@@ -1,0 +1,33 @@
+﻿{
+    "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
+    "name": "AzureCloudPowerShellDeployment",
+    "friendlyName": "Azure Cloud Service Deployment via PowerShell",
+    "description": "Deploy an Azure Cloud Service with PowerShell",
+    "category": "Deploy",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "demands" : [
+        "azureps"
+    ],
+    "inputs": [
+        { "name": "DeploymentEnvironmentName", "type": "string", "label": "Deployment Environment", "defaultValue": "", "required": true },
+        { "name": "CsPkg", "type": "string", "label": "CsPkg", "defaultValue": "$(build.stagingDirectory)\\*.cspkg", "required": true },
+        { "name": "CsCfg", "type": "string", "label": "CsCfg", "defaultValue": "$(build.stagingDirectory)\\*.cscfg", "required": true },
+        { "name": "StorageAccount", "type": "string", "label": "Storage account", "defaultValue": "", "required": false },
+        { "name": "Slot", "type": "string", "label": "Environment (Slot)", "defaultValue": "Production", "required": true },
+        { "name": "AdditionalArguments", "type": "string", "label": "Additional Arguments", "defaultValue": "", "required": false }
+    ],
+    "instanceNameFormat": "Azure Deployment: $(CsPkg)",
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\Publish-AzureCloudDeployment.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

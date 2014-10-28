@@ -1,0 +1,30 @@
+﻿{
+    "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
+    "name": "AzurePowerShell",
+    "friendlyName": "Azure PowerShell",
+    "description": "Run a PowerShell script within an Azure environment",
+    "category": "Deploy",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "demands" : [
+        "azureps"
+    ],
+    "inputs": [
+        { "name": "DeploymentEnvironmentName", "type": "string", "label": "Deployment Environment", "defaultValue": "", "required": true },
+        { "name": "ScriptPath", "type": "filePath", "label": "Script Path", "defaultValue": "", "required": true },
+        { "name": "ScriptArguments", "type": "string", "label": "Script Arguments", "defaultValue": "", "required": false }
+    ],
+    "instanceNameFormat": "Azure PowerShell script: $(ScriptName)",
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

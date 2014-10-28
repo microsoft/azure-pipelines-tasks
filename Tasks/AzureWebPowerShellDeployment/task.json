@@ -1,0 +1,31 @@
+﻿{
+    "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
+    "name": "AzureWebPowerShellDeployment",
+    "friendlyName": "Azure Web Site Deployment via PowerShell",
+    "description": "Deploy an Azure Web Site with PowerShell",
+    "category": "Deploy",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "demands" : [
+        "azureps"
+    ],
+    "inputs": [
+        { "name": "DeploymentEnvironmentName", "type": "string", "label": "Deployment Environment", "defaultValue": "", "required": true },
+        { "name": "WebSiteName", "type": "string", "label": "Web Site Name", "defaultValue": "", "required": true },
+        { "name": "Package", "type": "string", "label": "Package", "defaultValue": "$(build.stagingDirectory)\\*.zip", "required": true },
+        { "name": "AdditionalArguments", "type": "string", "label": "Additional Arguments", "defaultValue": "", "required": false }
+    ],
+    "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

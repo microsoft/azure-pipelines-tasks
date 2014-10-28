@@ -1,0 +1,34 @@
+﻿{
+    "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
+    "name": "MSBuild",
+    "friendlyName": "MSBuild",
+    "description": "Build with MSBuild",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "demands" : [
+        "msbuild"
+    ],
+    "inputs": [
+        { "name": "solution", "type": "filePath", "label": "Solution", "defaultValue":"**\\*.sln", "required":true },
+        { "name": "msbuildLocation", "type": "string", "label": "MSBuild Location", "defaultValue":"", "required":false },
+        { "name": "msbuildArguments", "type": "string", "label": "MSBuild Arguments", "defaultValue":"", "required":false },
+        { "name": "platform", "type": "string", "label": "Platform", "defaultValue":"", "required":false },
+        { "name": "configuration", "type": "string", "label": "Configuration", "defaultValue":"", "required":false },
+        { "name": "clean", "type": "boolean", "label": "Clean", "defaultValue": "false", "required": false },
+        { "name": "restoreNugetPackages", "type": "boolean", "label": "Restore NuGet Packages", "defaultValue": "true", "required": false }
+    ],
+    "instanceNameFormat": "Build solution $(solution)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\MSBuild.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

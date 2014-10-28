@@ -1,0 +1,30 @@
+﻿{
+    "id": "D9BAFED4-0B18-4F58-968D-86655B4D2CE9",
+    "name": "ProcessRunner",
+    "friendlyName": "Process Runner",
+    "description": "Run an executable file",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "demands": [
+        "DotNetFramework"
+    ],
+    "inputs": [
+        { "name": "filename", "type": "filePath", "label": "Path", "defaultValue":"", "required": true },
+        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
+        { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue":"", "required":true }
+    ],
+    "instanceNameFormat": "Run $(filename)",
+    "execution": {
+        "Process": {
+            "target": "$(filename)",
+            "argumentFormat": "$(arguments)",
+            "workingDirectory": "$(workingFolder)"
+        }
+    }
+}

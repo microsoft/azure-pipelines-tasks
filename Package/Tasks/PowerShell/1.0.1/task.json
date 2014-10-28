@@ -1,0 +1,30 @@
+﻿{
+    "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+    "name": "PowerShell",
+    "friendlyName": "PowerShell",
+    "description": "Run a PowerShell script",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "demands": [
+        "DotNetFramework"
+    ],
+    "inputs": [
+        { "name": "scriptName", "type": "filePath", "label": "Script filename", "defaultValue":"", "required":true },
+        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
+        { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue":"", "required":true }
+    ],
+    "instanceNameFormat": "Powershell: $(scriptName)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(scriptName)",
+            "argumentFormat": "$(arguments)",
+            "workingDirectory": "$(workingFolder)"
+        }
+    }
+}

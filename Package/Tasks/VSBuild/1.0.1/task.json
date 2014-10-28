@@ -1,0 +1,36 @@
+﻿{
+    "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
+    "name": "VSBuild",
+    "friendlyName": "Visual Studio Build",
+    "description": "Build with Visual Studio",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "demands" : [
+        "msbuild",
+        "visualstudio"
+    ],
+    "inputs": [
+        { "name": "solution", "type": "filePath", "label": "Solution", "defaultValue":"**\\*.sln", "required":true },
+        { "name": "msbuildLocation", "type": "string", "label": "MSBuild Location", "defaultValue":"", "required":false },
+        { "name": "vsLocation", "type": "string", "label": "Visual Studio Location", "defaultValue":"", "required":false },
+        { "name": "msbuildArgs", "type": "string", "label": "MSBuild Arguments", "defaultValue":"", "required":false },
+        { "name": "platform", "type": "string", "label": "Platform", "defaultValue":"", "required":false },
+        { "name": "configuration", "type": "string", "label": "Configuration", "defaultValue":"", "required":false },
+        { "name": "clean", "type": "boolean", "label": "Clean", "defaultValue": "false", "required": false },
+        { "name": "restoreNugetPackages", "type": "boolean", "label": "Restore NuGet Packages", "defaultValue": "true", "required": false }
+    ],
+    "instanceNameFormat": "Build solution $(solution)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\VSBuild.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
