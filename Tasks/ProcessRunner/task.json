@@ -8,14 +8,14 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
+        "Patch": 2,
         "IsTest": false
     },
     "demands": [
         "DotNetFramework"
     ],
     "inputs": [
-        { "name": "filename", "type": "filePath", "label": "Path", "defaultValue":"", "required": true },
+        { "name": "filename", "type": "string", "label": "Path", "defaultValue":"", "required": true },
         { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
         { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue":"", "required":true }
     ],
