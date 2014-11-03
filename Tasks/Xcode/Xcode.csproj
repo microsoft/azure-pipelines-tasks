@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TargetDir>$(MSBuildProjectDirectory)\..\..\Package\Tasks\$(MSBuildProjectName)\1.0.1</TargetDir>
+    <TargetDir>$(MSBuildProjectDirectory)\temp</TargetDir>
     <ProjectGuid>{C7237AC6-2B73-4238-83CC-36E8542D7AF9}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
