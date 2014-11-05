@@ -20,15 +20,39 @@ Write-Verbose "modifyEnvironment (converted) = $modifyEnvironment"
 # Check for file existence
 if ([System.IO.File]::Exists($filename))
 {
+    $currentLocation = Get-Location
+    Write-Verbose "Current working folder: $currentLocation"
+    if ($workingFolder)
+    {
+        Write-Verbose "Changing the current working folder to: $workingFolder"
+        Set-Location -Path $workingFolder
+        $currentLocation = Get-Location
+        Write-Verbose "New working folder: $currentLocation"
+    }
+
     if ($modifyEnvironment)
     {
         Write-Verbose "Invoking script $filename with AllowScriptToChangeEnvironment flag set"
-        Invoke-BatchScript $filename -AllowScriptToChangeEnvironment 
+        if ($arguments)
+        {
+            Invoke-BatchScript $filename -AllowScriptToChangeEnvironment -Arguments $arguments
+        }
+        else
+        {
+            Invoke-BatchScript $filename -AllowScriptToChangeEnvironment 
+        }
     }
     else
     {
         Write-Verbose "Invoking script $filename without AllowScriptToChangeEnvironment flag"
-        Invoke-BatchScript $filename
+        if ($arguments)
+        {
+            Invoke-BatchScript $filename -Arguments $arguments
+        }
+        else
+        {
+            Invoke-BatchScript $filename
+        }
     }
 }
 else
