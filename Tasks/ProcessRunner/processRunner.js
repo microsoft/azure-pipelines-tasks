@@ -16,36 +16,31 @@
 
 var path = require('path');
 var shell = require('shelljs/global');
-var fs = require('fs');
 
 exports.execute = function(ctx, callback) {
-	
-	var cmakePath = which('cmake');
-	if (!cmakePath) {
-		callback(new Error('cmake not found'));
-		return;
-	}
-
-	ctx.verbose('using cmake: ' + cmakePath);
+	var _buffer;
 
 	var args = [];
 
-	var argsInput = ctx.inputs.args;
+	var argsInput = ctx.inputs.arguments;
 	ctx.verbose('argsInput: ' + argsInput);
 	if (argsInput && argsInput.length > 0) {
 		args = args.concat(ctx.util.argStringToArray(argsInput));
 	}
 
-	var cwd = ctx.inputs.cwd;
-	ctx.verbose('working: ' + cwd);
+	// cwd is optional - we use folder of script as working directory if not set.
+	var cwd = ctx.inputs.workingFolder;
+	ctx.verbose('cwd: ' + cwd);
+	if (!cwd || cwd.length == 0) {
+		cd(cwd);
+	}
 
-	if (!fs.existsSync(cwd)) {
-		callback(new Error('working does not exist: ' + cwd));	
+	// fileName should resolve via path or explicit path
+	var toolPath = which(ctx.inputs.filename);
+	if (!toolPath) {
+		callback(new Error(toolPath + ' not found'));
 		return;
 	}
-	cd(cwd);
 
-	var cwd = process.cwd();
-	ctx.info('Calling cmake');
-	ctx.util.spawn(cmakePath, args, { cwd: cwd, failOnStdErr: false }, callback);
+	ctx.util.spawn(toolPath, args, { cwd: cwd }, callback);
 }
