@@ -18,8 +18,8 @@
         { "name": "filename", "type": "string", "label": "Path", "defaultValue": "", "required": true },
         { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue": "", "required": false },
         { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue": "", "required": true },
-        { "name": "errorParttern", "type": "string", "label": "Error Parttern", "defaultValue": "", "required": false },
-        { "name": "warningParttern", "type": "string", "label": "Warning Parttern", "defaultValue": "", "required": false }
+        { "name": "errorPattern", "type": "string", "label": "Error Pattern", "defaultValue": "", "required": false },
+        { "name": "warningPattern", "type": "string", "label": "Warning Pattern", "defaultValue": "", "required": false }
     ],
     "instanceNameFormat": "Run $(filename)",
     "execution": {
@@ -27,8 +27,8 @@
             "target": "$(filename)",
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
-            "errorParttern": "$(errorParttern)",
-            "warningParttern": "$(warningParttern)"
+            "errorPattern": "$(errorPattern)",
+            "warningPattern": "$(warningPattern)"
         }
     }
 }
