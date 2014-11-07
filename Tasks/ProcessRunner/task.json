@@ -11,11 +11,8 @@
         "Patch": 2,
         "IsTest": false
     },
-    "demands": [
-        "DotNetFramework"
-    ],
     "inputs": [
-        { "name": "filename", "type": "string", "label": "Path", "defaultValue":"", "required": true },
+        { "name": "filename", "type": "string", "label": "Tool", "defaultValue":"", "required": true },
         { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
         { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue":"", "required":true }
     ],
@@ -25,6 +22,10 @@
             "target": "$(filename)",
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)"
-        }
+        },
+        "JavaScript": {
+            "target": "processRunner.js",
+            "argumentFormat": ""
+        }        
     }
 }

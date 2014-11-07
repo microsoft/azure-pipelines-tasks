@@ -11,13 +11,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
+        "Patch": 2,
         "IsTest": false
     },
     "instanceNameFormat": "CMake $(args)",
     "inputs": [
-        { "name": "srcRoot", "type": "filePath", "label": "Source Root", "defaultValue":"", "required":true },
-        { "name": "buildDirName", "type": "string", "label": "Build Directory Name", "defaultValue":"build", "required":true },
+        { "name": "cwd", "type": "filePath", "label": "Working Directory", "defaultValue":"build", "required":false },
         { "name": "args", "type": "string", "label": "Arguments", "defaultValue":"", "required":false }
     ],
     "execution": {

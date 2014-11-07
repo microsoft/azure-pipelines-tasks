@@ -110,6 +110,10 @@ exports.execute = function(ctx, callback) {
 		args.push(xcWorkspacePath);
 	}
 
+    //
+	// project and target is removed from the inputs - we support workspace/scheme based
+	// based builds.  leaving code support for now
+	// 
 	if (projectPath && projectPath != repoPath) {
 		args.push('-project');
 		args.push(projectPath);
