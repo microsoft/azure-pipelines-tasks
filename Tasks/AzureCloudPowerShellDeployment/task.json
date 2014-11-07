@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
+        "Patch": 2,
         "IsTest": false
     },
     "demands" : [
@@ -16,11 +16,13 @@
     ],
     "inputs": [
         { "name": "DeploymentEnvironmentName", "type": "string", "label": "Deployment Environment", "defaultValue": "", "required": true },
+        { "name": "ServiceName", "type": "string", "label": "Service name", "defaultValue": "", "required": true },
+        { "name": "ServiceLocation", "type": "string", "label": "Service location", "defaultValue": "South Central US", "required": true },
+        { "name": "StorageAccount", "type": "string", "label": "Storage account", "defaultValue": "", "required": false },
         { "name": "CsPkg", "type": "string", "label": "CsPkg", "defaultValue": "$(build.stagingDirectory)\\*.cspkg", "required": true },
         { "name": "CsCfg", "type": "string", "label": "CsCfg", "defaultValue": "$(build.stagingDirectory)\\*.cscfg", "required": true },
-        { "name": "StorageAccount", "type": "string", "label": "Storage account", "defaultValue": "", "required": false },
         { "name": "Slot", "type": "string", "label": "Environment (Slot)", "defaultValue": "Production", "required": true },
-        { "name": "AdditionalArguments", "type": "string", "label": "Additional Arguments", "defaultValue": "", "required": false }
+        { "name": "AllowUpgrade", "type": "boolean", "label": "Allow Upgrade", "defaultValue": "true", "required": true }
     ],
     "instanceNameFormat": "Azure Deployment: $(CsPkg)",
     "execution": {
