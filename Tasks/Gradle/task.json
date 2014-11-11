@@ -1,0 +1,30 @@
+﻿{
+    "id": "BFC8BF76-E7AC-4A8C-9A55-A944A9F632FD",
+    "name": "GradleBuild ",
+    "friendlyName": "Gradle Build",
+    "description": "Run a gradle build and optionally start emulator for unit tests",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "demands" : [
+        "androidSDK"
+    ],
+    "inputs": [
+        { "name": "gradleProj", "type": "filePath", "label": "Project Directory", "defaultValue":"", "required":true },
+        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
+        { "name": "startEmulator", "type": "boolean", "label": "Start Android Emulator", "defaultValue":"False", "required":false }
+    ],
+    "instanceNameFormat": "Gradle Build $(gradlebat)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\GradleBuild.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
