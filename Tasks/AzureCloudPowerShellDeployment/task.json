@@ -16,9 +16,9 @@
     ],
     "inputs": [
         { "name": "DeploymentEnvironmentName", "type": "string", "label": "Deployment Environment", "defaultValue": "", "required": true },
-        { "name": "ServiceName", "type": "string", "label": "Service name", "defaultValue": "", "required": true },
-        { "name": "ServiceLocation", "type": "string", "label": "Service location", "defaultValue": "South Central US", "required": true },
-        { "name": "StorageAccount", "type": "string", "label": "Storage account", "defaultValue": "", "required": false },
+        { "name": "StorageAccount", "type": "string", "label": "Storage Account", "defaultValue": "", "required": true },
+        { "name": "ServiceName", "type": "string", "label": "Service Name", "defaultValue": "", "required": true },
+        { "name": "ServiceLocation", "type": "string", "label": "Service Location", "defaultValue": "South Central US", "required": true },
         { "name": "CsPkg", "type": "string", "label": "CsPkg", "defaultValue": "$(build.stagingDirectory)\\*.cspkg", "required": true },
         { "name": "CsCfg", "type": "string", "label": "CsCfg", "defaultValue": "$(build.stagingDirectory)\\*.cscfg", "required": true },
         { "name": "Slot", "type": "string", "label": "Environment (Slot)", "defaultValue": "Production", "required": true },

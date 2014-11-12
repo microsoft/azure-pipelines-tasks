@@ -34,7 +34,7 @@ param
 
 Write-Verbose "Entering script Publish-AzureCloudDeployment.ps1"
 
-
+Write-Verbose "DeploymentEnvironmentName= $DeploymentEnvironmentName"
 Write-Verbose "ServiceName= $ServiceName"
 Write-Verbose "ServiceLocation= $ServiceLocation"
 Write-Verbose "StorageAccount= $StorageAccount"
@@ -45,6 +45,17 @@ Write-Verbose "AllowUpgrade=$AllowUpgrade"
 
 if (!$distributedTaskContext)
 {
+    # Load the required assemblies before importing the modules
+    $currentLocation = Split-Path -parent $MyInvocation.MyCommand.Definition
+    $assembliesToLoad = "Microsoft.TeamFoundation.DistributedTask.Agent.Interfaces.dll;Microsoft.TeamFoundation.Client.dll;Microsoft.TeamFoundation.DistributedTask.Agent.Strings.dll"
+    $splitOn = ,";"
+    $assemblies = $assembliesToLoad.Split($splitOn, [System.StringSplitOptions]::RemoveEmptyEntries)
+    foreach($assembly in $assemblies)
+    {
+        $assemblyLocation = "$currentLocation\Agent\Worker\$assembly"
+        [void][Reflection.Assembly]::LoadFrom($assemblyLocation)
+    }
+
     import-module "..\..\..\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Common"
     import-module "..\..\..\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Build"
     import-module "..\..\..\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Azure\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Azure.psm1"
@@ -78,34 +89,34 @@ $servicePackageFile = Find-Files -SearchPattern "$CsPkg"
 Write-Host "servicePackageFile= $servicePackageFile" -ForegroundColor Yellow
 $servicePackageFile = Get-SingleFile $servicePackageFile
 
-Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue"
-$azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue
+Write-Host "Get-AzureService -ServiceName $ServiceName -Verbose -ErrorAction SilentlyContinue"
+$azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue -Verbose
 if(!$azureService)
 {
-    Write-Host "New-AzureService -ServiceName $ServiceName -Location $ServiceLocation"
-    $azureService = New-AzureService -ServiceName $ServiceName -Location $ServiceLocation
+    Write-Host "New-AzureService -ServiceName $ServiceName -Location $ServiceLocation -Verbose"
+    $azureService = New-AzureService -ServiceName $ServiceName -Location $ServiceLocation -Verbose
 }
 
-Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue"
-$azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue
+Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -Verbose"
+$azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -Verbose
 if(!$azureDeployment)
 {
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
+    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose"
+    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose
 } 
 elseif ($allowUpgrade -eq $true)
 {
-    #use upgrade
-    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
-    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
+    #Use -Upgrade
+    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose"
+    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose
 }
 else
 {
-    #delete and then re-create
-    Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force"
-    Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
+    #Remove and then Re-create
+    Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force -Verbose"
+    Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force -Verbose
+    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose"
+    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose
 }
 
 Write-Verbose "Leaving script Publish-AzureCloudDeployment.ps1"
