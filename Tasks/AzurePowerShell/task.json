@@ -19,7 +19,7 @@
         { "name": "ScriptPath", "type": "filePath", "label": "Script Path", "defaultValue": "", "required": true },
         { "name": "ScriptArguments", "type": "string", "label": "Script Arguments", "defaultValue": "", "required": false }
     ],
-    "instanceNameFormat": "Azure PowerShell script: $(ScriptName)",
+    "instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
     "execution": {
         "AzurePowerShell": {
             "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
