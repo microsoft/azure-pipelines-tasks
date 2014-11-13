@@ -25,6 +25,17 @@ Write-Verbose "TeamProject= $TeamProject"
 
 if (!$distributedTaskContext) #running directly via command line
 {
+    # Load the required assemblies before importing the modules
+    $currentLocation = Split-Path -parent $MyInvocation.MyCommand.Definition
+    $assembliesToLoad = "Microsoft.TeamFoundation.DistributedTask.Agent.Interfaces.dll;Microsoft.TeamFoundation.Client.dll;Microsoft.TeamFoundation.DistributedTask.Agent.Strings.dll"
+    $splitOn = ,";"
+    $assemblies = $assembliesToLoad.Split($splitOn, [System.StringSplitOptions]::RemoveEmptyEntries)
+    foreach($assembly in $assemblies)
+    {
+        $assemblyLocation = "$currentLocation\Agent\Worker\$assembly"
+        [void][Reflection.Assembly]::LoadFrom($assemblyLocation)
+    }
+
     import-module "..\..\..\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Common"
     import-module "..\..\..\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Build"
     import-module "..\..\..\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Azure\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Azure.psm1"
@@ -46,8 +57,6 @@ if (!$distributedTaskContext) #running directly via command line
     Setup-AzureSubscription -DeploymentEnvironmentName $DeploymentEnvironmentName -CollectionUrl $collectionUrl -TeamProject $teamProject
 }
 
-Write-Host "Calling custom script!" -ForegroundColor Green
-
 #ENSURE: We pass arguments verbatim on the command line to the custom script
 Write-Host "ScriptArguments= " $ScriptArguments
 Write-Host "ScriptPath= " $ScriptPath
@@ -55,7 +64,5 @@ Write-Host "ScriptPath= " $ScriptPath
 $scriptCommand = "$ScriptPath $scriptArguments"
 Write-Host "scriptCommand=" $scriptCommand
 Invoke-Expression -Command $scriptCommand
-
-Write-Host "Back from custom script!" -ForegroundColor Green
 
 Write-Verbose "Leaving script RunAzurePowerShell.ps1"

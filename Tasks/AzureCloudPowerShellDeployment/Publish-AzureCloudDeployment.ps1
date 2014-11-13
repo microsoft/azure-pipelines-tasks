@@ -114,7 +114,7 @@ else
 {
     #Remove and then Re-create
     Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force -Verbose"
-    Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force -Verbose
+    $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force -Verbose
     Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose"
     $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose
 }
