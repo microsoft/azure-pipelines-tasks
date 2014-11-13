@@ -14,8 +14,8 @@ Write-Verbose "modifyEnvironment = $modifyEnvironment"
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
-$modifyEnvironment = Convert-String $modifyEnvironment Boolean
-Write-Verbose "modifyEnvironment (converted) = $modifyEnvironment"
+$allowModifyEnvironment = Convert-String $modifyEnvironment Boolean
+Write-Verbose "modifyEnvironment (converted) = $allowModifyEnvironment"
 
 # Check for file existence
 if ([System.IO.File]::Exists($filename))
@@ -30,7 +30,7 @@ if ([System.IO.File]::Exists($filename))
         Write-Verbose "New working folder: $currentLocation"
     }
 
-    if ($modifyEnvironment)
+    if ($allowModifyEnvironment)
     {
         Write-Verbose "Invoking script $filename with AllowScriptToChangeEnvironment flag set"
         if ($arguments)

@@ -29,8 +29,8 @@ if (!$solution)
 
 $nugetRestore = Convert-String $restoreNugetPackages Boolean
 Write-Verbose "nugetRestore (converted) = $nugetRestore"
-$clean = Convert-String $clean Boolean
-Write-Verbose "clean (converted) = $clean"
+$cleanBuild = Convert-String $clean Boolean
+Write-Verbose "clean (converted) = $cleanBuild"
 
 # check for solution pattern
 if ($solution.Contains("*") -or $solution.Contains("?"))
@@ -87,7 +87,7 @@ else
     Write-Warning "Unable to find script $scriptLocation"
 }
 
-if ($clean)
+if ($cleanBuild)
 {
     foreach ($sf in $solutionFiles)  
     {
