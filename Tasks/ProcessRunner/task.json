@@ -11,20 +11,25 @@
         "Patch": 2,
         "IsTest": false
     },
-    "demands": [
-        "DotNetFramework"
-    ],
     "inputs": [
-        { "name": "filename", "type": "string", "label": "Path", "defaultValue":"", "required": true },
-        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
-        { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue":"", "required":true }
+        { "name": "filename", "type": "string", "label": "Tool", "defaultValue": "", "required": true },
+        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue": "", "required": false },
+        { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue": "", "required": true },
+        { "name": "errorPattern", "type": "string", "label": "Error Pattern", "defaultValue": "", "required": false },
+        { "name": "warningPattern", "type": "string", "label": "Warning Pattern", "defaultValue": "", "required": false }
     ],
     "instanceNameFormat": "Run $(filename)",
     "execution": {
         "Process": {
             "target": "$(filename)",
             "argumentFormat": "$(arguments)",
-            "workingDirectory": "$(workingFolder)"
+            "workingDirectory": "$(workingFolder)",
+            "errorPattern": "$(errorPattern)",
+            "warningPattern": "$(warningPattern)"
+        },
+        "JavaScript": {
+            "target": "processRunner.js",
+            "argumentFormat": ""
         }
     }
 }

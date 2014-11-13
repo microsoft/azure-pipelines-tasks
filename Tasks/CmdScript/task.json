@@ -11,6 +11,9 @@
         "Patch": 2,
         "IsTest": false
     },
+    "demands": [
+        "Cmd"
+    ],
     "inputs": [
         { "name": "filename", "type": "filePath", "label": "Path", "defaultValue":"", "required": true },
         { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
