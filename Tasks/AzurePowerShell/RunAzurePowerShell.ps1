@@ -2,6 +2,9 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
+    $DeploymentEnvironmentName,
+
+    [String] [Parameter(Mandatory = $true)]
     $ScriptPath,
 
     [String] [Parameter(Mandatory = $true)]
