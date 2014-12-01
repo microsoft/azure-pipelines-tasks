@@ -26,7 +26,7 @@
     <Content Include="task.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="GradleBuild.ps1" />
+    <None Include="AndroidBuild.ps1" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
