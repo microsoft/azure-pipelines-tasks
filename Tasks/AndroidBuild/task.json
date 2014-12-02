@@ -17,13 +17,15 @@
     "inputs": [
         { "name": "gradleWrapper", "type": "filePath", "label": "Location of Gradle Wrapper", "defaultValue":"", "required":false },
         { "name": "gradleProj", "type": "filePath", "label": "Project Directory", "defaultValue":"", "required":false },
-        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
-        { "name": "startEmulator", "type": "boolean", "label": "Start Android Emulator", "defaultValue":"False", "required":false }
+        { "name": "gradleArguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
+        { "name": "startEmulator", "type": "boolean", "label": "Start Android Emulator", "defaultValue":"False", "required":false },
+        { "name": "emulatorTarget", "type": "string ", "label": "Emulator Target SDK", "defaultValue":"android-19", "required":false },
+        { "name": "emulatorDevice", "type": "string", "label": "Emulator Device", "defaultValue":"Nexus 5", "required":false }
     ],
     "instanceNameFormat": "Android Build $(gradleProj)",
     "execution": {
         "PowerShell": {
-            "target": "$(currentDirectory)\\GradleBuild.ps1",
+            "target": "$(currentDirectory)\\AndroidBuild.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
