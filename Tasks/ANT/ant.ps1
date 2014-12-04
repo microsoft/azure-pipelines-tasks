@@ -18,7 +18,7 @@ try
 }
 catch
 {
-	throw 'Unable to find Ant, verify it is installed correctly on the build agent: http://ant.apache.org/manual/install.html.'
+	throw 'Unable to find Ant. Verify it is installed correctly on the build agent: http://ant.apache.org/manual/install.html.'
 }
 
 # Find Working Directory to run Ant in

@@ -23,12 +23,12 @@ exports.execute = function (ctx, callback) {
     //Verify ant is installed correctly
     var antPath = which('ant');
     if (!antPath) {
-        callback(new Error('Unable to find Ant, verify it is installed correctly on the build agent: http://ant.apache.org/manual/install.html.'));
+        callback(new Error('Unable to find Ant. Verify it is installed correctly on the build agent: http://ant.apache.org/manual/install.html.'));
         return;
     }
 
     ctx.verbose('Found Ant at: ' + antPath);
-
+    
     //Find working directory to run Ant in
     var cwd = ctx.inputs.cwd;
     if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {
@@ -38,19 +38,20 @@ exports.execute = function (ctx, callback) {
 
     cd(cwd);
     ctx.verbose('Working Directory: ' + cwd);
-    var cwd = process.cwd();
-
+    
     // options and targets are optional - invoke ant without any arguments if nothing is specified
     var options = ctx.inputs.options;
     var targets = ctx.inputs.targets;
 
     var antArguments = [];
     if (options) {
-       var optionsArgs = options.split(' ');
+        var optionsArgs = options.split(' ');
+        ctx.verbose(optionsArgs);
        antArguments = antArguments.concat(optionsArgs);
     }
     if (targets) {
         var targetsArgs = targets.split(' ');
+        ctx.verbose(targetsArgs);
         antArguments = antArguments.concat(targetsArgs);
     }
 
