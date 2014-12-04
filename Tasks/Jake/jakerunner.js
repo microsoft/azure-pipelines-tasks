@@ -26,7 +26,7 @@ jake.addListener('start', function () {
 });
 
 jake.addListener('error', function (msg, code) {
-    console.log('Fatal error: ', msg, code);
+    console.error('Fatal error: ', msg, code);
 });
 
 jake.run.apply(jake, args);
