@@ -23,21 +23,21 @@ exports.execute = function (ctx, callback) {
     //Verify ant is installed correctly
     var antPath = which('ant');
     if (!antPath) {
-        callback(new Error('Unable to find ANT, verify it is installed correctly, ANT_HOME is set and ANT_HOME\bin is added to the PATH on the build agent'));
+        callback(new Error('Unable to find Ant, verify it is installed correctly on the build agent: http://ant.apache.org/manual/install.html.'));
         return;
     }
 
-    ctx.verbose('using ant: ' + antPath);
+    ctx.verbose('Found Ant at: ' + antPath);
 
-    //Find working directory to run ANT in
+    //Find working directory to run Ant in
     var cwd = ctx.inputs.cwd;
-    if (!fs.existsSync(cwd)) {
-        callback(new Error('Working Directory not exist: ' + cwd));
+    if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {
+        callback(new Error('Working Directory ' + cwd + ' does not exist or is not a valid directory'));
         return;
-    }
+    }   
 
     cd(cwd);
-    ctx.verbose('Working Folder: ' + cwd);
+    ctx.verbose('Working Directory: ' + cwd);
     var cwd = process.cwd();
 
     // options and targets are optional - invoke ant without any arguments if nothing is specified
@@ -46,7 +46,7 @@ exports.execute = function (ctx, callback) {
 
     var antArguments = [];
     if (options) {
-        var optionsArgs = options.split(' ');
+       var optionsArgs = options.split(' ');
        antArguments = antArguments.concat(optionsArgs);
     }
     if (targets) {
@@ -60,6 +60,6 @@ exports.execute = function (ctx, callback) {
     };
 
     // calling spawn instead of fork so we can easily capture output --> logs
-    ctx.info('Running ant: ');
+    ctx.info('Running Ant: ');
     ctx.util.spawn(antPath, antArguments, ops, callback);
 }

@@ -48,7 +48,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishTasks", "PublishTask
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GradleBuild", "GradleBuild\GradleBuild.csproj", "{2BB472AC-08B6-46E5-B561-56B1E393C362}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ANT", "ANT\ANT.csproj", "{26273B2C-95EE-4795-9A29-AA2179304D29}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ant", "Ant\Ant.csproj", "{26273B2C-95EE-4795-9A29-AA2179304D29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

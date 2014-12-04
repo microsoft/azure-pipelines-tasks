@@ -1,13 +1,13 @@
-﻿{
+{
     "id": "3A6A2D63-F2B2-4E93-BCF9-0CBE22F5DC26",
-    "name": "ANT",
-    "friendlyName": "ANT",
-    "description": "Build with Apache ANT",
+    "name": "Ant",
+    "friendlyName": "Ant",
+    "description": "Build with Apache Ant",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
-        "Minor": 1,
+        "Major": 1,
+        "Minor": 0,
         "Patch": 0,
         "IsTest": false
     },
@@ -16,7 +16,7 @@
     ],
     "instanceNameFormat": "Ant $(options)",
     "inputs": [
-        { "name": "cwd", "type": "filePath", "label": "Working Folder", "defaultValue":"", "required":true },
+        { "name": "cwd", "type": "filePath", "label": "Working Directory", "defaultValue":"", "required":true },
         { "name": "options", "type": "string", "label": "Options", "defaultValue":"", "required":false },
         { "name": "targets", "type": "string", "label": "Target(s)", "defaultValue":"", "required":false }
     ],

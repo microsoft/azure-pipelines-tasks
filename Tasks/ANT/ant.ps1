@@ -4,24 +4,24 @@
 	[string]$targets
 )
 
-Write-Verbose 'Entering ant.ps1'
+Write-Verbose 'Entering Ant.ps1'
 Write-Verbose "cwd = $cwd"
 Write-Verbose "options = $options"
 Write-Verbose "targets = $targets"
 
-#Verify ant is installed correctly
+#Verify Ant is installed correctly
 try
 {
-	$ant = Get-Command ant
+	$ant = Get-Command Ant
 	$antPath = $ant.Path
-	Write-Verbose "Found ANT at $antPath"
+	Write-Verbose "Found Ant at $antPath"
 }
 catch
 {
-	throw 'Unable to find ANT, verify it is installed correctly, ANT_HOME is set and ANT_HOME\bin is added to the PATH on the build agent'
+	throw 'Unable to find Ant, verify it is installed correctly on the build agent: http://ant.apache.org/manual/install.html.'
 }
 
-# Find working directory to run ANT in
+# Find Working Directory to run Ant in
 if(!$cwd)
 {
     throw "Working Directory is not set"
@@ -29,15 +29,14 @@ if(!$cwd)
 
 if(!(Test-Path $cwd -PathType Container))
 {
-	Write-Verbose "Creating directory $cwd"
-    New-Item -Path $cwd -ItemType Container
+	throw "Working Directory $cwd does not exist or is not a valid directory"
 }
 
 Write-Verbose "Setting Working Directory to $cwd"
 Set-Location $cwd
 
 $antArguments = $options + ' ' + $targets
-Write-Verbose "Using ANT arguments $antArguments"
+Write-Verbose "Using Ant arguments $antArguments"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
