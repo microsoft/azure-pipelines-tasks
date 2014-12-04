@@ -44,9 +44,16 @@ exports.execute = function (ctx, callback) {
     var options = ctx.inputs.options;
     var targets = ctx.inputs.targets;
 
-    var antArguments = options + targets;
-    ctx.verbose('ANT arguments: ' + antArguments);
-        
+    var antArguments = [];
+    if (options) {
+        var optionsArgs = options.split(' ');
+       antArguments = antArguments.concat(optionsArgs);
+    }
+    if (targets) {
+        var targetsArgs = targets.split(' ');
+        antArguments = antArguments.concat(targetsArgs);
+    }
+
     var ops = {
         cwd: path.resolve(cwd),
         env: process.env
