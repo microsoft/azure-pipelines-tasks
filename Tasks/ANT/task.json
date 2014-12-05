@@ -12,11 +12,12 @@
         "IsTest": false
     },
     "demands" : [
-        "ANT_HOME"
+        "ant"
     ],
     "instanceNameFormat": "Ant $(options)",
     "inputs": [
-        { "name": "cwd", "type": "filePath", "label": "Working Directory", "defaultValue":"", "required":true },
+        { "name": "antBuildFile", "type": "filePath", "label": "Ant build file", "defaultValue": "", "required": true },
+        { "name": "cwd", "type": "filePath", "label": "Working directory", "defaultValue":"", "required":false },
         { "name": "options", "type": "string", "label": "Options", "defaultValue":"", "required":false },
         { "name": "targets", "type": "string", "label": "Target(s)", "defaultValue":"", "required":false }
     ],

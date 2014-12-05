@@ -1,18 +1,5 @@
-﻿// 
-// Copyright (c) Microsoft and contributors.  All rights reserved.
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//   http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// 
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// 
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 var fs = require('fs');
 var path = require('path');
@@ -26,34 +13,48 @@ exports.execute = function (ctx, callback) {
         callback(new Error('Unable to find Ant. Verify it is installed correctly on the build agent: http://ant.apache.org/manual/install.html.'));
         return;
     }
-
     ctx.verbose('Found Ant at: ' + antPath);
     
-    //Find working directory to run Ant in
+    //Verify Ant build file is specified
+    var antBuildFile = ctx.inputs.antBuildFile;
+    if (!fs.existsSync(antBuildFile) || !fs.statSync(antBuildFile).isFile()) {
+        callback(new Error('Ant build file ' + antBuildFile + ' does not exist or is not a valid file'));
+        return;
+    }
+    ctx.verbose('Ant build file: ' + antBuildFile);
+
+    //Find Working directory to run Ant in. cwd is optional, we use directory of Ant build file as Working directory if not set.
     var cwd = ctx.inputs.cwd;
+    if (!cwd || cwd.length == 0)
+    {
+        cwd = path.dirname(antBuildFile);
+    }
     if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {
-        callback(new Error('Working Directory ' + cwd + ' does not exist or is not a valid directory'));
+        callback(new Error('Working directory ' + cwd + ' does not exist or is not a valid directory'));
         return;
     }   
-
     cd(cwd);
-    ctx.verbose('Working Directory: ' + cwd);
-    
-    // options and targets are optional - invoke ant without any arguments if nothing is specified
-    var options = ctx.inputs.options;
-    var targets = ctx.inputs.targets;
+    ctx.verbose('Working directory: ' + cwd);
 
     var antArguments = [];
-    if (options) {
-        var optionsArgs = options.split(' ');
+    antArguments = antArguments.concat("-buildfile");
+    antArguments = antArguments.concat(antBuildFile);
+
+    // options and targets are optional
+    var options = ctx.inputs.options;
+    if (options && options.length > 0) {
+        var optionsArgs = ctx.util.argStringToArray(options);
         ctx.verbose(optionsArgs);
-       antArguments = antArguments.concat(optionsArgs);
+        antArguments = antArguments.concat(optionsArgs);
     }
-    if (targets) {
-        var targetsArgs = targets.split(' ');
+
+    var targets = ctx.inputs.targets;
+    if (targets && targets.length > 0) {
+        var targetsArgs = ctx.util.argStringToArray(targets);
         ctx.verbose(targetsArgs);
         antArguments = antArguments.concat(targetsArgs);
-    }
+    }    
+    ctx.verbose("Ant arguments: " + antArguments.toString());
 
     var ops = {
         cwd: path.resolve(cwd),
