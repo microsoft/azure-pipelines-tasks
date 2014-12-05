@@ -12,9 +12,7 @@
         "IsTest": false
     },
     "demands" : [
-        "ANDROID_HOME", 
-		"JAVA_HOME", 
-		"GRADLE_HOME"
+	    "AndroidSDK"
     ],
     "inputs": [
         { "name": "gradleWrapper", "type": "filePath", "label": "Location of Gradle Wrapper", "defaultValue":"", "required":false },
