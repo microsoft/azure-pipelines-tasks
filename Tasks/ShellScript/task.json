@@ -2,13 +2,13 @@
     "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
     "name": "ShellScript",
     "friendlyName": "Shell Script",
-    "description": "Run a shell script with sh",
+    "description": "Run a shell script using bash",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
+        "Patch": 2,
         "IsTest": false
     },
     "demands" : [
