@@ -27,7 +27,7 @@ exports.execute = function(ctx, callback) {
 	// shell script runner
 	ctx.verbose('running: ' + JSON.stringify(args, null, 2));
 
-	ctx.util.spawn('sh', args, { cwd: cwd }, callback);
+	ctx.util.spawn('bash', args, { cwd: cwd }, callback);
 }
 
 // TODO: (bryanmac) system needs to chmod on the script? is that configurable?
