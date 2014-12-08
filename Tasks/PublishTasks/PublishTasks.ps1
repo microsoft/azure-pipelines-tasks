@@ -73,9 +73,10 @@ foreach($src in $tasksSrc)
 $taskinfo = $taskinfo.TrimEnd("`r`n")
 Write-Host taskinfo = $taskinfo
 
+#jpricket - removing these lines so we can maintain the readme file manually
 #remove all existing task info from README.md
-$initContent= (Get-Content $readmeFile |Where{$_ -notmatch '^- Task: '}) -join "`r`n"
-Set-Content $readmeFile $initContent
+#$initContent= (Get-Content $readmeFile |Where{$_ -notmatch '^- Task: '}) -join "`r`n"
+#Set-Content $readmeFile $initContent
 
 #add task info to README.md
-Add-Content $readmeFile $taskinfo
+#Add-Content $readmeFile $taskinfo
