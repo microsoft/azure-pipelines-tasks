@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidBuild", "AndroidBuil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ant", "Ant\Ant.csproj", "{26273B2C-95EE-4795-9A29-AA2179304D29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradle", "Gradle\Gradle.csproj", "{ACF56B21-8E00-45B4-9213-C3FB60774FB2}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1443AFB-0F79-4E9A-B943-E21F51705106}"
 	ProjectSection(SolutionItems) = preProject
 		License.txt = License.txt
@@ -125,6 +127,10 @@ Global
 		{26273B2C-95EE-4795-9A29-AA2179304D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26273B2C-95EE-4795-9A29-AA2179304D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26273B2C-95EE-4795-9A29-AA2179304D29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACF56B21-8E00-45B4-9213-C3FB60774FB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACF56B21-8E00-45B4-9213-C3FB60774FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACF56B21-8E00-45B4-9213-C3FB60774FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACF56B21-8E00-45B4-9213-C3FB60774FB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

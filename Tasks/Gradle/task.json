@@ -1,0 +1,35 @@
+{
+    "id": "8D8EEBD8-2B94-4C97-85AF-839254CC6DA4",
+    "name": "Gradle",
+    "friendlyName": "Gradle",
+    "description": "Run a build using Gradle wrapper",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "demands" : [
+        "java"
+    ],
+    "inputs": [
+        { "name": "wrapperScript", "type": "filePath", "label": "Gradle Wrapper", "defaultValue": "gradlew", "required": true },
+        { "name": "cwd", "type":  "filePath", "label":  "Project Directory", "defaultValue": "", "required":  false},
+        { "name": "options", "type": "string", "label": "Options", "defaultValue": "", "required": false },
+        { "name": "tasks", "type": "string", "label": "Tasks", "defaultValue": "build", "required": true  }
+    ],
+    "instanceNameFormat": "gradlew $(tasks)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\gradle.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        },
+        "JavaScript": {
+            "target": "gradle.js",
+            "argumentFormat": ""
+        }
+    }
+}
