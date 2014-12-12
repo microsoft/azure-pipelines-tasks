@@ -1,0 +1,35 @@
+{
+    "id": "AC4EE482-65DA-4485-A532-7B085873E532",
+    "name": "Maven",
+    "friendlyName": "Maven",
+    "description": "Build with Apache Maven",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "demands" : [
+        "maven"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "instanceNameFormat": "Maven $(args)",
+    "inputs": [
+        { "name": "mavenPOMFile", "type": "filePath", "label": "Maven POM file", "defaultValue": "", "required": true },
+        { "name": "cwd", "type": "filePath", "label": "Working directory", "defaultValue": "", "required": false },
+        { "name": "options", "type": "string", "label": "Options", "defaultValue": "", "required": false },
+        { "name": "goals", "type": "string", "label": "Goal(s)", "defaultValue": "", "required": false }
+    ],
+    "execution": {
+        "JavaScript": {
+            "target": "maven.js",
+            "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\maven.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
