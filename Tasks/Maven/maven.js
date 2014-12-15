@@ -43,14 +43,12 @@ exports.execute = function (ctx, callback) {
     var options = ctx.inputs.options;
     if (options && options.length > 0) {
         var optionsArgs = ctx.util.argStringToArray(options);
-        ctx.verbose(optionsArgs);
         mavenArguments = mavenArguments.concat(optionsArgs);
     }
 
     var goals = ctx.inputs.goals;
     if (goals && goals.length > 0) {
         var goalsArgs = ctx.util.argStringToArray(goals);
-        ctx.verbose(goalsArgs);
         mavenArguments = mavenArguments.concat(goalsArgs);
     }    
     ctx.verbose("Maven arguments: " + mavenArguments.toString());
