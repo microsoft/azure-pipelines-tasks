@@ -43,15 +43,13 @@ exports.execute = function (ctx, callback) {
     // options and targets are optional
     var options = ctx.inputs.options;
     if (options && options.length > 0) {
-        var optionsArgs = ctx.util.argStringToArray(options);
-        ctx.verbose(optionsArgs);
+        var optionsArgs = ctx.util.argStringToArray(options);        
         antArguments = antArguments.concat(optionsArgs);
     }
 
     var targets = ctx.inputs.targets;
     if (targets && targets.length > 0) {
-        var targetsArgs = ctx.util.argStringToArray(targets);
-        ctx.verbose(targetsArgs);
+        var targetsArgs = ctx.util.argStringToArray(targets);        
         antArguments = antArguments.concat(targetsArgs);
     }    
     ctx.verbose("Ant arguments: " + antArguments.toString());

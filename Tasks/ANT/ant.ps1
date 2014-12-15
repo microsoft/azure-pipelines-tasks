@@ -45,9 +45,6 @@ if(!(Test-Path $cwd -PathType Container))
 	throw "Working directory '$cwd' does not exist or is not a valid directory"
 }
 
-Write-Verbose "Setting Working directory to $cwd"
-Set-Location $cwd
-
 $antArguments = "-buildfile ""$antBuildFile"" $options $targets"
 Write-Verbose "Using Ant arguments $antArguments"
 
