@@ -7,6 +7,9 @@ param
     [String] [Parameter(Mandatory = $true)]
     $WebSiteName,
 
+    [String] [Parameter(Mandatory = $false)]
+    $WebSiteLocation,
+
     [String] [Parameter(Mandatory = $true)]
     $Package,
 
@@ -28,6 +31,18 @@ Write-Host "packageFile= $packageFile"
 
 #Ensure that at most a single package (.zip) file is found
 $packageFile = Get-SingleFile $packageFile
+
+#If we're provided a WebSiteLocation, check for it and create it if necessary
+if($WebSiteLocation)
+{
+    Write-Host "Get-AzureWebSite -Name $WebSiteName -Verbose -ErrorAction SilentlyContinue"
+    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -Verbose
+    if(!$azureWebSite)
+    {
+        Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Verbose"
+        $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Verbose
+    }
+}
 
 #Deploy the package
 $azureCommand = "Publish-AzureWebsiteProject"
