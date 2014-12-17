@@ -17,6 +17,22 @@ param
     $AdditionalArguments
 )
 
+function Get-SingleFile($files, $pattern)
+{
+    if($files -is [system.array])
+    {
+        throw "Found more than one file to deploy with search pattern $pattern.  There can be only one."
+    }
+    else
+    {
+        if(!$files)
+        {
+            throw "No files were found to deploy with search pattern $pattern"
+        }
+        return $files
+    }
+}
+
 Write-Host "Entering script Publish-AzureWebDeployment.ps1"
 
 Write-Host "DeploymentEnvironmentName= $DeploymentEnvironmentName"
@@ -30,7 +46,7 @@ $packageFile = Find-Files -SearchPattern $Package
 Write-Host "packageFile= $packageFile"
 
 #Ensure that at most a single package (.zip) file is found
-$packageFile = Get-SingleFile $packageFile
+$packageFile = Get-SingleFile $packageFile $Package
 
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)

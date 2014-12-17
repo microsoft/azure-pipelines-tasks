@@ -8,20 +8,20 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands" : [
         "azureps"
     ],
     "inputs": [
-        { "name": "DeploymentEnvironmentName", "type": "string", "label": "Deployment Environment", "defaultValue": "", "required": true },
-        { "name": "StorageAccount", "type": "string", "label": "Storage Account", "defaultValue": "", "required": true },
+        { "name": "DeploymentEnvironmentName", "type": "azureConnection", "label": "Deployment Environment", "defaultValue": "", "required": true },
+        { "name": "StorageAccount", "type": "string", "label": "Storage Account", "defaultValue": "", "required": true, "helpMarkDown": "Storage Account must exist prior to deployment." },
         { "name": "ServiceName", "type": "string", "label": "Service Name", "defaultValue": "", "required": true },
-        { "name": "ServiceLocation", "type": "string", "label": "Service Location", "defaultValue": "South Central US", "required": true },
+        { "name": "ServiceLocation", "type": "string", "label": "Service Location", "defaultValue": "South Central US", "required": true, "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others." },
         { "name": "CsPkg", "type": "string", "label": "CsPkg", "defaultValue": "$(build.stagingDirectory)\\*.cspkg", "required": true },
         { "name": "CsCfg", "type": "string", "label": "CsCfg", "defaultValue": "$(build.stagingDirectory)\\*.cscfg", "required": true },
-        { "name": "Slot", "type": "string", "label": "Environment (Slot)", "defaultValue": "Production", "required": true },
+        { "name": "Slot", "type": "string", "label": "Environment (Slot)", "defaultValue": "Production", "required": true, "helpMarkDown": "**Production** or **Staging**" },
         { "name": "AllowUpgrade", "type": "boolean", "label": "Allow Upgrade", "defaultValue": "true", "required": true }
     ],
     "instanceNameFormat": "Azure Deployment: $(CsPkg)",

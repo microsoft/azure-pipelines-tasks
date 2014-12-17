@@ -26,6 +26,22 @@ param
     $AllowUpgrade
 )
 
+function Get-SingleFile($files, $pattern)
+{
+    if($files -is [system.array])
+    {
+        throw "Found more than one file to deploy with search pattern $pattern.  There can be only one."
+    }
+    else
+    {
+        if(!$files)
+        {
+            throw "No files were found to deploy with search pattern $pattern"
+        }
+        return $files
+    }
+}
+
 Write-Verbose "Entering script Publish-AzureCloudDeployment.ps1"
 
 Write-Verbose "DeploymentEnvironmentName= $DeploymentEnvironmentName"
@@ -42,12 +58,12 @@ $allowUpgrade = Convert-String $AllowUpgrade Boolean
 Write-Host "Find-Files -SearchPattern $CsCfg"
 $serviceConfigFile = Find-Files -SearchPattern "$CsCfg"
 Write-Host "serviceConfigFile= $serviceConfigFile" -ForegroundColor Yellow
-$serviceConfigFile = Get-SingleFile $serviceConfigFile
+$serviceConfigFile = Get-SingleFile $serviceConfigFile $CsCfg
 
 Write-Host "Find-Files -SearchPattern $CsPkg"
 $servicePackageFile = Find-Files -SearchPattern "$CsPkg"
 Write-Host "servicePackageFile= $servicePackageFile" -ForegroundColor Yellow
-$servicePackageFile = Get-SingleFile $servicePackageFile
+$servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
 Write-Host "Get-AzureService -ServiceName $ServiceName -Verbose -ErrorAction SilentlyContinue"
 $azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue -Verbose

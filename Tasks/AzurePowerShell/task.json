@@ -8,14 +8,14 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
+        "Patch": 2,
         "IsTest": false
     },
     "demands" : [
         "azureps"
     ],
     "inputs": [
-        { "name": "DeploymentEnvironmentName", "type": "string", "label": "Deployment Environment", "defaultValue": "", "required": true },
+        { "name": "DeploymentEnvironmentName", "type": "azureConnection", "label": "Deployment Environment", "defaultValue": "", "required": true },
         { "name": "ScriptPath", "type": "filePath", "label": "Script Path", "defaultValue": "", "required": true },
         { "name": "ScriptArguments", "type": "string", "label": "Script Arguments", "defaultValue": "", "required": false }
     ],

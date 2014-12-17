@@ -8,16 +8,16 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands" : [
         "azureps"
     ],
     "inputs": [
-        { "name": "DeploymentEnvironmentName", "type": "string", "label": "Deployment Environment", "defaultValue": "", "required": true },
+        { "name": "DeploymentEnvironmentName", "type": "azureConnection", "label": "Deployment Environment", "defaultValue": "", "required": true },
         { "name": "WebSiteName", "type": "string", "label": "Web Site Name", "defaultValue": "", "required": true },
-        { "name": "WebSiteLocation", "type": "string", "label": "Web Site Location", "defaultValue": "South Central US", "required": true },
+        { "name": "WebSiteLocation", "type": "string", "label": "Web Site Location", "defaultValue": "South Central US", "required": true, "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others." },
         { "name": "Package", "type": "string", "label": "Package", "defaultValue": "$(build.stagingDirectory)\\*.zip", "required": true },
         { "name": "AdditionalArguments", "type": "string", "label": "Additional Arguments", "defaultValue": "", "required": false }
     ],
