@@ -38,7 +38,7 @@
             "label": "Actions", 
             "defaultValue":"build", 
             "required":true, 
-            "helpMarkDown": "Space delimited list of actions.  Valid options are build, clean, test, analyze, and archive.  For example: 'build clean' would do a clean build.  See [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)"
+            "helpMarkDown": "Space delimited list of actions.  Valid options are build, clean, test, analyze, and archive.  For example: `build clean` would do a clean build.  See [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)"
         },
         { 
             "name": "configuration", 
