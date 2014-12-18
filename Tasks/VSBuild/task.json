@@ -22,7 +22,7 @@
             "label": "Solution", 
             "defaultValue":"**\\*.sln", 
             "required":true,
-            "helpMarkDown": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, '**\\*.sln' for all sln files in all sub folders." 
+            "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, '**\\*.sln' for all sln files in all sub folders." 
         },
         { 
             "name": "msbuildLocation", 
@@ -39,7 +39,7 @@
             "Visual Studio Location", 
             "defaultValue":"", 
             "required":false,
-            "helpMarkDown": "Optionally supply the path to Visual Studio.  It defaults to searching for latest version."
+            "helpMarkDown": "Optionally supply the path to Visual Studio install location, used to locate the developer command prompt batch file.  It defaults to searching for latest version."
         },
         { 
             "name": "msbuildArgs", 
@@ -47,7 +47,7 @@
             "label": "MSBuild Arguments", 
             "defaultValue":"", 
             "required":false,
-            "helpMarkDown": "Arguments passed to MSBuild."
+            "helpMarkDown": "Additional arguments passed to MSBuild."
         },
         { 
             "name": "platform", 

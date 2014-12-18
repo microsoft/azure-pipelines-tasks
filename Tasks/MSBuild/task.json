@@ -37,7 +37,7 @@
             "label": "MSBuild Arguments", 
             "defaultValue":"", 
             "required":false,
-            "helpMarkDown": "Arguments passed to MSBuild."
+            "helpMarkDown": "Additional arguments passed to MSBuild."
         },
         { 
             "name": "platform", 

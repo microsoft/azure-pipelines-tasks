@@ -15,9 +15,30 @@
         "azureps"
     ],
     "inputs": [
-        { "name": "DeploymentEnvironmentName", "type": "azureConnection", "label": "Deployment Environment", "defaultValue": "", "required": true },
-        { "name": "ScriptPath", "type": "filePath", "label": "Script Path", "defaultValue": "", "required": true },
-        { "name": "ScriptArguments", "type": "string", "label": "Script Arguments", "defaultValue": "", "required": false }
+        { 
+            "name": "DeploymentEnvironmentName", 
+            "type": "azureConnection", 
+            "label": "Deployment Environment", 
+            "defaultValue": "", 
+            "required": true,
+            "helpMarkDown": "Azure subscription to configure before running PowerShell"
+        },
+        { 
+            "name": "ScriptPath", 
+            "type": "filePath", 
+            "label": "Script Path", 
+            "defaultValue": "", 
+            "required": true,
+            "helpMarkDown": "Relative path from the repo root of the script to run."
+        },
+        { 
+            "name": "ScriptArguments", 
+            "type": "string", 
+            "label": "Script Arguments", 
+            "defaultValue": "", 
+            "required": false,
+            "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+        }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
     "execution": {

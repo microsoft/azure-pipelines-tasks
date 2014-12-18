@@ -16,9 +16,29 @@
     ],
     "instanceNameFormat": "Ant $(options)",
     "inputs": [
-        { "name": "antBuildFile", "type": "filePath", "label": "Ant build file", "defaultValue": "", "required": true },
-        { "name": "cwd", "type": "filePath", "label": "Working directory", "defaultValue":"", "required":false },
-        { "name": "options", "type": "string", "label": "Options", "defaultValue":"", "required":false },
+        { 
+            "name": "antBuildFile", 
+            "type": "filePath", 
+            "label": "Ant build file", 
+            "defaultValue": "", 
+            "required": true,
+            "helpMarkDown": "Relative path from the repo root to the ant build file."
+        },
+        { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working directory", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown":"Working directory to run the build in. Defaults to the directory the ant build file is in."
+        },
+        { 
+            "name": "options", 
+            "type": "string", 
+            "label": "Options", 
+            "defaultValue":"", 
+            "required":false 
+        },
         { "name": "targets", "type": "string", "label": "Target(s)", "defaultValue":"", "required":false }
     ],
     "execution": {

@@ -15,7 +15,13 @@
         "azureps"
     ],
     "inputs": [
-        { "name": "DeploymentEnvironmentName", "type": "azureConnection", "label": "Deployment Environment", "defaultValue": "", "required": true },
+        { 
+            "name": "DeploymentEnvironmentName", 
+            "type": "azureConnection", "label": 
+            "Deployment Environment", "defaultValue": "", 
+            "required": true,
+            "helpMarkDown": "Azure subscription to target for deployment."
+        },
         { "name": "StorageAccount", "type": "string", "label": "Storage Account", "defaultValue": "", "required": true, "helpMarkDown": "Storage Account must exist prior to deployment." },
         { "name": "ServiceName", "type": "string", "label": "Service Name", "defaultValue": "", "required": true },
         { "name": "ServiceLocation", "type": "string", "label": "Service Location", "defaultValue": "South Central US", "required": true, "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others." },
