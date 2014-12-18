@@ -1,0 +1,33 @@
+﻿{
+    "id": "166113A9-4E6F-4000-9E6E-E49BFB9CBF1F",
+    "name": "RemotePowerShell",
+    "friendlyName": "Remote PowerShell",
+    "description": "Execute PowerShell commands remotely on machine(s)",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "inputs": [
+        { "name": "MachineNames", "type": "string", "label": "Machine Names", "defaultValue": "", "required": true },
+        { "name": "Port", "type": "string", "label": "Powershell port", "defaultValue": "5986", "required": true },
+        { "name": "MachineUsername", "type": "string", "label": "Username", "defaultValue": "", "required": true },
+        { "name": "MachinePassword", "type": "string", "label": "Password", "defaultValue": "", "required": true },
+        { "name": "ApplicationPath", "type": "string", "label": "Application Path", "defaultValue": "", "required": false },
+        { "name": "ScriptPath", "type": "string", "label": "Script Path", "defaultValue": "", "required": true },
+        { "name": "ConfigurationScriptPath", "type": "string", "label": "Configuration Script Path", "defaultValue": "", "required": false }	                
+    ],
+    "instanceNameFormat": "Run DtlSdk.exe",
+    "execution": {
+        "Process": {
+            "target": "$(currentDirectory)\\DtlSdk.exe",
+            "argumentFormat": "-type runScript -machineName \"$(MachineName)\" -port $(Port) -MachineUsername \"$(MachineUsername)\" -MachinePassword \"$(MachinePassword)\" -ScriptPath \"$(ScriptPath)\" -ConfigurationScriptPath \"$(ConfigurationScriptPath)\"",
+            "workingDirectory": "",
+            "errorPattern": "",
+            "warningPattern": ""
+        }
+    }
+}
