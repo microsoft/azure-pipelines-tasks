@@ -15,10 +15,36 @@
         "java"
     ],
     "inputs": [
-        { "name": "wrapperScript", "type": "filePath", "label": "Gradle Wrapper", "defaultValue": "gradlew", "required": true },
-        { "name": "cwd", "type":  "filePath", "label":  "Project Directory", "defaultValue": "", "required":  false},
-        { "name": "options", "type": "string", "label": "Options", "defaultValue": "", "required": false },
-        { "name": "tasks", "type": "string", "label": "Tasks", "defaultValue": "build", "required": true  }
+        { 
+            "name": "wrapperScript", 
+            "type": "filePath", 
+            "label": "Gradle Wrapper", 
+            "defaultValue": "gradlew", 
+            "required": true,
+            "helpMarkDown": "Relative path from the repo root to the `Gradle Wrapper script`."
+        },
+        { 
+            "name": "cwd", 
+            "type":  "filePath", 
+            "label":  "Project Directory", 
+            "defaultValue": "", 
+            "required":  false,
+            "helpMarkDown":"Working directory to run Gradle build in. Defaults to repo root."
+        },
+        { 
+            "name": "options", 
+            "type": "string", 
+             "label": "Options", 
+             "defaultValue": "", 
+             "required": false 
+        },
+        { 
+            "name": "tasks", 
+            "type": "string", 
+            "label": "Tasks", 
+            "defaultValue": "build", 
+            "required": true  
+        }
     ],
     "instanceNameFormat": "gradlew $(tasks)",
     "execution": {

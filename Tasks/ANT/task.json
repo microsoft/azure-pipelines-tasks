@@ -22,7 +22,7 @@
             "label": "Ant build file", 
             "defaultValue": "", 
             "required": true,
-            "helpMarkDown": "Relative path from the repo root to the ant build file."
+            "helpMarkDown": "Relative path from the repo root to the `Ant build file`."
         },
         { 
             "name": "cwd", 
@@ -30,7 +30,7 @@
             "label": "Working directory", 
             "defaultValue":"", 
             "required":false,
-            "helpMarkDown":"Working directory to run the build in. Defaults to the directory the ant build file is in."
+            "helpMarkDown":"Working directory to run the Ant build in. Defaults to repo root."
         },
         { 
             "name": "options", 
@@ -39,7 +39,12 @@
             "defaultValue":"", 
             "required":false 
         },
-        { "name": "targets", "type": "string", "label": "Target(s)", "defaultValue":"", "required":false }
+        { 
+            "name": "targets", 
+            "type": "string", 
+            "label": "Target(s)", 
+            "defaultValue":"", "required":false
+        }
     ],
     "execution": {
         "JavaScript": {
