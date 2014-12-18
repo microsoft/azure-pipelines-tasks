@@ -29,7 +29,7 @@
             "label": "Arguments", 
             "defaultValue":"", 
             "required":false,
-            "helpMarkDown": "Arguments passed to the PowerShell script" 
+            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters" 
         },
         { 
             "name": "workingFolder", 
