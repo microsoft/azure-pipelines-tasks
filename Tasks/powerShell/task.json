@@ -8,16 +8,37 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
+        "Patch": 2,
         "IsTest": false
     },
     "demands": [
         "DotNetFramework"
     ],
     "inputs": [
-        { "name": "scriptName", "type": "filePath", "label": "Script filename", "defaultValue":"", "required":true },
-        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
-        { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue":"", "required":true }
+        { 
+            "name": "scriptName", 
+            "type": "filePath", 
+            "label": "Script filename", 
+            "defaultValue":"", 
+            "required":true,
+            "helpMarkDown": "Relative path from repo root of the PowerShell script file to run." 
+        },
+        { 
+            "name": "arguments", 
+            "type": "string", 
+            "label": "Arguments", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Arguments passed to the PowerShell script" 
+        },
+        { 
+            "name": "workingFolder", 
+            "type": "filePath", 
+            "label": "Working folder", 
+            "defaultValue":"", 
+            "required":true,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located." 
+        }
     ],
     "instanceNameFormat": "Powershell: $(scriptName)",
     "execution": {

@@ -8,20 +8,65 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
+        "Patch": 2,
         "IsTest": false
     },
     "demands" : [
         "msbuild"
     ],
     "inputs": [
-        { "name": "solution", "type": "filePath", "label": "Solution", "defaultValue":"**\\*.sln", "required":true },
-        { "name": "msbuildLocation", "type": "string", "label": "MSBuild Location", "defaultValue":"", "required":false },
-        { "name": "msbuildArguments", "type": "string", "label": "MSBuild Arguments", "defaultValue":"", "required":false },
-        { "name": "platform", "type": "string", "label": "Platform", "defaultValue":"", "required":false },
-        { "name": "configuration", "type": "string", "label": "Configuration", "defaultValue":"", "required":false },
-        { "name": "clean", "type": "boolean", "label": "Clean", "defaultValue": "false", "required": false },
-        { "name": "restoreNugetPackages", "type": "boolean", "label": "Restore NuGet Packages", "defaultValue": "true", "required": false }
+        { 
+            "name": "solution", 
+            "type": "filePath", 
+            "label": "Solution", 
+            "defaultValue":"**\\*.sln", 
+            "required":true,
+            "helpMarkDown": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, '**\\*.sln' for all sln files in all sub folders."  
+        },
+        { 
+            "name": "msbuildLocation", 
+            "type": "string", 
+            "label": "MSBuild Location", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the path to MSBuild.  It defaults to searching for latest version."  
+        },
+        { 
+            "name": "msbuildArguments", 
+            "type": "string", 
+            "label": "MSBuild Arguments", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Arguments passed to MSBuild."
+        },
+        { 
+            "name": "platform", 
+            "type": "string", 
+            "label": "Platform", 
+            "defaultValue":"", 
+            "required":false 
+        },
+        { 
+            "name": "configuration", 
+            "type": "string", 
+            "label": "Configuration", 
+            "defaultValue":"", 
+            "required":false 
+        },
+        { 
+            "name": "clean", 
+            "type": "boolean", 
+            "label": "Clean", 
+            "defaultValue": "false", 
+            "required": false 
+        },
+        { 
+            "name": "restoreNugetPackages", 
+            "type": "boolean", 
+            "label": "Restore NuGet Packages", 
+            "defaultValue": "true", 
+            "required": false 
+        }
     ],
     "instanceNameFormat": "Build solution $(solution)",
     "execution": {

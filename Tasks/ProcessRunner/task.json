@@ -8,15 +8,50 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "inputs": [
-        { "name": "filename", "type": "string", "label": "Tool", "defaultValue": "", "required": true },
-        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue": "", "required": false },
-        { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue": "", "required": true },
-        { "name": "errorPattern", "type": "string", "label": "Error Pattern", "defaultValue": "", "required": false },
-        { "name": "warningPattern", "type": "string", "label": "Warning Pattern", "defaultValue": "", "required": false }
+        { 
+            "name": "filename", 
+            "type": "string", 
+            "label": "Tool", 
+            "defaultValue": "", 
+            "required": true,
+            "helpMarkDown": "Tool name to run.  Tool should be in path or resolvable via which.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent."
+        },
+        { 
+            "name": "arguments", 
+            "type": "string", 
+            "label": "Arguments", 
+            "defaultValue": "", 
+            "required": false 
+        },
+        { 
+            "name": "workingFolder", 
+            "type": "filePath", 
+            "label": "Working folder", 
+            "defaultValue": "", 
+            "required": true,
+            "helpMarkDown": "Arguments passed to the tool" 
+        },
+        { 
+            "name": "errorPattern", 
+            "type": "string", 
+            "label": "Error Pattern", 
+            "defaultValue": "", 
+            "required": false,
+            "helpMarkDown": "Optional regex to interpret output as an error."
+        },
+        { 
+            "name": "warningPattern", 
+            "type": "string", 
+            "label": 
+            "Warning Pattern", 
+            "defaultValue": "", 
+            "required": false,
+            "helpMarkDown": "Optional regex to interpret output as a warning."
+        }
     ],
     "instanceNameFormat": "Run $(filename)",
     "execution": {

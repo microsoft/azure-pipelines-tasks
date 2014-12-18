@@ -11,13 +11,27 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "instanceNameFormat": "CMake $(args)",
     "inputs": [
-        { "name": "cwd", "type": "filePath", "label": "Working Directory", "defaultValue":"build", "required":false },
-        { "name": "args", "type": "string", "label": "Arguments", "defaultValue":"", "required":false }
+        { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working Directory", 
+            "defaultValue":"build", 
+            "required":false,
+            "helpMarkDown": "Current working directory when cmake is run."  
+        },
+        { 
+            "name": "args", 
+            "type": "string", 
+            "label": "Arguments", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Arguments passed to cmake" 
+        }
     ],
     "execution": {
         "JavaScript": {

@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands" : [
@@ -16,12 +16,54 @@
     ],
     "instanceNameFormat": "Xcode $(actions)",
     "inputs": [
-        { "name": "xcWorkspacePath", "type": "filePath", "label": "Workspace Path", "defaultValue":"", "required":true },
-        { "name": "scheme", "type": "string", "label": "Scheme", "defaultValue":"", "required":true },
-        { "name": "actions", "type": "string", "label": "Actions", "defaultValue":"build", "required":true },
-        { "name": "configuration", "type": "string", "label": "Configuration", "defaultValue":"$(Configuration)", "required":true },
-        { "name": "sdk", "type": "string", "label": "SDK", "defaultValue":"$(SDK)", "required":true },
-        { "name": "outputPattern", "type": "string", "label": "Output", "defaultValue":"$(SDK)/$(Configuration)", "required":true }
+        { 
+            "name": "xcWorkspacePath", 
+            "type": "filePath", 
+            "label": "Workspace Path", 
+            "defaultValue":"", 
+            "required":true, 
+            "helpMarkDown": "Relative path from repo root where xcworkspace folder exists." 
+        },
+        { 
+            "name": "scheme", 
+            "type": "string", 
+            "label": "Scheme", 
+            "defaultValue":"", 
+            "required":true,
+            "helpMarkDown": "Scheme name in Xcode.  *Must be a shared scheme* (shared checkbox under managed schemes in Xcode)" 
+        },
+        { 
+            "name": "actions", 
+            "type": "string", 
+            "label": "Actions", 
+            "defaultValue":"build", 
+            "required":true, 
+            "helpMarkDown": "Space delimited list of actions.  Valid options are build, clean, test, analyze, and archive.  For example: 'build clean' would do a clean build.  See [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)"
+        },
+        { 
+            "name": "configuration", 
+            "type": "string", 
+            "label": "Configuration", 
+            "defaultValue":"$(Configuration)", 
+            "required":true 
+        },
+        { 
+            "name": "sdk", 
+            "type": "string", 
+            "label": "SDK", 
+            "defaultValue":"$(SDK)", 
+            "required":true,
+            "helpMarkDown": "Build an Xcode project or workspace against the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs."
+        },
+        { 
+            "name": "outputPattern", 
+            "type": "string", 
+            "label": 
+            "Output", 
+            "defaultValue":"$(SDK)/$(Configuration)", 
+            "required":true,
+            "helpMarkDown": "Relative path where build output (binaries) will be placed."
+        }
     ],
     "execution": {
         "JavaScript": {

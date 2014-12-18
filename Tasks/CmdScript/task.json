@@ -8,17 +8,45 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands": [
         "Cmd"
     ],
     "inputs": [
-        { "name": "filename", "type": "filePath", "label": "Path", "defaultValue":"", "required": true },
-        { "name": "arguments", "type": "string", "label": "Arguments", "defaultValue":"", "required":false },
-        { "name": "workingFolder", "type": "filePath", "label": "Working folder", "defaultValue":"", "required":true },
-        { "name": "modifyEnvironment", "type": "boolean", "label": "Modify Environment", "defaultValue": "False", "required": false }
+        { 
+            "name": "filename", 
+            "type": "filePath", 
+            "label": "Path", 
+            "defaultValue":"", 
+            "required": true,
+            "helpMarkDown": "Relative path from repo root of the cmd script file to run." 
+        },
+        { 
+            "name": "arguments", 
+            "type": "string", 
+            "label": "Arguments", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Arguments passed to the cmd script"
+        },
+        { 
+            "name": "workingFolder", 
+            "type": "filePath", 
+            "label": "Working folder", 
+            "defaultValue":"", 
+            "required":true,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located."
+        },
+        { 
+            "name": "modifyEnvironment", 
+            "type": "boolean", 
+            "label": "Modify Environment", 
+            "defaultValue": "False", 
+            "required": false,
+            "helpMarkDown": "Determines whether environment variable modifications will affect subsequent tasks." 
+        }
     ],
     "instanceNameFormat": "Run script $(filename)",
     "execution": {
