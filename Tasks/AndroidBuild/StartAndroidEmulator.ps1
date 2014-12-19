@@ -1,13 +1,10 @@
 param(
-    [string]$gradleWrapper,   # Path to gradle wrapper. Empty if using gradle installation. 
-    [string]$gradleProj,      # Optional - Root directory of gradle project. Defaults to root of working directory if empty. 
-    [string]$gradleArguments, # Gradle arguments
     [string]$startEmulator,   # True if emulator start required. Converted to Boolean
 	[string]$emulatorTarget,  # Emulator target version
 	[string]$emulatorDevice   # Emulator device 
 )
 
-Write-Verbose "Entering script AndroidBuild.ps1"
+Write-Verbose "Entering script StartAndroidEmulator.ps1"
 Write-Verbose "gradleWrapper = $gradleWrapper"
 Write-Verbose "gradleProj = $gradleProj"
 Write-Verbose "gradleArguments = $gradleArguments"
@@ -16,8 +13,7 @@ Write-Verbose "emulatorTarget = $emulatorTarget"
 Write-Verbose "emulatorDevice = $emulatorDevice"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
-#import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-import-module "..\..\..\Automation.Agent\Package\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Common\Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 $emulator = Convert-String $startEmulator Boolean
 Write-Verbose "startEmulator (converted) = $emulator"
@@ -59,7 +55,7 @@ if($emulator)
     {
         ($bootComplete = Start-Job -Name jobBootComplete -ScriptBlock {
             param($adbexe)
-            & $adbexe shell getprop init.svc.bootanim 2> $null
+            & $adbexe shell getprop dev.bootcomplete 2> $null
         } -argumentlist $adbexe) | Out-Null
         Wait-Job $bootComplete | Out-Null
         Receive-Job $bootComplete -OutVariable devBootComplete | Out-Null
@@ -92,7 +88,7 @@ if($gradleWrapper){
     # Use Gradle Wrapper
     if ([System.IO.File]::Exists($gradleWrapper)) {
         Write-Verbose "Invoking gradle wrapper $gradleWrapper with arguments $gradleArguments"
-        Invoke-BatchScript $gradleWrapper –Arguments $gradleArguments
+        Invoke-BatchScript $gradleWrapper â€“Arguments $gradleArguments
     }
     else {
         Write-Error "Unable to find script $gradleWrapper"
