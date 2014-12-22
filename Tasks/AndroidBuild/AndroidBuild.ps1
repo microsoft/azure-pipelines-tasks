@@ -17,7 +17,10 @@ Write-Verbose "emulatorDevice = $emulatorDevice"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 #import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-import-module "..\..\..\Automation.Agent\Package\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Common\Microsoft.TeamFoundation.DistributedTask.Task.Common"
+#import-module "..\..\..\Automation.Agent\Package\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "C:\enlistments\Automation.Agent\Package\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "C:\enlistments\Automation.Agent\Package\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.Build"
+
 
 $emulator = Convert-String $startEmulator Boolean
 Write-Verbose "startEmulator (converted) = $emulator"
