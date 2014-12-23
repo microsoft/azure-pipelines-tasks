@@ -8,7 +8,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <ProjectGuid>{BB041598-7038-4A10-A5F5-710758A00DE2}</ProjectGuid>
+    <ProjectGuid>{01E25658-75E4-4F2F-ACE6-80CB233C4A22}</ProjectGuid>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
