@@ -1,6 +1,6 @@
 ﻿{
     "id": "A48D8FA9-8693-468B-B4AD-0A1FAF588B79",
-    "name": "Deploy Test Agent",
+    "name": "DeployTestAgent",
     "friendlyName": "Deploy Test Agent",
     "description": "Deploy Visual Studio Test Agent",
     "category": "Build",
