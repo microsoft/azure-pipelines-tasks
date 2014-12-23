@@ -1,0 +1,99 @@
+﻿{
+    "id": "A48D8FA9-8693-468B-B4AD-0A1FAF588B79",
+    "name": "Deploy Test Agent",
+    "friendlyName": "Deploy Test Agent",
+    "description": "Deploy Visual Studio Test Agent",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "demands": [
+        "vstest"
+    ],
+    "inputs": [
+        {
+            "name": "environment",
+            "type": "string",
+            "label": "Environment",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of environment against which test needs to be run."
+        },
+        {
+            "name": "testMachines",
+            "type": "string",
+            "label": "Deploy to machines",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "List of machines where test agent needs to be deployed."
+        },
+        {
+            "name": "runAsProcess",
+            "type": "bool",
+            "label": "Run Test Agent as interactive process to execute UI Tests",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Denotes if test agent needs to run as interactive process or not."
+        },
+        {
+            "name": "machineUserName",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The username with which test agent process needs to run."
+        },
+        {
+            "name": "machinePassword",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The password for the username given above."
+        },
+        {
+            "name": "logonAutomatically",
+            "type": "bool",
+            "label": "Logon automatically",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Denotes if test agent needs to be configured with auto logon capability."
+        },
+        {
+            "name": "disableScreenSaver",
+            "type": "bool",
+            "label": "Disable screen saver",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Denotes if screen saver needs to be disabled on test agent machines."
+        },
+        {
+            "name": "alternateCredsUserName",
+            "type": "string",
+            "label": "Alternate credentials username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Alternate credentials that will be used by test agent to configure against tfs."
+        },
+        {
+            "name": "alternateCredsPassword",
+            "type": "string",
+            "label": "Alternate credentials password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Alternate credentials that will be used by test agent to configure against tfs."
+        }
+    ],
+    "instanceNameFormat": "Test Assemblies $(testAssembly)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\DeployTestAgent.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
