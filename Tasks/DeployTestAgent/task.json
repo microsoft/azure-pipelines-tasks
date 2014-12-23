@@ -33,7 +33,7 @@
         },
         {
             "name": "runAsProcess",
-            "type": "bool",
+            "type": "boolean",
             "label": "Run Test Agent as interactive process to execute UI Tests",
             "defaultValue": "",
             "required": false,
@@ -57,7 +57,7 @@
         },
         {
             "name": "logonAutomatically",
-            "type": "bool",
+            "type": "boolean",
             "label": "Logon automatically",
             "defaultValue": "",
             "required": true,
@@ -65,7 +65,7 @@
         },
         {
             "name": "disableScreenSaver",
-            "type": "bool",
+            "type": "boolean",
             "label": "Disable screen saver",
             "defaultValue": "",
             "required": true,
