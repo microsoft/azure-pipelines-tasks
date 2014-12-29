@@ -99,8 +99,8 @@
     "instanceNameFormat": "Environment $(environment)",
     "execution": {
         "Process": {
-            "target": "$$(currentDirectory)\\Task.DTA.exe",
-            "argumentFormat": "$(arguments)",
+            "target": "$(currentDirectory)\\Task.DTA.exe",
+            "argumentFormat": "deploy /machineNames:$(testMachines) /username:$(machineUserName) /password:$(machinePassword) /powershellport:5985",
             "workingDirectory": "$(currentDirectory)",
             "errorPattern": "$(errorPattern)",
             "warningPattern": "$(warningPattern)"
