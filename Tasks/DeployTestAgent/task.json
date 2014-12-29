@@ -96,7 +96,7 @@
             "helpMarkDown": "Alternate credentials that will be used by test agent to publish results to TFS."
         }
     ],
-    "instanceNameFormat": "Environment $(environment)",
+    "instanceNameFormat": "Deploy and configure Test Agent",
     "execution": {
         "Process": {
             "target": "$(currentDirectory)\\Task.DTA.exe",
