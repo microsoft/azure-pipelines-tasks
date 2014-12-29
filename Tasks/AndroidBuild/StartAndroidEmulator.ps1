@@ -1,79 +1,99 @@
 param(
 	[string]$emulatorTarget = "android-21", # Emulator target version
 	[string]$emulatorDevice = "Nexus 5",    # Emulator device 
-	[Boolean]$headlessEmulator = $FALSE     # True to avoid showing the emulator interface
+	[Boolean]$headlessEmulator = $FALSE,    # True to avoid showing the emulator interface
+	[int]$retries = 3,                       # Number of times to retry
+	[int] $timeout = 300                    # Length of time allowed per try
 )
 
 function Restart-ADB-Server {
-	Write-Output "INFO: Restarting adb server!"
 	& $adbexe kill-server
     & $adbexe start-server
 }
 
-function Wait-For-ADB-Property {
+function Get-ADB-Property {
     param(
-        [string]$adbCommand, 
-		[string]$expectedOutput,
-	    [string]$timeout = 30
+        [string]$property,
+		[int]$timeout = 10
     )
-    Write-Output "Waiting for $adbCommand to be $expectedOutput"
-    $adbOutput = 0
-    while($adbOutput -neq $expectedOutput) {
-        ($bootComplete = Start-Job
-		-ScriptBlock {
+	Write-Output "Checking property $property" | Out-Null
+	($adbPropertyJob = Start-Job -ScriptBlock {
 		    param($adbexe)
-		    & $adbexe shell $adbCommand 2> $null
+		    & $adbexe shell getprop $property 2> $null
 	    } -Argumentlist $adbexe) | Out-Null	
-		Wait-Job $bootComplete -Timeout $timeout| Out-Null
-		Receive-Job $bootComplete -OutVariable adbOutput | Out-Null
-    }
+	Wait-Job $adbPropertyJob -Timeout $timeout| Out-Null
+	Receive-Job $adbPropertyJob -OutVariable adbOutput | Out-Null
+	Write-Output "adb shell getprop $property returned $adb" | Out-Null
+	return $adbOutput
 }
 
 function Verify-Boot-Complete {
     param(
-	    [string]$timeout = 30
+		[int]$timeout = 10
     )
-	#time out 
-	$job = Start-Job { 
-		Wait-For-ADB-Property "getprop dev.bootcompleted", "1", $timeout
-		#Wait-For-ADB-Property "getprop sys_bootcomplete", "1", $timeout
-		#Wait-For-ADB-Property "getprop init.svc.bootanim", "stopped", $timeout
-	}
-	Wait-Job $Job.ID -Timeout $timeout | out-null
-    $result = Receive-Job $Job.ID
-	return $result
-}
+	Write-Output "Verifying boot complete" | Out-Null
+	$bootVerified = $TRUE
 	
-  
-  while ($devBootComplete[0] -ne "1")
-{
-	($bootComplete = Start-Job -Name jobBootComplete -ScriptBlock {
-		param($adbexe)
-		& $adbexe shell getprop dev.bootcomplete 2> $null
-	} -argumentlist $adbexe) | Out-Null
-	Wait-Job $bootComplete | Out-Null
-	Receive-Job $bootComplete -OutVariable devBootComplete | Out-Null
-	$output = "INFO: Waiting for emulator to boot..." + $numLoops
-	Write-Output $output
-	$numLoops++
-
-	# Try to restart adb server every once in a while to see if that is the problem
-	if ($numLoops % 25 -eq 0) {
-		Restart-ADB-Server
+	$devBootComplete = Get-ADB-Property "dev.bootcompleted" 
+	if($devBootComplete -ne "1") {
+		$bootVerified = $FALSE
 	}
-
-	# Bail out if the device never comes up
-	if ($numLoops -gt 500) {
-		Write-Error "ERROR: Emulator failed to start!"
-		break
+	
+	$sysBootComplete = Get-ADB-Property "sys_bootcomplete"
+	if($sysBootComplete -ne "1") {
+		$bootVerified =  $FALSE
 	}
+	
+	$bootAnim = Get-ADB-Property "init.svc.bootanim"
+	if($bootAnim -ne "stopped") {
+		$bootVerified =  $FALSE
+	}
+	Write-Output "Returning Verify-Boot-Complete $bootVerified" | Out-Null
+	return $bootVerified
 }
+
+
+function Wait-Boot-Complete {
+    param(
+	    [int]$timeout = 300
+    )
+
+	# Manually keep a timer for timeout. 
+	$ElapsedTime = [System.Diagnostics.Stopwatch]::StartNew()
+	Write-Output "Timer started at $(get-date) with timeout of $timeout seconds" | Out-Null
+	
+	$bootComplete = $FALSE
+	$numTries = 0
+	while(!$bootComplete) {
+		# Sleep for 1 second, then check properties
+		Start-Sleep -s 1
+		
+		$bootComplete = Verify-Boot-Complete
+		Write-Output "Verify-Boot-Complete returned $bootComplete" | Out-Null
+		
+		# Restart ADB Server occasionally in case of failure. 
+		$numTries++
+		if($numTries % 50 -eq 0) {
+			Write-Output "Restarting adb server!"
+			Restart-ADB-Server
+		}
+		
+		if($ElapsedTime.Elapsed.Seconds -gt $timeout) {
+			Write-Output "Wait-Boot-Complete timed out after $($ElapsedTime.Elapsed.Seconds) seconds"
+			return $FALSE
+		}
+	}
+	Write-Output "Returning Boot Complete: $bootcomplete" | Out-Null
+	return $bootComplete
 }
+
 
 Write-Output "Entering script StartAndroidEmulator.ps1"
 Write-Output "emulatorTarget = $emulatorTarget"
 Write-Output "emulatorDevice = $emulatorDevice"
 Write-Output "headlessEmulator = $headlessEmulator"
+
+#TODO Implement retries
 
 $adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
 $androidbat = $env:ANDROID_HOME + "\tools\android.bat"
@@ -110,34 +130,7 @@ Start-Job -Name openEmulator -ScriptBlock $emublock -ArgumentList $emuName, $hea
 & $adbexe start-server
 
 # Make sure emulator is fully booted
-# dev.bootcomplete is "1" when the device is fully booted
-# TODO: Try bootanim with headless. 
-$devBootComplete = 0
-$numLoops = 0  # fail out if it takes too long
-Write-Output "INFO: Waiting for emulator to fully boot!"
-while ($devBootComplete[0] -ne "1")
-{
-	($bootComplete = Start-Job -Name jobBootComplete -ScriptBlock {
-		param($adbexe)
-		& $adbexe shell getprop dev.bootcomplete 2> $null
-	} -argumentlist $adbexe) | Out-Null
-	Wait-Job $bootComplete | Out-Null
-	Receive-Job $bootComplete -OutVariable devBootComplete | Out-Null
-	$output = "INFO: Waiting for emulator to boot..." + $numLoops
-	Write-Output $output
-	$numLoops++
-
-	# Try to restart adb server every once in a while to see if that is the problem
-	if ($numLoops % 25 -eq 0) {
-		Restart-ADB-Server
-	}
-
-	# Bail out if the device never comes up
-	if ($numLoops -gt 500) {
-		Write-Error "ERROR: Emulator failed to start!"
-		break
-	}
-}
+Wait-Boot-Complete
 
 Write-Output "Leaving script StartAndroidEmulator.ps1"
 
