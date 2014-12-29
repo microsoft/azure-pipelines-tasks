@@ -98,10 +98,12 @@
     ],
     "instanceNameFormat": "Environment $(environment)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\DeployTestAgent.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+        "Process": {
+            "target": "$$(currentDirectory)\\Task.DTA.exe",
+            "argumentFormat": "$(arguments)",
+            "workingDirectory": "$(currentDirectory)",
+            "errorPattern": "$(errorPattern)",
+            "warningPattern": "$(warningPattern)"
         }
     }
 }
