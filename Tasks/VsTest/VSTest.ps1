@@ -1,11 +1,11 @@
 param(
     [string]$vsTestVersion, 
     [string]$testAssembly,
-	[string]$testFiltercriteria,
-	[string]$runSettingsFile,
-	[string]$codeCoverageEnabled,
-	[string]$pathtoCustomTestAdapters,
-	[string]$otherConsoleOptions
+    [string]$testFiltercriteria,
+    [string]$runSettingsFile,
+    [string]$codeCoverageEnabled,
+    [string]$pathtoCustomTestAdapters,
+    [string]$otherConsoleOptions
 )
 
 Write-Verbose "Entering script VSTestConsole.ps1"
