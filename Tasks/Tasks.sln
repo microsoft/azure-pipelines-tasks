@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22416.0
+VisualStudioVersion = 14.0.22419.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureCloudPowerShellDeployment", "AzureCloudPowerShellDeployment\AzureCloudPowerShellDeployment.csproj", "{F09D387F-AADB-46FA-A648-5768EB0DB020}"
 EndProject
@@ -60,6 +60,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maven", "Maven\Maven.csproj", "{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployTestAgent", "DeployTestAgent\DeployTestAgent.csproj", "{01E25658-75E4-4F2F-ACE6-80CB233C4A22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunDistributedTests", "RunDistributedTests\RunDistributedTests.csproj", "{8A30E842-D530-4700-8C17-7C21739985DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +145,10 @@ Global
 		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A30E842-D530-4700-8C17-7C21739985DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A30E842-D530-4700-8C17-7C21739985DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A30E842-D530-4700-8C17-7C21739985DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A30E842-D530-4700-8C17-7C21739985DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

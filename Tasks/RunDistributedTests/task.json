@@ -1,0 +1,68 @@
+﻿{
+    "id": "0EF70A38-3601-48B7-BF6A-8EFEF87EE23D",
+	"name": "RunDistributedTests",
+    "friendlyName": "Run Tests using Test Agents",
+    "description": "Run Tests using Test Agents",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "demands": [
+    ],
+    "inputs": [
+        {
+            "name": "environment",
+            "type": "string",
+            "label": "Test environment",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of environment on which tests need to be run."
+        },
+        {
+            "name": "testassemblies",
+            "type": "string",
+            "label": "Test Assemblies",
+            "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
+            "required": true,
+            "helpMarkDown": "Search pattern for Test assemblies"
+        },
+        {
+            "name": "testFilterCriteria",
+            "type": "string",
+            "label": "Test Filter criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Filter criteria for Test cases"
+        },
+        {
+            "name": "runSettingsFile",
+            "type": "filePath",
+            "label": "Run Settings File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Runsettings/TestSettings file for Test run"
+        },
+        {
+            "name": "customAdapterPath",
+            "type": "string",
+            "label": "Path to Custom Test Adapter",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path for custom test adapter to be used for running tests"
+        }
+    ],
+    "instanceNameFormat": "Test assemblies **\\*UItests.dll",
+    "execution": {
+        "Process": {
+            "target": "$(currentDirectory)\\Task.DTA.exe",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)",
+            "errorPattern": "$(errorPattern)",
+            "warningPattern": "$(warningPattern)"
+        }
+    }
+}
