@@ -100,7 +100,7 @@
     "execution": {
         "Process": {
             "target": "$(currentDirectory)\\Task.DTA.exe",
-            "argumentFormat": "deploy /machineNames:$(testMachines) /username:$(machineUserName) /password:$(machinePassword) /powershellport:5985 /environment:$(environment) /runasprocess:$(runAsProcess) /logonautomatically:$(logonAutomatically) /disablescreensaver:$(disableScreenSaver) /alternatecredsusername:$(alternateCredsUserName) /alternatecredspassword:$(alternateCredsPassword)",
+            "argumentFormat": "deploy /machinenames:$(testMachines) /username:$(machineUserName) /password:$(machinePassword) /powershellport:5985 /environment:$(environment) /runasprocess:$(runAsProcess) /logonautomatically:$(logonAutomatically) /disablescreensaver:$(disableScreenSaver) /alternatecredsusername:$(alternateCredsUserName) /alternatecredspassword:$(alternateCredsPassword)",
             "workingDirectory": "$(currentDirectory)",
             "errorPattern": "$(errorPattern)",
             "warningPattern": "$(warningPattern)"
