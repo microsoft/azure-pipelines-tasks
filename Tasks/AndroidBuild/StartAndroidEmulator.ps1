@@ -38,7 +38,7 @@ function WaitADBProperty2 {
 	$adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
 	$adbOutput = 0
 	#while($adbOutput.CompareTo($expectedOutput)) {
-	while($adbOutput[0] -ne "1") {
+	while($adbOutput[0] -ne $expectedOutput) {
 		#Write-Output "Waiting for property $property to be $expectedOutput"
 		($adbPropertyJob = Start-Job -ScriptBlock {
 				param($adbexe, $property)
@@ -133,7 +133,6 @@ function Wait-Boot-Complete {
 	return $bootComplete
 }
 
-
 Write-Output "Entering script StartAndroidEmulator.ps1"
 Write-Output "emulatorTarget = $emulatorTarget"
 Write-Output "emulatorDevice = $emulatorDevice"
@@ -175,8 +174,13 @@ Start-Job -Name openEmulator -ScriptBlock $emublock -ArgumentList $headlessEmula
 
 # Connect to emulator
 & $adbexe start-server
-	
+
 WaitADBProperty2 "dev.bootcomplete" "1"
+WaitADBProperty2 "sys_bootcomplete" "1"
+WaitADBProperty2 "init.svc.bootanim" "stopped"
+
+Write-Output "Leaving script StartAndroidEmulator.ps1"
+exit 0
 
 
 # Make sure emulator is fully booted
@@ -189,13 +193,14 @@ $func = {
 			[int]$timeout = 10
 		)
 		$adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
-		$adbOutput = $null
-		while($adbOutput -ne $expectedOutput) {
-			Write-Output "Checking property $property"
+		$adbOutput = 0
+		Write-Output "1Waiting for property $property to be $expectedOutput"
+		#while($adbOutput.CompareTo($expectedOutput)) {
+		while($adbOutput[0] -ne "1") {
+			Write-Output "2Waiting for property $property to be $expectedOutput"
 			($adbPropertyJob = Start-Job -ScriptBlock {
 					param($adbexe, $property)
-					#& $adbexe shell getprop $property 2> $null
-					& $adbexe shell getprop dev.bootcomplete 2> $null
+					& $adbexe shell getprop $property 2> $null
 				} -Argumentlist $adbexe, $property) | Out-Null	
 			Wait-Job $adbPropertyJob -Timeout $timeout| Out-Null
 			Receive-Job $adbPropertyJob -OutVariable adbOutput | Out-Null
@@ -211,8 +216,9 @@ Write-Output "creating and waiting on job"
 	WaitADBProperty  "dev.bootcomplete" "1"
 	WaitADBProperty "sys_bootcomplete" "1"
 	WaitADBProperty "init.svc.bootanim" "stopped"
-	} -InitializationScript $func) | Out-Null	
+	} -InitializationScript $func)	
 Wait-Job $waitADBPropertiesJob -Timeout $timeout| Out-Null
 Receive-Job $waitADBPropertiesJob -OutVariable waitJobOutput | Out-Null
+Write-Output "$waitJobOutput"
 
 Write-Output "Leaving script StartAndroidEmulator.ps1"
