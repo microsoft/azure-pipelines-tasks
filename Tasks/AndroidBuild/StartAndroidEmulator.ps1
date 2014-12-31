@@ -11,6 +11,8 @@ function Restart-ADB-Server {
     & $adbexe start-server
 }
 
+
+
 function Get-ADB-Property {
     param(
         [string]$property,
@@ -23,8 +25,52 @@ function Get-ADB-Property {
 	    } -Argumentlist $adbexe) | Out-Null	
 	Wait-Job $adbPropertyJob -Timeout $timeout| Out-Null
 	Receive-Job $adbPropertyJob -OutVariable adbOutput | Out-Null
-	Write-Output "adb shell getprop $property returned $adb" | Out-Null
+	Write-Output "adb shell getprop $property returned $adbOutput" | Out-Null
 	return $adbOutput
+}
+
+function WaitADBProperty2 {
+	param(
+		[string]$property,
+		[string]$expectedOutput,
+		[int]$timeout = 10
+	)
+	$adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
+	$adbOutput = 0
+	#while($adbOutput.CompareTo($expectedOutput)) {
+	while($adbOutput[0] -ne "1") {
+		#Write-Output "Waiting for property $property to be $expectedOutput"
+		($adbPropertyJob = Start-Job -ScriptBlock {
+				param($adbexe, $property)
+				& $adbexe shell getprop $property 2> $null
+				#& $adbexe shell getprop dev.bootcomplete 2> $null
+			} -Argumentlist $adbexe, $property) | Out-Null	
+		Wait-Job $adbPropertyJob -Timeout $timeout| Out-Null
+		Receive-Job $adbPropertyJob -OutVariable adbOutput | Out-Null
+		Write-Output "adb shell getprop $property returned $adbOutput" 
+	}
+}
+
+function WaitADBProperty3 {
+	param(
+		[string]$property,
+		[string]$expectedOutput,
+		[int]$timeout = 10
+	)
+	$adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
+	[string]$adbOutput = ""
+	while($adbOutput.CompareTo($expectedOutput)) {
+		Write-Output "Waiting for property $property to be $expectedOutput"
+		($adbPropertyJob = Start-Job -ScriptBlock {
+				param($adbexe)
+				#& $adbexe shell getprop $property 2> $null
+				& $adbexe shell getprop dev.bootcomplete 2> $null
+			} -Argumentlist $adbexe) | Out-Null	
+		Wait-Job $adbPropertyJob -Timeout $timeout| Out-Null
+		#Wait-Job $adbPropertyJob | Out-Null
+		Receive-Job $adbPropertyJob -OutVariable adbOutput | Out-Null
+		Write-Output "adb shell getprop $property returned $adbOutput" 
+	}
 }
 
 function Verify-Boot-Complete {
@@ -34,7 +80,7 @@ function Verify-Boot-Complete {
 	Write-Output "Verifying boot complete" | Out-Null
 	$bootVerified = $TRUE
 	
-	$devBootComplete = Get-ADB-Property "dev.bootcompleted" 
+	$devBootComplete = Get-ADB-Property "dev.bootcomplete" 
 	if($devBootComplete -ne "1") {
 		$bootVerified = $FALSE
 	}
@@ -99,8 +145,8 @@ $adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
 $androidbat = $env:ANDROID_HOME + "\tools\android.bat"
 
 # Set up default emulator settings 
-$emuName = "AndroidBuildEmulator"
 $abi = "default/x86"
+$emuName = "AndroidBuildEmulator"
 
 Stop-Process -processname emulator-x86 2> $null
 & $adbexe kill-server 2> $null
@@ -113,24 +159,60 @@ Stop-Process -processname emulator-x86 2> $null
 # Start emulator
 #TODO: Figure out how to validate this. Exit code seems to always return 0. 
 $emublock = {
-	param($emuName)
 	param($headlessEmulator)
 	Push-Location $env:ANDROID_HOME
 	if($headlessEmulator) {
-		.\tools\emulator.exe -avd $emuName -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save -no-skin -no-audio -no-window
+		Write-Output "Headless"
+		.\tools\emulator.exe -avd "AndroidBuildEmulator" -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save -no-skin -no-audio -no-window
 	}
 	else {
-	    .\tools\emulator.exe -avd $emuName -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save
+		Write-Output "Headed"
+	    .\tools\emulator.exe -avd "AndroidBuildEmulator" -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save
     }
 	Pop-Location
 }
-Start-Job -Name openEmulator -ScriptBlock $emublock -ArgumentList $emuName, $headlessEmulator | Out-Null
+Start-Job -Name openEmulator -ScriptBlock $emublock -ArgumentList $headlessEmulator | Out-Null
 
 # Connect to emulator
 & $adbexe start-server
+	
+WaitADBProperty2 "dev.bootcomplete" "1"
+
 
 # Make sure emulator is fully booted
-Wait-Boot-Complete
+Write-Output "Defining func"
+$func = {
+	function WaitADBProperty {
+		param(
+			[string]$property,
+			[string]$expectedOutput,
+			[int]$timeout = 10
+		)
+		$adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
+		$adbOutput = $null
+		while($adbOutput -ne $expectedOutput) {
+			Write-Output "Checking property $property"
+			($adbPropertyJob = Start-Job -ScriptBlock {
+					param($adbexe, $property)
+					#& $adbexe shell getprop $property 2> $null
+					& $adbexe shell getprop dev.bootcomplete 2> $null
+				} -Argumentlist $adbexe, $property) | Out-Null	
+			Wait-Job $adbPropertyJob -Timeout $timeout| Out-Null
+			Receive-Job $adbPropertyJob -OutVariable adbOutput | Out-Null
+			Write-Output "adb shell getprop $property returned $adbOutput" 
+		}
+	}
+}
+
+Write-Output "creating and waiting on job"
+#Wait-Boot-Complete
+($waitADBPropertiesJob = Start-Job -ScriptBlock {
+	Write-Output "HERE"
+	WaitADBProperty  "dev.bootcomplete" "1"
+	WaitADBProperty "sys_bootcomplete" "1"
+	WaitADBProperty "init.svc.bootanim" "stopped"
+	} -InitializationScript $func) | Out-Null	
+Wait-Job $waitADBPropertiesJob -Timeout $timeout| Out-Null
+Receive-Job $waitADBPropertiesJob -OutVariable waitJobOutput | Out-Null
 
 Write-Output "Leaving script StartAndroidEmulator.ps1"
-
