@@ -17,7 +17,7 @@
         { "name": "MachineUsername", "type": "string", "label": "Username", "defaultValue": "", "required": true },
         { "name": "MachinePassword", "type": "string", "label": "Password", "defaultValue": "", "required": true },
 		{ "name": "SourcePackage", "type": "string", "label": "Source Package", "defaultValue": "", "required": true },
-        { "name": "ApplicationPath", "type": "string", "label": "Application Path", "defaultValue": "", "required": false },
+        { "name": "ApplicationPath", "type": "string", "label": "Application Path", "defaultValue": "", "required": true },
         { "name": "ScriptPath", "type": "string", "label": "Script Path", "defaultValue": "", "required": true },
         { "name": "InitializationScriptPath", "type": "string", "label": "Initialization Script Path", "defaultValue": "", "required": false }	                
     ],
