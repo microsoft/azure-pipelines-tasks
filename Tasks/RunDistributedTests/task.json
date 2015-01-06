@@ -17,10 +17,10 @@
         {
             "name": "environment",
             "type": "string",
-            "label": "Test environment",
+            "label": "Test Environment",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of environment on which tests need to be run."
+            "helpMarkDown": "The name of the environment on which tests need to be run."
         },
         {
             "name": "testassemblies",
@@ -28,7 +28,7 @@
             "label": "Test Assemblies",
             "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
             "required": true,
-            "helpMarkDown": "Search pattern for Test assemblies"
+            "helpMarkDown": "Search pattern for test assemblies"
         },
         {
             "name": "testFilterCriteria",
@@ -36,7 +36,7 @@
             "label": "Test Filter criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Filter criteria for Test cases"
+            "helpMarkDown": "Filter criteria for selecting test cases"
         },
         {
             "name": "runSettingsFile",
@@ -44,22 +44,22 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Runsettings/TestSettings file for Test run"
+            "helpMarkDown": "Runsettings or testsettings file for test run"
         },
         {
             "name": "customAdapterPath",
             "type": "string",
-            "label": "Path to Custom Test Adapter",
+            "label": "Path to Custom Test Adapters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path for custom test adapter to be used for running tests"
+            "helpMarkDown": "Path to custom test adapters to be used for running tests"
         }
     ],
-    "instanceNameFormat": "Test assemblies **\\*UItests.dll",
+    "instanceNameFormat": "Test assemblies $(testassemblies)",
     "execution": {
         "Process": {
             "target": "$(currentDirectory)\\Task.DTA.exe",
-            "argumentFormat": "",
+            "argumentFormat": "runtests /environment:$(environment) /sourcefilter:$(testassemblies) /testcasefilter:$(testFilterCriteria) /runsettings:$(runSettingsFile) /customadapter:$(customAdapterPath)",
             "workingDirectory": "$(currentDirectory)",
             "errorPattern": "$(errorPattern)",
             "warningPattern": "$(warningPattern)"
