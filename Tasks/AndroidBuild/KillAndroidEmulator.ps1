@@ -1,13 +1,6 @@
-param(
-    [string]$emuName   # Name of emulator
-)
-
-if(!$emuName) {
-    $emuName = "AndroidBuildEmulator"
-}
-
 Write-Verbose "Entering script KillAndroidEmulator.ps1"
-Write-Verbose "emuName = $emuName"
+
+$emuName = "AndroidBuildEmulator"
 
 $adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
 $androidbat = $env:ANDROID_HOME + "\tools\android.bat"
