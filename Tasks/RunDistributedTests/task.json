@@ -57,12 +57,10 @@
     ],
     "instanceNameFormat": "Test assemblies $(testassemblies)",
     "execution": {
-        "Process": {
-            "target": "$(currentDirectory)\\Task.DTA.exe",
-            "argumentFormat": "runtests /environment:$(environment) /sourcefilter:$(testassemblies) /testcasefilter:$(testFilterCriteria) /runsettings:$(runSettingsFile) /customadapter:$(customAdapterPath)",
-            "workingDirectory": "$(currentDirectory)",
-            "errorPattern": "$(errorPattern)",
-            "warningPattern": "$(warningPattern)"
+        "PowerShell": {
+            "target": "$(currentDirectory)\\RunDistributedTests.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
         }
     }
 }
