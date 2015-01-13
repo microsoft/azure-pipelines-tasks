@@ -24,61 +24,15 @@ Write-Verbose "startEmulator (converted) = $emulator"
 $adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
 $androidbat = $env:ANDROID_HOME + "\tools\android.bat"
 
-if($emulator)
-{
-    # Set up default emulator settings 
-	$emuName = "AndroidBuildEmulator"
-	$abi = "default/x86"
+# Set the paths of the Start and Kill Android Emulator scripts, which are in the same directory as AndroidBuild.ps1
+$PSScriptRoot = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
+$StartEmulatorScript = Join-Path -Path $PSScriptRoot -ChildPath "StartAndroidEmulator.ps1" 
+$KillEmulatorScript = Join-Path -Path $PSScriptRoot -ChildPath "KillAndroidEmulator.ps1"
 
-    Stop-Process -processname emulator-x86 2> $null
-    & $adbexe kill-server 2> $null
-    & $androidbat delete avd -n $emuName 2> $null
+$emuName = "AndroidBuildEmulator"
 
-    # Create an emulator device
-	& $androidbat create avd --name $emuName --target $emulatorTarget --device $emulatorDevice --abi $abi  --force
-
-    # Start emulator
-    $emublock = {
-		param($emuName)
-        Push-Location $env:ANDROID_HOME
-        .\tools\emulator.exe -avd $emuName -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save
-        Pop-Location
-    }
-    Start-Job -Name openEmulator -ScriptBlock $emublock -ArgumentList $emuName | Out-Null
-
-    # Connect to emulator
-    & $adbexe start-server
-    
-    # Make sure emulator is fully booted
-    # dev.bootcomplete is "1" when the device is fully booted
-    $devBootComplete = 0
-    $numLoops = 0  # fail out if it takes too long
-    Write-Verbose "INFO: Waiting for emulator to fully boot!"
-    while ($devBootComplete[0] -ne "1")
-    {
-        ($bootComplete = Start-Job -Name jobBootComplete -ScriptBlock {
-            param($adbexe)
-            & $adbexe shell getprop dev.bootcomplete 2> $null
-        } -argumentlist $adbexe) | Out-Null
-        Wait-Job $bootComplete | Out-Null
-        Receive-Job $bootComplete -OutVariable devBootComplete | Out-Null
-        $output = "INFO: Waiting for emulator to boot..." + $numLoops
-        Write-Verbose $output
-        $numLoops++
-
-        # Try to restart adb server every once in a while to see if that is the problem
-        if ($numLoops % 25 -eq 0) {
-            Write-Verbose "INFO: Restarting adb server!"
-            & $adbexe kill-server
-            & $adbexe start-server
-        }
-
-        # Bail out if the device never comes up
-        if ($numLoops -gt 500) {
-            Write-Error "ERROR: Emulator failed to start!"
-            break
-        }
-    }
+if($emulator) {
+    Invoke-Expression "$StartEmulatorScript `"$emulatorTarget`" `"$emulatorDevice`" `"$emuName`""
 }
 
 # Change working directory to specified gradle project. 
@@ -111,9 +65,7 @@ if($gradleProj) {
 # Delete emulator device.  Stop-Process is used because Wait-Job or Stop-Job hangs.
 if($emulator)
 {
-    Stop-Process -processname emulator-x86
-    & $adbexe kill-server 
-    & $androidbat delete avd -n $emuName
+	Invoke-Expression "$KillEmulatorScript $emuName"
 }
 
 Write-Verbose "Leaving script AndroidBuild.ps1"
