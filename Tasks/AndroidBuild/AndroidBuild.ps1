@@ -24,10 +24,15 @@ Write-Verbose "startEmulator (converted) = $emulator"
 $adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
 $androidbat = $env:ANDROID_HOME + "\tools\android.bat"
 
+# Set the paths of the Start and Kill Android Emulator scripts, which are in the same directory as AndroidBuild.ps1
+$PSScriptRoot = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
+$StartEmulatorScript = Join-Path -Path $PSScriptRoot -ChildPath "StartAndroidEmulator.ps1" 
+$KillEmulatorScript = Join-Path -Path $PSScriptRoot -ChildPath "KillAndroidEmulator.ps1"
+
 $emuName = "AndroidBuildEmulator"
 
 if($emulator) {
-	.\StartAndroidEmulator.ps1 $emulatorTarget $emulatorDevice $emuName
+    Invoke-Expression "$StartEmulatorScript `"$emulatorTarget`" `"$emulatorDevice`" `"$emuName`""
 }
 
 # Change working directory to specified gradle project. 
@@ -60,7 +65,7 @@ if($gradleProj) {
 # Delete emulator device.  Stop-Process is used because Wait-Job or Stop-Job hangs.
 if($emulator)
 {
-	.\KillAndroidEmulator.ps1 $emuName
+	Invoke-Expression "$KillEmulatorScript $emuName"
 }
 
 Write-Verbose "Leaving script AndroidBuild.ps1"

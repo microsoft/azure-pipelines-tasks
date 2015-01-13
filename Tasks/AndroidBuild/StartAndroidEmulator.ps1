@@ -3,9 +3,8 @@ param(
 	[string]$emulatorDevice = "Nexus 5",            # Emulator device 
 	[string]$emulatorName = "AndroidBuildEmulator", # Name of emulator
 	[Boolean]$headlessEmulator = $FALSE,            # Avoid showing the emulator interface if true
-	[int] $timeout = 300                            # Length of time allowed per try
+	[int]$timeout = 300                             # Length of time allowed per try
 )
-
 
 Write-Verbose "Entering script StartAndroidEmulator.ps1"
 Write-Verbose "emulatorTarget = $emulatorTarget"
