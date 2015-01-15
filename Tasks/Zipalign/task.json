@@ -1,0 +1,58 @@
+﻿{
+    "id": "35F03769-0036-4467-AC17-9B39E536AD69",
+    "name": "Zipalign",
+    "friendlyName": "Zipalign",
+    "description": "Zipalign Android APK",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "demands": [
+        "AndroidSDK"
+    ],
+    "inputs": [
+        {
+            "name": "apk",
+            "type": "filePath",
+            "label": "APK",
+            "defaultValue": "**\\*.apk",
+            "required": true,
+            "helpMarkDown": "Relative path from repo root of the Apk(s) to align.  Wildcards can be used.  For example, `**\\*.apk` for all Apk files in all subfolders."
+        },
+        {
+            "name": "alignment",
+            "type": "string",
+            "label": "Alignment",
+            "defaultValue": "4",
+            "required": true
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Zipalign Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optional arguments passed to zipalign"
+        },
+        { 
+            "name": "zipalignLocation", 
+            "type": "string", 
+            "label": "Zipalign Location", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the path to zipalign.exe.  It defaults to use any zipalign.exe found in Android SDK folder."  
+        }
+    ],
+    "instanceNameFormat": "Zipalign $(apk)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\zipalign.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
