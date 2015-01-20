@@ -41,19 +41,3 @@ Tasks can be written in Powershell, ShellScript, javaScript or Python.  Tasks ca
 
 ##Capabilities and Demands
 Tasks demand a tool or dependency that they run.  On configuration and startup, an agent registers it's capabilities with the server.  When you add a task to a definition it appends the demands for that definition.  When run, an agent is found with the corresponding capabilities from the configured pool of agents.
-- Task: AndroidBuild --- Version: 1.0.1
-- Task: Ant --- Version: 1.0.0
-- Task: AzureCloudPowerShellDeployment --- Version: 1.0.2
-- Task: AzurePowerShell --- Version: 1.0.1
-- Task: AzureWebPowerShellDeployment --- Version: 1.0.1
-- Task: CMake --- Version: 1.0.2
-- Task: CmdScript --- Version: 1.0.2
-- Task: AndroidBuild --- Version: 1.0.1
-- Task: Jake --- Version: 1.0.2
-- Task: MSBuild --- Version: 1.0.1
-- Task: PowerShell --- Version: 1.0.1
-- Task: ProcessRunner --- Version: 1.0.2
-- Task: ShellScript --- Version: 1.0.2
-- Task: VSBuild --- Version: 1.0.1
-- Task: VSTest --- Version: 1.0.1
-- Task: Xcode --- Version: 1.0.2

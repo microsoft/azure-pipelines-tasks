@@ -52,15 +52,14 @@ foreach($src in $tasksSrc)
                    $taskDef.version.Patch.ToString()
     Write-Host taskVersion = $taskVersion
 
-    $dstDir = [System.IO.Path]::Combine($packageFolder,"Tasks",$taskName,$taskVersion)
-    Write-Host dstDir = $dstDir
-
-    if(Test-Path $dstDir)
+	$taskDir = [System.IO.Path]::Combine($packageFolder,"Tasks",$taskName)
+    if(Test-Path $taskDir)
     {
-        Write-Host $dstDir already exist, try to delete it.
-        Remove-Item -Path $dstDir -Recurse -Force -ErrorAction Stop
+        Write-Host $taskDir already exist, try to delete everything in it.
+        Remove-Item -Path $taskDir\* -Recurse -Force -ErrorAction Stop
     }
 
+	$dstDir = [System.IO.Path]::Combine($packageFolder,"Tasks",$taskName,$taskVersion)    
     Write-Host Create directory: $dstDir.
     $dstDir = New-Item -Path $dstDir -ItemType Directory -Force -ErrorAction Stop
 
