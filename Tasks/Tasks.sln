@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployTestAgent", "DeployTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunDistributedTests", "RunDistributedTests\RunDistributedTests.csproj", "{8A30E842-D530-4700-8C17-7C21739985DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployUsingPowerShell", "DeployUsingPowerShell\DeployUsingPowerShell.csproj", "{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +157,10 @@ Global
 		{8A30E842-D530-4700-8C17-7C21739985DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A30E842-D530-4700-8C17-7C21739985DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A30E842-D530-4700-8C17-7C21739985DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
