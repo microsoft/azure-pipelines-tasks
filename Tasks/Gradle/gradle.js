@@ -51,7 +51,9 @@ exports.execute = function (ctx, callback) {
 
     var ops = {
         cwd: path.resolve(cwd),
-        env: process.env
+        env: process.env,
+        failOnStdErr: false,
+        failOnNonZeroRC: true        
     };
 
     // calling spawn instead of fork so we can easily capture output --> logs

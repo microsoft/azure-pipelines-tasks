@@ -28,6 +28,10 @@
   <ItemGroup>
     <Content Include="AndroidBuild.ps1" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="KillAndroidEmulator.ps1" />
+    <Content Include="StartAndroidEmulator.ps1" />
+  </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
     <Copy SourceFiles="@(Content)" DestinationFiles="@(Content->'$(TargetDir)\%(filename)%(extension)')" />

@@ -62,7 +62,7 @@ exports.execute = function(ctx, callback) {
 	var cwd = process.cwd();
 
 	// create the output folder if not exist
-	var outputFolder = path.join(cwd, 'output', ctx.inputs.outputPattern);
+	var outputFolder = path.join(repoPath, ctx.inputs.outputPattern);
 	ctx.info('outputFolder: ' + outputFolder);
 
 	if (!fs.existsSync(outputFolder)) {
