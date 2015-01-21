@@ -12,7 +12,7 @@
         "IsTest": false
     },
     "inputs": [
-        { "name": "EnvironmentName", "type": "string", "label": "Environment Name", "defaultValue": "", "required": false },
+        { "name": "EnvironmentName", "type": "string", "label": "Environment Name", "defaultValue": "", "required": true },
         { "name": "MachineNames", "type": "string", "label": "Machine Names", "defaultValue": "", "required": true },
         { "name": "MachineUsername", "type": "string", "label": "Username", "defaultValue": "", "required": true },
         { "name": "MachinePassword", "type": "string", "label": "Password", "defaultValue": "", "required": true },

@@ -23,7 +23,7 @@ $port = '5985'
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
-$resources = Get-EnvironmentResources -environmentName $environmentName -resources $machineNames
+$resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames
 
 foreach ($resource in $resources)
 {
@@ -47,6 +47,7 @@ foreach ($resource in $resources)
     
     if ($copyResponse.Status -ne "Passed")
     {
+        # TODO : Should we fail at first error encountered?
         throw $copyResponse.Error;
     }
 
