@@ -26,7 +26,7 @@
             "name": "testassemblies",
             "type": "string",
             "label": "Test Assemblies",
-            "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
+            "defaultValue": "**\\*test*.dll",
             "required": true,
             "helpMarkDown": "Search pattern for test assemblies"
         },
