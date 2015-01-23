@@ -28,7 +28,7 @@
             "type": "string",
             "label": "Deploy to machines",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "List of machines where test agent needs to be deployed."
         },
         {
