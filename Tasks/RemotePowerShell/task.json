@@ -50,7 +50,7 @@
             "label": "Source Package",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the Source files." 
+            "helpMarkDown": "Location of the source files." 
         },
         {
             "name": "ApplicationPath",
@@ -66,7 +66,7 @@
             "label": "Script Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Absolute Path of the PS/DSC script on the target machines." 
+            "helpMarkDown": "Absolute or UNC path of the PS/DSC script on the target machines." 
         },
         {
             "name": "InitializationScriptPath",
@@ -74,7 +74,7 @@
             "label": "Initialization Script Path",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Absolute Path of the PS initialization script (data script for DSC) on the target machines." 
+            "helpMarkDown": "Absolute or UNC path of the PS initialization script (data script for DSC) on the target machines." 
         }	                
     ],
     "instanceNameFormat": "Run RemotePowershellRunner.ps1",
