@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 var fs = require('fs'),
+    shell = require('shelljs/global'),
     path = require('path');
 
 exports.execute = function (ctx, callback) {
