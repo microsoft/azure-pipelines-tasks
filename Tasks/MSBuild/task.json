@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands" : [
@@ -64,6 +64,13 @@
             "name": "restoreNugetPackages", 
             "type": "boolean", 
             "label": "Restore NuGet Packages", 
+            "defaultValue": "true", 
+            "required": false 
+        },
+        { 
+            "name": "logProjectEvents", 
+            "type": "boolean", 
+            "label": "Log Project Events", 
             "defaultValue": "true", 
             "required": false 
         }
