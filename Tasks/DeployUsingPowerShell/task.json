@@ -29,30 +29,6 @@
             "helpMarkDown": "Comma-separated list of machine names (IP address/fqdn)."
         },
         {
-            "name": "Port",
-            "type": "string",
-            "label": "Powershell port",
-            "defaultValue": "5986",
-            "required": true,
-            "helpMarkDown": "Powershell port of the machine. Default port is 5986 for HTTPS, 5985 for HTTP"
-        },
-        {
-            "name": "MachineUsername",
-            "type": "string",
-            "label": "Username",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Admin username for the machines specified." 
-        },
-        {
-            "name": "MachinePassword",
-            "type": "string",
-            "label": "Password",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Password corresponding to the admin username for the machines." 
-        },
-        {
             "name": "SourcePackage",
             "type": "string",
             "label": "Source Package",

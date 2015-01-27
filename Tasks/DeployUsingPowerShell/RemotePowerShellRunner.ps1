@@ -2,8 +2,6 @@ param (
     [string]$environmentName,
     [string]$machineNames, 
     [string]$sourcePackage,
-    [string]$machineUserName, 
-    [string]$machinePassword,
     [string]$applicationPath,
     [string]$scriptPath,
     [string]$initializationScriptPath
@@ -13,24 +11,38 @@ Write-Verbose "Entering script RemotePowerShellRunner.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePackage = $sourcePackage" -Verbose
-Write-Verbose "machineUserName = $machineUserName" -Verbose
 Write-Verbose "applicationPath = $applicationPath" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 
-$credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
-$port = '5985'
-
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+
+$port = '5985'
 
 $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames
 
+$environmentUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "username"
+$environmentPassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "password"
+
 foreach ($resource in $resources)
 {
-    $bag = $resource.PropertyBag.Bag
-    $fqdn = $bag["fqdn"].Data
+    $machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -ResourceName $resource.Name -Key "username"
 
-    Write-Verbose "Initiating copy on $resource.Name with fqdn: $fqdn" -Verbose
+    if ($machineUserName -eq $null)
+    {
+        $machineUserName = $environmentUserName
+        $machinePassword = $environmentPassword
+    }
+    else
+    {
+        $machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -ResourceName $resource.Name -Key "password"
+    }
+
+    $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
+
+    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -ResourceName $resource.Name -Key "fqdn"
+
+    Write-Verbose "Initiating copy on $resource.Name with fqdn: $fqdn, username: $machineUserName" -Verbose
 
     $copyResponse = Copy-FilesToRemote -MachineDnsName $fqdn -SourceLocalPath $sourcePackage -DestinationLocalPath $applicationPath -Credential $credential
 
