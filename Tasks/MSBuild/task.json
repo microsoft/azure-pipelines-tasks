@@ -70,7 +70,7 @@
         { 
             "name": "logProjectEvents", 
             "type": "boolean", 
-            "label": "Log Project Events", 
+            "label": "Record Project Details", 
             "defaultValue": "true", 
             "required": false 
         }
