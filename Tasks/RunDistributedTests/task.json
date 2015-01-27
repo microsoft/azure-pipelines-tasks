@@ -1,8 +1,8 @@
 ﻿{
     "id": "0EF70A38-3601-48B7-BF6A-8EFEF87EE23D",
 	"name": "RunDistributedTests",
-    "friendlyName": "Run Tests using Test Agents",
-    "description": "Run Tests using Test Agents",
+    "friendlyName": "Run Visual Studio Tests using Test Agent",
+    "description": "Run tests remotely or distribute tests to multiple machines.",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
