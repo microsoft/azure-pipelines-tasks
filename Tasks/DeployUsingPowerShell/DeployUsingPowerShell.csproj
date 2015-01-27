@@ -22,8 +22,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="RemotePowerShellRunner.ps1" />
-    <None Include="task.json" />
+    <Content Include="RemotePowerShellRunner.ps1" />
+    <Content Include="task.json" />
   </ItemGroup>
     <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
