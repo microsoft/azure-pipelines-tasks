@@ -21,28 +21,16 @@ $port = '5985'
 
 $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames
 
-$environmentUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "username"
-$environmentPassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "password"
+$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username"
+$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password"
+
+$credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
 
 foreach ($resource in $resources)
 {
-    $machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -ResourceName $resource.Name -Key "username"
+    $fqdn = $resource.Name
 
-    if ($machineUserName -eq $null)
-    {
-        $machineUserName = $environmentUserName
-        $machinePassword = $environmentPassword
-    }
-    else
-    {
-        $machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -ResourceName $resource.Name -Key "password"
-    }
-
-    $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
-
-    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -ResourceName $resource.Name -Key "fqdn"
-
-    Write-Verbose "Initiating copy on $resource.Name with fqdn: $fqdn, username: $machineUserName" -Verbose
+    Write-Verbose "Initiating copy on $fqdn, username: $machineUserName" -Verbose
 
     $copyResponse = Copy-FilesToRemote -MachineDnsName $fqdn -SourceLocalPath $sourcePackage -DestinationLocalPath $applicationPath -Credential $credential
 
@@ -63,7 +51,7 @@ foreach ($resource in $resources)
         throw $copyResponse.Error;
     }
 
-    Write-Verbose "Initiating deployment on $resource.Name with fqdn: $fqdn" -Verbose
+    Write-Verbose "Initiating deployment on $fqdn" -Verbose
 
     $deploymentResponse = Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath $scriptPath -WinRMPort $port -Credential $credential -InitializationScriptPath $initializationScriptPath –SkipCACheck -UseHttp
 
