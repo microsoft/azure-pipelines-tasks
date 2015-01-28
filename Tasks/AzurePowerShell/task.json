@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands" : [
@@ -16,9 +16,9 @@
     ],
     "inputs": [
         { 
-            "name": "DeploymentEnvironmentName", 
+            "name": "ConnectedServiceName", 
             "type": "azureConnection", 
-            "label": "Deployment Environment", 
+            "label": "Azure Subscription", 
             "defaultValue": "", 
             "required": true,
             "helpMarkDown": "Azure subscription to configure before running PowerShell"

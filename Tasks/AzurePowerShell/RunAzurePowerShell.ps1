@@ -2,7 +2,7 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
-    $DeploymentEnvironmentName,
+    $ConnectedServiceName,
 
     [String] [Parameter(Mandatory = $true)]
     $ScriptPath,

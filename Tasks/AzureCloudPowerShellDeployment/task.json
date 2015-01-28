@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3,
+        "Patch": 4,
         "IsTest": false
     },
     "demands" : [
@@ -16,9 +16,10 @@
     ],
     "inputs": [
         { 
-            "name": "DeploymentEnvironmentName", 
-            "type": "azureConnection", "label": 
-            "Deployment Environment", "defaultValue": "", 
+            "name": "ConnectedServiceName",
+            "type": "azureConnection",
+            "label": "Azure Subscription", 
+            "defaultValue": "", 
             "required": true,
             "helpMarkDown": "Azure subscription to target for deployment."
         },

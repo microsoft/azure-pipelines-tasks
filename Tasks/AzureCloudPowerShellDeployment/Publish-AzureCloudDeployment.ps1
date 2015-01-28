@@ -2,7 +2,7 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
-    $DeploymentEnvironmentName,
+    $ConnectedServiceName,
 
     [String] [Parameter(Mandatory = $true)]
     $ServiceName,
@@ -44,7 +44,7 @@ function Get-SingleFile($files, $pattern)
 
 Write-Verbose "Entering script Publish-AzureCloudDeployment.ps1"
 
-Write-Verbose "DeploymentEnvironmentName= $DeploymentEnvironmentName"
+Write-Verbose "ConnectedServiceName= $ConnectedServiceName "
 Write-Verbose "ServiceName= $ServiceName"
 Write-Verbose "ServiceLocation= $ServiceLocation"
 Write-Verbose "StorageAccount= $StorageAccount"
