@@ -14,6 +14,13 @@
     "demands" : [
 	    "AndroidSDK"
     ],
+    "groups":  [
+        {
+            "name": "emulatorOptions", 
+            "displayName":"Emulator Options",
+            "isExpanded":true
+        }
+    ],
     "inputs": [
         { 
             "name": "gradleWrapper", 
@@ -42,6 +49,7 @@
             "label": "Start Android Emulator", 
             "defaultValue":"False", 
             "required":false,
+            "groupName":"emulatorOptions" 
         },
         { 
             "name": "emulatorTarget", 
@@ -50,6 +58,7 @@
             "defaultValue":"android-19", 
             "required":false, 
             "visibleRule": "startEmulator = true", 
+            "groupName":"emulatorOptions" 
         },
         { 
             "name": "emulatorDevice", 
@@ -58,6 +67,7 @@
             "defaultValue":"Nexus 5", 
             "required":false,
             "visibleRule": "startEmulator = true", 
+            "groupName":"emulatorOptions" 
         }
     ],
     "instanceNameFormat": "Android Build $(gradleProj)",
