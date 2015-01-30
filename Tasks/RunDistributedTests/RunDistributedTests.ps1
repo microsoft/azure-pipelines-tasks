@@ -9,7 +9,7 @@ param(
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
 Write-Verbose "environment = $environment"
-Write-Verbose "testassemblies = $testassemblies"
+Write-Verbose "Source Filter = $testassemblies"
 Write-Verbose "testFilterCriteria = $testFilterCriteria"
 Write-Verbose "runSettingsFile = $runSettingsFile"
 Write-Verbose "AlternateuserName = $alternateCredsUserName"
