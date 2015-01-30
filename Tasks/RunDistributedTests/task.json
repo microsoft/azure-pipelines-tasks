@@ -23,7 +23,7 @@
             "helpMarkDown": "The name of the environment on which tests need to be run."
         },
         {
-            "name": "testassemblies",
+            "name": "sourcefilters",
             "type": "string",
             "label": "Source Filters",
             "defaultValue": "**\\*test*.dll",
