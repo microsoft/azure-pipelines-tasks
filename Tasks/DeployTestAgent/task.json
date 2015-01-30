@@ -82,18 +82,18 @@
         {
             "name": "alternateCredsUserName",
             "type": "string",
-            "label": "Alternate credentials username",
+            "label": "Alternate credentials User Name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials that will be used by test agent to publish results to TFS."
+            "helpMarkDown": "Alternate credentials that will be used to connect to TFS."
         },
         {
             "name": "alternateCredsPassword",
             "type": "string",
-            "label": "Alternate credentials password",
+            "label": "Alternate credentials Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials that will be used by test agent to publish results to TFS."
+            "helpMarkDown": "Alternate credentials that will be used to connect to TFS."
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",

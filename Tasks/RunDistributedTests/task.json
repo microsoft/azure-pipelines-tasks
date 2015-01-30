@@ -25,7 +25,7 @@
         {
             "name": "testassemblies",
             "type": "string",
-            "label": "Test Assemblies",
+            "label": "Source Filters",
             "defaultValue": "**\\*test*.dll",
             "required": true,
             "helpMarkDown": "Search pattern for test assemblies"
@@ -49,18 +49,18 @@
         {
             "name": "alternateCredsUserName",
             "type": "string",
-            "label": "Alternate credentials username",
+            "label": "Alternate credentials User Name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials that will be used by build agent to connect to TFS."
+            "helpMarkDown": "Alternate credentials that will be used to connect to TFS."
         },
         {
             "name": "alternateCredsPassword",
             "type": "string",
-            "label": "Alternate credentials password",
+            "label": "Alternate credentials Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials that will be used by build agent to connect to TFS."
+            "helpMarkDown": "Alternate credentials that will be used to connect to TFS."
         }
     ],
     "instanceNameFormat": "Test assemblies $(testassemblies)",
