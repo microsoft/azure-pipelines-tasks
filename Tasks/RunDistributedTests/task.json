@@ -47,12 +47,20 @@
             "helpMarkDown": "Runsettings or testsettings file for test run"
         },
         {
-            "name": "customAdapterPath",
+            "name": "alternateCredsUserName",
             "type": "string",
-            "label": "Path to Custom Test Adapters",
+            "label": "Alternate credentials username",
             "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Path to custom test adapters to be used for running tests"
+            "required": true,
+            "helpMarkDown": "Alternate credentials that will be used by build agent to connect to TFS."
+        },
+        {
+            "name": "alternateCredsPassword",
+            "type": "string",
+            "label": "Alternate credentials password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Alternate credentials that will be used by build agent to connect to TFS."
         }
     ],
     "instanceNameFormat": "Test assemblies $(testassemblies)",
