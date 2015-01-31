@@ -46,10 +46,10 @@
             "required": false,
             "helpMarkDown": "Runsettings or testsettings file for test run"
         },
-		{
+        {
             "name": "subHeading",
             "type": "bool",
-            "label": "Alternate credentials to publish results to TFS",
+            "label": "Alternate credentials to publish test results to TFS",
             "defaultValue": "false",
             "required": true,
             "helpMarkDown": ""
@@ -57,10 +57,10 @@
         {
             "name": "alternateCredsUserName",
             "type": "string",
-            "label": "Alternate credentials User Name",
+            "label": "Alternate credentials Username",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials that will be used to connect to TFS."
+            "helpMarkDown": "Alternate credentials Username for connecting to TFS"
         },
         {
             "name": "alternateCredsPassword",
@@ -68,7 +68,7 @@
             "label": "Alternate credentials Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials that will be used to connect to TFS."
+            "helpMarkDown": "Alternate credentials Password for connecting to TFS"
         }
     ],
     "instanceNameFormat": "Test assemblies $(testassemblies)",
