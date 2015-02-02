@@ -59,7 +59,23 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Absolute or UNC path of the PS initialization script (data script for DSC) on the target machines." 
-        }
+        },
+        {
+            "name": "AlternateCredentialsUsername",
+            "type": "string",
+            "label": "Alternate Credentials Username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Username of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
+        },
+        {
+            "name": "AlternateCredentialsPassword",
+            "type": "string",
+            "label": "Alternate Credentials Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
+		}
     ],
     "instanceNameFormat": "Run RemotePowershellRunner.ps1",
 	 "execution": {

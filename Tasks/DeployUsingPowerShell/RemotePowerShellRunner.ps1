@@ -4,7 +4,9 @@ param (
     [string]$sourcePackage,
     [string]$applicationPath,
     [string]$scriptPath,
-    [string]$initializationScriptPath
+    [string]$initializationScriptPath,
+	[string]$alternateCredentialsUsername,
+	[string]$alternateCredentialsPassword
     )
 
 Write-Verbose "Entering script RemotePowerShellRunner.ps1" -Verbose
@@ -16,6 +18,9 @@ Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+
+$env:DTL_ALTERNATE_CREDENTIALS_USERNAME = $alternateCredentialsUsername
+$env:DTL_ALTERNATE_CREDENTIALS_PASSWORD = $alternateCredentialsPassword
 
 $port = '5985'
 
