@@ -75,7 +75,7 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
-		}
+        }
     ],
     "instanceNameFormat": "Run RemotePowershellRunner.ps1",
 	 "execution": {
