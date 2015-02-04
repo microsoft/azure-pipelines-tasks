@@ -1,7 +1,7 @@
 {
-    "id":"5131D8BD-C292-4546-81D6-4491827586BE",
+    "id":"71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
     "name":"VSBuild",
-    "friendlyName": "Visual Studio Build 2",
+    "friendlyName": "Visual Studio Build",
     "description": "Build with Visual Studio",
     "category": "Build",
     "author": "Microsoft Corporation",

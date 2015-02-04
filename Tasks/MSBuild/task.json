@@ -1,7 +1,7 @@
 ﻿{
-    "id": "E7D3BCE0-C73A-450B-A1BF-26ABEC5BD6D0",
+    "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
     "name": "MSBuild",
-    "friendlyName": "MSBuild (test)",
+    "friendlyName": "MSBuild",
     "description": "Build with MSBuild",
     "category": "Build",
     "author": "Microsoft Corporation",
