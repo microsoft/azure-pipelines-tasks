@@ -79,6 +79,12 @@ if(!$msBuildLocation)
 {
     if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
     {
+        if($msbuildVersion -eq "latest")
+        {
+            # null out $msBuildVersion before passing to cmdlet so it will default to the latest on teh machine.
+            $msBuildVersion = $null
+        }
+            
         $msBuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
     }  
 }

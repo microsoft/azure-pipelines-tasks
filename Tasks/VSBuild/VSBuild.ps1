@@ -111,6 +111,10 @@ if(!$msBuildLocation)
 {
     if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
     {
+        if($msbuildVersion -eq "latest")
+        {
+            $msbuildVersion = $null
+        }
         $msBuildLocation = Get-MSBuildLocation -version $msbuildVersion -architecture $msbuildArchitecture
     }   
 }
