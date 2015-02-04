@@ -1,0 +1,92 @@
+﻿{
+    "id": "27EDD013-36FD-43AA-96A3-7D73E1E35285",
+    "name": "XamarinAndroid",
+    "friendlyName": "Xamarin Android",
+    "description": "Build Android app with Xamarin",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "demands": [
+        "AndroidSDK",
+        "JDK",
+        "MSBuild",
+        "Xamarin.Android"
+    ],
+    "groups":  [
+        {
+            "name": "msbuildOptions", 
+            "displayName":"MSBuild Options",
+            "isExpanded": true 
+        }
+    ],
+    "inputs": [
+        {
+            "name": "project",
+            "type": "filePath",
+            "label": "Project",
+            "defaultValue": "**\\*.csproj",
+            "required": true,
+            "helpMarkDown": "Relative path from repo root of the project(s) to build.  Wildcards can be used.  For example, `**\\*.csproj` for all csproj files in all subfolders."
+        },
+        {
+            "name": "target",
+            "type": "string",
+            "label": "Target",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Build these targets in this project. Use a semicolon to separate multiple targets."
+        },
+        { 
+            "name": "package", 
+            "type": "boolean", 
+            "label": "Package", 
+            "defaultValue": "true", 
+            "required": false 
+        },
+        {
+            "name": "outputDir",
+            "type": "string",
+            "label": "Output Directory",
+            "defaultValue": "$(Agent.BuildDirectory)\\bin\\Release",
+            "required": false
+        },
+        {
+            "name": "configuration",
+            "type": "string",
+            "label": "Configuration",
+            "defaultValue": "Release",
+            "required": false
+        },
+        { 
+            "name": "msbuildLocation", 
+            "type": "string", 
+            "label": "MSBuild Location", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the path to MSBuild.  It defaults to searching for latest version.",
+            "groupName":"msbuildOptions"   
+        },
+        {
+            "name": "msbuildArguments",
+            "type": "string",
+            "label": "MSBuild Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to MSBuild.",
+            "groupName":"msbuildOptions"   
+        }
+    ],
+    "instanceNameFormat": "Build Xamarin.Android Project $(project)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\XamarinAndroid.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
