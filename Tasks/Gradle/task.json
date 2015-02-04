@@ -8,7 +8,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands" : [
@@ -28,7 +28,7 @@
             "label": "Gradle Wrapper", 
             "defaultValue": "gradlew", 
             "required": true,
-            "helpMarkDown": "Relative path from the repo root to the `Gradle Wrapper script`."
+            "helpMarkDown": "Relative path from the repository root to the `Gradle Wrapper script`."
         },
         { 
             "name": "options", 
@@ -47,10 +47,10 @@
         { 
             "name": "cwd", 
             "type":  "filePath", 
-            "label":  "Project Directory", 
+            "label":  "Working Directory", 
             "defaultValue": "", 
             "required":  false,
-            "helpMarkDown":"Working directory to run Gradle build in. Defaults to repo root.",
+            "helpMarkDown":"Working directory to run Gradle build in. Defaults to repository root.",
             "groupName":"advanced"
         }
     ],

@@ -7,8 +7,8 @@ param(
     [string]$clean,
     [string]$restoreNugetPackages,
     [string]$logProjectEvents,
-    [string]$msbuildVersion = "latest",
-    [string]$msbuildArchitecture = "x86"
+    [string]$msbuildVersion,
+    [string]$msbuildArchitecture
 )
 
 Write-Verbose "Entering script MSBuild.ps1"

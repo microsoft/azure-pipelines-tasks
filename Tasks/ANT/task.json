@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0,
+        "Patch": 1,
         "IsTest": false
     },
     "demands" : [
@@ -29,7 +29,7 @@
             "label": "Ant build file", 
             "defaultValue": "", 
             "required": true,
-            "helpMarkDown": "Relative path from the repo root to the `Ant build file`."
+            "helpMarkDown": "Relative path from the repository root to the `Ant build file`."
         },
         { 
             "name": "options", 
@@ -50,7 +50,7 @@
             "label": "Working directory", 
             "defaultValue":"", 
             "required":false,
-            "helpMarkDown":"Working directory to run the Ant build in. Defaults to repo root.",
+            "helpMarkDown":"Working directory to run the Ant build in. Defaults to repository root.",
             "groupName":"advanced"
         }
     ],
