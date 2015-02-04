@@ -80,7 +80,7 @@
     "instanceNameFormat": "Run RemotePowershellRunner.ps1",
 	 "execution": {
         "PowerShell": {
-            "target": "$(Agent.HomeDirectory)\\Agent\\Worker\\Modules\\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\\RemotePowershellRunner.ps1",
+            "target": "$(currentDirectory)\\RemotePowershellRunner.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }

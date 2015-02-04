@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="icon.png" />
+    <Content Include="RemotePowerShellRunner.ps1" />
     <Content Include="task.json" />
   </ItemGroup>
   <Target Name="Build">
