@@ -15,6 +15,13 @@
         "sh"
     ],    
     "instanceNameFormat": "Shell Script $(scriptPath)",
+     "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
     "inputs": [
         { 
             "name": "scriptPath", 
@@ -25,20 +32,21 @@
             "helpMarkDown": "Relative path from repo root of the shell script file to run."
         },
         { 
-            "name": "cwd", 
-            "type": "filePath", 
-            "label": "Working Directory", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located." 
-        },
-        { 
             "name": "args", 
             "type": "string", 
             "label": "Arguments", 
             "defaultValue":"", 
             "required":false,
             "helpMarkDown": "Arguments passed to the shell script"
+        },
+        { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working Directory", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located." ,
+            "groupName":"advanced"
         }
     ],
     "execution": {

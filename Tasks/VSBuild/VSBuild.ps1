@@ -1,6 +1,9 @@
 param(
     [string]$vsLocation, 
-    [string]$msbuildLocation, 
+    [string]$vsVersion,
+    [string]$msbuildLocation,
+    [string]$msbuildVersion,
+    [string]$msbuildArchitecture,
     [string]$msbuildArgs, 
     [string]$solution, 
     [string]$platform,
@@ -13,6 +16,8 @@ param(
 Write-Verbose "Entering script VSBuild.ps1"
 Write-Verbose "vsLocation = $vsLocation"
 Write-Verbose "msbuildLocation = $msbuildLocation"
+Write-Verbose "msbuildVersion = $msbuildVersion"
+Write-Verbose "msbuildArchitecture = $msbuildArchitecture"
 Write-Verbose "msbuildArgs = $msbuildArgs"
 Write-Verbose "solution = $solution"
 Write-Verbose "platform = $platform"
@@ -78,8 +83,16 @@ Write-Verbose "args = $args"
 if (!$vsLocation)
 {
     Write-Verbose "Finding Visual Studio install location"
-    $vsLocation = Get-VisualStudioPath
+    if($vsVersion -eq "latest" -or $vsVersion -eq $null)
+    {
+        $vsLocation = Get-VisualStudioPath
+    }
+    else 
+    {
+        $vsLocation = Get-VisualStudioPath -Version $vsVersion
+    }
 }
+
 $scriptName = "VsDevCmd.bat"
 $scriptLocation = [System.IO.Path]::Combine($vsLocation, "Common7\Tools", $scriptName)
 Write-Verbose "scriptLocation = $scriptLocation"
@@ -92,6 +105,14 @@ if ([System.IO.File]::Exists($scriptLocation))
 else
 {
     Write-Warning "Unable to find script $scriptLocation"
+}
+
+if(!$msBuildLocation)
+{
+    if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
+    {
+        $msBuildLocation = Get-MSBuildLocation -version $msbuildVersion -architecture $msbuildArchitecture
+    }   
 }
 
 if ($cleanBuild)

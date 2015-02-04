@@ -1,39 +1,64 @@
 ﻿{
-    "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
-    "name": "AzureWebPowerShellDeployment",
-    "friendlyName": "Azure Web Site Deployment via PowerShell",
-    "description": "Deploy an Azure Web Site with PowerShell",
-    "category": "Deploy",
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 5,
-        "IsTest": false
+  "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
+  "name": "AzureWebPowerShellDeployment",
+  "friendlyName": "Azure Web Site Deployment via PowerShell",
+  "description": "Deploy an Azure Web Site with PowerShell",
+  "category": "Deploy",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 5,
+    "IsTest": false
+  },
+  "demands": [
+    "azureps"
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "azureConnection",
+      "label": "Azure Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure subscription to target for deployment."
     },
-    "demands" : [
-        "azureps"
-    ],
-    "inputs": [
-        { 
-            "name": "ConnectedServiceName",
-            "type": "azureConnection",
-            "label": "Azure Subscription", 
-            "defaultValue": "", 
-            "required": true,
-            "helpMarkDown": "Azure subscription to target for deployment."
-        },
-        { "name": "WebSiteName", "type": "string", "label": "Web Site Name", "defaultValue": "", "required": true },
-        { "name": "WebSiteLocation", "type": "string", "label": "Web Site Location", "defaultValue": "South Central US", "required": true, "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others." },
-        { "name": "Package", "type": "string", "label": "Package", "defaultValue": "$(build.stagingDirectory)\\*.zip", "required": true },
-        { "name": "AdditionalArguments", "type": "string", "label": "Additional Arguments", "defaultValue": "", "required": false }
-    ],
-    "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
-    "execution": {
-        "AzurePowerShell": {
-            "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
-        }
+    {
+      "name": "WebSiteName",
+      "type": "string",
+      "label": "Web Site Name",
+      "defaultValue": "",
+      "required": true
+    },
+    {
+      "name": "WebSiteLocation",
+      "type": "string",
+      "label": "Web Site Location",
+      "defaultValue": "South Central US",
+      "required": true,
+      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
+    },
+    {
+      "name": "Package",
+      "type": "string",
+      "label": "Package",
+      "defaultValue": "$(build.stagingDirectory)\\*.zip",
+      "required": true
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "Additional Arguments",
+      "defaultValue": "",
+      "required": false
     }
+  ],
+  "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
 }

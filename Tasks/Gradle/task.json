@@ -14,6 +14,13 @@
     "demands" : [
         "java"
     ],
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
     "inputs": [
         { 
             "name": "wrapperScript", 
@@ -22,14 +29,6 @@
             "defaultValue": "gradlew", 
             "required": true,
             "helpMarkDown": "Relative path from the repo root to the `Gradle Wrapper script`."
-        },
-        { 
-            "name": "cwd", 
-            "type":  "filePath", 
-            "label":  "Project Directory", 
-            "defaultValue": "", 
-            "required":  false,
-            "helpMarkDown":"Working directory to run Gradle build in. Defaults to repo root."
         },
         { 
             "name": "options", 
@@ -44,6 +43,15 @@
             "label": "Tasks", 
             "defaultValue": "build", 
             "required": true  
+        },
+        { 
+            "name": "cwd", 
+            "type":  "filePath", 
+            "label":  "Project Directory", 
+            "defaultValue": "", 
+            "required":  false,
+            "helpMarkDown":"Working directory to run Gradle build in. Defaults to repo root.",
+            "groupName":"advanced"
         }
     ],
     "instanceNameFormat": "gradlew $(tasks)",

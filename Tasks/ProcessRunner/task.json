@@ -11,6 +11,13 @@
         "Patch": 3,
         "IsTest": false
     },
+    "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+    ],
     "inputs": [
         { 
             "name": "filename", 
@@ -33,7 +40,8 @@
             "label": "Working folder", 
             "defaultValue": "", 
             "required": true,
-            "helpMarkDown": "Arguments passed to the tool" 
+            "helpMarkDown": "Arguments passed to the tool",
+            "groupName":"advanced"
         },
         { 
             "name": "errorPattern", 
@@ -41,7 +49,8 @@
             "label": "Error Pattern", 
             "defaultValue": "", 
             "required": false,
-            "helpMarkDown": "Optional regex to interpret output as an error."
+            "helpMarkDown": "Optional regex to interpret output as an error.",
+            "groupName":"advanced"
         },
         { 
             "name": "warningPattern", 
@@ -50,7 +59,8 @@
             "Warning Pattern", 
             "defaultValue": "", 
             "required": false,
-            "helpMarkDown": "Optional regex to interpret output as a warning."
+            "helpMarkDown": "Optional regex to interpret output as a warning.",
+            "groupName":"advanced"
         }
     ],
     "instanceNameFormat": "Run $(filename)",

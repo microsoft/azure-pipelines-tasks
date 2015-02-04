@@ -14,6 +14,13 @@
     "demands": [
         "Cmd"
     ],
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
     "inputs": [
         { 
             "name": "filename", 
@@ -32,21 +39,22 @@
             "helpMarkDown": "Arguments passed to the cmd script"
         },
         { 
-            "name": "workingFolder", 
-            "type": "filePath", 
-            "label": "Working folder", 
-            "defaultValue":"", 
-            "required":true,
-            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located."
-        },
-        { 
             "name": "modifyEnvironment", 
             "type": "boolean", 
             "label": "Modify Environment", 
             "defaultValue": "False", 
             "required": false,
             "helpMarkDown": "Determines whether environment variable modifications will affect subsequent tasks." 
-        }
+        },
+        { 
+            "name": "workingFolder", 
+            "type": "filePath", 
+            "label": "Working folder", 
+            "defaultValue":"", 
+            "required":true,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+            "groupName":"advanced"
+        },
     ],
     "instanceNameFormat": "Run script $(filename)",
     "execution": {

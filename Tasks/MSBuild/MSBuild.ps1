@@ -6,9 +6,10 @@ param(
     [string]$configuration,
     [string]$clean,
     [string]$restoreNugetPackages,
-    [string]$logProjectEvents
+    [string]$logProjectEvents,
+    [string]$msbuildVersion = "latest",
+    [string]$msbuildArchitecture = "x86"
 )
-
 
 Write-Verbose "Entering script MSBuild.ps1"
 Write-Verbose "msbuildLocation = $msbuildLocation"
@@ -73,6 +74,14 @@ if ($configuration)
 }
 
 Write-Verbose "args = $args"
+
+if(!$msBuildLocation)
+{
+    if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
+    {
+        $msBuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
+    }  
+}
 
 if ($cleanBuild)
 {
