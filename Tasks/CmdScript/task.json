@@ -54,7 +54,7 @@
             "required":true,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
             "groupName":"advanced"
-        },
+        }
     ],
     "instanceNameFormat": "Run script $(filename)",
     "execution": {
