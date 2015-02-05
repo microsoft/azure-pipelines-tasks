@@ -18,8 +18,6 @@ Write-Verbose "applicationPath = $applicationPath" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 
-Write-Verbose "PSScriptRootPath = $PSScriptRoot" -Verbose
-
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
