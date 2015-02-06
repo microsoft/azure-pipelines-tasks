@@ -61,7 +61,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maven", "Maven\Maven.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinAndroid", "XamarinAndroid\XamarinAndroid.csproj", "{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidPublish", "AndroidPublish\AndroidPublish.csproj", "{FFF51606-307E-4344-9FCF-48B6F817A141}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidSigning", "AndroidSigning\AndroidSigning.csproj", "{FFF51606-307E-4344-9FCF-48B6F817A141}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

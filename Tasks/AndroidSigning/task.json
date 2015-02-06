@@ -1,8 +1,8 @@
 ﻿{
     "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B9",
-    "name": "AndroidPublish",
-    "friendlyName": "Android Publish",
-    "description": "Signing and aligning APK for publishing",
+    "name": "AndroidSigning",
+    "friendlyName": "Android Signing",
+    "description": "Signing and aligning APK",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
@@ -99,7 +99,7 @@
     "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
     "execution": {
         "PowerShell": {
-            "target": "$(currentDirectory)\\AndroidPublish.ps1",
+            "target": "$(currentDirectory)\\AndroidSigning.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }

@@ -9,7 +9,7 @@ param(
     [string]$zipalignLocation
 )
 
-Write-Verbose "Entering script AndroidPublish.ps1"
+Write-Verbose "Entering script AndroidSigning.ps1"
 Write-Verbose "files = $files"
 Write-Verbose "keystoreFile = $keystoreFile"
 Write-Verbose "keystoreAlias = $keystoreAlias"
@@ -141,4 +141,4 @@ foreach ($file in $filesToSign)
     }
 }
 
-Write-Verbose "Leaving script AndroidPublish.ps1"
+Write-Verbose "Leaving script AndroidSigning.ps1"

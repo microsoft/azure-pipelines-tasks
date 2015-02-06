@@ -23,7 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="task.json" />
-    <Content Include="AndroidPublish.ps1" />
+    <Content Include="AndroidSigning.ps1" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
