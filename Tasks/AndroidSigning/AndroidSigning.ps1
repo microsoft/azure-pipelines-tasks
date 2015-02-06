@@ -1,5 +1,6 @@
 param(
     [string]$files,
+    [string]$jarsign,
     [string]$keystoreFile,
     [string]$keystorePass,
     [string]$keystoreAlias,
@@ -11,6 +12,7 @@ param(
 
 Write-Verbose "Entering script AndroidSigning.ps1"
 Write-Verbose "files = $files"
+Write-Verbose "jarsign = $jarsign"
 Write-Verbose "keystoreFile = $keystoreFile"
 Write-Verbose "keystoreAlias = $keystoreAlias"
 Write-Verbose "jarsignerArguments = $jarsignerArguments"
@@ -19,6 +21,9 @@ Write-Verbose "zipalignLocation = $zipalignLocation"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
+$jarsignApk = Convert-String $jarsign Boolean
+Write-Verbose "jarsign (converted) = $jarsignApk"
 
 $zipalignApk = Convert-String $zipalign Boolean
 Write-Verbose "zipalign (converted) = $zipalignApk"
@@ -67,31 +72,34 @@ if (!$filesToSign)
     throw "No file with search pattern '$files' was found."
 }
 
-# verify parameters required for signing apk 
-$jarsigner = $env:JAVA_HOME + "\bin\jarsigner.exe"
-if (!(Test-Path -Path $jarsigner -PathType Leaf)) 
+if ($jarsignApk)
 {
-    throw "Can not locate jarsigner.exe, please verify JAVA_HOME is properly configured on the build machine."	
-}	
+    # verify parameters required for signing apk 
+    $jarsigner = $env:JAVA_HOME + "\bin\jarsigner.exe"
+    if (!(Test-Path -Path $jarsigner -PathType Leaf)) 
+    {
+        throw "Can not locate jarsigner.exe, please verify JAVA_HOME is properly configured on the build machine."	
+    }	
 
-if (!$keystoreFile -or !(Test-Path -Path $keystoreFile -PathType Leaf)) 
-{
-    throw "Please specify the keystore for signing APK and make sure it exists."
-}
+    if (!$keystoreFile -or !(Test-Path -Path $keystoreFile -PathType Leaf)) 
+    {
+        throw "Please specify the keystore for signing APK and make sure it exists."
+    }
 
-if (!$keystoreAlias) 
-{
-    throw "Please specify the keystore alias."	
-}
+    if (!$keystoreAlias) 
+    {
+        throw "Please specify the keystore alias."	
+    }
 
-if ($keystorePass) 
-{
-    $jarsignerArguments = "$jarsignerArguments -storepass $keystorePass" 
-}
+    if ($keystorePass) 
+    {
+        $jarsignerArguments = "$jarsignerArguments -storepass $keystorePass" 
+    }
 
-if ($keyPass) 
-{
-    $jarsignerArguments = "$jarsignerArguments -keypass $keyPass" 
+    if ($keyPass) 
+    {
+        $jarsignerArguments = "$jarsignerArguments -keypass $keyPass" 
+    }
 }
 
 if ($zipalignApk) 
@@ -123,12 +131,15 @@ if ($zipalignApk)
 
 foreach ($file in $filesToSign) 
 {
-    # move the apk file so we do not pollute the work direcotry with multiple apks
-    $unsignedApk = RenameExtension $file ".unsigned"
+    if ($jarsignApk)
+    {
+        # move the apk file so we do not pollute the work direcotry with multiple apks
+        $unsignedApk = RenameExtension $file ".unsigned"
 
-    $jarsignerArgs = "$jarsignerArguments -keystore $keystoreFile -signedjar $file $unsignedApk $keystoreAlias"
+        $jarsignerArgs = "$jarsignerArguments -keystore $keystoreFile -signedjar $file $unsignedApk $keystoreAlias"
         
-    Invoke-Tool -Path $jarsigner -Arguments $jarsignerArgs 
+        Invoke-Tool -Path $jarsigner -Arguments $jarsignerArgs 
+    }
 
     if ($zipalignApk)
     {
