@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="icon.png" />
     <Content Include="task.json" />
     <Content Include="AndroidSigning.ps1" />
   </ItemGroup>
