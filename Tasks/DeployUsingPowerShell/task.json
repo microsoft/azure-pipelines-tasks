@@ -26,7 +26,7 @@
             "label": "Deploy to Machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally provide a comma separated list of machines to deploy the application to. It defaults to all the machines in the environment."
+            "helpMarkDown": "Optionally provide a comma separated list of machines to deploy the application to. It defaults to all the machines in the environment. For example, BudgetIT-Web01, BudgetIT-Web02."
         },
         {
             "name": "SourcePackage",
@@ -34,7 +34,7 @@
             "label": "Source",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the application binaries. Variables like $(Build.Repository.LocalPath) can be used for binaries in the Automation Agent."
+            "helpMarkDown": "Location of the application binaries. Variables like $(Build.Repository.LocalPath) can be used for binaries in the Automation Agent. For example, $(Build.Repository.LocalPath)\\BudgetIT\\Web." 
         },
         {
             "name": "ApplicationPath",
@@ -42,7 +42,7 @@
             "label": "Destination",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Local Path on the target machines for copying the binaries from the source."
+            "helpMarkDown": "Local Path on the target machines for copying the binaries from the source. For example, C:\\BudgetIT\\Web." 
         },
         {
             "name": "ScriptPath",
@@ -50,7 +50,7 @@
             "label": "PowerShell Script",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the PowerShell script on the local machine or on a UNC path"
+            "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\Website.ps1"
         },
         {
             "name": "InitializationScriptPath",
@@ -58,7 +58,7 @@
             "label": "Initialization Script",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Location of the PowerShell initialization script (data script for DSC) on the local machine or on a UNC path." 
+            "helpMarkDown": "Optinally provide location of the PowerShell initialization script (data script for DSC) on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1" 
         },
         {
             "name": "AlternateCredentialsUsername",
@@ -77,7 +77,7 @@
             "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
         }
     ],
-    "instanceNameFormat": "Run RemotePowershellRunner.ps1",
+    "instanceNameFormat": "Deploy PowerShell on environment $(EnvironmentName)",
 	 "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RemotePowershellRunner.ps1",
