@@ -18,47 +18,47 @@
             "label": "Environment Name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the created lab environment."
+            "helpMarkDown": "Name of the environment for deploying application.​"
         },
         {
             "name": "MachineNames",
             "type": "string",
-            "label": "Machine Names",
+            "label": "Deploy to Machines",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Comma-separated list of machine names (IP address/fqdn)."
+            "required": false,
+            "helpMarkDown": "Optionally provide a comma separated list of machines to deploy the application to. It defaults to all the machines in the environment."
         },
         {
             "name": "SourcePackage",
             "type": "string",
-            "label": "Source Package",
+            "label": "Source",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the source files." 
+            "helpMarkDown": "Location of the application binaries. Variables like $(Build.Repository.LocalPath) can be used for binaries in the Automation Agent."
         },
         {
             "name": "ApplicationPath",
             "type": "string",
-            "label": "Application Path",
+            "label": "Destination",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path on target machines where source package would get copied." 
+            "helpMarkDown": "Local Path on the target machines for copying the binaries from the source."
         },
         {
             "name": "ScriptPath",
             "type": "string",
-            "label": "Script Path",
+            "label": "PowerShell Script",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Absolute or UNC path of the PS/DSC script on the target machines." 
+            "helpMarkDown": "Location of the PowerShell script on the local machine or on a UNC path"
         },
         {
             "name": "InitializationScriptPath",
             "type": "string",
-            "label": "Initialization Script Path",
+            "label": "Initialization Script",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Absolute or UNC path of the PS initialization script (data script for DSC) on the target machines." 
+            "helpMarkDown": "Location of the PowerShell initialization script (data script for DSC) on the local machine or on a UNC path." 
         },
         {
             "name": "AlternateCredentialsUsername",
