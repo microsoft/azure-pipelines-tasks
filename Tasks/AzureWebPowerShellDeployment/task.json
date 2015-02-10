@@ -1,14 +1,14 @@
 ﻿{
   "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
   "name": "AzureWebPowerShellDeployment",
-  "friendlyName": "Azure Web Site Deployment via PowerShell",
-  "description": "Deploy an Azure Web Site with PowerShell",
+  "friendlyName": "Azure Web Site Deployment",
+  "description": "Deploy a website to Microsoft Azure",
   "category": "Deploy",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5,
+    "Patch": 6,
     "IsTest": false
   },
   "demands": [

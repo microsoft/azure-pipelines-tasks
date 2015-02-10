@@ -8,7 +8,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4,
+    "Patch": 5,
     "IsTest": false
   },
   "demands": [
@@ -71,7 +71,8 @@
       "helpMarkDown": "The version of VSTest to use.",
       "groupName":"advanced",
       "options": {
-                "14.0": "Visual Studio 2015"
+                "14.0": "Visual Studio 2015",
+                "12.0": "Visual Studio 2013"
             }
     },
     {

@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4,
+        "Patch": 5,
         "IsTest": false
     },
     "demands" : [
@@ -108,7 +108,7 @@
             "label": "MSBuild Architecture", 
             "defaultValue":"x86", 
             "required":false,
-            "helpMarkDown": "Optionally supply the path the architecture (x86, x64) of MSBuild to run.",
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
             "groupName":"advanced",
             "visibleRule": "msbuildLocationMethod = version",
             "options":{
