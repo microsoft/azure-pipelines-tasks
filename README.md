@@ -2,30 +2,36 @@
 
 Tasks which will be provided in the box in the new build system.
 
-Also see the agent [here](https://github.com/Microsoft/vso-agent)
-
 ![Build Tasks](/tasks.png?raw=true "Build Tasks")
 
-##Available Tasks
+##Configure
+
+Before you run the builds, you need to configure an agent:
+
+[Windows](http://youtu.be/V2-cPzggChg)
+[OSX/Linux](https://github.com/Microsoft/vso-agent)
+
+##Available Build Steps
+
 * Android
+* Ant
 * Azure Cloud Deployment
-* Azure PowerShell
-* Azure WebSite Deployment
+* [Azure PowerShell (Video)](http://youtu.be/uRI94SJ_XoE)
+* [Azure WebSite Deployment (Video)](http://youtu.be/aLprCE3uRHs)
 * CMake
 * CmdScript
 * Jake
+* Maven
 * MSBuild
 * PowerShell
 * ProcessRunner
 * ShellScript
-* VSBuild
+* [VSBuild (Video)](http://youtu.be/Jx8s7KAATH4)
 * VSTest
-* Xcode Build
+* [Xcode Build (Video)](http://youtu.be/OxmBuqtgHuM)
 
-Coming Soon:
+Coming Soon
 
-* Ant
-* Maven
 * Python
 
 ##Overview
