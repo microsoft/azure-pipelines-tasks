@@ -4,6 +4,8 @@ Tasks which will be provided in the box in the new build system.
 
 Also see the agent [here](https://github.com/Microsoft/vso-agent)
 
+![Build Tasks](/tasks.png?raw=true "Build Tasks")
+
 ##Available Tasks
 * Android
 * Azure Cloud Deployment
