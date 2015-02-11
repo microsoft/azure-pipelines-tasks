@@ -7,7 +7,7 @@ param
     [String] [Parameter(Mandatory = $true)]
     $ScriptPath,
 
-    [String] [Parameter(Mandatory = $true)]
+    [String] [Parameter(Mandatory = $false)]
     $ScriptArguments
 )
 
