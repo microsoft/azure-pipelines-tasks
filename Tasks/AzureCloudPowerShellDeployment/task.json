@@ -1,14 +1,14 @@
 ﻿{
   "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
   "name": "AzureCloudPowerShellDeployment",
-  "friendlyName": "Azure Cloud Service Deployment via PowerShell",
-  "description": "Deploy an Azure Cloud Service with PowerShell",
+  "friendlyName": "Azure Cloud Service Deployment",
+  "description": "Deploy an Azure Cloud Service",
   "category": "Deploy",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4,
+    "Patch": 5,
     "IsTest": false
   },
   "demands": [
