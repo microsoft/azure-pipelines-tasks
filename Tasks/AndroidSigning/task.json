@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0,
+        "Patch": 1,
         "IsTest": false
     },
     "demands": [
@@ -36,6 +36,14 @@
             "required": true,
             "helpMarkDown": "Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\bin\\*.apk` for all APK files in bin subfolder."
         },
+        { 
+            "name": "jarsign", 
+            "type": "boolean", 
+            "label": "Sign the APK", 
+            "defaultValue": "true", 
+            "required": false,
+            "groupName": "jarsignerOptions"
+        },
         {
             "name": "keystoreFile",
             "type": "string",
@@ -43,6 +51,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Full path to the keystore file.",
+            "visibleRule": "jarsign = true",
             "groupName":"jarsignerOptions"   
         },
         {
@@ -51,6 +60,7 @@
             "label": "Keystore Password",
             "defaultValue": "",
             "required": false,
+            "visibleRule": "jarsign = true",
             "groupName":"jarsignerOptions"   
         },
         {
@@ -59,6 +69,7 @@
             "label": "Alias",
             "defaultValue": "",
             "required": false,
+            "visibleRule": "jarsign = true",
             "groupName":"jarsignerOptions"   
         },
         {
@@ -67,6 +78,7 @@
             "label": "Key Password",
             "defaultValue": "",
             "required": false,
+            "visibleRule": "jarsign = true",
             "groupName":"jarsignerOptions"   
         },
         {
@@ -75,6 +87,7 @@
             "label": "Jarsigner Arguments",
             "defaultValue": "-verbose -sigalg MD5withRSA -digestalg SHA1",
             "required": false,
+            "visibleRule": "jarsign = true",
             "groupName": "jarsignerOptions"
         },
         { 
