@@ -9,6 +9,7 @@ Tasks which will be provided in the box in the new build system.
 Before you run the builds, you need to configure an agent:
 
 [Windows](http://youtu.be/V2-cPzggChg)
+
 [OSX/Linux](https://github.com/Microsoft/vso-agent)
 
 ##Available Build Steps
