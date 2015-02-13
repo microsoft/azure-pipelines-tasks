@@ -58,7 +58,7 @@
             "label": "Initialization Script",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optinally provide location of the PowerShell initialization script (data script for DSC) on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1" 
+            "helpMarkDown": "Optionally provide location of the PowerShell initialization script (data script for DSC) on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1" 
         },
         {
             "name": "AlternateCredentialsUsername",
