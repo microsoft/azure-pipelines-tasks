@@ -6,9 +6,9 @@
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
-        "Minor": 1,
-        "Patch": 3,
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
         "IsTest": false
     },
     "demands" : [
@@ -44,14 +44,42 @@
             "defaultValue": "build", 
             "required": true  
         },
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Working directory to run Gradle build in. Defaults to repository root.",
+            "groupName": "advanced"
+        },
+        {
+            "name":"jdkVersion",
+            "type":"pickList",
+            "label":"JDK Version",
+            "required":false,
+            "groupName":"advanced",
+            "defaultValue":"default",
+            "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+            "options": {
+                "default":"default",
+                "1.8":"JDK 8",
+                "1.7":"JDK 7",
+                "1.6":"JDK 6"
+            }
+        },
         { 
-            "name": "cwd", 
-            "type":  "filePath", 
-            "label":  "Working Directory", 
-            "defaultValue": "", 
-            "required":  false,
-            "helpMarkDown":"Working directory to run Gradle build in. Defaults to repository root.",
-            "groupName":"advanced"
+            "name": "jdkArchitecture", 
+            "type": "pickList", 
+            "label": "JDK Architecture", 
+            "defaultValue":"x86", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+            "groupName":"advanced",
+            "options":{
+                "x86":"x86",
+                "x64":"x64"
+            }
         }
     ],
     "instanceNameFormat": "gradlew $(tasks)",
