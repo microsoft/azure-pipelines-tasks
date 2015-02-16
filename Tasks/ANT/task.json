@@ -8,11 +8,18 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0,
+        "Patch": 1,
         "IsTest": false
     },
     "demands" : [
         "ant"
+    ],
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
     ],
     "instanceNameFormat": "Ant $(options)",
     "inputs": [
@@ -22,15 +29,7 @@
             "label": "Ant build file", 
             "defaultValue": "", 
             "required": true,
-            "helpMarkDown": "Relative path from the repo root to the `Ant build file`."
-        },
-        { 
-            "name": "cwd", 
-            "type": "filePath", 
-            "label": "Working directory", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown":"Working directory to run the Ant build in. Defaults to repo root."
+            "helpMarkDown": "Relative path from the repository root to the `Ant build file`."
         },
         { 
             "name": "options", 
@@ -44,6 +43,15 @@
             "type": "string", 
             "label": "Target(s)", 
             "defaultValue":"", "required":false
+        },
+         { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working directory", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown":"Working directory to run the Ant build in. Defaults to repository root.",
+            "groupName":"advanced"
         }
     ],
     "execution": {

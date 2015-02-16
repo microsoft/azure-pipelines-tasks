@@ -8,11 +8,18 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3,
+        "Patch": 4,
         "IsTest": false
     },
     "demands" : [
         "jake"
+    ],
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
     ],
     "instanceNameFormat": "Jake $(target)",
     "inputs": [
@@ -25,19 +32,20 @@
             "helpMarkDown": "Relative path from repo root of the Jake file script file to run."
         },
         { 
-            "name": "cwd", 
-            "type": "filePath", 
-            "label": "Local path", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located." 
-        },
-        { 
             "name": "target", 
             "type": "string", 
             "label": "Jake Target", 
             "defaultValue":"", 
             "required":false
+        },
+         { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working Directory", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+            "groupName":"advanced"
         }
     ],
     "execution": {

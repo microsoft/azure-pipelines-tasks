@@ -8,11 +8,18 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 5,
         "IsTest": false
     },
     "demands" : [
         "msbuild"
+    ],
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
     ],
     "inputs": [
         { 
@@ -24,12 +31,18 @@
             "helpMarkDown": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."  
         },
         { 
-            "name": "msbuildLocation", 
+            "name": "platform", 
             "type": "string", 
-            "label": "MSBuild Location", 
+            "label": "Platform", 
             "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Optionally supply the path to MSBuild.  It defaults to searching for latest version."  
+            "required":false
+        },
+        { 
+            "name": "configuration", 
+            "type": "string", 
+            "label": "Configuration", 
+            "defaultValue":"", 
+            "required":false 
         },
         { 
             "name": "msbuildArguments", 
@@ -38,20 +51,6 @@
             "defaultValue":"", 
             "required":false,
             "helpMarkDown": "Additional arguments passed to MSBuild."
-        },
-        { 
-            "name": "platform", 
-            "type": "string", 
-            "label": "Platform", 
-            "defaultValue":"", 
-            "required":false 
-        },
-        { 
-            "name": "configuration", 
-            "type": "string", 
-            "label": "Configuration", 
-            "defaultValue":"", 
-            "required":false 
         },
         { 
             "name": "clean", 
@@ -66,6 +65,66 @@
             "label": "Restore NuGet Packages", 
             "defaultValue": "true", 
             "required": false 
+        },
+        { 
+            "name": "logProjectEvents", 
+            "type": "boolean", 
+            "label": "Record Project Details", 
+            "defaultValue": "true", 
+            "required": false,
+            "groupName":"advanced" 
+        },
+        {
+            "name":"msbuildLocationMethod",
+            "type":"radio",
+            "label":"MSBuild",
+            "required":false,
+            "groupName":"advanced",
+            "defaultValue":"version",
+            "options": {
+                "version":"Version",
+                "location":"Specify Location"
+            }   
+        },
+        {
+            "name":"msbuildVersion",
+            "type":"pickList",
+            "label":"MSBuild Version",
+            "required":false,
+            "groupName":"advanced",
+            "defaultValue":"latest",
+            "helpMarkDown": "Optionally specify the version of MSBuild. It defaults to searching for the latest version.",
+            "visibleRule": "msbuildLocationMethod = version",
+            "options": {
+                "latest":"Latest",
+                "14.0":"MSBuild 14.0",
+                "12.0":"MSBuild 12.0",
+                "4.0":"MSBuild 4.0"
+            }
+        },
+        { 
+            "name": "msbuildArchitecture", 
+            "type": "pickList", 
+            "label": "MSBuild Architecture", 
+            "defaultValue":"x86", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+            "groupName":"advanced",
+            "visibleRule": "msbuildLocationMethod = version",
+            "options":{
+                "x86":"MSBuild x86",
+                "x64":"MSBuild x64"
+            }
+        },
+        { 
+            "name": "msbuildLocation", 
+            "type": "string", 
+            "label": "Path to MSBuild", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the path to MSBuild.",  
+            "visibleRule": "msbuildLocationMethod = location",
+            "groupName":"advanced"
         }
     ],
     "instanceNameFormat": "Build solution $(solution)",

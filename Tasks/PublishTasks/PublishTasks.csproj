@@ -40,7 +40,7 @@
     <Message Text="SourceLocation = $(SourceLocation)" Importance="High" />
     <Message Text="PackageLocation = $(PackageLocation)" Importance="High" />
     <Message Text="ReadMeFileLocation = $(ReadMeFileLocation)" Importance="High" />
-    <Exec Command="$(PowerShellExe) Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force" />
+    <Exec Command="$(PowerShellExe) Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -Scope CurrentUser" />
     <Exec Command="$(PowerShellExe) -Command &quot;&amp; { &amp;'$(ScriptLocation)' '$(SourceLocation)' '$(PackageLocation)' '$(ReadMeFileLocation)'} &quot;" />
   </Target>
   <Target Name="Rebuild" DependsOnTargets="Build" />

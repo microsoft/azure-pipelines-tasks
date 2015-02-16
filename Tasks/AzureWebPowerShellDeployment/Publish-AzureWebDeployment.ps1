@@ -2,7 +2,7 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
-    $DeploymentEnvironmentName,
+    $ConnectedServiceName,
 
     [String] [Parameter(Mandatory = $true)]
     $WebSiteName,
@@ -35,7 +35,7 @@ function Get-SingleFile($files, $pattern)
 
 Write-Host "Entering script Publish-AzureWebDeployment.ps1"
 
-Write-Host "DeploymentEnvironmentName= $DeploymentEnvironmentName"
+Write-Host "ConnectedServiceName= $ConnectedServiceName"
 Write-Host "WebSiteName= $WebSiteName"
 Write-Host "Package= $Package"
 Write-Verbose "AdditionalArguments= $AdditionalArguments"
