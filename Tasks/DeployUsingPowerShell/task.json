@@ -1,7 +1,7 @@
 ﻿{
     "id": "328F068F-D6E5-4435-91FE-27175C8A0AD4",
     "name": "DeployUsingPowerShell",
-    "friendlyName": "Deploy Using PowerShell",
+    "friendlyName": "Deploy Using PowerShell*",
     "description": "Execute PowerShell commands remotely on machine(s)",
     "category": "Utility",
     "author": "Microsoft Corporation",
