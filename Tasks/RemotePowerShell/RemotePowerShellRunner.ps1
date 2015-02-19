@@ -18,6 +18,25 @@ Write-Verbose "applicationPath = $applicationPath" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 
+function Output-ResponseLogs
+{
+    param([string]$operationName,
+          [string]$fqdn,
+          [object]$deploymentResponse)
+
+    if ([string]::IsNullOrEmpty($deploymentResponse.DeploymentLog) -eq $false -or [string]::IsNullOrEmpty($deploymentResponse.ServiceLog) -eq $false)
+    {
+        Write-Verbose "Deployment logs for $operationName operation on $fqdn " -Verbose
+        Write-Verbose ($deploymentResponse.DeploymentLog | Format-List | Out-String) -Verbose
+        Write-Verbose "Service logs for $operationName operation on $fqdn " -Verbose
+        Write-Verbose ($deploymentResponse.ServiceLog | Format-List | Out-String) -Verbose
+    }
+    else
+    {
+        Write-Verbose "Finished $operationName operation" -Verbose
+    }
+}
+
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
@@ -39,16 +58,7 @@ foreach ($machineName in $machineNameList)
     
     $copyResponse = Copy-FilesToRemote -MachineDnsName $machineName -SourceLocalPath $sourcePackage -DestinationLocalPath $applicationPath -Credential $credential
 
-    $log = $copyResponse.Log;
-
-    if ([string]::IsNullOrEmpty($log) -eq $false)
-    {
-        Write-Verbose "Copy response for $machineName is $log" -Verbose
-    }
-    else
-    {
-        Write-Verbose "Finished Copying" -Verbose
-    }
+    Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $copyResponse
     
     if ($copyResponse.Status -ne [Microsoft.VisualStudio.Services.DevTestLabs.Definition.DscStatus]::Passed)
     {
@@ -61,16 +71,7 @@ foreach ($machineName in $machineNameList)
 
     $deploymentResponse = Invoke-PsOnRemote -MachineDnsName $machineName -ScriptPath $scriptPath -WinRMPort $port -Credential $credential -InitializationScriptPath $initializationScriptPath –SkipCACheck -UseHttp    
 
-    $log = $deploymentResponse.Log;
-
-    if ([string]::IsNullOrEmpty($log) -eq $false)
-    {
-        Write-Verbose "Copy response for $machineName is $log" -Verbose
-    }
-    else
-    {
-        Write-Verbose "Finished Deployment" -Verbose
-    }
+    Output-ResponseLogs -operationName "deployment" -fqdn $machineName -deploymentResponse $deploymentResponse
     
     if ($deploymentResponse.Status -ne [Microsoft.VisualStudio.Services.DevTestLabs.Definition.DscStatus]::Passed)
     {
