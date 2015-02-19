@@ -17,6 +17,25 @@ Write-Verbose "applicationPath = $applicationPath" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 
+function Output-ResponseLogs
+{
+    param([string]$operationName,
+          [string]$fqdn,
+          [object]$deploymentResponse)
+
+    if ([string]::IsNullOrEmpty($deploymentResponse.DeploymentLog) -eq $false -or [string]::IsNullOrEmpty($deploymentResponse.ServiceLog) -eq $false)
+    {
+        Write-Verbose "Deployment logs for $operationName operation on $fqdn " -Verbose
+        Write-Verbose ($deploymentResponse.DeploymentLog | Format-List | Out-String) -Verbose
+        Write-Verbose "Service logs for $operationName operation on $fqdn " -Verbose
+        Write-Verbose ($deploymentResponse.ServiceLog | Format-List | Out-String) -Verbose
+    }
+    else
+    {
+        Write-Verbose "Finished $operationName operation" -Verbose
+    }
+}
+
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 $env:DTL_ALTERNATE_CREDENTIALS_USERNAME = $alternateCredentialsUsername
@@ -48,16 +67,9 @@ foreach ($resource in $resources)
 
     $copyResponse = Copy-FilesToRemote -MachineDnsName $fqdn -SourceLocalPath $sourcePackage -DestinationLocalPath $applicationPath -Credential $credential
 
-    $log = $copyResponse.Log;
+    $log = "Deployment Logs : " + $copyResponse.DeploymentLog + "`nService Logs : " + $copyResponse.ServiceLog
 
-    if ([string]::IsNullOrEmpty($log) -eq $false)
-    {
-        Write-Verbose "Copy response for $fqdn is $log" -Verbose
-    }
-    else
-    {
-        Write-Verbose "Finished Copying" -Verbose
-    }
+    Output-ResponseLogs -operationName "copy" -fqdn $fqdn -deploymentResponse $copyResponse
 
     $response = $copyResponse
     
@@ -67,16 +79,9 @@ foreach ($resource in $resources)
 
         $deploymentResponse = Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath $scriptPath -WinRMPort $port -Credential $credential -InitializationScriptPath $initializationScriptPath –SkipCACheck -UseHttp
 
-        $log = $deploymentResponse.Log;
+        $log = "Deployment Logs : " + $deploymentResponse.DeploymentLog + "`nService Logs : " + $deploymentResponse.ServiceLog;
 
-        if ([string]::IsNullOrEmpty($log) -eq $false)
-        {
-            Write-Verbose "Deployment response for $fqdn is $log" -Verbose
-        }
-        else
-        {
-            Write-Verbose "Finished Deployment" -Verbose
-        }
+        Output-ResponseLogs -operationName "deployment" -fqdn $fqdn -deploymentResponse $deploymentResponse
 
         $response = $deploymentResponse
     }
