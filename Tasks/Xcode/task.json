@@ -77,6 +77,10 @@
         "JavaScript": {
             "target": "xcodebuild.js",
             "argumentFormat": ""
-        }
+        },
+        "Node": {
+            "target": "xcodebuild2.js",
+            "argumentFormat": ""
+        }        
     }    
 }
