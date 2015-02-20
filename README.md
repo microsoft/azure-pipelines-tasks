@@ -2,28 +2,37 @@
 
 Tasks which will be provided in the box in the new build system.
 
-Also see the agent [here](https://github.com/Microsoft/vso-agent)
+![Build Tasks](/tasks.png?raw=true "Build Tasks")
 
-##Available Tasks
+##Configure
+
+Before you run the builds, you need to configure an agent:
+
+[Windows](http://youtu.be/V2-cPzggChg)
+
+[OSX/Linux](https://github.com/Microsoft/vso-agent)
+
+##Available Build Steps
+
 * Android
+* Ant
 * Azure Cloud Deployment
-* Azure PowerShell
-* Azure WebSite Deployment
+* [Azure PowerShell (Video)](http://youtu.be/uRI94SJ_XoE)
+* [Azure WebSite Deployment (Video)](http://youtu.be/aLprCE3uRHs)
 * CMake
 * CmdScript
 * Jake
+* Maven
 * MSBuild
 * PowerShell
 * ProcessRunner
 * ShellScript
-* VSBuild
+* [VSBuild (Video)](http://youtu.be/Jx8s7KAATH4)
 * VSTest
-* Xcode Build
+* [Xcode Build (Video)](http://youtu.be/OxmBuqtgHuM)
 
-Coming Soon:
+Coming Soon
 
-* Ant
-* Maven
 * Python
 
 ##Overview
@@ -38,6 +47,8 @@ We also have tasks for script runners such as PowerShell, cmd script, Shell Scri
 
 ##Authoring
 Tasks can be written in Powershell, ShellScript, javaScript or Python.  Tasks can carry multiple implementations for cases where you want to run PowerShell on Windows and a Shell Script for example on Linux or OSX.
+
+[Pre-Defined Variables](/docs/authoring/variables.md)
 
 ##Capabilities and Demands
 Tasks demand a tool or dependency that they run.  On configuration and startup, an agent registers it's capabilities with the server.  When you add a task to a definition it appends the demands for that definition.  When run, an agent is found with the corresponding capabilities from the configured pool of agents.

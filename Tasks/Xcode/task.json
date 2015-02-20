@@ -8,13 +8,20 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4,
+        "Patch": 5,
         "IsTest": false
     },
     "demands" : [
         "xcode"
     ],
     "instanceNameFormat": "Xcode $(actions)",
+     "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
     "inputs": [
         { 
             "name": "xcWorkspacePath", 
@@ -62,7 +69,8 @@
             "Output", 
             "defaultValue":"output/$(SDK)/$(Configuration)", 
             "required":true,
-            "helpMarkDown": "Relative path where build output (binaries) will be placed."
+            "helpMarkDown": "Relative path where build output (binaries) will be placed.",
+            "groupName":"advanced"
         }
     ],
     "execution": {

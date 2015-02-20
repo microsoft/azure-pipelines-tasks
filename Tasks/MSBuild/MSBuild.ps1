@@ -5,9 +5,11 @@ param(
     [string]$platform,
     [string]$configuration,
     [string]$clean,
-    [string]$restoreNugetPackages
+    [string]$restoreNugetPackages,
+    [string]$logProjectEvents,
+    [string]$msbuildVersion,
+    [string]$msbuildArchitecture
 )
-
 
 Write-Verbose "Entering script MSBuild.ps1"
 Write-Verbose "msbuildLocation = $msbuildLocation"
@@ -17,6 +19,7 @@ Write-Verbose "platform = $platform"
 Write-Verbose "configuration = $configuration"
 Write-Verbose "clean = $clean"
 Write-Verbose "restoreNugetPackages = $restoreNugetPackages"
+Write-Verbose "logProjectEvents = $logProjectEvents"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -28,6 +31,10 @@ if (!$solution)
 
 $nugetRestore = Convert-String $restoreNugetPackages Boolean
 Write-Verbose "nugetRestore (converted) = $nugetRestore"
+$logEvents = Convert-String $logProjectEvents Boolean
+Write-Verbose "logEvents (converted) = $logEvents"
+$noTimelineLogger = !$logEvents
+Write-Verbose "noTimelineLogger = $noTimelineLogger"
 $cleanBuild = Convert-String $clean Boolean
 Write-Verbose "clean (converted) = $cleanBuild"
 
@@ -50,6 +57,7 @@ if (!$solutionFiles)
     throw "No solution with search pattern '$solution' was found."
 }
 
+Write-Verbose "Creating a new timeline for logging events"
 $timeline = Start-Timeline -Context $distributedTaskContext
 
 $args = $msbuildArguments;
@@ -67,11 +75,25 @@ if ($configuration)
 
 Write-Verbose "args = $args"
 
+if(!$msBuildLocation)
+{
+    if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
+    {
+        if($msbuildVersion -eq "latest")
+        {
+            # null out $msBuildVersion before passing to cmdlet so it will default to the latest on teh machine.
+            $msBuildVersion = $null
+        }
+            
+        $msBuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
+    }  
+}
+
 if ($cleanBuild)
 {
     foreach ($sf in $solutionFiles)  
     {
-        Invoke-MSBuild $sf -Timeline $timeline -Targets Clean -LogFile "$sf-clean.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
+        Invoke-MSBuild $sf -Timeline $timeline -Targets Clean -LogFile "$sf-clean.log" -ToolLocation $msBuildLocation -CommandLineArgs $args -NoTimelineLogger:$noTimelineLogger
     }
 }
 
@@ -100,7 +122,7 @@ foreach ($sf in $solutionFiles)
         }
     }
 
-    Invoke-MSBuild $sf -Timeline $timeline -LogFile "$sf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
+    Invoke-MSBuild $sf -Timeline $timeline -LogFile "$sf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args  -NoTimelineLogger:$noTimelineLogger
 }
 
 Write-Verbose "Leaving script MSBuild.ps1"

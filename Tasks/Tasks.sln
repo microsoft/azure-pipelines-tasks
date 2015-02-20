@@ -67,6 +67,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunDistributedTests", "RunD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployUsingPowerShell", "DeployUsingPowerShell\DeployUsingPowerShell.csproj", "{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinAndroid", "XamarinAndroid\XamarinAndroid.csproj", "{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidSigning", "AndroidSigning\AndroidSigning.csproj", "{FFF51606-307E-4344-9FCF-48B6F817A141}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +165,14 @@ Global
 		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFF51606-307E-4344-9FCF-48B6F817A141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFF51606-307E-4344-9FCF-48B6F817A141}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFF51606-307E-4344-9FCF-48B6F817A141}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFF51606-307E-4344-9FCF-48B6F817A141}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

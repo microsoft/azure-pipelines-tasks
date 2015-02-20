@@ -1,6 +1,6 @@
-﻿{
-    "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
-    "name": "VSBuild",
+{
+    "id":"71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
+    "name":"VSBuild",
     "friendlyName": "Visual Studio Build",
     "description": "Build with Visual Studio",
     "category": "Build",
@@ -8,74 +8,161 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 5,
         "IsTest": false
     },
-    "demands" : [
+    "demands": [
         "msbuild",
         "visualstudio"
     ],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
-        { 
-            "name": "solution", 
-            "type": "filePath", 
-            "label": "Solution", 
-            "defaultValue":"**\\*.sln", 
-            "required":true,
-            "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders." 
+        {
+            "name": "solution",
+            "type": "filePath",
+            "label": "Solution",
+            "defaultValue": "**\\*.sln",
+            "required": true,
+            "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
         },
-        { 
-            "name": "msbuildLocation", 
-            "type": "string", 
-            "label": "MSBuild Location", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Optionally supply the path to MSBuild.  It defaults to searching for latest version." 
-        },
-        { 
-            "name": "vsLocation", 
-            "type": "string", 
-            "label": 
-            "Visual Studio Location", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Optionally supply the path to Visual Studio install location, used to locate the developer command prompt batch file.  It defaults to searching for latest version."
-        },
-        { 
-            "name": "msbuildArgs", 
-            "type": "string", 
-            "label": "MSBuild Arguments", 
-            "defaultValue":"", 
-            "required":false,
+        {
+            "name": "msbuildArgs",
+            "type": "string",
+            "label": "MSBuild Arguments",
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Additional arguments passed to MSBuild."
         },
-        { 
-            "name": "platform", 
-            "type": "string", 
-            "label": "Platform", 
-            "defaultValue":"", 
-            "required":false 
+        {
+            "name": "platform",
+            "type": "string",
+            "label": "Platform",
+            "defaultValue": "",
+            "required": false
         },
-        { 
-            "name": "configuration", 
-            "type": "string", 
-            "label": "Configuration", 
-            "defaultValue":"", 
-            "required":false 
+        {
+            "name": "configuration",
+            "type": "string",
+            "label": "Configuration",
+            "defaultValue": "",
+            "required": false
         },
-        { 
-            "name": "clean", 
-            "type": "boolean", 
-            "label": "Clean", 
-            "defaultValue": "false", 
-            "required": false 
+        {
+            "name": "clean",
+            "type": "boolean",
+            "label": "Clean",
+            "defaultValue": "false",
+            "required": false
         },
-        { 
-            "name": "restoreNugetPackages", 
-            "type": "boolean", 
-            "label": "Restore NuGet Packages", 
-            "defaultValue": "true", 
-            "required": false 
+        {
+            "name": "restoreNugetPackages",
+            "type": "boolean",
+            "label": "Restore NuGet Packages",
+            "defaultValue": "true",
+            "required": false
+        },
+        {
+            "name": "vsLocationMethod",
+            "type": "radio",
+            "label": "Visual Studio",
+            "required": false,
+            "defaultValue": "version",
+            "groupName": "advanced",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
+        {
+            "name": "vsVersion",
+            "type": "pickList",
+            "label": "Visual Studio Version",
+            "required": false,
+            "groupName": "advanced",
+            "defaultValue": "latest",
+            "visibleRule": "vsLocationMethod = version",
+            "options": {
+                "latest":"Latest",
+                "14.0": "Visual Studio 2015",
+                "12.0": "Visual Studio 2013",
+                "11.0": "Visual Studio 2012"
+            }
+        },
+        {
+            "name": "vsLocation",
+            "type": "string",
+            "label": "Visual Studio Location",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to Visual Studio install location, used to locate the developer command prompt batch file.  It defaults to searching for latest version.",
+            "groupName": "advanced",
+            "visibleRule": "vsLocationMethod = location"
+        },
+        {
+            "name": "msbuildLocationMethod",
+            "type": "radio",
+            "label": "MSBuild",
+            "required": false,
+            "defaultValue": "version",
+            "groupName": "advanced",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
+        {
+            "name": "msbuildVersion",
+            "type": "pickList",
+            "label": "MSBuild Version",
+            "defaultValue": "latest",
+            "required": false,
+            "groupName": "advanced",
+            "visibleRule": "msbuildLocationMethod = version",
+            "helpMarkDown": "Version of MSBuild to run.  Defaults to searching for latest version",
+            "options": {
+                "latest": "Latest",
+                "14.0": "MSBuild 14.0",
+                "12.0": "MSBuild 12.0",
+                "4.0": "MSBuild 4.0"
+            }
+        },
+        {
+            "name": "msbuildArchitecture",
+            "type": "pickList",
+            "label": "MSBuild Architecture",
+            "defaultValue": "x86",
+            "required": false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+            "groupName": "advanced",
+            "visibleRule": "msbuildLocationMethod = version",
+            "options": {
+                "x86": "MSBuild x86",
+                "x64": "MSBuild x64"
+            }
+        },
+        {
+            "name": "msbuildLocation",
+            "type": "string",
+            "label": "Path to MSBuild",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to MSBuild.  It defaults to searching for latest version.",
+            "visibleRule": "msbuildLocationMethod = location",
+            "groupName": "advanced"
+        },
+        {
+            "name": "logProjectEvents",
+            "type": "boolean",
+            "label": "Record Project Details",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Build solution $(solution)",

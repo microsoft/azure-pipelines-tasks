@@ -8,11 +8,18 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands": [
         "DotNetFramework"
+    ],
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
     ],
     "inputs": [
         { 
@@ -36,8 +43,9 @@
             "type": "filePath", 
             "label": "Working folder", 
             "defaultValue":"", 
-            "required":true,
-            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located." 
+            "required":false,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+            "groupName":"advanced"
         }
     ],
     "instanceNameFormat": "Powershell: $(scriptName)",
