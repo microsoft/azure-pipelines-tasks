@@ -23,16 +23,17 @@ function Output-ResponseLogs
           [string]$fqdn,
           [object]$deploymentResponse)
 
-    if ([string]::IsNullOrEmpty($deploymentResponse.DeploymentLog) -eq $false -or [string]::IsNullOrEmpty($deploymentResponse.ServiceLog) -eq $false)
+    Write-Verbose "Finished $operationName operation" -Verbose
+
+    if ([string]::IsNullOrEmpty($deploymentResponse.DeploymentLog) -eq $false)
     {
         Write-Verbose "Deployment logs for $operationName operation on $fqdn " -Verbose
         Write-Verbose ($deploymentResponse.DeploymentLog | Format-List | Out-String) -Verbose
+    }
+    if ([string]::IsNullOrEmpty($deploymentResponse.ServiceLog) -eq $false)
+    {
         Write-Verbose "Service logs for $operationName operation on $fqdn " -Verbose
         Write-Verbose ($deploymentResponse.ServiceLog | Format-List | Out-String) -Verbose
-    }
-    else
-    {
-        Write-Verbose "Finished $operationName operation" -Verbose
     }
 }
 
