@@ -56,22 +56,6 @@
             "helpMarkDown": "The password for the username given above."
         },
         {
-            "name": "logonAutomatically",
-            "type": "boolean",
-            "label": "Logon automatically",
-            "defaultValue": "false",
-            "required": true,
-            "helpMarkDown": "Denotes if test agent needs to be configured with auto logon capability."
-        },
-        {
-            "name": "disableScreenSaver",
-            "type": "boolean",
-            "label": "Disable screen saver",
-            "defaultValue": "false",
-            "required": true,
-            "helpMarkDown": "Denotes if screen saver needs to be disabled on test agent machines."
-        },
-        {
             "name": "subHeading",
             "type": "bool",
             "label": "Alternate credentials to publish test results to TFS",

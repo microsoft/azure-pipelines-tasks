@@ -4,11 +4,13 @@ param(
     [string]$runAsProcess,
     [string]$machineUserName,
     [string]$machinePassword,
-    [string]$logonAutomatically,
-    [string]$disableScreenSaver,
     [string]$alternateCredsUserName,
     [string]$alternateCredsPassword
 )
+
+# If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
+$logonAutomatically = $runAsProcess
+$disableScreenSaver = $runAsProcess
 
 Write-Verbose "Entering script DeployTestAgent.ps1"
 Write-Verbose "environment = $environment"
