@@ -1,5 +1,5 @@
 ﻿{
-    "id": "A48D8FA9-8693-468B-B4AD-0A1FAF588B79",
+    "id": "C7A6DE2B-3B04-4EB8-B9B0-7F4113316B8C",
     "name": "DeployTestAgent",
     "friendlyName": "Deploy Visual Studio Test Agent",
     "description": "Deploy and configure Test Agent to run tests on a lab environment",
