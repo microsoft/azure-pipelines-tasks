@@ -1,5 +1,5 @@
 ﻿{
-    "id": "0EF70A38-3601-48B7-BF6A-8EFEF87EE23D",
+    "id": "798E69E4-B1AE-4C4B-83A8-CD96F565A546",
 	"name": "RunDistributedTests",
     "friendlyName": "Run Visual Studio Tests using Test Agent",
     "description": "Run tests remotely or distribute tests to multiple machines.",
