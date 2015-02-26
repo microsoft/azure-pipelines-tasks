@@ -70,7 +70,7 @@ foreach ($machineName in $machineNameList)
 
     Write-Verbose "Initiating deployment on $machineName" -Verbose
 
-    $deploymentResponse = Invoke-PsOnRemote -MachineDnsName $machineName -ScriptPath $scriptPath -WinRMPort $port -Credential $credential -InitializationScriptPath $initializationScriptPath –SkipCACheck -UseHttp    
+    $deploymentResponse = Invoke-PsOnRemote -MachineDnsName $machineName -ScriptPath $scriptPath -WinRMPort $port -Credential $credential -InitializationScriptPath $initializationScriptPath -ApplicationPath $applicationPath –SkipCACheck -UseHttp
 
     Output-ResponseLogs -operationName "deployment" -fqdn $machineName -deploymentResponse $deploymentResponse
     
