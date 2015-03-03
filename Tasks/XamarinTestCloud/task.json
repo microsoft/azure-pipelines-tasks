@@ -17,7 +17,7 @@
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": false
+            "isExpanded": true 
         }
     ],
     "inputs": [
@@ -30,12 +30,15 @@
             "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**\\*.apk` for all apk files in all subfolders."
         },
         {
-            "name": "testDir",
-            "type": "filePath",
-            "label": "Test Assemembly Directory",
-            "defaultValue": "",
+            "name": "testFramework",
+            "type": "radio",
+            "label": "Framework",
             "required": true,
-            "helpMarkDown": "Relative path to the folder that contains the test assemblies." 
+            "defaultValue": "xamarinUITest",
+            "options": {
+                "xamarinUITest": "Xamarin.UITest",
+                "calabash": "Calabash"
+            }
         },
         {
             "name": "teamApiKey",
@@ -51,7 +54,7 @@
             "label": "User Email",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "User name this test will run under.",
+            "helpMarkDown": "User name this test will run under."
         },
         {
             "name": "devices",
@@ -70,15 +73,61 @@
             "helpMarkDown": "Organize test runs by series (e.g. master, production, beta)."
         },
         {
-            "name": "locale",
-            "type": "pickList",
-            "label": "System language",
-            "defaultValue": "en_US",
+            "name": "testDir",
+            "type": "filePath",
+            "label": "Test Assemembly Directory",
+            "defaultValue": "",
             "required": true,
-            "options": { 
-                "en_US": "English (United States)",
-                "ja_JP": "Japanese (Japan)"
+            "visibleRule": "testFramework = xamarinUITest",
+            "helpMarkDown": "Relative path to the folder that contains the test assemblies."
+        },
+        {
+            "name": "testCloudLocation",
+            "type": "string",
+            "label": "test-cloud.exe Location",
+            "defaultValue": "$(Agent.BuildDirectory)\\**\\packages\\**\\tools\\test-cloud.exe",
+            "required": true,
+            "visibleRule": "testFramework = xamarinUITest"
+        },
+        {
+            "name": "parallelization",
+            "type": "pickList",
+            "label": "Parallelization",
+            "required": true,
+            "defaultValue": "none",
+            "visibleRule": "testFramework = xamarinUITest",
+            "options": {
+                "none": "None",
+                "--fixture-chunk": "By test fixture",
+                "--test-chunk": "By test method"
             }
+        },
+        {
+            "name": "workspace",
+            "type": "filePath",
+            "label": "Workspace",
+            "required": true,
+            "defaultValue": "$(Build.SourcesDirectory)",
+            "helpMarkDown":  "Path to your Calabash workspace (containing your features folder)",
+            "visibleRule": "testFramework = calabash"
+        },
+        {
+            "name": "configFile",
+            "type": "filePath",
+            "label": "Cucumber configuration file",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "testFramework = calabash",
+            "helpMarkDown":  "Cucumber configuration file (cucumber.yml)"
+        },
+        {
+            "name": "profile",
+            "type": "string",
+            "label": "Profile",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "testFramework = calabash",
+            "helpMarkDown": "Profile to run (profile from cucumber.yml)"
         },
         {
             "name": "appName",
@@ -89,12 +138,31 @@
             "groupName": "advanced"
         },
         {
-            "name": "testCloudLocation",
-            "type": "string",
-            "label": "test-cloud Location",
-            "defaultValue": "$(Agent.BuildDirectory)\\**\\tools\\test-cloud.exe",
+            "name": "locale",
+            "type": "pickList",
+            "label": "System language",
+            "defaultValue": "en_US",
             "required": true,
-            "groupName": "advanced"
+            "groupName": "advanced",
+            "options": {
+                "en_US": "English (United States)",
+                "en_GB": "English (United Kingdom)",
+                "fr_FR": "French (France)",
+                "de_DE": "German (Germany)",
+                "ja_JP": "Japanese (Japan)",
+                "ru_RU": "Russian (Russia)",
+                "es_MX": "Spanish (Mexico)",
+                "es_ES": "Spanish (Spain)"
+            }
+        },
+        {
+            "name": "optionalArgs",
+            "type": "string",
+            "label": "Optional Arguments",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "advanced",
+            "helpMarkDown":  "Additional arguments passed to the test-cloud tool."
         }
     ],
     "instanceNameFormat": "Test Xamarin App $(app)",

@@ -1,4 +1,5 @@
 ﻿param(
+    [string]$testFramework,
     [string]$app, 
     [string]$testDir, 
     [string]$teamApiKey,
@@ -7,10 +8,16 @@
     [string]$series, 
     [string]$locale,
     [string]$appName,
-    [string]$testCloudLocation
+    [string]$testCloudLocation,
+    [string]$parallelization,
+    [string]$optionalArgs,
+    [string]$workspace,
+    [string]$configFile,
+    [string]$profile
 )
 
 Write-Verbose "Entering script XamarinTestCloud.ps1"
+Write-Verbose "testFramework = $testFramework"
 Write-Verbose "app = $app"
 Write-Verbose "testDir = $testDir"
 Write-Verbose "teamApiKey = $teamApiKey"
@@ -20,17 +27,13 @@ Write-Verbose "series = $series"
 Write-Verbose "locale = $locale"
 Write-Verbose "appName = $locale"
 Write-Verbose "testCloudLocation = $testCloudLocation"
+Write-Verbose "parallelization = $parallelization"
+Write-Verbose "optionalArgs = $optionalArgs"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 $parameters = ""
-
-if (!$testDir -or !(Test-Path -Path $testDir -PathType Container))
-{
-    throw "Test assembly directory does not exist or is not a folder."
-}
-$parameters = "$parameters --assembly-dir $testDir"
 
 if (!$teamApiKey) 
 {
@@ -61,35 +64,6 @@ if (!$locale)
 }
 $parameters = "$parameters --locale `"$locale`""
 
-# locate the test-cloud tool, it is part of the Xamarin.UITest NuGet package
-if ($testCloudLocation.Contains("*") -or $testCloudLocation.Contains("?"))
-{
-    Write-Verbose "Find-Files -SearchPattern $testCloudLocation"
-    $testCloudExectuables = Find-Files -SearchPattern $testCloudLocation
-    Write-Verbose "testCloudExectuables = $testCloudExectuables"
-
-    if ($testCloudExectuables)
-    {
-        foreach ($executable in $testCloudExectuables) 
-        {
-            $testCloudExe = $executable
-            break;
-        }
-    }
-}
-else 
-{
-    if (Test-Path -Path $testCloudLocation --Type Leaf) 
-    {
-        $testCloudExe = $testCloudLocation 
-    }
-}
-
-if (!$testCloudExe) 
-{
-    throw "Could not find test-cloud.exe.  Has the test assembly successfully built? "
-}
-
 # check for app pattern
 if ($app.Contains("*") -or $app.Contains("?"))
 {
@@ -109,11 +83,90 @@ if (!$appFiles)
     throw "No apps with search pattern '$app' was found."
 }
 
+if ("xamarinUITest" -eq $testFramework)
+{
+    # Xamarin.UITest specific options
+    if (!$testDir -or !(Test-Path -Path $testDir -PathType Container))
+    {
+        throw "Test assembly directory does not exist or is not a folder."
+    }
+    $parameters = "$parameters --assembly-dir $testDir"
+
+    if ("none" -ne $parallelization)
+    {
+        $parameters = "$parameters $parallelization"
+    }
+
+    # locate the test-cloud tool, it is part of the Xamarin.UITest NuGet package
+    if ($testCloudLocation.Contains("*") -or $testCloudLocation.Contains("?"))
+    {
+        Write-Verbose "Find-Files -SearchPattern $testCloudLocation"
+        $testCloudExectuables = Find-Files -SearchPattern $testCloudLocation
+        Write-Verbose "testCloudExectuables = $testCloudExectuables"
+
+        if ($testCloudExectuables)
+        {
+            foreach ($executable in $testCloudExectuables) 
+            {
+                $testCloud = $executable
+                break;
+            }
+        }
+    }
+    else 
+    {
+        if (Test-Path -Path $testCloudLocation --Type Leaf) 
+        {
+            $testCloud = $testCloudLocation 
+        }
+    }
+
+    if (!$testCloud) 
+    {
+        throw "Could not find test-cloud.exe.  Has the test assembly successfully built? "
+    }
+}
+elseif ("calabash" -eq $testFramework)
+{
+    #Verify test-cloud gem is installed correctly
+    try
+    {
+        $testCloudGem = Get-Command test-cloud
+        $testCloud = $testCloudGem.Path
+        Write-Verbose "Found test-cloud at $testCloud"
+    }
+    catch
+    {
+        throw 'Unable to find "test-cloud". If you still do not have Xamarin Test Cloud command line tools installed, get it by installing the xamarin-test-cloud ruby gem: gem install xamarin-test-cloud.'
+    }
+
+    # Calabash specific options
+    if ($workspace) 
+    {
+        $parameters = "$parameters -w $workspace"
+    }
+
+    if ($configFile)
+    {
+        $parameters = "$parameters -c $configFile" 
+    }
+
+    if ($profile)
+    {
+        $parameters = "$parameters -p $profile"
+    }
+}
+
+if ($optionalArgs)
+{
+    $parameters = "$parameters $optionalArgs"
+}
+
 foreach ($ap in $appFiles)
 {
     $argument = "submit $ap $teamApiKey $parameters"
     Write-Host "Submit $ap to Xamarin Test Cloud."
-    Invoke-Tool -Path $testCloudExe -Arguments $argument
+    Invoke-Tool -Path $testCloud -Arguments $argument
 }
 
 Write-Verbose "Leaving script XamarinTestCloud.ps1"
