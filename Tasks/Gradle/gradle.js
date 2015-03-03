@@ -48,6 +48,19 @@ exports.execute = function (ctx, callback) {
     }
     argsArray = argsArray.concat(ctx.util.argStringToArray(tasks));
 
+    // update JAVA_HOME if user selected specific JDK version
+    if (ctx.inputs.jdkVersion && ctx.inputs.jdkVersion !== "default") {
+        var envName = "JAVA_HOME_" + ctx.inputs.jdkVersion.slice(2) + "_" + ctx.inputs.jdkArchitecture
+        var specifiedJavaHome = process.env[envName];
+        if (!specifiedJavaHome || specifiedJavaHome.length == 0) {
+            callback(new Error('Failed to find specified JDK version.  Please make sure environment varialbe ' + envName + ' exists and is set to a valid JDK.'));
+            return;
+        }
+
+        ctx.info("Set JAVA_HOME to " + specifiedJavaHome);
+        process.env["JAVA_HOME"] = specifiedJavaHome;
+    }
+
     ctx.verbose('Invoking Gradle wrapper ' + wrapperScript + ' ' + argsArray.join(" "));
 
     var ops = {
