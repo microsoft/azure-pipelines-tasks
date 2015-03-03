@@ -14,6 +14,13 @@
     "demands": [
 
     ],
+    "groups": [
+     {
+       "name": "advanced",
+       "displayName": "Advanced",
+       "isExpanded": false
+     }
+    ],
     "inputs": [
         {
             "name": "environment",
@@ -78,6 +85,15 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Alternate credentials Password for connecting to TFS"
+        },
+        {
+            "name": "agentLocation",
+            "type": "string",
+            "label": "Test Agent Location",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Optionally supply the path to TestAgent Setup from network or local location.If No Path is provided, it will downloaded TestAgent from web"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",
