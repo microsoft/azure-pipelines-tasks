@@ -56,7 +56,10 @@ exports.execute = function (ctx, callback) {
 
     // update JAVA_HOME if user selected specific JDK version
     if (ctx.inputs.jdkVersion && ctx.inputs.jdkVersion !== "default") {
-        var envName = "JAVA_HOME_" + ctx.inputs.jdkVersion.slice(2) + "_" + ctx.inputs.jdkArchitecture
+        // ctx.inputs.jdkVersion should be in the form of 1.7, 1.8, or 1.10
+        // ctx.inputs.jdkArchitecture is either x64 or x86
+        // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
+        var envName = "JAVA_HOME_" + ctx.inputs.jdkVersion.slice(2) + "_" + ctx.inputs.jdkArchitecture.toUpperCase();
         var specifiedJavaHome = process.env[envName];
         if (!specifiedJavaHome || specifiedJavaHome.length == 0) {
             callback(new Error('Failed to find specified JDK version.  Please make sure environment varialbe ' + envName + ' exists and is set to a valid JDK.'));

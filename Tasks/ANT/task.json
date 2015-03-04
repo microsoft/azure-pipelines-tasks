@@ -21,7 +21,7 @@
             "isExpanded":false
         }
     ],
-    "instanceNameFormat": "Ant $(options)",
+    "instanceNameFormat": "Ant $(options) $(antBuildFile)",
     "inputs": [
         { 
             "name": "antBuildFile", 
