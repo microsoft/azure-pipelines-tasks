@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4,
+        "Patch": 5,
         "IsTest": false
     },
     "groups": [
@@ -52,14 +52,23 @@
             "helpMarkDown": "Optional regex to interpret output as an error.",
             "groupName":"advanced"
         },
-        { 
-            "name": "warningPattern", 
-            "type": "string", 
-            "label": 
-            "Warning Pattern", 
-            "defaultValue": "", 
+        {
+            "name": "warningPattern",
+            "type": "string",
+            "label": "Warning Pattern",
+            "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optional regex to interpret output as a warning.",
+            "groupName": "advanced"
+        },
+        { 
+            "name": "standardErrorFailTask", 
+            "type": "boolean", 
+            "label": 
+            "Standard Error Fail Task", 
+            "defaultValue": "true", 
+            "required": false,
+            "helpMarkDown": "Task will fail if the process produce any standard error.",
             "groupName":"advanced"
         }
     ],
@@ -70,7 +79,8 @@
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
             "errorPattern": "$(errorPattern)",
-            "warningPattern": "$(warningPattern)"
+            "warningPattern": "$(warningPattern)",
+            "standardErrorFailTask": "$(standardErrorFailTask)"
         },
         "JavaScript": {
             "target": "processRunner.js",
