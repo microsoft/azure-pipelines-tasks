@@ -1,0 +1,36 @@
+{
+  "name": "Agent.Tasks",
+  "version": "0.4.0",
+  "description": "Tasks for VSO Build.vNext build system",
+  "main": "gulpfile.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/vso-agent-tasks"
+  },
+  "keywords": [
+    "VSO",
+    "build",
+    "tasks"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vso-agent-tasks",
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-util": "^3.0.4",
+    "run-sequence": "^1.0.2",
+    "shelljs": "^0.3.0",
+    "through2": "^0.6.3",
+    "validator": "^3.33.0"
+  }
+}
