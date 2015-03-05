@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
+        "Patch": 3,
         "IsTest": false
     },
     "demands" : [
@@ -21,7 +21,7 @@
             "isExpanded":false
         }
     ],
-    "instanceNameFormat": "Ant $(options)",
+    "instanceNameFormat": "Ant $(options) $(antBuildFile)",
     "inputs": [
         { 
             "name": "antBuildFile", 
