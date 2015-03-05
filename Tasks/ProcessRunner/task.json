@@ -62,13 +62,12 @@
             "groupName": "advanced"
         },
         { 
-            "name": "standardErrorFailTask", 
-            "type": "boolean", 
-            "label": 
-            "Standard Error Fail Task", 
+            "name": "failOnStandardError", 
+            "type": "boolean",
+            "label": "Fail on Standard Error", 
             "defaultValue": "true", 
             "required": false,
-            "helpMarkDown": "Task will fail if the process produce any standard error.",
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
             "groupName":"advanced"
         }
     ],
@@ -80,7 +79,7 @@
             "workingDirectory": "$(workingFolder)",
             "errorPattern": "$(errorPattern)",
             "warningPattern": "$(warningPattern)",
-            "standardErrorFailTask": "$(standardErrorFailTask)"
+            "failOnStandardError": "$(failOnStandardError)"
         },
         "JavaScript": {
             "target": "processRunner.js",
