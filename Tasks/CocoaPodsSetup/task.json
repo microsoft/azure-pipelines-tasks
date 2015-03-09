@@ -1,0 +1,41 @@
+{
+    "id": "4124AB60-3A66-4778-BABF-400EEDE72465",
+    "name": "CocoaPodsSetup",
+    "friendlyName": "CocoaPods pod install",
+    "description": "A simple way to do 'pod install'",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 1,
+        "IsTest": false
+    },
+    "demands" : [
+        "cocoapods"
+    ],
+    "inputs": [
+        { 
+            "name": "ignoreWarnings", 
+            "type": "boolean", 
+            "label": "Ignore warnings", 
+            "defaultValue":"False", 
+            "required":false,
+            "helpMarkDown": "If doing a pod install causes warnings, this option will redirect stderr to stdout."
+        },
+        { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working Directory", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Current working directory. Defaults to the repo directory."
+        }
+    ],
+    "execution": {
+        "Bash": {
+            "target": "CocoaPodsSetup.sh",
+            "argumentFormat": ""
+        }        
+    }    
+}
