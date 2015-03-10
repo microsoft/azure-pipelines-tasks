@@ -6,9 +6,9 @@
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 3,
+        "Patch": 0,
         "IsTest": false
     },
     "demands" : [
@@ -43,16 +43,7 @@
             "type": "string", 
             "label": "Target(s)", 
             "defaultValue":"", "required":false
-        },
-        {
-            "name": "cwd",
-            "type": "filePath",
-            "label": "Working directory",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Working directory to run the Ant build in. Defaults to repository root.",
-            "groupName": "advanced"
-        },
+        },        
         {
             "name":"jdkVersion",
             "type":"pickList",

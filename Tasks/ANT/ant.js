@@ -23,12 +23,8 @@ exports.execute = function (ctx, callback) {
     }
     ctx.verbose('Ant build file: ' + antBuildFile);
 
-    //Find Working directory to run Ant in. cwd is optional, we use directory of Ant build file as Working directory if not set.
-    var cwd = ctx.inputs.cwd;
-    if (!cwd || cwd.length == 0)
-    {
-        cwd = path.dirname(antBuildFile);
-    }
+    //Find Working directory to run Ant in. We use directory of Ant build file as Working directory.
+    cwd = path.dirname(antBuildFile);    
     if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {
         callback(new Error('Working directory ' + cwd + ' does not exist or is not a valid directory'));
         return;

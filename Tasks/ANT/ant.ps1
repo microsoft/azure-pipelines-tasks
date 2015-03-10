@@ -1,6 +1,5 @@
 ﻿param (
     [string]$antBuildFile,
-    [string]$cwd,
     [string]$options,
     [string]$targets,
     [string]$jdkVersion,
@@ -9,7 +8,6 @@
 
 Write-Verbose 'Entering Ant.ps1'
 Write-Verbose "antBuildFile = $antBuildFile"
-Write-Verbose "cwd = $cwd"
 Write-Verbose "options = $options"
 Write-Verbose "targets = $targets"
 Write-Verbose "jdkVersion = $jdkVersion"
@@ -32,22 +30,6 @@ if(!$antBuildFile)
 {
     throw "Ant build file is not specified"
 }
-if(!(Test-Path $antBuildFile -PathType Leaf))
-{
-    throw "Ant build file '$antBuildFile' does not exist or is not a valid file"
-}
-
-
-# Find Working directory to run Ant in. cwd is optional, we use directory of Ant build file as Working directory if not set.
-if(!$cwd)
-{
-    $antBuildFileItem = Get-Item -Path $antBuildFile
-    $cwd = $antBuildFileItem.Directory.FullName
-}
-if(!(Test-Path $cwd -PathType Container))
-{
-    throw "Working directory '$cwd' does not exist or is not a valid directory"
-}
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -65,11 +47,11 @@ if($jdkVersion -and $jdkVersion -ne "default")
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
-$antArguments = "-buildfile ""$antBuildFile"" $options $targets"
-Write-Verbose "Using Ant arguments $antArguments"
+Write-Verbose "Creating a new timeline for logging events"
+$timeline = Start-Timeline -Context $distributedTaskContext
 
 Write-Verbose "Running Ant..."
-Invoke-Tool -Path $ant.Path -Arguments $antArguments -WorkingFolder $cwd
+Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets -ToolLocation $ant.Path -Timeline $timeline
 
 Write-Verbose "Leaving script Ant.ps1"
 
