@@ -21,7 +21,7 @@ Write-Verbose "logonAutomatically = $logonAutomatically"
 Write-Verbose "disableScreenSaver = $disableScreenSaver"
 
 
-if (([string]::IsNullOrWhiteSpace($agentLocation))
+if ([string]::IsNullOrWhiteSpace($agentLocation))
 {
    Write-Verbose "Download of testagent would begin from internet"
 }
