@@ -51,7 +51,7 @@ Write-Verbose "Creating a new timeline for logging events"
 $timeline = Start-Timeline -Context $distributedTaskContext
 
 Write-Verbose "Running Ant..."
-Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets -ToolLocation $ant.Path -Timeline $timeline
+Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets -ToolPath $ant.Path -Timeline $timeline
 
 Write-Verbose "Leaving script Ant.ps1"
 
