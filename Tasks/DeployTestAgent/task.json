@@ -93,7 +93,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Optionally supply the path to TestAgent Setup from network or local location.If No Path is provided, it will downloaded TestAgent from web"
+            "helpMarkDown": "Optionally supply the path to TestAgent.zip from network or local location.If No Path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkID=528474&clcid=0x409"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",
