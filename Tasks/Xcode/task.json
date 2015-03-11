@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5,
+        "Patch": 6,
         "IsTest": false
     },
     "demands" : [
@@ -77,6 +77,10 @@
         "JavaScript": {
             "target": "xcodebuild.js",
             "argumentFormat": ""
-        }
+        },
+        "Node": {
+            "target": "xcodebuild2.js",
+            "argumentFormat": ""
+        }        
     }    
 }

@@ -1,0 +1,61 @@
+﻿{
+    "id": "94A74903-F93F-4075-884F-DC11F34058B4",
+    "name": "Deploy To Azure",
+    "friendlyName": "Deploy To Azure",
+    "description": "CSM deployment to azure",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 5,
+        "IsTest": false
+    },
+    "demands": [
+    "azureps"
+  ],
+    "inputs": [
+		{
+			"name": "ConnectedServiceName",
+			"type": "azureConnection",
+			"label": "Azure Subscription",
+			"defaultValue": "",
+			"required": true,
+			"helpMarkDown": "Azure subscription to target for deployment."
+        },
+        { 
+            "name": "csmFile", 
+            "type": "filePath", 
+            "label": "Csm File Path", 
+            "defaultValue":"", 
+            "required":true,
+        },
+		{ 
+            "name": "csmParametersFile", 
+            "type": "filePath", 
+            "label": "Csm Parameters File", 
+            "defaultValue":"", 
+            "required":true,
+        },
+		{
+            "name": "resourceGroupName", 
+            "type": "string", 
+            "label": "Resource Group Name", 
+            "required":true,
+        },
+		{ 
+            "name": "location", 
+            "type": "string", 
+            "label": "Location", 
+            "required":true,
+        }
+    ],
+    "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\DeployToAzure.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

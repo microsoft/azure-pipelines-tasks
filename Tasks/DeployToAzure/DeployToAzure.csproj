@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TargetDir>$(MSBuildProjectDirectory)\temp</TargetDir>
-    <ProjectGuid>{C7237AC6-2B73-4238-83CC-36E8542D7AF9}</ProjectGuid>
+    <ProjectGuid>{98BC5FBE-FA04-47B5-B32C-9AD2419F24C3}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,8 +24,7 @@
   <ItemGroup>
     <Content Include="icon.png" />
     <Content Include="task.json" />
-    <Content Include="xcodebuild.js" />
-    <Content Include="xcodebuild2.js" />
+    <Content Include="DeployToAzure.ps1" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
