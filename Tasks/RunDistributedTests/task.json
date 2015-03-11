@@ -2,7 +2,7 @@
     "id": "798E69E4-B1AE-4C4B-83A8-CD96F565A546",
 	"name": "RunDistributedTests",
     "friendlyName": "Run Visual Studio Tests using Test Agent",
-    "description": "Run tests remotely or distribute tests to multiple machines.",
+    "description": "Run tests distributedly using multiple test agents in a lab environment.",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
@@ -59,7 +59,7 @@
             "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll",
             "required": true,
-            "helpMarkDown": "Search pattern for test assemblies",
+            "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;` for all dlls with test in name.",
             "groupName": "testSettings"
         },
         {
@@ -68,7 +68,7 @@
             "label": "Test Filter criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Filter criteria for selecting test cases",
+            "helpMarkDown": "Filter criteria for the tests.",
             "groupName": "testSettings"
         },
         {
@@ -77,7 +77,7 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Runsettings or testsettings file for test run",
+            "helpMarkDown": "the runsettings or testsettings file for the test run",
             "groupName": "testSettings"
         }
     ],
