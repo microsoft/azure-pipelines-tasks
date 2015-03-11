@@ -13,6 +13,18 @@
     },
     "demands": [
     ],
+    "groups":  [
+        {
+            "name": "testEnvironment",
+            "displayName": "Test Environment",
+            "isExpanded": true
+        },
+        {
+            "name": "testSettings",
+            "displayName": "Test Settings",
+            "isExpanded": true
+        }
+    ],
     "inputs": [
         {
             "name": "environment",
@@ -20,39 +32,8 @@
             "label": "Test Environment",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the environment on which tests need to be run."
-        },
-        {
-            "name": "sourcefilters",
-            "type": "string",
-            "label": "Source Filters",
-            "defaultValue": "**\\*test*.dll",
-            "required": true,
-            "helpMarkDown": "Search pattern for test assemblies"
-        },
-        {
-            "name": "testFilterCriteria",
-            "type": "string",
-            "label": "Test Filter criteria",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Filter criteria for selecting test cases"
-        },
-        {
-            "name": "runSettingsFile",
-            "type": "filePath",
-            "label": "Run Settings File",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Runsettings or testsettings file for test run"
-        },
-        {
-            "name": "subHeading",
-            "type": "bool",
-            "label": "Alternate credentials to publish test results to TFS",
-            "defaultValue": "false",
-            "required": true,
-            "helpMarkDown": ""
+            "helpMarkDown": "The name of the environment on which tests need to be run.",
+            "groupName": "testEnvironment"
         },
         {
             "name": "alternateCredsUserName",
@@ -60,7 +41,8 @@
             "label": "Alternate credentials Username",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials Username for connecting to TFS"
+            "helpMarkDown": "Alternate credentials Username for connecting to TFS",
+            "groupName": "testEnvironment"
         },
         {
             "name": "alternateCredsPassword",
@@ -68,10 +50,38 @@
             "label": "Alternate credentials Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials Password for connecting to TFS"
+            "helpMarkDown": "Alternate credentials Password for connecting to TFS",
+            "groupName": "testEnvironment"
+        },
+        {
+            "name": "sourcefilters",
+            "type": "string",
+            "label": "Test Assembly",
+            "defaultValue": "**\\*test*.dll",
+            "required": true,
+            "helpMarkDown": "Search pattern for test assemblies",
+            "groupName": "testSettings"
+        },
+        {
+            "name": "testFilterCriteria",
+            "type": "string",
+            "label": "Test Filter criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Filter criteria for selecting test cases",
+            "groupName": "testSettings"
+        },
+        {
+            "name": "runSettingsFile",
+            "type": "filePath",
+            "label": "Run Settings File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Runsettings or testsettings file for test run",
+            "groupName": "testSettings"
         }
     ],
-    "instanceNameFormat": "Test assemblies $(testassemblies)",
+    "instanceNameFormat": "Test assemblies $(sourcefilters)",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RunDistributedTests.ps1",
