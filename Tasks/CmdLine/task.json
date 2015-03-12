@@ -1,15 +1,14 @@
 ﻿{
     "id": "D9BAFED4-0B18-4F58-968D-86655B4D2CE9",
-    "name": "ProcessRunner",
-    "friendlyName": "Process Runner",
-    "description": "Run an executable file",
+    "name": "CmdLine",
+    "friendlyName": "Command Line",
+    "description": "Run a command line with arguments",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5,
-        "IsTest": false
+        "Patch": 6
     },
     "groups": [
     {
