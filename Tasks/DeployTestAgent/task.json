@@ -68,16 +68,16 @@
             "type": "string",
             "label": "Alternate credentials Username",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate Credentials Username, only if connecting to VS Online"
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Username, only if connecting to Visual Studio Online"
         },
         {
             "name": "alternateCredsPassword",
             "type": "string",
             "label": "Alternate credentials Password",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate Credentials Password, only if connecting to VS Online"
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",

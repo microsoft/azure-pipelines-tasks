@@ -40,8 +40,8 @@
             "type": "string",
             "label": "Alternate credentials Username",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Username for connecting to TFS",
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online",
             "groupName": "testEnvironment"
         },
         {
@@ -49,8 +49,8 @@
             "type": "string",
             "label": "Alternate credentials Password",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Password for connecting to TFS",
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online",
             "groupName": "testEnvironment"
         },
         {
@@ -59,7 +59,7 @@
             "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll",
             "required": true,
-            "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;` for all dlls with test in name.",
+            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, `**\\*test*.dll;` for all dlls containing 'test' in their name.",
             "groupName": "testSettings"
         },
         {
