@@ -3,7 +3,7 @@
     "name": "CocoaPodsSetup",
     "friendlyName": "CocoaPods pod install",
     "description": "A simple way to do 'pod install'",
-    "category": "Build",
+    "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,

@@ -43,10 +43,19 @@
             "type": "string", 
             "label": "Gulp Task(s)", 
             "defaultValue":"",
-            "helpMarkDown": "Space delimited list of tasks to run.  If not specified, the default task will run.",
+            "helpMarkDown": "Optional.  default task will get run if not specified. Space delimited list of tasks to run.  If not specified, the default task will run.",
             "required":false
         },
-         { 
+        { 
+            "name": "arguments", 
+            "type": "string", 
+            "label": "Arguments", 
+            "defaultValue":"",
+            "helpMarkDown": "Additional arguments passed to gulp.  --gulpfile is not needed since already added via gulpFile input above.",
+            "required":false,
+            "groupName":"advanced"
+        },        
+        { 
             "name": "cwd", 
             "type": "filePath", 
             "label": "Working Directory", 
