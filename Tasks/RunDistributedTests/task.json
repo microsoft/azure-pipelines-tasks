@@ -41,7 +41,7 @@
             "label": "Alternate credentials Username",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online",
+            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
             "groupName": "testEnvironment"
         },
         {
@@ -50,7 +50,7 @@
             "label": "Alternate credentials Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online",
+            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
             "groupName": "testEnvironment"
         },
         {

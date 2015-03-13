@@ -58,7 +58,7 @@
         {
             "name": "subHeading",
             "type": "bool",
-            "label": "Alternate credentials to publish test results to TFS",
+            "label": "Alternate Credentials to publish test results, only required if connecting to Visual Studio Online",
             "defaultValue": "false",
             "required": true,
             "helpMarkDown": ""
@@ -69,7 +69,7 @@
             "label": "Alternate credentials Username",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Alternate Credentials Username, only if connecting to Visual Studio Online"
+            "helpMarkDown": "Alternate Credentials Username, only required if connecting to Visual Studio Online"
         },
         {
             "name": "alternateCredsPassword",
@@ -77,7 +77,7 @@
             "label": "Alternate credentials Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online"
+            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",
