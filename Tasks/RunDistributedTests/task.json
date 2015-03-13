@@ -73,11 +73,20 @@
         },
         {
             "name": "runSettingsFile",
-            "type": "filePath",
+            "type": "string",
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "the runsettings or testsettings file for the test run",
+            "groupName": "testSettings"
+        },
+        {
+            "name": "overrideRunParams",
+            "type": "string",
+            "label": "Override TestRun Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform) Port=`8080`",
             "groupName": "testSettings"
         }
     ],

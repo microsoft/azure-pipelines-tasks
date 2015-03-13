@@ -14,6 +14,18 @@
     "demands": [
 
     ],
+    "groups":  [
+        {
+            "name": "environment",
+            "displayName": "Environment",
+            "isExpanded": true
+        },
+        {
+            "name": "alternateCredentials",
+            "displayName": "Alternate Credentials if connecting to Visual Studio Online",
+            "isExpanded": true
+        }
+    ],
     "inputs": [
         {
             "name": "environment",
@@ -21,7 +33,8 @@
             "label": "Environment",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of environment on which tests need to be run."
+            "helpMarkDown": "The name of environment on which tests need to be run.",
+            "groupName": "environment"
         },
         {
             "name": "testMachines",
@@ -29,7 +42,8 @@
             "label": "Deploy to machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Comma separeted list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'"
+            "helpMarkDown": "Comma separeted list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
+            "groupName": "environment"
         },
         {
             "name": "runAsProcess",
@@ -37,7 +51,8 @@
             "label": "Run Test Agent as interactive process to execute UI Tests",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Denotes if test agent needs to run as interactive process."
+            "helpMarkDown": "Denotes if test agent needs to run as interactive process.",
+            "groupName": "environment"
         },
         {
             "name": "machineUserName",
@@ -45,7 +60,8 @@
             "label": "Username",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The username with which test agent process needs to run."
+            "helpMarkDown": "The username with which test agent process needs to run.",
+            "groupName": "environment"
         },
         {
             "name": "machinePassword",
@@ -53,31 +69,26 @@
             "label": "Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The password for the username given above."
-        },
-        {
-            "name": "subHeading",
-            "type": "bool",
-            "label": "Alternate credentials to publish test results to TFS",
-            "defaultValue": "false",
-            "required": true,
-            "helpMarkDown": ""
+            "helpMarkDown": "The password for the username given above.",
+            "groupName": "environment"
         },
         {
             "name": "alternateCredsUserName",
             "type": "string",
             "label": "Alternate credentials Username",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Username for connecting to TFS"
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Username, only if connecting to Visual Studio Online",
+            "groupName": "alternateCredentials"
         },
         {
             "name": "alternateCredsPassword",
             "type": "string",
             "label": "Alternate credentials Password",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Password for connecting to TFS"
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online",
+            "groupName": "alternateCredentials"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",
