@@ -86,7 +86,7 @@
             "label": "Override TestRun Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform) Port=`8080`",
+            "helpMarkDown": "Overrides the parameters defined in the TestRunParameters section of runsettings file. For example: ApplicationUrl=$(appUrl) Port=`8080`",
             "groupName": "testSettings"
         }
     ],
