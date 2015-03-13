@@ -22,7 +22,7 @@
         },
         {
             "name": "alternateCredentials",
-            "displayName": "Alternate Credentials if connecting to Visual Studio Online",
+            "displayName": "Alternate Credentials, only required if connecting to Visual Studio Online",
             "isExpanded": true
         }
     ],
@@ -78,7 +78,7 @@
             "label": "Alternate credentials Username",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Alternate Credentials Username, only if connecting to Visual Studio Online",
+            "helpMarkDown": "Alternate Credentials Username, only required if connecting to Visual Studio Online",
             "groupName": "alternateCredentials"
         },
         {
@@ -87,7 +87,7 @@
             "label": "Alternate credentials Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online",
+            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
             "groupName": "alternateCredentials"
         }
     ],
