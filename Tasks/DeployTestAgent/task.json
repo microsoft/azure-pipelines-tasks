@@ -75,8 +75,8 @@
             "type": "string",
             "label": "Alternate credentials Username",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Username for connecting to TFS"
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Username, only if connecting to Visual Studio Online"
         },
         {
             "name": "alternateCredsPassword",
@@ -84,7 +84,7 @@
             "label": "Alternate credentials Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Alternate credentials Password for connecting to TFS"
+            "helpMarkDown": "Alternate Credentials Password, only if connecting to Visual Studio Online"
         },
         {
             "name": "agentLocation",
