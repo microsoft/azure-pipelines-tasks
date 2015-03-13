@@ -2,7 +2,7 @@
     "id": "049918CB-1488-48EB-85E8-C318ECCAAA74",
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
-    "description": "Test mobile apps with Xamarin Test Cloud",
+    "description": "Test mobile apps with Xamarin Test Cloud with Xamarin.UITest",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
@@ -30,17 +30,6 @@
             "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**\\*.apk` for all apk files in all subfolders."
         },
         {
-            "name": "testFramework",
-            "type": "radio",
-            "label": "Framework",
-            "required": true,
-            "defaultValue": "xamarinUITest",
-            "options": {
-                "xamarinUITest": "Xamarin.UITest",
-                "calabash": "Calabash"
-            }
-        },
-        {
             "name": "teamApiKey",
             "type": "string",
             "label": "Team API Key",
@@ -62,7 +51,7 @@
             "label": "Devices",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Device IDs for Xamarin Test Cloud"
+            "helpMarkDown": "Devices string generated from Xamarin Test Cloud"
         },
         {
             "name": "series",
@@ -78,16 +67,15 @@
             "label": "Test Assemembly Directory",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "testFramework = xamarinUITest",
             "helpMarkDown": "Relative path to the folder that contains the test assemblies."
         },
         {
             "name": "testCloudLocation",
             "type": "string",
             "label": "test-cloud.exe Location",
+            "groupName": "advanced",
             "defaultValue": "$(Agent.BuildDirectory)\\**\\packages\\**\\tools\\test-cloud.exe",
-            "required": true,
-            "visibleRule": "testFramework = xamarinUITest"
+            "required": true
         },
         {
             "name": "parallelization",
@@ -95,39 +83,12 @@
             "label": "Parallelization",
             "required": true,
             "defaultValue": "none",
-            "visibleRule": "testFramework = xamarinUITest",
+            "groupName": "advanced",
             "options": {
                 "none": "None",
                 "--fixture-chunk": "By test fixture",
                 "--test-chunk": "By test method"
             }
-        },
-        {
-            "name": "workspace",
-            "type": "filePath",
-            "label": "Workspace",
-            "required": true,
-            "defaultValue": "$(Build.SourcesDirectory)",
-            "helpMarkDown":  "Path to your Calabash workspace (containing your features folder)",
-            "visibleRule": "testFramework = calabash"
-        },
-        {
-            "name": "configFile",
-            "type": "filePath",
-            "label": "Cucumber configuration file",
-            "required": true,
-            "defaultValue": "",
-            "visibleRule": "testFramework = calabash",
-            "helpMarkDown":  "Cucumber configuration file (cucumber.yml)"
-        },
-        {
-            "name": "profile",
-            "type": "string",
-            "label": "Profile",
-            "required": true,
-            "defaultValue": "",
-            "visibleRule": "testFramework = calabash",
-            "helpMarkDown": "Profile to run (profile from cucumber.yml)"
         },
         {
             "name": "appName",
@@ -165,7 +126,7 @@
             "helpMarkDown":  "Additional arguments passed to the test-cloud tool."
         }
     ],
-    "instanceNameFormat": "Test Xamarin App $(app)",
+    "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\XamarinTestCloud.ps1",
