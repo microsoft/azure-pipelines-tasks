@@ -65,6 +65,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmdLine", "CmdLine\CmdLine.csproj", "{D59CDF62-6AA5-4A62-B9D5-86CE9A6F70BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CocoaPods", "CocoaPods\CocoaPods.csproj", "{E35055AA-0BFA-41DE-91B6-992051DC7048}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinTestCloud", "XamarinTestCloud\XamarinTestCloud.csproj", "{56BF68B1-18FC-4EA0-ADF8-2AD4E6BF6178}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,6 +161,10 @@ Global
 		{E35055AA-0BFA-41DE-91B6-992051DC7048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E35055AA-0BFA-41DE-91B6-992051DC7048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E35055AA-0BFA-41DE-91B6-992051DC7048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56BF68B1-18FC-4EA0-ADF8-2AD4E6BF6178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56BF68B1-18FC-4EA0-ADF8-2AD4E6BF6178}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56BF68B1-18FC-4EA0-ADF8-2AD4E6BF6178}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56BF68B1-18FC-4EA0-ADF8-2AD4E6BF6178}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
