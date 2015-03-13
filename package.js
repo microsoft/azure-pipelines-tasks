@@ -11,10 +11,9 @@ var createError = function(msg) {
 
 var validate = function(folderName, task, done) {
 	var vn = (task.name  || folderName);
-	gutil.log('Validating: ' + vn);
 
 	if (!task.id || !check.isUUID(task.id)) {
-		done(createError(task.name + ': id is a required guid'));
+		done(createError(vn + ': id is a required guid'));
 		return;
 	};
 
@@ -62,6 +61,7 @@ function packageTask(pkgPath){
 	        		return;
 	        	}
 
+				gutil.log('Packaging: ' + task.name);
 	        	var verStr = task.version.Major + '.' + task.version.Minor + '.' + task.version.Patch;
 	        	var verPath = path.join(pkgPath, task.name, verStr);
 	        	shell.mkdir('-p', verPath);
