@@ -3,12 +3,12 @@
   "name": "VSTest",
   "friendlyName": "VSTest",
   "description": "Run tests with VS test runner",
-  "category": "Build",
+  "category": "Test",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [
     "vstest"
