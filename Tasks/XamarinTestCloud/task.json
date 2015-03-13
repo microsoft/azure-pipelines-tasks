@@ -70,12 +70,12 @@
             "helpMarkDown": "Relative path to the folder that contains the test assemblies."
         },
         {
-            "name": "testCloudLocation",
+            "name": "appName",
             "type": "string",
-            "label": "test-cloud.exe Location",
-            "groupName": "advanced",
-            "defaultValue": "$(Agent.BuildDirectory)\\**\\packages\\**\\tools\\test-cloud.exe",
-            "required": true
+            "label": "App Name",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced"
         },
         {
             "name": "parallelization",
@@ -89,14 +89,6 @@
                 "--fixture-chunk": "By test fixture",
                 "--test-chunk": "By test method"
             }
-        },
-        {
-            "name": "appName",
-            "type": "string",
-            "label": "App Name",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advanced"
         },
         {
             "name": "locale",
@@ -115,6 +107,14 @@
                 "es_MX": "Spanish (Mexico)",
                 "es_ES": "Spanish (Spain)"
             }
+        },
+        {
+            "name": "testCloudLocation",
+            "type": "string",
+            "label": "test-cloud.exe Location",
+            "groupName": "advanced",
+            "defaultValue": "$(Agent.BuildDirectory)\\**\\packages\\**\\tools\\test-cloud.exe",
+            "required": true
         },
         {
             "name": "optionalArgs",
