@@ -250,7 +250,7 @@ function Update-LocalEnvironmentAttributes()
 
 	Write-Verbose "Environment attributes after modification:`n$modifiedJsonString" -verbose
 
-	$environmentPath = join-path -Path $chefrepo "environments\'$environmentName.json"               
+	$environmentPath = join-path -Path $chefrepo "environments\'$environmentName'.json"               
 	
 	Write-Verbose "Setting modified environment attributes at $environmentPath" -verbose
     Set-Content -Value $modifiedJsonString -Path $environmentPath
