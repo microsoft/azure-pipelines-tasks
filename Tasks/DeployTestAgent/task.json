@@ -83,7 +83,7 @@
             "type": "string",
             "label": "Alternate credentials Password",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online"
         },
         {
