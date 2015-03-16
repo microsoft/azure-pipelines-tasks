@@ -30,13 +30,73 @@ function Invoke-Knife()
         $command = "knife "
         $arguments | foreach{ $command += "$_ " }
         $command = $command.Trim()
-        write-verbose "Running knife command: $command" -verbose
+        Write-verbose "Running knife command: $command" -verbose
         iex $command
     }
     finally
     {
         popd
     }
+}
+
+function Wait-ForChefNodeRunsToComplete()
+{
+	[CmdletBinding()]
+    Param
+    (
+        [Parameter(mandatory=$true)]
+        [string]$environmentName,
+		[Parameter(mandatory=$true)]
+        [int]$runWaitTimeInMinutes,
+		[Parameter(mandatory=$true)]
+        [int]$pollingIntervalTimeInSeconds
+    )
+
+	$attributeUpdateTime = (Get-Date).ToUniversalTime();
+	$allNodeRunsCompleted = $false;
+
+	while(((Get-Date).ToUniversalTime() -lt $attributeUpdateTime.AddMinutes($runWaitTimeInMinutes)) `
+	-and ($allNodeRunsCompleted -eq $false))
+	{
+		Write-Host "Waiting for runs to complete on all the nodes of the environment: $environment"
+		$runListJson = Invoke-Knife @("runs list -E $environmentName -F json")
+		$nodes = Invoke-Knife @("node list -E $environmentName;")
+
+		$nodesCompletionTable = @{};
+		foreach($node in $nodes)
+		{
+			$nodesCompletionTable.Add($node, $false);
+		}
+
+		$runArray = [Newtonsoft.Json.Linq.JArray]::Parse($runListJson);
+
+		foreach($run in $runArray.GetEnumerator())
+		{
+			$nodeName = $run["node_name"].ToString();
+			if($nodesCompletionTable.Contains($nodeName) `
+			-and ([System.DateTime]::Parse($run["start_time"].ToString()) -gt $attributeUpdateTime))
+			{
+				$nodesCompletionTable[$nodeName] = $true            
+			}
+		}
+
+		$allNodeRunsCompleted = $true;
+		foreach($isCompleted in $nodesCompletionTable.Values)
+		{
+			if(-not $isCompleted)
+			{
+				$allNodeRunsCompleted = $false;
+				break;        
+			}
+		}
+
+		if(-not $allNodeRunsCompleted)
+		{
+			Start-Sleep -s $pollingIntervalTimeInSeconds
+		}
+	}
+
+	Write-Host "Runs have completed on all the nodes in the environment: $environmentName"
 }
 
 function Invoke-GenericMethod
@@ -129,29 +189,54 @@ function Invoke-GenericMethod
 
 }
 
+function Add-NewtonsoftAsType()
+{
+	[CmdletBinding()]
+    Param
+    (
+        [Parameter(mandatory=$true)]
+        [string]$path
+    )
+
+	pushd $PSScriptRoot
+	try
+	{
+		Write-Verbose "Adding Newtonsoft.Json.dll as a type" -verbose
+		$newtonPath = (resolve-path $path).path
+		Add-Type -LiteralPath $newtonPath | Out-Null
+		Write-Verbose "Added Newtonsoft.Json.dll as a type" -verbose
+	}
+	finally
+	{
+		popd
+	}
+}
+
 $global:chefRepo = "$chefServer";
 
-pushd $PSScriptRoot
-try
-{
-    Write-Verbose "Adding Newtonsoft.Json.dll as a type" -verbose
-    $newtonPath = (resolve-path "../../../Agent/Worker/Newtonsoft.Json.dll").path
-    Add-Type -LiteralPath $newtonPath | Out-Null
-	Write-Verbose "Added Newtonsoft.Json.dll as a type" -verbose
-}
-finally
-{
-    popd
-}
+#this is the maximum wait time we will wait for the runs to happen on all nodes in the environment
+$totalWaitTimeForRunsInMinutes = 30;
 
-Write-Verbose "Parsing environment attributes passed as key-value pairs" -verbose
-$attributesTable = Invoke-GenericMethod ([Newtonsoft.Json.JsonConvert]) DeserializeObject HashTable $attributes
-Write-Verbose "Parsed environment attributes" -verbose
+#this is the poll interval for checking in between runs
+$pollIntervalForRunsInSeconds = 60;
 
-try
+#this is the relative path in Agent from the script to find Newtonsoft Json binary
+$relativePathToNewtonsoft = "../../../Agent/Worker/Newtonsoft.Json.dll"
+
+Add-NewtonsoftAsType $relativePathToNewtonsoft
+
+function Update-LocalEnvironmentAttributes()
 {
-    Invoke-Knife @("download environments/$environment.json")
-    $jsonString = [string](Invoke-Knife @("environment show '$environment' -z -F json"))
+	[CmdletBinding()]
+    Param
+    (
+        [Parameter(mandatory=$true)]
+        [HashTable]$attributesTable,
+		[Parameter(mandatory=$true)]
+        [string]$environmentName
+    )
+
+	$jsonString = [string](Invoke-Knife @("environment show '$environmentName' -z -F json"))
     $jsonObject = [Newtonsoft.Json.Linq.JObject]::Parse($jsonString)
 
 	Write-Verbose "Environment attributes before modification:`n$jsonString" -verbose
@@ -165,12 +250,25 @@ try
 
 	Write-Verbose "Environment attributes after modification:`n$modifiedJsonString" -verbose
 
-	$environmentPath = join-path -Path $chefrepo "environments\$environment.json"               
+	$environmentPath = join-path -Path $chefrepo "environments\'$environmentName.json"               
 	
 	Write-Verbose "Setting modified environment attributes at $environmentPath" -verbose
     Set-Content -Value $modifiedJsonString -Path $environmentPath
+}
+
+try
+{
+	Write-Verbose "Parsing environment attributes passed as key-value pairs" -verbose
+	$attributesTable = Invoke-GenericMethod ([Newtonsoft.Json.JsonConvert]) DeserializeObject HashTable $attributes
+	Write-Verbose "Parsed environment attributes" -verbose
+
+    Invoke-Knife @("download environments/$environment.json")
+    
+	Update-LocalEnvironmentAttributes $attributesTable $environment
 
 	Invoke-Knife @("upload environments/$environment.json")
+
+	Wait-ForChefNodeRunsToComplete $environment $totalWaitTimeForRunsInMinutes $pollIntervalForRunsInSeconds
 }
 catch
 {
