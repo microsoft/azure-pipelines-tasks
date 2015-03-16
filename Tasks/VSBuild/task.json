@@ -2,13 +2,13 @@
     "id":"71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
     "name":"VSBuild",
     "friendlyName": "Visual Studio Build",
-    "description": "Build with Visual Studio",
+    "description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [
         "msbuild",

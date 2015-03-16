@@ -21,35 +21,35 @@
         }
     ],
     "inputs": [
-        { 
-            "name": "filename", 
-            "type": "filePath", 
-            "label": "Path", 
-            "defaultValue":"", 
+        {
+            "name": "filename",
+            "type": "filePath",
+            "label": "Path",
+            "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the cmd or bat script file to run." 
+            "helpMarkDown": "Relative path from repo root of the cmd or bat script file to run."
         },
-        { 
-            "name": "arguments", 
-            "type": "string", 
-            "label": "Arguments", 
-            "defaultValue":"", 
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue":"",
             "required":false,
             "helpMarkDown": "Arguments passed to the cmd or bat script"
         },
-        { 
-            "name": "modifyEnvironment", 
-            "type": "boolean", 
-            "label": "Modify Environment", 
-            "defaultValue": "False", 
+        {
+            "name": "modifyEnvironment",
+            "type": "boolean",
+            "label": "Modify Environment",
+            "defaultValue": "False",
             "required": false,
             "helpMarkDown": "Determines whether environment variable modifications will affect subsequent tasks." 
         },
-        { 
-            "name": "workingFolder", 
-            "type": "filePath", 
-            "label": "Working folder", 
-            "defaultValue":"", 
+        {
+            "name": "workingFolder",
+            "type": "filePath",
+            "label": "Working folder",
+            "defaultValue":"",
             "required":false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
             "groupName":"advanced"
