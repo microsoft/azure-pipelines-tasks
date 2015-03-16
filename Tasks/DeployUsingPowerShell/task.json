@@ -66,7 +66,7 @@
             "label": "Alternate Credentials Username",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Username of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
+            "helpMarkDown": "Username of the alternate credentials required to connect to the VSO service; Not required for TFS OnPrem. See http://aka.ms/ALTCREDENTIALS for more information"
         },
         {
             "name": "AlternateCredentialsPassword",
@@ -74,7 +74,7 @@
             "label": "Alternate Credentials Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
+            "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service; Not required for TFS OnPrem. See http://aka.ms/ALTCREDENTIALS for more information"
         }
     ],
     "instanceNameFormat": "Deploy PowerShell on environment $(EnvironmentName)",
