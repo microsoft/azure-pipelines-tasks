@@ -65,8 +65,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployTestAgent", "DeployTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunDistributedTests", "RunDistributedTests\RunDistributedTests.csproj", "{8A30E842-D530-4700-8C17-7C21739985DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefEditEnvironmentAttributes", "ChefEditEnvironmentAttributes\ChefEditEnvironmentAttributes.csproj", "{9D324E12-84FE-4D9A-BC4E-B3F6D62A8054}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployUsingPowerShell", "DeployUsingPowerShell\DeployUsingPowerShell.csproj", "{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinAndroid", "XamarinAndroid\XamarinAndroid.csproj", "{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}"
@@ -175,10 +173,6 @@ Global
 		{FFF51606-307E-4344-9FCF-48B6F817A141}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFF51606-307E-4344-9FCF-48B6F817A141}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFF51606-307E-4344-9FCF-48B6F817A141}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D324E12-84FE-4D9A-BC4E-B3F6D62A8054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D324E12-84FE-4D9A-BC4E-B3F6D62A8054}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D324E12-84FE-4D9A-BC4E-B3F6D62A8054}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D324E12-84FE-4D9A-BC4E-B3F6D62A8054}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
