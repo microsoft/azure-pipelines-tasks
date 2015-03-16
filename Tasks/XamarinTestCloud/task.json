@@ -3,13 +3,12 @@
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
     "description": "Test mobile apps with Xamarin Test Cloud with Xamarin.UITest",
-    "category": "Build",
+    "category": "Test",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0,
-        "IsTest": false
+        "Patch": 0
     },
     "demands": [
     ],
