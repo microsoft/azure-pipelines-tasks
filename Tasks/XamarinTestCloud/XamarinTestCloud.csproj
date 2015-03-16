@@ -28,7 +28,7 @@
     <Content Include="task.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="XamarinTestCloud.ps1" />
+    <Content Include="XamarinTestCloud.ps1" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
