@@ -49,8 +49,8 @@ function Get-RoleName($extPath)
 {
     $roleName = ""
 
-    #The following statement uses the SimpleMatch option to direct the -split operator to interpret the dot (.) delimiter literally. 
-    #With the default, RegexMatch, the dot enclosed in quotation marks (".") is interpreted to match any character except for a newline     
+    #The following statement uses the SimpleMatch option to direct the -split operator to interpret the dot (.) delimiter literally.
+    #With the default, RegexMatch, the dot enclosed in quotation marks (".") is interpreted to match any character except for a newline
     #character. As a result, the Split statement returns a blank line for every character except newline.  The 0 represents the "return
     #all" value of the Max-substrings parameter. You can use options, such as SimpleMatch, only when the Max-substrings value is specified.
     $roles = $extPath -split ".",0,"simplematch"
@@ -111,7 +111,7 @@ function Apply-DiagnosticsExtensions($storageAccount, $extensionsPath)
             foreach ($extPath in $diagnosticsExtensions)
             {
                 $role = Get-RoleName $extPath
-                if($role)
+                if ($role)
                 {
                     $fullExtPath = Join-Path -path $extensionsSearchPath -ChildPath $extPath
                     Write-Verbose "fullExtPath= $fullExtPath"
@@ -156,16 +156,16 @@ function Apply-DiagnosticsExtensions($storageAccount, $extensionsPath)
     }
 }
 
-Write-Verbose "Entering script Publish-AzureCloudDeployment.ps1"
+Write-Host "Entering script Publish-AzureCloudDeployment.ps1"
 
-Write-Verbose "ConnectedServiceName= $ConnectedServiceName "
-Write-Verbose "ServiceName= $ServiceName"
-Write-Verbose "ServiceLocation= $ServiceLocation"
-Write-Verbose "StorageAccount= $StorageAccount"
-Write-Verbose "CsPkg= $CsPkg"
-Write-Verbose "CsCfg= $CsCfg"
-Write-Verbose "Slot= $Slot"
-Write-Verbose "AllowUpgrade=$AllowUpgrade"
+Write-Host "ConnectedServiceName= $ConnectedServiceName "
+Write-Host "ServiceName= $ServiceName"
+Write-Host "ServiceLocation= $ServiceLocation"
+Write-Host "StorageAccount= $StorageAccount"
+Write-Host "CsPkg= $CsPkg"
+Write-Host "CsCfg= $CsCfg"
+Write-Host "Slot= $Slot"
+Write-Host "AllowUpgrade= $AllowUpgrade"
 
 $allowUpgrade = Convert-String $AllowUpgrade Boolean
 
@@ -179,36 +179,36 @@ $servicePackageFile = Find-Files -SearchPattern "$CsPkg"
 Write-Host "servicePackageFile= $servicePackageFile" -ForegroundColor Yellow
 $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
-Write-Host "Get-AzureService -ServiceName $ServiceName -Verbose -ErrorAction SilentlyContinue"
-$azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue -Verbose
+Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue"
+$azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue
 if (!$azureService)
 {
-    Write-Host "New-AzureService -ServiceName $ServiceName -Location $ServiceLocation -Verbose"
-    $azureService = New-AzureService -ServiceName $ServiceName -Location $ServiceLocation -Verbose
+    Write-Host "New-AzureService -ServiceName $ServiceName -Location $ServiceLocation"
+    $azureService = New-AzureService -ServiceName $ServiceName -Location $ServiceLocation
 }
 
-Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -Verbose"
-$azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -Verbose
+Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue"
+$azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue
 if (!$azureDeployment)
 {
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose
+    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
+    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
 } 
 elseif ($allowUpgrade -eq $true)
 {
     #Use -Upgrade
-    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose"
-    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose
+    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
+    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
 }
 else
 {
     #Remove and then Re-create
-    Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force -Verbose"
-    $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force -Verbose
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Verbose
+    Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force"
+    $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force
+    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
+    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
 }
 
 Apply-DiagnosticsExtensions $StorageAccount $CsCfg
 
-Write-Verbose "Leaving script Publish-AzureCloudDeployment.ps1"
+Write-Host "Leaving script Publish-AzureCloudDeployment.ps1"

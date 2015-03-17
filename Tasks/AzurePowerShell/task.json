@@ -8,33 +8,33 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands" : [
         "azureps"
     ],
     "inputs": [
-        { 
-            "name": "ConnectedServiceName", 
-            "type": "azureConnection", 
-            "label": "Azure Subscription", 
-            "defaultValue": "", 
+        {
+            "name": "ConnectedServiceName",
+            "type": "azureConnection",
+            "label": "Azure Subscription",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Azure subscription to configure before running PowerShell"
         },
-        { 
-            "name": "ScriptPath", 
-            "type": "filePath", 
-            "label": "Script Path", 
-            "defaultValue": "", 
+        {
+            "name": "ScriptPath",
+            "type": "filePath",
+            "label": "Script Path",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Relative path from the repo root of the script to run."
         },
-        { 
-            "name": "ScriptArguments", 
-            "type": "string", 
-            "label": "Script Arguments", 
-            "defaultValue": "", 
+        {
+            "name": "ScriptArguments",
+            "type": "string",
+            "label": "Script Arguments",
+            "defaultValue": "",
             "required": false,
             "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
         }
