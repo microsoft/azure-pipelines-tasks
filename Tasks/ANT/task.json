@@ -6,9 +6,9 @@
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 2,
+        "Major": 1,
         "Minor": 0,
-        "Patch": 0,
+        "Patch": 4,
         "IsTest": false
     },
     "demands" : [
