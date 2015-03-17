@@ -48,7 +48,7 @@
             "type": "string",
             "label": "Keystore File",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Full path to the keystore file.",
             "visibleRule": "jarsign = true",
             "groupName":"jarsignerOptions"   

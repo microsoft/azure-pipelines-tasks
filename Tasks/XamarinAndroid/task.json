@@ -44,8 +44,9 @@
             "name": "package", 
             "type": "boolean", 
             "label": "Package", 
-            "defaultValue": "true", 
-            "required": false 
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Add 'PackageForAndroid' target to this build." 
         },
         {
             "name": "outputDir",
