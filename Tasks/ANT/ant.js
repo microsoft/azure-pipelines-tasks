@@ -73,5 +73,5 @@ exports.execute = function (ctx, callback) {
 
     // calling spawn instead of fork so we can easily capture output --> logs
     ctx.info('Running Ant: ');
-    ctx.util.spawn(antPath, antArguments, ops, callback);
+    ctx.util.spawn('ant', antArguments, ops, callback);
 }

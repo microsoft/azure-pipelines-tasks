@@ -76,5 +76,5 @@ exports.execute = function (ctx, callback) {
 
     // calling spawn instead of fork so we can easily capture output --> logs
     ctx.info('Running Maven: ');
-    ctx.util.spawn(mavenPath, mavenArguments, ops, callback);
+    ctx.util.spawn('mvn', mavenArguments, ops, callback);
 }
