@@ -8,8 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4,
-        "IsTest": false
+        "Patch": 4
     },
     "demands" : [
         "ant"
