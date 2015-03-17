@@ -23,16 +23,8 @@ exports.execute = function (ctx, callback) {
     }
     ctx.verbose('Maven POM file: ' + mavenPOMFile);
 
-    //Find Working directory to run Maven in. cwd is optional, we use directory of Maven POM file as Working directory if not set.
-    var cwd = ctx.inputs.cwd;
-    if (!cwd || cwd.length == 0)
-    {
-        cwd = path.dirname(mavenPOMFile);
-    }
-    if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {
-        callback(new Error('Working directory ' + cwd + ' does not exist or is not a valid directory'));
-        return;
-    }   
+    //Find Working directory to run Maven in, use directory of Maven POM file
+    var cwd = path.dirname(mavenPOMFile);    
     cd(cwd);
     ctx.verbose('Working directory: ' + cwd);
 
