@@ -2,7 +2,7 @@
 
 Tasks which will be provided in the box in the new build system.
 
-![Build Tasks](/tasks.png?raw=true "Build Tasks")
+![Build Tasks](/taskbanner.png?raw=true "Build Tasks")
 
 ##Configure
 
