@@ -7,10 +7,11 @@ var out = path.resolve(tl.getVariable('build.sourceDirectory'),
 	                            tl.getInput('outputPattern', true));
 tl.mkdirP(out);
 
-var xcv = new tl.ToolRunner(tl.which('xcodebuild', true));
+var tool = tl.which('xctool', false) || tl.which('xcodebuild', true);
+var xcv = new tl.ToolRunner(tool);
 xcv.arg('-version');
 
-var xcb = new tl.ToolRunner(tl.which('xcodebuild', true));
+var xcb = new tl.ToolRunner(tool);
 xcb.arg('-workspace');
 xcb.arg(tl.getPathInput('xcWorkspacePath', true, true));
 xcb.arg('-sdk');
