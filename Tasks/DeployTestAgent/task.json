@@ -14,6 +14,13 @@
     "demands": [
 
     ],
+    "groups": [
+     {
+       "name": "advanced",
+       "displayName": "Advanced",
+       "isExpanded": false
+     }
+    ],
     "inputs": [
         {
             "name": "environment",
@@ -58,7 +65,7 @@
         {
             "name": "subHeading",
             "type": "bool",
-            "label": "Alternate credentials to publish test results to TFS",
+            "label": "Alternate Credentials to publish test results, only required if connecting to Visual Studio Online",
             "defaultValue": "false",
             "required": true,
             "helpMarkDown": ""
@@ -68,16 +75,25 @@
             "type": "string",
             "label": "Alternate credentials Username",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Username for connecting to TFS"
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Username, only required if connecting to Visual Studio Online"
         },
         {
             "name": "alternateCredsPassword",
             "type": "string",
             "label": "Alternate credentials Password",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Password for connecting to TFS"
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online"
+        },
+        {
+            "name": "agentLocation",
+            "type": "string",
+            "label": "Test Agent Location",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Optionally supply the path to TestAgent.zip from network or local location.If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkID=528474&clcid=0x409"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",
