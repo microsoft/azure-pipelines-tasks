@@ -25,10 +25,6 @@ exports.execute = function (ctx, callback) {
 
     //Find Working directory to run Ant in. We use directory of Ant build file as Working directory.
     var cwd = path.dirname(antBuildFile);    
-    if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {
-        callback(new Error('Working directory ' + cwd + ' does not exist or is not a valid directory'));
-        return;
-    }   
     cd(cwd);
     ctx.verbose('Working directory: ' + cwd);
 

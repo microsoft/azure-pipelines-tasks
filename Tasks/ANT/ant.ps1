@@ -13,18 +13,6 @@ Write-Verbose "targets = $targets"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 
-#Verify Ant is installed correctly
-try
-{
-    $ant = Get-Command Ant
-    $antPath = $ant.Path
-    Write-Verbose "Found Ant at $antPath"
-}
-catch
-{
-    throw 'Unable to find Ant. Verify it is installed correctly on the build agent: http://ant.apache.org/manual/install.html.'
-}
-
 #Verify Ant build file is specified
 if(!$antBuildFile)
 {
@@ -51,7 +39,7 @@ Write-Verbose "Creating a new timeline for logging events"
 $timeline = Start-Timeline -Context $distributedTaskContext
 
 Write-Verbose "Running Ant..."
-Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets -ToolPath $ant.Path -Timeline $timeline
+Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets -Timeline $timeline
 
 Write-Verbose "Leaving script Ant.ps1"
 
