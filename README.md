@@ -1,7 +1,7 @@
 # VSO Build.Preview Tasks
-
+<br/>
 ![Build Tasks](/taskbanner.png?raw=true "Build Tasks")
-
+<br/>
 ## Configure
 
 Before you run the builds, you need to configure an agent:
