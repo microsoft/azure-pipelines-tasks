@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TargetDir>$(MSBuildProjectDirectory)\temp</TargetDir>
-    <ProjectGuid>{D59CDF62-6AA5-4A62-B9D5-86CE9A6F70BE}</ProjectGuid>
+    <ProjectGuid>{83D274B3-B416-481F-85A2-0299B0017D27}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,7 +24,7 @@
   <ItemGroup>
     <Content Include="icon.png" />
     <Content Include="task.json" />
-    <Content Include="processRunner.js" />
+    <Content Include="BatchScript.ps1" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />

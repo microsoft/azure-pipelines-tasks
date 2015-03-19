@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TargetDir>$(MSBuildProjectDirectory)\temp</TargetDir>
-    <ProjectGuid>{C7237AC6-2B73-4238-83CC-36E8542D7AF9}</ProjectGuid>
+    <ProjectGuid>{06739F98-FB78-437A-95EB-E6878861CB6B}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,8 +24,7 @@
   <ItemGroup>
     <Content Include="icon.png" />
     <Content Include="task.json" />
-    <Content Include="xcodebuild.js" />
-    <Content Include="xcodebuild2.js" />
+    <Content Include="gulptask.js" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
