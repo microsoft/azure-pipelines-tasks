@@ -59,8 +59,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maven", "Maven\Maven.csproj", "{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotePowerShell", "RemotePowerShell\RemotePowerShell.csproj", "{1402C9DE-3D6E-4129-8E89-E3E5FDD86108}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployTestAgent", "DeployTestAgent\DeployTestAgent.csproj", "{01E25658-75E4-4F2F-ACE6-80CB233C4A22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunDistributedTests", "RunDistributedTests\RunDistributedTests.csproj", "{8A30E842-D530-4700-8C17-7C21739985DF}"
@@ -149,10 +147,6 @@ Global
 		{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1402C9DE-3D6E-4129-8E89-E3E5FDD86108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1402C9DE-3D6E-4129-8E89-E3E5FDD86108}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1402C9DE-3D6E-4129-8E89-E3E5FDD86108}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1402C9DE-3D6E-4129-8E89-E3E5FDD86108}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
