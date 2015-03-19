@@ -24,7 +24,7 @@
   <ItemGroup>
     <Content Include="icon.png" />
     <Content Include="task.json" />
-    <Content Include="DeployToAzure.ps1" />
+    <Content Include="DeployToAzureResourceGroup.ps1" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
