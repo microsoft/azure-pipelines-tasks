@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1 
     },
     "demands": [
         "AndroidSDK",
@@ -21,6 +21,11 @@
             "name": "msbuildOptions", 
             "displayName":"MSBuild Options",
             "isExpanded": true 
+        },
+        {
+            "name": "jdkOptions", 
+            "displayName":"JDK Options",
+            "isExpanded": true 
         }
     ],
     "inputs": [
@@ -30,7 +35,7 @@
             "label": "Project",
             "defaultValue": "**\\*.csproj",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the project(s) to build.  Wildcards can be used.  For example, `**\\*.csproj` for all csproj files in all subfolders."
+            "helpMarkDown": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**\\*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target."
         },
         {
             "name": "target",
@@ -39,14 +44,6 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Build these targets in this project. Use a semicolon to separate multiple targets."
-        },
-        { 
-            "name": "package", 
-            "type": "boolean", 
-            "label": "Package", 
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Add 'PackageForAndroid' target to this build." 
         },
         {
             "name": "outputDir",
@@ -78,7 +75,35 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Additional arguments passed to MSBuild.",
-            "groupName":"msbuildOptions"   
+            "groupName": "msbuildOptions"
+        },
+        {
+            "name":"jdkVersion",
+            "type":"pickList",
+            "label":"JDK Version",
+            "required":false,
+            "groupName":"jdkOptions",
+            "defaultValue":"default",
+            "helpMarkDown": "Use the selected JDK version during build.",
+            "options": {
+                "default":"default",
+                "1.8":"JDK 8",
+                "1.7":"JDK 7",
+                "1.6":"JDK 6"
+            }
+        },
+        { 
+            "name": "jdkArchitecture", 
+            "type": "pickList", 
+            "label": "JDK Architecture", 
+            "defaultValue":"x86", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+            "groupName":"jdkOptions",
+            "options":{
+                "x86":"x86",
+                "x64":"x64"
+            }
         }
     ],
     "instanceNameFormat": "Build Xamarin.Android Project $(project)",

@@ -1,27 +1,26 @@
 param(
     [string]$project, 
     [string]$target, 
-    [string]$package,
     [string]$configuration,
     [string]$outputDir,
     [string]$msbuildLocation, 
-    [string]$msbuildArguments 
+    [string]$msbuildArguments,
+    [string]$jdkVersion,
+    [string]$jdkArchitecture
 )
 
 Write-Verbose "Entering script XamarinAndroid.ps1"
 Write-Verbose "project = $project"
 Write-Verbose "target = $target"
-Write-Verbose "package = $package"
 Write-Verbose "configuration = $configuration"
 Write-Verbose "outputDir = $outputDir"
 Write-Verbose "msbuildLocation = $msbuildLocation"
 Write-Verbose "msbuildArguments = $msbuildArguments"
+Write-Verbose "jdkVersion = $jdkVersion"
+Write-Verbose "jdkArchitecture = $jdkArchitecture"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-
-$packageForAndroid = Convert-String $package Boolean
-Write-Verbose "package (converted) = $packageForAndroid"
 
 if (!$project)
 {
@@ -64,16 +63,26 @@ if ($target)
     $args = "$args /t:$target"
 }
 
-if ($packageForAndroid)
-{
-    Write-Verbose "adding target: PackageForAndroid"
-    $args = "$args /t:PackageForAndroid"
-}
+# Always build the APK file
+Write-Verbose "adding target: PackageForAndroid"
+$args = "$args /t:PackageForAndroid"
 
 if ($outputDir) 
 {
     Write-Verbose "adding OutputPath: $outputDir"
     $args = "$args /p:OutputPath=$outputDir"
+}
+
+if ($jdkVersion -and $jdkVersion -ne "default")
+{
+    $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
+    if (!$jdkPath) 
+    {
+        throw "Could not find JDK $jdkVersion $jdkArchitecture, please make sure the selected JDK is installed properly"
+    }
+
+    Write-Verbose "adding JavaSdkDirectory: $jdkPath"
+    $args = "$args /p:JavaSdkDirectory=`"$jdkPath`""
 }
 
 Write-Verbose "args = $args"
