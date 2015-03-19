@@ -3,7 +3,7 @@
     "name": "DeployUsingPowerShell",
     "friendlyName": "Deploy Using PowerShell*",
     "description": "Execute PowerShell commands remotely on machine(s)",
-    "category": "Utility",
+    "category": "Deploy",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
