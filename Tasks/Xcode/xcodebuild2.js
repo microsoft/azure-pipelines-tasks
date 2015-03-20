@@ -32,7 +32,6 @@ xcv.exec()
 	return xcb.exec();
 })
 .then(function(code) {
-	console.log(code);
 	tl.exit(code);
 })
 .fail(function(err) {
