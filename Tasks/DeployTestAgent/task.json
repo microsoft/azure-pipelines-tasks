@@ -1,8 +1,8 @@
 ﻿{
     "id": "D7DC1F54-ACD6-4B7C-93C0-264FC03B2C6B",
     "name": "DeployTestAgent",
-    "friendlyName": "Deploy Visual Studio Test Agent*",
-    "description": "Deploy and configure Test Agent to run tests on a lab environment",
+    "friendlyName": "Deploy Visual Studio Test Agent [Preview]",
+    "description": "Deploy and configure Test Agent to run tests on a lab environment. This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
     "category": "Test",
     "author": "Microsoft Corporation",
     "version": {
