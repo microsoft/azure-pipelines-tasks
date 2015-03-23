@@ -46,11 +46,12 @@ if ($action -eq "activate")
     $xamarinProducts = @()
     if ($activateAndroidLicense)
     {
-        $xamarinProducts += 0
+        $xamarinProducts += [Microsoft.TeamFoundation.DistributedTask.Task.Common.Core.XamarinProductType]::Android 
     }
 
     foreach ($p in $xamarinProducts)
     {
+        Write-Verbose "Activating license for product type $p"
         Register-XamarinLicense -Email $email -Password $password -Product $p -TimeoutInSec $timeoutInSec
     }
 }
