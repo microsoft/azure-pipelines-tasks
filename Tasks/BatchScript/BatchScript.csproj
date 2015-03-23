@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TargetDir>$(MSBuildProjectDirectory)\temp</TargetDir>
-    <ProjectGuid>{1402C9DE-3D6E-4129-8E89-E3E5FDD86108}</ProjectGuid>
+    <ProjectGuid>{83D274B3-B416-481F-85A2-0299B0017D27}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,8 +23,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="icon.png" />
-    <Content Include="RemotePowerShellRunner.ps1" />
     <Content Include="task.json" />
+    <Content Include="BatchScript.ps1" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />

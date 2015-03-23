@@ -8,8 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3,
-        "IsTest": false
+        "Patch": 3
     },
     "demands": [
         "DotNetFramework"

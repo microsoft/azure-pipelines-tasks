@@ -11,8 +11,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2, 
-        "IsTest": false
+        "Patch": 4
     },
     "instanceNameFormat": "Maven $(args)",
     "groups": [
@@ -44,16 +43,7 @@
             "label": "Goal(s)", 
             "defaultValue": "compile", 
             "required": false 
-        },
-        {
-            "name": "cwd",
-            "type": "filePath",
-            "label": "Working directory",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Working directory to run the Maven build in. Defaults to the repo root.",
-            "groupName": "advanced"
-        },
+        },        
         {
             "name":"jdkVersion",
             "type":"pickList",

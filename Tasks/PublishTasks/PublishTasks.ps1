@@ -6,7 +6,7 @@
 param
 (
     [string]$sourceFolder,
-    [string]$packageFolder, 
+    [string]$packageFolder,
     [string]$readmeFile
 )
 
@@ -21,10 +21,13 @@ if( -Not (Test-Path $sourceFolder))
     return
 }
 
-if( -Not (Test-Path $packageFolder))
+#If the package folder exists, delete it so we don't have stale tasks around
+if(Test-Path $packageFolder)
 {
-    New-Item -Path $packageFolder -ItemType Directory -Force -ErrorAction Stop
+    Write-Host "packageFolder '$packageFolder' was found.  Deleting it."
+    Remove-Item -Path $packageFolder -Recurse -Force -ErrorAction Stop
 }
+New-Item -Path $packageFolder -ItemType Directory -Force -ErrorAction Stop | Out-Null
 
 if( -Not (Test-Path $readmeFile))
 {
@@ -40,10 +43,10 @@ $taskinfo = ""
 foreach($src in $tasksSrc)
 {
     Write-Host task.json location: (Join-Path -Path $src.FullName -ChildPath "task.json")
-    $json = (Get-Content -Path (Join-Path -Path $src.FullName -ChildPath "task.json")) -join "`r`n"  
+    $json = (Get-Content -Path (Join-Path -Path $src.FullName -ChildPath "task.json")) -join "`r`n"
 
     $taskDef = ConvertFrom-Json -InputObject $json -ErrorAction Stop
-    
+
     $taskName = $taskDef.name
     Write-Host taskName = $taskName
 
@@ -52,14 +55,14 @@ foreach($src in $tasksSrc)
                    $taskDef.version.Patch.ToString()
     Write-Host taskVersion = $taskVersion
 
-	$taskDir = [System.IO.Path]::Combine($packageFolder,"Tasks",$taskName)
+    $taskDir = [System.IO.Path]::Combine($packageFolder,"Tasks",$taskName)
     if(Test-Path $taskDir)
     {
         Write-Host $taskDir already exist, try to delete everything in it.
         Remove-Item -Path $taskDir\* -Recurse -Force -ErrorAction Stop
     }
 
-	$dstDir = [System.IO.Path]::Combine($packageFolder,"Tasks",$taskName,$taskVersion)    
+    $dstDir = [System.IO.Path]::Combine($packageFolder,"Tasks",$taskName,$taskVersion)
     Write-Host Create directory: $dstDir.
     $dstDir = New-Item -Path $dstDir -ItemType Directory -Force -ErrorAction Stop
 
@@ -71,6 +74,13 @@ foreach($src in $tasksSrc)
 
 $taskinfo = $taskinfo.TrimEnd("`r`n")
 Write-Host taskinfo = $taskinfo
+
+#Delete each temp folder for the tasks we just packaged up so we're clean next run
+foreach($src in $tasksSrc)
+{
+    Write-Host "Deleting" $src.FullName
+    Remove-Item -Path $src.FullName -Recurse -Force -ErrorAction Stop
+}
 
 #jpricket - removing these lines so we can maintain the readme file manually
 #remove all existing task info from README.md

@@ -8,8 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
-        "IsTest": false
+        "Patch": 1
     },
     "demands": [
         "JDK",
@@ -49,7 +48,7 @@
             "type": "string",
             "label": "Keystore File",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Full path to the keystore file.",
             "visibleRule": "jarsign = true",
             "groupName":"jarsignerOptions"   

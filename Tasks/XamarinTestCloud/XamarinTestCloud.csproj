@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TargetDir>$(MSBuildProjectDirectory)\temp</TargetDir>
-    <ProjectGuid>{83D274B3-B416-481F-85A2-0299B0017D27}</ProjectGuid>
+    <ProjectGuid>{56BF68B1-18FC-4EA0-ADF8-2AD4E6BF6178}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,8 +23,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="icon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="task.json" />
-    <Content Include="CmdScript.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="XamarinTestCloud.ps1" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />

@@ -1,9 +1,9 @@
 ﻿{
-    "id": "798E69E4-B1AE-4C4B-83A8-CD96F565A546",
-	"name": "RunDistributedTests",
-    "friendlyName": "Run Visual Studio Tests using Test Agent",
-    "description": "Run tests remotely or distribute tests to multiple machines.",
-    "category": "Build",
+    "id": "79CF505F-47AA-4558-86A4-06E7644DFD4C",
+    "name": "RunDistributedTests",
+    "friendlyName": "Run Visual Studio Tests using Test Agent [Preview]",
+    "description": "Run tests distributedly using multiple test agents in a lab environment. This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
+    "category": "Test",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
@@ -13,6 +13,18 @@
     },
     "demands": [
     ],
+    "groups": [
+        {
+            "name": "testEnvironment",
+            "displayName": "Test Environment",
+            "isExpanded": true
+        },
+        {
+            "name": "testSettings",
+            "displayName": "Test Settings",
+            "isExpanded": true
+        }
+    ],
     "inputs": [
         {
             "name": "environment",
@@ -20,15 +32,35 @@
             "label": "Test Environment",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the environment on which tests need to be run."
+            "helpMarkDown": "The name of the environment on which tests need to be run.",
+            "groupName": "testEnvironment"
+        },
+        {
+            "name": "alternateCredsUserName",
+            "type": "string",
+            "label": "Alternate credentials Username",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
+            "groupName": "testEnvironment"
+        },
+        {
+            "name": "alternateCredsPassword",
+            "type": "string",
+            "label": "Alternate credentials Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
+            "groupName": "testEnvironment"
         },
         {
             "name": "sourcefilters",
             "type": "string",
-            "label": "Source Filters",
+            "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll",
             "required": true,
-            "helpMarkDown": "Search pattern for test assemblies"
+            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, `**\\*test*.dll;` for all dlls containing 'test' in their name.",
+            "groupName": "testSettings"
         },
         {
             "name": "testFilterCriteria",
@@ -36,7 +68,8 @@
             "label": "Test Filter criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Filter criteria for selecting test cases"
+            "helpMarkDown": "Filter criteria for the tests.",
+            "groupName": "testSettings"
         },
         {
             "name": "runSettingsFile",
@@ -44,34 +77,11 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Runsettings or testsettings file for test run"
-        },
-        {
-            "name": "subHeading",
-            "type": "bool",
-            "label": "Alternate credentials to publish test results to TFS",
-            "defaultValue": "false",
-            "required": true,
-            "helpMarkDown": ""
-        },
-        {
-            "name": "alternateCredsUserName",
-            "type": "string",
-            "label": "Alternate credentials Username",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Username for connecting to TFS"
-        },
-        {
-            "name": "alternateCredsPassword",
-            "type": "string",
-            "label": "Alternate credentials Password",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Alternate credentials Password for connecting to TFS"
+            "helpMarkDown": "the runsettings or testsettings file for the test run",
+            "groupName": "testSettings"
         }
     ],
-    "instanceNameFormat": "Test assemblies $(testassemblies)",
+    "instanceNameFormat": "Test assemblies $(sourcefilters)",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RunDistributedTests.ps1",
