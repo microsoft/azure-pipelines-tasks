@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinAndroid", "XamarinAn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidSigning", "AndroidSigning\AndroidSigning.csproj", "{FFF51606-307E-4344-9FCF-48B6F817A141}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployToAzureResourceGroup", "DeployToAzure\DeployToAzureResourceGroup.csproj", "{98BC5FBE-FA04-47B5-B32C-9AD2419F24C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +175,10 @@ Global
 		{FFF51606-307E-4344-9FCF-48B6F817A141}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFF51606-307E-4344-9FCF-48B6F817A141}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFF51606-307E-4344-9FCF-48B6F817A141}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98BC5FBE-FA04-47B5-B32C-9AD2419F24C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98BC5FBE-FA04-47B5-B32C-9AD2419F24C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98BC5FBE-FA04-47B5-B32C-9AD2419F24C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98BC5FBE-FA04-47B5-B32C-9AD2419F24C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
