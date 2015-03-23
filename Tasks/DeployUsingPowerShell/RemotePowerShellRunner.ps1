@@ -5,8 +5,8 @@ param (
     [string]$applicationPath,
     [string]$scriptPath,
     [string]$initializationScriptPath,
-	[string]$alternateCredentialsUsername,
-	[string]$alternateCredentialsPassword
+    [string]$alternateCredentialsUsername,
+    [string]$alternateCredentialsPassword
     )
 
 Write-Verbose "Entering script RemotePowerShellRunner.ps1" -Verbose
@@ -58,10 +58,12 @@ Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 
 foreach ($resource in $resources)
 {
-	$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -ErrorAction Stop
+    $logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
 
-	Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-	
+    $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -ErrorAction Stop
+
+    Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+    
     $fqdn = $resource.Name
 
     Write-Verbose "Initiating copy on $fqdn, username: $machineUserName" -Verbose
@@ -87,11 +89,12 @@ foreach ($resource in $resources)
         $response = $deploymentResponse
     }
 
-	Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $log -ErrorAction Stop
+    $logs.Add($log)
+    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $logs -ErrorAction Stop
     
     if ($response.Status -ne "Passed")
     {
-		Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -ErrorAction Stop
+        Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -ErrorAction Stop
 
         throw $response.Error;
     }

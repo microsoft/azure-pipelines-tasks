@@ -26,6 +26,12 @@
     <Content Include="task.json" />
     <Content Include="DeployToAzureResourceGroup.ps1" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="AzureResourceManagerHelper.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DtlServiceHelper.ps1" />
+  </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
     <Copy SourceFiles="@(Content)" DestinationFiles="@(Content->'$(TargetDir)\%(filename)%(extension)')" />
