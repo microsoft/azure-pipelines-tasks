@@ -1,0 +1,74 @@
+﻿{
+    "id": "6237827D-6244-4D52-B93E-47D8610FBD8A",
+    "name": "XamarinLicense",
+    "friendlyName": "Xamarin License",
+    "description": "Activate or deactivate Xamarin licenses",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+       {
+            "name":"action",
+            "type":"radio",
+            "label":"Action",
+            "required":false,
+            "defaultValue":"activate",
+            "options": {
+                "activate":"Activate",
+                "deactivate":"Deactivate"
+            }   
+        },
+        {
+            "name": "email",
+            "type": "string",
+            "label": "Email",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Xamarin account email address."
+        },
+        {
+            "name": "password",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Xamarin account password."
+        },
+        {
+            "name": "activateAndroid",
+            "type": "boolean",
+            "label": "Activate Xamarin.Android",
+            "defaultValue": true,
+            "required": true,
+            "visibleRule": "action = activate"
+        },
+        {
+            "name": "Timeout",
+            "type": "string",
+            "label": "Timeout in Seconds",
+            "groupName": "advanced",
+            "defaultValue": "30",
+            "required": false 
+        }
+    ],
+    "instanceNameFormat": "$(action) Xamarin license",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\XamarinLicense.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

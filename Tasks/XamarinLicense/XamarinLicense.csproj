@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetDir>$(MSBuildProjectDirectory)\temp</TargetDir>
+    <ProjectGuid>{E18A236C-66B3-46AA-B64B-718372524C6E}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="task.json" />
+    <Content Include="XamarinLicense.ps1" />
+    <Content Include="icon.png" />
+  </ItemGroup>
+  <Target Name="Build">
+    <Message Text="targetDir = $(TargetDir)" Importance="High" />
+    <Copy SourceFiles="@(Content)" DestinationFiles="@(Content->'$(TargetDir)\%(filename)%(extension)')" />
+  </Target>
+  <Target Name="Rebuild" DependsOnTargets="Build" />
+</Project>
