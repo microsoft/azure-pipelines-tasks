@@ -34,7 +34,12 @@ if (!$password)
 }
 
 $timeoutInSec = $null
-if (![Int32]::TryParse($timeout, [ref] $timeoutInSec))
+if (!$timeout)
+{
+    Write-Verbose "Use default timeout of 30 seconds"
+    $timeoutInSec = 30
+}
+elseif (![Int32]::TryParse($timeout, [ref] $timeoutInSec))
 {
     Write-Verbose "Could not parse timeout input, timeout default to 30 seconds."
     $timeoutInSec = 30

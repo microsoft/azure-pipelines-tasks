@@ -23,7 +23,7 @@
             "name":"action",
             "type":"radio",
             "label":"Action",
-            "required":false,
+            "required":true,
             "defaultValue":"activate",
             "options": {
                 "activate":"Activate",
