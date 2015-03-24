@@ -8,8 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
-        "IsTest": false
+        "Patch": 4
     },
     "demands" : [
         "ant"
@@ -21,7 +20,7 @@
             "isExpanded":false
         }
     ],
-    "instanceNameFormat": "Ant $(options)",
+    "instanceNameFormat": "Ant $(options) $(antBuildFile)",
     "inputs": [
         { 
             "name": "antBuildFile", 
@@ -43,15 +42,34 @@
             "type": "string", 
             "label": "Target(s)", 
             "defaultValue":"", "required":false
-        },
-         { 
-            "name": "cwd", 
-            "type": "filePath", 
-            "label": "Working directory", 
-            "defaultValue":"", 
+        },        
+        {
+            "name":"jdkVersion",
+            "type":"pickList",
+            "label":"JDK Version",
             "required":false,
-            "helpMarkDown":"Working directory to run the Ant build in. Defaults to repository root.",
-            "groupName":"advanced"
+            "groupName":"advanced",
+            "defaultValue":"default",
+            "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+            "options": {
+                "default":"default",
+                "1.8":"JDK 8",
+                "1.7":"JDK 7",
+                "1.6":"JDK 6"
+            }
+        },
+        { 
+            "name": "jdkArchitecture", 
+            "type": "pickList", 
+            "label": "JDK Architecture", 
+            "defaultValue":"x86", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+            "groupName":"advanced",
+            "options":{
+                "x86":"x86",
+                "x64":"x64"
+            }
         }
     ],
     "execution": {

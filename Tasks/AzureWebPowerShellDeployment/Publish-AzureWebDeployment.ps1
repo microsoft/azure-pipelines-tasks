@@ -19,13 +19,13 @@ param
 
 function Get-SingleFile($files, $pattern)
 {
-    if($files -is [system.array])
+    if ($files -is [system.array])
     {
         throw "Found more than one file to deploy with search pattern $pattern.  There can be only one."
     }
     else
     {
-        if(!$files)
+        if (!$files)
         {
             throw "No files were found to deploy with search pattern $pattern"
         }
@@ -38,10 +38,10 @@ Write-Host "Entering script Publish-AzureWebDeployment.ps1"
 Write-Host "ConnectedServiceName= $ConnectedServiceName"
 Write-Host "WebSiteName= $WebSiteName"
 Write-Host "Package= $Package"
-Write-Verbose "AdditionalArguments= $AdditionalArguments"
+Write-Host "AdditionalArguments= $AdditionalArguments"
 
 #Find the package to deploy
-Write-Host "packageFile = Find-Files -SearchPattern $Package"
+Write-Host "packageFile= Find-Files -SearchPattern $Package"
 $packageFile = Find-Files -SearchPattern $Package
 Write-Host "packageFile= $packageFile"
 
@@ -51,18 +51,18 @@ $packageFile = Get-SingleFile $packageFile $Package
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)
 {
-    Write-Host "Get-AzureWebSite -Name $WebSiteName -Verbose -ErrorAction SilentlyContinue"
-    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -Verbose
+    Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue"
+    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue
     if(!$azureWebSite)
     {
-        Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Verbose"
-        $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Verbose
+        Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation"
+        $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation
     }
 }
 
 #Deploy the package
 $azureCommand = "Publish-AzureWebsiteProject"
-$azureCommandArguments = "-Name $WebSiteName -Package `"$packageFile`" -Verbose $AdditionalArguments"
+$azureCommandArguments = "-Name $WebSiteName -Package `"$packageFile`" $AdditionalArguments"
 $finalCommand = "$azureCommand $azureCommandArguments"
 Write-Host "finalCommand= $finalCommand"
 Invoke-Expression -Command $finalCommand

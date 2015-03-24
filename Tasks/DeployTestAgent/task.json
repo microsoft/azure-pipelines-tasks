@@ -1,9 +1,9 @@
 ﻿{
-    "id": "C7A6DE2B-3B04-4EB8-B9B0-7F4113316B8C",
+    "id": "D7DC1F54-ACD6-4B7C-93C0-264FC03B2C6B",
     "name": "DeployTestAgent",
-    "friendlyName": "Deploy Visual Studio Test Agent",
-    "description": "Deploy and configure Test Agent to run tests on a lab environment",
-    "category": "Build",
+    "friendlyName": "Deploy Visual Studio Test Agent [Preview]",
+    "description": "Deploy and configure Test Agent to run tests on a lab environment. This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
+    "category": "Test",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
@@ -24,6 +24,11 @@
             "name": "agentConfiguration",
             "displayName": "Agent Configuration",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -89,6 +94,15 @@
             "required": true,
             "helpMarkDown": "The password for the username given above.",
             "groupName": "agentConfiguration"
+        },
+        {
+            "name": "agentLocation",
+            "type": "string",
+            "label": "Test Agent Location",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Optionally supply the path to TestAgent.zip from network or local location.If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkID=528474&clcid=0x409"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",
