@@ -1,9 +1,10 @@
 ﻿{
-    "id": "79CF505F-47AA-4558-86A4-06E7644DFD4C",
+    "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunDistributedTests",
     "friendlyName": "Run Visual Studio Tests using Test Agent [Preview]",
     "description": "Run tests distributedly using multiple test agents in a lab environment. This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
     "category": "Test",
+    "visibility": "Preview, Build",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

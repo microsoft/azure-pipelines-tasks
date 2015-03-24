@@ -1,9 +1,10 @@
 ﻿{
-    "id": "88A985E0-DF49-4745-8824-E7D194F9ACBC",
+    "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
     "name": "DeployUsingPowerShell",
     "friendlyName": "Deploy Using PowerShell [Preview]",
     "description": "Execute PowerShell commands remotely on machine(s). This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
     "category": "Deploy",
+    "visibility": "Preview, Build",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
