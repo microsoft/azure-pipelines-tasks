@@ -4,8 +4,7 @@ param(
     [string]$alternateCredsPassword, 
     [string]$sourcefilters,
     [string]$testFilterCriteria,
-    [string]$runSettingsFile,
-	[string]$overrideRunParams
+    [string]$runSettingsFile
 )
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
@@ -14,7 +13,6 @@ Write-Verbose "Source Filter = $sourcefilters"
 Write-Verbose "testFilterCriteria = $testFilterCriteria"
 Write-Verbose "runSettingsFile = $runSettingsFile"
 Write-Verbose "AlternateuserName = $alternateCredsUserName"
-Write-Verbose "TestRun Parameters to override = $overrideRunParams"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
