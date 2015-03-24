@@ -89,7 +89,10 @@ foreach ($resource in $resources)
         $response = $deploymentResponse
     }
 
-    $logs.Add($log)
+	$resourceOperationLog = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.Log
+	$resourceOperationLog.Content = $log
+    $logs.Add($resourceOperationLog)
+
     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $logs -ErrorAction Stop
     
     if ($response.Status -ne "Passed")
