@@ -4,7 +4,10 @@
     "friendlyName": "Deploy Using PowerShell [Preview]",
     "description": "Execute PowerShell commands remotely on machine(s). This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
     "category": "Deploy",
-    "visibility": "Preview, Build",
+    "visibility": [
+                "Preview",
+                "Build"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
