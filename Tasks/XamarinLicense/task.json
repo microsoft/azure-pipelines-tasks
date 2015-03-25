@@ -55,7 +55,7 @@
             "visibleRule": "action = activate"
         },
         {
-            "name": "Timeout",
+            "name": "timeout",
             "type": "string",
             "label": "Timeout in Seconds",
             "groupName": "advanced",
