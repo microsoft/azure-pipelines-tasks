@@ -58,8 +58,6 @@ Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 
 foreach ($resource in $resources)
 {
-    $logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
-
     $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -ErrorAction Stop
 
     Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
@@ -89,8 +87,7 @@ foreach ($resource in $resources)
         $response = $deploymentResponse
     }
 
-    $logs.Add($log)
-    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $logs -ErrorAction Stop
+    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $log -ErrorAction Stop
     
     if ($response.Status -ne "Passed")
     {
