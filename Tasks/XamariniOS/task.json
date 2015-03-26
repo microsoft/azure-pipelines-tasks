@@ -1,0 +1,40 @@
+{
+    "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
+    "name": "XamariniOS",
+    "friendlyName": "Xamarin.iOS",
+    "description": "Build iOS app with Xamarin",
+    "category": "Build",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [
+        "Xamarin.iOS"
+    ],
+    "inputs": [
+        {
+            "name": "project",
+            "type": "filePath",
+            "label": "Project",
+            "defaultValue": "**\\*.csproj",
+            "required": true,
+            "helpMarkDown": "Relative path from repo root of Xamarin.iOS project(s) to build.  Wildcards can be used.  For example, `**\\*.csproj` for all csproj files in all subfolders."
+        },
+        {
+            "name": "outputDir",
+            "type": "string",
+            "label": "Output Directory",
+            "defaultValue": "$(Agent.BuildDirectory)\\bin\\Release",
+            "required": false
+        }
+    ],
+    "instanceNameFormat": "Build Xamarin.iOS Project $(project)",
+    "execution": {
+        "Node": {
+            "target": "xamariniOS.js",
+            "argumentFormat": ""
+        }
+    }
+}
