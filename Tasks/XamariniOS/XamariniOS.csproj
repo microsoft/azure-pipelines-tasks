@@ -24,6 +24,7 @@
   <ItemGroup>
     <Content Include="icon.png" />
     <Content Include="task.json" />
+    <Content Include="xamariniOS.js" />
   </ItemGroup>
   <Target Name="Build">
     <Message Text="targetDir = $(TargetDir)" Importance="High" />
