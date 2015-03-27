@@ -46,7 +46,7 @@ elseif (![Int32]::TryParse($timeout, [ref] $timeoutInSec))
 }
 Write-Verbose "timeout: $timeoutInSec"
 
-if ($action -eq "activate")
+if ($action -eq "Activate")
 {
     $xamarinProducts = @()
     if ($activateAndroidLicense)
@@ -60,7 +60,7 @@ if ($action -eq "activate")
         Register-XamarinLicense -Email $email -Password $password -Product $p -TimeoutInSec $timeoutInSec
     }
 }
-elseif ($action -eq "deactivate")
+elseif ($action -eq "Deactivate")
 {
     Unregister-XamarinLicense -Email $email -Password $password -TimeoutInSec $timeoutInSec
 }

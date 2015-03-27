@@ -26,8 +26,8 @@
             "required":true,
             "defaultValue":"activate",
             "options": {
-                "activate":"Activate",
-                "deactivate":"Deactivate"
+                "Activate":"Activate",
+                "Deactivate":"Deactivate"
             }   
         },
         {
