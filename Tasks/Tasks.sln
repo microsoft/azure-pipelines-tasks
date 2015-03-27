@@ -52,6 +52,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maven", "Maven\Maven.csproj", "{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployTestAgent", "DeployTestAgent\DeployTestAgent.csproj", "{01E25658-75E4-4F2F-ACE6-80CB233C4A22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunDistributedTests", "RunDistributedTests\RunDistributedTests.csproj", "{8A30E842-D530-4700-8C17-7C21739985DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployUsingPowerShell", "DeployUsingPowerShell\DeployUsingPowerShell.csproj", "{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinAndroid", "XamarinAndroid\XamarinAndroid.csproj", "{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidSigning", "AndroidSigning\AndroidSigning.csproj", "{FFF51606-307E-4344-9FCF-48B6F817A141}"
@@ -136,6 +142,18 @@ Global
 		{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6C004CF-F364-47A1-BFB3-5D018B8B0F4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01E25658-75E4-4F2F-ACE6-80CB233C4A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A30E842-D530-4700-8C17-7C21739985DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A30E842-D530-4700-8C17-7C21739985DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A30E842-D530-4700-8C17-7C21739985DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A30E842-D530-4700-8C17-7C21739985DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4F5AAB5-015C-4CBD-88DF-B279C054DCAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E62B27E9-9CA6-4474-98C9-D3EE29B4CA11}.Release|Any CPU.ActiveCfg = Release|Any CPU
