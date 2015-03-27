@@ -77,11 +77,11 @@
         },
         {
             "name": "runSettingsFile",
-            "type": "filePath",
+            "type": "string",
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "the runsettings or testsettings file for the test run",
+            "helpMarkDown": "Path to runsettings file to use with the tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder.",
             "groupName": "testSettings"
         }
     ],

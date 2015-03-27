@@ -1,10 +1,10 @@
 param(
-    [string]$environment, 
+    [string]$environment,
+    [string]$alternateCredsUserName,
+    [string]$alternateCredsPassword, 
     [string]$sourcefilters,
     [string]$testFilterCriteria,
-    [string]$runSettingsFile,
-    [string]$alternateCredsUserName,
-    [string]$alternateCredsPassword
+    [string]$runSettingsFile
 )
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
