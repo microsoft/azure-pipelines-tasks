@@ -42,7 +42,7 @@
             "name": "forSimulator",
             "type": "boolean",
             "label": "Build for iOS Simulator",
-            "defaultValue": "$(BuildForSimulator)",
+            "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Optionally builds for the iOS Simulator instead of physical iOS devices."
         }
