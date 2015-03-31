@@ -1,6 +1,6 @@
 {
     "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
-    "name": "XamariniOS",
+    "name": "Xamarin.iOS",
     "friendlyName": "Xamarin.iOS",
     "description": "Build iOS app with Xamarin on Mac OS",
     "category": "Build",
@@ -13,37 +13,30 @@
     "demands": [
         "Xamarin.iOS"
     ],
-    "groups": [
-        {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
-        }
-    ],
     "inputs": [
         { 
-            "name": "solution", 
-            "type": "filePath", 
-            "label": "Solution", 
-            "defaultValue":"", 
-            "required":true,
-            "helpMarkDown": "Relative path from repo root of the Xamarin.iOS solution to build."  
+            "name": "solution",
+            "type": "filePath",
+            "label": "Solution",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Relative path from repo root of the Xamarin.iOS solution to build."
         },
         {
             "name": "configuration",
             "type": "string",
             "label": "Configuration",
-            "defaultValue": "$(Configuration)",
-            "required": true
+            "defaultValue": "Release",
+            "required": true,
+            "helpMarkDown": "Standard configurations are Ad-Hoc, AppStore, Debug, Release."
         },
         { 
             "name": "mdtoolLocation",
             "type": "string",
-            "label": "Path to mdtool",
-            "defaultValue":"",
-            "required":false,
-            "helpMarkDown": "Optionally supply the path to mdtool, the Xamarin Studio build tool. If empty, the default will be used: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
-            "groupName":"advanced"
+            "label": "Override path to mdtool",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to mdtool, the Xamarin Studio build tool. When empty, the default path will be used: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool"
         },
         {
             "name": "forSimulator",
@@ -51,8 +44,7 @@
             "label": "Build for iOS Simulator",
             "defaultValue": "$(BuildForSimulator)",
             "required": false,
-            "helpMarkDown": "Optionally builds for the iOS Simulator instead of physical iOS devices.",
-            "groupName":"advanced"
+            "helpMarkDown": "Optionally builds for the iOS Simulator instead of physical iOS devices."
         }
     ],
     "instanceNameFormat": "Build Xamarin.iOS solution $(solution)",
