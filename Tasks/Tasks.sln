@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22726.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureCloudPowerShellDeployment", "AzureCloudPowerShellDeployment\AzureCloudPowerShellDeployment.csproj", "{F09D387F-AADB-46FA-A648-5768EB0DB020}"
 EndProject
@@ -75,6 +75,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchScript", "BatchScript\BatchScript.csproj", "{83D274B3-B416-481F-85A2-0299B0017D27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinLicense", "XamarinLicense\XamarinLicense.csproj", "{E18A236C-66B3-46AA-B64B-718372524C6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamariniOS", "XamariniOS\XamariniOS.csproj", "{E09850F3-28C4-40E3-9E12-28B2E7E7C451}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -190,6 +192,10 @@ Global
 		{E18A236C-66B3-46AA-B64B-718372524C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E18A236C-66B3-46AA-B64B-718372524C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E18A236C-66B3-46AA-B64B-718372524C6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E09850F3-28C4-40E3-9E12-28B2E7E7C451}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E09850F3-28C4-40E3-9E12-28B2E7E7C451}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E09850F3-28C4-40E3-9E12-28B2E7E7C451}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E09850F3-28C4-40E3-9E12-28B2E7E7C451}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
