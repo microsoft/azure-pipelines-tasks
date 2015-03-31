@@ -45,6 +45,6 @@ mdtoolRunner.exec()
 })
 .fail(function (err) {
     // Error executing
-    tl.debug('ToolRunner execution error');
+    tl.debug('ToolRunner execution failure: ' + err);
     tl.exit(1);
 })
