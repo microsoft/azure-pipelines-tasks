@@ -24,7 +24,7 @@
             "type":"radio",
             "label":"Action",
             "required":true,
-            "defaultValue":"activate",
+            "defaultValue":"Activate",
             "options": {
                 "Activate":"Activate",
                 "Deactivate":"Deactivate"
@@ -52,7 +52,7 @@
             "label": "Activate Xamarin.Android",
             "defaultValue": true,
             "required": true,
-            "visibleRule": "action = activate"
+            "visibleRule": "action = Activate"
         },
         {
             "name": "timeout",
