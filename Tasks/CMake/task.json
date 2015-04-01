@@ -2,7 +2,7 @@
     "id": "7D831C3C-3C68-459A-A5C9-BDE6E659596C",
     "name": "CMake",
     "friendlyName": "CMake",
-    "description": "Cross platform build system",
+    "description": "Build with the CMake cross-platform build system",
     "category": "Build",
     "author": "Microsoft Corporation",
     "demands" : [
@@ -11,7 +11,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "instanceNameFormat": "CMake $(args)",
     "inputs": [

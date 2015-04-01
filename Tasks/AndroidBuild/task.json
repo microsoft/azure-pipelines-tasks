@@ -2,13 +2,13 @@
     "id": "DF857559-8715-46EB-A74E-AC98B9178AA0",
     "name": "AndroidBuild",
     "friendlyName": "Android Build",
-    "description": "Run an Android build using Gradle and optionally start the emulator for unit tests",
+    "description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands" : [
 	    "AndroidSDK"
