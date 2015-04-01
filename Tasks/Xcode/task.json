@@ -2,7 +2,7 @@
     "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
     "name": "Xcode",
     "friendlyName": "Xcode Build",
-    "description": "Build an Xcode project with xctool or xcodebuild tool",
+    "description": "Build an Xcode workspace on Mac OS",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {

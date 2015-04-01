@@ -2,7 +2,7 @@
     "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B9",
     "name": "AndroidSigning",
     "friendlyName": "Android Signing",
-    "description": "Signing and aligning APK",
+    "description": "Sign and align Android APK files",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {

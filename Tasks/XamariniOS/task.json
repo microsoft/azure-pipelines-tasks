@@ -2,7 +2,7 @@
     "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
     "name": "Xamarin.iOS",
     "friendlyName": "Xamarin.iOS",
-    "description": "Build iOS app with Xamarin on Mac OS",
+    "description": "Build an iOS app with Xamarin on Mac OS",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {

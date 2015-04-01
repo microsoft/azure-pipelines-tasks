@@ -2,7 +2,7 @@
     "id": "F54D001C-999F-408A-9867-0400C1838C5E",
     "name": "XcodePackageiOS",
     "friendlyName": "Xcode Package iOS",
-    "description": "Generates an .ipa file from the build output",
+    "description": "Generate an .ipa file from Xcode build output",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {

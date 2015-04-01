@@ -2,7 +2,7 @@
     "id": "8D8EEBD8-2B94-4C97-85AF-839254CC6DA4",
     "name": "Gradle",
     "friendlyName": "Gradle",
-    "description": "Run a build using Gradle wrapper",
+    "description": "Build using a Gradle wrapper script",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
