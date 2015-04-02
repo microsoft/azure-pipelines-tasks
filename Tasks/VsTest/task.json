@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "vstest"
@@ -42,29 +42,44 @@
       "helpMarkDown": "Filter criteria for the tests."
     },
     {
+      "name": "platform", 
+      "type": "string", 
+      "label": "Platform", 
+      "defaultValue":"", 
+      "required":false
+    },
+    {
+      "name": "configuration", 
+      "type": "string", 
+      "label": "Configuration", 
+      "defaultValue":"", 
+      "required":false 
+    },
+    {
       "name": "runSettingsFile",
-      "type": "filePath",
+      "type": "string",
       "label": "Run Settings File",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The run settings file to use."
+      "helpMarkDown": "Path to runsettings file to use with the Tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder"
+    },
+    {
+      "name": "overrideTestrunParameters",
+      "type": "string",
+      "label": "Override TestRun Parameters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080"      
     },
     {
       "name": "codeCoverageEnabled",
       "type": "boolean",
       "label": "Code Coverage Enabled",
-      "defaultValue": "True",
+      "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "Whether code coverage needs to be enabled."
-    },
-    {
-      "name": "otherConsoleOptions",
-      "type": "string",
-      "label": "Other console options",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Any other console options to be used."
-    },
+      "helpMarkDown": "Whether code coverage needs to be enabled.",
+      "groupName":"advanced"
+    },    
     {
       "name": "vsTestVersion",
       "type": "pickList",
@@ -86,6 +101,15 @@
       "required": false,
       "helpMarkDown": "Path to custom adapters.",
       "groupName":"advanced"
+    },
+    {
+      "name": "otherConsoleOptions",
+      "type": "string",
+      "label": "Other console options",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Other console options.",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "Test Assemblies $(testAssembly)",
