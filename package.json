@@ -33,5 +33,8 @@
     "through2": "^0.6.3",
     "validator": "^3.33.0",
     "vso-task-lib": "^0.1.3"
+  },
+  "dependencies": {
+    "q": "^1.2.0"
   }
 }
