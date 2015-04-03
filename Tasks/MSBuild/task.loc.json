@@ -1,0 +1,140 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
+  "name": "MSBuild",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Build",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 6
+  },
+  "demands": [
+    "msbuild"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "solution",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.solution",
+      "defaultValue": "**\\*.sln",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
+    },
+    {
+      "name": "platform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.platform",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "msbuildArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.msbuildArguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional arguments passed to MSBuild."
+    },
+    {
+      "name": "clean",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.clean",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
+      "name": "restoreNugetPackages",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.restoreNugetPackages",
+      "defaultValue": "true",
+      "required": false
+    },
+    {
+      "name": "logProjectEvents",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.logProjectEvents",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced"
+    },
+    {
+      "name": "msbuildLocationMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.msbuildLocationMethod",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "version",
+      "options": {
+        "version": "Version",
+        "location": "Specify Location"
+      }
+    },
+    {
+      "name": "msbuildVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.msbuildVersion",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "latest",
+      "helpMarkDown": "Optionally specify the version of MSBuild. It defaults to searching for the latest version.",
+      "visibleRule": "msbuildLocationMethod = version",
+      "options": {
+        "latest": "Latest",
+        "14.0": "MSBuild 14.0",
+        "12.0": "MSBuild 12.0",
+        "4.0": "MSBuild 4.0"
+      }
+    },
+    {
+      "name": "msbuildArchitecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.msbuildArchitecture",
+      "defaultValue": "x86",
+      "required": false,
+      "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+      "groupName": "advanced",
+      "visibleRule": "msbuildLocationMethod = version",
+      "options": {
+        "x86": "MSBuild x86",
+        "x64": "MSBuild x64"
+      }
+    },
+    {
+      "name": "msbuildLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.msbuildLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optionally supply the path to MSBuild.",
+      "visibleRule": "msbuildLocationMethod = location",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "Build solution $(solution)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\MSBuild.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

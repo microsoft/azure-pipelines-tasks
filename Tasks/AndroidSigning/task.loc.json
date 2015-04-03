@@ -1,0 +1,122 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B9",
+  "name": "AndroidSigning",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Build",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 2
+  },
+  "demands": [
+    "JDK",
+    "AndroidSDK"
+  ],
+  "groups": [
+    {
+      "name": "jarsignerOptions",
+      "displayName": "ms-resource:loc.group.displayName.jarsignerOptions",
+      "isExpanded": true
+    },
+    {
+      "name": "zipalignOptions",
+      "displayName": "ms-resource:loc.group.displayName.zipalignOptions",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "files",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.files",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\bin\\*.apk` for all APK files in bin subfolder."
+    },
+    {
+      "name": "jarsign",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.jarsign",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "jarsignerOptions"
+    },
+    {
+      "name": "keystoreFile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.keystoreFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Full path to the keystore file.",
+      "visibleRule": "jarsign = true",
+      "groupName": "jarsignerOptions"
+    },
+    {
+      "name": "keystorePass",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.keystorePass",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "jarsign = true",
+      "groupName": "jarsignerOptions"
+    },
+    {
+      "name": "keystoreAlias",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.keystoreAlias",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "jarsign = true",
+      "groupName": "jarsignerOptions"
+    },
+    {
+      "name": "keyPass",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.keyPass",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "jarsign = true",
+      "groupName": "jarsignerOptions"
+    },
+    {
+      "name": "jarsignerArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jarsignerArguments",
+      "defaultValue": "-verbose -sigalg MD5withRSA -digestalg SHA1",
+      "required": false,
+      "visibleRule": "jarsign = true",
+      "groupName": "jarsignerOptions"
+    },
+    {
+      "name": "zipalign",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.zipalign",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "zipalignOptions"
+    },
+    {
+      "name": "zipalignLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.zipalignLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optionally supply the path to zipalign.exe.  It defaults to use any zipalign.exe found in Android SDK folder.",
+      "visibleRule": "zipalign = true",
+      "groupName": "zipalignOptions"
+    }
+  ],
+  "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\AndroidSigning.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Android Build",
+  "loc.description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
+  "loc.group.displayName.emulatorOptions": "Emulator Options",
+  "loc.input.label.gradleWrapper": "Location of Gradle Wrapper",
+  "loc.input.label.gradleProj": "Project Directory",
+  "loc.input.label.gradleArguments": "Arguments",
+  "loc.input.label.startEmulator": "Start Android Emulator",
+  "loc.input.label.emulatorTarget": "Emulator Target SDK",
+  "loc.input.label.emulatorDevice": "Emulator Device"
+}

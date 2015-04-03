@@ -1,0 +1,69 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "BFC8BF76-E7AC-4A8C-9A55-A944A9F632FD",
+  "name": "BatchScript",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 5
+  },
+  "demands": [
+    "Cmd"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "filename",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.filename",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of the cmd or bat script file to run."
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Arguments passed to the cmd or bat script"
+    },
+    {
+      "name": "modifyEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.modifyEnvironment",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "Determines whether environment variable modifications will affect subsequent tasks."
+    },
+    {
+      "name": "workingFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "Run script $(filename)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\BatchScript.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

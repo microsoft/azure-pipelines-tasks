@@ -1,0 +1,11 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Xamarin iOS",
+  "loc.description": "Build an iOS app with Xamarin on Mac OS",
+  "loc.input.label.solution": "Solution",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.mdtoolLocation": "Override path to mdtool",
+  "loc.input.label.forSimulator": "Build for iOS Simulator"
+}

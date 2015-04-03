@@ -1,0 +1,14 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Xcode Build",
+  "loc.description": "Build an Xcode workspace on Mac OS",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.xcWorkspacePath": "Workspace Path",
+  "loc.input.label.scheme": "Scheme",
+  "loc.input.label.actions": "Actions",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.outputPattern": "Output"
+}

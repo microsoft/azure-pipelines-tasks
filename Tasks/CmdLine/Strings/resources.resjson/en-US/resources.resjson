@@ -1,0 +1,14 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Command Line",
+  "loc.description": "Run a command line with arguments",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.filename": "Tool",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.label.workingFolder": "Working folder",
+  "loc.input.label.errorPattern": "Error Pattern",
+  "loc.input.label.warningPattern": "Warning Pattern",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error"
+}

@@ -1,0 +1,66 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
+  "name": "AzureWebPowerShellDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Deploy",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 7
+  },
+  "demands": [
+    "azureps"
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "azureConnection",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure subscription to target for deployment."
+    },
+    {
+      "name": "WebSiteName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WebSiteName",
+      "defaultValue": "",
+      "required": true
+    },
+    {
+      "name": "WebSiteLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WebSiteLocation",
+      "defaultValue": "South Central US",
+      "required": true,
+      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
+    },
+    {
+      "name": "Package",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Package",
+      "defaultValue": "$(build.stagingDirectory)\\*.zip",
+      "required": true
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "defaultValue": "",
+      "required": false
+    }
+  ],
+  "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

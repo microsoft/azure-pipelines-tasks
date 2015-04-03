@@ -1,0 +1,89 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
+  "name": "AzureCloudPowerShellDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Deploy",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 7
+  },
+  "demands": [
+    "azureps"
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "azureConnection",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure subscription to target for deployment."
+    },
+    {
+      "name": "StorageAccount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Storage Account must exist prior to deployment."
+    },
+    {
+      "name": "ServiceName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServiceName",
+      "defaultValue": "",
+      "required": true
+    },
+    {
+      "name": "ServiceLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServiceLocation",
+      "defaultValue": "South Central US",
+      "required": true,
+      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
+    },
+    {
+      "name": "CsPkg",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CsPkg",
+      "defaultValue": "$(build.stagingDirectory)\\*.cspkg",
+      "required": true
+    },
+    {
+      "name": "CsCfg",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CsCfg",
+      "defaultValue": "$(build.stagingDirectory)\\*.cscfg",
+      "required": true
+    },
+    {
+      "name": "Slot",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Slot",
+      "defaultValue": "Production",
+      "required": true,
+      "helpMarkDown": "**Production** or **Staging**"
+    },
+    {
+      "name": "AllowUpgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AllowUpgrade",
+      "defaultValue": "true",
+      "required": true
+    }
+  ],
+  "instanceNameFormat": "Azure Deployment: $(CsPkg)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\Publish-AzureCloudDeployment.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Batch Script",
+  "loc.description": "Run a windows cmd or bat script and optionally allow it to change the environment",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.filename": "Path",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.label.modifyEnvironment": "Modify Environment",
+  "loc.input.label.workingFolder": "Working folder"
+}

@@ -5,6 +5,14 @@ var fs = require('fs');
 var check = require('validator');
 var shell = require('shelljs');
 var Q = require('q');
+var os = require('os');
+
+var _strRelPath = path.join('Strings', 'resources.resjson', 'en-US');
+
+var _divider = '// *******************************************************' + os.EOL;
+var _banner = '' + _divider;
+_banner += '// GENERATED FILE - DO NOT EDIT DIRECTLY' + os.EOL;
+_banner += _divider;
 
 var createError = function(msg) {
 	return new gutil.PluginError('PackageTask', msg);
@@ -32,29 +40,77 @@ var validate = function(folderName, task) {
 	return defer.promise;
 };
 
-var createStrings = function(task, pkgPath) {
+var LOC_FRIENDLYNAME = 'loc.friendlyName';
+var LOC_DESCRIPTION = 'loc.description';
+var LOC_GROUPDISPLAYNAME = 'loc.group.displayName.';
+var LOC_INPUTLABEL = 'loc.input.label.';
+
+var createStrings = function(task, pkgPath, srcPath) {
 	var defer = Q.defer();
 
-	var strPath = path.join(pkgPath, 'Strings', 'resources.resjson', 'en-US');
+	var strPath = path.join(pkgPath, _strRelPath);
 	shell.mkdir('-p', strPath);
+	var srcStrPath = path.join(srcPath, _strRelPath);
+	shell.mkdir('-p', srcStrPath);
 
+	//
+	// Loc tasks.json and product strings content
+	//
 	var strings = {};
-	strings['loc.friendlyName'] = task.friendlyName;
-	task['friendlyName'] = 'ms-resource:loc.friendlyName';
+	strings[LOC_FRIENDLYNAME] = task.friendlyName;
+	task['friendlyName'] = 'ms-resource:' + LOC_FRIENDLYNAME;
 
+	strings[LOC_DESCRIPTION] = task.description;
+	task['description'] = 'ms-resource:' + LOC_DESCRIPTION;
+
+	if (task.groups) {
+		task.groups.forEach(function(group) {
+			if (group.name) {
+				var key = LOC_GROUPDISPLAYNAME + group.name;
+				strings[key] = group.displayName;
+				group.displayName = 'ms-resource:' + key;
+			}
+		});
+	}
+
+	if (task.inputs) {
+		task.inputs.forEach(function(input) {
+			if (input.name) {
+				var key = LOC_INPUTLABEL + input.name;
+				strings[key] = input.label;
+				input.label = 'ms-resource:' + key;
+			}
+		});
+	}	
+
+	//
+	// Write the tasks.json and strings file in package and back to source
+	//
 	var enPath = path.join(strPath, 'resources.resjson');
-	fs.writeFile(enPath, JSON.stringify(strings, null, 2), function(err) {
+	var enSrcPath = path.join(srcStrPath, 'resources.resjson');
+
+	var enContents = '' + _banner;
+	enContents += JSON.stringify(strings, null, 2);
+	fs.writeFile(enPath, enContents, function(err) {
 		if (err) {
 			defer.reject(createError('could not create: ' + enPath + ' - ' + err.message));
 			return;
 		}
 
 		var taskPath = path.join(pkgPath, 'task.loc.json');
-		fs.writeFile(taskPath, JSON.stringify(task, null, 2), function(err) {
+
+		var contents = '' + _banner;
+		contents += JSON.stringify(task, null, 2);
+
+		fs.writeFile(taskPath, contents, function(err) {
 			if (err) {
 				defer.reject(createError('could not create: ' + taskPath + ' - ' + err.message));
 				return;
 			}
+
+			// copy the loc assets back to the src so they can be checked in
+			shell.cp('-f', enPath, enSrcPath);
+			shell.cp('-f', taskPath, path.join(srcPath, 'task.loc.json'));
 
 			defer.resolve();			
 		});
@@ -102,7 +158,7 @@ function packageTask(pkgPath){
 	        	return;        	
 	        })
 	        .then(function() {
-	        	return createStrings(task, tgtPath);
+	        	return createStrings(task, tgtPath, dirName);
 	        })
 	        .then(function() {
 	        	done();

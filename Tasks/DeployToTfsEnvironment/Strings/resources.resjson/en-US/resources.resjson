@@ -1,0 +1,15 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Deploy To TFS Environment",
+  "loc.description": "Deploy to TFS Environment.  Executes PowerShell commands remotely on machine(s). This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
+  "loc.input.label.EnvironmentName": "Environment Name",
+  "loc.input.label.MachineNames": "Deploy to Machines",
+  "loc.input.label.SourcePackage": "Source",
+  "loc.input.label.ApplicationPath": "Destination",
+  "loc.input.label.ScriptPath": "PowerShell Script",
+  "loc.input.label.InitializationScriptPath": "Initialization Script",
+  "loc.input.label.AlternateCredentialsUsername": "Alternate Credentials Username",
+  "loc.input.label.AlternateCredentialsPassword": "Alternate Credentials Password"
+}

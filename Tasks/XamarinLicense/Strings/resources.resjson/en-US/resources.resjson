@@ -1,0 +1,13 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Xamarin License",
+  "loc.description": "Activate or deactivate Xamarin licenses",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.action": "Action",
+  "loc.input.label.email": "Email",
+  "loc.input.label.password": "Password",
+  "loc.input.label.activateAndroid": "Activate Xamarin.Android",
+  "loc.input.label.timeout": "Timeout in Seconds"
+}

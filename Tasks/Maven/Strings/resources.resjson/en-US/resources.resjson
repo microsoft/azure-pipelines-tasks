@@ -1,0 +1,13 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Maven",
+  "loc.description": "Build with Apache Maven",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.mavenPOMFile": "Maven POM file",
+  "loc.input.label.options": "Options",
+  "loc.input.label.goals": "Goal(s)",
+  "loc.input.label.jdkVersion": "JDK Version",
+  "loc.input.label.jdkArchitecture": "JDK Architecture"
+}

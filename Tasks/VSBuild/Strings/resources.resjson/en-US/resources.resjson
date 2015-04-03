@@ -1,0 +1,22 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Visual Studio Build",
+  "loc.description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.solution": "Solution",
+  "loc.input.label.msbuildArgs": "MSBuild Arguments",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.clean": "Clean",
+  "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
+  "loc.input.label.vsLocationMethod": "Visual Studio",
+  "loc.input.label.vsVersion": "Visual Studio Version",
+  "loc.input.label.vsLocation": "Visual Studio Location",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.label.msbuildLocation": "Path to MSBuild",
+  "loc.input.label.logProjectEvents": "Record Project Details"
+}
