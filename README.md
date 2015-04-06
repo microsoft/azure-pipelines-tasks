@@ -48,3 +48,40 @@ Tasks can be written in Powershell, ShellScript, javaScript or Python.  Tasks ca
 
 ## Capabilities and Demands
 Tasks demand a tool or dependency that they run.  On configuration and startup, an agent registers it's capabilities with the server.  When you add a task to a definition it appends the demands for that definition.  When run, an agent is found with the corresponding capabilities from the configured pool of agents.
+
+## Contributing
+Tasks are built using gulp.  
+
+### Node and Npm:
+**Mac OSX**: Download and install node from [nodejs.org](http://nodejs.org/)
+
+**Linux**: Install [using package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
+
+From a terminal ensure at least node 0.10 and npm 1.4:
+```bash
+$ node -v && npm -v
+v0.12.0
+2.5.1
+```
+
+### Gulp
+
+Install gulp
+```bash
+npm install gulp -g
+```
+
+From the root of the repo, install the dependencies to build:
+```bash
+npm install
+```
+
+### Build
+From the root of the repo:
+```bash
+gulp
+```
+
+Tasks will be created in the _build directory.  It will also generate a tasks.loc.json and an english strings file under Strings in your source tree.  You can check these back in.  Another localization process will create the other strings files.
+
+
