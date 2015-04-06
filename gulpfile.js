@@ -92,7 +92,8 @@ gulp.task('package', ['zip'], function(done) {
 		return;				
 	}
 
-	if (!options.server) {
+	var server = options.server;
+	if (!server) {
 		done(new gutil.PluginError('PackageTask', 'supply nuget server with --server'));
 		return;		
 	}
@@ -124,6 +125,11 @@ gulp.task('package', ['zip'], function(done) {
 
 		var cmdline = '"' + nugetPath + '" pack ' + nuspecPath + ' -OutputDirectory ' + _pkgRoot;
 		QExec(cmdline)
+		.then(function() {
+			var pkgLocation = path.join(_pkgRoot, pkgName + '.' + version + '.nupkg');
+			var cmdline = '"' + nugetPath + '" push ' + pkgLocation + ' -Source ' + server;
+			return QExec(cmdline);
+		})
 		.then(function() {
 			done();
 		})
