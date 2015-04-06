@@ -121,7 +121,7 @@ gulp.task('package', ['zip'], function(done) {
 			return;
 		}
 
-		var cmdline = nugetPath + ' pack ' + nuspecPath + ' -OutputDirectory ' + _pkgRoot;
+		var cmdline = '"' + nugetPath + '" pack ' + nuspecPath + ' -OutputDirectory ' + _pkgRoot;
 		QExec(cmdline)
 		.then(function() {
 			done();
