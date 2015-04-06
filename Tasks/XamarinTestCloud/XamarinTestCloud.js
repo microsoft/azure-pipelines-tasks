@@ -19,6 +19,7 @@ var optionalArgs = tl.getInput('optionalArgs', false);
 
 // Output debug information for inputs
 tl.debug('app: ' + app);
+tl.debug('dsym: ' + dsym);
 tl.debug('teamApiKey: ' + teamApiKey);
 tl.debug('user: ' + user);
 tl.debug('devices: ' + devices);

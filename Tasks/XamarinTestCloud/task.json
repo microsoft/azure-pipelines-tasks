@@ -122,7 +122,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "advanced",
-            "helpMarkDown": "Additional arguments passed to the test-cloud tool."
+            "helpMarkDown": "Additional arguments passed to test-cloud.exe."
         }
     ],
     "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
