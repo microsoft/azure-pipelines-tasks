@@ -64,7 +64,7 @@ if($WebSiteLocation)
 $azureCommand = "Publish-AzureWebsiteProject"
 $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments"
 $finalCommand = "$azureCommand $azureCommandArguments"
-Write-Host "finalCommand= $finalCommand"
+Write-Host "$finalCommand"
 Invoke-Expression -Command $finalCommand
 
 Write-Host "Leaving script Publish-AzureWebDeployment.ps1"
