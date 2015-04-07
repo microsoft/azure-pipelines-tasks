@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Gulp",
-  "loc.description": "Build with a Node.js streaming, task-based build system",
+  "loc.description": "Node.js streaming task based build system",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.gulpFile": "Gulp File Path",
   "loc.input.label.targets": "Gulp Task(s)",

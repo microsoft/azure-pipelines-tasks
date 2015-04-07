@@ -8,10 +8,33 @@ param(
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
-# Add node_modules\.bin to path 
-$buildSourcesDirectory = Get-Variable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
-$nodeBinPath = Join-Path -Path $buildSourcesDirectory -ChildPath 'node_modules\.bin'
-$env:PATH = $env:PATH + ';' + $nodeBinPath
+# try to find gulp in the path
+$gulp = Get-Command -Name gulp -ErrorAction Ignore
+if(!$gulp)
+{
+    #try to find gulp in the node_modules in the sources direcotry
+    $buildSourcesDirectory = Get-Variable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+    $nodeBinPath = Join-Path -Path $buildSourcesDirectory -ChildPath 'node_modules\.bin'
+
+    if(Test-Path -Path $nodeBinPath -PathType Container)
+    {
+        $gulpPath = Join-Path -Path $nodeBinPath -ChildPath "gulp.cmd"
+        Write-Verbose "Looking for gulp.cmd in $gulpPath"
+        $gulp = Get-Command -Name $gulpPath -ErrorAction Ignore
+    }
+    else
+    {
+        Write-Verbose "Recursively searching for gulp.cmd in $buildSourcesDirectory"
+        $searchPattern = Join-Path -Path $buildSourcesDirectory -ChildPath '**\gulp.cmd'
+        $foundFiles = Find-Files -SearchPattern $searchPattern
+        foreach($file in $foundFiles)
+        {
+            $gulpPath = $file;
+            $gulp = Get-Command -Name $gulpPath
+            break;
+        }
+    }
+}
 
 if($cwd)
 {
@@ -22,16 +45,6 @@ else
 {
     $location = Get-Location
     $cwd = $location.Path
-}
-
-try
-{
-    $gulp = Get-Command -Name gulp
-    Write-Verbose "Using $gulp.Source"
-}
-catch
-{
-    throw 'Unable to file Gulp in path.'
 }
 
 Write-Verbose 'Running Gulp'

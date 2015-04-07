@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [
     "gulp"
@@ -64,6 +64,11 @@
     "Node": {
       "target": "gulptask.js",
       "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Gulptask.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
     }
   }
 }
