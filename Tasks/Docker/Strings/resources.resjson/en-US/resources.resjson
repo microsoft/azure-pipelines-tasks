@@ -1,0 +1,12 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "Deploy a docker image to a remote machine",
+  "loc.input.label.DockerEndpoint": "Docker Endpoint",
+  "loc.input.label.Repository": "Repository",
+  "loc.input.label.Tag": "Tag",
+  "loc.input.label.ContainerName": "Container Name",
+  "loc.input.label.PortBindings": "Port Bindings"
+}

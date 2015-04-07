@@ -150,25 +150,25 @@ function Refresh-SASToken
     {
         Write-Verbose "Generating SAS token for $fullBlobUri" -Verbose
 
-		$startTime = Get-Date
+        $startTime = Get-Date
 
-		$endTime = $startTime.AddHours(24.0)
+        $endTime = $startTime.AddHours(24.0)
 
-		$fullBlobUri = $fullBlobUri.TrimEnd('/')
+        $fullBlobUri = $fullBlobUri.TrimEnd('/')
 
-		$i = $fullBlobUri.LastIndexOf('/')
-		$blobName = $fullBlobUri.Substring($i + 1)
-		$fullBlobUri = $fullBlobUri.Remove($i)
+        $i = $fullBlobUri.LastIndexOf('/')
+        $blobName = $fullBlobUri.Substring($i + 1)
+        $fullBlobUri = $fullBlobUri.Remove($i)
 
-		$i = $fullBlobUri.LastIndexOf('/')
-		$containerName = $fullBlobUri.Substring($i + 1)
-		$fullBlobUri = $fullBlobUri.Remove($i)
+        $i = $fullBlobUri.LastIndexOf('/')
+        $containerName = $fullBlobUri.Substring($i + 1)
+        $fullBlobUri = $fullBlobUri.Remove($i)
 
-		$i = $fullBlobUri.IndexOf('.')
-		$fullBlobUri = $fullBlobUri.Remove($i)
-		$storageAccountName = $fullBlobUri.Substring($fullBlobUri.IndexOf("//") + 2)
+        $i = $fullBlobUri.IndexOf('.')
+        $fullBlobUri = $fullBlobUri.Remove($i)
+        $storageAccountName = $fullBlobUri.Substring($fullBlobUri.IndexOf("//") + 2)
 
-		Set-AzureSubscription -SubscriptionId $ConnectedServiceName -CurrentStorageAccountName $storageAccountName
+        Set-AzureSubscription -SubscriptionId $ConnectedServiceName -CurrentStorageAccountName $storageAccountName
 
         $token  = New-AzureStorageBlobSASToken -Container $containerName -Blob $blobName -Permission r -StartTime $startTime -ExpiryTime $endTime -Verbose -ErrorAction Stop
 

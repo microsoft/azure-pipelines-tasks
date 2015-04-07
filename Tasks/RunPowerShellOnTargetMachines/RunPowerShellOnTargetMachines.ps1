@@ -5,9 +5,7 @@ param (
     [string]$applicationPath,
     [string]$scriptPath,
     [string]$scriptArguments,
-    [string]$initializationScriptPath,
-    [string]$alternateCredentialsUsername,
-    [string]$alternateCredentialsPassword
+    [string]$initializationScriptPath
     )
 
 Write-Verbose "Entering script RemotePowerShellRunner.ps1" -Verbose

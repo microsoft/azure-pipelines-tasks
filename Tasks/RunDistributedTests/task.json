@@ -40,24 +40,6 @@
             "groupName": "testEnvironment"
         },
         {
-            "name": "alternateCredsUserName",
-            "type": "string",
-            "label": "Alternate credentials Username",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
-            "groupName": "testEnvironment"
-        },
-        {
-            "name": "alternateCredsPassword",
-            "type": "string",
-            "label": "Alternate credentials Password",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
-            "groupName": "testEnvironment"
-        },
-        {
             "name": "dropLocation",
             "type": "string",
             "label": "Test Drop Location",

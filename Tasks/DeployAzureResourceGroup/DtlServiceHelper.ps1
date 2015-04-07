@@ -5,7 +5,7 @@ function Create-Provider
 
     Write-Verbose "Registering provider $providerName" -Verbose
 
-    $provider = Register-Provider -Name $providerName -Type $providerType -ErrorAction Stop
+    $provider = Register-Provider -Name $providerName -Type $providerType -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered provider $provider" -Verbose
 
@@ -26,7 +26,7 @@ function Create-ProviderData
     $propertyBag.Add("SubscriptionId", $subscriptionIdPropertyBagData)
 
     #TODO Figure out authentication mechanism and store it
-    $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -ErrorAction Stop
+    $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered provider data $providerData" -Verbose
 
@@ -50,7 +50,7 @@ function Create-EnvironmentDefinition
         $propertyBag.Add("CsmParameters", $csmParameters)
     }
 
-    $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -ErrorAction Stop
+    $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered environment definition $environmentDefinition" -Verbose
 
@@ -88,7 +88,7 @@ function Create-Environment
     
     Write-Verbose "Registering environment $environmentName" -Verbose
 
-    $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderId $providerId -ProviderDataIds $providerDataIds -EnvironmentDefinitionId $environmentDefinitionId -PropertyBagValue $propertyBag -Resources $resources -ErrorAction Stop
+    $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderId $providerId -ProviderDataIds $providerDataIds -EnvironmentDefinitionId $environmentDefinitionId -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered environment $environment" -Verbose
 
@@ -112,11 +112,11 @@ function Create-EnvironmentOperation
 
         Write-Verbose "Saving environment $name provisioning operation" -Verbose
 
-        $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].SubmissionTimestamp -ErrorAction Stop
+        $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].SubmissionTimestamp -Connection $connection -ErrorAction Stop
 
         Create-ResourceOperations -environment $environment -environmentOperationId $envOperationId
 
-        Complete-EnvironmentOperation -EnvironmentName $environment.Name -EnvironmentOperationId $envOperationId -Status $deploymentOperationLogs[0].Status -EndTime $deploymentOperationLogs[0].SubmissionTimestamp -Logs $logs -ErrorAction Stop
+        Complete-EnvironmentOperation -EnvironmentName $environment.Name -EnvironmentOperationId $envOperationId -Status $deploymentOperationLogs[0].Status -EndTime $deploymentOperationLogs[0].SubmissionTimestamp -Logs $logs -Connection $connection -ErrorAction Stop
 
         Write-Verbose "Completed saving $name provisioning operation with id $envOperationId" -Verbose
 
@@ -143,9 +143,9 @@ function Create-ResourceOperations
 
             Write-Verbose "Saving resource $name provisioning operation" -Verbose
 
-            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $resourceOperationLogs[$resourceOperationLogs.Count - 1].SubmissionTimestamp -EnvironmentOperationId $environmentOperationId -ErrorAction Stop
+            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $resourceOperationLogs[$resourceOperationLogs.Count - 1].SubmissionTimestamp -EnvironmentOperationId $environmentOperationId -Connection $connection -ErrorAction Stop
 
-            Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $resourceOperationLogs[0].Status -EndTime $resourceOperationLogs[0].SubmissionTimestamp -Logs $logs -ErrorAction Stop
+            Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $resourceOperationLogs[0].Status -EndTime $resourceOperationLogs[0].SubmissionTimestamp -Logs $logs -Connection $connection -ErrorAction Stop
 
             Write-Verbose "Completed saving resource $name provisioning operation with id $resOperationId" -Verbose
         }
@@ -169,4 +169,13 @@ function Get-OperationLogs
     }
         
     return $logs
+}
+
+function Initialize-DTLServiceHelper
+{
+    Write-Verbose "Getting the vss connection object"
+
+    $connection = Get-VssConnection -TaskContext $distributedTaskContext
+
+    Set-Variable -Name $connection -Value $connection -Scope "Script"
 }

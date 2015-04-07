@@ -1,7 +1,5 @@
 param(
     [string]$environment,
-    [string]$alternateCredsUserName,
-    [string]$alternateCredsPassword,
 	[string]$dropLocation,
     [string]$sourcefilters,
     [string]$testFilterCriteria,
@@ -11,7 +9,6 @@ param(
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
 Write-Verbose "Environment = $environment"
-Write-Verbose "Alternate UserName = $alternateCredsUserName"
 Write-Verbose "Test Drop Location = $dropLocation"
 Write-Verbose "Source Filter = $sourcefilters"
 Write-Verbose "Test Filter Criteria = $testFilterCriteria"
@@ -22,7 +19,10 @@ Write-Verbose "TestRun Parameters to override = $overrideRunParams"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DistributedTestAutomation"
 
+Write-Verbose "Getting the connection object"
+$connection = Get-VssConnection -TaskContext $distributedTaskContext
+
 Write-Verbose "Calling Invoke-RunDistributedTests"
-Invoke-RunDistributedTests -EnvironmentName $environment -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -AlternateCredUserName $alternateCredsUserName -AlternateCredPassword $alternateCredsPassword
+Invoke-RunDistributedTests -EnvironmentName $environment -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection
 
 Write-Verbose "Leaving script RunDistributedTests.ps1"
