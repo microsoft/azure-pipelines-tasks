@@ -81,8 +81,10 @@ function Get-RoleName($extPath)
     return $roleName
 }
 
-function Apply-DiagnosticsExtensions($storageAccount, $extensionsPath)
+function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
 {
+    $diagnosticsConfigurations = @()
+    
     $extensionsSearchPath = Split-Path -Parent $extensionsPath
     Write-Verbose "extensionsSearchPath= $extensionsSearchPath"
     $extensionsSearchPath = Join-Path -Path $extensionsSearchPath -ChildPath "Extensions"
@@ -104,10 +106,10 @@ function Apply-DiagnosticsExtensions($storageAccount, $extensionsPath)
             Write-Verbose "New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey <key>"
             $definitionStorageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $primaryStorageKey
 
-            Write-Verbose "Get-ChildItem -Path $extensionsSearchPath -Filter DiagnosticsExtension.*.PubConfig.xml"
-            $diagnosticsExtensions = Get-ChildItem -Path $extensionsSearchPath -Filter "DiagnosticsExtension.*.PubConfig.xml"
+            Write-Verbose "Get-ChildItem -Path $extensionsSearchPath -Filter PaaSDiagnostics.*.PubConfig.xml"
+            $diagnosticsExtensions = Get-ChildItem -Path $extensionsSearchPath -Filter "PaaSDiagnostics.*.PubConfig.xml"
 
-            #$extPath like DiagnosticsExtension.WebRole1.PubConfig.xml
+            #$extPath like PaaSDiagnostics.WebRole1.PubConfig.xml
             foreach ($extPath in $diagnosticsExtensions)
             {
                 $role = Get-RoleName $extPath
@@ -144,8 +146,11 @@ function Apply-DiagnosticsExtensions($storageAccount, $extensionsPath)
                         $storageContext = $definitionStorageContext
                     }
 
-                    Write-Host "Set-AzureServiceDiagnosticsExtension -ServiceName $ServiceName -Slot $Slot -DiagnosticsConfigurationPath $fullExtPath -Role $role -StorageContext <context>"
-                    $extension = Set-AzureServiceDiagnosticsExtension -ServiceName $ServiceName -Slot $Slot -DiagnosticsConfigurationPath $fullExtPath -Role $role -StorageContext $storageContext
+                    Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext <context> -DiagnosticsConfigurationPath $fullExtPath"
+                    $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext $storageContext -DiagnosticsConfigurationPath $fullExtPath 
+
+                    #Add each extension configuration to the array for use by caller
+                    $diagnosticsConfigurations += $wadconfig
                 }
             }
         }
@@ -154,6 +159,8 @@ function Apply-DiagnosticsExtensions($storageAccount, $extensionsPath)
             Write-Warning "Could not get the primary storage key for storage account '$storageAccount'.  Unable to apply any diagnostics extensions."
         }
     }
+    
+    return $diagnosticsConfigurations
 }
 
 Write-Host "Entering script Publish-AzureCloudDeployment.ps1"
@@ -187,28 +194,29 @@ if (!$azureService)
     $azureService = New-AzureService -ServiceName $ServiceName -Location $ServiceLocation
 }
 
+$diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $CsCfg
+
 Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue"
 $azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue
 if (!$azureDeployment)
 {
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
+    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
 } 
 elseif ($allowUpgrade -eq $true)
 {
     #Use -Upgrade
-    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
-    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
+    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
 }
 else
 {
     #Remove and then Re-create
     Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force"
     $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot
+    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
 }
 
-Apply-DiagnosticsExtensions $StorageAccount $CsCfg
 
 Write-Host "Leaving script Publish-AzureCloudDeployment.ps1"
