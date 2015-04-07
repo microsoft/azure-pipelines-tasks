@@ -6,7 +6,6 @@
     [string]$devices,
     [string]$series, 
     [string]$locale,
-    [string]$appName,
     [string]$testCloudLocation,
     [string]$parallelization,
     [string]$optionalArgs
@@ -20,7 +19,6 @@ Write-Verbose "user = $user"
 Write-Verbose "devices = $devices"
 Write-Verbose "series = $series"
 Write-Verbose "locale = $locale"
-Write-Verbose "appName = $locale"
 Write-Verbose "testCloudLocation = $testCloudLocation"
 Write-Verbose "parallelization = $parallelization"
 Write-Verbose "optionalArgs = $optionalArgs"
@@ -69,7 +67,7 @@ if ($app.Contains("*") -or $app.Contains("?"))
 }
 else
 {
-    Write-Verbose "No Pattern found in app parameter."
+    Write-Verbose "No pattern found in app input."
     $appFiles = ,$app
 }
 
@@ -88,6 +86,12 @@ $parameters = "$parameters --assembly-dir $testDir"
 if ("none" -ne $parallelization)
 {
     $parameters = "$parameters $parallelization"
+}
+
+# Ensure that $testCloudLocation specifies test-cloud.exe
+if (!$testCloudLocation.EndsWith("\\test-cloud.exe", "OrdinalIgnoreCase")
+{
+    throw "test-cloud.exe location must end with '\\test-cloud.exe'."
 }
 
 # locate the test-cloud tool, it is part of the Xamarin.UITest NuGet package
