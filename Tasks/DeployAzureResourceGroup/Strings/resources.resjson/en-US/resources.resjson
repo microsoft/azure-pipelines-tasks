@@ -9,8 +9,6 @@
   "loc.input.label.resourceGroupName": "Environment",
   "loc.input.label.csmFile": "Deployment Template",
   "loc.input.label.csmParametersFile": "Deployment Template Parameters",
-  "loc.input.label.AlternateCredentialsUsername": "Alternate Credentials Username",
-  "loc.input.label.AlternateCredentialsPassword": "Alternate Credentials Password",
   "loc.input.label.dscDeployment": "DSC deployment",
   "loc.input.label.fullBlobUri": "DSC Module's URL",
   "loc.input.label.sasTokenParameterName": "SAS token parameter name"

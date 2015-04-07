@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0,
+    "Patch": 5,
     "IsTest": false
   },
   "demands": [
@@ -65,22 +65,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Source control path for the parameters file for the selected CSM template"
-    },
-    {
-      "name": "AlternateCredentialsUsername",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AlternateCredentialsUsername",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Username of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
-    },
-    {
-      "name": "AlternateCredentialsPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AlternateCredentialsPassword",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
     },
     {
       "name": "dscDeployment",
