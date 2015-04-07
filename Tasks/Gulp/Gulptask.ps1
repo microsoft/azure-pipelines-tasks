@@ -10,9 +10,10 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 # try to find gulp in the path
 $gulp = Get-Command -Name gulp -ErrorAction Ignore
+
 if(!$gulp)
 {
-    #try to find gulp in the node_modules in the sources direcotry
+    Write-Verbose "try to find gulp in the node_modules in the sources directory"
     $buildSourcesDirectory = Get-Variable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
     $nodeBinPath = Join-Path -Path $buildSourcesDirectory -ChildPath 'node_modules\.bin'
 
@@ -36,6 +37,16 @@ if(!$gulp)
     }
 }
 
+
+if($targets)
+{
+    $arguments = $targets + " --gulpfile " + $gulpFile + " " + $arguments    
+}
+else
+{
+    $arguments = "--gulpfile " + $gulpFile + " " + $arguments
+}
+
 if($cwd)
 {
     Write-Verbose "Setting working directory to $cwd"
@@ -47,9 +58,5 @@ else
     $cwd = $location.Path
 }
 
-Write-Verbose 'Running Gulp'
-Invoke-Tool -Path $gulp.Source -Arguments $arguments -WorkingFolder $cwd
-
-
-
-
+Write-Verbose "Running Gulp $gulp"
+Invoke-Tool -Path $gulp.Path -Arguments $arguments -WorkingFolder $cwd
