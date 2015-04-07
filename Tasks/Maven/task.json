@@ -4,6 +4,9 @@
     "friendlyName": "Maven",
     "description": "Build with Apache Maven",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],    
     "author": "Microsoft Corporation",
     "demands" : [
         "maven"

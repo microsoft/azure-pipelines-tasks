@@ -4,6 +4,9 @@
     "friendlyName": "Xamarin iOS",
     "description": "Build an iOS app with Xamarin on Mac OS",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

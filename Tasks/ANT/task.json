@@ -4,6 +4,9 @@
     "friendlyName": "Ant",
     "description": "Build with Apache Ant",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

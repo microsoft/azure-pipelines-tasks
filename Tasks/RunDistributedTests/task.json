@@ -6,7 +6,8 @@
     "category": "Test",
     "visibility": [
                 "Preview",
-                "Build"
+                "Build",
+                "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {

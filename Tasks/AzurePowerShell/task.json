@@ -4,6 +4,10 @@
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
     "category": "Deploy",
+    "visibility": [
+                  "Build",
+                  "Release"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
@@ -28,7 +32,7 @@
             "label": "Script Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from the repo root of the script to run."
+            "helpMarkDown": "Path of the script relative to the default working directory of the agent."
         },
         {
             "name": "ScriptArguments",

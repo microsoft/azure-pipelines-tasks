@@ -4,6 +4,9 @@
     "friendlyName": "Xamarin License",
     "description": "Activate or deactivate Xamarin licenses",
     "category": "Utility",
+    "visibility": [
+                "Build"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

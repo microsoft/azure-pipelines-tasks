@@ -4,6 +4,10 @@
     "friendlyName": "PowerShell",
     "description": "Run a PowerShell script",
     "category": "Utility",
+    "visibility": [
+                  "Build",
+                  "Release"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
@@ -27,7 +31,7 @@
             "label": "Script filename", 
             "defaultValue":"", 
             "required":true,
-            "helpMarkDown": "Relative path from repo root of the PowerShell script file to run." 
+            "helpMarkDown": "Path of the script to execute relative to the default working directory of the agent." 
         },
         { 
             "name": "arguments", 

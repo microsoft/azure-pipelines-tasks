@@ -4,6 +4,9 @@
     "friendlyName": "Visual Studio Build",
     "description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

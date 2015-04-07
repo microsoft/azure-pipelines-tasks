@@ -4,6 +4,9 @@
     "friendlyName": "Gulp",
     "description": "Build with a Node.js streaming, task-based build system",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,

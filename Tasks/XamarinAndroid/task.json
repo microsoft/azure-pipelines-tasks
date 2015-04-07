@@ -4,6 +4,9 @@
     "friendlyName": "Xamarin Android",
     "description": "Build an Android app with Xamarin",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
