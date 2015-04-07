@@ -11,7 +11,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "groups": [
@@ -29,6 +29,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**\\*.apk` for all APK files in all subfolders."
+    },
+    {
+      "name": "dsym",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dsym",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Example: *.dSYM"
     },
     {
       "name": "teamApiKey",
@@ -60,7 +68,7 @@
       "label": "ms-resource:loc.input.label.series",
       "defaultValue": "master",
       "required": true,
-      "helpMarkDown": "Organize test runs by series (e.g. master, production, beta)."
+      "helpMarkDown": "The series name for organizing test runs (e.g. master, production, beta)."
     },
     {
       "name": "testDir",
@@ -68,15 +76,7 @@
       "label": "ms-resource:loc.input.label.testDir",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path to the folder that contains the test assemblies."
-    },
-    {
-      "name": "appName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.appName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advanced"
+      "helpMarkDown": "Relative path to the folder containing the test assemblies, such as: SolutionName/TestsProjectName/bin/Release"
     },
     {
       "name": "parallelization",
@@ -111,7 +111,7 @@
     },
     {
       "name": "testCloudLocation",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.testCloudLocation",
       "groupName": "advanced",
       "defaultValue": "$(Agent.BuildDirectory)\\**\\packages\\**\\tools\\test-cloud.exe",
@@ -124,11 +124,15 @@
       "required": false,
       "defaultValue": "",
       "groupName": "advanced",
-      "helpMarkDown": "Additional arguments passed to the test-cloud tool."
+      "helpMarkDown": "Additional arguments passed to test-cloud.exe."
     }
   ],
   "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
   "execution": {
+    "Node": {
+      "target": "XamarinTestCloud.js",
+      "argumentFormat": ""
+    },
     "PowerShell": {
       "target": "$(currentDirectory)\\XamarinTestCloud.ps1",
       "argumentFormat": "",
