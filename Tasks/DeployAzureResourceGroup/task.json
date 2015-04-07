@@ -1,0 +1,122 @@
+﻿{
+    "id": "94A74903-F93F-4075-884F-DC11F34058B4",
+    "name": "DeployAzureResourceGroup",
+    "friendlyName": "Deploy Azure Resource Group",
+    "description": "CSM deployment to azure",
+    "category": "Deploy",
+    "visibility": [
+                "Preview",
+                "Build",
+                "Release"
+                  ],
+    "author": "Microsoft Corporation",
+    "visibility": [
+                "Preview",
+                "Build",
+                "Release"
+                  ],
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "demands": [
+        "azureps"
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "azureConnection",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure subscription to target for deployment."
+        },
+        {
+            "name": "location",
+            "type": "pickList",
+            "label": "Location",
+            "defaultValue": "East US",
+            "required": true,
+            "helpMarkDown": "Location of the deployment",
+            "options": {
+                "East US": "East US",
+                "West US": "West US"
+            }
+        },
+        {
+            "name": "resourceGroupName", 
+            "type": "string", 
+            "label": "Environment",
+            "required": true,
+            "helpMarkDown": "Name of the resource group in which deployment will be created"
+        },
+        { 
+            "name": "csmFile", 
+            "type": "filePath", 
+            "label": "Deployment Template", 
+            "defaultValue":"",
+            "required": true,
+            "helpMarkDown": "Source control path for the CSM file backing this deployment"
+        },
+        { 
+            "name": "csmParametersFile", 
+            "type": "filePath", 
+            "label": "Deployment Template Parameters", 
+            "defaultValue":"",
+            "required": false,
+            "helpMarkDown": "Source control path for the parameters file for the selected CSM template"
+        },
+        {
+            "name": "AlternateCredentialsUsername",
+            "type": "string",
+            "label": "Alternate Credentials Username",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Username of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
+        },
+        {
+            "name": "AlternateCredentialsPassword",
+            "type": "string",
+            "label": "Alternate Credentials Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service. See http://aka.ms/ALTCREDENTIALS for more information"
+        },
+        {
+            "name": "dscDeployment",
+            "type": "boolean",
+            "label": "DSC deployment",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Check the box if the deployment definition template involves DSC extensions. If the DSC module URL is public provide the URL as a template parameter and leave the below boxes empty"
+        },
+        {
+            "name": "fullBlobUri",
+            "type": "string",
+            "label": "DSC Module's URL",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Full url of the blob to which the dsc script is zipped and uploaded. For example https://foobar.blob.core.windows.net/dscscripts/MySample.ps1.zip",
+            "visibleRule": "dscDeployment = true"
+        },
+        {
+            "name": "sasTokenParameterName",
+            "type": "string",
+            "label": "SAS token parameter name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name of the SAS token parameter.",
+            "visibleRule": "dscDeployment = true"
+        }
+    ],
+    "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

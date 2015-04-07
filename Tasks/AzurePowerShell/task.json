@@ -4,6 +4,10 @@
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
     "category": "Deploy",
+    "visibility": [
+                "Build",
+                "Release"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

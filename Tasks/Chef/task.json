@@ -1,0 +1,66 @@
+﻿{
+    "id": "B719DB6C-40A2-4F43-9AFF-827825BAECAE",
+    "name": "Chef",
+    "friendlyName": "Chef",
+    "description": "Deploy to Chef environments by editing environment attributes",
+    "category": "Deploy",
+    "visibility": [
+                "Preview",
+                "Build",
+                "Release"
+                  ],
+    "author": "Microsoft Corporation",
+    "visibility": [
+                "Preview",
+                "Build",
+                "Release"
+                  ],
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
+    "inputs": [
+        {
+            "name": "connectedServiceName",
+            "type": "connectedService:Chef",
+            "label": "Chef Connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the Chef subscription"
+        },
+        {
+            "name": "Environment",
+            "type": "string",
+            "label": "Environment",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the Chef Environment to be used for Deployment. The attributes of that environment will be edited."
+        },
+        {
+            "name": "Attributes",
+            "type": "multiLine",
+            "label": "Environment Attributes",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify the value of the leaf node attribute(s) to be updated ex. {\"default_attributes.websiteName\":\"MyWebsite\",\"override_attributes.db\":\"MyDb\"}.Task will fail if the leaf node attribute does not exist, or if it is not a leaf node."
+        },
+        {
+            "name": "chefWaitTime",
+            "type": "string",
+            "label": "Wait Time",
+            "defaultValue": "30",
+            "required": true,
+            "helpMarkDown": "The amount of time (in minutes) to wait for this task to complete. Default value: 30 minutes"
+        }
+    ],
+    "instanceNameFormat": "Deploy to chef by editing environment attributes of Chef subscription $(ChefServer)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\Chef.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

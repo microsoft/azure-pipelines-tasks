@@ -1,27 +1,29 @@
 ﻿{
     "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
-    "name": "DeployToTfsEnvironment",
-    "friendlyName": "Deploy To TFS Environment",
-    "description": "Deploy to TFS Environment.  Executes PowerShell commands remotely on machine(s). This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
+    "name": "RunPowerShellOnTargetMachines",
+    "friendlyName": "Run PowerShell on Target Machines",
+    "description": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s). This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
     "category": "Deploy",
     "visibility": [
                 "Preview",
-                "Build"
+                "Build",
+                "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 1,
+        "IsTest": false
     },
     "inputs": [
         {
             "name": "EnvironmentName",
             "type": "string",
-            "label": "Environment Name",
+            "label": "Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the environment for deploying application.​"
+            "helpMarkDown": "Name of the Machine Group for deploying application.​"
         },
         {
             "name": "MachineNames",
@@ -29,7 +31,7 @@
             "label": "Deploy to Machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally provide a comma separated list of machines to deploy the application to. It defaults to all the machines in the environment. For example, BudgetIT-Web01, BudgetIT-Web02."
+            "helpMarkDown": "Optionally provide a comma separated list of machines to deploy the application to. It defaults to all the machines in the Machine Group. For example, BudgetIT-Web01, BudgetIT-Web02."
         },
         {
             "name": "SourcePackage",
@@ -56,34 +58,26 @@
             "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\Website.ps1"
         },
         {
+            "name": "ScriptArguments",
+            "type": "string",
+            "label": "Script Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters. For example, -testParam test"
+        },
+        {
             "name": "InitializationScriptPath",
             "type": "string",
             "label": "Initialization Script",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally provide location of the PowerShell initialization script (data script for DSC) on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1" 
-        },
-        {
-            "name": "AlternateCredentialsUsername",
-            "type": "string",
-            "label": "Alternate Credentials Username",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Username of the alternate credentials required to connect to the VSO service; Not required for TFS OnPrem. See http://aka.ms/ALTCREDENTIALS for more information"
-        },
-        {
-            "name": "AlternateCredentialsPassword",
-            "type": "string",
-            "label": "Alternate Credentials Password",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service; Not required for TFS OnPrem. See http://aka.ms/ALTCREDENTIALS for more information"
         }
     ],
-    "instanceNameFormat": "Deploy To Tfs Environment $(EnvironmentName)",
+    "instanceNameFormat": "Run PowerShell on Machine Group $(EnvironmentName)",
 	 "execution": {
         "PowerShell": {
-            "target": "$(currentDirectory)\\RemotePowershellRunner.ps1",
+            "target": "$(currentDirectory)\\RunPowerShellOnTargetMachines.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }

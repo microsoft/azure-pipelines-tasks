@@ -4,6 +4,7 @@ param (
     [string]$sourcePackage,
     [string]$applicationPath,
     [string]$scriptPath,
+    [string]$scriptArguments,
     [string]$initializationScriptPath,
     [string]$alternateCredentialsUsername,
     [string]$alternateCredentialsPassword
@@ -15,6 +16,7 @@ Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePackage = $sourcePackage" -Verbose
 Write-Verbose "applicationPath = $applicationPath" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
+Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 
 function Output-ResponseLogs
@@ -37,28 +39,29 @@ function Output-ResponseLogs
     }
 }
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
-$env:DTL_ALTERNATE_CREDENTIALS_USERNAME = $alternateCredentialsUsername
-$env:DTL_ALTERNATE_CREDENTIALS_PASSWORD = $alternateCredentialsPassword
+$connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 $port = '5985'
 
-$resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -ErrorAction Stop
+$resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -ErrorAction Stop -Connection $connection
 
-$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -ErrorAction Stop
+$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -ErrorAction Stop -Connection $connection
 
-$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -ErrorAction Stop
+$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -ErrorAction Stop -Connection $connection
 
 $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
 
-$envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Deployment" -ErrorAction Stop
+$envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Deployment" -ErrorAction Stop -Connection $connection
 
 Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 
 foreach ($resource in $resources)
 {
-    $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -ErrorAction Stop
+
+    $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -ErrorAction Stop -Connection $connection
 
     Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
     
@@ -78,7 +81,7 @@ foreach ($resource in $resources)
     {
         Write-Verbose "Initiating deployment on $fqdn" -Verbose
 
-        $deploymentResponse = Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath $scriptPath -WinRMPort $port -Credential $credential -InitializationScriptPath $initializationScriptPath -ApplicationPath $applicationPath –SkipCACheck -UseHttp
+        $deploymentResponse = Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath $scriptPath -WinRMPort $port -Credential $credential -ScriptArguments $scriptArguments -InitializationScriptPath $initializationScriptPath -ApplicationPath $applicationPath –SkipCACheck -UseHttp
 
         $log = "Deployment Logs : " + $deploymentResponse.DeploymentLog + "`nService Logs : " + $deploymentResponse.ServiceLog;
 
@@ -87,16 +90,20 @@ foreach ($resource in $resources)
         $response = $deploymentResponse
     }
 
-    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $log -ErrorAction Stop
+    $logs = New-Object 'System.Collections.Generic.List[System.Object]'         
+    $resourceOperationLog = New-OperationLog -Content $log
+    $logs.Add($resourceOperationLog)
+
+    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $logs -ErrorAction Stop -Connection $connection
     
     if ($response.Status -ne "Passed")
     {
-        Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -ErrorAction Stop
+        Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -ErrorAction Stop -Connection $connection
 
         throw $response.Error;
     }
 }
 
-Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Passed" -ErrorAction Stop
+Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Passed" -ErrorAction Stop -Connection $connection
 
 Write-Verbose "Leaving script RemotePowerShellRunner.ps1" -Verbose

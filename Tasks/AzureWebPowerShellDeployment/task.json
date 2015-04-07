@@ -4,6 +4,10 @@
   "friendlyName": "Azure Web Site Deployment",
   "description": "Deploy a website to Microsoft Azure",
   "category": "Deploy",
+  "visibility": [
+                "Build",
+                "Release"
+                  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
