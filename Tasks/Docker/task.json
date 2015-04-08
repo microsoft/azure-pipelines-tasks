@@ -10,6 +10,12 @@
                 "Release"
                   ],
     "author": "Microsoft Corporation",
+	 "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0,
+        "IsTest": false
+    },
     "inputs": [
         {
             "name": "DockerEndpoint",
