@@ -10,11 +10,6 @@
                 "Release"
                   ],
     "author": "Microsoft Corporation",
-    "visibility": [
-                "Preview",
-                "Build",
-                "Release"
-                  ],
     "version": {
         "Major": 1,
         "Minor": 0,
