@@ -83,7 +83,7 @@ function Get-TestAgentConfiguration
     param
     (
         [String] $TestAgentVersion,	
-        [PSCredential] $UserCredential,
+        [System.Management.Automation.PSCredential] $UserCredential,
         [String] $AlternateCredUserName,
         [String] $AlternateCredPassword
     )
@@ -171,7 +171,7 @@ function Set-TestAgentConfiguration
         [String] $TfsCollection,
         [ValidateSet("Service", "Process")]
         [String] $AsServiceOrProcess,
-        [PSCredential] $UserCredential,
+        [System.Management.Automation.PSCredential] $UserCredential,
         [Bool] $DisableScreenSaver = $true,
         [Bool] $EnableAutoLogon = $false,
         [String] $TestAgentVersion,
@@ -291,7 +291,7 @@ function CanSkipTestAgentConfiguration
         [String] $TfsCollection,
         [ValidateSet("Service", "Process")]
         [String] $AsServiceOrProcess,
-        [PSCredential] $UserCredential,
+        [System.Management.Automation.PSCredential] $UserCredential,
         [Bool] $DisableScreenSaver,
         [Bool] $EnableAutoLogon,
         [String] $TestAgentVersion,
@@ -471,7 +471,7 @@ function EnableTracing
     Write-Verbose -Message ("Logs will now be stored at : {0}" -f $logFilePath) -Verbose
 }
 
-function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [PSCredential] $UserCredential, [String] $AlternateCredUserName, [String] $AlternateCredPassword)
+function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [System.Management.Automation.PSCredential] $UserCredential, [String] $AlternateCredUserName, [String] $AlternateCredPassword)
 {
     $ExeName = "TestAgentConfig.exe"
     if (-not (Test-IsAdmin))
@@ -528,7 +528,7 @@ function ConfigureTestAgent
         [String] $TfsCollection,
         [ValidateSet("Service", "Process")]
         [String] $AsServiceOrProcess,
-        [PSCredential] $UserCredential,
+        [System.Management.Automation.PSCredential] $UserCredential,
         [Bool] $DisableScreenSaver = $false,
         [Bool] $EnableAutoLogon = $false,
         [String] $TestAgentVersion = "14.0",

@@ -23,19 +23,10 @@ function Create-AzureResourceGroup
 
     if (!$csmParametersObject)
     {
-        Write-Verbose -Verbose "New-AzureResourceGroupDeployment -Name $resourceGroupName
-                                 -ResourceGroupName $resourceGroupName
-                                 -TemplateFile $csmFile"
-                                             
         $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -Verbose -ErrorAction Stop
     }
     else
     {
-        Write-Verbose -Verbose "New-AzureResourceGroupDeployment -Name $resourceGroupName
-                                 -ResourceGroupName $resourceGroupName
-                                 -TemplateFile $csmFile
-                                 -TemplateParameterFile $csmParametersFile"
-
         $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -TemplateParameterObject $csmParametersObject -Verbose -ErrorAction Stop
     }
 
@@ -109,15 +100,13 @@ function Get-Resources
     }
 }
 
-function Replace-SASToken
+function Get-CsmParameterObject
 {
-    param([string]$csmParameterFileContent,
-    [string]$sasTokenParameterName,
-    [string]$newSASToken)
+    param([string]$csmParameterFileContent)
 
-    if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false -And [string]::IsNullOrEmpty($sasTokenParameterName) -eq $false -And [string]::IsNullOrEmpty($newSASToken) -eq $false)
+    if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false)
     {
-        Write-Verbose "Replacing the SAS token for parameter $sasTokenParameterName" -Verbose
+        Write-Verbose "Generating the parameter object from the file $csmParameterFileContent" -Verbose
 
         $csmJObject = [Newtonsoft.Json.Linq.JObject]::Parse($csmParameterFileContent)
         $parameters = $csmJObject.GetValue("parameters")
@@ -131,10 +120,7 @@ function Replace-SASToken
             $newParametersObject.Add($key, $parameterValue["value"].ToString())
         }
 
-        $newParametersObject.Remove($sasTokenParameterName)
-        $newParametersObject.Add($sasTokenParameterName, $newSASToken)
-
-        Write-Verbose "Replaced the SAS token for parameter $sasTokenParameterName" -Verbose
+        Write-Verbose "Generated the parameter object from the file $csmParameterFileContent" -Verbose
 
         return $newParametersObject
     }
@@ -143,10 +129,10 @@ function Replace-SASToken
 function Refresh-SASToken
 {
     param([string]$fullBlobUri,
-    [string]$csmParameterFileContent,
-    [string]$sasTokenParameterName)
+    [string]$sasTokenParameterName,
+    [System.Collections.Hashtable]$csmParametersObject)
 
-    if ([string]::IsNullOrEmpty($fullBlobUri) -eq $false)
+    if ($dscDeployment -eq "true")
     {
         Write-Verbose "Generating SAS token for $fullBlobUri" -Verbose
 
@@ -174,9 +160,15 @@ function Refresh-SASToken
 
         Write-Verbose "Generated SAS token for $fullBlobUri" -Verbose
 
-        $csmParametersObject = Replace-SASToken -csmParameterFileContent $csmParameterFileContent -sasTokenParameterName $sasTokenParameterName -newSASToken $token
+        Write-Verbose "Replacing SAS token for parameter $sasTokenParameterName" -Verbose
 
-        return $csmParametersObject
+        $csmParametersObject.Remove($sasTokenParameterName)
+        $csmParametersObject.Add($sasTokenParameterName, $token)
+
+        Write-Verbose "Replaced SAS token for parameter $sasTokenParameterName" -Verbose
+
     }
+
+    return $csmParametersObject
 }
 
