@@ -87,6 +87,11 @@ gulp.task('package', ['zip'], function(done) {
 		return;		
 	}
 
+	if (!semver.valid(version)) {
+		done(new gutil.PluginError('PackageTask', 'invalid semver version: ' + version));
+		return;				
+	}	
+
 	var server = options.server;
 
 	shell.mkdir('-p', _pkgRoot);
@@ -119,11 +124,6 @@ gulp.task('package', ['zip'], function(done) {
 		.then(function() {
 			// publish only if version and source supplied - used by CI server that does official publish
 			if (server) {
-				if (!semver.valid(version)) {
-					done(new gutil.PluginError('PackageTask', 'invalid semver version: ' + version));
-					return;				
-				}
-
 				var pkgLocation = path.join(_pkgRoot, pkgName + '.' + version + '.nupkg');
 				var cmdline = '"' + nugetPath + '" push ' + pkgLocation + ' -Source ' + server;
 				return QExec(cmdline);				
