@@ -48,7 +48,8 @@
       "name": "Package",
       "type": "string",
       "label": "ms-resource:loc.input.label.Package",
-      "defaultValue": "Path of package under the default artifact directory of the agent.",
+      "defaultValue": "",
+      "helpMarkDown": "Path of package under the default artifact directory.",
       "required": true
     },
     {
