@@ -16,7 +16,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "azureConnection",
+      "type": "connectedService:Azure",
       "label": "Azure Subscription",
       "defaultValue": "",
       "required": true,
