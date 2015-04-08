@@ -31,7 +31,7 @@
             "label": "Path",
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Path of the cmd or bat script to execute relative to the default working directory of the agent."
+            "helpMarkDown": "Path of the cmd or bat script to execute. Should be fully qualified path or relative to the default working directory."
         },
         {
             "name": "arguments",

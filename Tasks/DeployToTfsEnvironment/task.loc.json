@@ -41,7 +41,7 @@
       "label": "ms-resource:loc.input.label.SourcePackage",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Location of the application binaries under the default working directory of the agent."
+      "helpMarkDown": "Location of the application binaries. Should be fully qualified path or relative to the default working directory."
     },
     {
       "name": "ApplicationPath",

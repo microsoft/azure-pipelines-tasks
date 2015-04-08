@@ -32,7 +32,7 @@
             "label": "Script Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path of the script relative to the default working directory of the agent."
+            "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory."
         },
         {
             "name": "ScriptArguments",
