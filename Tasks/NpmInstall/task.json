@@ -3,7 +3,7 @@
     "name": "NpmInstall",
     "friendlyName": "npm install",
     "description": "install npm packages",
-    "category": "Build",
+    "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
