@@ -6,7 +6,8 @@
     "category": "Deploy",
     "visibility": [
                 "Preview",
-                "Build"
+                "Build",
+                "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
@@ -37,7 +38,7 @@
             "label": "Source",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the application binaries. Variables like $(Build.Repository.LocalPath) can be used for binaries in the Automation Agent. For example, $(Build.Repository.LocalPath)\\BudgetIT\\Web." 
+            "helpMarkDown": "Location of the application binaries under the default working directory of the agent." 
         },
         {
             "name": "ApplicationPath",

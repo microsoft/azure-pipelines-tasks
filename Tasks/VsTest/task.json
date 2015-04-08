@@ -4,6 +4,10 @@
   "friendlyName": "Visual Studio Test",
   "description": "Run tests with Visual Studio test runner",
   "category": "Test",
+  "visibility": [
+                "Build",
+                "Release"
+                ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,

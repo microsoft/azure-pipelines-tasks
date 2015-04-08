@@ -7,6 +7,10 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
@@ -31,7 +35,7 @@
       "label": "ms-resource:loc.input.label.ScriptPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from the repo root of the script to run."
+      "helpMarkDown": "Path of the script relative to the default working directory of the agent."
     },
     {
       "name": "ScriptArguments",

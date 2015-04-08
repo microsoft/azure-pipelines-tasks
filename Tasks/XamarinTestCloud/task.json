@@ -4,6 +4,9 @@
     "friendlyName": "Xamarin Test Cloud",
     "description": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
     "category": "Test",
+    "visibility": [
+                "Build"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

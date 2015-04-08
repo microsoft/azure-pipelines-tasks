@@ -4,6 +4,9 @@
     "friendlyName": "Shell Script",
     "description": "Run a shell script using bash",
     "category": "Utility",
+    "visibility": [
+                "Build"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

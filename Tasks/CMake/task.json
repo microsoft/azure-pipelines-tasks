@@ -4,6 +4,9 @@
     "friendlyName": "CMake",
     "description": "Build with the CMake cross-platform build system",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],    
     "author": "Microsoft Corporation",
     "demands" : [
         "cmake"

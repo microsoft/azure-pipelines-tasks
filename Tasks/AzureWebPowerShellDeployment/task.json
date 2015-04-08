@@ -4,6 +4,10 @@
   "friendlyName": "Azure Web Site Deployment",
   "description": "Deploy a website to Microsoft Azure",
   "category": "Deploy",
+  "visibility": [
+                "Build",
+                "Release"
+                ],  
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
@@ -41,7 +45,7 @@
       "name": "Package",
       "type": "string",
       "label": "Package",
-      "defaultValue": "$(build.stagingDirectory)\\*.zip",
+      "defaultValue": "Path of package under the default artifact directory of the agent.",
       "required": true
     },
     {
