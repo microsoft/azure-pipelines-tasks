@@ -70,4 +70,11 @@ gulp
 
 Tasks will be created in the _build directory.  It will also generate a tasks.loc.json and an english strings file under Strings in your source tree.  You can check these back in.  Another localization process will create the other strings files.
 
+### Package
+This must be done on a windows machine with nuget.exe in the path
+From the root of the repo (replace version with appropriate version)
+```bash
+gulp package --version 1.0.29
+```
 
+Tasks will be create a nuget package in the _package directory.
