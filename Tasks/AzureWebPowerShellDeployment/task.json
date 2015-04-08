@@ -24,7 +24,7 @@
     },
     {
       "name": "WebSiteName",
-      "type": "pickList",
+      "type": "string",
       "label": "Web Site Name",
       "defaultValue": "",
       "required": true
@@ -50,14 +50,6 @@
       "label": "Additional Arguments",
       "defaultValue": "",
       "required": false
-    }
-  ],
-  "sourceDefinitions": [
-    {
-        "target": "WebSiteName",
-        "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/webspaces/SouthCentralUSWebspace/sites",
-        "selector": "xpath://Site/Name",
-        "authKey": "{$ConnectedServiceName}"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
