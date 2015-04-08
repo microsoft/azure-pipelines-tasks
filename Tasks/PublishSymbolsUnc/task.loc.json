@@ -1,0 +1,38 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
+  "name": "PublishSymbolsUnc",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Build",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "msbuild",
+    "visualstudio"
+  ],
+  "inputs": [
+    {
+      "name": "UncPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.UncPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Path to a UNC share in which to publish the symbols."
+    }
+  ],
+  "instanceNameFormat": "Publish symbols",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\PublishSymbolsUnc.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
