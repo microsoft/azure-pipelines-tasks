@@ -1,6 +1,6 @@
 ﻿{
     "id": "27EDD013-36FD-43AA-96A3-7D73E1E35285",
-    "name": "Xamarin.Android",
+    "name": "XamarinAndroid",
     "friendlyName": "Xamarin.Android",
     "description": "Build an Android app with Xamarin",
     "category": "Build",
@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "AndroidSDK",

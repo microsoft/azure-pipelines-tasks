@@ -30,21 +30,40 @@ if (!fs.existsSync(mdtoolPath)) {
     tl.exit(1);
 }
 
-// Prepare build command line
-var mdtoolRunner = new tl.ToolRunner(mdtoolPath);
-mdtoolRunner.arg('--verbose');
-mdtoolRunner.arg('build');
-mdtoolRunner.arg('--configuration:' + configuration + '|' + device);
-mdtoolRunner.arg(solutionPath);
+// Find location of nuget
+var nugetPath = tl.which('nuget');
+if (!nugetPath) {
+    tl.error('nuget was not found in the path.');
+    tl.exit(1);
+}
 
-// Execute build
-mdtoolRunner.exec()
-.then(function (code) {
-    // Executed successfully
-    tl.exit(code);
-})
-.fail(function (err) {
+// Prepare function for tool execution failure
+var onFailedExecution = function (err) {
     // Error executing
     tl.debug('ToolRunner execution failure: ' + err);
     tl.exit(1);
+}
+
+// Restore NuGet packages of the solution
+var nugetRunner = new tl.ToolRunner(nugetPath);
+nugetRunner.arg('restore');
+nugetRunner.arg(solutionPath);
+nugetRunner.exec()
+.then(function (code) {
+
+    // Prepare build command line
+    var mdtoolRunner = new tl.ToolRunner(mdtoolPath);
+    mdtoolRunner.arg('--verbose');
+    mdtoolRunner.arg('build');
+    mdtoolRunner.arg('--configuration:' + configuration + '|' + device);
+    mdtoolRunner.arg(solutionPath);
+
+    // Execute build
+    mdtoolRunner.exec()
+    .then(function (code) {
+        // Executed successfully
+        tl.exit(code);
+    })
+    .fail(onFailedExecution)
 })
+.fail(onFailedExecution)

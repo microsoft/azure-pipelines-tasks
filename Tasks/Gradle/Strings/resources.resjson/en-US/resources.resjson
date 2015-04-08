@@ -1,0 +1,14 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Gradle",
+  "loc.description": "Build using a Gradle wrapper script",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.wrapperScript": "Gradle Wrapper",
+  "loc.input.label.options": "Options",
+  "loc.input.label.tasks": "Tasks",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.label.jdkVersion": "JDK Version",
+  "loc.input.label.jdkArchitecture": "JDK Architecture"
+}

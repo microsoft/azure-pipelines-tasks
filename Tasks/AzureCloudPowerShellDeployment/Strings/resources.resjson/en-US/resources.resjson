@@ -1,0 +1,15 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Azure Cloud Service Deployment",
+  "loc.description": "Deploy an Azure Cloud Service",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.StorageAccount": "Storage Account",
+  "loc.input.label.ServiceName": "Service Name",
+  "loc.input.label.ServiceLocation": "Service Location",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "Environment (Slot)",
+  "loc.input.label.AllowUpgrade": "Allow Upgrade"
+}

@@ -1,0 +1,53 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
+  "name": "AzurePowerShell",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Deploy",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 4
+  },
+  "demands": [
+    "azureps"
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "azureConnection",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure subscription to configure before running PowerShell"
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from the repo root of the script to run."
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+    }
+  ],
+  "instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

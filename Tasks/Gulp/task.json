@@ -2,7 +2,7 @@
     "id": "B82CFBE4-34F9-40F5-889E-C8842CA9DD9D",
     "name": "Gulp",
     "friendlyName": "Gulp",
-    "description": "Build with a Node.js streaming, task-based build system",
+    "description": "Node.js streaming task based build system",
     "category": "Build",
     "author": "Microsoft Corporation",
     "version": {
@@ -61,6 +61,11 @@
         "Node": {
             "target": "gulptask.js",
             "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\Gulptask.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
         }
     }
 }

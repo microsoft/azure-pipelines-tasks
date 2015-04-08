@@ -1,0 +1,14 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Xcode Package iOS",
+  "loc.description": "Generate an .ipa file from Xcode build output",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.appName": "Name of .app",
+  "loc.input.label.ipaName": "Name of .ipa",
+  "loc.input.label.provisioningProfile": "Provisioning Profile Name",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.appPath": "Path to .app",
+  "loc.input.label.ipaPath": "Path to place .ipa"
+}

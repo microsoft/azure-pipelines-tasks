@@ -1,0 +1,19 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.description": "Build with MSBuild",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.solution": "Solution",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.msbuildArguments": "MSBuild Arguments",
+  "loc.input.label.clean": "Clean",
+  "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
+  "loc.input.label.logProjectEvents": "Record Project Details",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.label.msbuildLocation": "Path to MSBuild"
+}

@@ -1,0 +1,15 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Visual Studio Test",
+  "loc.description": "Run tests with Visual Studio test runner",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.testAssembly": "Test Assembly",
+  "loc.input.label.testFiltercriteria": "Test Filter criteria",
+  "loc.input.label.runSettingsFile": "Run Settings File",
+  "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
+  "loc.input.label.otherConsoleOptions": "Other console options",
+  "loc.input.label.vsTestVersion": "VSTest version",
+  "loc.input.label.pathtoCustomTestAdapters": "Path to Custom Test Adapters"
+}

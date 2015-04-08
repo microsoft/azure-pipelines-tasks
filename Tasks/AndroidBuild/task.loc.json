@@ -1,0 +1,83 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "DF857559-8715-46EB-A74E-AC98B9178AA0",
+  "name": "AndroidBuild",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Build",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 2
+  },
+  "demands": [
+    "AndroidSDK"
+  ],
+  "groups": [
+    {
+      "name": "emulatorOptions",
+      "displayName": "ms-resource:loc.group.displayName.emulatorOptions",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "gradleWrapper",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.gradleWrapper",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "gradleProj",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.gradleProj",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "gradleArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gradleArguments",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "startEmulator",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.startEmulator",
+      "defaultValue": "False",
+      "required": false,
+      "groupName": "emulatorOptions"
+    },
+    {
+      "name": "emulatorTarget",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.emulatorTarget",
+      "defaultValue": "android-19",
+      "required": false,
+      "visibleRule": "startEmulator = true",
+      "groupName": "emulatorOptions"
+    },
+    {
+      "name": "emulatorDevice",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.emulatorDevice",
+      "defaultValue": "Nexus 5",
+      "required": false,
+      "visibleRule": "startEmulator = true",
+      "groupName": "emulatorOptions"
+    }
+  ],
+  "instanceNameFormat": "Android Build $(gradleProj)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\AndroidBuild.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

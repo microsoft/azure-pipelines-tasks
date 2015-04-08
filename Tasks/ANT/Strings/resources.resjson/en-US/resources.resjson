@@ -1,0 +1,13 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Ant",
+  "loc.description": "Build with Apache Ant",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.antBuildFile": "Ant build file",
+  "loc.input.label.options": "Options",
+  "loc.input.label.targets": "Target(s)",
+  "loc.input.label.jdkVersion": "JDK Version",
+  "loc.input.label.jdkArchitecture": "JDK Architecture"
+}

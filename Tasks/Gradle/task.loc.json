@@ -1,0 +1,99 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "8D8EEBD8-2B94-4C97-85AF-839254CC6DA4",
+  "name": "Gradle",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Build",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 2
+  },
+  "demands": [
+    "java"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "wrapperScript",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.wrapperScript",
+      "defaultValue": "gradlew",
+      "required": true,
+      "helpMarkDown": "Relative path from the repository root to the `Gradle Wrapper script`."
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.options",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "tasks",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tasks",
+      "defaultValue": "build",
+      "required": true
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Working directory to run Gradle build in. Defaults to repository root.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "jdkVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkVersion",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "default",
+      "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+      "options": {
+        "default": "default",
+        "1.8": "JDK 8",
+        "1.7": "JDK 7",
+        "1.6": "JDK 6"
+      }
+    },
+    {
+      "name": "jdkArchitecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkArchitecture",
+      "defaultValue": "x86",
+      "required": false,
+      "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+      "groupName": "advanced",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
+    }
+  ],
+  "instanceNameFormat": "gradlew $(tasks)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\gradle.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    },
+    "JavaScript": {
+      "target": "gradle.js",
+      "argumentFormat": ""
+    }
+  }
+}

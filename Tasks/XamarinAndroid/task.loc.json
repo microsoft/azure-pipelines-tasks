@@ -1,0 +1,120 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "27EDD013-36FD-43AA-96A3-7D73E1E35285",
+  "name": "XamarinAndroid",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Build",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 3
+  },
+  "demands": [
+    "AndroidSDK",
+    "JDK",
+    "MSBuild",
+    "Xamarin.Android"
+  ],
+  "groups": [
+    {
+      "name": "msbuildOptions",
+      "displayName": "ms-resource:loc.group.displayName.msbuildOptions",
+      "isExpanded": true
+    },
+    {
+      "name": "jdkOptions",
+      "displayName": "ms-resource:loc.group.displayName.jdkOptions",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "project",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.project",
+      "defaultValue": "**\\*.csproj",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**\\*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target."
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.target",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Build these targets in this project. Use a semicolon to separate multiple targets."
+    },
+    {
+      "name": "outputDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputDir",
+      "defaultValue": "$(Agent.BuildDirectory)\\bin\\Release",
+      "required": false
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "Release",
+      "required": false
+    },
+    {
+      "name": "msbuildLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.msbuildLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optionally supply the path to MSBuild.  It defaults to searching for latest version.",
+      "groupName": "msbuildOptions"
+    },
+    {
+      "name": "msbuildArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.msbuildArguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional arguments passed to MSBuild.",
+      "groupName": "msbuildOptions"
+    },
+    {
+      "name": "jdkVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkVersion",
+      "required": false,
+      "groupName": "jdkOptions",
+      "defaultValue": "default",
+      "helpMarkDown": "Use the selected JDK version during build.",
+      "options": {
+        "default": "default",
+        "1.8": "JDK 8",
+        "1.7": "JDK 7",
+        "1.6": "JDK 6"
+      }
+    },
+    {
+      "name": "jdkArchitecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkArchitecture",
+      "defaultValue": "x86",
+      "required": false,
+      "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+      "groupName": "jdkOptions",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
+    }
+  ],
+  "instanceNameFormat": "Build Xamarin.Android Project $(project)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\XamarinAndroid.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

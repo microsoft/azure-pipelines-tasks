@@ -1,0 +1,9 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "Build with the CMake cross-platform build system",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.label.args": "Arguments"
+}

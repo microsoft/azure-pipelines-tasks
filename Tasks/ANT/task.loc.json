@@ -1,0 +1,90 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "3A6A2D63-F2B2-4E93-BCF9-0CBE22F5DC26",
+  "name": "Ant",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Build",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 4
+  },
+  "demands": [
+    "ant"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "Ant $(options) $(antBuildFile)",
+  "inputs": [
+    {
+      "name": "antBuildFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.antBuildFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from the repository root to the `Ant build file`."
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.options",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "targets",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.targets",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "jdkVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkVersion",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "default",
+      "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+      "options": {
+        "default": "default",
+        "1.8": "JDK 8",
+        "1.7": "JDK 7",
+        "1.6": "JDK 6"
+      }
+    },
+    {
+      "name": "jdkArchitecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkArchitecture",
+      "defaultValue": "x86",
+      "required": false,
+      "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+      "groupName": "advanced",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
+    }
+  ],
+  "execution": {
+    "JavaScript": {
+      "target": "ant.js",
+      "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\ant.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

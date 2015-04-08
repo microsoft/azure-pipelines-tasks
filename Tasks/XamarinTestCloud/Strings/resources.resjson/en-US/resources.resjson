@@ -1,0 +1,19 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Xamarin Test Cloud",
+  "loc.description": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.app": "App File",
+  "loc.input.label.dsym": "dSYM File (iOS only)",
+  "loc.input.label.teamApiKey": "Team API Key",
+  "loc.input.label.user": "User Email",
+  "loc.input.label.devices": "Devices",
+  "loc.input.label.series": "Series",
+  "loc.input.label.testDir": "Test Assembly Directory",
+  "loc.input.label.parallelization": "Parallelization",
+  "loc.input.label.locale": "System Language",
+  "loc.input.label.testCloudLocation": "test-cloud.exe Location",
+  "loc.input.label.optionalArgs": "Optional Arguments"
+}

@@ -1,0 +1,61 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+  "name": "PowerShell",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 3
+  },
+  "demands": [
+    "DotNetFramework"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "scriptName",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.scriptName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of the PowerShell script file to run."
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters"
+    },
+    {
+      "name": "workingFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "Powershell: $(scriptName)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(scriptName)",
+      "argumentFormat": "$(arguments)",
+      "workingDirectory": "$(workingFolder)"
+    }
+  }
+}
