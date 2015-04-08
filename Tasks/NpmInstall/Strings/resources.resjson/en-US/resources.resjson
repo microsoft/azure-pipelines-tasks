@@ -1,0 +1,10 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "npm install",
+  "loc.description": "install npm packages",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.label.cwd": "Working Directory"
+}
