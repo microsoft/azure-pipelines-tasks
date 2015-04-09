@@ -171,9 +171,31 @@ function Get-OperationLogs
     return $logs
 }
 
+function Check-EnvironmentNameAvailability
+{
+    param([string]$environmentName)
+
+    if ([string]::IsNullOrEmpty($environmentName) -eq $false)
+    {
+		Write-Verbose "Checking environment name availability" -Verbose
+
+        $environment = Get-Environment -EnvironmentName $environmentName -Connection $connection -ErrorAction silentlycontinue
+
+        if($environment)
+        {
+            if($environment.Provider.Name -ne "AzureResourceGroupManagerV2")
+            {
+                Write-Error -Message "Environment with the name $environmentName is already registered. Please try a different name" -Category InvalidArgument
+            }
+        }
+
+		Write-Verbose "Checked environment name availability" -Verbose
+    }
+}
+
 function Initialize-DTLServiceHelper
 {
-    Write-Verbose "Getting the vss connection object"
+    Write-Verbose "Getting the vss connection object" -Verbose
 
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 

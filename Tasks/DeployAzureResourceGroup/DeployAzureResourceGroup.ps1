@@ -1,11 +1,11 @@
 param(
-    [string]$ConnectedServiceName, 
-    [string]$location,
-    [string]$resourceGroupName,
-    [string]$csmFile, 
+    [string][Parameter(Mandatory=$true)]$ConnectedServiceName, 
+    [string][Parameter(Mandatory=$true)]$location,
+    [string][Parameter(Mandatory=$true)]$resourceGroupName,
+    [string][Parameter(Mandatory=$true)]$csmFile, 
     [string]$csmParametersFile,
     [string]$dscDeployment,
-    [string]$fullBlobUri,
+    [string]$moduleUrlParameterName,
     [string]$sasTokenParameterName
 )
 
@@ -17,21 +17,28 @@ Write-Verbose -Verbose "environmentName = $resourceGroupName"
 Write-Verbose -Verbose "location = $location"
 Write-Verbose -Verbose "deplyomentDefinitionFile = $csmFile"
 Write-Verbose -Verbose "deploymentDefinitionParametersFile = $csmParametersFile"
-Write-Verbose -Verbose "blobUri = $fullBlobUri"
+Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
 Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
+$ErrorActionPreference = "Stop"
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 $csmFileContent = [System.IO.File]::ReadAllText($csmFile)
-$csmParametersFileContent = [System.IO.File]::ReadAllText($csmParametersFile)
+
+if ([string]::IsNullOrEmpty($csmParametersFile) -eq $false)
+{
+    $csmParametersFileContent = [System.IO.File]::ReadAllText($csmParametersFile)
+}
 
 . ./AzureResourceManagerHelper.ps1
 . ./DtlServiceHelper.ps1
 
+Check-EnvironmentNameAvailability -environmentName $resourceGroupName
+
 $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
-$parametersObject = Refresh-SASToken -fullBlobUri  $fullBlobUri -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject
+$parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameterName -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject
 
 Switch-AzureMode AzureResourceManager
 

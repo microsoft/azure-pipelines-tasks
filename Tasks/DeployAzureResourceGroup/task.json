@@ -2,7 +2,7 @@
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "DeployAzureResourceGroup",
     "friendlyName": "Deploy Azure Resource Group",
-    "description": "CSM deployment to azure",
+    "description": "Provision and Deploy an Azure resource group using CSM",
     "category": "Deploy",
     "visibility": [
                 "Preview",
@@ -66,24 +66,24 @@
         {
             "name": "dscDeployment",
             "type": "boolean",
-            "label": "DSC deployment",
+            "label": "DSC Deployment",
             "required": false,
             "defaultValue": "false",
             "helpMarkDown": "Check the box if the deployment definition template involves DSC extensions. If the DSC module URL is public provide the URL as a template parameter and leave the below boxes empty"
         },
         {
-            "name": "fullBlobUri",
+            "name": "moduleUrlParameterName",
             "type": "string",
-            "label": "DSC Module's URL",
+            "label": "DSC Module Url Parameter Name",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Full url of the blob to which the dsc script is zipped and uploaded. For example https://foobar.blob.core.windows.net/dscscripts/MySample.ps1.zip",
+            "helpMarkDown": "Name of the parameter corresponding to the Azure blob url of the uploaded DSC module",
             "visibleRule": "dscDeployment = true"
         },
         {
             "name": "sasTokenParameterName",
             "type": "string",
-            "label": "SAS token parameter name",
+            "label": "SAS Token Parameter Name",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Name of the SAS token parameter.",

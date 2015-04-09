@@ -128,12 +128,29 @@ function Get-CsmParameterObject
 
 function Refresh-SASToken
 {
-    param([string]$fullBlobUri,
+    param([string]$moduleUrlParameterName,
     [string]$sasTokenParameterName,
     [System.Collections.Hashtable]$csmParametersObject)
 
     if ($dscDeployment -eq "true")
     {
+        if ($csmParametersObject.ContainsKey($sasTokenParameterName) -eq $false)
+        {
+            Write-Error -Message "$sasTokenParameterName is not present in the csm parameter file. Specify correct parameter name" -Category InvalidArgument
+        }
+
+        if ($csmParametersObject.ContainsKey($moduleUrlParameterName) -eq $false)
+        {
+            Write-Error -Message "$moduleUrlParameterName is not present in the csm parameter file. Specify correct parameter name" -Category InvalidArgument
+        }
+
+        $fullBlobUri = $csmParametersObject[$moduleUrlParameterName]
+		$uri = $fullBlobUri -as [System.URI]
+        if (($uri.AbsoluteURI -ne $null -And $uri.Scheme -match '[http|https]') -eq $false)
+        {
+            Write-Error -Message "$moduleUrlParameterName $fullBlobUri is not in the correct url format" -Category InvalidData
+        }
+
         Write-Verbose "Generating SAS token for $fullBlobUri" -Verbose
 
         $startTime = Get-Date
@@ -143,16 +160,25 @@ function Refresh-SASToken
         $fullBlobUri = $fullBlobUri.TrimEnd('/')
 
         $i = $fullBlobUri.LastIndexOf('/')
-        $blobName = $fullBlobUri.Substring($i + 1)
-        $fullBlobUri = $fullBlobUri.Remove($i)
+        if($i -ne -1)
+        {
+            $blobName = $fullBlobUri.Substring($i + 1)
+            $fullBlobUri = $fullBlobUri.Remove($i)
+        }
 
         $i = $fullBlobUri.LastIndexOf('/')
-        $containerName = $fullBlobUri.Substring($i + 1)
-        $fullBlobUri = $fullBlobUri.Remove($i)
+        if($i -ne -1)
+        {
+            $containerName = $fullBlobUri.Substring($i + 1)
+            $fullBlobUri = $fullBlobUri.Remove($i)
+        }
 
         $i = $fullBlobUri.IndexOf('.')
-        $fullBlobUri = $fullBlobUri.Remove($i)
-        $storageAccountName = $fullBlobUri.Substring($fullBlobUri.IndexOf("//") + 2)
+        if($i -ne -1)
+        {
+            $fullBlobUri = $fullBlobUri.Remove($i)
+            $storageAccountName = $fullBlobUri.Substring($fullBlobUri.IndexOf("//") + 2)
+        }
 
         Set-AzureSubscription -SubscriptionId $ConnectedServiceName -CurrentStorageAccountName $storageAccountName
 

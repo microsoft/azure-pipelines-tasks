@@ -75,12 +75,12 @@
       "helpMarkDown": "Check the box if the deployment definition template involves DSC extensions. If the DSC module URL is public provide the URL as a template parameter and leave the below boxes empty"
     },
     {
-      "name": "fullBlobUri",
+      "name": "moduleUrlParameterName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.fullBlobUri",
+      "label": "ms-resource:loc.input.label.moduleUrlParameterName",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Full url of the blob to which the dsc script is zipped and uploaded. For example https://foobar.blob.core.windows.net/dscscripts/MySample.ps1.zip",
+      "helpMarkDown": "Name of the parameter corresponding to the Azure blob url of the uploaded DSC module",
       "visibleRule": "dscDeployment = true"
     },
     {
