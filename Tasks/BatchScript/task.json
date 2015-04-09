@@ -4,6 +4,10 @@
     "friendlyName": "Batch Script",
     "description": "Run a windows cmd or bat script and optionally allow it to change the environment",
     "category": "Utility",
+    "visibility": [
+                  "Build",
+                  "Release"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
@@ -27,7 +31,7 @@
             "label": "Path",
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the cmd or bat script file to run."
+            "helpMarkDown": "Path of the cmd or bat script to execute. Should be fully qualified path or relative to the default working directory."
         },
         {
             "name": "arguments",

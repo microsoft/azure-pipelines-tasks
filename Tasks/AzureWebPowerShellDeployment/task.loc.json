@@ -7,6 +7,10 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
@@ -19,7 +23,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "azureConnection",
+      "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
@@ -44,7 +48,8 @@
       "name": "Package",
       "type": "string",
       "label": "ms-resource:loc.input.label.Package",
-      "defaultValue": "$(build.stagingDirectory)\\*.zip",
+      "defaultValue": "",
+      "helpMarkDown": "Path of package under the default artifact directory.",
       "required": true
     },
     {

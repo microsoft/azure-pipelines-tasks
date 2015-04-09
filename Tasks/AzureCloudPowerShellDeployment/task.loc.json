@@ -7,6 +7,10 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
@@ -19,7 +23,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "azureConnection",
+      "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
@@ -52,15 +56,17 @@
       "name": "CsPkg",
       "type": "string",
       "label": "ms-resource:loc.input.label.CsPkg",
-      "defaultValue": "$(build.stagingDirectory)\\*.cspkg",
-      "required": true
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Path of CsPkg under the default artifact directory."
     },
     {
       "name": "CsCfg",
       "type": "string",
       "label": "ms-resource:loc.input.label.CsCfg",
-      "defaultValue": "$(build.stagingDirectory)\\*.cscfg",
-      "required": true
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Path of CsCfg under the default artifact directory."
     },
     {
       "name": "Slot",

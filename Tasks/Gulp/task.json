@@ -4,11 +4,14 @@
     "friendlyName": "Gulp",
     "description": "Node.js streaming task based build system",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
     "demands" : [
         "gulp"
@@ -20,7 +23,7 @@
             "isExpanded":false
         }
     ],    
-    "instanceNameFormat": "gulp $(tasks)",
+    "instanceNameFormat": "gulp $(targets)",
     "inputs": [
         { 
             "name": "gulpFile",

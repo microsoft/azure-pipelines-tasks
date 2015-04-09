@@ -6,7 +6,8 @@
     "category": "Test",
     "visibility": [
                 "Preview",
-                "Build"
+                "Build",
+                "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
@@ -69,7 +70,7 @@
             "label": "Deploy to machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Comma separeted list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
+            "helpMarkDown": "Comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
             "groupName": "agentConfiguration"
         },
         {

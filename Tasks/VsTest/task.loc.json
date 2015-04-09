@@ -7,6 +7,10 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
