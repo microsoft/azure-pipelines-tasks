@@ -20,7 +20,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "type": "azureConnection",
+            "type": "connectedService:Azure",
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
@@ -32,7 +32,7 @@
             "label": "Script Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from the repo root of the script to run."
+            "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory."
         },
         {
             "name": "ScriptArguments",

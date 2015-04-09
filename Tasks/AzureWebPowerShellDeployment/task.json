@@ -7,12 +7,12 @@
   "visibility": [
                 "Build",
                 "Release"
-                  ],
+                ],  
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [
     "azureps"
@@ -20,7 +20,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "azureConnection",
+      "type": "connectedService:Azure",
       "label": "Azure Subscription",
       "defaultValue": "",
       "required": true,
@@ -45,7 +45,8 @@
       "name": "Package",
       "type": "string",
       "label": "Package",
-      "defaultValue": "$(build.stagingDirectory)\\*.zip",
+      "defaultValue": "",
+      "helpMarkDown": "Path of package under the default artifact directory.",
       "required": true
     },
     {

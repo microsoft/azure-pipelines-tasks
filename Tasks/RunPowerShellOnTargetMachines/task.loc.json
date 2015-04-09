@@ -42,7 +42,7 @@
       "label": "ms-resource:loc.input.label.SourcePackage",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Location of the application binaries. Variables like $(Build.Repository.LocalPath) can be used for binaries in the Automation Agent. For example, $(Build.Repository.LocalPath)\\BudgetIT\\Web."
+      "helpMarkDown": "Location of the application binaries. Should be fully qualified path or relative to the default working directory."
     },
     {
       "name": "ApplicationPath",

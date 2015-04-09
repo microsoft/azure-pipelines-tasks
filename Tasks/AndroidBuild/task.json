@@ -4,6 +4,9 @@
     "friendlyName": "Android Build",
     "description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],   
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

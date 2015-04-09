@@ -51,20 +51,20 @@ $packageFile = Get-SingleFile $packageFile $Package
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)
 {
-    Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue"
-    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue
+    Write-Host "Get-AzureWebSite -Name `"$WebSiteName`" -ErrorAction SilentlyContinue"
+    $azureWebSite = Get-AzureWebSite -Name `"$WebSiteName`" -ErrorAction SilentlyContinue
     if(!$azureWebSite)
     {
-        Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation"
-        $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation
+        Write-Host "New-AzureWebSite -Name `"$WebSiteName`" -Location $WebSiteLocation"
+        $azureWebSite = New-AzureWebSite -Name `"$WebSiteName`" -Location $WebSiteLocation
     }
 }
 
 #Deploy the package
 $azureCommand = "Publish-AzureWebsiteProject"
-$azureCommandArguments = "-Name $WebSiteName -Package `"$packageFile`" $AdditionalArguments"
+$azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments"
 $finalCommand = "$azureCommand $azureCommandArguments"
-Write-Host "finalCommand= $finalCommand"
+Write-Host "$finalCommand"
 Invoke-Expression -Command $finalCommand
 
 Write-Host "Leaving script Publish-AzureWebDeployment.ps1"

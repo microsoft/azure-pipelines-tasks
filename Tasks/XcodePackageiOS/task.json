@@ -4,6 +4,9 @@
     "friendlyName": "Xcode Package iOS",
     "description": "Generate an .ipa file from Xcode build output",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,

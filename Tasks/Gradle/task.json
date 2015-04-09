@@ -4,6 +4,9 @@
     "friendlyName": "Gradle",
     "description": "Build using a Gradle wrapper script",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

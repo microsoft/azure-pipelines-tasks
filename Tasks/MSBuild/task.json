@@ -4,6 +4,9 @@
     "friendlyName": "MSBuild",
     "description": "Build with MSBuild",
     "category": "Build",
+    "visibility": [
+                "Build"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,

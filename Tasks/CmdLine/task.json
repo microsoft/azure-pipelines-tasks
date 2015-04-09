@@ -4,6 +4,10 @@
     "friendlyName": "Command Line",
     "description": "Run a command line with arguments",
     "category": "Utility",
+    "visibility": [
+                  "Build",
+                  "Release"
+                  ],    
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
