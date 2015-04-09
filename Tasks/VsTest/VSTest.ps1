@@ -46,14 +46,14 @@ if($testAssemblyFiles)
     $projectName = Get-Variable -Context $distributedTaskContext -Name "System.TeamProject"
     $buildDir = Get-Variable -Context $distributedTaskContext -Name "Agent.BuildDirectory" -Global $FALSE
     $buildNumber = Get-Variable -Context $distributedTaskContext -Name "Build.BuildNumber"
-    $buildUri = Get-Variable -Context $distributedTaskContext -Name "Build.BuildUri"	
-    $cwd = $buildDir+"\"+$projectName
-    $testResultsDir = $buildDir+"\"+$projectName+"\"+"TestResults"
-    $trxLocation = $buildDir+"\"+$projectName+"\"+"Temp"
+    $buildUri = Get-Variable -Context $distributedTaskContext -Name "Build.BuildUri"
+    $owner = Get-Variable -Context $distributedTaskContext -Name "Build.RequestedFor"	
+    $cwd = $buildDir
+    $testResultsDir = $buildDir+"\"+"TestResults"
     Write-Verbose "Calling Invoke-VSTest from working folder: $cwd"
-    Invoke-VSTest -TestAssemblies $testAssemblyFiles -Timeline $timeline -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $cwd -TestResultsDir $testResultsDir -ResultLocation $trxLocation
+    Invoke-VSTest -TestAssemblies $testAssemblyFiles -Timeline $timeline -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $cwd -TestResultsDir $testResultsDir
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
-    Invoke-ResultPublisher -Connection $connection -ProjectName $projectName -ResultLocation $trxLocation -Extension "trx" -ReaderType "Trx" -BuildUri $buildUri -BuildNumber $buildNumber -Platform $platform -Configuration $configuration
+    Invoke-ResultPublisher -Connection $connection -ProjectName $projectName -Owner $owner -TestResultsDir $testResultsDir -Extension "trx" -ResultType "Trx" -BuildUri $buildUri -BuildNumber $buildNumber -Platform $platform -Configuration $configuration
 }
 else
 {
