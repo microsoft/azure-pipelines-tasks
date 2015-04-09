@@ -25,7 +25,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "azureConnection",
+      "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,

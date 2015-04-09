@@ -25,7 +25,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "azureConnection",
+      "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
@@ -37,7 +37,7 @@
       "label": "ms-resource:loc.input.label.SourcePath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Location of the source folder or file. Variables like $(Build.Repository.LocalPath) can be used for binaries in the Automation Agent. For example, $(Build.Repository.LocalPath)\\BudgetIT\\Web."
+      "helpMarkDown": "Location of the source folder or file."
     },
     {
       "name": "StorageAccount",
