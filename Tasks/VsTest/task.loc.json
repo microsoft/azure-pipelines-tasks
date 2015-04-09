@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "vstest"
@@ -45,12 +45,34 @@
       "helpMarkDown": "Filter criteria for the tests."
     },
     {
+      "name": "platform", 
+      "type": "string", 
+      "label": "ms-resource:loc.input.label.platform", 
+      "defaultValue":"", 
+      "required":false
+    },
+    {
+      "name": "configuration", 
+      "type": "string", 
+      "label": "ms-resource:loc.input.label.configuration", 
+      "defaultValue":"", 
+      "required":false 
+    },
+    {
       "name": "runSettingsFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.runSettingsFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The run settings file to use."
+      "helpMarkDown": "Path to runsettings file to use with the Tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder"
+    },
+    {
+      "name": "overrideTestrunParameters",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.overrideTestrunParameters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080"
     },
     {
       "name": "codeCoverageEnabled",
@@ -58,15 +80,8 @@
       "label": "ms-resource:loc.input.label.codeCoverageEnabled",
       "defaultValue": "True",
       "required": false,
-      "helpMarkDown": "Whether code coverage needs to be enabled."
-    },
-    {
-      "name": "otherConsoleOptions",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.otherConsoleOptions",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Any other console options to be used."
+      "helpMarkDown": "Whether code coverage needs to be enabled.",
+      "groupName":"advanced"
     },
     {
       "name": "vsTestVersion",
@@ -88,6 +103,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Path to custom adapters.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "otherConsoleOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.otherConsoleOptions",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Other console options.",
       "groupName": "advanced"
     }
   ],
