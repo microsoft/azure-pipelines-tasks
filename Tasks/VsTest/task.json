@@ -61,7 +61,7 @@
       "label": "Run Settings File",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to runsettings file to use with the Tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder"
+      "helpMarkDown": "The run settings file to use."
     },
     {
       "name": "overrideTestrunParameters",
