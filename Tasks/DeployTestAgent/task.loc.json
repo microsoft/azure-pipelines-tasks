@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "id": "52A38A6A-1517-41D7-96CC-73EE0C60D2B6",
-  "name": "DeployTestAgent",
+  "name": "DeployVisualStudioTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Test",
@@ -44,7 +44,7 @@
       "label": "ms-resource:loc.input.label.environment",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of environment on which tests need to be run.",
+      "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
       "groupName": "environment"
     },
     {
@@ -108,7 +108,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Optionally supply the path to TestAgent.zip from network or local location.If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkID=528474&clcid=0x409"
+      "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkId=532768"
     }
   ],
   "instanceNameFormat": "Deploy and configure Test Agent",

@@ -3,11 +3,11 @@
 // *******************************************************
 {
   "loc.friendlyName": "Deploy Visual Studio Test Agent",
-  "loc.description": "Deploy and configure Test Agent to run tests on a lab environment. This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
-  "loc.group.displayName.environment": "Test Environment",
+  "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group.",
+  "loc.group.displayName.environment": "Test Machine Group",
   "loc.group.displayName.agentConfiguration": "Agent Configuration",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.environment": "Test Environment",
+  "loc.input.label.environment": "Test Machine Group",
   "loc.input.label.alternateCredsUserName": "Alternate credentials Username",
   "loc.input.label.alternateCredsPassword": "Alternate credentials Password",
   "loc.input.label.testMachines": "Deploy to machines",

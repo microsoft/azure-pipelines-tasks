@@ -1,0 +1,11 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Chef",
+  "loc.description": "Deploy to Chef environments by editing environment attributes",
+  "loc.input.label.connectedServiceName": "Chef Connection",
+  "loc.input.label.Environment": "Environment",
+  "loc.input.label.Attributes": "Environment Attributes",
+  "loc.input.label.chefWaitTime": "Wait Time"
+}

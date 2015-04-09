@@ -2,14 +2,14 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Run Tests using Test Agent",
-  "loc.description": "Run tests distributedly using multiple test agents in a lab environment. This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
-  "loc.group.displayName.testEnvironment": "Test Environment",
+  "loc.friendlyName": "Run Visual Studio Tests using Test Agent",
+  "loc.description": "Run tests distributedly using multiple test agents in a lab machine group.",
+  "loc.group.displayName.testEnvironment": "Test Machine Group",
   "loc.group.displayName.testSettings": "Test Settings",
-  "loc.input.label.environment": "Test Environment",
-  "loc.input.label.alternateCredsUserName": "Alternate credentials Username",
-  "loc.input.label.alternateCredsPassword": "Alternate credentials Password",
+  "loc.input.label.environment": "Test Machine Group",
+  "loc.input.label.dropLocation": "Test Drop Location",
   "loc.input.label.sourcefilters": "Test Assembly",
   "loc.input.label.testFilterCriteria": "Test Filter criteria",
-  "loc.input.label.runSettingsFile": "Run Settings File"
+  "loc.input.label.runSettingsFile": "Run Settings File",
+  "loc.input.label.overrideRunParams": "Override TestRun Parameters"
 }
