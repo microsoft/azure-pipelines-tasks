@@ -53,7 +53,7 @@
     },
     {
       "name": "runSettingsFile",
-      "type": "string",
+      "type": "filePath",
       "label": "Run Settings File",
       "defaultValue": "",
       "required": false,
