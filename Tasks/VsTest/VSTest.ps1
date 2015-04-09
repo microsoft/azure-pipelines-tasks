@@ -5,13 +5,18 @@ param(
     [string]$runSettingsFile,
     [string]$codeCoverageEnabled,
     [string]$pathtoCustomTestAdapters,
-    [string]$otherConsoleOptions
+    [string]$overrideTestrunParameters,
+    [string]$otherConsoleOptions,
+    [string]$platform,
+    [string]$configuration
 )
 
 Write-Verbose "Entering script VSTestConsole.ps1"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+# Import the Task.TestResults dll that has the cmdlet we need for publishing results
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if (!$testAssembly)
 {
@@ -38,9 +43,18 @@ if($testAssemblyFiles)
 {
     Write-Verbose "Calling Invoke-VSTest for all test assemblies"
     $timeline = Start-Timeline -Context $distributedTaskContext
-	$cwd = Get-Location  
+    $projectName = Get-Variable -Context $distributedTaskContext -Name "System.TeamProject"
+    $buildDir = Get-Variable -Context $distributedTaskContext -Name "Agent.BuildDirectory" -Global $FALSE
+    $buildNumber = Get-Variable -Context $distributedTaskContext -Name "Build.BuildNumber"
+    $buildUri = Get-Variable -Context $distributedTaskContext -Name "Build.BuildUri"
+    $owner = Get-Variable -Context $distributedTaskContext -Name "Build.RequestedFor"	
+    $cwd = $buildDir
+    $testResultsDir = $buildDir+"\"+"TestResults"
     Write-Verbose "Calling Invoke-VSTest from working folder: $cwd"
-    Invoke-VSTest -TestAssemblies $testAssemblyFiles -Timeline $timeline -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $cwd
+    Invoke-VSTest -TestAssemblies $testAssemblyFiles -Timeline $timeline -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $cwd -TestResultsFolder $testResultsDir
+    $connection = Get-VssConnection -TaskContext $distributedTaskContext
+    $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDir
+    Invoke-ResultPublisher -Connection $connection -ProjectName $projectName -Owner $owner -ResultFiles $resultFiles -ResultType "Trx" -BuildUri $buildUri -BuildNumber $buildNumber -Platform $platform -Configuration $configuration
 }
 else
 {
