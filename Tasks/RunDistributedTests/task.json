@@ -37,7 +37,7 @@
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the environment on which tests need to be run.",
+            "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
             "groupName": "testEnvironment"
         },
         {
