@@ -51,9 +51,9 @@ if($testAssemblyFiles)
     $cwd = $buildDir
     $testResultsDir = $buildDir+"\"+"TestResults"
     Write-Verbose "Calling Invoke-VSTest from working folder: $cwd"
-    Invoke-VSTest -TestAssemblies $testAssemblyFiles -Timeline $timeline -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $cwd -TestResultsDir $testResultsDir
+    Invoke-VSTest -TestAssemblies $testAssemblyFiles -Timeline $timeline -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $cwd -TestResultsFolder $testResultsDir
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
-    Invoke-ResultPublisher -Connection $connection -ProjectName $projectName -Owner $owner -TestResultsDir $testResultsDir -Extension "trx" -ResultType "Trx" -BuildUri $buildUri -BuildNumber $buildNumber -Platform $platform -Configuration $configuration
+    Invoke-ResultPublisher -Connection $connection -ProjectName $projectName -Owner $owner -TestResultsFolder $testResultsDir -Extension "trx" -ResultType "Trx" -BuildUri $buildUri -BuildNumber $buildNumber -Platform $platform -Configuration $configuration
 }
 else
 {
