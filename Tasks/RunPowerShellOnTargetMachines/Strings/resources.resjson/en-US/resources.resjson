@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Run PowerShell on Target Machines",
-  "loc.description": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s). This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
+  "loc.description": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s).",
   "loc.input.label.EnvironmentName": "Machine Group",
   "loc.input.label.MachineNames": "Deploy to Machines",
   "loc.input.label.SourcePackage": "Source",
