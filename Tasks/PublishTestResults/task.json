@@ -39,15 +39,7 @@
       "defaultValue": "**\\TEST-*.xml",
       "required": true,
       "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**\\*TEST-*.xml` for all xml files whose name starts with TEST-."
-    },
-    { 
-      "name": "cwd", 
-      "type": "filePath", 
-      "label": "Working Directory", 
-      "defaultValue": "", 
-      "required": false,
-      "helpMarkDown": "Current working directory to look for test result files."  
-    },
+    },    
     {
       "name": "platform",
       "type": "string",
