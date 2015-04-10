@@ -57,7 +57,7 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "Configuration for which the tests were run."
-    },   
+    }   
   ],
   "instanceNameFormat": "Publish Test Results $(testResultsFiles)",
   "execution": {
