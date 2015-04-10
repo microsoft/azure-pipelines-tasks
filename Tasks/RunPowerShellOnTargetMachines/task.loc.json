@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
-  "name": "DeployToTfsEnvironment",
+  "name": "RunPowerShellOnTargetMachines",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Deploy",
@@ -16,7 +16,8 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 0,
+    "IsTest": false
   },
   "inputs": [
     {
@@ -25,7 +26,7 @@
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the environment for deploying application.​"
+      "helpMarkDown": "Name of the Machine Group for deploying application.​"
     },
     {
       "name": "MachineNames",
@@ -33,7 +34,7 @@
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally provide a comma separated list of machines to deploy the application to. It defaults to all the machines in the environment. For example, BudgetIT-Web01, BudgetIT-Web02."
+      "helpMarkDown": "Optionally provide a comma separated list of machines to deploy the application to. It defaults to all the machines in the Machine Group. For example, BudgetIT-Web01, BudgetIT-Web02."
     },
     {
       "name": "SourcePackage",
@@ -60,34 +61,26 @@
       "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\Website.ps1"
     },
     {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters. For example, -testParam test"
+    },
+    {
       "name": "InitializationScriptPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.InitializationScriptPath",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Optionally provide location of the PowerShell initialization script (data script for DSC) on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1"
-    },
-    {
-      "name": "AlternateCredentialsUsername",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AlternateCredentialsUsername",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Username of the alternate credentials required to connect to the VSO service; Not required for TFS OnPrem. See http://aka.ms/ALTCREDENTIALS for more information"
-    },
-    {
-      "name": "AlternateCredentialsPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AlternateCredentialsPassword",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service; Not required for TFS OnPrem. See http://aka.ms/ALTCREDENTIALS for more information"
     }
   ],
-  "instanceNameFormat": "Deploy To Tfs Environment $(EnvironmentName)",
+  "instanceNameFormat": "Run PowerShell on Machine Group $(EnvironmentName)",
   "execution": {
     "PowerShell": {
-      "target": "$(currentDirectory)\\RemotePowershellRunner.ps1",
+      "target": "$(currentDirectory)\\RunPowerShellOnTargetMachines.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }

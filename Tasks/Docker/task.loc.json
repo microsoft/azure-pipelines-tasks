@@ -1,0 +1,72 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "DCBEA2C9-E7F4-4929-82B2-DA7FC9177109",
+  "name": "Docker",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0,
+    "IsTest": false
+  },
+  "inputs": [
+    {
+      "name": "DockerEndpoint",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DockerEndpoint",
+      "defaultValue": "hostname:remote_api_port",
+      "helpMarkDown": "Docker server remote connection url. The valid remote_api_port range is [0,65535]",
+      "required": true
+    },
+    {
+      "name": "Repository",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Repository",
+      "defaultValue": "namespace/repo_name",
+      "required": true,
+      "helpMarkDown": "Name of the image"
+    },
+    {
+      "name": "Tag",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Tag",
+      "defaultValue": "latest",
+      "helpMarkDown": "Image tag",
+      "required": false
+    },
+    {
+      "name": "ContainerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ContainerName",
+      "defaultValue": "",
+      "helpMarkDown": "Name of the container",
+      "required": true
+    },
+    {
+      "name": "PortBindings",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PortBindings",
+      "defaultValue": "",
+      "helpMarkDown": "Provide the port binding information in the format 'hostport:containerport'",
+      "required": false
+    }
+  ],
+  "instanceNameFormat": "Docker Deployment: $(Repository)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Docker-Deployment.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

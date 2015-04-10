@@ -1,0 +1,104 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "94A74903-F93F-4075-884F-DC11F34058B4",
+  "name": "DeployAzureResourceGroup",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0,
+    "IsTest": false
+  },
+  "demands": [
+    "azureps"
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure subscription to target for deployment."
+    },
+    {
+      "name": "location",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.location",
+      "defaultValue": "East US",
+      "required": true,
+      "helpMarkDown": "Location of the deployment",
+      "options": {
+        "East US": "East US",
+        "West US": "West US"
+      }
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
+      "required": true,
+      "helpMarkDown": "Name of the resource group in which deployment will be created"
+    },
+    {
+      "name": "csmFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.csmFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Source control path for the CSM file backing this deployment"
+    },
+    {
+      "name": "csmParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.csmParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Source control path for the parameters file for the selected CSM template"
+    },
+    {
+      "name": "dscDeployment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.dscDeployment",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "Check the box if the deployment definition template involves DSC extensions. If the DSC module URL is public provide the URL as a template parameter and leave the below boxes empty"
+    },
+    {
+      "name": "moduleUrlParameterName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.moduleUrlParameterName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Name of the parameter corresponding to the Azure blob url of the uploaded DSC module",
+      "visibleRule": "dscDeployment = true"
+    },
+    {
+      "name": "sasTokenParameterName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sasTokenParameterName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Name of the SAS token parameter.",
+      "visibleRule": "dscDeployment = true"
+    }
+  ],
+  "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

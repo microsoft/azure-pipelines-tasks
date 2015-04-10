@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
-  "name": "RunDistributedTests",
+  "name": "RunVisualStudioTestsusingTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Test",
@@ -39,26 +39,17 @@
       "label": "ms-resource:loc.input.label.environment",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of the environment on which tests need to be run.",
+      "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
       "groupName": "testEnvironment"
     },
     {
-      "name": "alternateCredsUserName",
+      "name": "dropLocation",
       "type": "string",
-      "label": "ms-resource:loc.input.label.alternateCredsUserName",
+      "label": "ms-resource:loc.input.label.dropLocation",
       "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
-      "groupName": "testEnvironment"
-    },
-    {
-      "name": "alternateCredsPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.alternateCredsPassword",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
-      "groupName": "testEnvironment"
+      "required": true,
+      "helpMarkDown": "The location where the test binaries have been dropped in the agent machine(s) as part of the `Deploy files to Machines` task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+      "groupName": "testSettings"
     },
     {
       "name": "sourcefilters",
@@ -85,6 +76,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Path to runsettings file to use with the tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder.",
+      "groupName": "testSettings"
+    },
+    {
+      "name": "overrideRunParams",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.overrideRunParams",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
       "groupName": "testSettings"
     }
   ],
