@@ -40,6 +40,6 @@ if (!$matchingTestResultsFiles)
 }
 
 Write-Verbose "Calling Publish-TestResults"
-Publish-TestResults -TestRunner $testRunner -TestResultsFiles $testResultsFiles -WorkingFolder $cwd -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -Platform $platform -Configuration $configuration -Context $distributedTaskContext
 
 Write-Verbose "Leaving script PublishTestResults.ps1"
