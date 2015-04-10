@@ -31,7 +31,7 @@
     },
     {
       "name": "StorageAccount",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
       "required": true,
@@ -39,7 +39,7 @@
     },
     {
       "name": "ServiceName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.ServiceName",
       "defaultValue": "",
       "required": true
@@ -82,6 +82,20 @@
       "label": "ms-resource:loc.input.label.AllowUpgrade",
       "defaultValue": "true",
       "required": true
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "StorageAccount",
+      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/storageservices",
+      "selector": "xpath://ServiceName",
+      "authKey": "{$ConnectedServiceName}"
+    },
+    {
+      "target": "ServiceName",
+      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/hostedservices",
+      "selector": "xpath://ServiceName",
+      "authKey": "{$ConnectedServiceName}"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(CsPkg)",
