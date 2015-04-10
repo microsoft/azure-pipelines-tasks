@@ -45,7 +45,7 @@ if($testAssemblyFiles)
     $timeline = Start-Timeline -Context $distributedTaskContext
     $projectName = Get-Variable -Context $distributedTaskContext -Name "System.TeamProject"
     $buildDir = Get-Variable -Context $distributedTaskContext -Name "Agent.BuildDirectory" -Global $FALSE
-    $buildNumber = Get-Variable -Context $distributedTaskContext -Name "Build.BuildNumber"
+    $buildNumber = Get-Variable -Context $distributedTaskContext -Name "Build.BuildId"
     $buildUri = Get-Variable -Context $distributedTaskContext -Name "Build.BuildUri"
     $owner = Get-Variable -Context $distributedTaskContext -Name "Build.RequestedFor"	
     $cwd = $buildDir
