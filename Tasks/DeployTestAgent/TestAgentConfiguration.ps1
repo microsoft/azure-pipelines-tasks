@@ -487,8 +487,6 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     if (Test-Path $exePath)
     {
-        #Write-Verbose -Message "Calling TestAgentConfig.exe with arguments: $Arguments" -Verbose
-
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo
         $pinfo.FileName = $exePath
         $pinfo.RedirectStandardError = $true
