@@ -239,9 +239,8 @@ function Set-TestAgentConfiguration
 			Write-Verbose -Message "Marking the machine for reboot as exit code 0 received and TestAgent is not running" -Verbose
 			SetRebootKey;
 		}
-		# In On Prem scenarios exit code is always 0, because agent is configured as logged in user. But because DSC launches the process as non interactive process
-		# we need a restart.
-		elseif ($configAsProcess -and [string]::IsNullOrWhiteSpace($AlternateCredUserName))
+		# DSC launches dta host as non interactive and because user has selected configure as process, we need to restart.
+        	elseif ($configAsProcess)
 		{
 			Write-Verbose -Message "Restarting the machine as error code 0 received and agent is launched as non interactive prcoess." -verbose
 			SetRebootKey;
@@ -488,8 +487,6 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     if (Test-Path $exePath)
     {
-        Write-Verbose -Message "Calling TestAgentConfig.exe with arguments: $Arguments" -Verbose
-
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo
         $pinfo.FileName = $exePath
         $pinfo.RedirectStandardError = $true
