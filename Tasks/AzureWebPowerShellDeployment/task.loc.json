@@ -30,19 +30,37 @@
       "helpMarkDown": "Azure subscription to target for deployment."
     },
     {
-      "name": "WebSiteName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.WebSiteName",
-      "defaultValue": "",
-      "required": true
-    },
-    {
       "name": "WebSiteLocation",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.WebSiteLocation",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
+      "helpMarkDown": "Select a region for deployment.",
+      "options": {
+        "South Central US": "South Central US",
+        "North Europe": "North Europe",
+        "West Europe": "West Europe",
+        "North Central US": "North Central US",
+        "West US": "West US",
+        "East Asia": "East Asia",
+        "East US": "East US",
+        "Southeast Asia": "Southeast Asia",
+        "East US2": "East US2",
+        "Japan West": "Japan West",
+        "Japan East": "Japan East",
+        "Central US": "Central US",
+        "Brazil South": "Brazil South"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "WebSiteName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebSiteName",
+      "defaultValue": "",
+      "required": true
     },
     {
       "name": "Package",
@@ -58,6 +76,14 @@
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "defaultValue": "",
       "required": false
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "WebSiteName",
+      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/webspaces/{$WebSiteLocation}Webspace/sites",
+      "selector": "xpath://Site/Name",
+      "authKey": "{$ConnectedServiceName}"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
