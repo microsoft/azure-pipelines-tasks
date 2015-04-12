@@ -45,18 +45,18 @@
       "helpMarkDown": "Filter criteria for the tests."
     },
     {
-      "name": "platform", 
-      "type": "string", 
-      "label": "ms-resource:loc.input.label.platform", 
-      "defaultValue":"", 
-      "required":false
+      "name": "platform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.platform",
+      "defaultValue": "",
+      "required": false
     },
     {
-      "name": "configuration", 
-      "type": "string", 
-      "label": "ms-resource:loc.input.label.configuration", 
-      "defaultValue":"", 
-      "required":false 
+      "name": "configuration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "",
+      "required": false
     },
     {
       "name": "runSettingsFile",
@@ -78,10 +78,10 @@
       "name": "codeCoverageEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.codeCoverageEnabled",
-      "defaultValue": "True",
+      "defaultValue": "False",
       "required": false,
       "helpMarkDown": "Whether code coverage needs to be enabled.",
-      "groupName":"advanced"
+      "groupName": "advanced"
     },
     {
       "name": "vsTestVersion",

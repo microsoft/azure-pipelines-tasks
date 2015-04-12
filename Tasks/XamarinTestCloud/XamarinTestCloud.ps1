@@ -89,9 +89,9 @@ if ("none" -ne $parallelization)
 }
 
 # Ensure that $testCloudLocation specifies test-cloud.exe
-if (!$testCloudLocation.EndsWith("\\test-cloud.exe", "OrdinalIgnoreCase")
+if (!$testCloudLocation.EndsWith("test-cloud.exe", "OrdinalIgnoreCase"))
 {
-    throw "test-cloud.exe location must end with '\\test-cloud.exe'."
+    throw "test-cloud.exe location must end with 'test-cloud.exe'."
 }
 
 # locate the test-cloud tool, it is part of the Xamarin.UITest NuGet package

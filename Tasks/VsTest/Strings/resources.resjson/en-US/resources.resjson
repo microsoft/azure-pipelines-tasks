@@ -9,10 +9,10 @@
   "loc.input.label.testFiltercriteria": "Test Filter criteria",
   "loc.input.label.platform": "Platform",
   "loc.input.label.configuration": "Configuration",
-  "loc.input.label.overrideTestrunParameters": "Override TestRun Parameters",
   "loc.input.label.runSettingsFile": "Run Settings File",
+  "loc.input.label.overrideTestrunParameters": "Override TestRun Parameters",
   "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
-  "loc.input.label.otherConsoleOptions": "Other console options",
   "loc.input.label.vsTestVersion": "VSTest version",
-  "loc.input.label.pathtoCustomTestAdapters": "Path to Custom Test Adapters"
+  "loc.input.label.pathtoCustomTestAdapters": "Path to Custom Test Adapters",
+  "loc.input.label.otherConsoleOptions": "Other console options"
 }
