@@ -204,6 +204,16 @@ function Set-TestAgentConfiguration
         $yesno = GetBoolAsYesNo($EnableAutoLogon)
         $configArgs = $configArgs + ("/enableAutoLogon:{0}" -f $yesno)
     }
+  
+    if ($PSBoundParameters.ContainsKey('DisableScreenSaver'))
+    {
+        if (-not $configAsProcess)
+        {
+            throw "DisableScreenSaver option is not valid for configureAsService."
+        }
+        $yesno = GetBoolAsYesNo($DisableScreenSaver)
+        $configArgs = $configArgs + ("/disableScreenSaver:{0}" -f $yesno)
+    }
     
     if (-not [string]::IsNullOrWhiteSpace($EnvironmentUrl))
     {
