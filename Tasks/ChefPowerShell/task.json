@@ -1,0 +1,52 @@
+﻿{
+    "id": "C7B7CCF9-D6E0-472B-97BB-06B6E43504F3",
+    "name": "ChefPowerShell",
+    "friendlyName": "Chef PowerShell",
+    "description": "Run a PowerShell script within an Chef environment",
+    "category": "Deploy",
+    "visibility": [
+                "Preview",
+                "Build",
+                "Release"
+                  ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:Chef",
+            "label": "Chef Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Chef subscription to configure before running PowerShell"
+        },
+        {
+            "name": "ScriptPath",
+            "type": "filePath",
+            "label": "Script Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Relative path from the repo root of the script to run."
+        },
+        {
+            "name": "ScriptArguments",
+            "type": "string",
+            "label": "Script Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+        }
+    ],
+    "instanceNameFormat": "Chef PowerShell script: $(ScriptPath)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\ChefPowerShell.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
