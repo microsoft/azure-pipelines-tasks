@@ -13,7 +13,7 @@ param
 
 Write-Host "Entering script ChefPowerShell.ps1"
 
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Chef"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 
 #ENSURE: We pass arguments verbatim on the command line to the custom script
 Write-Host "ScriptArguments= " $ScriptArguments
