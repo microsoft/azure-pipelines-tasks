@@ -1,0 +1,10 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Chef Knife",
+  "loc.description": "Run (Knife + PowerShell) scripts on your chef workstation",
+  "loc.input.label.ConnectedServiceName": "Chef Subscription",
+  "loc.input.label.ScriptPath": "Script Path",
+  "loc.input.label.ScriptArguments": "Script Arguments"
+}
