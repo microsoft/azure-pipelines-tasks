@@ -147,7 +147,7 @@ try
 	#setting error action preference
 	$ErrorActionPreference = "Stop"
     
-    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Chef"
+    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 
     #fetching chef subscription details
     $connectedServiceDetails = Get-ConnectedServiceDetails -Context $distributedTaskContext -ConnectedServiceName $connectedServiceName
