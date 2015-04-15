@@ -11,7 +11,7 @@ param
     $ScriptArguments
 )
 
-Write-Host "Entering script ChefPowerShell.ps1"
+Write-Host "Entering script ChefKnife.ps1"
 
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 
@@ -41,4 +41,4 @@ finally
     }
 }
 
-Write-Host "Leaving script ChefPowerShell.ps1"
+Write-Host "Leaving script ChefKnife.ps1"
