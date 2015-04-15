@@ -13,7 +13,7 @@ param
 
 Write-Host "Entering script ChefPowerShell.ps1"
 
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Chef"
 
 #ENSURE: We pass arguments verbatim on the command line to the custom script
 Write-Host "ScriptArguments= " $ScriptArguments
@@ -24,7 +24,10 @@ Write-Host "scriptCommand=" $scriptCommand
 
 try
 {
-    Setup-ChefRepo $connectedServiceName
+    #fetching chef subscription details 
+    $connectedServiceDetails = Get-ConnectedServiceDetails -Context $distributedTaskContext -ConnectedServiceName $connectedServiceName
+    #setting up chef repo with the chef subscription details fetched before 
+    Setup-ChefRepo $connectedServiceDetails 
     Invoke-Expression -Command $scriptCommand
 }
 finally
