@@ -1,0 +1,10 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Chef PowerShell",
+  "loc.description": "Run a PowerShell script within an Chef environment",
+  "loc.input.label.ConnectedServiceName": "Chef Subscription",
+  "loc.input.label.ScriptPath": "Script Path",
+  "loc.input.label.ScriptArguments": "Script Arguments"
+}
