@@ -1,6 +1,6 @@
 ﻿{
-    "id": "95A74903-F93F-4075-884F-DC11F34058B4",
-    "name": "DeployAzureResourceGroup2",
+    "id": "94A74903-F93F-4075-884F-DC11F34058B4",
+    "name": "DeployAzureResourceGroup",
     "friendlyName": "Deploy Azure Resource Group",
     "description": "Provision and Deploy an Azure resource group using CSM",
     "category": "Deploy",
