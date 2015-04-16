@@ -1,6 +1,6 @@
 ﻿{
-    "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-    "name": "DeployAzureResourceGroup",
+    "id": "95A74903-F93F-4075-884F-DC11F34058B4",
+    "name": "DeployAzureResourceGroup2",
     "friendlyName": "Deploy Azure Resource Group",
     "description": "Provision and Deploy an Azure resource group using CSM",
     "category": "Deploy",
@@ -13,11 +13,18 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0,
+        "Patch": 5,
         "IsTest": false
     },
     "demands": [
         "azureps"
+    ],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
     ],
     "inputs": [
         {
@@ -43,7 +50,7 @@
         {
             "name": "resourceGroupName", 
             "type": "string", 
-            "label": "Environment",
+            "label": "Resouce Group",
             "required": true,
             "helpMarkDown": "Name of the resource group in which deployment will be created"
         },
@@ -53,23 +60,24 @@
             "label": "Deployment Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Source control path for the CSM file backing this deployment"
+            "helpMarkDown": "Specify the path for the CSM template. This path should be accessible to the agent machine."
         },
-        { 
-            "name": "csmParametersFile", 
-            "type": "filePath", 
-            "label": "Deployment Template Parameters", 
-            "defaultValue":"",
+        {
+            "name": "csmParametersFile",
+            "type": "filePath",
+            "label": "Deployment Template Parameters",
+            "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Source control path for the parameters file for the selected CSM template"
+            "helpMarkDown": "Specify the path for the paramters corresponding to the template."
         },
         {
             "name": "dscDeployment",
             "type": "boolean",
-            "label": "DSC Deployment",
+            "label": "Generate SAS token",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "Check the box if the deployment definition template involves DSC extensions. If the DSC module URL is public provide the URL as a template parameter and leave the below boxes empty"
+            "groupName": "advanced",
+            "helpMarkDown": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly."
         },
         {
             "name": "moduleUrlParameterName",
@@ -77,15 +85,17 @@
             "label": "DSC Module Url Parameter Name",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Name of the parameter corresponding to the Azure blob url of the uploaded DSC module",
+            "groupName": "advanced",
+            "helpMarkDown": "Name of the parameter corresponding to the Azure blob.",
             "visibleRule": "dscDeployment = true"
         },
         {
             "name": "sasTokenParameterName",
             "type": "string",
-            "label": "SAS Token Parameter Name",
+            "label": "Name of the SAS token parameter.",
             "defaultValue": "",
             "required": false,
+            "groupName": "advanced",
             "helpMarkDown": "Name of the SAS token parameter.",
             "visibleRule": "dscDeployment = true"
         }

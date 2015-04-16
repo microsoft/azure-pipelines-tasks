@@ -5,37 +5,39 @@ function Create-AzureResourceGroup
           [string]$resourceGroupName,
           [string]$location)
     
-    $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+    if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false -and [string]::IsNullOrEmpty($storageAccount) -eq $false)
+    {
+        $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
     
-    if(!$azureResourceGroup)    
-    {
-        Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
+        if(!$azureResourceGroup)    
+        {
+            Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
 
-        $resourceGroup  = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+            $resourceGroup  = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
 
-        Write-Verbose -Verbose "Created resource group $resourceGroup"
+            Write-Verbose -Verbose "Created resource group $resourceGroup"
 
+        }
+
+        $startTime = Get-Date
+        $startTime = $startTime.ToUniversalTime()
+        Set-Variable -Name startTime -Value $startTime -Scope "Global"
+
+        if (!$csmParametersObject)
+        {
+            $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -Verbose -ErrorAction Stop
+        }
+        else
+        {
+            $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -TemplateParameterObject $csmParametersObject -Verbose -ErrorAction Stop
+        }
+
+        Set-Variable -Name azureResourceGroupDeployment -Value $azureResourceGroupDeployment -Scope "Global"
+
+        Write-Verbose -Verbose "Created resource group deployment with name $resourceGroupName"
+
+        return $azureResourceGroupDeployment
     }
-
-    $startTime = Get-Date
-    $startTime = $startTime.ToUniversalTime()
-    Set-Variable -Name startTime -Value $startTime -Scope "Global"
-
-    if (!$csmParametersObject)
-    {
-        $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -Verbose -ErrorAction Stop
-    }
-    else
-    {
-        $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -TemplateParameterObject $csmParametersObject -Verbose -ErrorAction Stop
-    }
-
-    Set-Variable -Name azureResourceGroupDeployment -Value $azureResourceGroupDeployment -Scope "Global"
-
-    Write-Verbose -Verbose "Created resource group deployment with name $resourceGroupName"
-
-    return $azureResourceGroupDeployment
-    
 }
 
 function Get-SubscriptionInformation
@@ -88,7 +90,7 @@ function Get-Resources
                 $propertyBag.Add($resourceProperty.Key, $property)
             }
 
-            $environmentResource.PropertyBag.AddOrUpdateProperties($propertyBag)
+            $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
             $resources.Add($environmentResource)
             
@@ -130,25 +132,27 @@ function Refresh-SASToken
 {
     param([string]$moduleUrlParameterName,
     [string]$sasTokenParameterName,
-    [System.Collections.Hashtable]$csmParametersObject)
+    [System.Collections.Hashtable]$csmParametersObject,
+    [string]$subscriptionId,
+    [string]$dscDeployment)
 
     if ($dscDeployment -eq "true")
     {
         if ($csmParametersObject.ContainsKey($sasTokenParameterName) -eq $false)
         {
-            Write-Error -Message "$sasTokenParameterName is not present in the csm parameter file. Specify correct parameter name" -Category InvalidArgument
+            Throw "$sasTokenParameterName is not present in the csm parameter file. Specify correct parameter name"
         }
 
         if ($csmParametersObject.ContainsKey($moduleUrlParameterName) -eq $false)
         {
-            Write-Error -Message "$moduleUrlParameterName is not present in the csm parameter file. Specify correct parameter name" -Category InvalidArgument
+            Throw "$moduleUrlParameterName is not present in the csm parameter file. Specify correct parameter name"
         }
 
         $fullBlobUri = $csmParametersObject[$moduleUrlParameterName]
-		$uri = $fullBlobUri -as [System.URI]
+        $uri = $fullBlobUri -as [System.URI]
         if (($uri.AbsoluteURI -ne $null -And $uri.Scheme -match '[http|https]') -eq $false)
         {
-            Write-Error -Message "$moduleUrlParameterName $fullBlobUri is not in the correct url format" -Category InvalidData
+            Throw "$moduleUrlParameterName $fullBlobUri is not in the correct url format"
         }
 
         Write-Verbose "Generating SAS token for $fullBlobUri" -Verbose
@@ -180,7 +184,7 @@ function Refresh-SASToken
             $storageAccountName = $fullBlobUri.Substring($fullBlobUri.IndexOf("//") + 2)
         }
 
-        Set-AzureSubscription -SubscriptionId $ConnectedServiceName -CurrentStorageAccountName $storageAccountName
+        Set-AzureSubscription -SubscriptionId $subscriptionId -CurrentStorageAccountName $storageAccountName
 
         $token  = New-AzureStorageBlobSASToken -Container $containerName -Blob $blobName -Permission r -StartTime $startTime -ExpiryTime $endTime -Verbose -ErrorAction Stop
 
