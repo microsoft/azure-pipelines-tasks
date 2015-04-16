@@ -1,62 +1,53 @@
 function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arguments)
 {
+    Write-Verbose -Message ("Installing test agent.") -verbose
+
+	$creds = New-Object System.Management.Automation.PSCredential -ArgumentList $UserName, (ConvertTo-SecureString -String $Password -AsPlainText -Force)
+
+	# Invoke the TA installation
+	Write-Verbose -Message ("Invoking the command {0} with arguments {1}" -f $SetupPath, $Arguments) -verbose
+
+	try
+	{
+		$argumentsarr = $Arguments -split " "
+		$exitCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ComputerName . -Credential $creds -ErrorAction Stop
+	}
+	catch
+	{
+		Write-Warning -Verbose "Caught exception while installing Test Agent"
+		throw $_.Exception
+	}
+
+	if(-not ($exitCode -eq 0 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641))
+	{
+		throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
+	}
+
+	if($exitCode -eq 3010 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641)
+	{
+		# check if the key is not already present. Else set the key
+		if(-not ((Get-ItemProperty 'hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\').PendingFileRenameOperations.Length -gt 0))
+		{
+			# todo: Check with Pavan if this is ok
+			Write-Verbose -Message "Reboot key does not exist. Adding it." -verbose
+			Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name "PendingFileRenameOperations" -Value true -EA Ignore
+		}
+	}
+
 	$InstalledCheckRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testagentcore" -f $ProductVersion)
 	$InstalledCheckRegValueName = "Install"
 	$InstalledCheckRegValueData = "1"
 
+	# Verify the TA registry entry
 	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName -InstalledCheckRegValueData $InstalledCheckRegValueData
 
 	if($isProductExists)
 	{
-		Write-Verbose -Message ("Test Agent already exists") -verbose
+		Write-Verbose "Test Agent installed successfully" -Verbose
 	}
 	else
 	{
-		Write-Verbose -Message ("Test Agent does not exists. Installing it.") -verbose
-
-		$creds = New-Object System.Management.Automation.PSCredential -ArgumentList $UserName, (ConvertTo-SecureString -String $Password -AsPlainText -Force)
-
-		# Invoke the TA installation
-		Write-Verbose -Message ("Invoking the command {0} with arguments {1}" -f $SetupPath, $Arguments) -verbose
-
-		try
-		{
-			$argumentsarr = $Arguments -split " "
-			$exitCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ComputerName . -Credential $creds -ErrorAction Stop
-		}
-		catch
-		{
-			Write-Warning -Verbose "Caught exception while installing Test Agent"
-			throw $_.Exception
-		}
-
-		if(-not ($exitCode -eq 0 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641))
-		{
-			throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
-		}
-
-		if($exitCode -eq 3010 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641)
-		{
-		    # check if the key is not already present. Else set the key
-			if(-not ((Get-ItemProperty 'hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\').PendingFileRenameOperations.Length -gt 0))
-			{
-				# todo: Check with Pavan if this is ok
-				Write-Verbose -Message "Reboot key does not exist. Adding it." -verbose
-				Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name "PendingFileRenameOperations" -Value true -EA Ignore
-			}
-		}
-
-		# Verify the TA registry entry
-		$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName -InstalledCheckRegValueData $InstalledCheckRegValueData
-
-		if($isProductExists)
-		{
-			Write-Verbose "Test Agent installed successfully" -Verbose
-		}
-		else
-		{
-			throw "Look up in registry failed. Test agent failed to install."
-		}
+		throw "Look up in registry failed. Test agent failed to install."
 	}
 }
 
