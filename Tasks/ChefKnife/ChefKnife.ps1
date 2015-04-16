@@ -19,7 +19,7 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 Write-Host "ScriptArguments= " $ScriptArguments
 Write-Host "ScriptPath= " $ScriptPath
 
-$scriptCommand = "$ScriptPath $scriptArguments"
+$scriptCommand = "& `"$ScriptPath`" $scriptArguments"
 Write-Host "scriptCommand=" $scriptCommand
 
 try
