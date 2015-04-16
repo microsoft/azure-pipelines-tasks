@@ -574,7 +574,7 @@ function SetRebootKey
 	{
 		# todo: Check with Pavan if this is ok
 	    Write-Verbose -Message "Reboot key does not exist. Adding it." -verbose
-	    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name "PendingFileRenameOperations" -Value true -EA Ignore
+	    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name "PendingFileRenameOperations" -Value true -EA SilentlyContinue
 	}
 }
 
