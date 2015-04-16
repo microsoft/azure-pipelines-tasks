@@ -1,6 +1,10 @@
 function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arguments)
 {
-    Write-Verbose -Message ("Installing test agent.") -verbose
+	$InstalledCheckRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testagentcore" -f $ProductVersion)
+	$InstalledCheckRegValueName = "Install"
+	$InstalledCheckRegValueData = "1"
+	
+	Write-Verbose -Message ("Installing test agent.") -verbose
 
 	$creds = New-Object System.Management.Automation.PSCredential -ArgumentList $UserName, (ConvertTo-SecureString -String $Password -AsPlainText -Force)
 
@@ -33,10 +37,6 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 			Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name "PendingFileRenameOperations" -Value true -EA Ignore
 		}
 	}
-
-	$InstalledCheckRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testagentcore" -f $ProductVersion)
-	$InstalledCheckRegValueName = "Install"
-	$InstalledCheckRegValueData = "1"
 
 	# Verify the TA registry entry
 	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName -InstalledCheckRegValueData $InstalledCheckRegValueData
