@@ -2,7 +2,7 @@
     "id": "C7B7CCF9-D6E0-472B-97BB-06B6E43504F3",
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",
-    "description": "Run (Knife + PowerShell) scripts on your chef workstation",
+    "description": "Run Scripts with knife commands on your chef workstation",
     "category": "Deploy",
     "visibility": [
                 "Preview",
@@ -22,7 +22,7 @@
             "label": "Chef Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Chef subscription to configure before running PowerShell"
+            "helpMarkDown": "Chef subscription to configure before running knife commands"
         },
         {
             "name": "ScriptPath",
@@ -30,7 +30,7 @@
             "label": "Script Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from the repo root of the script to run."
+            "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory."
         },
         {
             "name": "ScriptArguments",
@@ -38,7 +38,7 @@
             "label": "Script Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+            "helpMarkDown": "Additional parameters to pass to Script.  Can be either ordinal or named parameters."
         }
     ],
     "instanceNameFormat": "Chef Knife script: $(ScriptPath)",
