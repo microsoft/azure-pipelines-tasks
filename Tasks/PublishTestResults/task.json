@@ -30,7 +30,7 @@
       "options": {
           "JUnit":"JUnit",
           "VSTest":"VSTest",
-          "NUnit": "NUnit"
+          "NUnit":"NUnit"
         }
     },
     {
