@@ -54,7 +54,10 @@ if($testAssemblyFiles)
     Invoke-VSTest -TestAssemblies $testAssemblyFiles -Timeline $timeline -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $cwd -TestResultsFolder $testResultsDir
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDir
-    Invoke-ResultPublisher -Connection $connection -ProjectName $projectName -Owner $owner -ResultFiles $resultFiles -ResultType "Trx" -BuildUri $buildUri -BuildNumber $buildNumber -Platform $platform -Configuration $configuration
+    if($connection)
+    {
+        Invoke-ResultPublisher -Connection $connection -ProjectName $projectName -Owner $owner -ResultFiles $resultFiles -ResultType "Trx" -BuildUri $buildUri -BuildNumber $buildNumber -Platform $platform -Configuration $configuration
+    }
 }
 else
 {
