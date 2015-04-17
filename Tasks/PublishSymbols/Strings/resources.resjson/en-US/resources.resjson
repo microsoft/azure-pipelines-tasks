@@ -1,0 +1,15 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Index Sources & Publish Symbols",
+  "loc.description": "Index your source code and publish symbols to a file share",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.SymbolsPath": "Path to publish symbols",
+  "loc.input.label.SearchPattern": "Search Pattern",
+  "loc.input.label.SymbolsFolder": "Path to symbols folder",
+  "loc.input.label.SourceFolder": "Path to source folder",
+  "loc.input.label.SymbolsMaximumWaitTime": "Max Wait Time (min)",
+  "loc.input.label.SymbolsProduct": "Product",
+  "loc.input.label.SymbolsVersion": "Version"
+}

@@ -1,8 +1,0 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
-{
-  "loc.friendlyName": "Publish Symbols (UNC)",
-  "loc.description": "Publish symbols to a UNC share",
-  "loc.input.label.UncPath": "UNC Path"
-}
