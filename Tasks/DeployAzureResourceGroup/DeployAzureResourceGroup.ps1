@@ -61,7 +61,7 @@ $providerDataNames.Add($providerData.Name)
 
 $environmentResources = Get-Resources -resourceGroupName $resourceGroupName
 
-$environment = Create-Environment -environmentName $resourceGroupName -environmentType "Azure CSM V2" -environmentStatus $resourceGroupDeployment.ProvisioningState -providerName $provider.ProviderName -providerDataNames $providerDataNames -environmentDefinitionName $environmentDefinition.Name -resources $environmentResources
+$environment = Create-Environment -environmentName $resourceGroupName -environmentType "Azure CSM V2" -environmentStatus $resourceGroupDeployment.ProvisioningState -providerName $provider.Name -providerDataNames $providerDataNames -environmentDefinitionName $environmentDefinition.Name -resources $environmentResources
 
 $environmentOperationId = Create-EnvironmentOperation -environment $environment
 
