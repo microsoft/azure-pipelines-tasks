@@ -3,7 +3,17 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 	$InstalledCheckRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testagentcore" -f $ProductVersion)
 	$InstalledCheckRegValueName = "Install"
 	$InstalledCheckRegValueData = "1"
-	
+
+	# Check if testagent is present on the machine
+	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName -InstalledCheckRegValueData $InstalledCheckRegValueData
+	$testAgentFileExists = Test-Path "$env:SystemDrive\TestAgent\testagent"
+
+	if ($testAgentFileExists -and $isProductExists)
+	{
+		Write-Verbose -Message ("Test agent already installed.") -verbose
+		return
+	}
+
 	Write-Verbose -Message ("Installing test agent.") -verbose
 
 	$creds = New-Object System.Management.Automation.PSCredential -ArgumentList $UserName, (ConvertTo-SecureString -String $Password -AsPlainText -Force)
@@ -44,6 +54,8 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 	if($isProductExists)
 	{
 		Write-Verbose "Test Agent installed successfully" -Verbose
+		#creating testagent file to indicate testagent installed successfully
+		New-Item -Path "$env:SystemDrive\TestAgent\testagent" -type File
 	}
 	else
 	{
