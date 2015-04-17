@@ -43,19 +43,19 @@ if($testAssemblyFiles)
 {
     Write-Verbose "Calling Invoke-VSTest for all test assemblies"
     $timeline = Start-Timeline -Context $distributedTaskContext
-    $projectName = Get-Variable -Context $distributedTaskContext -Name "System.TeamProject"
     $buildDir = Get-Variable -Context $distributedTaskContext -Name "Agent.BuildDirectory" -Global $FALSE
-    $buildNumber = Get-Variable -Context $distributedTaskContext -Name "Build.BuildId"
-    $buildUri = Get-Variable -Context $distributedTaskContext -Name "Build.BuildUri"
-    $owner = Get-Variable -Context $distributedTaskContext -Name "Build.RequestedFor"	
     $cwd = $buildDir
     $testResultsDir = $buildDir+"\"+"TestResults"
     Write-Verbose "Calling Invoke-VSTest from working folder: $cwd"
     Invoke-VSTest -TestAssemblies $testAssemblyFiles -Timeline $timeline -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $cwd -TestResultsFolder $testResultsDir
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
-    $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDir
     if($connection)
     {
+        $projectName = Get-Variable -Context $distributedTaskContext -Name "System.TeamProject"
+        $owner = Get-Variable -Context $distributedTaskContext -Name "Build.RequestedFor"	
+        $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDir
+        $buildUri = Get-Variable -Context $distributedTaskContext -Name "Build.BuildUri"
+        $buildNumber = Get-Variable -Context $distributedTaskContext -Name "Build.BuildId"
         Invoke-ResultPublisher -Connection $connection -ProjectName $projectName -Owner $owner -ResultFiles $resultFiles -ResultType "Trx" -BuildUri $buildUri -BuildNumber $buildNumber -Platform $platform -Configuration $configuration
     }
 }
