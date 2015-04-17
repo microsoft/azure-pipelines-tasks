@@ -51,7 +51,7 @@
             "name": "resourceGroupName", 
             "type": "string", 
             "label": "Resouce Group",
-            "required": true,
+            "required": true
         },
         { 
             "name": "csmFile", 
