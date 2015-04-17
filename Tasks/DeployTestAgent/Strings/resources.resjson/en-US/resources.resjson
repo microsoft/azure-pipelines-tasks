@@ -14,5 +14,6 @@
   "loc.input.label.runAsProcess": "Run Test Agent as interactive process to execute UI Tests",
   "loc.input.label.machineUserName": "Username",
   "loc.input.label.machinePassword": "Password",
-  "loc.input.label.agentLocation": "Test Agent Location"
+  "loc.input.label.agentLocation": "Test Agent Location",
+  "loc.input.label.updateTestAgent": "Update Test Agent"
 }

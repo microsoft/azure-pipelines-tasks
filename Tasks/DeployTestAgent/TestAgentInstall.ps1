@@ -5,14 +5,16 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 	$InstalledCheckRegValueData = "1"
 
 	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName -InstalledCheckRegValueData $InstalledCheckRegValueData
+        $testAgentFileExists = Test-Path "$env:SystemDrive\TestAgent\testagent"
 
-	if($isProductExists)
+	if($testAgentFileExists -and $isProductExists)
 	{
+	    # Bug 266057 remove the logic of testagent file creation. Remove the if check, always install testagent.
 		Write-Verbose -Message ("Test Agent already exists") -verbose
 	}
 	else
 	{
-		Write-Verbose -Message ("Test Agent does not exists. Installing it.") -verbose
+		Write-Verbose -Message ("Installing/Updating Test Agent.") -verbose
 
 		$creds = New-Object System.Management.Automation.PSCredential -ArgumentList $UserName, (ConvertTo-SecureString -String $Password -AsPlainText -Force)
 
@@ -52,7 +54,9 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 		if($isProductExists)
 		{
 			Write-Verbose "Test Agent installed successfully" -Verbose
-		}
+                        #creating testagent file to indicate testagent installed successfully
+             		New-Item -Path "$env:SystemDrive\TestAgent\testagent" -type File
+   		}
 		else
 		{
 			throw "Look up in registry failed. Test agent failed to install."
