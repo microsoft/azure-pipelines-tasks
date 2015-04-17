@@ -15,5 +15,5 @@
   "loc.input.label.machineUserName": "Username",
   "loc.input.label.machinePassword": "Password",
   "loc.input.label.agentLocation": "Test Agent Location",
-  "loc.input.label.updateTestAgent": "Update test agent"
+  "loc.input.label.updateTestAgent": "Update Test Agent"
 }

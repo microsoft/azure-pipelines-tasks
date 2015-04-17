@@ -112,10 +112,10 @@
         {
             "name": "updateTestAgent",
             "type": "boolean",
-            "label": "Update test agent",
+            "label": "Update Test Agent",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "Denotes if test agent needs to be updated.",
+            "helpMarkDown": "Optionally specify if test agent needs to be updated.",
             "groupName": "advanced"
         }
     ],

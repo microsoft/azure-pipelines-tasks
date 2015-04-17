@@ -116,7 +116,7 @@
       "label": "ms-resource:loc.input.label.updateTestAgent",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "Denotes if test agent needs to be updated.",
+      "helpMarkDown": "Optionally specify if test agent needs to be updated.",
       "groupName": "advanced"
     }
   ],

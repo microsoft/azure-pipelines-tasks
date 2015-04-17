@@ -9,6 +9,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 
 	if($testAgentFileExists -and $isProductExists)
 	{
+	    # Bug 266057 remove the logic of testagent file creation. Remove the if check, always install testagent.
 		Write-Verbose -Message ("Test Agent already exists") -verbose
 	}
 	else
