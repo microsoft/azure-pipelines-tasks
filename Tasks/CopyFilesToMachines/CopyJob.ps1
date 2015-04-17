@@ -21,7 +21,7 @@ param (
     Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
     }
 
-   $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $fqdn -EnvironmentOperationId $envOperationId -ErrorAction Stop -Connection $connection
+   $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $fqdn -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 
    Write-Verbose "ResourceOperationId = $resOperationId for resource $fqdn" -Verbose
 
@@ -44,7 +44,7 @@ param (
     $resourceOperationLog = New-OperationLog -Content $log
     $logs.Add($resourceOperationLog)
 
-	Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -ErrorAction Stop -Connection $connection
+	Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
     
     Write-Output $copyResponse
 }

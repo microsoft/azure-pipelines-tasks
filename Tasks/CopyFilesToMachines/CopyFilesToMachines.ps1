@@ -41,13 +41,13 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-$resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -ErrorAction Stop -Connection $connection
+$resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
 
-$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -ErrorAction Stop -Connection $connection
+$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -Connection $connection -ErrorAction Stop
 
-$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -ErrorAction Stop -Connection $connection
+$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -Connection $connection -ErrorAction Stop
 
-$envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -ErrorAction Stop -Connection $connection
+$envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -Connection $connection -ErrorAction Stop
 
 Write-Verbose "envOperationId = $envOperationId" -Verbose
 $envOperationStatus = "Passed"
@@ -56,40 +56,14 @@ if($deployFilesInParallel -eq "false")
 {
     foreach($resource in $resources)
     {
-        $fdqn = $resource.Name
-        Write-Output "Copy will be Started for - $fdqn"
+        $machine = $resource.Name
+        Write-Output "Copy Started for - $machine"
 
-        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $fdqn -EnvironmentOperationId $envOperationId -ErrorAction Stop -Connection $connection
-        Write-Verbose "ResourceOperationId = $resOperationId for resource $fdqn" -Verbose
-
-        $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
-
-        Write-Verbose "Initiating copy on $fdqn, username: $machineUserName" -Verbose
-        Write-Output "Copy Started for  - $fdqn"
-
-        if($cleanTargetBeforeCopy -eq "true")
-        {
-            $copyResponse = Copy-FilesToTargetMachine -MachineDnsName $fdqn -SourcePath $sourcePath -DestinationPath $targetPath -Credential $credential -CleanTargetPath -SkipCACheck -UseHttp
-        }
-
-        else
-        {
-             $copyResponse = Copy-FilesToTargetMachine -MachineDnsName $fdqn -SourcePath $sourcePath -DestinationPath $targetPath -Credential $credential -SkipCACheck -UseHttp
-        }
-
-        $result = $copyResponse.DeploymentLog
+        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $environmentName, $envOperationId, $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy, $connection
+       
         $status = $copyResponse.Status
-
-        $logs = New-Object 'System.Collections.Generic.List[System.Object]'
-        $log = "Deployment Logs : " + $copyResponse.DeploymentLog + "`nService Logs : " + $copyResponse.ServiceLog             
-        $resourceOperationLog = New-OperationLog -Content $log
-        $logs.Add($resourceOperationLog)
-
-	    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -ErrorAction Stop -Connection $connection
-        
-        Output-ResponseLogs -operationName "copy" -fqdn $fdqn -deploymentResponse $copyResponse
-        Write-Output "Result for machine $fdqn : $result"
-        Write-Output "Copy Status for machine $fdqn : $status"
+        Output-ResponseLogs -operationName "copy" -fqdn $machine -deploymentResponse $copyResponse
+        Write-Output "Copy Status for machine $machine : $status"
 
         if($status -ne "Passed")
         {
@@ -106,14 +80,12 @@ else
     foreach($resource in $resources)
     {
         $machine = $resource.Name
-	
-        Write-Output "Copy will be Started for - $machine"
 
         $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $environmentName, $envOperationId, $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy, $connection
 
         $Jobs.Add($job.Id, $machine)
     
-        Write-Output "Copy Started for  - $machine"
+        Write-Output "Copy Started for - $machine"
     }
 
     While (Get-Job)
@@ -124,7 +96,7 @@ else
              if($job.State -ne "Running")
              {
                  $output = Receive-Job -Job $job
-                 $result = $output.DeploymentLog
+                 Remove-Job $Job
                  $status = $output.Status
 
                  if($status -ne "Passed")
@@ -135,15 +107,13 @@ else
                  $machineName = $Jobs.Item($job.Id)
 
                  Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
-                 Write-Output "Result for machine $machineName : $result"
                  Write-Output "Copy Status for machine $machineName : $status"
-                 Remove-Job $Job
               } 
         }
     }
 }
 
-Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -ErrorAction Stop -Connection $connection
+Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection -ErrorAction Stop
 
 if($envOperationStatus -ne "Passed")
 {

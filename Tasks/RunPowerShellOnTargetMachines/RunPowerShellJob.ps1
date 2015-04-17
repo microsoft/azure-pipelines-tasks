@@ -1,3 +1,4 @@
+
 $RunPowershellJob = {
 param (
     [string]$environmentName,
@@ -22,7 +23,7 @@ param (
     }
 
     
-    $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $fqdn -EnvironmentOperationId $envOperationId -ErrorAction Stop -Connection $connection
+    $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $fqdn -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 
     Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
     
@@ -38,7 +39,7 @@ param (
     $resourceOperationLog = New-OperationLog -Content $log
     $logs.Add($resourceOperationLog)
 
-    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $logs -ErrorAction Stop -Connection $connection
+    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $response.Status -ErrorMessage $response.Error -Logs $logs -Connection $connection -ErrorAction Stop
     
     Write-Output $response
 }
