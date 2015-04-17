@@ -14,7 +14,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 	}
 	else
 	{
-		Write-Verbose -Message ("Test Agent does not exists. Installing it.") -verbose
+		Write-Verbose -Message ("Installing/Updating Test Agent.") -verbose
 
 		$creds = New-Object System.Management.Automation.PSCredential -ArgumentList $UserName, (ConvertTo-SecureString -String $Password -AsPlainText -Force)
 
