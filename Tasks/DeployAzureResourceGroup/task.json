@@ -33,7 +33,7 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription to target for deployment."
+            "helpMarkDown": "Azure subscription under which the Resouce Group is deployed."
         },
         {
             "name": "location",
@@ -52,7 +52,6 @@
             "type": "string", 
             "label": "Resouce Group",
             "required": true,
-            "helpMarkDown": "Name of the resource group in which deployment will be created"
         },
         { 
             "name": "csmFile", 
@@ -82,7 +81,7 @@
         {
             "name": "moduleUrlParameterName",
             "type": "string",
-            "label": "DSC Module Url Parameter Name",
+            "label": "Azure blob parameter",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
@@ -92,7 +91,7 @@
         {
             "name": "sasTokenParameterName",
             "type": "string",
-            "label": "Name of the SAS token parameter.",
+            "label": "SAS Token Parameter Name",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
