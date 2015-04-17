@@ -56,7 +56,7 @@
         { 
             "name": "csmFile", 
             "type": "filePath", 
-            "label": "Deployment Template", 
+            "label": "Template", 
             "defaultValue":"",
             "required": true,
             "helpMarkDown": "Specify the path for the CSM template. This path should be accessible to the agent machine."
@@ -64,7 +64,7 @@
         {
             "name": "csmParametersFile",
             "type": "filePath",
-            "label": "Deployment Template Parameters",
+            "label": "Template Parameters",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the path for the paramters corresponding to the template."
@@ -81,7 +81,7 @@
         {
             "name": "moduleUrlParameterName",
             "type": "string",
-            "label": "Azure blob parameter",
+            "label": "Azure Blob Parameter",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
@@ -91,7 +91,7 @@
         {
             "name": "sasTokenParameterName",
             "type": "string",
-            "label": "SAS Token Parameter Name",
+            "label": "SAS Token Parameter",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
