@@ -17,7 +17,7 @@ Write-Host "Entering script RunAzurePowerShell.ps1"
 Write-Host "ScriptArguments= " $ScriptArguments
 Write-Host "ScriptPath= " $ScriptPath
 
-$scriptCommand = "$ScriptPath $scriptArguments"
+$scriptCommand = "& `"$ScriptPath`" $scriptArguments"
 Write-Host "scriptCommand=" $scriptCommand
 Invoke-Expression -Command $scriptCommand
 
