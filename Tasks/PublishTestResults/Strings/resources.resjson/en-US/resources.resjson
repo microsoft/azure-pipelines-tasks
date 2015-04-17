@@ -1,0 +1,12 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Publish Test Results",
+  "loc.description": "Publish Test Results to VSO/TFS",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.testRunner": "Test Result Format",
+  "loc.input.label.testResultsFiles": "Test Results Files",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration"
+}

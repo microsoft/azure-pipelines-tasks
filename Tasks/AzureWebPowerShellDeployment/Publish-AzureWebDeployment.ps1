@@ -51,12 +51,12 @@ $packageFile = Get-SingleFile $packageFile $Package
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)
 {
-    Write-Host "Get-AzureWebSite -Name `"$WebSiteName`" -ErrorAction SilentlyContinue"
-    $azureWebSite = Get-AzureWebSite -Name `"$WebSiteName`" -ErrorAction SilentlyContinue
+    Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue"
+    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue
     if(!$azureWebSite)
     {
-        Write-Host "New-AzureWebSite -Name `"$WebSiteName`" -Location $WebSiteLocation"
-        $azureWebSite = New-AzureWebSite -Name `"$WebSiteName`" -Location $WebSiteLocation
+        Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation"
+        $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation
     }
 }
 

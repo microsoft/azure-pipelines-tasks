@@ -1,8 +1,8 @@
 ﻿{
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
-    "name": "RunDistributedTests",
-    "friendlyName": "Run Tests using Test Agent",
-    "description": "Run tests distributedly using multiple test agents in a lab environment. This task is under Preview, please contact devops_tools@microsoft.com to enable this task fully on the backend for your account. Please refer http://aka.ms/ci_cd for additional guidance.",
+    "name": "RunVisualStudioTestsusingTestAgent",
+    "friendlyName": "Run Visual Studio Tests using Test Agent",
+    "description": "Run tests distributedly using multiple test agents in a lab machine group.",
     "category": "Test",
     "visibility": [
                 "Preview",
@@ -21,7 +21,7 @@
     "groups": [
         {
             "name": "testEnvironment",
-            "displayName": "Test Environment",
+            "displayName": "Test Machine Group",
             "isExpanded": true
         },
         {
@@ -34,29 +34,20 @@
         {
             "name": "environment",
             "type": "string",
-            "label": "Test Environment",
+            "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the environment on which tests need to be run.",
+            "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
             "groupName": "testEnvironment"
         },
         {
-            "name": "alternateCredsUserName",
+            "name": "dropLocation",
             "type": "string",
-            "label": "Alternate credentials Username",
+            "label": "Test Drop Location",
             "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
-            "groupName": "testEnvironment"
-        },
-        {
-            "name": "alternateCredsPassword",
-            "type": "string",
-            "label": "Alternate credentials Password",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
-            "groupName": "testEnvironment"
+            "required": true,
+            "helpMarkDown": "The location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+            "groupName": "testSettings"
         },
         {
             "name": "sourcefilters",
@@ -64,7 +55,7 @@
             "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll",
             "required": true,
-            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, `**\\*test*.dll;` for all dlls containing 'test' in their name.",
+            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, '**\\*test*.dll;' for all dlls containing 'test' in their name.",
             "groupName": "testSettings"
         },
         {
@@ -83,6 +74,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path to runsettings file to use with the tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder.",
+            "groupName": "testSettings"
+        },
+        {
+            "name": "overrideRunParams",
+            "type": "string",
+            "label": "Override TestRun Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
             "groupName": "testSettings"
         }
     ],

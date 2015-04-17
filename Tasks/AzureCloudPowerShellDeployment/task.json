@@ -28,7 +28,7 @@
     },
     {
       "name": "StorageAccount",
-      "type": "string",
+      "type": "pickList",
       "label": "Storage Account",
       "defaultValue": "",
       "required": true,
@@ -36,7 +36,7 @@
     },
     {
       "name": "ServiceName",
-      "type": "string",
+      "type": "pickList",
       "label": "Service Name",
       "defaultValue": "",
       "required": true
@@ -80,6 +80,20 @@
       "defaultValue": "true",
       "required": true
     }
+  ],
+  "sourceDefinitions": [
+    {
+        "target": "StorageAccount",
+        "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/storageservices",
+        "selector": "xpath://ServiceName",
+        "authKey": "{$ConnectedServiceName}"
+    },
+	{
+        "target": "ServiceName",
+        "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/hostedservices",
+        "selector": "xpath://ServiceName",
+        "authKey": "{$ConnectedServiceName}"
+	}
   ],
   "instanceNameFormat": "Azure Deployment: $(CsPkg)",
   "execution": {
