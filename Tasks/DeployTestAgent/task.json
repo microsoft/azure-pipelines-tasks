@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0,
+        "Patch": 1,
         "IsTest": false
     },
     "demands": [
@@ -108,6 +108,15 @@
             "required": false,
             "groupName": "advanced",
             "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkId=532768"
+        },
+        {
+            "name": "updateTestAgent",
+            "type": "boolean",
+            "label": "Update Test Agent",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Optionally specify if test agent needs to be updated.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",

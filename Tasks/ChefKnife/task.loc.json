@@ -1,0 +1,55 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "C7B7CCF9-D6E0-472B-97BB-06B6E43504F3",
+  "name": "ChefKnife",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Chef",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Chef subscription to configure before running knife commands"
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory."
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional parameters to pass to Script.  Can be either ordinal or named parameters."
+    }
+  ],
+  "instanceNameFormat": "Chef Knife script: $(ScriptPath)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\ChefKnife.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
