@@ -2,7 +2,7 @@
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "DeployAzureResourceGroup",
     "friendlyName": "Deploy Azure Resource Group",
-    "description": "Provision and Deploy an Azure resource group using CSM",
+    "description": "Provision and Deploy an Azure Resource Group",
     "category": "Deploy",
     "visibility": [
                 "Preview",
@@ -62,7 +62,7 @@
             "label": "Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Specify the path for the CSM template. This path should be accessible to the agent machine."
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template."
         },
         {
             "name": "csmParametersFile",

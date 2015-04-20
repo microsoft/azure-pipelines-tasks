@@ -65,7 +65,7 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify the path for the CSM template. This path should be accessible to the agent machine."
+      "helpMarkDown": "Specify the path to the Azure Resource Manager template."
     },
     {
       "name": "csmParametersFile",
