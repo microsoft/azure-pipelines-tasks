@@ -16,11 +16,18 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0,
+    "Patch": 5,
     "IsTest": false
   },
   "demands": [
     "azureps"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
   ],
   "inputs": [
     {
@@ -29,7 +36,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to target for deployment."
+      "helpMarkDown": "Azure subscription under which the Resouce Group is deployed."
     },
     {
       "name": "location",
@@ -47,8 +54,7 @@
       "name": "resourceGroupName",
       "type": "string",
       "label": "ms-resource:loc.input.label.resourceGroupName",
-      "required": true,
-      "helpMarkDown": "Name of the resource group in which deployment will be created"
+      "required": true
     },
     {
       "name": "csmFile",
@@ -56,7 +62,7 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Source control path for the CSM file backing this deployment"
+      "helpMarkDown": "Specify the path for the CSM template. This path should be accessible to the agent machine."
     },
     {
       "name": "csmParametersFile",
@@ -64,7 +70,7 @@
       "label": "ms-resource:loc.input.label.csmParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Source control path for the parameters file for the selected CSM template"
+      "helpMarkDown": "Specify the path for the paramters corresponding to the template."
     },
     {
       "name": "dscDeployment",
@@ -72,7 +78,8 @@
       "label": "ms-resource:loc.input.label.dscDeployment",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "Check the box if the deployment definition template involves DSC extensions. If the DSC module URL is public provide the URL as a template parameter and leave the below boxes empty"
+      "groupName": "advanced",
+      "helpMarkDown": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly."
     },
     {
       "name": "moduleUrlParameterName",
@@ -80,7 +87,8 @@
       "label": "ms-resource:loc.input.label.moduleUrlParameterName",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Name of the parameter corresponding to the Azure blob url of the uploaded DSC module",
+      "groupName": "advanced",
+      "helpMarkDown": "Name of the parameter corresponding to the Azure blob.",
       "visibleRule": "dscDeployment = true"
     },
     {
@@ -89,6 +97,7 @@
       "label": "ms-resource:loc.input.label.sasTokenParameterName",
       "defaultValue": "",
       "required": false,
+      "groupName": "advanced",
       "helpMarkDown": "Name of the SAS token parameter.",
       "visibleRule": "dscDeployment = true"
     }
