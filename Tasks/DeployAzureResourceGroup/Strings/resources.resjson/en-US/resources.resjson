@@ -7,7 +7,7 @@
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.label.location": "Location",
-  "loc.input.label.resourceGroupName": "Resouce Group",
+  "loc.input.label.resourceGroupName": "Resource Group",
   "loc.input.label.csmFile": "Template",
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.label.dscDeployment": "Generate SAS token",

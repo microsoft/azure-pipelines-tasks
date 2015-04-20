@@ -33,7 +33,7 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription under which the Resouce Group is deployed."
+            "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
         },
         {
             "name": "location",
@@ -44,13 +44,16 @@
             "helpMarkDown": "Location of the deployment",
             "options": {
                 "East US": "East US",
-                "West US": "West US"
+                "West US": "West US",
+                "West Europe": "West Europe",
+                "East Asia": "East Asia",
+                "Southeast Asia": "Southeast Asia"
             }
         },
         {
             "name": "resourceGroupName", 
             "type": "string", 
-            "label": "Resouce Group",
+            "label": "Resource Group",
             "required": true
         },
         { 
@@ -67,7 +70,7 @@
             "label": "Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the path for the paramters corresponding to the template."
+            "helpMarkDown": "Specify the path for the parameters corresponding to the template."
         },
         {
             "name": "dscDeployment",
