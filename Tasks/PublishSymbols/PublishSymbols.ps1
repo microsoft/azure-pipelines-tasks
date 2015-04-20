@@ -43,13 +43,13 @@ if (!$symbolsVersion)
 $maxWaitTime = $null
 if (!$symbolsMaximumWaitTime)
 {
-    $maxWaitTime = 4 * 60 * 60 * 1000 #4h in milliseconds
-    Write-Verbose "symbolsMaximumWaitTime not sent to script, using the default maxWaitTime of $maxWaitTime milliseconds"
+    $maxWaitTime = 2 * 60 * 60 * 1000 #2h in milliseconds
+    Write-Verbose "symbolsMaximumWaitTime not sent to script, using the default maxWaitTime of 2 hours"
 }
 elseif (![Int32]::TryParse($symbolsMaximumWaitTime, [ref] $maxWaitTime))
 {
-    $maxWaitTime = 4 * 60 * 60 * 1000 #4h in milliseconds
-    Write-Verbose "Could not parse symbolsMaximumWaitTime input, using the default maxWaitTime of $maxWaitTime milliseconds."
+    $maxWaitTime = 2 * 60 * 60 * 1000 #2h in milliseconds
+    Write-Verbose "Could not parse symbolsMaximumWaitTime input, using the default maxWaitTime of 2 hours"
 }
 else
 {
@@ -66,7 +66,7 @@ Write-Verbose "maxSemaphoreAge= $maxSemaphoreAge minutes"
 
 Write-Verbose "symbolsFolder= $symbolsFolder"
 
-$repositoryEndpoint = Get-Endpoint -Context $distributedTaskContext -Name $env:Build_Repository_Name
+$repositoryEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $env:Build_Repository_Name
 
 #The symbols search folder defaults to source folder.  Override if symbolsFolder is passed
 $symbolsSearchFolder = $sourceFolder
@@ -94,8 +94,8 @@ if ($symbolsPath)
     $semaphoreMessage = "Machine: $env:ComputerName, BuildUri: $env:Build_BuildUri, BuildNumber: $env:Build_BuildNumber, RepositoryName: $env:Build_Repository_Name, RepositoryUri: $env:Build_Repository_Uri, Team Project: $env:System_TeamProject, CollectionUri: $env:System_TeamFoundationCollectionUri at $utcNow UTC"
     Write-Verbose "semaphoreMessage= $semaphoreMessage"
 
-    Write-Host "Invoke-PublishSymbols -SymbolsFolder $symbolsSearchFolder -PdbFiles <pdbFiles> -Share $symbolsPath -Product $symbolsProduct -Version $symbolsVersion -MaximumWaitTime $maxWaitTime -MaximumSemaphoreAge $maxSemaphoreAge"
-    Invoke-PublishSymbols -SymbolsFolder $symbolsSearchFolder -PdbFiles $pdbFiles -Share $symbolsPath -Product $symbolsProduct -Version $symbolsVersion -MaximumWaitTime $maxWaitTime -MaximumSemaphoreAge $maxSemaphoreAge -SemaphoreMessage $semaphoreMessage
+    Write-Host "Invoke-PublishSymbols -PdbFiles <pdbFiles> -Share $symbolsPath -Product $symbolsProduct -Version $symbolsVersion -MaximumWaitTime $maxWaitTime -MaximumSemaphoreAge $maxSemaphoreAge"
+    Invoke-PublishSymbols -PdbFiles $pdbFiles -Share $symbolsPath -Product $symbolsProduct -Version $symbolsVersion -MaximumWaitTime $maxWaitTime -MaximumSemaphoreAge $maxSemaphoreAge -SemaphoreMessage $semaphoreMessage
 }
 else
 {

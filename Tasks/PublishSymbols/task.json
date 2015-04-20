@@ -8,7 +8,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 30
+        "Patch": 0
     },
     "groups": [
         {
@@ -36,21 +36,21 @@
             "groupName": "advanced"
         },
         {
-            "name": "SymbolsFolder",
-            "type": "string",
-            "label": "Path to symbols folder",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder.",
-            "groupName": "advanced"
-        },
-        {
             "name": "SourceFolder",
             "type": "filePath",
             "label": "Path to source folder",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The path to the source folder that is searched for symbol files.  The default is $(Build.SourcesDirectory)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "SymbolsFolder",
+            "type": "string",
+            "label": "Path to symbols folder",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder.",
             "groupName": "advanced"
         },
         {
