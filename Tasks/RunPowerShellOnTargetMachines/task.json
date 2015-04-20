@@ -16,6 +16,13 @@
         "Patch": 0,
         "IsTest": false
     },
+   "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
     "inputs": [
         {
             "name": "EnvironmentName",
@@ -32,22 +39,6 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally provide a comma separated list of machines to deploy the application to. It defaults to all the machines in the Machine Group. For example, BudgetIT-Web01, BudgetIT-Web02."
-        },
-        {
-            "name": "SourcePackage",
-            "type": "string",
-            "label": "Source",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Location of the application binaries. Should be fully qualified path or relative to the default working directory." 
-        },
-        {
-            "name": "ApplicationPath",
-            "type": "string",
-            "label": "Destination",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Local Path on the target machines for copying the binaries from the source. For example, C:\\BudgetIT\\Web." 
         },
         {
             "name": "ScriptPath",
@@ -71,7 +62,16 @@
             "label": "Initialization Script",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally provide location of the PowerShell initialization script (data script for DSC) on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1" 
+            "helpMarkDown": "Optionally provide location of the PowerShell initialization script (data script for DSC) on the target machines or on a UNC path. For example, C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1"
+        },
+        {
+            "name": "RunPowershellInParallel",
+            "type": "boolean",
+            "label": "Run Powershell Parallely",
+            "defaultValue": "true",
+            "required": false,
+            "groupName":"advanced",
+            "helpMarkDown": "Setting it to true will run powershell parellely on the machines."
         }
     ],
     "instanceNameFormat": "Run PowerShell on Machine Group $(EnvironmentName)",

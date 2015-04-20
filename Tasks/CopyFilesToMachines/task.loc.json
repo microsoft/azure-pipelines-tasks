@@ -75,22 +75,6 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "Setting it to true will copying files parellely on the machines."
-    },
-    {
-      "name": "AlternateCredentialsUsername",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AlternateCredentialsUsername",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Username of the alternate credentials required to connect to the VSO service; Not required for TFS OnPrem. See http://aka.ms/ALTCREDENTIALS for more information."
-    },
-    {
-      "name": "AlternateCredentialsPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AlternateCredentialsPassword",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Password of the alternate credentials required to connect to the VSO service; Not required for TFS OnPrem. See http://aka.ms/ALTCREDENTIALS for more information."
     }
   ],
   "instanceNameFormat": "Copy files on machine group $(EnvironmentName)",

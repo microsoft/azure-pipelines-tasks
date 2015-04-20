@@ -4,11 +4,11 @@
 {
   "loc.friendlyName": "Run PowerShell on Target Machines",
   "loc.description": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s).",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.EnvironmentName": "Machine Group",
   "loc.input.label.MachineNames": "Deploy to Machines",
-  "loc.input.label.SourcePackage": "Source",
-  "loc.input.label.ApplicationPath": "Destination",
   "loc.input.label.ScriptPath": "PowerShell Script",
   "loc.input.label.ScriptArguments": "Script Arguments",
-  "loc.input.label.InitializationScriptPath": "Initialization Script"
+  "loc.input.label.InitializationScriptPath": "Initialization Script",
+  "loc.input.label.RunPowershellInParallel": "Run Powershell Parallely"
 }

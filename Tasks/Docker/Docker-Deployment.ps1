@@ -33,7 +33,7 @@ $jsonContentType = "application/json"
 # Images
 $imagesRestUrl = ("{0}/images" -f $DockerEndpointRestUrl)
 $createImageRestUrl	= ("$DockerEndpointRestUrl/images/create?fromImage={0}")
-$isImageExists = $true
+$global:isImageExists = $true
 
 # Containers
 $containerRestUrl = ("{0}/containers" -f $DockerEndpointRestUrl)
@@ -185,18 +185,8 @@ function Create-Container()
         if( $errorCode -eq $notFoundErrorCode )
 		{
             Write-Host ("Image '{0}' doesn't exists" -f $Repository)			            
-            $global:isImageExists = $false;
-		}
-        # If the status code is 409, it means a container with the same name already exists
-        elseif( $errorCode -eq $conflictErrorCode )
-        {
-            # Delete the container if it already exists
-            Write-Host ("A container '{0}' already exists" -f $ContainerName)
-	        Delete-Container -name $ContainerName
-
-            # Retry the container creation
-            $response = Invoke-RestMethod -Method Post -Uri $createContainerRestUrl.Trim() -Body $payload -ContentType $jsonContentType
-        }
+            $global:isImageExists = $false
+		}        
 		else
 		{ 
 			Write-Host ("Exception Occurred while creating the container: {0}" -f $_.Exception.Message)          
@@ -247,7 +237,10 @@ function Delete-Container($name)
 try
 {    
     # Validate the port binding
-	Parse-PortBinding
+    Parse-PortBinding
+
+    # Delete the container
+    Delete-Container -name $ContainerName
         
     # Create the container		
     $result = Create-Container
