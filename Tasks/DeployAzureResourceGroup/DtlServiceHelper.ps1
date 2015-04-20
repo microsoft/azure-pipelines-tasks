@@ -62,9 +62,9 @@ function Create-Environment
     param([string]$environmentName,
           [string]$environmentType,
           [string]$environmentStatus,
-          [string]$providerId,
-          [System.Collections.Generic.List[String]]$providerDataIds,
-          [string]$environmentDefinitionId,          
+          [string]$providerName,
+          [System.Collections.Generic.List[String]]$providerDataNames,
+          [string]$environmentDefinitionName,          
           [System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]]$resources)
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
@@ -88,7 +88,7 @@ function Create-Environment
     
     Write-Verbose "Registering environment $environmentName" -Verbose
 
-    $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderId $providerId -ProviderDataIds $providerDataIds -EnvironmentDefinitionId $environmentDefinitionId -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
+    $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered environment $environment" -Verbose
 
@@ -105,18 +105,29 @@ function Create-EnvironmentOperation
 
         Write-Verbose "Saving resource group creation logs" -Verbose
 
-        $environmentPlatformId = $environment.PropertyBag.GetProperty("PlatformId")
+        $environmentPlatformId = $environment.Properties.GetProperty("PlatformId")
         $deploymentPlatformId = [System.String]::Format("{0}/{1}/{2}", $environmentPlatformId, "deployments", $environment.Name)
         $deploymentOperationLogs = Get-AzureResourceLog -ResourceId $deploymentPlatformId -StartTime $startTime -Detailed -ErrorAction Stop
         $logs = Get-OperationLogs -operationLogs $deploymentOperationLogs
 
         Write-Verbose "Saving environment $name provisioning operation" -Verbose
 
-        $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].SubmissionTimestamp -Connection $connection -ErrorAction Stop
+        $operationStartTime = New-Object System.DateTime
+        $operationEndTime = New-Object System.DateTime
+        $operationStatus = "Unknown"
+
+        if(!$deploymentOperationLogs)
+        {
+            $operationStartTime = $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].SubmissionTimestamp
+            $operationEndTime = $deploymentOperationLogs[0].SubmissionTimestamp
+            $operationStatus = $deploymentOperationLogs[0].Status
+        }
+
+        $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $operationStartTime -Connection $connection -ErrorAction Stop
 
         Create-ResourceOperations -environment $environment -environmentOperationId $envOperationId
 
-        Complete-EnvironmentOperation -EnvironmentName $environment.Name -EnvironmentOperationId $envOperationId -Status $deploymentOperationLogs[0].Status -EndTime $deploymentOperationLogs[0].SubmissionTimestamp -Logs $logs -Connection $connection -ErrorAction Stop
+        Complete-EnvironmentOperation -EnvironmentName $environment.Name -EnvironmentOperationId $envOperationId -Status $operationStatus -EndTime $operationEndTime -Logs $logs -Connection $connection -ErrorAction Stop
 
         Write-Verbose "Completed saving $name provisioning operation with id $envOperationId" -Verbose
 
@@ -137,15 +148,26 @@ function Create-ResourceOperations
             
             Write-Verbose "Saving resource creation logs" -Verbose
 
-            $resourcePlatformId = $resource.PropertyBag.GetProperty("PlatformId")
+            $resourcePlatformId = $resource.Properties.GetProperty("PlatformId")
             $resourceOperationLogs = Get-AzureResourceLog -ResourceId $resourcePlatformId -StartTime $startTime -Detailed -ErrorAction Stop
             $logs = Get-OperationLogs -operationLogs $resourceOperationLogs
 
+            $operationStartTime = New-Object System.DateTime
+            $operationEndTime = New-Object System.DateTime
+            $operationStatus = "Unknown"
+
+            if(!$logs)
+            {
+                $operationStartTime = $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].SubmissionTimestamp
+                $operationEndTime = $deploymentOperationLogs[0].SubmissionTimestamp
+                $operationStatus = $deploymentOperationLogs[0].Status
+            }
+
             Write-Verbose "Saving resource $name provisioning operation" -Verbose
 
-            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $resourceOperationLogs[$resourceOperationLogs.Count - 1].SubmissionTimestamp -EnvironmentOperationId $environmentOperationId -Connection $connection -ErrorAction Stop
+            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $operationStartTime -EnvironmentOperationId $environmentOperationId -Connection $connection -ErrorAction Stop
 
-            Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $resourceOperationLogs[0].Status -EndTime $resourceOperationLogs[0].SubmissionTimestamp -Logs $logs -Connection $connection -ErrorAction Stop
+            Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $operationStatus -EndTime $operationEndTime -Logs $logs -Connection $connection -ErrorAction Stop
 
             Write-Verbose "Completed saving resource $name provisioning operation with id $resOperationId" -Verbose
         }
@@ -177,7 +199,7 @@ function Check-EnvironmentNameAvailability
 
     if ([string]::IsNullOrEmpty($environmentName) -eq $false)
     {
-		Write-Verbose "Checking environment name availability" -Verbose
+        Write-Verbose "Checking environment name availability" -Verbose
 
         $environment = Get-Environment -EnvironmentName $environmentName -Connection $connection -ErrorAction silentlycontinue
 
@@ -185,11 +207,11 @@ function Check-EnvironmentNameAvailability
         {
             if($environment.Provider.Name -ne "AzureResourceGroupManagerV2")
             {
-                Write-Error -Message "Environment with the name $environmentName is already registered. Please try a different name" -Category InvalidArgument
+                Throw "Environment with the name $environmentName is already registered. Please try a different name"
             }
         }
 
-		Write-Verbose "Checked environment name availability" -Verbose
+        Write-Verbose "Checked environment name availability" -Verbose
     }
 }
 
@@ -199,5 +221,5 @@ function Initialize-DTLServiceHelper
 
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-    Set-Variable -Name $connection -Value $connection -Scope "Script"
+    Set-Variable -Name connection -Value $connection -Scope "Script"
 }
