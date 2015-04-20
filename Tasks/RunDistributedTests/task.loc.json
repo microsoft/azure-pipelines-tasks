@@ -79,6 +79,15 @@
       "groupName": "testSettings"
     },
     {
+      "name": "codeCoverageEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Optionally specify if code coverage needs to be enabled.",
+      "groupName": "testSettings"
+    },
+    {
       "name": "overrideRunParams",
       "type": "string",
       "label": "ms-resource:loc.input.label.overrideRunParams",
