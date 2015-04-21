@@ -1,0 +1,96 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
+  "name": "CloudLoadTest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Test",
+  "visibility": [
+    "Preview",
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "demands": [
+    "msbuild"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "TestDrop",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.TestDrop",
+      "defaultValue": "$(Build.SourcesDirectory)\\loadtest",
+      "required": true,
+      "helpMarkDown": "Relative path from build source directory on the agent under which the load test solution output is placed."
+    },
+    {
+      "name": "LoadTest",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.LoadTest",
+      "defaultValue": "loadtest1.loadtest",
+      "required": true,
+      "helpMarkDown": "Relative path to the load test filename under the test drop folder defined above."
+    },
+    {
+      "name": "TestSettings",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TestSettings",
+      "defaultValue": "local.testsettings",
+      "required": true,
+      "helpMarkDown": "Relative path to the test settings filename under the test drop folder defined above."
+    },
+    {
+      "name": "ThresholdLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ThresholdLimit",
+      "required": false,
+      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsucessful."
+    },
+    {
+      "name": "VsoAccountUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VsoAccountUrl",
+      "defaultValue": "$(System.TeamFoundationServerUri)",
+      "groupName": "advanced",
+      "required": true,
+      "helpMarkDown": "Visual Studio Online Account URL."
+    },
+    {
+      "name": "Username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Username",
+      "defaultValue": "$(System.Auth.UserName)",
+      "groupName": "advanced",
+      "required": true
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Password",
+      "defaultValue": "$(System.Auth.Password)",
+      "groupName": "advanced",
+      "required": true
+    }
+  ],
+  "instanceNameFormat": "Cloud Load Test $(LoadTest)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Start-CloudLoadTest.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
