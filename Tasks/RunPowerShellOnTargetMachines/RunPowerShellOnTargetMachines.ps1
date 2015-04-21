@@ -56,7 +56,6 @@ $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName 
 
 Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 $envOperationStatus = "Passed"
-$deploymentError = ""
 
 if($runPowershellInParallel -eq "false")
 {
