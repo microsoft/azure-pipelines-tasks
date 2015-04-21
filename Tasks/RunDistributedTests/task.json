@@ -82,7 +82,7 @@
             "label": "Code Coverage Enabled",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Optionally specify if code coverage needs to be enabled.",
+            "helpMarkDown": "Whether code coverage needs to be enabled.",
             "groupName": "testSettings"
         },
         {
