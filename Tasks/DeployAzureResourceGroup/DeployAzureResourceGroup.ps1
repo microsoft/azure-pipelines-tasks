@@ -24,10 +24,20 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"
+if (!(Test-Path -Path $csmFile -PathType Leaf))
+{
+    Throw "Please specify a complete and a valid template file path"
+}
+
+if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
+{
+    Throw "Please specify a complete and a valid template parameters file path"
+}
+
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 $csmFileContent = [System.IO.File]::ReadAllText($csmFile)
 
-if ([string]::IsNullOrEmpty($csmParametersFile) -eq $false)
+if(Test-Path -Path $csmParametersFile -PathType Leaf)
 {
     $csmParametersFileContent = [System.IO.File]::ReadAllText($csmParametersFile)
 }
