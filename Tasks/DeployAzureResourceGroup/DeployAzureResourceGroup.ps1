@@ -9,6 +9,22 @@ param(
     [string]$sasTokenParameterName
 )
 
+function Get-SingleFile($files, $pattern)
+{
+    if ($files -is [system.array])
+    {
+        throw "Found more than one file to deploy with search pattern $pattern.  There can be only one."
+    }
+    else
+    {
+        if (!$files)
+        {
+            throw "No files were found to deploy with search pattern $pattern"
+        }
+        return $files
+    }
+}
+
 Write-Verbose -Verbose "Entering script DeployToAzureResourceGroup.ps1"
 Write-Output "Entering script DeployToAzureResourceGroup.ps1"
 
@@ -24,6 +40,22 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"
+
+#Find the deployment definition File
+Write-Host "Find-Files -SearchPattern $csmFile"
+$deploymentDefinitionFiles = Find-Files -SearchPattern "$csmFile"
+Write-Host "deploymentDefinitionFiles= $deploymentDefinitionFiles" -ForegroundColor Yellow
+#Ensure that at most a single deployment definition (.json) file is found
+$csmFile = Get-SingleFile $deploymentDefinitionFiles $csmFile
+
+#Find the deployment definition Parameter File
+Write-Host "Find-Files -SearchPattern $csmParametersFile"
+$deploymentDefinitionParametersFiles = Find-Files -SearchPattern "$csmParametersFile"
+Write-Host "deploymentDefinitionParametersFiles= $deploymentDefinitionParametersFiles" -ForegroundColor Yellow
+#Ensure that at most a single deployment definition parameter (.json) file is found
+$csmParametersFile = Get-SingleFile $deploymentDefinitionParametersFiles $csmParametersFile
+
+
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 $csmFileContent = [System.IO.File]::ReadAllText($csmFile)
 
