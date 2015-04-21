@@ -11,5 +11,6 @@
   "loc.input.label.sourcefilters": "Test Assembly",
   "loc.input.label.testFilterCriteria": "Test Filter criteria",
   "loc.input.label.runSettingsFile": "Run Settings File",
+  "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
   "loc.input.label.overrideRunParams": "Override TestRun Parameters"
 }

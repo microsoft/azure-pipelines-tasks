@@ -38,7 +38,7 @@ if ([string]::IsNullOrEmpty($csmParametersFile) -eq $false)
 Check-EnvironmentNameAvailability -environmentName $resourceGroupName
 
 $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
-$parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameterName -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject
+$parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameterName -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
 
 Switch-AzureMode AzureResourceManager
 
@@ -56,12 +56,12 @@ $environmentDefinitionName = [System.String]::Format("{0}_{1}", $csmFileName, $e
 
 $environmentDefinition = Create-EnvironmentDefinition -environmentDefinitionName $environmentDefinitionName -providerName $provider.Name
 
-$providerDataIds = New-Object System.Collections.Generic.List[string]
-$providerDataIds.Add($providerData.Id)
+$providerDataNames = New-Object System.Collections.Generic.List[string]
+$providerDataNames.Add($providerData.Name)
 
 $environmentResources = Get-Resources -resourceGroupName $resourceGroupName
 
-$environment = Create-Environment -environmentName $resourceGroupName -environmentType "Azure CSM V2" -environmentStatus $resourceGroupDeployment.ProvisioningState -providerId $provider.ProviderId -providerDataIds $providerDataIds -environmentDefinitionId $environmentDefinition.Id -resources $environmentResources
+$environment = Create-Environment -environmentName $resourceGroupName -environmentType "Azure CSM V2" -environmentStatus $resourceGroupDeployment.ProvisioningState -providerName $provider.Name -providerDataNames $providerDataNames -environmentDefinitionName $environmentDefinition.Name -resources $environmentResources
 
 $environmentOperationId = Create-EnvironmentOperation -environment $environment
 
