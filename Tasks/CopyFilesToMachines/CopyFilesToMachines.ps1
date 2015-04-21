@@ -67,8 +67,9 @@ if($deployFilesInParallel -eq "false")
 
         if($status -ne "Passed")
         {
-             $envOperationStatus = "Failed"
-             break
+            Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection -ErrorAction Stop
+
+            throw $copyResponse.Error
         }
     } 
 }
@@ -95,7 +96,7 @@ else
          {
              if($job.State -ne "Running")
              {
-                 $output = Receive-Job -Job $job
+                 $output = Receive-Job -Id $job.Id
                  Remove-Job $Job
                  $status = $output.Status
 
