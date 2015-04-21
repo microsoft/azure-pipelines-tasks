@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0,
+        "Patch": 1,
         "IsTest": false
     },
     "demands": [
@@ -74,6 +74,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path to runsettings file to use with the tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder.",
+            "groupName": "testSettings"
+        },
+        {
+            "name": "codeCoverageEnabled",
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Whether code coverage needs to be enabled.",
             "groupName": "testSettings"
         },
         {
