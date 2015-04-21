@@ -97,9 +97,9 @@ function Get-Resources
                 if ([string]::IsNullOrEmpty($fqdnTagValue) -ne $true)
                 {
                     # FQDN value contain . as last character so we need to remove it 
-                    if ($fqdnTagValue.Substring($fqdnTagValue.length-1,1) -eq ".")
+                    if($fqdnTagValue.EndsWith("."))
                     {
-                        $fqdnTagValue = $fqdnTagValue -replace ".$"
+                        $fqdnTagValue = $fqdnTagValue.TrimEnd('.')
                     }
                     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
                     $propertyBag.Add($fqdnTagKey, $property)
@@ -128,18 +128,7 @@ function Get-FQDN
 
      $publicIP = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -Name $resourceName
 
-     if ($publicIP -ne $null)
-     {
-        if ($publicIP.Properties -ne $null)
-        {
-            if ($publicIP.Properties.DnsSettings -ne $null)
-            {
-                return $publicIP.Properties.DnsSettings.Fqdn;
-            }
-        }
-     }
-
-     return $null;
+     return $publicIP.Properties.DnsSettings.Fqdn;
 }
 
 function Get-CsmParameterObject
