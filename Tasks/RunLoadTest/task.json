@@ -4,6 +4,10 @@
   "friendlyName": "Cloud-based Load Test with VSO",
   "description": "Runs the load test in cloud; Powered by VS Online.",
   "category": "Test",
+  "visibility": [
+    "Preview",
+    "Build"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,

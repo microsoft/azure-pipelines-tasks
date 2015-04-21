@@ -4,6 +4,11 @@
   "friendlyName": "Cloud-based Web Performance Test",
   "description": "Quickly find perf regressions to your website under load. Powered by VS Online.",
   "category": "Test",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
