@@ -1,7 +1,7 @@
 ﻿## Logging Commands:
 
 The general format for a logging command is:
-    ##vso[loggingarea.event property1=value; property2=value; ...]message
+    ##vso[loggingarea.event property1=value;property2=value;...]message
 
 #### Task Logging Commands:
 <table>
@@ -32,7 +32,7 @@ The general format for a logging command is:
                 <p align="left">
                     Create error or warning timeline record issue for current task.<br>
                     Example: <br>
-                    ##vso[task.issue type=error; sourcepath=consoleapp/main.cs; linenumber=1; columnumber=1; code=100;]this is an error
+                    ##vso[task.issue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnumber=1;code=100;]this is an error
                 </p>
             </td>
         </tr>
@@ -102,9 +102,9 @@ The general format for a logging command is:
                     Task author need to remember which Guid they used for each timeline record.
                     The logging system will keep tracking the Guid for each timeline records that been created, so any new Guid will result a new timeline record. <br>
                     Example: <br>
-                    Create new root timeline record: ##vso[task.detail id=new guid; name=project1; type=build; order=1]create new timeline record.<br>
-                    Create new nested timeline record: ##vso[task.detail id=new guid; parentid=exist timeline record guid ; name=project1; type=build; order=1]create new nested timeline record.<br>
-                    Update exist timeline record: ##vso[task.detail id=exist timeline record guid; progress=15; state=InProgress;]update timeline record
+                    Create new root timeline record: ##vso[task.detail id=new guid;name=project1;type=build;order=1]create new timeline record.<br>
+                    Create new nested timeline record: ##vso[task.detail id=new guid;parentid=exist timeline record guid;name=project1;type=build;order=1]create new nested timeline record.<br>
+                    Update exist timeline record: ##vso[task.detail id=exist timeline record guid;progress=15;state=InProgress;]update timeline record
                 </p>
             </td>
         </tr>
@@ -124,7 +124,7 @@ The general format for a logging command is:
                 <p align="left">
                     Set variable in variable service of taskcontext. The first task can set an variable, and following tasks are able to use the variable.<br>
                     Example: <br>
-                    ##vso[task.setvariable name=testvar; value=testvalue;]
+                    ##vso[task.setvariable name=testvar;value=testvalue;]
                 </p>
             </td>
         </tr>
@@ -158,7 +158,7 @@ The general format for a logging command is:
                 <p align="left">
                     Create artifact line, artifact location is required to be a file container path, VC path or UNC share path. <br>
                     Example: <br>
-                    ##vso[artifact.associate artifactname=drop; artifactlocation=#/1/build;] <br>
+                    ##vso[artifact.associate artifactname=drop;artifactlocation=#/1/build;] <br>
                 </p>
             </td>
         </tr>
@@ -179,7 +179,7 @@ The general format for a logging command is:
                 <p align="left">
                     Upload local file into a file container folder, create artifact if artifactname provided.<br>
                     Example: <br>
-                    ##vso[artifact.upload containerfolder=testresult; localpath=c:\testresult.trx; artifactname=uploadedresult;]<br>
+                    ##vso[artifact.upload containerfolder=testresult;localpath=c:\testresult.trx;artifactname=uploadedresult;]<br>
                 </p>
             </td>
     </tbody>
