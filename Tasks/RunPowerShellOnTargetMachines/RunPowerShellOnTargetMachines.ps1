@@ -1,20 +1,19 @@
 param (
     [string]$environmentName,
     [string]$machineNames, 
-    [string]$sourcePackage,
     [string]$scriptPath,
     [string]$scriptArguments,
     [string]$initializationScriptPath,
     [string]$runPowershellInParallel
     )
 
-Write-Verbose "Entering script RemotePowerShellRunner.ps1" -Verbose
+Write-Verbose "Entering script RunPowerShellOnTargetMachines.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
-Write-Verbose "sourcePackage = $sourcePackage" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
+Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
 
 . ./RunPowerShellJob.ps1
 
@@ -77,7 +76,7 @@ if($runPowershellInParallel -eq "false")
         {
             Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection -ErrorAction Stop
 
-            throw $response.Error;
+            throw $deploymentResponse.Error;
         }
     }
 }
@@ -92,7 +91,7 @@ else
         $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $environmentName, $envOperationId, $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential, $connection
 
         $Jobs.Add($job.Id, $machine)
-    
+         
         Write-Output "Deployment Started for - $machine"
     }
     While (Get-Job)
@@ -102,8 +101,9 @@ else
          {
              if($job.State -ne "Running")
              {
-                 $output = Receive-Job -Job $job
+                 $output = Receive-Job -Id $job.Id
                  Remove-Job $Job
+
                  $status = $output.Status
 
                  if($status -ne "Passed")
@@ -120,6 +120,11 @@ else
     }
 }
 
-Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Passed" -Connection $connection -ErrorAction Stop
+Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection -ErrorAction Stop
 
-Write-Verbose "Leaving script RemotePowerShellRunner.ps1" -Verbose
+if($envOperationStatus -ne "Passed")
+{
+    throw "deployment on one or more machine failed."
+}
+
+Write-Verbose "Leaving script RunPowerShellOnTargetMachines.ps1" -Verbose
