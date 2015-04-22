@@ -1,4 +1,4 @@
-## Logging Commands:
+﻿## Logging Commands:
 
 The general format for a logging command is:
     ##vso[loggingarea.event property1=value; property2=value; ...]message
@@ -32,7 +32,7 @@ The general format for a logging command is:
                 <p align="left">
                     Create error or warning timeline record issue for current task.<br>
                     Example: <br>
-                    ##vso[task.issue type=error/warning; sourcepath=consoleapp/main.cs; linenumber=1; columnumber=1; code=100;]something wrong
+                    ##vso[task.issue type=error; sourcepath=consoleapp/main.cs; linenumber=1; columnumber=1; code=100;]this is an error
                 </p>
             </td>
         </tr>
@@ -102,8 +102,8 @@ The general format for a logging command is:
                     Task author need to remember which Guid they used for each timeline record.
                     The logging system will keep tracking the Guid for each timeline records that been created, so any new Guid will result a new timeline record. <br>
                     Example: <br>
-                    Create new root timeline record: ##vso[task.detail id=new guid; name=project1; type=buid; order=1]create new timeline record.<br>
-                    Create new nested timeline record: ##vso[task.detail id=new guid; parentid=exist timeline record guid ; name=project1; type=buid; order=1]create new nested timeline record.<br>
+                    Create new root timeline record: ##vso[task.detail id=new guid; name=project1; type=build; order=1]create new timeline record.<br>
+                    Create new nested timeline record: ##vso[task.detail id=new guid; parentid=exist timeline record guid ; name=project1; type=build; order=1]create new nested timeline record.<br>
                     Update exist timeline record: ##vso[task.detail id=exist timeline record guid; progress=15; state=InProgress;]update timeline record
                 </p>
             </td>
@@ -209,7 +209,7 @@ The general format for a logging command is:
             </td>
             <td>
                 <p align="left">
-                    Upload user interestd log to build’s container “logs\tool” folder.<br>
+                    Upload user interested log to build’s container “logs\tool” folder.<br>
                     Example: <br>
                     ##vso[build.uploadlog filepath=c:\msbuild.log]
                 </p>
