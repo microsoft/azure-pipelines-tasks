@@ -64,7 +64,7 @@
       "label": "ms-resource:loc.input.label.runSettingsFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The run settings file to use."
+      "helpMarkDown": "Path to runsettings file on disk or choose file from the repository."
     },
     {
       "name": "overrideTestrunParameters",

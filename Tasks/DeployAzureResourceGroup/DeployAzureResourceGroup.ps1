@@ -55,11 +55,20 @@ Write-Host "deploymentDefinitionParametersFiles= $deploymentDefinitionParameters
 #Ensure that at most a single deployment definition parameter (.json) file is found
 $csmParametersFile = Get-SingleFile $deploymentDefinitionParametersFiles $csmParametersFile
 
+if (!(Test-Path -Path $csmFile -PathType Leaf))
+{
+    Throw "Please specify a complete and a valid template file path"
+}
+
+if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
+{
+    Throw "Please specify a complete and a valid template parameters file path"
+}
 
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 $csmFileContent = [System.IO.File]::ReadAllText($csmFile)
 
-if ([string]::IsNullOrEmpty($csmParametersFile) -eq $false)
+if(Test-Path -Path $csmParametersFile -PathType Leaf)
 {
     $csmParametersFileContent = [System.IO.File]::ReadAllText($csmParametersFile)
 }
