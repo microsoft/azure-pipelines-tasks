@@ -12,11 +12,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "demands": [
     "vstest"
   ],
+  "minimumAgentVersion": "1.82.0",
   "groups": [
     {
       "name": "advanced",
