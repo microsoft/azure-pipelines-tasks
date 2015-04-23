@@ -17,7 +17,7 @@ if(options != '') {
 
 var goals = tl.getInput('goals');
 if(goals != '') {
-  mvnb.arg(targets);
+  mvnb.arg(goals);
 }
 
 // update JAVA_HOME if user selected specific JDK version
