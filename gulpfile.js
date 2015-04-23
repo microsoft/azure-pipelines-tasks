@@ -11,8 +11,10 @@ var fs = require('fs');
 var semver = require('semver');
 var Q = require('q');
 var exec = require('child_process').exec;
+var ts = require('gulp-typescript');
 
 var _buildRoot = path.join(__dirname, '_build', 'Tasks');
+var _taskUploaderRoot = path.join(__dirname, '_build', 'TaskUploader');
 var _pkgRoot = path.join(__dirname, '_package');
 var _oldPkg = path.join(__dirname, 'Package');
 var _wkRoot = path.join(__dirname, '_working');
@@ -25,6 +27,17 @@ gulp.task('build', ['clean'], function () {
 	shell.mkdir('-p', _buildRoot);
 	return gulp.src(path.join(__dirname, 'Tasks', '**/task.json'))
         .pipe(pkgm.PackageTask(_buildRoot));
+});
+
+gulp.task('uploader', function() {
+    var tsResult = gulp.src(['TaskUploader/*.ts', 'definitions/*.d.ts'])
+                       .pipe(ts({
+                           declarationFiles: false,
+                           noExternalResolve: true,
+						   'module': 'commonjs'
+                       }));
+    
+    tsResult.js.pipe(gulp.dest(_taskUploaderRoot));
 });
 
 gulp.task('default', ['build']);

@@ -1,0 +1,65 @@
+﻿{
+  "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
+  "name": "PublishBuildArtifacts",
+  "friendlyName": "Publish Build Artifacts",
+  "description": "Publish Build artifacts to the server or a file share",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 65
+  },
+  "demands": [
+  ],
+  "inputs": [
+    {
+      "name": "Contents",
+      "type": "multiLine",
+      "label": "Contents",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "File or folder paths to include as part of the artifact."
+    },
+    {
+      "name": "ArtifactName",
+      "type": "string",
+      "label": "Artifact Name",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The name of the artifact to create."
+    },
+    {
+      "name": "ArtifactType",
+      "type": "pickList",
+      "label": "Artifact Type",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The name of the artifact to create.",
+      "options": {
+        "Container": "Server",
+        "FilePath": "File share"
+      }
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "Path",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The file share to which to copy the files",
+      "visibleRule": "ArtifactType = FilePath"
+    }
+  ],
+  "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Publish-BuildArtifacts.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
