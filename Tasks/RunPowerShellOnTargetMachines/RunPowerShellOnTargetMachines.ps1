@@ -15,27 +15,8 @@ Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
 
+. ./RunPowerShellHelper.ps1
 . ./RunPowerShellJob.ps1
-
-function Output-ResponseLogs
-{
-    param([string]$operationName,
-          [string]$fqdn,
-          [object]$deploymentResponse)
-
-    Write-Verbose "Finished $operationName operation" -Verbose
-
-    if ([string]::IsNullOrEmpty($deploymentResponse.DeploymentLog) -eq $false)
-    {
-        Write-Verbose "Deployment logs for $operationName operation on $fqdn " -Verbose
-        Write-Verbose ($deploymentResponse.DeploymentLog | Format-List | Out-String) -Verbose
-    }
-    if ([string]::IsNullOrEmpty($deploymentResponse.ServiceLog) -eq $false)
-    {
-        Write-Verbose "Service logs for $operationName operation on $fqdn " -Verbose
-        Write-Verbose ($deploymentResponse.ServiceLog | Format-List | Out-String) -Verbose
-    }
-}
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
@@ -62,15 +43,24 @@ if($runPowershellInParallel -eq "false")
     foreach ($resource in $resources)
     {    
         $machine = $resource.Name
-        Write-Output "Deployment Started for - $machine"
-
-        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $environmentName, $envOperationId, $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential, $connection
-
+        
+		Write-Output "Deployment Started for - $machine"
+		
+		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+		
+		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+		
+        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential
+		
         Output-ResponseLogs -operationName "deployment" -fqdn $machine -deploymentResponse $deploymentResponse
 
         $status = $deploymentResponse.Status
 
         Write-Output "Deployment Status for machine $machine : $status"
+		
+		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
+		
+		CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $deploymentResponse
 
         if ($status -ne "Passed")
         {
@@ -82,15 +72,23 @@ if($runPowershellInParallel -eq "false")
 }
 else
 {
-    $Jobs = New-Object "System.Collections.Generic.Dictionary``2[int, string]"
+	[hashtable]$Jobs = @{} 
 
     foreach($resource in $resources)
     {
         $machine = $resource.Name
-	
-        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $environmentName, $envOperationId, $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential, $connection
+		[hashtable]$resourceProperties = @{} 
+		
+		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+		
+		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+		
+		$resourceProperties.machineName = $machine
+		$resourceProperties.resOperationId = $resOperationId
+		
+        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential
 
-        $Jobs.Add($job.Id, $machine)
+        $Jobs.Add($job.Id, $resourceProperties)
          
         Write-Output "Deployment Started for - $machine"
     }
@@ -111,10 +109,17 @@ else
                      $envOperationStatus = "Failed"
                  }
             
-                 $machineName = $Jobs.Item($job.Id)
-
-                 Output-ResponseLogs -operationName "Deployment" -fqdn $machineName -deploymentResponse $output
+                 $machineName = $Jobs.Item($job.Id).machineName
+				 $resOperationId = $Jobs.Item($job.Id).resOperationId
+				 
+				 Output-ResponseLogs -operationName "Deployment" -fqdn $machineName -deploymentResponse $output
+				 
                  Write-Output "Deployment Status for machine $machineName : $status"
+				 
+				 Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
+				 
+				 CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
+                 
               } 
         }
     }
