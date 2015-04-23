@@ -1,0 +1,72 @@
+{
+    "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+    "name": "NuGetInstaller",
+    "friendlyName": "NuGet Installer",
+    "description": "Installs and updates missing NuGet packages",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 8
+    },
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],    
+    "instanceNameFormat": "NuGet restore $(solution)",
+    "inputs": [
+        {
+            "name": "solution",
+            "type": "filePath",
+            "label": "Path to Solution",
+            "defaultValue":"**\\*.sln",
+            "helpMarkDown": "The path to the Visual Studio Solution file",
+            "required":true
+        },
+        {
+            "name": "excludeVersion",
+            "type": "boolean",
+            "label": "Exclude Version",
+            "defaultValue": "false",
+            "helpMarkDown": "Makes NuGet exclude package version from package folder names. Equivilent to the -ExcludeVersion NuGet.exe command line argument",
+            "required":"false"
+        },
+        {
+            "name": "noCache",
+            "type": "boolean",
+            "label": "Disable local cache",
+            "defaultValue": "false",
+            "helpMarkDown": "Equivalent to the -NoCache NuGet.exe commanline argument",
+            "required":"false"
+        },
+        {
+            "name": "nuGetRestoreArgs",
+            "type": "string",
+            "label": "NuGet Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to NuGet.exe restore."
+        },
+        {
+            "name": "nuGetPath",
+            "type": "string",
+            "label": "Path to NuGet.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to NuGet.exe",
+            "groupName": "advanced"
+        }
+
+    ],
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\NuGetInstaller.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

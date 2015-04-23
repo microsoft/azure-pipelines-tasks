@@ -1,0 +1,95 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
+  "name": "PublishSymbols",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Build",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "SymbolsPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify the path to the symbol store share.  If this value is not set, source indexing will occur but symbols will not be published."
+    },
+    {
+      "name": "SearchPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SearchPattern",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The pattern used to discover the pdb files to publish.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SourceFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourceFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The path to the source folder that is searched for symbol files.  The default is $(Build.SourcesDirectory)",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsMaximumWaitTime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsMaximumWaitTime",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The number of minutes to wait before failing the step",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsProduct",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsProduct",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify the product parameter to symstore.exe.  The default is $(Build.DefinitionName)",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsVersion",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "Publish symbols path: $(SymbolsPath)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\PublishSymbols.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
