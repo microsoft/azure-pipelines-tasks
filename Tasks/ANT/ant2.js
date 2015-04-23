@@ -1,5 +1,4 @@
 var tl = require('vso-task-lib');
-var path = require('path');
 
 var anttool = tl.which('ant', false);
 
@@ -38,7 +37,6 @@ if(jdkVersion != '' && jdkVersion != 'default') {
    tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
    process.env['JAVA_HOME'] = specifiedJavaHome;
 }
-
 
 antv.exec()
 .then(function(code) {

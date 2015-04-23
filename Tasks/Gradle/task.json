@@ -94,6 +94,10 @@
         "JavaScript": {
             "target": "gradle.js",
             "argumentFormat": ""
+        },
+        "Node": {
+            "target": "gradle2.js",
+            "argumentFormat": ""
         }
     }
 }
