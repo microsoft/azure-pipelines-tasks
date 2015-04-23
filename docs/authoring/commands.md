@@ -1,7 +1,7 @@
 ﻿## Logging Commands:
 
 The general format for a logging command is:
-    ##vso[loggingarea.event property1=value;property2=value;...]message
+    ##vso[area.action property1=value;property2=value;...]message
 
 #### Task Logging Commands:
 <table>
@@ -16,12 +16,12 @@ The general format for a logging command is:
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.issue]error/warning message
+                    ##vso[task.logissue]error/warning message
                 </p>
             </td>
             <td>
                 <p align="left">
-                    type=error|warning (Required) <br>
+                    type=error or warning (Required) <br>
                     sourcepath=source file location <br>
                     linenumber=line number <br>
                     columnumber=colum number <br>
@@ -30,16 +30,16 @@ The general format for a logging command is:
             </td>
             <td>
                 <p align="left">
-                    Create error or warning timeline record issue for current task.<br>
+                    Log error or warning issue to timeline record of current task.<br>
                     Example: <br>
-                    ##vso[task.issue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnumber=1;code=100;]this is an error
+                    ##vso[task.logissue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnumber=1;code=100;]this is an error
                 </p>
             </td>
         </tr>
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.progress]current operation
+                    ##vso[task.setprogress]current operation
                 </p>
             </td>
             <td>
@@ -51,7 +51,7 @@ The general format for a logging command is:
                 <p align="left">
                     Set progress and current operation for current task.<br>
                     Example: <br>
-                    ##vso[task.progress value=75;]Upload Log
+                    ##vso[task.setprogress value=75;]Upload Log
                 </p>
             </td>
         </tr>
@@ -77,7 +77,7 @@ The general format for a logging command is:
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.detail]current operation
+                    ##vso[task.logdetail]current operation
                 </p>
             </td>
             <td>
@@ -102,9 +102,9 @@ The general format for a logging command is:
                     Task author need to remember which Guid they used for each timeline record.
                     The logging system will keep tracking the Guid for each timeline records that been created, so any new Guid will result a new timeline record. <br>
                     Example: <br>
-                    Create new root timeline record: ##vso[task.detail id=new guid;name=project1;type=build;order=1]create new timeline record.<br>
-                    Create new nested timeline record: ##vso[task.detail id=new guid;parentid=exist timeline record guid;name=project1;type=build;order=1]create new nested timeline record.<br>
-                    Update exist timeline record: ##vso[task.detail id=exist timeline record guid;progress=15;state=InProgress;]update timeline record
+                    Create new root timeline record: ##vso[task.logdetail id=new guid;name=project1;type=build;order=1]create new timeline record.<br>
+                    Create new nested timeline record: ##vso[task.logdetail id=new guid;parentid=exist timeline record guid;name=project1;type=build;order=1]create new nested timeline record.<br>
+                    Update exist timeline record: ##vso[task.logdetail id=exist timeline record guid;progress=15;state=InProgress;]update timeline record
                 </p>
             </td>
         </tr>
