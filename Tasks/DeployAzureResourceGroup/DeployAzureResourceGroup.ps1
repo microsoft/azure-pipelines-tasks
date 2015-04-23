@@ -9,22 +9,6 @@ param(
     [string]$sasTokenParameterName
 )
 
-function Get-SingleFile($files, $pattern)
-{
-    if ($files -is [system.array])
-    {
-        throw "Found more than one file to deploy with search pattern $pattern.  There can be only one."
-    }
-    else
-    {
-        if (!$files)
-        {
-            throw "No files were found to deploy with search pattern $pattern"
-        }
-        return $files
-    }
-}
-
 Write-Verbose -Verbose "Entering script DeployToAzureResourceGroup.ps1"
 Write-Output "Entering script DeployToAzureResourceGroup.ps1"
 
@@ -41,28 +25,28 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"
 
-#Find the deployment definition File
-Write-Host "Find-Files -SearchPattern $csmFile"
-$deploymentDefinitionFiles = Find-Files -SearchPattern "$csmFile"
-Write-Host "deploymentDefinitionFiles= $deploymentDefinitionFiles" -ForegroundColor Yellow
-#Ensure that at most a single deployment definition (.json) file is found
-$csmFile = Get-SingleFile $deploymentDefinitionFiles $csmFile
+. ./Utility.ps1
 
-#Find the deployment definition Parameter File
-Write-Host "Find-Files -SearchPattern $csmParametersFile"
-$deploymentDefinitionParametersFiles = Find-Files -SearchPattern "$csmParametersFile"
-Write-Host "deploymentDefinitionParametersFiles= $deploymentDefinitionParametersFiles" -ForegroundColor Yellow
-#Ensure that at most a single deployment definition parameter (.json) file is found
-$csmParametersFile = Get-SingleFile $deploymentDefinitionParametersFiles $csmParametersFile
+#Find the matching deployment definition File
+$csmFile = Get-File $csmFile
+Write-Verbose -Verbose "csmFile = $csmFile"
+
+# csmParametersFile value would be  BUILD_SOURCESDIRECTORY when left empty in UI.
+if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY)
+{
+    #Find the matching deployment definition Parameter File
+    $csmParametersFile = Get-File $csmParametersFile
+    Write-Verbose -Verbose "csmParametersFile = $csmParametersFile"
+}
 
 if (!(Test-Path -Path $csmFile -PathType Leaf))
 {
-    Throw "Please specify a complete and a valid template file path"
+    Throw "Please specify a valid template file path"
 }
 
 if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
 {
-    Throw "Please specify a complete and a valid template parameters file path"
+    Throw "Please specify a valid template parameters file path"
 }
 
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
