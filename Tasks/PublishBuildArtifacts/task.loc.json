@@ -2,106 +2,64 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
-  "name": "AzureCloudPowerShellDeployment",
+  "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
+  "name": "PublishBuildArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "category": "Deploy",
+  "category": "Build",
   "visibility": [
-    "Build",
-    "Release"
+    "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 8
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 9
   },
-  "demands": [
-    "azureps"
-  ],
+  "demands": [],
   "inputs": [
     {
-      "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
-      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "name": "Contents",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Contents",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to target for deployment."
+      "helpMarkDown": "File or folder paths to include as part of the artifact."
     },
     {
-      "name": "StorageAccount",
+      "name": "ArtifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ArtifactName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The name of the artifact to create."
+    },
+    {
+      "name": "ArtifactType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.StorageAccount",
+      "label": "ms-resource:loc.input.label.ArtifactType",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Storage Account must exist prior to deployment."
+      "helpMarkDown": "The name of the artifact to create.",
+      "options": {
+        "Container": "Server",
+        "LocalPath": "File share"
+      }
     },
     {
-      "name": "ServiceName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ServiceName",
+      "name": "TargetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPath",
       "defaultValue": "",
-      "required": true
-    },
-    {
-      "name": "ServiceLocation",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.ServiceLocation",
-      "defaultValue": "South Central US",
-      "required": true,
-      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
-    },
-    {
-      "name": "CsPkg",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.CsPkg",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Path of CsPkg under the default artifact directory."
-    },
-    {
-      "name": "CsCfg",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.CsCfg",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Path of CsCfg under the default artifact directory."
-    },
-    {
-      "name": "Slot",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Slot",
-      "defaultValue": "Production",
-      "required": true,
-      "helpMarkDown": "**Production** or **Staging**"
-    },
-    {
-      "name": "AllowUpgrade",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.AllowUpgrade",
-      "defaultValue": "true",
-      "required": true
+      "required": false,
+      "helpMarkDown": "The file share to which to copy the files",
+      "visibleRule": "ArtifactType = LocalPath"
     }
   ],
-  "sourceDefinitions": [
-    {
-      "target": "StorageAccount",
-      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/storageservices",
-      "selector": "xpath://ServiceName",
-      "authKey": "{$ConnectedServiceName}"
-    },
-    {
-      "target": "ServiceName",
-      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/hostedservices",
-      "selector": "xpath://ServiceName",
-      "authKey": "{$ConnectedServiceName}"
-    }
-  ],
-  "instanceNameFormat": "Azure Deployment: $(CsPkg)",
+  "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Publish-AzureCloudDeployment.ps1",
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Publish-BuildArtifacts.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
