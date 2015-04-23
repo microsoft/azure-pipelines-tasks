@@ -6,7 +6,10 @@ param(
     [string]$csmParametersFile,
     [string]$dscDeployment,
     [string]$moduleUrlParameterName,
-    [string]$sasTokenParameterName
+    [string]$sasTokenParameterName,
+    [string]$vmCreds,
+    [string]$vmUserName,
+    [string]$vmPassword
 )
 
 Write-Verbose -Verbose "Entering script DeployToAzureResourceGroup.ps1"

@@ -12,5 +12,8 @@
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.label.dscDeployment": "Generate SAS token",
   "loc.input.label.moduleUrlParameterName": "Azure Blob Parameter",
-  "loc.input.label.sasTokenParameterName": "SAS Token Parameter"
+  "loc.input.label.sasTokenParameterName": "SAS Token Parameter",
+  "loc.input.label.vmCreds": "Virtual Machine Credentials",
+  "loc.input.label.vmUserName": "Username",
+  "loc.input.label.vmPassword": "Password"
 }

@@ -85,6 +85,17 @@ function Create-Environment
 
     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureResourceGroup.ResourceId)
     $propertyBag.Add("PlatformId", $property)
+
+    if ($vmCreds -eq "true")
+    {
+        $usernameTagKey = "Microsoft-Vslabs-MG-Resource-Username"
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $vmUserName)
+        $propertyBag.Add($usernameTagKey, $property)
+
+        $passwordTagKey = "Microsoft-Vslabs-MG-Resource-Password"
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $vmPassword)
+        $propertyBag.Add($passwordTagKey, $property)
+    }
     
     Write-Verbose "Registering environment $environmentName" -Verbose
 

@@ -100,6 +100,35 @@
             "groupName": "advanced",
             "helpMarkDown": "Name of the SAS token parameter.",
             "visibleRule": "dscDeployment = true"
+        },
+		{
+            "name": "vmCreds",
+            "type": "boolean",
+            "label": "Virtual Machine Credentials",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "helpMarkDown": "Credentials will be same for all virtual machines under this azure resource group."
+        },
+        {
+            "name": "vmUserName",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "User Name for virtual machines under this resource group.",
+            "visibleRule": "vmCreds = true"
+        },
+        {
+            "name": "vmPassword",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Password for virtual machines under this resource group.",
+            "visibleRule": "vmCreds = true"
         }
     ],
     "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
