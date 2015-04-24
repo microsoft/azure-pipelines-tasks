@@ -6,19 +6,19 @@ fs.chmodSync(wrapperScript, "755"); //Make sure the wrapper script is executable
 var gb = new tl.ToolRunner(wrapperScript);
 
 var options = tl.getInput('options');
-if (!options) {
+if (options) {
     gb.arg(options);
 }
 
 var tasks = tl.getInput('tasks', true);
-if (!tasks) {
+if (tasks) {
     gb.arg(tasks);
 }
 
 // update JAVA_HOME if user selected specific JDK version
 var jdkVersion = tl.getInput('jdkVersion');
 var jdkArchitecture = tl.getInput('jdkArchitecture');
-if(!jdkVersion && jdkVersion != 'default') {
+if(jdkVersion != 'default') {
   // jdkVersion should be in the form of 1.7, 1.8, or 1.10
   // jdkArchitecture is either x64 or x86
   // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
