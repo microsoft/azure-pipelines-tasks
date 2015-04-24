@@ -27,7 +27,7 @@ try
     #fetching chef subscription details 
     $connectedServiceDetails = Get-ConnectedServiceDetails -Context $distributedTaskContext -ConnectedServiceName $connectedServiceName
     #setting up chef repo with the chef subscription details fetched before 
-    Setup-ChefRepo $connectedServiceDetails 
+    Initialize-ChefRepo $connectedServiceDetails 
     Invoke-Expression -Command $scriptCommand
 }
 finally
