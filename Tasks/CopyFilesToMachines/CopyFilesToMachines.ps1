@@ -33,7 +33,7 @@ $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName 
 Write-Verbose "envOperationId = $envOperationId" -Verbose
 $envOperationStatus = "Passed"
 
-if($deployFilesInParallel -eq "false")
+if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
     {

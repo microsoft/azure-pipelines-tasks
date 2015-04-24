@@ -38,7 +38,7 @@ $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName 
 Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 $envOperationStatus = "Passed"
 
-if($runPowershellInParallel -eq "false")
+if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach ($resource in $resources)
     {    
