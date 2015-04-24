@@ -37,6 +37,19 @@ if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $c
     Throw "Please specify a complete and a valid template parameters file path"
 }
 
+if ($vmCreds -eq $true)
+{
+    if([string]::IsNullOrEmpty($vmUserName) -eq $true)
+    {
+        Throw "Please specify Username"
+    }
+
+    if([string]::IsNullOrEmpty($vmPassword) -eq $true)
+    {
+        Throw "Please specify Password"
+    }
+}
+
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 $csmFileContent = [System.IO.File]::ReadAllText($csmFile)
 

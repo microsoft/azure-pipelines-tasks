@@ -108,7 +108,7 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "advanced",
-            "helpMarkDown": "Credentials will be same for all virtual machines under this azure resource group."
+            "helpMarkDown": "These VM resource's credentials are used by some of the deployment and test tasks. The username and password should be same for all the Virtual Machines."
         },
         {
             "name": "vmUserName",
@@ -117,7 +117,6 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "User Name for virtual machines under this resource group.",
             "visibleRule": "vmCreds = true"
         },
         {
@@ -127,7 +126,6 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Password for virtual machines under this resource group.",
             "visibleRule": "vmCreds = true"
         }
     ],

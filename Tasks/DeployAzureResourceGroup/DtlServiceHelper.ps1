@@ -88,15 +88,6 @@ function Create-Environment
 
     if ($vmCreds -eq "true")
     {
-        if([string]::IsNullOrEmpty($vmUserName) -eq $true)
-        {
-            Throw "Please specify Username"
-        }
-        if([string]::IsNullOrEmpty($vmPassword) -eq $true)
-        {
-            Throw "Please specify Password"
-        }
-
         $usernameTagKey = "Microsoft-Vslabs-MG-Resource-Username"
         $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $vmUserName)
         $propertyBag.Add($usernameTagKey, $property)
