@@ -98,7 +98,7 @@ if ($cleanBuild)
 }
 
 $nugetPath = Get-ToolPath -Name 'NuGet.exe'
-if (-not $nugetPath)
+if (-not $nugetPath -and $nugetRestore)
 {
     Write-Warning "Unable to locate nuget.exe. Package restore will not be performed for the solutions"
 }
