@@ -45,25 +45,7 @@
             "required": true,
             "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
             "groupName": "environment"
-        },
-        {
-            "name": "alternateCredsUserName",
-            "type": "string",
-            "label": "Alternate credentials Username",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Alternate Credentials Username, only required if connecting to Visual Studio Online",
-            "groupName": "environment"
-        },
-        {
-            "name": "alternateCredsPassword",
-            "type": "string",
-            "label": "Alternate credentials Password",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
-            "groupName": "environment"
-        },
+        },       
         {
             "name": "testMachines",
             "type": "string",
