@@ -1,0 +1,13 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "NuGet Installer",
+  "loc.description": "Installs and updates missing NuGet packages",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.solution": "Path to Solution",
+  "loc.input.label.excludeVersion": "Exclude Version",
+  "loc.input.label.noCache": "Disable local cache",
+  "loc.input.label.nuGetRestoreArgs": "NuGet Arguments",
+  "loc.input.label.nuGetPath": "Path to NuGet.exe"
+}

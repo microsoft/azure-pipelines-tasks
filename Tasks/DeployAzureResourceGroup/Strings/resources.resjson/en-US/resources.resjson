@@ -3,13 +3,14 @@
 // *******************************************************
 {
   "loc.friendlyName": "Deploy Azure Resource Group",
-  "loc.description": "Provision and Deploy an Azure resource group using CSM",
+  "loc.description": "Provision and Deploy an Azure Resource Group",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.label.location": "Location",
-  "loc.input.label.resourceGroupName": "Environment",
-  "loc.input.label.csmFile": "Deployment Template",
-  "loc.input.label.csmParametersFile": "Deployment Template Parameters",
-  "loc.input.label.dscDeployment": "DSC Deployment",
-  "loc.input.label.moduleUrlParameterName": "DSC Module Url Parameter Name",
-  "loc.input.label.sasTokenParameterName": "SAS Token Parameter Name"
+  "loc.input.label.resourceGroupName": "Resource Group",
+  "loc.input.label.csmFile": "Template",
+  "loc.input.label.csmParametersFile": "Template Parameters",
+  "loc.input.label.dscDeployment": "Generate SAS token",
+  "loc.input.label.moduleUrlParameterName": "Azure Blob Parameter",
+  "loc.input.label.sasTokenParameterName": "SAS Token Parameter"
 }

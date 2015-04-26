@@ -1,0 +1,16 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Cloud-based Web Performance Test",
+  "loc.description": "Quickly find perf regressions to your website under load. Powered by VS Online.",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.websiteUrl": "Website Url",
+  "loc.input.label.testName": "Test Name",
+  "loc.input.label.vuLoad": "User Load",
+  "loc.input.label.runDuration": "Run Duration",
+  "loc.input.label.geoLocation": "Geo Location",
+  "loc.input.label.Username": "Alternate credential username",
+  "loc.input.label.Password": "Alternate credential password",
+  "loc.input.label.CltAccountUrl": "VSO Account URL"
+}
