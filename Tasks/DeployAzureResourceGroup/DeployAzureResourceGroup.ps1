@@ -24,14 +24,29 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"
+
+. ./Utility.ps1
+
+#Find the matching deployment definition File
+$csmFile = Get-File $csmFile
+Write-Verbose -Verbose "csmFile = $csmFile"
+
+# csmParametersFile value would be  BUILD_SOURCESDIRECTORY when left empty in UI.
+if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY)
+{
+    #Find the matching deployment definition Parameter File
+    $csmParametersFile = Get-File $csmParametersFile
+    Write-Verbose -Verbose "csmParametersFile = $csmParametersFile"
+}
+
 if (!(Test-Path -Path $csmFile -PathType Leaf))
 {
-    Throw "Please specify a complete and a valid template file path"
+    Throw "Please specify a valid template file path"
 }
 
 if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
 {
-    Throw "Please specify a complete and a valid template parameters file path"
+    Throw "Please specify a valid template parameters file path"
 }
 
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
