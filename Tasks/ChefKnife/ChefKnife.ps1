@@ -25,7 +25,7 @@ Write-Host "scriptCommand=" $scriptCommand
 try
 {
     #fetching chef subscription details 
-    $connectedServiceDetails = Get-ConnectedServiceDetails -Context $distributedTaskContext -ConnectedServiceName $connectedServiceName
+    $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
     #setting up chef repo with the chef subscription details fetched before 
     Setup-ChefRepo $connectedServiceDetails 
     Invoke-Expression -Command $scriptCommand
