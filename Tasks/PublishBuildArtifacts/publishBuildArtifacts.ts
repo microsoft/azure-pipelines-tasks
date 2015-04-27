@@ -141,7 +141,6 @@ else {
     });
 
     filesToCopyPromise.fail((err) => {
-        console.log('1' + err);
         tl.error(err);
     });
 
@@ -199,12 +198,10 @@ else {
                 }
             }
             catch (err) {
-                console.log('2' + err);
                 tl.error(err);
             }
         }
     },(err: any) => {
-        console.log('3' + err);
         tl.error(err);
     });
 }
