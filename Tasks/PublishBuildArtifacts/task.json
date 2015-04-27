@@ -1,7 +1,7 @@
 ﻿{
   "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
   "name": "PublishBuildArtifacts",
-  "friendlyName": "Publish Build Artifacts",
+  "friendlyName": "xplat Publish Build Artifacts",
   "description": "Publish Build artifacts to the server or a file share",
   "category": "Build",
   "visibility": [
@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 65
+    "Patch": 66
   },
   "demands": [
   ],
@@ -60,6 +60,10 @@
       "target": "$(currentDirectory)\\Publish-BuildArtifacts.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
+    },
+    "Node": {
+      "target": "publishBuildArtifacts.js",
+      "argumentFormat": ""            
     }
   }
 }

@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 9
+    "Patch": 52
   },
   "demands": [],
   "inputs": [
@@ -62,6 +62,10 @@
       "target": "$(currentDirectory)\\Publish-BuildArtifacts.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
+    },
+    "Node": {
+      "target": "publishBuildArtifacts.js",
+      "argumentFormat": ""
     }
   }
 }
