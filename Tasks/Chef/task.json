@@ -16,6 +16,10 @@
         "Patch": 1,
         "IsTest": false
     },
+    "demands" : [
+        "Chef",
+        "KnifeReporting"
+    ],
     "inputs": [
         {
             "name": "connectedServiceName",
