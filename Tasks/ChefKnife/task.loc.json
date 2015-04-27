@@ -18,6 +18,9 @@
     "Minor": 0,
     "Patch": 0
   },
+  "demands": [
+    "Chef"
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
