@@ -49,7 +49,13 @@ Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 Write-Verbose "Getting Personal Access Token for the Run"
-$personalAccessToken = Get-PersonalAccessToken -TaskContext $distributedTaskContext
+$vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
+$personalAccessToken = $vssEndpoint.Authorization.Parameters.AccessToken
+
+if ( [string]::IsNullOrEmpty($personalAccessToken))
+{
+  throw "Unable to generate Personal Access Token for the user. Please contact Project Collection Administrator"
+}
 
 Write-Verbose "Calling Invoke-DeployTestAgent"
 Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -EnvironmentName $environment -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken

@@ -134,6 +134,10 @@ function Get-TestAgentConfiguration
             {
                 $machineName = GetConfigValue($line)
             }
+            elseif($line.StartsWith("PersonalAccessTokenUser"))
+            {
+                $personalAccessTokenUserName = GetConfigValue($line)
+            }
         }
     }
 
@@ -144,6 +148,7 @@ function Get-TestAgentConfiguration
     Write-Verbose -Message ("Existing Configuration : EnableAutoLogon : {0}" -f $enableAutoLogon) -Verbose
     Write-Verbose -Message ("Existing Configuration : DisableScreenSaver : {0}" -f $disableScreenSaver) -Verbose
     Write-Verbose -Message ("Existing Configuration : RunningAsProcess : {0}" -f $runningAsProcess) -Verbose
+    Write-Verbose -Message ("Existing Configuration : PersonalAccessTokenUser : {0}" -f $personalAccessTokenUserName) -Verbose
 
     @{
         UserName = $userName
@@ -153,6 +158,7 @@ function Get-TestAgentConfiguration
         RunningAsProcess = $runningAsProcess
         EnvironmentUrl = $envUrl
         MachineName = $machineName 
+        PersonalAccessTokenUser = $personalAccessTokenUserName
      }
 }
 
@@ -282,6 +288,41 @@ function IsDtaExecutionHostRunning
     return $false
 }
 
+function LoadDependentDlls
+{
+	param
+	(		
+		[string] $TestAgentVersion
+	)
+
+	$vsRoot = Locate-TestVersionAndVsRoot($TestAgentVersion)
+	$assemblylist = 
+				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.TeamFoundation.Client.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.TeamFoundation.Common.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.VisualStudio.Services.Common.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\Microsoft.VisualStudio.TestService.Common.dll").ToString()
+
+	foreach ($asm in $assemblylist)
+	{
+		[Reflection.Assembly]::LoadFrom($asm)
+	}
+}
+
+
+function ReadCredentials 
+{
+    param
+    (
+    [String] $TFSCollectionUrl,
+    [String] $TestAgentVersion
+    )
+	
+    LoadDependentDlls($TestAgentVersion)    
+    $creds = [Microsoft.VisualStudio.TestService.AgentExecutionHost.CredentialStoreHelper]::GetStoredCredential($TFSCollectionUrl)       
+  
+    return $creds                    
+}
+
 function CanSkipTestAgentConfiguration
 {
     [OutputType([Bool])]
@@ -295,7 +336,8 @@ function CanSkipTestAgentConfiguration
         [Bool] $EnableAutoLogon,
         [String] $TestAgentVersion,
         [String] $EnvironmentUrl,
-        [String] $MachineName
+        [String] $MachineName,
+        [String] $PersonalAccessToken
     )
 
     Write-Verbose -Message "Finding whether TestAgent configuration is required" -Verbose
@@ -374,7 +416,28 @@ function CanSkipTestAgentConfiguration
             return $false
         }
     }
-	
+
+    if ($PSBoundParameters.ContainsKey('PersonalAccessToken'))
+    {
+      $creds = ReadCredentials -TFSCollectionUrl $TfsCollection -TestAgentVersion $TestAgentVersion
+       if ($creds -eq $null)
+       {
+	     Write-Verbose -Message "No personal access token found in the credential store" -Verbose
+         return $false
+       }
+
+       if($creds.Credentials -eq $null)
+       {
+	     Write-Verbose -Message "No credentials found in stored identity" -Verbose
+         return $false
+       }      
+        $storedString = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($creds.Credentials.SecurePassword))
+        if ($storedString -cne $PersonalAccessToken)
+        {
+		    Write-Verbose -Message "Stored Personal Access Token doesn't match with supplied value" -Verbose
+            return $false
+        }  
+     }      	
     Write-Verbose -Message ("TestAgent reconfiguration not required.") -Verbose
     return $true
 }
@@ -561,7 +624,7 @@ $enableAutoLogon = [Boolean] $enableAutoLogon
 
 $Credential = New-Object System.Management.Automation.PSCredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
 
-$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon 
+$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon  -PersonalAccessToken $PersonalAccessToken
 if ($ret -eq $false)
 {
     ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken
