@@ -48,6 +48,9 @@
                 "West Europe": "West Europe",
                 "East Asia": "East Asia",
                 "Southeast Asia": "Southeast Asia"
+            },
+            "properties": {
+                "EditableOptions": "True" 
             }
         },
         {
