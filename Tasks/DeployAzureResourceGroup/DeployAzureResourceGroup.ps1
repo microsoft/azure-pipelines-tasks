@@ -14,7 +14,7 @@ param(
 
 . ./AzureResourceManagerHelper.ps1
 . ./DtlServiceHelper.ps1
-. ./Utilities.ps1
+. ./Utility.ps1
 
 $ErrorActionPreference = "Stop"
 
@@ -24,45 +24,28 @@ Write-Host "Starting Azure Resource Group Deployment Task"
 Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "environmentName = $resourceGroupName"
 Write-Verbose -Verbose "location = $location"
-Write-Verbose -Verbose "deplyomentDefinitionFile = $csmFile"
-Write-Verbose -Verbose "deploymentDefinitionParametersFile = $csmParametersFile"
 Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
 Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
-
-. ./Utility.ps1
-
 #Find the matching deployment definition File
 $csmFile = Get-File $csmFile
-Write-Verbose -Verbose "csmFile = $csmFile"
+Write-Verbose -Verbose "deplyomentDefinitionFile = $csmFile"
 
 # csmParametersFile value would be  BUILD_SOURCESDIRECTORY when left empty in UI.
 if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY)
 {
     #Find the matching deployment definition Parameter File
     $csmParametersFile = Get-File $csmParametersFile
-    Write-Verbose -Verbose "csmParametersFile = $csmParametersFile"
+    Write-Verbose -Verbose "deploymentDefinitionParametersFile = $csmParametersFile"
 }
 
 Validate-DeploymentFileAndParameters -csmFile $csmFile -csmParametersFile $csmParametersFile
 
+Validate-Credentials -vmCreds $vmCreds -vmUserName $vmUserName -vmPassword $vmPassword
 
-
-if ($vmCreds -eq $true)
-{
-    if([string]::IsNullOrEmpty($vmUserName) -eq $true)
-    {
-        Throw "Please specify valid username"
-    }
-
-    if([string]::IsNullOrEmpty($vmPassword) -eq $true)
-    {
-        Throw "Please specify valid password"
-    }
-}
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 $csmFileContent = [System.IO.File]::ReadAllText($csmFile)
 

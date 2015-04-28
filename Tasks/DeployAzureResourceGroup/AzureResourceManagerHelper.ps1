@@ -45,9 +45,9 @@ function Create-AzureResourceGroup
                 Set-Variable -Name deploymentError -Value $deploymentError -Scope "Global"
 
                 foreach($error in $deploymentError)
-		{
-			Write-Verbose -Verbose $error
-		}
+                {
+                    Write-Verbose -Verbose $error
+                }
 
                 Write-Host "Resource group deployment $resourceGroupName failed"
             }
@@ -86,7 +86,7 @@ function Get-Resources
     {
         Write-Verbose -Verbose "Getting resources in $resourceGroupName"
 
-	$azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
+        $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
         $resources = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]'
 
@@ -99,43 +99,39 @@ function Get-Resources
             $environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2				
             $environmentResource.Name = $resource.Name
             $environmentResource.Type = $resource.ResourceType
-                $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
-                $resourceLocation = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Location)
-                $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
-                $propertyBag.Add("Location", $resourceLocation)
-                $propertyBag.Add("PlatformId", $platformId)
+            $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
+            $resourceLocation = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Location)
+            $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
+            $propertyBag.Add("Location", $resourceLocation)
+            $propertyBag.Add("PlatformId", $platformId)
                     
-                foreach($tagKey in $resource.Tags.Keys)
-                {
-                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
-                    $propertyBag.Add($tagKey, $property)
-                }
+            foreach($tagKey in $resource.Tags.Keys)
+            {
+                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
+                $propertyBag.Add($tagKey, $property)
+            }
 
             foreach($resourcePropertyKey in $resource.Properties.Keys)
-                {
+            {
                 $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Properties.Item($resourcePropertyKey))
                 $propertyBag.Add($resourcePropertyKey, $property)
-                }
+            }
             
+            # getting fqdn value for vm resource
+            $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
+            $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
+            $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
+            $propertyBag.Add($fqdnTagKey, $property)
 
-                $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
-                
-                # getting fqdn value for vm resource
-                $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
-                
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
-                $propertyBag.Add($fqdnTagKey, $property)
+            $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
-                $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
-
-                $resources.Add($environmentResource)
+            $resources.Add($environmentResource)
+        }
         
-            
+        Write-Verbose -Verbose "Got resources: $resources"
+
+        return $resources
     }
-        
-    Write-Verbose -Verbose "Got resources: $resources"
-
-    return $resources
 }
 
 function Get-FQDN
@@ -239,7 +235,7 @@ function Refresh-SASToken
 
         $token  = New-AzureStorageBlobSASToken -Container $containerName -Blob $blobName -Permission r -StartTime $startTime -ExpiryTime $endTime -Verbose -ErrorAction Stop
 
-        Write-Host "Generated SAS token for $fullBlobUri"
+        Write-Host "Generated SAS token for $uri"
 
         Write-Verbose -Verbose "Replacing SAS token for parameter $sasTokenParameterName"
 
@@ -262,18 +258,18 @@ function Get-MachineLogs
 
         Set-Variable -Name azureResourceGroup -Value $azureResourceGroup -Scope "Global"
         
-		$azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
+        $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
         foreach($resource in $azureResourceGroupResources)
         {
-			$name = $resource.Name
+            $name = $resource.Name
             $vmInstanceView = Get-AzureVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
 
             Write-Verbose -Verbose "Machine $name status:"
-			foreach($status in $vmInstanceView.Statuses)
-			{
-				Print-OperationLog -Log $status
-			}
+            foreach($status in $vmInstanceView.Statuses)
+            {
+                Print-OperationLog -Log $status
+            }
 
             if($vmInstanceView.VMAgent.ExtensionHandlers)
             {
@@ -290,39 +286,39 @@ function Get-MachineLogs
 
                 Write-Verbose -Verbose "Extension $extensionName status:"
                 foreach($status in $extension.Statuses)
-				{
-					Print-OperationLog -Log $status
-				}
+                {
+                    Print-OperationLog -Log $status
+                }
 
                 Write-Verbose -Verbose "Extension $extensionName sub status:"
                 foreach($status in $extension.SubStatuses)
-				{
-					Print-OperationLog -Log $status
-				}
+                {
+                    Print-OperationLog -Log $status
+                }
             }
         }
 
-		Write-Verbose -Verbose "End of machine group deployment logs"
+        Write-Verbose -Verbose "End of machine group deployment logs"
     }
 }
 
 function Print-OperationLog
 {
-	param([System.Object]$log)
+    param([System.Object]$log)
 
-	if($log)
-	{
-		$status = $log.DisplayStatus
-		if([string]::IsNullOrEmpty($status) -eq $false)
-		{
-			Write-Verbose -Verbose "Status: $status"
-		}
+    if($log)
+    {
+        $status = $log.DisplayStatus
+        if([string]::IsNullOrEmpty($status) -eq $false)
+        {
+            Write-Verbose -Verbose "Status: $status"
+        }
 
-		$message = $log.Message
-		if([string]::IsNullOrEmpty($message) -eq $false)
-		{
-			Write-Verbose -Verbose "Message: $message"
-		}
-	}
+        $message = $log.Message
+        if([string]::IsNullOrEmpty($message) -eq $false)
+        {
+            Write-Verbose -Verbose "Message: $message"
+        }
+    }
 }
 
