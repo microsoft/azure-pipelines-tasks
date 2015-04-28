@@ -53,8 +53,7 @@ function Create-AzureResourceGroup
             }
             else
             {
-                
-                Write-Host "Created resource group deployment with name $resourceGroupName"
+                Write-Host "Successfully created resource group deployment with name $resourceGroupName"
             }
 
             return $azureResourceGroupDeployment
@@ -96,7 +95,7 @@ function Get-Resources
 
         foreach ($resource in $azureResourceGroupResources)
         {
-            $environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2				
+            $environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2
             $environmentResource.Name = $resource.Name
             $environmentResource.Type = $resource.ResourceType
             $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
