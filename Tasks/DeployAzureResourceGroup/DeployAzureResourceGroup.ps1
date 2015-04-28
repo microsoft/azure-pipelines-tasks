@@ -41,12 +41,12 @@ if ($vmCreds -eq $true)
 {
     if([string]::IsNullOrEmpty($vmUserName) -eq $true)
     {
-        Throw "Please specify Username"
+        Throw "Please specify Valid Username"
     }
 
     if([string]::IsNullOrEmpty($vmPassword) -eq $true)
     {
-        Throw "Please specify Password"
+        Throw "Please specify Valid Password"
     }
 }
 

@@ -66,6 +66,10 @@ function Get-Resources
 
         $resources = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]'
 
+        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName 
+
+        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName 
+
         foreach ($resource in $azureResourceGroup.Resources)
         {
             $environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2
@@ -93,9 +97,9 @@ function Get-Resources
                 }
 
                 $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
-                Write-Verbose "entring in get-fqdn" -Verbose
+                
                 $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
-                Write-Verbose "fqdn is $fqdnTagValue" -Verbose
+                
                 $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
                 $propertyBag.Add($fqdnTagKey, $property)
 
@@ -117,32 +121,38 @@ function Get-FQDN
 {
     param([string]$resourceGroupName,
           [string]$resourceName)
-
-    $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName
-    #$azureVM.NetworkInterfaces
-
-    $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName 
-    foreach ($nic in $networkInterfaceResources)
+    
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($resourceName) -eq $false)
     {
-       if ($nic.Id -eq $azureVM.NetworkInterfaces)
-       {
-            $ipc = $nic.Properties.IpConfigurations
-       }
-    }
+        Write-Verbose "Getting FQDN for the resource $resourceName from resourceGroupName $resourceGroupName" -Verbose
 
-    $publicIPAddr = $ipc[0].Properties.PublicIpAddress.Id
-
-    $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName 
-
-    foreach ($publicIP in $publicIPAddressResources) 
-    {
-        if($publicIP.id -eq $publicIPAddr)
+        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName
+        
+        foreach ($nic in $networkInterfaceResources)
         {
-            $fqdn = $publicIP.Properties.DnsSettings.Fqdn
+           if ($nic.Id -eq $azureVM.NetworkInterfaces)
+           {
+                $ipc = $nic.Properties.IpConfigurations
+           }
+        }
+
+        if($ipc)
+        {
+            $publicIPAddr = $ipc[0].Properties.PublicIpAddress.Id
+
+            foreach ($publicIP in $publicIPAddressResources) 
+            {
+                if($publicIP.id -eq $publicIPAddr)
+                {
+                    $fqdn = $publicIP.Properties.DnsSettings.Fqdn
+                }
+            }
+
+            Write-Verbose "fqdn value for resource $resourceName is  $fqdn" -Verbose
+
+            return $fqdn;
         }
     }
-
-    return $fqdn;
 
 }
 
