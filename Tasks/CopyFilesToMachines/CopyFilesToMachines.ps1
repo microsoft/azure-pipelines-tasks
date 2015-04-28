@@ -16,26 +16,7 @@ Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
 . ./CopyJob.ps1
-
-function Output-ResponseLogs
-{
-    param([string]$operationName,
-          [string]$fqdn,
-          [object]$deploymentResponse)
-
-    Write-Verbose "Finished $operationName operation on $fqdn" -Verbose
-
-    if ([string]::IsNullOrEmpty($deploymentResponse.DeploymentLog) -eq $false)
-    {
-        Write-Verbose "Deployment logs for $operationName operation on $fqdn " -Verbose
-        Write-Verbose ($deploymentResponse.DeploymentLog | Format-List | Out-String) -Verbose
-    }
-    if ([string]::IsNullOrEmpty($deploymentResponse.ServiceLog) -eq $false)
-    {
-        Write-Verbose "Service logs for $operationName operation on $fqdn " -Verbose
-        Write-Verbose ($deploymentResponse.ServiceLog | Format-List | Out-String) -Verbose
-    }
-}
+. ./CopyFilesHelper.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
@@ -52,18 +33,25 @@ $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName 
 Write-Verbose "envOperationId = $envOperationId" -Verbose
 $envOperationStatus = "Passed"
 
-if($deployFilesInParallel -eq "false")
+if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
     {
         $machine = $resource.Name
         Write-Output "Copy Started for - $machine"
 
-        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $environmentName, $envOperationId, $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy, $connection
+		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+		
+        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy
        
         $status = $copyResponse.Status
         Output-ResponseLogs -operationName "copy" -fqdn $machine -deploymentResponse $copyResponse
         Write-Output "Copy Status for machine $machine : $status"
+		
+		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
+		
+		CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $copyResponse
 
         if($status -ne "Passed")
         {
@@ -76,15 +64,23 @@ if($deployFilesInParallel -eq "false")
 
 else
 {
-    $Jobs = New-Object "System.Collections.Generic.Dictionary``2[int, string]"
+    [hashtable]$Jobs = @{} 
 
     foreach($resource in $resources)
     {
         $machine = $resource.Name
+		[hashtable]$resourceProperties = @{} 
+		
+		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+		
+		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+		
+		$resourceProperties.machineName = $machine
+		$resourceProperties.resOperationId = $resOperationId
 
-        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $environmentName, $envOperationId, $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy, $connection
+        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy
 
-        $Jobs.Add($job.Id, $machine)
+        $Jobs.Add($job.Id, $resourceProperties)
     
         Write-Output "Copy Started for - $machine"
     }
@@ -104,11 +100,15 @@ else
                  {
                      $envOperationStatus = "Failed"
                  }
-            
-                 $machineName = $Jobs.Item($job.Id)
+				 
+				 $machineName = $Jobs.Item($job.Id).machineName
+				 $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                  Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
+				 
                  Write-Output "Copy Status for machine $machineName : $status"
+				 
+				 CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
               } 
         }
     }

@@ -51,6 +51,9 @@
         "West Europe": "West Europe",
         "East Asia": "East Asia",
         "Southeast Asia": "Southeast Asia"
+      },
+      "properties": {
+        "EditableOptions": "True"
       }
     },
     {
@@ -103,6 +106,33 @@
       "groupName": "advanced",
       "helpMarkDown": "Name of the SAS token parameter.",
       "visibleRule": "dscDeployment = true"
+    },
+    {
+      "name": "vmCreds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.vmCreds",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "These VM resource's credentials are used by some of the deployment and test tasks. The username and password should be same for all the Virtual Machines."
+    },
+    {
+      "name": "vmUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vmUserName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "visibleRule": "vmCreds = true"
+    },
+    {
+      "name": "vmPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vmPassword",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "visibleRule": "vmCreds = true"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",

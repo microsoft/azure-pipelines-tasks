@@ -13,6 +13,7 @@
     "Minor": 0,
     "Patch": 0
   },
+  "minimumAgentVersion": "1.82.0",
   "groups": [
     {
       "name": "advanced",
@@ -33,7 +34,7 @@
       "name": "SearchPattern",
       "type": "string",
       "label": "ms-resource:loc.input.label.SearchPattern",
-      "defaultValue": "",
+      "defaultValue": "**\\bin\\**\\*.pdb",
       "required": false,
       "helpMarkDown": "The pattern used to discover the pdb files to publish.",
       "groupName": "advanced"

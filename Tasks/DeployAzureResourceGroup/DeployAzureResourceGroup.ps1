@@ -6,7 +6,10 @@ param(
     [string]$csmParametersFile,
     [string]$dscDeployment,
     [string]$moduleUrlParameterName,
-    [string]$sasTokenParameterName
+    [string]$sasTokenParameterName,
+    [string]$vmCreds,
+    [string]$vmUserName,
+    [string]$vmPassword
 )
 
 . ./AzureResourceManagerHelper.ps1
@@ -29,8 +32,37 @@ Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
+
+. ./Utility.ps1
+
+#Find the matching deployment definition File
+$csmFile = Get-File $csmFile
+Write-Verbose -Verbose "csmFile = $csmFile"
+
+# csmParametersFile value would be  BUILD_SOURCESDIRECTORY when left empty in UI.
+if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY)
+{
+    #Find the matching deployment definition Parameter File
+    $csmParametersFile = Get-File $csmParametersFile
+    Write-Verbose -Verbose "csmParametersFile = $csmParametersFile"
+}
+
 Validate-DeploymentFileAndParameters -csmFile $csmFile -csmParametersFile $csmParametersFile
 
+
+
+if ($vmCreds -eq $true)
+{
+    if([string]::IsNullOrEmpty($vmUserName) -eq $true)
+    {
+        Throw "Please specify valid username"
+    }
+
+    if([string]::IsNullOrEmpty($vmPassword) -eq $true)
+    {
+        Throw "Please specify valid password"
+    }
+}
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 $csmFileContent = [System.IO.File]::ReadAllText($csmFile)
 

@@ -47,7 +47,7 @@
       "name": "goals",
       "type": "string",
       "label": "ms-resource:loc.input.label.goals",
-      "defaultValue": "compile",
+      "defaultValue": "package",
       "required": false
     },
     {
@@ -82,6 +82,10 @@
   "execution": {
     "JavaScript": {
       "target": "maven.js",
+      "argumentFormat": ""
+    },
+    "Node": {
+      "target": "maven2.js",
       "argumentFormat": ""
     },
     "PowerShell": {
