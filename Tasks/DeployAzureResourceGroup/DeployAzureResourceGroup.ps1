@@ -6,7 +6,10 @@ param(
     [string]$csmParametersFile,
     [string]$dscDeployment,
     [string]$moduleUrlParameterName,
-    [string]$sasTokenParameterName
+    [string]$sasTokenParameterName,
+    [string]$vmCreds,
+    [string]$vmUserName,
+    [string]$vmPassword
 )
 
 Write-Verbose -Verbose "Entering script DeployToAzureResourceGroup.ps1"
@@ -47,6 +50,19 @@ if (!(Test-Path -Path $csmFile -PathType Leaf))
 if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
 {
     Throw "Please specify a valid template parameters file path"
+}
+
+if ($vmCreds -eq $true)
+{
+    if([string]::IsNullOrEmpty($vmUserName) -eq $true)
+    {
+        Throw "Please specify valid username"
+    }
+
+    if([string]::IsNullOrEmpty($vmPassword) -eq $true)
+    {
+        Throw "Please specify valid password"
+    }
 }
 
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)

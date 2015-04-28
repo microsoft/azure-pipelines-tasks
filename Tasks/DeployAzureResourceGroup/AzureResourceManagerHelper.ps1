@@ -66,52 +66,48 @@ function Get-Resources
 
         $resources = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]'
 
+        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName 
+
+        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName 
+
         foreach ($resource in $azureResourceGroup.Resources)
         {
             $environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2
             $environmentResource.Name = $resource.Name
             $environmentResource.Type = $resource.ResourceType
 
-            $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
-            $resourceLocation = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Location)
-            $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
-            $propertyBag.Add("Location", $resourceLocation)
-            $propertyBag.Add("PlatformId", $platformId)
+            if ($environmentResource.Type -eq "Microsoft.Compute/virtualMachines")
+            {
+                $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
+                $resourceLocation = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Location)
+                $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
+                $propertyBag.Add("Location", $resourceLocation)
+                $propertyBag.Add("PlatformId", $platformId)
             
-            foreach($tagKey in $resource.Tags.Keys)
-            {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
-                $propertyBag.Add($tagKey, $property)
-            }
-
-            foreach($resourceProperty in $resource.Properties)
-            {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Properties.Item($resourceProperty.Key))
-                $propertyBag.Add($resourceProperty.Key, $property)
-            }
-
-            if ($resource.ResourceType -eq "Microsoft.Network/publicIPAddresses")
-            {
-                $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
-                $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
-                if ([string]::IsNullOrEmpty($fqdnTagValue) -ne $true)
+                foreach($tagKey in $resource.Tags.Keys)
                 {
-                    # FQDN value contain . as last character so we need to remove it 
-                    if($fqdnTagValue.EndsWith("."))
-                    {
-                        $fqdnTagValue = $fqdnTagValue.TrimEnd('.')
-                    }
-                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
-                    $propertyBag.Add($fqdnTagKey, $property)
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
+                    $propertyBag.Add($tagKey, $property)
                 }
 
-                 $resourceName = $resource.Name
-                 Write-Verbose "resource name is :$resourceName and fqdn is :$fqdnTagValue " -Verbose
+                foreach($resourceProperty in $resource.Properties)
+                {
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Properties.Item($resourceProperty.Key))
+                    $propertyBag.Add($resourceProperty.Key, $property)
+                }
+
+                $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
+                
+                # getting fqdn value for vm resource
+                $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
+                
+                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
+                $propertyBag.Add($fqdnTagKey, $property)
+
+                $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
+
+                $resources.Add($environmentResource)
             }
-
-            $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
-
-            $resources.Add($environmentResource)
             
         }
         
@@ -123,12 +119,43 @@ function Get-Resources
 
 function Get-FQDN
 {
-     param([string]$resourceGroupName,
-           [string]$resourceName)
+    param([string]$resourceGroupName,
+          [string]$resourceName)
+    
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($resourceName) -eq $false)
+    {
+        Write-Verbose "Getting FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
 
-     $publicIP = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -Name $resourceName
+        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName
+        
+        foreach ($nic in $networkInterfaceResources)
+        {
+           if ($nic.Id -eq $azureVM.NetworkInterfaces)
+           {
+                $ipc = $nic.Properties.IpConfigurations
+                break
+           }
+        }
 
-     return $publicIP.Properties.DnsSettings.Fqdn;
+        if($ipc)
+        {
+            $publicIPAddr = $ipc.Properties.PublicIpAddress.Id
+
+            foreach ($publicIP in $publicIPAddressResources) 
+            {
+                if($publicIP.id -eq $publicIPAddr)
+                {
+                    $fqdn = $publicIP.Properties.DnsSettings.Fqdn
+                    break
+                }
+            }
+
+            Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+
+            return $fqdn;
+        }
+    }
+
 }
 
 function Get-CsmParameterObject
