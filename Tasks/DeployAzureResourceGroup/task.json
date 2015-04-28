@@ -101,7 +101,7 @@
             "helpMarkDown": "Name of the SAS token parameter.",
             "visibleRule": "dscDeployment = true"
         },
-		{
+        {
             "name": "vmCreds",
             "type": "boolean",
             "label": "Virtual Machine Credentials",

@@ -98,11 +98,11 @@ function Get-Resources
 
                 $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
                 
+                # getting fqdn value for vm resource
                 $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
                 
                 $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
                 $propertyBag.Add($fqdnTagKey, $property)
-
 
                 $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
@@ -124,7 +124,7 @@ function Get-FQDN
     
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($resourceName) -eq $false)
     {
-        Write-Verbose "Getting FQDN for the resource $resourceName from resourceGroupName $resourceGroupName" -Verbose
+        Write-Verbose "Getting FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
 
         $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName
         
@@ -148,7 +148,7 @@ function Get-FQDN
                 }
             }
 
-            Write-Verbose "fqdn value for resource $resourceName is  $fqdn" -Verbose
+            Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
 
             return $fqdn;
         }
