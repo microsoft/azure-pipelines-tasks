@@ -133,18 +133,20 @@ function Get-FQDN
            if ($nic.Id -eq $azureVM.NetworkInterfaces)
            {
                 $ipc = $nic.Properties.IpConfigurations
+                break
            }
         }
 
         if($ipc)
         {
-            $publicIPAddr = $ipc[0].Properties.PublicIpAddress.Id
+            $publicIPAddr = $ipc.Properties.PublicIpAddress.Id
 
             foreach ($publicIP in $publicIPAddressResources) 
             {
                 if($publicIP.id -eq $publicIPAddr)
                 {
                     $fqdn = $publicIP.Properties.DnsSettings.Fqdn
+                    break
                 }
             }
 
