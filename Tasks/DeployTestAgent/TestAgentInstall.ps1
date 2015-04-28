@@ -24,7 +24,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 		try
 		{
 			$argumentsarr = $Arguments -split " "
-			$exitCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ComputerName . -Credential $creds -ErrorAction Stop
+			$exitCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ErrorAction Stop
 		}
 		catch
 		{
