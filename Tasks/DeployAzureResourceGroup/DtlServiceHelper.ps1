@@ -86,11 +86,11 @@ function Create-Environment
     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureResourceGroup.ResourceId)
     $propertyBag.Add("PlatformId", $property)
     
-    Write-Verbose "Registering environment $environmentName" -Verbose
+    Write-Verbose -Verbose "Registering environment $environmentName"
 
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
-    Write-Verbose "Registered environment $environment" -Verbose
+    Write-Host "Registered environment $environmentName"
 
     return $environment
 }
@@ -199,7 +199,7 @@ function Check-EnvironmentNameAvailability
 
     if ([string]::IsNullOrEmpty($environmentName) -eq $false)
     {
-        Write-Verbose "Checking environment name availability" -Verbose
+        Write-Verbose -Verbose "Checking environment name availability"
 
         $environment = Get-Environment -EnvironmentName $environmentName -Connection $connection -ErrorAction silentlycontinue
 
@@ -211,7 +211,7 @@ function Check-EnvironmentNameAvailability
             }
         }
 
-        Write-Verbose "Checked environment name availability" -Verbose
+        Write-Host "Checked environment name availability"
     }
 }
 
