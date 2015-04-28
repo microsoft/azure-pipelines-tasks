@@ -1,4 +1,4 @@
-# VSO Build.Preview Tasks
+# VSO Build.Preview Tasks (release M82)
 <br/>
 ![Build Tasks](/taskbanner.png?raw=true "Build Tasks")
 <br/>
