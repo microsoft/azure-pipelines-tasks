@@ -81,7 +81,7 @@ var artifactName: string = tl.getInput('ArtifactName');
 var artifactType: string = tl.getInput('ArtifactType');
 // targetPath is used for file shares
 var targetPath: string = tl.getInput('TargetPath');
-var agentRoot: string = tl.getVariable('agent.buildDirectory');
+var findRoot: string = tl.getPathInput('CopyRoot');
 
 if (!artifactName) {
     // nothing to do
@@ -101,20 +101,28 @@ else {
     var stagingFolder: string = tl.getVariable('build.stagingdirectory');
     stagingFolder = path.join(stagingFolder, artifactName);
     
+    console.log('Cleaning staging folder: ' + stagingFolder);
+    tl.rmRF(stagingFolder); 
+
     tl.debug('Preparing artifact content in staging folder ' + stagingFolder + '...');
 
     // enumerate all files
     
     var files: string[] = [];
-    var allFiles: string[] = tl.find(agentRoot);
+    var allFiles: string[] = tl.find(findRoot);
     if (contents && allFiles) {
         tl.debug("allFiles contains " + allFiles.length + " files");
+
         // a map to eliminate duplicates
         var map = {};
         for (var i: number = 0; i < contents.length; i++) {
             var pattern = contents[i].trim();
-            tl.debug('Globbing ' + pattern);
-            var matches = tl.match(allFiles, pattern, { matchBase: true });
+            tl.debug('Matching ' + pattern);
+
+            var realPattern = path.join(findRoot, pattern);
+            tl.debug('Actual pattern: ' + realPattern);
+
+            var matches = tl.match(allFiles, realPattern, { matchBase: true });
             tl.debug('Matched ' + matches.length + ' files');
             for (var j: number = 0; j < matches.length; j++) {
                 var matchPath = matches[j];
@@ -132,7 +140,7 @@ else {
 
     // copy the files to the staging folder
 
-    tl.debug("found " + files.length + " files");
+    console.log("found " + files.length + " files");
     if (files.length > 0) {
         // make sure the staging folder exists
         tl.mkdirP(stagingFolder);
