@@ -6,48 +6,45 @@ param(
     [string]$csmParametersFile,
     [string]$dscDeployment,
     [string]$moduleUrlParameterName,
-    [string]$sasTokenParameterName
+    [string]$sasTokenParameterName,
+    [string]$vmCreds,
+    [string]$vmUserName,
+    [string]$vmPassword
 )
 
-Write-Verbose -Verbose "Entering script DeployToAzureResourceGroup.ps1"
-Write-Output "Entering script DeployToAzureResourceGroup.ps1"
+. ./AzureResourceManagerHelper.ps1
+. ./DtlServiceHelper.ps1
+. ./Utility.ps1
+
+$ErrorActionPreference = "Stop"
+
+Write-Host "******************************************************************************"
+Write-Host "Starting Azure Resource Group Deployment Task"
 
 Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "environmentName = $resourceGroupName"
 Write-Verbose -Verbose "location = $location"
-Write-Verbose -Verbose "deplyomentDefinitionFile = $csmFile"
-Write-Verbose -Verbose "deploymentDefinitionParametersFile = $csmParametersFile"
 Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
 Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
-$ErrorActionPreference = "Stop"
-
-. ./Utility.ps1
-
 #Find the matching deployment definition File
 $csmFile = Get-File $csmFile
-Write-Verbose -Verbose "csmFile = $csmFile"
+Write-Verbose -Verbose "deplyomentDefinitionFile = $csmFile"
 
 # csmParametersFile value would be  BUILD_SOURCESDIRECTORY when left empty in UI.
 if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY)
 {
     #Find the matching deployment definition Parameter File
     $csmParametersFile = Get-File $csmParametersFile
-    Write-Verbose -Verbose "csmParametersFile = $csmParametersFile"
+    Write-Verbose -Verbose "deploymentDefinitionParametersFile = $csmParametersFile"
 }
 
-if (!(Test-Path -Path $csmFile -PathType Leaf))
-{
-    Throw "Please specify a valid template file path"
-}
+Validate-DeploymentFileAndParameters -csmFile $csmFile -csmParametersFile $csmParametersFile
 
-if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
-{
-    Throw "Please specify a valid template parameters file path"
-}
+Validate-Credentials -vmCreds $vmCreds -vmUserName $vmUserName -vmPassword $vmPassword
 
 $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 $csmFileContent = [System.IO.File]::ReadAllText($csmFile)
@@ -56,9 +53,6 @@ if(Test-Path -Path $csmParametersFile -PathType Leaf)
 {
     $csmParametersFileContent = [System.IO.File]::ReadAllText($csmParametersFile)
 }
-
-. ./AzureResourceManagerHelper.ps1
-. ./DtlServiceHelper.ps1
 
 Check-EnvironmentNameAvailability -environmentName $resourceGroupName
 
@@ -90,5 +84,10 @@ $environment = Create-Environment -environmentName $resourceGroupName -environme
 
 $environmentOperationId = Create-EnvironmentOperation -environment $environment
 
-Write-Verbose -Verbose  "Leaving script DeployToAzureResourceGroup.ps1"
-Write-Output "Leaving script DeployToAzureResourceGroup.ps1"
+if($deploymentError)
+{
+    Throw "Deploy Azure Resource Group Task failed. View logs for details"
+}
+
+Write-Host "Completing Azure Resource Group Deployment Task"
+Write-Host "******************************************************************************"

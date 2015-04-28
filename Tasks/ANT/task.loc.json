@@ -84,6 +84,10 @@
       "target": "ant.js",
       "argumentFormat": ""
     },
+    "Node": {
+      "target": "ant2.js",
+      "argumentFormat": ""
+    },
     "PowerShell": {
       "target": "$(currentDirectory)\\ant.ps1",
       "argumentFormat": "",
