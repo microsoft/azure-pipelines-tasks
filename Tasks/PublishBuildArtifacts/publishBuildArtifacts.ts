@@ -83,12 +83,6 @@ var artifactType: string = tl.getInput('ArtifactType');
 var targetPath: string = tl.getInput('TargetPath');
 var agentRoot: string = tl.getVariable('agent.buildDirectory');
 
-tl.debug('artifactName: ' + artifactName);
-tl.debug('artifactType: ' + artifactType);
-tl.debug('targetPath: ' + targetPath);
-tl.debug('agentRoot: ' + agentRoot);
-tl.debug('contents: ' + contents);
-
 if (!artifactName) {
     // nothing to do
     tl.warning('Artifact name is not specified.');
@@ -110,98 +104,88 @@ else {
     tl.debug('Preparing artifact content in staging folder ' + stagingFolder + '...');
 
     // enumerate all files
-    var allFilesPromise = tl.readDirectory(agentRoot, true, false);
-
-    // determine the list of files to copy
-    var filesToCopyPromise = allFilesPromise.then((allFiles: string[]) => {
-        if (contents && allFiles) {
-            tl.debug("allFiles contains " + allFiles.length + " files");
-            // a map to eliminate duplicates
-            var map = {};
-            var results: string[] = [];
-            for (var i: number = 0; i < contents.length; i++) {
-                var pattern = contents[i].trim();
-                tl.debug('Globbing ' + pattern);
-                var matches = tl.match(allFiles, pattern, { matchBase: true });
-                tl.debug('Matched ' + matches.length + ' files');
-                for (var j: number = 0; j < matches.length; j++) {
-                    var path = matches[j];
-                    if (!map.hasOwnProperty(path)) {
-                        map[path] = true;
-                        results.push(path);
-                    }
+    
+    var files: string[] = [];
+    var allFiles: string[] = tl.find(agentRoot);
+    if (contents && allFiles) {
+        tl.debug("allFiles contains " + allFiles.length + " files");
+        // a map to eliminate duplicates
+        var map = {};
+        for (var i: number = 0; i < contents.length; i++) {
+            var pattern = contents[i].trim();
+            tl.debug('Globbing ' + pattern);
+            var matches = tl.match(allFiles, pattern, { matchBase: true });
+            tl.debug('Matched ' + matches.length + ' files');
+            for (var j: number = 0; j < matches.length; j++) {
+                var matchPath = matches[j];
+                if (!map.hasOwnProperty(matchPath)) {
+                    map[matchPath] = true;
+                    files.push(matchPath);
                 }
             }
-            return results;
         }
-        else {
-            tl.debug("Either contents or allFiles is empty");
-            return allFiles;
-        }
-    });
-
-    filesToCopyPromise.fail((err) => {
-        tl.error(err);
-    });
+    }
+    else {
+        tl.debug("Either contents or allFiles is empty");
+        files = allFiles;
+    }
 
     // copy the files to the staging folder
-    filesToCopyPromise.then((files: string[]) => {
-        tl.debug("found " + files.length + " files or folders");
-        if (files.length > 0) {
-            // make sure the staging folder exists
-            tl.mkdirP(stagingFolder);
 
-            var commonRoot = getCommonLocalPath(files);
-            var useCommonRoot = !!commonRoot;
-            if (useCommonRoot) {
-                tl.debug("There is a common root (" + commonRoot + ") for the files. Using the remaining path elements in staging folder.");
-            }
+    tl.debug("found " + files.length + " files");
+    if (files.length > 0) {
+        // make sure the staging folder exists
+        tl.mkdirP(stagingFolder);
 
-            try {
-                var createdFolders = {};
-                files.forEach((file: string) => {
-                    var stagingPath = stagingFolder;
-                    if (useCommonRoot) {
-                        var relativePath = file.substring(commonRoot.length)
-                            .replace(/^\\/g, "")
-                            .replace(/^\//g, "");
-                        stagingPath = path.dirname(path.join(stagingFolder, relativePath));
-                    }
-                    
-                    if (!createdFolders[stagingPath]) {
-                        tl.debug("Creating folder " + stagingPath);
-                        tl.mkdirP(stagingPath);
-                        createdFolders[stagingPath] = true;
-                    }
-                    
-                    tl.debug("Copying " + file + " to " + stagingPath);
-                    tl.cp("-Rf", file, stagingPath);
-                });
+        var commonRoot = getCommonLocalPath(files);
+        var useCommonRoot = !!commonRoot;
+        if (useCommonRoot) {
+            tl.debug("There is a common root (" + commonRoot + ") for the files. Using the remaining path elements in staging folder.");
+        }
 
-                var data = {
-                    artifacttype: artifactType,
-                    artifactname: artifactName
-                };
-        
-                // upload or copy
-                if (artifactType === "container") {
-                    data["containerfolder"] = artifactName;
-                    data["localpath"] = stagingFolder;
-                    tl.command("artifact.upload", data, "Uploading artifact");
+        try {
+            var createdFolders = {};
+            files.forEach((file: string) => {
+                var stagingPath = stagingFolder;
+                if (useCommonRoot) {
+                    var relativePath = file.substring(commonRoot.length)
+                        .replace(/^\\/g, "")
+                        .replace(/^\//g, "");
+                    stagingPath = path.dirname(path.join(stagingFolder, relativePath));
                 }
-                else if (artifactType === "filepath") {
-                    tl.mkdirP(targetPath);
-                    tl.cp("-Rf", stagingFolder, targetPath);
-
-                    data["artifactlocation"] = targetPath;
-                    tl.command("artifact.associate", data, "Associating artifact");
+                
+                if (!createdFolders[stagingPath]) {
+                    tl.debug("Creating folder " + stagingPath);
+                    tl.mkdirP(stagingPath);
+                    createdFolders[stagingPath] = true;
                 }
+                
+                tl.debug("Copying " + file + " to " + stagingPath);
+                tl.cp("-Rf", file, stagingPath);
+            });
+
+            var data = {
+                artifacttype: artifactType,
+                artifactname: artifactName
+            };
+    
+            // upload or copy
+            if (artifactType === "container") {
+                data["containerfolder"] = artifactName;
+                data["localpath"] = stagingFolder;
+                tl.command("artifact.upload", data, "Uploading artifact");
             }
-            catch (err) {
-                tl.error(err);
+            else if (artifactType === "filepath") {
+                tl.mkdirP(targetPath);
+                tl.cp("-Rf", stagingFolder, targetPath);
+
+                data["artifactlocation"] = targetPath;
+                tl.command("artifact.associate", data, "Associating artifact");
             }
         }
-    },(err: any) => {
-        tl.error(err);
-    });
+        catch (err) {
+            tl.error(err);
+            tl.exit(1);
+        }
+    }
 }
