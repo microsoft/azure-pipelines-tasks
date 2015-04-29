@@ -77,4 +77,4 @@ From the root of the repo (replace version with appropriate version)
 gulp package --version 1.0.29
 ```
 
-Tasks will be create a nuget package in the _package directory.
+Tasks will be create a nuget package in the _package directory.  This is only used for TFS internal engineering.
