@@ -2,6 +2,9 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
+    $CopyRoot,
+
+    [String] [Parameter(Mandatory = $true)]
     $Contents,
 
     [String] [Parameter(Mandatory = $true)]
@@ -15,6 +18,7 @@ param
 )
 
 Write-Host "Entering script Publish-BuildArtifacts.ps1"
+Write-Host "CopyRoot = $CopyRoot"
 Write-Host "Contents = $Contents"
 Write-Host "ArtifactName = $ArtifactName"
 Write-Host "ArtifactType = $ArtifactType"
@@ -23,14 +27,13 @@ Write-Host "ArtifactType = $ArtifactType"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Build"
 
-$agentRoot = Get-Variable $distributedTaskContext "agent.buildDirectory"
 $buildId = Get-Variable $distributedTaskContext "build.buildId"
 $teamProjectId = Get-Variable $distributedTaskContext "system.teamProjectId"
 $stagingFolder = Get-Variable $distributedTaskContext "build.artifactstagingdirectory"
 
 # gather files into staging folder
 Write-Host "Preparing artifact content in staging folder $stagingFolder..."
-$artifactStagingFolder = Copy-BuildArtifact $distributedTaskContext $agentRoot $stagingFolder $ArtifactName $Contents
+$artifactStagingFolder = Copy-BuildArtifact $distributedTaskContext $CopyRoot $stagingFolder $ArtifactName $Contents
 
 # copy staging folder to artifact location
 if ($ArtifactType -ieq "container")
