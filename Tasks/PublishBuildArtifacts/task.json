@@ -65,7 +65,7 @@
   "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "execution": {
     "PowerShell": {
-      "target": "$(currentDirectory)\\Publish-BuildArtifacts.ps1",
+      "target": "$(currentDirectory)\\PublishBuildArtifacts.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     },

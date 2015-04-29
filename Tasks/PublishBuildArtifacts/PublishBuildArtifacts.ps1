@@ -30,7 +30,7 @@ $stagingFolder = Get-Variable $distributedTaskContext "build.artifactstagingdire
 
 # gather files into staging folder
 Write-Host "Preparing artifact content in staging folder $stagingFolder..."
-$artifactStagingFolder = Prepare-BuildArtifact $distributedTaskContext $agentRoot $stagingFolder $ArtifactName $Contents
+$artifactStagingFolder = Copy-BuildArtifact $distributedTaskContext $agentRoot $stagingFolder $ArtifactName $Contents
 
 # copy staging folder to artifact location
 if ($ArtifactType -ieq "container")

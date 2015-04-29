@@ -58,7 +58,7 @@ The general format for a logging command is:
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.complete]
+                    ##vso[task.complete]current operation
                 </p>
             </td>
             <td>
@@ -68,9 +68,9 @@ The general format for a logging command is:
             </td>
             <td>
                 <p align="left">
-                    Finish timeline record for current task, set task result. When result not provide, set result to succeeded.<br>
+                    Finish timeline record for current task, set task result and current operation. When result not provide, set result to succeeded.<br>
                     Example: <br>
-                    ##vso[task.complete result=Succeeded;]
+                    ##vso[task.complete result=Succeeded;]DONE
                 </p>
             </td>
         </tr>
