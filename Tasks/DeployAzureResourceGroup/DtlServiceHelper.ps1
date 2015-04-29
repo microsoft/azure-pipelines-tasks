@@ -38,7 +38,7 @@ function Create-EnvironmentDefinition
     param([string]$environmentDefinitionName,
           [string]$providerName)
   
-    Write-Verbose "Registering machine group definiiton definition $environmentDefinitionName" -Verbose
+    Write-Verbose "Registering machine group definition $environmentDefinitionName" -Verbose
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
     $csmContent = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $csmFileContent)
