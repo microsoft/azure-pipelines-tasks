@@ -125,7 +125,7 @@ function Create-EnvironmentOperation
         $operationEndTime = New-Object System.DateTime
         $operationStatus = "Unknown"
 
-        if(!$deploymentOperationLogs)
+        if($deploymentOperationLogs)
         {
             $operationStartTime = $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].EventTimestamp
             $operationEndTime = $deploymentOperationLogs[0].EventTimestamp
@@ -164,18 +164,19 @@ function Create-ResourceOperations
             $operationEndTime = New-Object System.DateTime
             $operationStatus = "Unknown"
 
-            if(!$logs)
+            if($resourceOperationLogs)
             {
-                $operationStartTime = $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].EventTimestamp
-                $operationEndTime = $deploymentOperationLogs[0].EventTimestamp
-                $operationStatus = $deploymentOperationLogs[0].Status
+                $operationStartTime = $resourceOperationLogs[$resourceOperationLogs.Count - 1].EventTimestamp
+                $operationEndTime = $resourceOperationLogs[0].EventTimestamp
+                $operationStatus = $resourceOperationLogs[0].Status
             }
 
             Write-Verbose "Saving resource $name provisioning operation" -Verbose
 
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $operationStartTime -EnvironmentOperationId $environmentOperationId -Connection $connection -ErrorAction Stop
 
-            Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $operationStatus -EndTime $operationEndTime -Connection $connection -ErrorAction Stop
+			$logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
+            Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $operationStatus -EndTime $operationEndTime -Logs $logs -Connection $connection -ErrorAction Stop
 
             Write-Verbose "Completed saving resource $name provisioning operation with id $resOperationId" -Verbose
         }
