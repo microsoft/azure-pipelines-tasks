@@ -111,20 +111,19 @@ The general format for a logging command is:
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.setvariable]
+                    ##vso[task.setvariable]value
                 </p>
             </td>
             <td>
                 <p align="left">
-                    name=variable name (Required) <br>
-                    value=variable value (Required) <br>
+                    variable=variable name (Required) <br>
                 </p>
             </td>
             <td>
                 <p align="left">
                     Set variable in variable service of taskcontext. The first task can set an variable, and following tasks are able to use the variable.<br>
                     Example: <br>
-                    ##vso[task.setvariable name=testvar;value=testvalue;]
+					##vso[task.setvariable variable=testvar;]testvalue<br> 
                 </p>
             </td>
         </tr>
@@ -145,33 +144,31 @@ The general format for a logging command is:
         <tr>
             <td>
                 <p align="left">
-                    ##vso[artifact.associate]
+                    ##vso[artifact.associate]artfact location
                 </p>
             </td>
             <td>
                 <p align="left">
                     artifactname=artifact name (Required)
-                    artifactlocation=location of artifact (Required)
                 </p>
             </td>
             <td>
                 <p align="left">
-                    Create artifact line, artifact location is required to be a file container path, VC path or UNC share path. <br>
+                    Create an artifact link, artifact location is required to be a file container path, VC path or UNC share path. <br>
                     Example: <br>
-                    ##vso[artifact.associate artifactname=drop;artifactlocation=#/1/build;] <br>
+                    ##vso[artifact.associate artifactname=drop;]#/1/build <br>
                 </p>
             </td>
         </tr>
         <tr>
             <td>
                 <p align="left">
-                    ##vso[artifact.upload]
+                    ##vso[artifact.upload]local file path
                 </p>
             </td>
             <td>
                 <p align="left">
                     containerfolder=folder that the file will upload to, folder will be created if needed. (Required)<br>
-                    localpath=file path on your disk (Required)<br>
                     artifactname=artifact name<br>
                 </p>
             </td>
@@ -179,7 +176,7 @@ The general format for a logging command is:
                 <p align="left">
                     Upload local file into a file container folder, create artifact if artifactname provided.<br>
                     Example: <br>
-                    ##vso[artifact.upload containerfolder=testresult;localpath=c:\testresult.trx;artifactname=uploadedresult;]<br>
+                    ##vso[artifact.upload containerfolder=testresult;artifactname=uploadedresult;]c:\testresult.trx<br>
                 </p>
             </td>
     </tbody>
@@ -199,38 +196,36 @@ The general format for a logging command is:
         <tr>
             <td>
                 <p align="left">
-                    ##vso[build.uploadlog]
+                    ##vso[build.uploadlog]local file path
                 </p>
             </td>
             <td>
                 <p align="left">
-                    filepath=full path to log file (Required)
                 </p>
             </td>
             <td>
                 <p align="left">
                     Upload user interested log to build’s container “logs\tool” folder.<br>
                     Example: <br>
-                    ##vso[build.uploadlog filepath=c:\msbuild.log]
+                    ##vso[build.uploadlog]c:\msbuild.log
                 </p>
             </td>
         </tr>
         <tr>
             <td>
                 <p align="left">
-                    ##vso[build.uploadsummary]
+                    ##vso[build.uploadsummary]local file path
                 </p>
             </td>
             <td>
                 <p align="left">
-                    filepath=full path to .md file (Required)
                 </p>
             </td>
             <td>
                 <p align="left">
                     Upload customized summary.md to build’s container “summaries” folder.<br>
                     Example: <br>
-                    ##vso[build.uploadsummary filepath=c:\testsummary.md]
+                    ##vso[build.uploadsummary]c:\testsummary.md
                 </p>
             </td>
         </tr>
