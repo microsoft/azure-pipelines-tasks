@@ -13,8 +13,22 @@ Write-Verbose "emulatorName = $emulatorName"
 Write-Verbose "headlessEmulator = $headlessEmulator"
 Write-Verbose "timeout = $timeout seconds"
 
+if ($env:ANDROID_HOME -eq $null)
+{
+    throw 'Environment variable not set: ANDROID_HOME'
+}
+
 $adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
+if (!(Test-Path -Path $adbexe))
+{
+    throw "File not found: $adbexe"
+}
+
 $androidbat = $env:ANDROID_HOME + "\tools\android.bat"
+if (!(Test-Path -Path $androidbat))
+{
+    throw "File not found: $androidbat"
+}
 
 # Set up default emulator settings 
 $abi = "default/x86"
@@ -80,7 +94,7 @@ Receive-Job $bootJob -OutVariable bootCompleted | Out-Null
 
 # Check if emulator booted up successfully
 if([boolean]$bootCompleted -ne $TRUE) {
-	Write-Error "Error: Emulator failed to start within $timeout seconds."
+    Write-Error "Error: Emulator failed to start within $timeout seconds."
 }
 
 Write-Verbose "Leaving script StartAndroidEmulator.ps1"
