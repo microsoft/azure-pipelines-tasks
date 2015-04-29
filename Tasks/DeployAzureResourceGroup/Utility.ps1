@@ -52,13 +52,20 @@ function Get-CsmParameterObject
 
     if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false)
     {
-        Write-Verbose -Verbose "Generating csm parameter object"
+        Write-Verbose "Generating csm parameter object" -Verbose
 
         $csmJObject = [Newtonsoft.Json.Linq.JObject]::Parse($csmParameterFileContent)
-        $parameters = $csmJObject.GetValue("parameters")
-        $parametersObject  = $parameters.ToObject([System.Collections.Hashtable])
-
         $newParametersObject = New-Object 'System.Collections.Hashtable'
+        
+        if($csmJObject.ContainsKey("parameters") -eq $true)
+        {
+            $parameters = $csmJObject.GetValue("parameters")
+            $parametersObject  = $parameters.ToObject([System.Collections.Hashtable])
+        }
+        else
+        {
+            $parametersObject = $csmJObject.ToObject([System.Collections.Hashtable])
+        }
 
         foreach($key in $parametersObject.Keys)
         {
@@ -66,7 +73,7 @@ function Get-CsmParameterObject
             $newParametersObject.Add($key, $parameterValue["value"].ToString())
         }
 
-        Write-Verbose -Verbose "Generated the parameter object."
+        Write-Verbose "Generated the parameter object" -Verbose
 
         return $newParametersObject
     }
