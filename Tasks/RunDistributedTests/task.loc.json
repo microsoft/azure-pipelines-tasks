@@ -95,6 +95,15 @@
       "required": false,
       "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
       "groupName": "testSettings"
+    },
+    {
+      "name": "testConfigurations",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testConfigurations",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Test Configuration against which test results should be reported. For example, DefaultConfigurationId:10;Name~chromedriver:11. Test configurations can be viewed/defined in Microsoft Test Manager. Test results will be reported against DefaultConfiguration if not mapped with any test case filter expression.",
+      "groupName": "testSettings"
     }
   ],
   "instanceNameFormat": "Test assemblies $(sourcefilters)",
