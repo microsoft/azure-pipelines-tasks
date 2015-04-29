@@ -46,9 +46,6 @@ if (!$projectFiles)
     throw "No project with search pattern '$project' was found."
 }
 
-# construct build parameters
-$timeline = Start-Timeline -Context $distributedTaskContext
-
 $args = $msbuildArguments;
 
 if ($configuration)
@@ -90,7 +87,7 @@ Write-Verbose "args = $args"
 # build each project file
 foreach ($pf in $projectFiles)
 {
-    Invoke-MSBuild $pf -Timeline $timeline -LogFile "$pf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
+    Invoke-MSBuild $pf -LogFile "$pf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
 }
 
 Write-Verbose "Leaving script XamarinAndroid.ps1"
