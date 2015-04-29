@@ -35,11 +35,8 @@ if($jdkVersion -and $jdkVersion -ne "default")
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
-Write-Verbose "Creating a new timeline for logging events"
-$timeline = Start-Timeline -Context $distributedTaskContext
-
 Write-Verbose "Running Ant..."
-Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets -Timeline $timeline
+Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets
 
 Write-Verbose "Leaving script Ant.ps1"
 
