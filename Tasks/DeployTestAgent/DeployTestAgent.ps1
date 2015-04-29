@@ -54,7 +54,7 @@ $personalAccessToken = $vssEndpoint.Authorization.Parameters.AccessToken
 
 if ( [string]::IsNullOrEmpty($personalAccessToken))
 {
-  throw "Unable to generate Personal Access Token for the user. Please contact Project Collection Administrator"
+  throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
 }
 
 Write-Verbose "Calling Invoke-DeployTestAgent"
