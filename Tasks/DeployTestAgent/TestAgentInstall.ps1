@@ -16,15 +16,13 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 	{
 		Write-Verbose -Message ("Installing/Updating Test Agent.") -verbose
 
-		$creds = New-Object System.Management.Automation.PSCredential -ArgumentList $UserName, (ConvertTo-SecureString -String $Password -AsPlainText -Force)
-
 		# Invoke the TA installation
 		Write-Verbose -Message ("Invoking the command {0} with arguments {1}" -f $SetupPath, $Arguments) -verbose
 
 		try
 		{
 			$argumentsarr = $Arguments -split " "
-			$exitCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ComputerName . -Credential $creds -ErrorAction Stop
+			$exitCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ErrorAction Stop
 		}
 		catch
 		{
