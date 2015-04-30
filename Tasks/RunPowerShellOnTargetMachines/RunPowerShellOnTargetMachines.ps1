@@ -27,9 +27,9 @@ $port = '5985'
 
 $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
 
-$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -Connection $connection -ErrorAction Stop
+$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Microsoft-Vslabs-MG-Resource-Username" -Connection $connection -ErrorAction Stop
 
-$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -Connection $connection -ErrorAction Stop
+$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Microsoft-Vslabs-MG-Resource-Password" -Connection $connection -ErrorAction Stop
 
 $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
 
