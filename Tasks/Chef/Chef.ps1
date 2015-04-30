@@ -24,6 +24,12 @@ function Validate-EnvironmentInput()
 	{
 		throw "Environment name `"$environment`" is not found on the chef server"	
 	}
+
+    $nodesList = Invoke-Knife @("node list -E $environmentName")
+    if([string]::isNullOrEmpty($nodesList))
+    {
+        throw "The chef environment: `"$environment`" has no nodes in it"	
+    }
 }
 
 function Validate-AttributesInput()
@@ -126,6 +132,11 @@ function Update-LocalEnvironmentAttributes()
 		if($jsonObject.SelectToken($attribute.Key) -eq $null)
 		{
 			throw "Cannot find environment attribute with key: $($attribute.Key)"
+		}
+		
+		if(-not ($jsonObject.SelectToken($attribute.Key).Value -is [String]))
+		{
+			throw "The attribute with key: '$($attribute.Key)' is not a leaf attribute"				
 		}
 
 		$jsonObject.SelectToken($attribute.Key).Value = $attribute.Value	
