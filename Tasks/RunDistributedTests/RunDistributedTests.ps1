@@ -5,7 +5,8 @@ param(
     [string]$testFilterCriteria,
     [string]$runSettingsFile,
     [string]$codeCoverageEnabled,
-    [string]$overrideRunParams
+    [string]$overrideRunParams,
+	[string]$testConfigurations
 )
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
@@ -25,6 +26,6 @@ Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 Write-Verbose "Calling Invoke-RunDistributedTests"
-Invoke-RunDistributedTests -EnvironmentName $environment -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection
+Invoke-RunDistributedTests -EnvironmentName $environment -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations
 
 Write-Verbose "Leaving script RunDistributedTests.ps1"
