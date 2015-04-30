@@ -21,7 +21,7 @@ Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
-function GetResourceCredentials
+function Get-ResourceCredentials
 {
 	param([object]$resource)
 		
@@ -59,7 +59,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
 		Write-Verbose "Get resource credentials" -Verbose
 		
-		$credential = GetResourceCredentials -resource $resource
+		$credential = Get-ResourceCredentials -resource $resource
 		
         $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential
 		
@@ -96,7 +96,7 @@ else
 		
 		Write-Verbose "Get resource credentials" -Verbose
 		
-		$credential = GetResourceCredentials -resource $resource
+		$credential = Get-ResourceCredentials -resource $resource
 		
 		$resourceProperties.machineName = $machine
 		$resourceProperties.resOperationId = $resOperationId
