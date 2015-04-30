@@ -35,11 +35,8 @@ if($jdkVersion -and $jdkVersion -ne "default")
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
-Write-Verbose "Creating a new timeline for logging events"
-$timeline = Start-Timeline -Context $distributedTaskContext
-
 Write-Verbose "Running Maven..."
-Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals -Timeline $timeline
+Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
 
 Write-Verbose "Leaving script Maven.ps1"
 
