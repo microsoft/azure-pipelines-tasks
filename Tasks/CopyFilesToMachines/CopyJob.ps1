@@ -28,7 +28,7 @@ param (
 
     Write-Verbose "Initiating copy on $fqdn " -Verbose
    
-   	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath $sourcePath -DestinationPath $targetPath -Credential `$credential -WinRMPort $winrmPort $cleanTargetPathOption $skipCACheckOption $httpProtocallOption"	
+   	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winrmPort $cleanTargetPathOption $skipCACheckOption $httpProtocallOption"	
 	
 	Write-Host $copyFilesToTargetMachineBlockString
 	
