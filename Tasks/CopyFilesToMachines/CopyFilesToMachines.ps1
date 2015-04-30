@@ -24,6 +24,10 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
 
+$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -Connection $connection -ErrorAction Stop
+
+$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -Connection $connection -ErrorAction Stop
+
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -Connection $connection -ErrorAction Stop
 
 Write-Verbose "envOperationId = $envOperationId" -Verbose
@@ -38,11 +42,6 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-		
-		$machineUserName = $resource.Username
-		Write-Verbose "`t`t Resource Username - $machineUserName" -Verbose
-		
-		$machinePassword = $resource.Password
 		
         $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy
        
@@ -75,10 +74,6 @@ else
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-		$machineUserName = $resource.Username
-		Write-Verbose "`t`t Resource Username - $machineUserName" -Verbose
-		
-		$machinePassword = $resource.Password
 		
 		$resourceProperties.machineName = $machine
 		$resourceProperties.resOperationId = $resOperationId
