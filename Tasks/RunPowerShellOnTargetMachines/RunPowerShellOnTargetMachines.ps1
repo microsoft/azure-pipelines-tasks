@@ -21,17 +21,24 @@ Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
+function Get-ResourceCredentials
+{
+	param([object]$resource)
+		
+	$machineUserName = $resource.Username
+	Write-Verbose "`t`t Resource Username - $machineUserName" -Verbose
+	$machinePassword = $resource.Password
+
+	$credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
+	
+	return $credential
+}
+
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 $port = '5985'
 
 $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
-
-$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -Connection $connection -ErrorAction Stop
-
-$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -Connection $connection -ErrorAction Stop
-
-$credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Deployment" -Connection $connection -ErrorAction Stop
 
@@ -49,6 +56,10 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+		
+		Write-Verbose "Get resource credentials" -Verbose
+		
+		$credential = Get-ResourceCredentials -resource $resource
 		
         $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential
 		
@@ -82,6 +93,10 @@ else
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+		
+		Write-Verbose "Get resource credentials" -Verbose
+		
+		$credential = Get-ResourceCredentials -resource $resource
 		
 		$resourceProperties.machineName = $machine
 		$resourceProperties.resOperationId = $resOperationId
