@@ -20,30 +20,99 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
+	# Default + constants #
+$defaultWirmPort = '5985'
+$defaultSkipCACheckOption = '-SkipCACheck'
+$defaulthttpProtocallOption = '-UseHttp'
+$resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
+$resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
+$resourceWinRMHttpsPortKeyName = 'WinRM_HttpsPort'
+$envOperationStatus = 'Passed'
+
+function GetResourceCredentials
+{
+	param([object]$resource)
+		
+	$machineUserName = $resource.Username
+	Write-Verbose "`t`t Resource Username - $machineUserName" -Verbose
+	$machinePassword = $resource.Password
+
+	$credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
+	
+	return $credential
+}
+
+function GetResourcesProperties
+{
+    param([object]$resources)
+
+	$resourcesProperties = @()
+	
+	foreach ($resource in $resources)
+    {
+		[hashtable]$eachResourceProperties = @{} 
+		
+		$resourceName = $resource.Name
+		Write-Verbose "Get Resource properties for $resourceName" -Verbose		
+		
+		$fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+		
+		Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose	
+		
+		$eachResourceProperties.fqdn = $fqdn
+
+		$eachResourceProperties.httpProtocallOption = ''
+		$eachResourceProperties.skipCACheckOption = $defaultSkipCACheckOption
+
+		$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+		
+		if([string]::IsNullOrEmpty($winrmPort))
+		{
+			$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+			if([string]::IsNullOrEmpty($winrmPort))
+			{
+				Write-Verbose "`t`t Resource $resourceName does not have any winrm port defined , use the default - $defaultWirmPort" -Verbose
+				$winrmPort = $defaultWirmPort
+			}
+			$eachResourceProperties.httpProtocallOption = $defaulthttpProtocallOption
+		}
+		else
+		{
+			# Do not use 'SkipCACheck' option in case of winrm https port
+			$eachResourceProperties.skipCACheckOption = ''
+			Write-Verbose "`t`t Resource $resourceName has winrm https port $winrmPort defined , CA option will be used to expand the target path if it is provided as environment variable " -Verbose
+		}
+		$eachResourceProperties.winrmPort = $winrmPort
+		
+		$eachResourceProperties.credential = GetResourceCredentials -resource $resource
+		
+		$resourcesProperties += $eachResourceProperties
+	}
+	 return $resourcesProperties
+}
+
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
 
-$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -Connection $connection -ErrorAction Stop
-
-$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -Connection $connection -ErrorAction Stop
-
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -Connection $connection -ErrorAction Stop
 
 Write-Verbose "envOperationId = $envOperationId" -Verbose
-$envOperationStatus = "Passed"
+
+$resourcesProperties = GetResourcesProperties -resources $resources
 
 if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
-    foreach($resource in $resources)
-    {
-        $machine = $resource.Name
+    foreach ($resource in $resourcesProperties)
+    {    	
+        $machine = $resource.fqdn
+		
         Write-Output "Copy Started for - $machine"
 
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy
+        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resource.credential, $cleanTargetBeforeCopy, $resource.winrmPort, $resource.httpProtocallOption, $resource.skipCACheckOption
        
         $status = $copyResponse.Status
         Output-ResponseLogs -operationName "copy" -fqdn $machine -deploymentResponse $copyResponse
@@ -61,14 +130,16 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         }
     } 
 }
-
 else
 {
     [hashtable]$Jobs = @{} 
 
-    foreach($resource in $resources)
-    {
-        $machine = $resource.Name
+    foreach ($resource in $resourcesProperties)
+    {    	
+        $machine = $resource.fqdn
+		
+        Write-Output "Copy Started for - $machine"
+		
 		[hashtable]$resourceProperties = @{} 
 		
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
@@ -78,11 +149,10 @@ else
 		$resourceProperties.machineName = $machine
 		$resourceProperties.resOperationId = $resOperationId
 
-        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy
+        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resource.credential, $cleanTargetBeforeCopy, $resource.winrmPort, $resource.httpProtocallOption, $resource.skipCACheckOption
 
         $Jobs.Add($job.Id, $resourceProperties)
-    
-        Write-Output "Copy Started for - $machine"
+		
     }
 
     While (Get-Job)

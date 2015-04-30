@@ -4,7 +4,9 @@ param (
     [string]$scriptPath,
     [string]$scriptArguments,
     [string]$initializationScriptPath,
-    [string]$runPowershellInParallel
+    [string]$runPowershellInParallel,
+	[string]$connectionProtocol,
+	[string]$security
     )
 
 Write-Verbose "Entering script RunPowerShellOnTargetMachines.ps1" -Verbose
@@ -14,6 +16,9 @@ Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
+Write-Verbose "Connection Protocol = $connectionProtocol" -Verbose
+Write-Verbose "Security Option = $security" -Verbose
+
 
 . ./RunPowerShellHelper.ps1
 . ./RunPowerShellJob.ps1
@@ -21,36 +26,130 @@ Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
+	# Constants #
+$resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
+$resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
+$resourceWinRMHttpsPortKeyName = 'WinRM_HttpsPort'
+$httpConnectionProtocolValue = 'http'
+$httpsConnectionProtocolValue = 'https'
+$skipCACheckOptionValue = 'doSkipCAchek'
+
+
+	# Defaults #
+$envOperationStatus = "Passed"
+$defaultWirmHttpPort = '5985'
+$defaultWirmHttpsPort = '5986'
+$useHttpProtocol = $true
+$httpProtocallOption = '-UseHttp'
+$doSkipCACheckOption = '-SkipCACheck'
+
+	# Process input parameters #
+if($connectionProtocol -eq $httpsConnectionProtocolValue)
+{
+	$useHttpProtocol = $false	# use https connection
+	$httpProtocallOption = ''
+	
+	# check if certificate authentication is opted for https connection
+	if($security -ne $skipCACheckOptionValue )
+	{
+		$doSkipCACheckOption = ''
+		Write-Verbose "Certificate authentication will be used to connect to target machines for given winrm https port" -Verbose
+	}
+	else
+	{
+		Write-Verbose "Certificate authentication is not opted to connect to target machines for given winrm https port" -Verbose
+	}
+}
+
+function GetResourceCredentials
+{
+	param([object]$resource)
+	
+	$machineUserName = $resource.Username
+	
+	Write-Verbose "`t`t Resource Username - $machineUserName" -Verbose
+
+	$machinePassword = $resource.Password
+
+	$credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
+	
+	return $credential
+}
+
+function GetResourcesProperties
+{
+	param([object]$resources)
+	
+	$resourcesProperties = @()
+	
+	foreach ($resource in $resources)
+    {
+		[hashtable]$eachResourceProperties = @{} 
+		
+		$resourceName = $resource.Name
+		
+		Write-Verbose "Get Resource properties for $resourceName " -Verbose			
+		
+		$fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+		
+		Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose
+		
+		$eachResourceProperties.fqdn = $fqdn
+		
+		if($useHttpProtocol)
+		{
+			$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+			if([string]::IsNullOrEmpty($winrmPort))
+			{
+				$winrmPort = $defaultWirmHttpPort
+				Write-Verbose "`t`t Resource $resourceName does not have any $resourceWinRMHttpPortKeyName defined , use the default - $defaultWirmHttpsPort for deployment" -Verbose			
+			}
+		}
+		else
+		{
+			$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+			if([string]::IsNullOrEmpty($winrmPort))
+			{
+				$winrmPort = $defaultWirmHttpsPort
+				Write-Verbose "`t`t Resource $resourceName does not have any $resourceWinRMHttpsPortKeyName defined , use the default - $defaultWirmHttpsPort for deployment" -Verbose		
+			}
+		}
+		
+		Write-Verbose "`t`t Resource winrmPort - $winrmPort" -Verbose
+		
+		$eachResourceProperties.winrmPort = $winrmPort
+		
+		$eachResourceProperties.credential = GetResourceCredentials -resource $resource
+
+		$resourcesProperties += $eachResourceProperties
+	}
+	
+	return $resourcesProperties
+}
+
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-$port = '5985'
-
 $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
-
-$machineUserName = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Username" -Connection $connection -ErrorAction Stop
-
-$machinePassword = Get-EnvironmentProperty -EnvironmentName $environmentName -Key "Password" -Connection $connection -ErrorAction Stop
-
-$credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Deployment" -Connection $connection -ErrorAction Stop
 
 Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
-$envOperationStatus = "Passed"
+
+$resourcesProperties = GetResourcesProperties -resources $resources
 
 if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
-    foreach ($resource in $resources)
-    {    
-        $machine = $resource.Name
-        
+    foreach ($resource in $resourcesProperties)
+    {    	
+        $machine = $resource.fqdn
+		
 		Write-Output "Deployment Started for - $machine"
 		
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential
+        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resource.winrmPort, $scriptArguments, $initializationScriptPath, $resource.credential, $httpProtocallOption, $doSkipCACheckOption
 		
         Output-ResponseLogs -operationName "deployment" -fqdn $machine -deploymentResponse $deploymentResponse
 
@@ -74,23 +173,24 @@ else
 {
 	[hashtable]$Jobs = @{} 
 
-    foreach($resource in $resources)
-    {
-        $machine = $resource.Name
-		[hashtable]$resourceProperties = @{} 
+    foreach ($resource in $resourcesProperties)
+    {       		
+        $machine = $resource.fqdn
+		
+		Write-Output "Deployment Started for - $machine"
 		
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-		$resourceProperties.machineName = $machine
-		$resourceProperties.resOperationId = $resOperationId
+		[hashtable]$resourceMetadata = @{} 
+		$resourceMetadata.machineName = $machine
+		$resourceMetadata.resOperationId = $resOperationId
 		
-        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $port, $scriptArguments, $initializationScriptPath, $credential
+        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resource.winrmPort, $scriptArguments, $initializationScriptPath, $resource.credential, $httpProtocallOption, $doSkipCACheckOption
 
-        $Jobs.Add($job.Id, $resourceProperties)
+        $Jobs.Add($job.Id, $resourceMetadata)
          
-        Write-Output "Deployment Started for - $machine"
     }
     While (Get-Job)
     {

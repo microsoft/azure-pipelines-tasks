@@ -72,7 +72,35 @@
             "required": false,
             "groupName":"advanced",
             "helpMarkDown": "Setting it to true will run powershell parellely on the machines."
-        }
+        },
+		{
+            "name": "connectionProtocol",
+            "type": "radio",
+            "label": "Connection Protocol",
+			"required":false,
+            "defaultValue": "http",
+            "groupName":"advanced",
+            "helpMarkDown": "Select the connection protocol to be used while connecting to the target machines.",
+			"options": {
+                "http":"http",
+                "https":"https"
+            }  
+        },
+		{
+            "name":"security",
+            "type":"pickList",
+            "label":"Https Security",
+            "required":false,
+            "groupName":"advanced",
+            "defaultValue":"Don’t Skip CA Check, I have the required certificates installed",
+            "helpMarkDown": "Select the Certificate Authentication option for https connection.",
+            "visibleRule": "connectionProtocol = https",
+            "options": {
+                "doSkipCAchek":"Skip CA Check",
+                "donotSkipCAchek":"Don’t Skip CA Check, I have the required certificates installed",
+                "donotSkipCAchekForSelfSigned":"Don’t Skip CA Check, I have self-signed certificates installed"
+            }
+        }		
     ],
     "instanceNameFormat": "Run PowerShell on Machine Group $(EnvironmentName)",
 	 "execution": {
