@@ -61,7 +61,7 @@ if($connectionProtocol -eq $httpsConnectionProtocolValue)
 	}
 }
 
-function GetResourceCredentials
+function Get-ResourceCredentials
 {
 	param([object]$resource)
 	
@@ -76,7 +76,7 @@ function GetResourceCredentials
 	return $credential
 }
 
-function GetResourcesProperties
+function Get-ResourcesProperties
 {
 	param([object]$resources)
 	
@@ -119,7 +119,7 @@ function GetResourcesProperties
 		
 		$eachResourceProperties.winrmPort = $winrmPort
 		
-		$eachResourceProperties.credential = GetResourceCredentials -resource $resource
+		$eachResourceProperties.credential = Get-ResourceCredentials -resource $resource
 
 		$resourcesProperties += $eachResourceProperties
 	}
@@ -135,7 +135,7 @@ $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName 
 
 Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 
-$resourcesProperties = GetResourcesProperties -resources $resources
+$resourcesProperties = Get-ResourcesProperties -resources $resources
 
 if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
