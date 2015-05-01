@@ -4,6 +4,9 @@
   "friendlyName": "Publish Test Results",
   "description": "Publish Test Results to VSO/TFS",
   "category": "Test",
+  "visibility": [
+                  "Build"
+                ],  
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
