@@ -143,7 +143,7 @@ function Get-Resources
         {
             if($fqdnErrorCount -gt 0 -and $fqdnErrorCount -ne $azureResourceGroupResources.Count)
             {
-                 Write-Host "Unable to get FQDN for $fqdnErrorCount resources in ResourceGroup : $resourceGroupName" -Verbose
+                 Write-Warning "Unable to get FQDN for $fqdnErrorCount resources in ResourceGroup : $resourceGroupName" -Verbose
             }
 
         }
