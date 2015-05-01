@@ -27,9 +27,14 @@
       "isExpanded": true
     },
     {
-      "name": "testSettings",
-      "displayName": "ms-resource:loc.group.displayName.testSettings",
-      "isExpanded": true
+        "name": "testSettings",
+        "displayName": "ms-resource:loc.group.displayName.testSettings",
+        "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
     }
   ],
   "inputs": [
@@ -88,13 +93,22 @@
       "groupName": "testSettings"
     },
     {
-      "name": "overrideRunParams",
+        "name": "overrideRunParams",
+        "type": "string",
+        "label": "ms-resource:loc.input.label.overrideRunParams",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+        "groupName": "testSettings"
+    },
+    {
+      "name": "autEnvironment",
       "type": "string",
-      "label": "ms-resource:loc.input.label.overrideRunParams",
+      "label": "ms-resource:loc.input.label.autEnvironment",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
-      "groupName": "testSettings"
+      "helpMarkDown": "The name of the Application Under Test(AUT), Machine Group on which server processes such as W3WP.exe is running.",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "Test assemblies $(sourcefilters)",

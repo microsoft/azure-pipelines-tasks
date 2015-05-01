@@ -117,6 +117,15 @@
             "required": false,
             "helpMarkDown": "Optionally specify if test agent needs to be updated.",
             "groupName": "advanced"
+        },
+        {
+            "name": "isDataCollectionOnly",
+            "type": "boolean",
+            "label": "Enable Data Collection Only",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Denotes if test agent needs to be used only for datacollection and not for running tests. Typically done on AUT environments.",
+            "groupName": "agentConfiguration"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",

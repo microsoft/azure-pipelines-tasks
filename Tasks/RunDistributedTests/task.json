@@ -28,6 +28,11 @@
             "name": "testSettings",
             "displayName": "Test Settings",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -93,6 +98,15 @@
             "required": false,
             "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
             "groupName": "testSettings"
+        },
+        {
+            "name": "autEnvironment",
+            "type": "string",
+            "label": "Application Under Test Machine Group",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The name of the Application Under Test Machine Group on which server processes such as W3WP.exe is running.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Test assemblies $(sourcefilters)",
