@@ -5,9 +5,8 @@
     "description": "Run tests distributedly using multiple test agents in a lab machine group.",
     "category": "Test",
     "visibility": [
-                "Preview",
-                "Build",
-                "Release"
+                    "Preview",
+                    "Build"
                   ],
     "author": "Microsoft Corporation",
     "version": {
