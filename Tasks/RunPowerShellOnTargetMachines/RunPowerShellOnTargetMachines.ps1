@@ -159,7 +159,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
 		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 		
-		CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $deploymentResponse
+		Complete-ResourceOperations -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $deploymentResponse
 
         if ($status -ne "Passed")
         {
@@ -218,7 +218,7 @@ else
 				 
 				 Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 				 
-				 CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
+				 Complete-ResourceOperations -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
                  
               } 
         }

@@ -29,7 +29,7 @@ $resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
 $resourceWinRMHttpsPortKeyName = 'WinRM_HttpsPort'
 $envOperationStatus = 'Passed'
 
-function GetResourceCredentials
+function Get-ResourceCredentials
 {
 	param([object]$resource)
 		
@@ -42,7 +42,7 @@ function GetResourceCredentials
 	return $credential
 }
 
-function GetResourcesProperties
+function Get-ResourcesProperties
 {
     param([object]$resources)
 
@@ -84,7 +84,7 @@ function GetResourcesProperties
 		}
 		$eachResourceProperties.winrmPort = $winrmPort
 		
-		$eachResourceProperties.credential = GetResourceCredentials -resource $resource
+		$eachResourceProperties.credential = Get-ResourceCredentials -resource $resource
 		
 		$resourcesProperties += $eachResourceProperties
 	}
@@ -99,7 +99,7 @@ $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName 
 
 Write-Verbose "envOperationId = $envOperationId" -Verbose
 
-$resourcesProperties = GetResourcesProperties -resources $resources
+$resourcesProperties = Get-ResourcesProperties -resources $resources
 
 if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
@@ -120,7 +120,7 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
 		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 		
-		CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $copyResponse
+		Complete-ResourceOperations -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $copyResponse
 
         if($status -ne "Passed")
         {
@@ -178,7 +178,7 @@ else
 				 
                  Write-Output "Copy Status for machine $machineName : $status"
 				 
-				 CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
+				 Complete-ResourceOperations -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
               } 
         }
     }
