@@ -158,7 +158,7 @@ function Create-ResourceOperations
             $name = $resource.Name
             
             $resourcePlatformId = $resource.Properties.GetProperty("PlatformId")
-            $resourceOperationLogs = $operationLogs | Where-Object {$_.ResourceId -eq $resourcePlatformId}
+            $resourceOperationLogs = $operationLogs | Where-Object {$_.ResourceId -like "*$resourcePlatformId*"}
 
             $operationStartTime = New-Object System.DateTime
             $operationEndTime = New-Object System.DateTime
