@@ -70,6 +70,22 @@
       "groupName": "testSettings"
     },
     {
+      "name": "platform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.platform",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "testSettings"
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "testSettings"
+    },
+    {
       "name": "runSettingsFile",
       "type": "string",
       "label": "ms-resource:loc.input.label.runSettingsFile",

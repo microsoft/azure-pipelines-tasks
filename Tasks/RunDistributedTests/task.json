@@ -68,6 +68,22 @@
             "groupName": "testSettings"
         },
         {
+		    "name": "platform", 
+		    "type": "string", 
+		    "label": "Platform", 
+		    "defaultValue":"", 
+		    "required":false,
+			"groupName": "testSettings"
+		},
+		{
+		    "name": "configuration", 
+		    "type": "string", 
+		    "label": "Configuration", 
+		    "defaultValue":"", 
+		    "required":false,
+			"groupName": "testSettings"
+		},
+        {
             "name": "runSettingsFile",
             "type": "string",
             "label": "Run Settings File",

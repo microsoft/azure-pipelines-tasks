@@ -10,6 +10,8 @@
   "loc.input.label.dropLocation": "Test Drop Location",
   "loc.input.label.sourcefilters": "Test Assembly",
   "loc.input.label.testFilterCriteria": "Test Filter criteria",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
   "loc.input.label.runSettingsFile": "Run Settings File",
   "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
   "loc.input.label.overrideRunParams": "Override TestRun Parameters",
