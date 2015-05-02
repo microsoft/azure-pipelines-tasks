@@ -7,7 +7,8 @@ param(
     [string]$alternateCredsUserName,
     [string]$alternateCredsPassword,
     [string]$agentLocation,
-    [string]$updateTestAgent
+    [string]$updateTestAgent,
+	[string]$isDataCollectionOnly
 )
 
 # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
@@ -21,6 +22,7 @@ Write-Verbose "runAsProcess = $runAsProcess"
 Write-Verbose "logonAutomatically = $logonAutomatically"
 Write-Verbose "disableScreenSaver = $disableScreenSaver"
 Write-Verbose "updateTestAgent = $updateTestAgent"
+Write-Verbose "isDataCollectionOnly = $isDataCollectionOnly"
 
 
 if ([string]::IsNullOrWhiteSpace($agentLocation))
@@ -51,6 +53,6 @@ Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 Write-Verbose "Calling Invoke-DeployTestAgent"
-Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -EnvironmentName $environment -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AlternateCredUserName $alternateCredsUserName -AlternateCredPassword $alternateCredsPassword -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection
+Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -EnvironmentName $environment -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AlternateCredUserName $alternateCredsUserName -AlternateCredPassword $alternateCredsPassword -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -DataCollectionOnly $isDataCollectionOnly -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection
 
 Write-Verbose "Leaving script DeployTestAgent.ps1"

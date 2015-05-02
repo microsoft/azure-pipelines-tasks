@@ -125,7 +125,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Denotes if test agent needs to be used only for datacollection and not for running tests. Typically done on AUT environments.",
-            "groupName": "agentConfiguration"
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",

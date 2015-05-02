@@ -100,7 +100,7 @@
             "groupName": "testSettings"
         },
         {
-            "name": "autEnvironment",
+            "name": "autEnvironmentName",
             "type": "string",
             "label": "Application Under Test Machine Group",
             "defaultValue": "",

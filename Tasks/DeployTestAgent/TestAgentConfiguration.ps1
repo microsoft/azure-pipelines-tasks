@@ -140,6 +140,10 @@ function Get-TestAgentConfiguration
             {
                 $alternateCredUserName = GetConfigValue($line)
             }
+            elseif ($line.StartsWith("Capabilities"))
+            {
+                $capabilities = GetConfigValue($line)
+            }
         }
     }
 
@@ -151,6 +155,7 @@ function Get-TestAgentConfiguration
     Write-Verbose -Message ("Existing Configuration : EnableAutoLogon : {0}" -f $enableAutoLogon) -Verbose
     Write-Verbose -Message ("Existing Configuration : DisableScreenSaver : {0}" -f $disableScreenSaver) -Verbose
     Write-Verbose -Message ("Existing Configuration : RunningAsProcess : {0}" -f $runningAsProcess) -Verbose
+    Write-Verbose -Message ("Existing Configuration : Capabilities : {0}" -f $capabilities) -Verbose
 
     @{
         UserName = $userName
@@ -161,6 +166,7 @@ function Get-TestAgentConfiguration
         EnvironmentUrl = $envUrl
         MachineName = $machineName 
         AlternateCredUserName = $alternateCredUserName
+        Capabilities = $capabilities
     }
 }
 
@@ -178,7 +184,8 @@ function Set-TestAgentConfiguration
         [String] $EnvironmentUrl,
         [String] $AlternateCredUserName,
         [String] $AlternateCredPassword,
-        [String] $MachineName
+        [String] $MachineName,
+        [String] $Capabilities
     )
 
     switch ($AsServiceOrProcess)
@@ -229,6 +236,11 @@ function Set-TestAgentConfiguration
     if (-not [string]::IsNullOrWhiteSpace($MachineName))
     {
         $configArgs = $configArgs +  ("/dtlMachineName:{0}" -f $MachineName)
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($Capabilities))
+    {
+        $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
 
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $UserCredential -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword
@@ -307,7 +319,8 @@ function CanSkipTestAgentConfiguration
         [String] $EnvironmentUrl,
         [String] $AlternateCredUserName,
         [String] $AlternateCredPassword,
-        [String] $MachineName
+        [String] $MachineName,
+        [String] $Capabilities
     )
 
     Write-Verbose -Message "Finding whether TestAgent configuration is required" -Verbose
@@ -392,6 +405,17 @@ function CanSkipTestAgentConfiguration
         if ($UserCredential.UserName -ne $existingConfiguration.UserName)
         {
             Write-Verbose -Message ("AlternateCredentials UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $UserCredential.UserName, $existingConfiguration.UserName) -Verbose
+            return $false
+        }
+    }
+
+    if ($PSBoundParameters.ContainsKey('Capabilities'))
+    {
+        //todo: should not do String match but rather break string based on delimiters and compare individual strings
+        // but as of now We have only one capability so it is fine
+        if ($Capabilities -ne $existingConfiguration.Capabilities)
+        {
+            Write-Verbose -Message ("Capabilities UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $Capabilities, $existingConfiguration.Capabilities) -Verbose
             return $false
         }
     }
@@ -583,8 +607,8 @@ $enableAutoLogon = [Boolean] $enableAutoLogon
 
 $Credential = New-Object System.Management.Automation.PSCredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
 
-$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -AlternateCredUserName $alternateCredUserName -AlternateCredPassword $alternateCredPassword
+$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -AlternateCredUserName $alternateCredUserName -AlternateCredPassword $alternateCredPassword -Capabilities $capabilities
 if ($ret -eq $false)
 {
-    ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -AlternateCredUserName $alternateCredUserName -AlternateCredPassword $alternateCredPassword
+    ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -AlternateCredUserName $alternateCredUserName -AlternateCredPassword $alternateCredPassword -Capabilities $capabilities
 }

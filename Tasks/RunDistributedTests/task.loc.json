@@ -102,9 +102,9 @@
         "groupName": "testSettings"
     },
     {
-      "name": "autEnvironment",
+      "name": "autEnvironmentName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.autEnvironment",
+      "label": "ms-resource:loc.input.label.autEnvironmentName",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "The name of the Application Under Test(AUT), Machine Group on which server processes such as W3WP.exe is running.",
