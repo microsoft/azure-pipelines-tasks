@@ -115,7 +115,7 @@
             "label": "Test Configurations",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: <Filter1>:<Id1>;<Filter2>:<Id2>;DefaultTestConfiguration:<Id3>. For example: FullyQualifiedName~Chromedriver:12;DefaultTestConfiguration:10. If no filter gets matched, that test will get reporeted against the DefaultTestConfiguration",
+            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: <Filter1>:<Id1>;<Filter2>:<Id2>;DefaultTestConfiguration:<Id3>. For example: FullyQualifiedName~Chromedriver:12;DefaultTestConfiguration:10. If no filter gets matched, that test will get reported against the DefaultTestConfiguration",
             "groupName": "testSettings"
         }
     ],
