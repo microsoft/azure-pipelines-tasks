@@ -115,6 +115,7 @@
             "label": "Test Configurations",
             "defaultValue": "",
             "required": false,
+            "helpMarkDown": "Use this to specify which test case result should be reported against which test configuration. Syntax: <TestCaseFilter1>:<ConfigurationId1>;<TestCaseFilter2>:<ConfigurationId2>;DefaultTestConfiguration:<ConfigurationId3>. For example: FullyQualifiedName~Chromedriver:12;DefaultTestConfiguration:10. If a testcase does not match any filter, it will be reported against DefaultTestConfiguration. Test configuration IDs can be viewed/defined in Microsoft Test Manager",
             "groupName": "testSettings"
         }
     ],
