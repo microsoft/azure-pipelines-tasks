@@ -5,9 +5,8 @@
     "description": "Run tests distributedly using multiple test agents in a lab machine group.",
     "category": "Test",
     "visibility": [
-                "Preview",
-                "Build",
-                "Release"
+                    "Preview",
+                    "Build"
                   ],
     "author": "Microsoft Corporation",
     "version": {
@@ -68,6 +67,22 @@
             "groupName": "testSettings"
         },
         {
+		    "name": "platform", 
+		    "type": "string", 
+		    "label": "Platform", 
+		    "defaultValue":"", 
+		    "required":false,
+			"groupName": "testSettings"
+		},
+		{
+		    "name": "configuration", 
+		    "type": "string", 
+		    "label": "Configuration", 
+		    "defaultValue":"", 
+		    "required":false,
+			"groupName": "testSettings"
+		},
+        {
             "name": "runSettingsFile",
             "type": "string",
             "label": "Run Settings File",
@@ -92,6 +107,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+            "groupName": "testSettings"
+        },
+        {
+            "name": "testConfigurations",
+            "type": "string",
+            "label": "Test Configurations",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Test Configuration against which test results should be reported. For example, DefaultConfigurationId:10;Name~chromedriver:11. Test configurations can be viewed/defined in Microsoft Test Manager. Test results will be reported against DefaultConfiguration if not mapped with any test case filter expression.",
             "groupName": "testSettings"
         }
     ],

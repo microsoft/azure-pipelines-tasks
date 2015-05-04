@@ -93,6 +93,8 @@ function Get-Resources
 
         $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName 
 
+        $fqdnErrorCount = 0
+
         foreach ($resource in $azureResourceGroupResources)
         {
             $environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2
@@ -126,18 +128,36 @@ function Get-Resources
             
             # getting fqdn value for vm resource
             $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
-			if([string]::IsNullOrEmpty($fqdnTagValue) -eq $false)
-            {
-				$fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
-				$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
-				$propertyBag.Add($fqdnTagKey, $property)
-			}
 
+	    if([string]::IsNullOrEmpty($fqdnTagValue) -eq $false)
+            {          
+		$fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
+		$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
+		$propertyBag.Add($fqdnTagKey, $property)
+	    }
+	    else
+	    {
+	    	$fqdnErrorCount = $fqdnErrorCount + 1
+	    }
+	    
             $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
             $resources.Add($environmentResource)
         }
         
+        if($fqdnErrorCount -eq $azureResourceGroupResources.Count)
+        {
+            throw "Unable to get FQDN for all resources in ResourceGroup : $resourceGroupName"
+        }
+        else
+        {
+            if($fqdnErrorCount -gt 0 -and $fqdnErrorCount -ne $azureResourceGroupResources.Count)
+            {
+                 Write-Warning "Unable to get FQDN for $fqdnErrorCount resources in ResourceGroup : $resourceGroupName" -Verbose
+            }
+
+        }
+	
         Write-Verbose -Verbose "Got resources: $resources"
 
         return $resources
@@ -153,33 +173,52 @@ function Get-FQDN
     {
         Write-Verbose "Getting FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
 
-        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName
-        
-        foreach ($nic in $networkInterfaceResources)
+        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorVariable fqdnError
+
+        if($azureVM -eq $null)
         {
-           if ($nic.Id -eq $azureVM.NetworkInterfaces)
-           {
-                $ipc = $nic.Properties.IpConfigurations
-                break
-           }
+            Write-Host $fqdnError -Verbose
         }
-
-        if($ipc)
+        else
         {
-            $publicIPAddr = $ipc.Properties.PublicIpAddress.Id
-
-            foreach ($publicIP in $publicIPAddressResources) 
+            foreach ($nic in $networkInterfaceResources)
             {
-                if($publicIP.id -eq $publicIPAddr)
-                {
-                    $fqdn = $publicIP.Properties.DnsSettings.Fqdn
+               if ($nic.Id -eq $azureVM.NetworkInterfaces)
+               {
+                    $ipc = $nic.IpConfigurations
                     break
-                }
+               }
             }
 
-            Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+            if($ipc)
+            {
+                $publicIPAddr = $ipc.PublicIpAddress.Id
+            
+                foreach ($publicIP in $publicIPAddressResources) 
+                {
+                    if($publicIP.id -eq $publicIPAddr)
+                    {
+                        $fqdn = $publicIP.DnsSettings.Fqdn
+                        break
+                    }
+                }
 
-            return $fqdn;
+                if($fqdn -eq $null)
+                {
+                    Write-Host "Unable to find FQDN for resource $resourceName" -Verbose
+                }
+                else
+                {
+                    Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+                
+                    return $fqdn;
+                }
+
+            }
+            else
+            {
+                Write-Host "Unable to find IPConfiguration of resource $resourceName" -Verbose
+            }
         }
     }
 

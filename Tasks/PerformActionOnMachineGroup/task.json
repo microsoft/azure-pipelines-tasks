@@ -1,0 +1,67 @@
+﻿{
+    "id": "434AFC5D-31F0-4E3E-BE20-90AF34B75D7A",
+    "name": "PerformActionOnMachineGroup",
+    "friendlyName": "Perform action on machine group",
+    "description": "Perform given action on machine group",
+    "category": "Deploy",
+    "visibility": [
+                "Preview",
+                "Build"
+                  ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 5,
+        "IsTest": false
+    },
+    "demands": [
+        "azureps"
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:Azure",
+            "label": "Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Subscription to target for performing action."
+        },        
+        {
+            "name": "MachineGroupName", 
+            "type": "string", 
+            "label": "Machine Group",
+            "required": true,
+            "helpMarkDown": "Name of the Machine Group on which the operation is to be performed."
+        },
+        {
+            "name": "Action", 
+            "type": "pickList", 
+            "label": "Action",
+            "defaultValue": "Delete",
+            "required": true,
+            "helpMarkDown": "Allowed operations are : Delete, Stop, Start, Restart",
+            "options": {
+                 "Delete": "Delete",
+                 "Start": "Start",
+                 "Stop": "Stop",
+                 "Restart": "Restart"
+                }
+        },
+        {
+            "name": "Filters", 
+            "type": "string", 
+            "label": "Apply to Machines",
+            "required": false,
+            "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 ."
+        }    
+     ],
+    "instanceNameFormat": "Actions on machine group : $(MachineGroupName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\PerformActionOnMachineGroup.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

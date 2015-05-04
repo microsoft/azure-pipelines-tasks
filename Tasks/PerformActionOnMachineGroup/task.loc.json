@@ -1,0 +1,71 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "434AFC5D-31F0-4E3E-BE20-90AF34B75D7A",
+  "name": "PerformActionOnMachineGroup",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 5,
+    "IsTest": false
+  },
+  "demands": [
+    "azureps"
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Subscription to target for performing action."
+    },
+    {
+      "name": "MachineGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineGroupName",
+      "required": true,
+      "helpMarkDown": "Name of the Machine Group on which the operation is to be performed."
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "defaultValue": "Delete",
+      "required": true,
+      "helpMarkDown": "Allowed operations are : Delete, Stop, Start, Restart",
+      "options": {
+        "Delete": "Delete",
+        "Start": "Start",
+        "Stop": "Stop",
+        "Restart": "Restart"
+      }
+    },
+    {
+      "name": "Filters",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Filters",
+      "required": false,
+      "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 ."
+    }
+  ],
+  "instanceNameFormat": "Actions on machine group : $(MachineGroupName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\PerformActionOnMachineGroup.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

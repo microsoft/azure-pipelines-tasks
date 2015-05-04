@@ -9,16 +9,16 @@
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build",
-    "Release"
+    "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0,
+    "Patch": 1,
     "IsTest": false
   },
+  "minimumAgentVersion": "1.82.0",
   "groups": [
     {
       "name": "advanced",
