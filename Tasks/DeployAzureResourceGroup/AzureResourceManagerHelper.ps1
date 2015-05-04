@@ -129,17 +129,17 @@ function Get-Resources
             # getting fqdn value for vm resource
             $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
 
-	    if([string]::IsNullOrEmpty($fqdnTagValue) -eq $false)
+            if([string]::IsNullOrEmpty($fqdnTagValue) -eq $false)
             {          
-		$fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
-		$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
-		$propertyBag.Add($fqdnTagKey, $property)
-	    }
-	    else
-	    {
-	    	$fqdnErrorCount = $fqdnErrorCount + 1
-	    }
-	    
+                $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
+                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
+                $propertyBag.Add($fqdnTagKey, $property)
+            }
+            else
+            {
+                $fqdnErrorCount = $fqdnErrorCount + 1
+            }
+        
             $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
             $resources.Add($environmentResource)
@@ -155,9 +155,8 @@ function Get-Resources
             {
                  Write-Warning "Unable to get FQDN for $fqdnErrorCount resources in ResourceGroup : $resourceGroupName" -Verbose
             }
-
         }
-	
+    
         Write-Verbose -Verbose "Got resources: $resources"
 
         return $resources
