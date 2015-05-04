@@ -127,9 +127,9 @@ function Invoke-OperationOnProvider
 # Task fails if operation fails on all the machines
 function Throw-ExceptionIfOperationFailesOnAllMachine
 {
-   param([int]passedOperationCount,
-         [string]operationName,
-         [string]machineGroupName)
+   param([int]$passedOperationCount,
+         [string]$operationName,
+         [string]$machineGroupName)
 
   if($passedOperationCount -and $passedOperationCount -eq 0)
   {
