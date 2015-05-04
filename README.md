@@ -6,7 +6,7 @@
 
 Before you run the builds, you need to configure an agent:
 
-[Windows](http://youtu.be/V2-cPzggChg)
+[Windows](https://youtu.be/ZzrDPmTOEEk)
 
 [OSX/Linux](https://github.com/Microsoft/vso-agent)
 
