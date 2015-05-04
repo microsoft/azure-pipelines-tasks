@@ -411,8 +411,8 @@ function CanSkipTestAgentConfiguration
 
     if ($PSBoundParameters.ContainsKey('Capabilities'))
     {
-        //todo: should not do String match but rather break string based on delimiters and compare individual strings
-        // but as of now We have only one capability so it is fine
+        #todo: should not do String match but rather break string based on delimiters and compare individual strings
+        #but as of now We have only one capability so it is fine
         if ($Capabilities -ne $existingConfiguration.Capabilities)
         {
             Write-Verbose -Message ("Capabilities UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $Capabilities, $existingConfiguration.Capabilities) -Verbose
@@ -566,7 +566,8 @@ function ConfigureTestAgent
         [String] $EnvironmentUrl,
         [String] $AlternateCredUserName,
         [String] $AlternateCredPassword,
-        [String] $MachineName
+        [String] $MachineName,
+        [String] $Capabilities
     )
 
     EnableTracing -TestAgentVersion $TestAgentVersion
@@ -574,11 +575,11 @@ function ConfigureTestAgent
     $ret = -1
     if ($AsServiceOrProcess -eq "Service")
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword -MachineName $MachineName
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword -MachineName $MachineName -Capabilities $Capabilities
     }
     else
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword -MachineName $MachineName 
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword -MachineName $MachineName -Capabilities $Capabilities
     }
     
     if ($ret -eq 0)
