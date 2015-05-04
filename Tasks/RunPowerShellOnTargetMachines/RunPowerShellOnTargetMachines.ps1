@@ -37,17 +37,17 @@ $skipCACheckOptionValue = 'doSkipCAchek'
 
 	# Defaults #
 $envOperationStatus = "Passed"
-$defaultWirmHttpPort = '5985'
-$defaultWirmHttpsPort = '5986'
+$defaultWinRMHttpPort = '5985'
+$defaultWinRMHttpsPort = '5986'
 $useHttpProtocol = $true
-$httpProtocallOption = '-UseHttp'
+$httpProtocolOption = '-UseHttp'
 $doSkipCACheckOption = '-SkipCACheck'
 
 	# Process input parameters #
 if($connectionProtocol -eq $httpsConnectionProtocolValue)
 {
 	$useHttpProtocol = $false	# use https connection
-	$httpProtocallOption = ''
+	$httpProtocolOption = ''
 	
 	# check if certificate authentication is opted for https connection
 	if($security -ne $skipCACheckOptionValue )
@@ -76,6 +76,40 @@ function Get-ResourceCredentials
 	return $credential
 }
 
+function Get-WinRMPort
+{
+	param([string]$resourceName)
+	
+	if($useHttpProtocol)
+		{
+			$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+			if([string]::IsNullOrEmpty($winrmPort))
+			{
+				$winrmPort = $defaultWinRMHttpPort
+				Write-Verbose "`t`t Resource $resourceName does not have any $resourceWinRMHttpPortKeyName defined , use the default - $defaultWinRMHttpPort for deployment" -Verbose			
+			}
+			else
+			{
+				Write-Verbose "`t`t Resource $resourceName has $resourceWinRMHttpPortKeyName defined as - $winrmPort" -Verbose			
+			}
+		}
+		else
+		{
+			$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+			if([string]::IsNullOrEmpty($winrmPort))
+			{
+				$winrmPort = $defaultWinRMHttpsPort
+				Write-Verbose "`t`t Resource $resourceName does not have any $resourceWinRMHttpsPortKeyName defined , use the default - $defaultWinRMHttpsPort for deployment" -Verbose		
+			}
+			else
+			{	
+				Write-Verbose "`t`t Resource $resourceName has $resourceWinRMHttpsPortKeyName defined as - $winrmPort" -Verbose	
+			}
+		}
+		
+	return $winrmPort
+}
+
 function Get-ResourcesProperties
 {
 	param([object]$resources)
@@ -96,24 +130,7 @@ function Get-ResourcesProperties
 		
 		$eachResourceProperties.fqdn = $fqdn
 		
-		if($useHttpProtocol)
-		{
-			$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
-			if([string]::IsNullOrEmpty($winrmPort))
-			{
-				$winrmPort = $defaultWirmHttpPort
-				Write-Verbose "`t`t Resource $resourceName does not have any $resourceWinRMHttpPortKeyName defined , use the default - $defaultWirmHttpsPort for deployment" -Verbose			
-			}
-		}
-		else
-		{
-			$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
-			if([string]::IsNullOrEmpty($winrmPort))
-			{
-				$winrmPort = $defaultWirmHttpsPort
-				Write-Verbose "`t`t Resource $resourceName does not have any $resourceWinRMHttpsPortKeyName defined , use the default - $defaultWirmHttpsPort for deployment" -Verbose		
-			}
-		}
+		$winrmPort = Get-WinRMPort -resourceName $resourceName
 		
 		Write-Verbose "`t`t Resource winrmPort - $winrmPort" -Verbose
 		
@@ -149,7 +166,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resource.winrmPort, $scriptArguments, $initializationScriptPath, $resource.credential, $httpProtocallOption, $doSkipCACheckOption
+        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resource.winrmPort, $scriptArguments, $initializationScriptPath, $resource.credential, $httpProtocolOption, $doSkipCACheckOption
 		
         Output-ResponseLogs -operationName "deployment" -fqdn $machine -deploymentResponse $deploymentResponse
 
@@ -159,7 +176,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
 		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 		
-		Complete-ResourceOperations -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $deploymentResponse
+		DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $deploymentResponse
 
         if ($status -ne "Passed")
         {
@@ -187,7 +204,7 @@ else
 		$resourceMetadata.machineName = $machine
 		$resourceMetadata.resOperationId = $resOperationId
 		
-        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resource.winrmPort, $scriptArguments, $initializationScriptPath, $resource.credential, $httpProtocallOption, $doSkipCACheckOption
+        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resource.winrmPort, $scriptArguments, $initializationScriptPath, $resource.credential, $httpProtocolOption, $doSkipCACheckOption
 
         $Jobs.Add($job.Id, $resourceMetadata)
          
@@ -218,7 +235,7 @@ else
 				 
 				 Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 				 
-				 Complete-ResourceOperations -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
+				 DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
                  
               } 
         }

@@ -5,8 +5,8 @@ param (
     [string]$targetPath,
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
-	[string]$winrmPort,
-	[string]$httpProtocallOption,
+	[string]$winRMPort,
+	[string]$httpProtocolOption,
 	[string]$skipCACheckOption
     )
 
@@ -28,7 +28,7 @@ param (
 
     Write-Verbose "Initiating copy on $fqdn " -Verbose
    
-   	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winrmPort $cleanTargetPathOption $skipCACheckOption $httpProtocallOption"	
+   	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"	
 	
 	Write-Host $copyFilesToTargetMachineBlockString
 	
