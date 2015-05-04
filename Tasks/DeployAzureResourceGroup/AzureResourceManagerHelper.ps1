@@ -103,24 +103,35 @@ function Get-Resources
             $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
             $propertyBag.Add("Location", $resourceLocation)
             $propertyBag.Add("PlatformId", $platformId)
-                    
+               
             foreach($tagKey in $resource.Tags.Keys)
             {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
-                $propertyBag.Add($tagKey, $property)
+                $tagValue = $resource.Tags.Item($tagKey)
+                if([string]::IsNullOrEmpty($tagValue) -eq $false)
+                {
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $tagValue)
+                    $propertyBag.Add($tagKey, $property)
+                }
             }
 
             foreach($resourcePropertyKey in $resource.Properties.Keys)
             {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Properties.Item($resourcePropertyKey))
-                $propertyBag.Add($resourcePropertyKey, $property)
+                $propertyValue = $resource.Properties.Item($resourcePropertyKey)
+                if([string]::IsNullOrEmpty($propertyValue) -eq $false)
+                {
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $propertyValue)
+                    $propertyBag.Add($resourcePropertyKey, $property)
+                }
             }
             
             # getting fqdn value for vm resource
-            $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
             $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
-            $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
-            $propertyBag.Add($fqdnTagKey, $property)
+			if([string]::IsNullOrEmpty($fqdnTagValue) -eq $false)
+            {
+				$fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
+				$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
+				$propertyBag.Add($fqdnTagKey, $property)
+			}
 
             $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 

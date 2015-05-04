@@ -72,15 +72,23 @@ function Create-Environment
     Write-Verbose "Adding parameters to the machine group" -Verbose
     foreach($key in $azureResourceGroupDeployment.Parameters.Keys)
     {
-        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureResourceGroupDeployment.Parameters.Item($key).Value)
-        $propertyBag.Add($key, $property)
+        $propertyValue = $azureResourceGroupDeployment.Parameters.Item($key).Value
+        if([string]::IsNullOrEmpty($propertyValue) -eq $false)
+        {
+            $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $propertyValue)
+            $propertyBag.Add($key, $property)
+        }
     }
 
     Write-Verbose "Adding tags to the machine group" -Verbose
     foreach($tagKey in $azureResourceGroup.Tags.Keys)
     {
-        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
-        $propertyBag.Add($tagKey, $property)
+        $tagValue = $azureResourceGroup.Tags.Item($tagKey)
+        if([string]::IsNullOrEmpty($tagValue) -eq $false)
+        {
+            $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $tagValue)
+            $propertyBag.Add($tagKey, $property)
+        }
     }
 
     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureResourceGroup.ResourceId)
@@ -158,7 +166,7 @@ function Create-ResourceOperations
             $name = $resource.Name
             
             $resourcePlatformId = $resource.Properties.GetProperty("PlatformId")
-            $resourceOperationLogs = $operationLogs | Where-Object {$_.ResourceId -eq $resourcePlatformId}
+            $resourceOperationLogs = $operationLogs | Where-Object {$_.ResourceId -like "*$resourcePlatformId*"}
 
             $operationStartTime = New-Object System.DateTime
             $operationEndTime = New-Object System.DateTime
@@ -175,7 +183,7 @@ function Create-ResourceOperations
 
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $operationStartTime -EnvironmentOperationId $environmentOperationId -Connection $connection -ErrorAction Stop
 
-			$logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
+            $logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
             Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $operationStatus -EndTime $operationEndTime -Logs $logs -Connection $connection -ErrorAction Stop
 
             Write-Verbose "Completed saving resource $name provisioning operation with id $resOperationId" -Verbose
