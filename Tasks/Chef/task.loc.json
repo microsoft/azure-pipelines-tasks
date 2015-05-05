@@ -16,8 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2,
-    "IsTest": false
+    "Patch": 2
   },
   "demands": [
     "Chef",
