@@ -27,9 +27,9 @@
       "isExpanded": true
     },
     {
-        "name": "testSettings",
-        "displayName": "ms-resource:loc.group.displayName.testSettings",
-        "isExpanded": true
+      "name": "testSettings",
+      "displayName": "ms-resource:loc.group.displayName.testSettings",
+      "isExpanded": true
     },
     {
       "name": "advanced",
@@ -93,13 +93,13 @@
       "groupName": "testSettings"
     },
     {
-        "name": "overrideRunParams",
-        "type": "string",
-        "label": "ms-resource:loc.input.label.overrideRunParams",
-        "defaultValue": "",
-        "required": false,
-        "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
-        "groupName": "testSettings"
+      "name": "overrideRunParams",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.overrideRunParams",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+      "groupName": "testSettings"
     },
     {
       "name": "autEnvironmentName",
@@ -107,7 +107,7 @@
       "label": "ms-resource:loc.input.label.autEnvironmentName",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The name of the Application Under Test(AUT), Machine Group on which server processes such as W3WP.exe is running.",
+      "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
       "groupName": "advanced"
     }
   ],

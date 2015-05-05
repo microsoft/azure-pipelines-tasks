@@ -124,7 +124,7 @@
             "label": "Enable Data Collection Only",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test machine group.",
+            "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
             "groupName": "advanced"
         }
     ],

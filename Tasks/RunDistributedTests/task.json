@@ -105,7 +105,7 @@
             "label": "Application Under Test Machine Group",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The name of the Application Under Test Machine Group on which server processes such as W3WP.exe is running.",
+            "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
             "groupName": "advanced"
         }
     ],

@@ -415,7 +415,7 @@ function CanSkipTestAgentConfiguration
         #but as of now We have only one capability so it is fine
         if ($Capabilities -ne $existingConfiguration.Capabilities)
         {
-            Write-Verbose -Message ("Capabilities UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $Capabilities, $existingConfiguration.Capabilities) -Verbose
+            Write-Verbose -Message ("Capabilities mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $Capabilities, $existingConfiguration.Capabilities) -Verbose
             return $false
         }
     }
