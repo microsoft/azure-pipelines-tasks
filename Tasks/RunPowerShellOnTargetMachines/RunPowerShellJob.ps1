@@ -5,7 +5,9 @@ param (
     [string]$port,
     [string]$scriptArguments,
     [string]$initializationScriptPath,
-    [object]$credential
+    [object]$credential,
+	[string]$httpProtocolOption,
+	[string]$skipCACheckOption
     )
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
@@ -19,8 +21,12 @@ param (
     }    
    
     Write-Verbose "Initiating deployment on $fqdn" -Verbose
-
-    $deploymentResponse = Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath $scriptPath -WinRMPort $port -Credential $credential -ScriptArguments $scriptArguments -InitializationScriptPath $initializationScriptPath –SkipCACheck -UseHttp
     
+	[String]$psOnRemoteScriptBlockString = "Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath `$scriptPath -WinRMPort $port -Credential `$credential -ScriptArguments `$scriptArguments -InitializationScriptPath `$initializationScriptPath $skipCACheckOption $httpProtocolOption"
+	
+	[scriptblock]$psOnRemoteScriptBlock = [scriptblock]::Create($psOnRemoteScriptBlockString)
+	
+	$deploymentResponse = Invoke-Command -ScriptBlock $psOnRemoteScriptBlock
+	
     Write-Output $deploymentResponse
 }
