@@ -8,7 +8,7 @@ param(
     [string]$alternateCredsPassword,
     [string]$agentLocation,
     [string]$updateTestAgent,
-	[string]$isDataCollectionOnly
+    [string]$isDataCollectionOnly
 )
 
 # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.

@@ -6,7 +6,7 @@ param(
     [string]$runSettingsFile,
     [string]$codeCoverageEnabled,
     [string]$overrideRunParams,
-	[string]$autEnvironmentName
+    [string]$autEnvironmentName
 )
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
