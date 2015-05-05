@@ -125,7 +125,7 @@
       "label": "ms-resource:loc.input.label.isDataCollectionOnly",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Denotes if test agent needs to be used only for datacollection and not for running tests. Typically done on Application under test environments.",
+      "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test machine group.",
       "groupName": "advanced"
     }
   ],
