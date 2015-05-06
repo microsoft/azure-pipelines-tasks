@@ -76,26 +76,6 @@ function Get-CsmParameterObject
 
         Write-Verbose "Generated the parameter object" -Verbose
 
-        if ([string]::IsNullOrEmpty($overrideParameters) -eq $false)
-        {
-            $paramsList = New-Object System.Collections.Generic.List[string]
-
-            $paramsList = $overrideParameters.Split(" ") | Where-Object {$_.Contains(" ") -eq $false} | Where-Object {$_.Length -gt 0}
-
-            for($i = 0; $i -lt $paramsList.Count - 1; $i = $i+2)
-            {
-                if($paramsList[$i][0] -ne '-' -or $paramsList[$i+1] -eq $null)
-                {
-                    Throw "Specified argument list is not in the correct format"
-                }
-            
-                $parameterName = $paramsList[$i].TrimStart('-')
-                Write-Verbose "Overwrote the parameter $parameterName from the input" -Verbose
-                $newParametersObject[$parameterName] = Get-Variable -Name $paramsList[$i + 1].TrimStart('$') -ValueOnly
-		
-            }
-        }
-
         return $newParametersObject
     }
 }
