@@ -33,7 +33,7 @@
   "inputs": [
     {
       "name": "environment",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.environment",
       "defaultValue": "",
       "required": true,
@@ -118,6 +118,14 @@
       "required": false,
       "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: <Filter1>:<Id1>;<Filter2>:<Id2>;DefaultTestConfiguration:<Id3>. For example: FullyQualifiedName~Chromedriver:12;DefaultTestConfiguration:10. If no filter gets matched, that test will get reported against the DefaultTestConfiguration",
       "groupName": "testSettings"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "EnvironmentName",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "Test assemblies $(sourcefilters)",
