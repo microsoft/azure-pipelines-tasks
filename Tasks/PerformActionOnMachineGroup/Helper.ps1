@@ -38,7 +38,7 @@ function Invoke-OperationHelper
             if($status -ne "Succeeded")
             {
                 $machineStatus = "Failed"
-                $passesOperationCount--
+                $passedOperationCount--
                 Write-Warning("Operation $operationName on machine $machine.Name failed with error $operation.Error")
             }
         }
@@ -124,7 +124,7 @@ function Invoke-OperationOnProvider
 # Task fails if operation fails on all the machines
 function Throw-ExceptionIfOperationFailesOnAllMachine
 {
-   param([int]$passedOperationCount,
+   param([string]$passedOperationCount,
          [string]$operationName,
          [string]$machineGroupName)
 

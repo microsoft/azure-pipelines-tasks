@@ -50,7 +50,7 @@ Switch ($Action)
 {
      "Delete" {
          Delete-MachinesHelper -machineGroupName $MachineGroupName -filters $Filters -machines $machineGroup.Resources
-         break         
+         break
       }
 
      { @("Start", "Stop", "Restart") -contains $_ } {
