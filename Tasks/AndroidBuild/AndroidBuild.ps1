@@ -3,8 +3,8 @@ param(
     [string]$gradleProj,      # Optional - Root directory of gradle project. Defaults to root of working directory if empty. 
     [string]$gradleArguments, # Gradle arguments
     [string]$startEmulator,   # True if emulator start required. Converted to Boolean
-	[string]$emulatorTarget,  # Emulator target version
-	[string]$emulatorDevice   # Emulator device 
+    [string]$emulatorTarget,  # Emulator target version
+    [string]$emulatorDevice   # Emulator device 
 )
 
 Write-Verbose "Entering script AndroidBuild.ps1"
@@ -28,21 +28,23 @@ $KillEmulatorScript = Join-Path -Path $PSScriptRoot -ChildPath "KillAndroidEmula
 
 $emuName = "AndroidBuildEmulator"
 
-if($emulator) {
-    Invoke-Expression "$StartEmulatorScript `"$emulatorTarget`" `"$emulatorDevice`" `"$emuName`""
+if ($emulator) {
+    $startEmulatorCommand = "& `"$StartEmulatorScript`" `"$emulatorTarget`" `"$emulatorDevice`" `"$emuName`""
+    Write-Verbose "Starting emulator with command: $startEmulatorCommand"
+    Invoke-Expression -Command $startEmulatorCommand
 }
 
 # Change working directory to specified gradle project. 
-if($gradleProj) {
+if ($gradleProj) {
     Write-Verbose "Setting working directory to $gradleProj"
     Push-Location $gradleProj
 }
 
-if($gradleWrapper){
+if ($gradleWrapper) {
     # Use Gradle Wrapper
     if ([System.IO.File]::Exists($gradleWrapper)) {
         Write-Verbose "Invoking gradle wrapper $gradleWrapper with arguments $gradleArguments"
-        Invoke-BatchScript $gradleWrapper –Arguments $gradleArguments
+        Invoke-BatchScript $gradleWrapper -Arguments $gradleArguments
     }
     else {
         Write-Error "Unable to find script $gradleWrapper"
@@ -55,14 +57,16 @@ else {
     Invoke-Expression $gradleCommand
 }
 
-if($gradleProj) {
+if ($gradleProj) {
     Pop-Location
 }
 
 # Delete emulator device.  Stop-Process is used because Wait-Job or Stop-Job hangs.
-if($emulator)
+if ($emulator)
 {
-	Invoke-Expression "$KillEmulatorScript $emuName"
+    $killEmulatorCommand = "& `"$KillEmulatorScript`" `"$emuName`""
+    Write-Verbose "Stopping emulator with command: $killEmulatorCommand"
+    Invoke-Expression -Command $killEmulatorCommand
 }
 
 Write-Verbose "Leaving script AndroidBuild.ps1"
