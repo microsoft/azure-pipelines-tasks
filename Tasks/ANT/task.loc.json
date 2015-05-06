@@ -62,7 +62,7 @@
       "required": true,
       "defaultValue": "true",
       "groupName": "junitTestResults",
-      "helpMarkDown": "Select this option to publish JUnit Test results produced by the Ant build to VSO/TFS. Each test result file matching `TEST-*.xml` pattern will be published as a test run in VSO/TFS."
+      "helpMarkDown": "Select this option to publish JUnit Test results produced by the Ant build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
     },
     {
       "name": "testResultsFiles",
