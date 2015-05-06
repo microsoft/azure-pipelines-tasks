@@ -59,7 +59,7 @@ else
 
 if (!$solutionFiles)
 {
-    throw (Get-LocalizedString -Key "No solution with search pattern '{0}' was found." -ArgumentList $solution)
+    throw (Get-LocalizedString -Key "No solution was found using search pattern '{0}'." -ArgumentList $solution)
 }
 
 $args = $msbuildArgs;
