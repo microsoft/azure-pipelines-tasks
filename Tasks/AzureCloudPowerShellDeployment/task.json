@@ -85,15 +85,15 @@
   "sourceDefinitions": [
     {
         "target": "StorageAccount",
-        "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/storageservices",
+        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
         "selector": "xpath://ServiceName",
-        "authKey": "{$ConnectedServiceName}"
+        "authKey": "$(ConnectedServiceName)"
     },
 	{
         "target": "ServiceName",
-        "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/hostedservices",
+        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/hostedservices",
         "selector": "xpath://ServiceName",
-        "authKey": "{$ConnectedServiceName}"
+        "authKey": "$(ConnectedServiceName)"
 	}
   ],
   "instanceNameFormat": "Azure Deployment: $(CsPkg)",
