@@ -12,6 +12,7 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Run tests with Visual Studio test runner.",
   "version": {
     "Major": 1,
     "Minor": 0,

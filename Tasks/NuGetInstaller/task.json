@@ -5,6 +5,7 @@
     "description": "Installs and updates missing NuGet packages",
     "category": "Package",
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Installs and updates missing NuGet packages.",
     "version": {
         "Major": 0,
         "Minor": 1,

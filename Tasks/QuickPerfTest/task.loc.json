@@ -12,6 +12,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Quickly find perf regressions to your website under load. Powered by VS Online.",
   "version": {
     "Major": 1,
     "Minor": 0,

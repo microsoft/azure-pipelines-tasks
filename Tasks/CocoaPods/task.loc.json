@@ -11,6 +11,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install.",
   "version": {
     "Major": 0,
     "Minor": 1,

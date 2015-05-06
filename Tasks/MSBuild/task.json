@@ -8,6 +8,7 @@
                 "Build"
                   ],    
     "author": "Microsoft Corporation",
+    "helpMarkDown": "You can build your awesome project with **MSBuild** using this task.",
     "version": {
         "Major": 1,
         "Minor": 0,

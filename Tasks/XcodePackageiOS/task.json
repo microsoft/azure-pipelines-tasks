@@ -8,6 +8,7 @@
                 "Build"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Generate an .ipa file from Xcode build output.",
     "version": {
         "Major": 0,
         "Minor": 1,

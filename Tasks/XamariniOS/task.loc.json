@@ -11,6 +11,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Build an iOS app with **Xamarin** on Mac OS.",
   "version": {
     "Major": 1,
     "Minor": 0,

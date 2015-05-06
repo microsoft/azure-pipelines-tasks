@@ -8,6 +8,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Publish Build artifacts to the server or a file share.",
   "version": {
     "Major": 0,
     "Minor": 1,

@@ -2,13 +2,14 @@
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunVisualStudioTestsusingTestAgent",
     "friendlyName": "Run Visual Studio Tests using Test Agent",
-    "description": "Run tests distributedly using multiple test agents in a lab machine group.",
+    "description": "Run tests distributedly using multiple test agents in a lab machine group",
     "category": "Test",
     "visibility": [
                     "Preview",
                     "Build"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Run tests distributedly using multiple test agents in a lab machine group.",
     "version": {
         "Major": 1,
         "Minor": 0,

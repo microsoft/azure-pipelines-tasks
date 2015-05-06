@@ -10,6 +10,7 @@
                  "Release"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Copy Files To Azure Blob.",
     "version": {
         "Major": 1,
         "Minor": 0,

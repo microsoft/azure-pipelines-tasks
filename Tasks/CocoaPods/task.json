@@ -2,12 +2,13 @@
     "id": "BFC05E0D-839C-42CD-89C7-0F9FBFCAB965",
     "name": "CocoaPods",
     "friendlyName": "CocoaPods",
-    "description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install.",
+    "description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install",
     "category": "Package",
     "visibility": [
                 "Build"
                   ],    
     "author": "Microsoft Corporation",
+    "helpMarkDown": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install.",
     "version": {
         "Major": 0,
         "Minor": 1,

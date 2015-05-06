@@ -8,6 +8,7 @@
                     "Build"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Index your source code and publish symbols to a file share.",
     "version": {
         "Major": 1,
         "Minor": 0,

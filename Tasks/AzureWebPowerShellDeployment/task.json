@@ -9,6 +9,7 @@
                 "Release"
                 ],  
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Deploy a website to Microsoft Azure.",
   "version": {
     "Major": 1,
     "Minor": 0,

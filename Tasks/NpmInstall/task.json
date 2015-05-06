@@ -2,9 +2,10 @@
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
     "name": "NpmInstall",
     "friendlyName": "npm install",
-    "description": "install npm packages",
+    "description": "Install npm packages",
     "category": "Package",
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Install **npm** packages.",
     "version": {
         "Major": 0,
         "Minor": 1,

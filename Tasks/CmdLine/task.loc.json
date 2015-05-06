@@ -12,6 +12,7 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Run a command line with arguments.",
   "version": {
     "Major": 1,
     "Minor": 0,

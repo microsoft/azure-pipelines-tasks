@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "npm install",
-  "loc.description": "install npm packages",
+  "loc.description": "Install npm packages",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.arguments": "Arguments",
   "loc.input.label.cwd": "Working Directory"

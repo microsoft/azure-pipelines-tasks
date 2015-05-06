@@ -12,6 +12,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Run tests distributedly using multiple test agents in a lab machine group.",
   "version": {
     "Major": 1,
     "Minor": 0,

@@ -13,6 +13,7 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Provision and Deploy an Azure Resource Group.",
   "version": {
     "Major": 1,
     "Minor": 0,

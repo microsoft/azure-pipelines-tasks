@@ -12,6 +12,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group.",
   "version": {
     "Major": 1,
     "Minor": 0,
@@ -44,7 +45,7 @@
       "required": true,
       "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
       "groupName": "environment"
-    },   
+    },
     {
       "name": "testMachines",
       "type": "string",

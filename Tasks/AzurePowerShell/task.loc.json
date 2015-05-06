@@ -12,6 +12,7 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Run a PowerShell script within an Azure environment.",
   "version": {
     "Major": 1,
     "Minor": 0,
