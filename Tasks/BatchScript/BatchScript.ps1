@@ -57,7 +57,7 @@ if ([System.IO.File]::Exists($filename))
 }
 else
 {
-    Write-Error "Unable to find script $filename"
+    Write-Error (Get-LocalizedString -Key "Unable to find script {0}" -ArgumentList $filename)
 }
 
 Write-Verbose "Leaving script CmdScript.ps1"

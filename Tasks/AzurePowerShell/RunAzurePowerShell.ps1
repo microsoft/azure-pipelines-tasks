@@ -11,14 +11,14 @@ param
     $ScriptArguments
 )
 
-Write-Host "Entering script RunAzurePowerShell.ps1"
+Write-Verbose "Entering script RunAzurePowerShell.ps1"
 
 #ENSURE: We pass arguments verbatim on the command line to the custom script
-Write-Host "ScriptArguments= " $ScriptArguments
-Write-Host "ScriptPath= " $ScriptPath
+Write-Verbose "ScriptArguments= " $ScriptArguments
+Write-Verbose "ScriptPath= " $ScriptPath
 
 $scriptCommand = "& `"$ScriptPath`" $scriptArguments"
-Write-Host "scriptCommand=" $scriptCommand
+Write-Verbose "scriptCommand=" $scriptCommand
 Invoke-Expression -Command $scriptCommand
 
-Write-Host "Leaving script RunAzurePowerShell.ps1"
+Write-Verbose "Leaving script RunAzurePowerShell.ps1"

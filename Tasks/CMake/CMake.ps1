@@ -7,9 +7,12 @@ Write-Verbose 'Entering CMake.ps1'
 Write-Verbose "cwd = $cwd"
 Write-Verbose "args = $args"
 
+# Import the Task.Common dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 if(!$cwd)
 {
-    throw "cwd parameter is not set"
+    throw (Get-LocalizedString -Key "Current working directory parameter is not set")
 }
 
 if(!(Test-Path $cwd -PathType Container))
@@ -25,15 +28,11 @@ try
 }
 catch
 {
-	throw 'Unable to find cmake.exe'
+	throw (Get-LocalizedString -Key 'Unable to find {0}' -ArgumentList 'cmake.exe')
 }
 
 Write-Verbose "Setting working directory to $cwd"
 Set-Location $cwd
-
-
-# Import the Task.Common dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 Write-Verbose "Running CMake..."
 Invoke-Tool -Path $cmake.Source -Arguments $args -WorkingFolder $buildPath

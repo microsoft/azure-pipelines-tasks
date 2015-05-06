@@ -26,7 +26,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if (!$solution)
 {
-    throw "solution parameter not set on script"
+    throw (Get-LocalizedString -Key "Solution parameter not set on script")
 }
 
 $nugetRestore = Convert-String $restoreNugetPackages Boolean
@@ -54,7 +54,7 @@ else
 
 if (!$solutionFiles)
 {
-    throw "No solution with search pattern '$solution' was found."
+    throw (Get-LocalizedString -Key "No solution with search pattern '{0}' was found." -ArgumentList $solution)
 }
 
 $args = $msbuildArguments;
@@ -97,7 +97,7 @@ if ($cleanBuild)
 $nugetPath = Get-ToolPath -Name 'NuGet.exe'
 if (-not $nugetPath -and $nugetRestore)
 {
-    Write-Warning "Unable to locate nuget.exe. Package restore will not be performed for the solutions"
+    Write-Warning (Get-LocalizedString -Key "Unable to locate nuget.exe. Package restore will not be performed for the solutions")
 }
 
 foreach ($sf in $solutionFiles)

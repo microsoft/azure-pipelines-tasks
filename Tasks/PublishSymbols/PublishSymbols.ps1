@@ -82,7 +82,7 @@ foreach ($pdbFile in $pdbFiles)
     Write-Verbose "pdbFile= $pdbFile"
 }
 $fileCount = $pdbFiles.Count
-Write-Host "Found $fileCount files to index..."
+Write-Host (Get-LocalizedString -Key "Found {0} files to index..." -ArgumentList $fileCount)
 
 Write-Host "Invoke-IndexSources -RepositoryEndpoint <repositoryEndpoint> -SourceFolder $sourceFolder -PdbFiles <pdbFiles>"
 Invoke-IndexSources -RepositoryEndpoint $repositoryEndpoint -SourceFolder $sourceFolder -PdbFiles $pdbFiles
