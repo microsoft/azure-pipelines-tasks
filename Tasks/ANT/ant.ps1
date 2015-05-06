@@ -60,7 +60,7 @@ if($publishJUnitResultsFromAntBuild)
 }
 else
 {
-    Write-Host "Option to publish JUnit Test results produced by Ant build was not selected and is being skipped."
+    Write-Verbose "Option to publish JUnit Test results produced by Ant build was not selected and is being skipped."
 }
 
 Write-Verbose "Leaving script Ant.ps1"
