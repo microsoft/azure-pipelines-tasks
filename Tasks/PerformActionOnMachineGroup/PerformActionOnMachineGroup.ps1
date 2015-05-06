@@ -49,8 +49,8 @@ Switch ($providerName)
 Switch ($Action)
 {
      "Delete" {
-         #Delete-MachinesHelper -machineGroupName $MachineGroupName -filters $Filters -machines $machineGroup.Resources
-         break         
+         Delete-MachinesHelper -machineGroupName $MachineGroupName -filters $Filters -machines $machineGroup.Resources
+         break
       }
 
      { @("Start", "Stop", "Restart") -contains $_ } {
