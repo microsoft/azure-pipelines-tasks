@@ -12,8 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
-        "IsTest": false
+        "Patch": 1
     },
     "demands": [
     ],
@@ -115,7 +114,7 @@
             "label": "Test Configurations",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Test Configuration against which test results should be reported. For example, DefaultConfigurationId:10;Name~chromedriver:11. Test configurations can be viewed/defined in Microsoft Test Manager. Test results will be reported against DefaultConfiguration if not mapped with any test case filter expression.",
+            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: <Filter1>:<Id1>;<Filter2>:<Id2>;DefaultTestConfiguration:<Id3>. For example: FullyQualifiedName~Chromedriver:12;DefaultTestConfiguration:10. If no filter gets matched, that test will get reported against the DefaultTestConfiguration",
             "groupName": "testSettings"
         }
     ],

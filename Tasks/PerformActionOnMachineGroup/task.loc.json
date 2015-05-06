@@ -9,15 +9,13 @@
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build",
-    "Release"
+    "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5,
-    "IsTest": false
+    "Patch": 5
   },
   "demands": [
     "azureps"

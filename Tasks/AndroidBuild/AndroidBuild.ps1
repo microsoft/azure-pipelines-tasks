@@ -21,9 +21,6 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 $emulator = Convert-String $startEmulator Boolean
 Write-Verbose "startEmulator (converted) = $emulator"
 
-$adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
-$androidbat = $env:ANDROID_HOME + "\tools\android.bat"
-
 # Set the paths of the Start and Kill Android Emulator scripts, which are in the same directory as AndroidBuild.ps1
 $PSScriptRoot = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 $StartEmulatorScript = Join-Path -Path $PSScriptRoot -ChildPath "StartAndroidEmulator.ps1" 

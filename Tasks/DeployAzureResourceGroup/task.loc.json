@@ -16,8 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6,
-    "IsTest": false
+    "Patch": 6
   },
   "demands": [
     "azureps"
