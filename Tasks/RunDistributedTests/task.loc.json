@@ -116,7 +116,7 @@
       "label": "ms-resource:loc.input.label.testConfigurations",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;&lt;Filter2&gt;:&lt;Id2&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chromedriver:12;DefaultTestConfiguration:10. If no filter gets matched, that test will get reported against the DefaultTestConfiguration",
+      "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: Name~Chrome:12;DefaultTestConfiguration:10. If no filter gets matched, that test will get reported against the DefaultTestConfiguration",
       "groupName": "testSettings"
     }
   ],
