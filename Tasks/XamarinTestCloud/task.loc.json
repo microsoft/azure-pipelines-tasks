@@ -11,6 +11,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest.",
   "version": {
     "Major": 1,
     "Minor": 0,

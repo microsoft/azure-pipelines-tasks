@@ -12,6 +12,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Perform given action on machine group.",
   "version": {
     "Major": 1,
     "Minor": 0,

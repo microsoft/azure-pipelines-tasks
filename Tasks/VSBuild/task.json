@@ -8,6 +8,7 @@
                 "Build"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Build with **MSBuild** in the Visual Studio Developer Command Prompt.",
     "version": {
         "Major": 1,
         "Minor": 0,

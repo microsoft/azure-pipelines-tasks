@@ -10,6 +10,7 @@
                 "Release"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Deploy a docker image to a remote machine.",
 	 "version": {
         "Major": 1,
         "Minor": 0,

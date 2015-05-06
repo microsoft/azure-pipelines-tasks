@@ -13,6 +13,7 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Run Scripts with knife commands on your chef workstation.",
   "version": {
     "Major": 1,
     "Minor": 0,

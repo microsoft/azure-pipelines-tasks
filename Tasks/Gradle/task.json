@@ -8,6 +8,7 @@
                 "Build"
                   ],    
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Build using a **Gradle** wrapper script.",
     "version": {
         "Major": 1,
         "Minor": 0,

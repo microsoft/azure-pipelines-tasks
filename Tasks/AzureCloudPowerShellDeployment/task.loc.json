@@ -12,6 +12,7 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Deploy an Azure Cloud Service.",
   "version": {
     "Major": 1,
     "Minor": 0,

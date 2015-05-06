@@ -11,6 +11,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Build an Android app using **Gradle** and optionally start the emulator for unit tests.",
   "version": {
     "Major": 1,
     "Minor": 0,

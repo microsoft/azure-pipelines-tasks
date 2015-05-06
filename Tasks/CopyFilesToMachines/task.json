@@ -10,6 +10,7 @@
                 "Release"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Copy files to remote machine(s).",
     "version": {
         "Major": 1,
         "Minor": 0,

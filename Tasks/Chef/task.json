@@ -10,6 +10,7 @@
                 "Release"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Deploy to Chef environments by editing environment attributes.",
     "version": {
         "Major": 1,
         "Minor": 0,

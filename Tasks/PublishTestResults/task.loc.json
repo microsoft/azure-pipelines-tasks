@@ -11,6 +11,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Publish Test Results to **VSO**/**TFS**.",
   "version": {
     "Major": 1,
     "Minor": 0,

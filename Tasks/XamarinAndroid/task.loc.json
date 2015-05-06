@@ -11,6 +11,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Build an Android app with **Xamarin**.",
   "version": {
     "Major": 1,
     "Minor": 0,

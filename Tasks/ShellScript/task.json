@@ -8,6 +8,7 @@
                 "Build"
                   ],
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Run a shell script using **bash**",
     "version": {
         "Major": 1,
         "Minor": 0,

@@ -8,6 +8,7 @@
                 "Build"
                   ],    
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Node.js streaming task based build system.",
     "version": {
         "Major": 0,
         "Minor": 1,

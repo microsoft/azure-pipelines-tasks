@@ -12,6 +12,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s).",
   "version": {
     "Major": 1,
     "Minor": 0,

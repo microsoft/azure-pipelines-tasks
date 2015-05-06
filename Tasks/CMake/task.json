@@ -8,6 +8,7 @@
                 "Build"
                   ],    
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Build with the CMake cross-platform build system.",
     "demands" : [
         "cmake"
     ],

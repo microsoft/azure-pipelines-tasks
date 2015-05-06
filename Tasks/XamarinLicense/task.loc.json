@@ -11,6 +11,7 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "helpMarkDown": "Activate or deactivate Xamarin licenses",
   "version": {
     "Major": 1,
     "Minor": 0,

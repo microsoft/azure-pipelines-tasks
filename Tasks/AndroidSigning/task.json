@@ -8,6 +8,7 @@
                 "Build"
                   ],    
     "author": "Microsoft Corporation",
+    "helpMarkDown": "Sign using **Jarsigner** and align Android APK files.",
     "version": {
         "Major": 1,
         "Minor": 0,
