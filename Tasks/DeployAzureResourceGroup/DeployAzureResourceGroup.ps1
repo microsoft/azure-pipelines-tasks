@@ -4,6 +4,7 @@ param(
     [string][Parameter(Mandatory=$true)]$resourceGroupName,
     [string][Parameter(Mandatory=$true)]$csmFile, 
     [string]$csmParametersFile,
+    [string]$overrideParameters,
     [string]$dscDeployment,
     [string]$moduleUrlParameterName,
     [string]$sasTokenParameterName,
@@ -56,7 +57,7 @@ if(Test-Path -Path $csmParametersFile -PathType Leaf)
 
 Check-EnvironmentNameAvailability -environmentName $resourceGroupName
 
-$parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
+$parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent -overrideParameters $overrideParameters
 $parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameterName -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
 
 Switch-AzureMode AzureResourceManager
