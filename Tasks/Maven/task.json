@@ -14,10 +14,15 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "instanceNameFormat": "Maven $(args)",
     "groups": [
+        {
+            "name":"junitTestResults",
+            "displayName":"JUnit Test Results",
+            "isExpanded":true
+        },
         {
             "name":"advanced",
             "displayName":"Advanced",
@@ -46,7 +51,25 @@
             "label": "Goal(s)", 
             "defaultValue": "package", 
             "required": false 
-        },        
+        },    
+        {
+            "name":"publishJUnitResults",
+            "type":"boolean",
+            "label":"Publish to VSO/TFS",
+            "required":true,
+            "defaultValue":"true",
+            "groupName":"junitTestResults",
+            "helpMarkDown":"Select this option to publish JUnit Test results produced by the Maven build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
+        }, 
+        {
+            "name": "testResultsFiles",
+            "type": "filePath",
+            "label": "Test Results Files",
+            "defaultValue": "**/TEST-*.xml",
+            "required": true,
+            "groupName":"junitTestResults",
+            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+        },     
         {
             "name":"jdkVersion",
             "type":"pickList",
