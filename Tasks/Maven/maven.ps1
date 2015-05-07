@@ -50,7 +50,7 @@ if($publishJUnitResultsFromAntBuild)
     $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
     if (!$matchingTestResultsFiles)
     {
-        Write-Host "No JUnit test results files were found matching pattern `$testResultsFiles`, so publishing JUnit test results is being skipped."
+        Write-Host "No JUnit test results files were found matching pattern '$testResultsFiles', so publishing JUnit test results is being skipped."
     }
     else
     {

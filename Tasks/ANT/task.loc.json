@@ -68,10 +68,10 @@
       "name": "testResultsFiles",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testResultsFiles",
-      "defaultValue": "**\\TEST-*.xml",
+      "defaultValue": "**/TEST-*.xml",
       "required": true,
       "groupName": "junitTestResults",
-      "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**\\*TEST-*.xml` for all xml files whose name starts with TEST-."
+      "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
     },
     {
       "name": "jdkVersion",

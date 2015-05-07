@@ -14,12 +14,17 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "java"
   ],
   "groups": [
+    {
+      "name": "junitTestResults",
+      "displayName": "ms-resource:loc.group.displayName.junitTestResults",
+      "isExpanded": true
+    },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
@@ -57,6 +62,24 @@
       "required": false,
       "helpMarkDown": "Working directory to run Gradle build in. Defaults to repository root.",
       "groupName": "advanced"
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishJUnitResults",
+      "required": true,
+      "defaultValue": "true",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "Select this option to publish JUnit Test results produced by the Gradle build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
+    },
+    {
+      "name": "testResultsFiles",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.testResultsFiles",
+      "defaultValue": "**/TEST-*.xml",
+      "required": true,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
     },
     {
       "name": "jdkVersion",
