@@ -3,9 +3,11 @@ param (
     [string]$fqdn, 
     [string]$sourcePath,
     [string]$targetPath,
-    [string]$username,
-	[string]$password,
-    [string]$cleanTargetBeforeCopy
+    [object]$credential,
+    [string]$cleanTargetBeforeCopy,
+	[string]$winRMPort,
+	[string]$httpProtocolOption,
+	[string]$skipCACheckOption
     )
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
@@ -17,20 +19,20 @@ param (
     [void][reflection.assembly]::LoadFrom( $_.FullName )
     Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
     }
+	
+	$cleanTargetPathOption = ''
+	if($cleanTargetBeforeCopy -eq "true")
+	{
+		$cleanTargetPathOption = '-CleanTargetPath'
+	}
 
-   $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $username, $password
+    Write-Verbose "Initiating copy on $fqdn " -Verbose
+   
+   	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"	
+		
+	[scriptblock]$copyFilesToTargetMachineBlock = [scriptblock]::Create($copyFilesToTargetMachineBlockString)
+	
+	$copyResponse = Invoke-Command -ScriptBlock $copyFilesToTargetMachineBlock
 
-   Write-Verbose "Initiating copy on $fqdn, username: $username" -Verbose
-
-   if($cleanTargetBeforeCopy -eq "true")
-    {
-         $copyResponse = Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath $sourcePath -DestinationPath $targetPath -Credential $credential -CleanTargetPath -SkipCACheck -UseHttp
-    }
-
-    else
-    {
-         $copyResponse = Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath $sourcePath -DestinationPath $targetPath -Credential $credential -SkipCACheck -UseHttp
-    }
-    
     Write-Output $copyResponse
 }

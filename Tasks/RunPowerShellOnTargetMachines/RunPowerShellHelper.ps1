@@ -1,5 +1,4 @@
-
-function CompleteResourceOperation
+function DoComplete-ResourceOperation
 {
     param([string]$environmentName,
 		  [guid]$envOperationId,
@@ -35,4 +34,3 @@ function Output-ResponseLogs
         Write-Verbose ($deploymentResponse.ServiceLog | Format-List | Out-String) -Verbose
     }
 }
-
