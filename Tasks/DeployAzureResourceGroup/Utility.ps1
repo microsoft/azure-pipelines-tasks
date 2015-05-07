@@ -90,8 +90,8 @@ function Get-CsmParameterObject
                     Throw "Specified argument list is not in the correct format"
                 }
             
-				$parameterName = $paramsList[$i].Substring(0, $space)
-				$parameterValue = $paramsList[$i].Substring($space + 1).TrimEnd(' ')
+                $parameterName = $paramsList[$i].Substring(0, $space)
+                $parameterValue = $paramsList[$i].Substring($space + 1).TrimEnd(' ')
                 Write-Verbose "Overwrote the parameter $parameterName from the input with the vale $parameterValue" -Verbose
                 $newParametersObject[$parameterName] = $parameterValue
             }

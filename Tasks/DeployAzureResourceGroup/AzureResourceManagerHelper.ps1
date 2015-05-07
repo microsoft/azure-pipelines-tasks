@@ -180,15 +180,15 @@ function Get-FQDN
         }
         else
         {
-			foreach ($networkInterface in $azureVM.NetworkProfile.NetworkInterfaces)
-			{
-				$nic = $networkInterfaceResources | Where-Object {$_.Id -eq $networkInterface.ReferenceUri}
-				if($nic)
-				{
-					 $ipc = $nic.IpConfigurations
+            foreach ($networkInterface in $azureVM.NetworkProfile.NetworkInterfaces)
+            {
+                $nic = $networkInterfaceResources | Where-Object {$_.Id -eq $networkInterface.ReferenceUri}
+                if($nic)
+                {
+                     $ipc = $nic.IpConfigurations
                     break
-				}
-			}
+                }
+            }
             if($ipc)
             {
                 $publicIPAddr = $ipc.PublicIpAddress.Id
