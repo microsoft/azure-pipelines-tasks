@@ -44,14 +44,19 @@ function Get-ResourceCredentials
 
 function Get-ResourceConnectionDetails
 {
-    param([object]$resource,
-	[REF]$resourceProperties
-	)
+    param([object]$resource)
 	
+	$resourceProperties = @{} 
 	$resourceName = $resource.Name 
 	
-	$resourceProperties.value.httpProtocolOption = $defaultHttpProtocolOption
-	$resourceProperties.value.skipCACheckOption = $defaultSkipCACheckOption
+	$fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+		
+	Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose
+		
+	$resourceProperties.fqdn = $fqdn
+	
+	$resourceProperties.httpProtocolOption = $defaultHttpProtocolOption
+	$resourceProperties.skipCACheckOption = $defaultSkipCACheckOption
 	
 	$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
 		
@@ -65,9 +70,11 @@ function Get-ResourceConnectionDetails
 		Write-Verbose "`t`t Resource $resourceName has winrm http port $winrmPort defined " -Verbose
 	}
 		
-	$resourceProperties.value.credential = Get-ResourceCredentials -resource $resource
+	$resourceProperties.credential = Get-ResourceCredentials -resource $resource
 	
-	$resourceProperties.value.winrmPort = $winrmPort
+	$resourceProperties.winrmPort = $winrmPort
+	
+	return $resourceProperties
 }
 
 function Get-ResourcesProperties
@@ -78,21 +85,13 @@ function Get-ResourcesProperties
 	
 	foreach ($resource in $resources)
     {
-		$resourceProperties = @{} 
-		
 		$resourceName = $resource.Name
 		
 		Write-Verbose "Get Resource properties for $resourceName " -Verbose			
 		
-		$fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
-		
-		Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose
-		
-		$resourceProperties.fqdn = $fqdn
-		
-		# Get other connection details for resource like - wirmport, http protocol, skipCACheckOption, resource credentials
+		# Get other connection details for resource like - fqdn, wirmport, http protocol, skipCACheckOption, resource credentials
 
-		Get-ResourceConnectionDetails -resource $resource -resourceProperties ([ref]$resourceProperties)
+		$resourceProperties = Get-ResourceConnectionDetails -resource $resource
 		
 		$resourcesPropertyBag.add($resourceName,$resourceProperties)
 	}
@@ -113,9 +112,9 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
     {
-		$resourceProperty = $resourcesPropertyBag.Item($resource.Name)
+		$resourceProperties = $resourcesPropertyBag.Item($resource.Name)
 		
-        $machine = $resourceProperty.fqdn
+        $machine = $resourceProperties.fqdn
 		
 		Write-Output "Deployment Started for - $machine"
 		
@@ -123,7 +122,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperty.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperty.credential, $resourceProperty.httpProtocolOption, $resourceProperty.skipCACheckOption
+        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
 		
         Output-ResponseLogs -operationName "deployment" -fqdn $machine -deploymentResponse $deploymentResponse
 
@@ -149,9 +148,9 @@ else
 
 	foreach($resource in $resources)
     {
-		$resourceProperty = $resourcesPropertyBag.Item($resource.Name)
+		$resourceProperties = $resourcesPropertyBag.Item($resource.Name)
 		
-        $machine = $resourceProperty.fqdn
+        $machine = $resourceProperties.fqdn
 		
 		Write-Output "Deployment Started for - $machine"
 		
@@ -159,11 +158,11 @@ else
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-		$resourceProperty.resOperationId = $resOperationId
+		$resourceProperties.resOperationId = $resOperationId
 		
-        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperty.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperty.credential, $resourceProperty.httpProtocolOption, $resourceProperty.skipCACheckOption
+        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
 
-        $Jobs.Add($job.Id, $resourceProperty)
+        $Jobs.Add($job.Id, $resourceProperties)
     }
     While (Get-Job)
     {
