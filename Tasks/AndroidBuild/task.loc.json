@@ -19,6 +19,7 @@
   "demands": [
     "AndroidSDK"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "emulatorOptions",

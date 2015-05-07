@@ -19,6 +19,7 @@
   "demands": [
     "Xamarin.iOS"
   ],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "solution",

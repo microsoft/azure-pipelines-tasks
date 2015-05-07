@@ -10,6 +10,7 @@
         "Minor": 1,
         "Patch": 9
     },
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"advanced",

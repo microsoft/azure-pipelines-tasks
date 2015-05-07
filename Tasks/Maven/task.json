@@ -16,6 +16,7 @@
         "Minor": 0,
         "Patch": 7
     },
+    "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Maven $(args)",
     "groups": [
         {

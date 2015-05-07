@@ -16,6 +16,7 @@
     "demands" : [
         "sh"
     ],    
+    "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Shell Script $(scriptPath)",
      "groups": [
         {

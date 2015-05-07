@@ -16,6 +16,7 @@
     "demands" : [
         "ant"
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"junitTestResults",

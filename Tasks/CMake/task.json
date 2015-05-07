@@ -16,6 +16,7 @@
         "Minor": 0,
         "Patch": 5
     },
+    "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "CMake $(args)",
     "inputs": [
         { 

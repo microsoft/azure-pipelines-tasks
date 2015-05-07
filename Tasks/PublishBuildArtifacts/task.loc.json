@@ -17,6 +17,7 @@
     "Patch": 72
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "CopyRoot",
