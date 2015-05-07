@@ -16,8 +16,10 @@ Write-Verbose "tasks = $tasks"
 Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 # Verify wrapperScript is set and is not a container
 if(!$wrapperScript -or !(Test-Path -Path $wrapperScript -PathType Leaf)) 

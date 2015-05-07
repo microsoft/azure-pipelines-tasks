@@ -4,7 +4,7 @@ function Create-Provider
           [string]$providerType)
 
     Write-Verbose "Registering provider $providerName" -Verbose
-
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     $provider = Register-Provider -Name $providerName -Type $providerType -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered provider $provider" -Verbose
@@ -26,6 +26,7 @@ function Create-ProviderData
     $propertyBag.Add("SubscriptionId", $subscriptionIdPropertyBagData)
 
     #TODO Figure out authentication mechanism and store it
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered provider data $providerData" -Verbose
@@ -49,7 +50,8 @@ function Create-EnvironmentDefinition
         $csmParameters = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $csmParametersFileContent)
         $propertyBag.Add("CsmParameters", $csmParameters)
     }
-
+    
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered machine group definition $environmentDefinition" -Verbose
@@ -106,7 +108,8 @@ function Create-Environment
     }
     
     Write-Verbose -Verbose "Registering machine group $environmentName"
-
+   
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
     Write-Host "Registered machine group $environment"
@@ -139,7 +142,8 @@ function Create-EnvironmentOperation
             $operationEndTime = $deploymentOperationLogs[0].EventTimestamp
             $operationStatus = $deploymentOperationLogs[0].Status
         }
-
+ 
+        import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
         $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $operationStartTime -Connection $connection -ErrorAction Stop
 
         Create-ResourceOperations  -operationLogs $operationLogs -environment $environment -environmentOperationId $envOperationId
@@ -181,6 +185,7 @@ function Create-ResourceOperations
 
             Write-Verbose "Saving resource $name provisioning operation" -Verbose
 
+            import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $operationStartTime -EnvironmentOperationId $environmentOperationId -Connection $connection -ErrorAction Stop
 
             $logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
@@ -199,6 +204,7 @@ function Check-EnvironmentNameAvailability
     {
         Write-Verbose -Verbose "Checking machine group name availability"
 
+        import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
         $environment = Get-Environment -EnvironmentName $environmentName -Connection $connection -ErrorAction silentlycontinue
 
         if($environment)
@@ -217,6 +223,7 @@ function Initialize-DTLServiceHelper
 {
     Write-Verbose "Getting the vss connection object" -Verbose
 
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
     Set-Variable -Name connection -Value $connection -Scope "Script"

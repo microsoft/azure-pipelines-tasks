@@ -18,6 +18,7 @@ Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
 . ./RunPowerShellHelper.ps1
 . ./RunPowerShellJob.ps1
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 

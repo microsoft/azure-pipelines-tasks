@@ -15,7 +15,8 @@ foreach($key in $PSBoundParameters.Keys)
     Write-Verbose ($key + ' = ' + $PSBoundParameters[$key])
 }
 
-import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if(!$solution)
 {
