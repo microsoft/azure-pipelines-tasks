@@ -12,7 +12,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if(!$cwd)
 {
-    throw (Get-LocalizedString -Key "Current working directory parameter is not set")
+    throw (Get-LocalizedString -Key "Working directory parameter is not set")
 }
 
 if(!(Test-Path $cwd -PathType Container))
@@ -21,21 +21,29 @@ if(!(Test-Path $cwd -PathType Container))
     New-Item -Path $cwd -ItemType Container
 }
 
+# Force Get-Command errors to be "terminating" errors. Otherwise, control
+# will not transfer to the catch block.
+$defaultErrorActionPreference = $ErrorActionPreference
+$ErrorActionPreference = 'Stop'
 try
 {
 	$cmake = Get-Command cmake.exe
-	Write-Verbose "Using $cmake.Source"
+	Write-Verbose ('Using {0}' -f $cmake.Path)
 }
 catch
 {
 	throw (Get-LocalizedString -Key 'Unable to find {0}' -ArgumentList 'cmake.exe')
+}
+finally
+{
+    $ErrorActionPreference = $defaultErrorActionPreference
 }
 
 Write-Verbose "Setting working directory to $cwd"
 Set-Location $cwd
 
 Write-Verbose "Running CMake..."
-Invoke-Tool -Path $cmake.Source -Arguments $args -WorkingFolder $buildPath
+Invoke-Tool -Path $cmake.Path -Arguments $args -WorkingFolder $buildPath
 
 Write-Verbose "Leaving script CMake.ps1"
 
