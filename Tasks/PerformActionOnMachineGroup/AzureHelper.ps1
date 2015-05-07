@@ -14,7 +14,7 @@ function Delete-MachineFromProvider
     
     $errorVariable=@()
     Write-Verbose "Deleting machine $machineName from Azure provider" -Verbose
-    Remove-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable  errorVariable -Verbose
+    $removeResponse = Remove-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -Force -ErrorAction SilentlyContinue -ErrorVariable  errorVariable -Verbose
 
     if($errorVariable.Count -eq 0)
     {

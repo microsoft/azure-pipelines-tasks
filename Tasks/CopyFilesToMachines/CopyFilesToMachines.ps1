@@ -20,6 +20,90 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
+# Default + constants #
+$defaultWinRMPort = '5985'
+$defaultSkipCACheckOption = ''	
+$defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
+$resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
+$resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
+$doSkipCACheckOption = '-SkipCACheck'
+$envOperationStatus = 'Passed'
+
+
+function Get-ResourceCredentials
+{
+	param([object]$resource)
+		
+	$machineUserName = $resource.Username
+	Write-Verbose "`t`t Resource Username - $machineUserName" -Verbose
+	$machinePassword = $resource.Password
+
+	$credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
+	
+	return $credential
+}
+
+function Get-ResourceConnectionDetails
+{
+    param([object]$resource)
+	
+	$resourceProperties = @{}
+	
+	$resourceName = $resource.Name
+	
+	$fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+		
+	Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose	
+		
+	$resourceProperties.fqdn = $fqdn
+	
+	$resourceProperties.httpProtocolOption = $defaultHttpProtocolOption
+	
+	$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+		
+	if([string]::IsNullOrEmpty($winrmPort))
+	{
+		Write-Verbose "`t`t Resource $resourceName does not have any winrm port defined , use the default - $defaultWinRMPort" -Verbose
+		$winrmPort = $defaultWinrmPort	
+	}
+	else
+	{
+		Write-Verbose "`t`t Resource $resourceName has winrm http port $winrmPort defined " -Verbose
+	}
+	
+	$resourceProperties.credential = Get-ResourceCredentials -resource $resource
+	
+	$resourceProperties.winrmPort = $winrmPort
+	
+	if($resourceProperties.httpProtocolOption -eq $defaultHttpProtocolOption)
+	{
+		$resourceProperties.skipCACheckOption = $doSkipCACheckOption	# If http option is opted , skip the CA check
+	}
+	
+	return $resourceProperties
+}
+
+function Get-ResourcesProperties
+{
+    param([object]$resources)
+
+	[hashtable]$resourcesPropertyBag = @{}
+	
+	foreach ($resource in $resources)
+    {
+		$resourceName = $resource.Name
+		Write-Verbose "Get Resource properties for $resourceName" -Verbose		
+		
+		# Get other connection details for resource like - fqdn wirmport, http protocol, skipCACheckOption, resource credentials
+
+		$resourceProperties = Get-ResourceConnectionDetails -resource $resource
+		
+		$resourcesPropertyBag.Add($resourceName, $resourceProperties)
+	}
+	 return $resourcesPropertyBag
+}
+
+
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
@@ -27,24 +111,23 @@ $resources = Get-EnvironmentResources -EnvironmentName $environmentName -Resourc
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -Connection $connection -ErrorAction Stop
 
 Write-Verbose "envOperationId = $envOperationId" -Verbose
-$envOperationStatus = "Passed"
+
+$resourcesPropertyBag = Get-ResourcesProperties -resources $resources
 
 if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
-    {
-        $machine = $resource.Name
+    {		
+		$resourceProperties = $resourcesPropertyBag.Item($resource.Name)
+		
+        $machine = $resourceProperties.fqdn
+		
         Write-Output "Copy Started for - $machine"
 
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-		$machineUserName = $resource.Username
-		Write-Verbose "`t`t Resource Username - $machineUserName" -Verbose
-		
-		$machinePassword = $resource.Password
-		
-        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy
+        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
        
         $status = $copyResponse.Status
         Output-ResponseLogs -operationName "copy" -fqdn $machine -deploymentResponse $copyResponse
@@ -52,7 +135,7 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
 		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 		
-		CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $copyResponse
+		DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $copyResponse
 
         if($status -ne "Passed")
         {
@@ -69,25 +152,21 @@ else
 
     foreach($resource in $resources)
     {
-        $machine = $resource.Name
-		[hashtable]$resourceProperties = @{} 
+		$resourceProperties = $resourcesPropertyBag.Item($resource.Name)
+		
+        $machine = $resourceProperties.fqdn
+		
+		Write-Output "Copy Started for - $machine"
 		
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-		$machineUserName = $resource.Username
-		Write-Verbose "`t`t Resource Username - $machineUserName" -Verbose
 		
-		$machinePassword = $resource.Password
-		
-		$resourceProperties.machineName = $machine
 		$resourceProperties.resOperationId = $resOperationId
 
-        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineUserName, $machinePassword, $cleanTargetBeforeCopy
+        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
 
         $Jobs.Add($job.Id, $resourceProperties)
-    
-        Write-Output "Copy Started for - $machine"
     }
 
     While (Get-Job)
@@ -106,14 +185,14 @@ else
                      $envOperationStatus = "Failed"
                  }
 				 
-				 $machineName = $Jobs.Item($job.Id).machineName
+				 $machineName = $Jobs.Item($job.Id).fqdn
 				 $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                  Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
 				 
                  Write-Output "Copy Status for machine $machineName : $status"
 				 
-				 CompleteResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
+				 DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
               } 
         }
     }
