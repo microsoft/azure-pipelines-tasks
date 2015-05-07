@@ -191,7 +191,13 @@ finally
     if ([string]::IsNullOrEmpty($global:chefRepo) -eq $false)
     {
         Write-Verbose "Deleting Chef Repo" -verbose
-        Remove-Item -Recurse -Force $global:chefRepo
+        #adding this as knife sometimes takes hold of the repo for a little time before deleting
+        $deleteChefRepoScript = 
+        { 
+            Remove-Item -Recurse -Force $global:chefRepo 
+        }
+
+        Invoke-WithRetry -Command $deleteChefRepoScript -RetryDelay 10 -MaxRetries 10 -OperationDetail "deleting chef repo"
         Write-Verbose "Chef Repo Deleted" -verbose
     }
 }
