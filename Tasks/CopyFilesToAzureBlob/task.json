@@ -38,7 +38,7 @@
         },
         {
             "name": "StorageAccount",
-            "type": "string",
+            "type": "pickList",
             "label": "Storage Account",
             "defaultValue": "",
             "required": true,
@@ -62,6 +62,14 @@
 
         }
     ],
+    "sourceDefinitions": [
+    {
+        "target": "StorageAccount",
+        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
+        "selector": "xpath://ServiceName",
+        "authKey": "$(ConnectedServiceName)"
+    }
+  ],
     "instanceNameFormat": "Copy Files To Azure Blob",
 	 "execution": {
         "AzurePowerShell": {

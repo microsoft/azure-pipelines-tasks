@@ -25,7 +25,7 @@
     "inputs": [
         {
             "name": "EnvironmentName",
-            "type": "string",
+            "type": "pickList",
             "label": "Machine Group",
             "defaultValue": "",
             "required": true,
@@ -73,6 +73,14 @@
             "helpMarkDown": "Setting it to true will run powershell parellely on the machines."
         }
     ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "EnvironmentName", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
     "instanceNameFormat": "Run PowerShell on Machine Group $(EnvironmentName)",
 	 "execution": {
         "PowerShell": {

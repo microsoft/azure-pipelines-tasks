@@ -31,7 +31,7 @@
     "inputs": [
         {
             "name": "environment",
-            "type": "string",
+            "type": "pickList",
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
@@ -118,6 +118,14 @@
             "groupName": "testSettings"
         }
     ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "environment", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
     "instanceNameFormat": "Test assemblies $(sourcefilters)",
     "execution": {
         "PowerShell": {

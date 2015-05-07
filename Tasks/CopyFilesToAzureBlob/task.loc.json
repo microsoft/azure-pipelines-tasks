@@ -41,7 +41,7 @@
     },
     {
       "name": "StorageAccount",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
       "required": true,
@@ -62,6 +62,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Useful while downloading, as it acts as a filter. Example - you can apppend your build number to all your blobs."
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "StorageAccount",
+      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
+      "selector": "xpath://ServiceName",
+      "authKey": "$(ConnectedServiceName)"
     }
   ],
   "instanceNameFormat": "Copy Files To Azure Blob",
