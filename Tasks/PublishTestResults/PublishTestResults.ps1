@@ -37,7 +37,7 @@ else
 
 if (!$matchingTestResultsFiles)
 {
-    throw (Get-LocalizedString -Key "No test results files with search pattern '{0}' were found." -ArgumentList $testResultsFiles)
+    throw (Get-LocalizedString -Key "No test result files were found using search pattern '{0}'." -ArgumentList $testResultsFiles)
 }
 
 $mergeResults = Convert-String $mergeTestResults Boolean
