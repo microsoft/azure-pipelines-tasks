@@ -20,7 +20,7 @@ function Create-AzureResourceGroup
         }
 
         $startTime = Get-Date
-        $startTime = $startTime.ToUniversalTime()
+        #$startTime = $startTime.ToUniversalTime()
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
         Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
