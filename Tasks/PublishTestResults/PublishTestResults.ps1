@@ -8,8 +8,9 @@ param(
 
 Write-Verbose "Entering script PublishTestResults.ps1"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.TestResults dll that has all the cmdlets we need
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if(!$testRunner)
 {

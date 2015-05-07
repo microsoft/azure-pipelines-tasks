@@ -32,8 +32,8 @@ Write-Verbose "Setting working directory to $cwd"
 Set-Location $cwd
 
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
 Write-Verbose "Running CMake..."
 Invoke-Tool -Path $cmake.Source -Arguments $args -WorkingFolder $buildPath

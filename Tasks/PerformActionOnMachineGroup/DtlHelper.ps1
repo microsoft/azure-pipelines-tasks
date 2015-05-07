@@ -1,7 +1,7 @@
 function Initialize-DTLServiceHelper
 {
     Write-Verbose "Getting the vss connection object" -Verbose
-
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
     Set-Variable -Name connection -Value $connection -Scope "Script"
@@ -13,6 +13,7 @@ function Get-MachineGroup
           [string]$filters)
  
     Write-Verbose "Getting the machine group $machineGroupName" -Verbose
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -Filters $filters -ErrorAction Stop -Verbose
     Write-Verbose "Retrieved the machine group"
 
@@ -26,6 +27,7 @@ function Delete-MachineGroup
 
     Write-Verbose "Deleting machine group $machineGroupName" -Verbose
     # If filters are not provided then it deltes entire machine group. If filters are given then it will delete all the machines satisfing the given filters.
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     if($filters)
     {
         Remove-EnvironmentResources -EnvironmentName $machineGroupName -Filters $filters -Connection $connection -ErrorAction Stop -Verbose
@@ -46,6 +48,7 @@ function Invoke-MachineGroupOperation
            [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
 
     Write-Verbose "Invoking $operationName for the machine group $machineGroupName" -Verbose
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     $operationId = Invoke-EnvironmentOperation -EnvironmentName $machineGroupName -OperationName $operationName -ResourceNames $machines.Name -Connection $connection -ErrorAction SilentlyContinue -Verbose
     Write-Verbose "Invoked $operationName for the machine group $machineGroupName" -Verbose
 
@@ -61,6 +64,7 @@ function End-MachineGroupOperation
           [string]$status)
 
     Write-Verbose "Saving $operationName details for machine group $machineGroupName" -Verbose
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     Complete-EnvironmentOperation -EnvironmentName $machineGroupName -EnvironmentOperationId $operationId -Status $status -Connection $connection -ErrorMessage $error -ErrorAction SilentlyContinue -Verbose
     Write-Verbose "Saved $operationName details for machine group $machineGroupName" -Verbose
 }
@@ -74,6 +78,7 @@ function End-MachineOperation
           [string]$status)
 
     Write-Verbose "Saving $operationName details for machine $machineName in machine group $machineGroupName" -Verbose
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     Complete-EnvironmentResourceOperation -EnvironmentName $machineGroupName -ResourceName $machineName -EnvironmentOperationId $operationId -Status $status -Connection $connection -ErrorAction SilentlyContinue -Verbose
     Write-Verbose "Completed $operationName for the machine $machineName in machine group $machineGroupName" -Verbose
 }

@@ -12,8 +12,8 @@ Write-Verbose "wrapperScript = $wrapperScript"
 Write-Verbose "options = $options"
 Write-Verbose "tasks = $tasks"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
 # Verify wrapperScript is set and is not a container
 if(!$wrapperScript -or !(Test-Path -Path $wrapperScript -PathType Leaf)) 

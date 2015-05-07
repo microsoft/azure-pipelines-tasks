@@ -23,7 +23,8 @@ if(!$antBuildFile)
     throw "Ant build file is not specified"
 }
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if($jdkVersion -and $jdkVersion -ne "default")
