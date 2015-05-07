@@ -26,6 +26,7 @@ if (!(Test-Path -Path $androidbat))
 Stop-Process -processname emulator-x86
 & $adbexe kill-server 
 & $androidbat delete avd -n $emulatorName
+Stop-Process -processname 'adb'
 
 # Remove temporary emulator file
 $user = [Environment]::UserName
