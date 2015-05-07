@@ -22,11 +22,13 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # Default + constants #
 $defaultWinRMPort = '5985'
-$defaultSkipCACheckOption = '-SkipCACheck'	# For on-prem BDT only HTTP support enabled , do skipCACheck until https support is not enabled 
-$defaultHttpProtocolOption = '-UseHttp'
+$defaultSkipCACheckOption = ''	
+$defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
 $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
 $resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
+$doSkipCACheckOption = '-SkipCACheck'
 $envOperationStatus = 'Passed'
+
 
 function Get-ResourceCredentials
 {
@@ -56,7 +58,6 @@ function Get-ResourceConnectionDetails
 	$resourceProperties.fqdn = $fqdn
 	
 	$resourceProperties.httpProtocolOption = $defaultHttpProtocolOption
-	$resourceProperties.skipCACheckOption = $defaultSkipCACheckOption
 	
 	$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
 		
@@ -73,6 +74,11 @@ function Get-ResourceConnectionDetails
 	$resourceProperties.credential = Get-ResourceCredentials -resource $resource
 	
 	$resourceProperties.winrmPort = $winrmPort
+	
+	if($resourceProperties.httpProtocolOption -eq $defaultHttpProtocolOption)
+	{
+		$resourceProperties.skipCACheckOption = $doSkipCACheckOption	# If http option is opted , skip the CA check
+	}
 	
 	return $resourceProperties
 }
