@@ -25,6 +25,7 @@ Write-Host "Starting Azure Resource Group Deployment Task"
 Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "environmentName = $resourceGroupName"
 Write-Verbose -Verbose "location = $location"
+Write-Verbose -Verbose "overrideParameters = $overrideParameters"
 Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
 Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
 

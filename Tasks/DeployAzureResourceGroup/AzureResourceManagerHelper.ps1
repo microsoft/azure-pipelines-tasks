@@ -169,65 +169,57 @@ function Get-FQDN
           [string]$resourceName)
     
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($resourceName) -eq $false)
-	{
-		$retryMaxCount = 5
-		$retryMaxWait = 15
-		for($retryCount = 0; $retryCount -lt $retryMaxCount; $retryCount = $retryCount + 1)
-		{
-			Write-Verbose "Trying to get FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
+    {
+        Write-Verbose "Trying to get FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
 
-			$azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorAction silentlycontinue -ErrorVariable fqdnError
+        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorAction silentlycontinue -ErrorVariable fqdnError
 
-			if(!$azureVM)
+        if(!$azureVM)
+        {
+            Write-Host $fqdnError -Verbose
+        }
+        else
+        {
+			foreach ($networkInterface in $azureVM.NetworkProfile.NetworkInterfaces)
 			{
-				Write-Host $fqdnError -Verbose
-			}
-			else
-			{
-				foreach ($nic in $networkInterfaceResources)
+				$nic = $networkInterfaceResources | Where-Object {$_.Id -eq $networkInterface.ReferenceUri}
+				if($nic)
 				{
-				   if ($nic.Id -eq $azureVM.NetworkInterfaces)
-				   {
-						$ipc = $nic.IpConfigurations
-						break
-				   }
+					 $ipc = $nic.IpConfigurations
+                    break
 				}
-
-				if($ipc)
-				{
-					$publicIPAddr = $ipc.PublicIpAddress.Id
+			}
+            if($ipc)
+            {
+                $publicIPAddr = $ipc.PublicIpAddress.Id
             
-					foreach ($publicIP in $publicIPAddressResources) 
-					{
-						if($publicIP.id -eq $publicIPAddr)
-						{
-							$fqdn = $publicIP.DnsSettings.Fqdn
-							break
-						}
-					}
+                foreach ($publicIP in $publicIPAddressResources) 
+                {
+                    if($publicIP.id -eq $publicIPAddr)
+                    {
+                        $fqdn = $publicIP.DnsSettings.Fqdn
+                        break
+                    }
+                }
 
-					if($fqdn -eq $null)
-					{
-						Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
-					}
-					else
-					{
-						Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
-                
-						return $fqdn;
-					}
+                if($fqdn -eq $null)
+                {
+                    Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
+                }
+                else
+                {
+                    Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+               
+                    return $fqdn;
+                }
 
-				}
-				else
-				{
-					Write-Host "Unable to find IPConfiguration of resource $resourceName" -Verbose
-				}
-			}
-
-			Start-Sleep -s $retryMaxWait
-		}
-	}
-
+            }
+            else
+            {
+                Write-Host "Unable to find IPConfiguration of resource $resourceName" -Verbose
+            }
+        }
+    }
 }
 
 function Refresh-SASToken
