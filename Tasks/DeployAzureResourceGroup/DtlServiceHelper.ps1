@@ -20,10 +20,14 @@ function Create-ProviderData
     
     Write-Verbose "Registering provider data $providerDataName" -Verbose
 
-    $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
-    $subscriptionIdPropertyBagData = New-Object 'Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData' -ArgumentList $false, $subscriptionId
-    $propertyBag.Add("SubscriptionId", $subscriptionIdPropertyBagData)
+    $propertyBag = Get-ServiceEndPointDetails -ConnectedServiceName $ConnectedServiceName
 
+    if($propertyBag -eq $null)
+    {
+        $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
+        $subscriptionIdPropertyBagData = New-Object 'Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData' -ArgumentList $false, $subscriptionId
+        $propertyBag.Add("SubscriptionId", $subscriptionIdPropertyBagData)
+    }
     #TODO Figure out authentication mechanism and store it
     $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
@@ -182,7 +186,7 @@ function Create-ResourceOperations
 
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $operationStartTime -EnvironmentOperationId $environmentOperationId -Connection $connection -ErrorAction Stop
 
-            $logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
+			$logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
             Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $operationStatus -EndTime $operationEndTime -Logs $logs -Connection $connection -ErrorAction Stop
 
             Write-Verbose "Completed saving resource $name provisioning operation with id $resOperationId" -Verbose
