@@ -27,10 +27,15 @@ Write-Verbose "TestConfiguration = $testConfigurations"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DistributedTestAutomation"
 
+# Get current directory.
+$currentDirectory = Convert-Path .
+$unregisterTestAgentLocation = Join-Path -Path $currentDirectory -ChildPath "TestAgentUnRegistration.ps1"
+Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
+
 Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 Write-Verbose "Calling Invoke-RunDistributedTests"
-Invoke-RunDistributedTests -EnvironmentName $environment -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations
+Invoke-RunDistributedTests -EnvironmentName $environment -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -UnregisterAgentLocation $unregisterTestAgentLocation
 
 Write-Verbose "Leaving script RunDistributedTests.ps1"
