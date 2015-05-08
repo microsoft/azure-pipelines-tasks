@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 69
+    "Patch": 71
   },
   "demands": [],
   "inputs": [
@@ -67,7 +67,7 @@
   "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "execution": {
     "PowerShell": {
-      "target": "$(currentDirectory)\\Publish-BuildArtifacts.ps1",
+      "target": "$(currentDirectory)\\PublishBuildArtifacts.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     },

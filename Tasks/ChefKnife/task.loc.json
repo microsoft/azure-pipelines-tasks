@@ -16,11 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "Chef"
   ],
+  "minimumAgentVersion": "1.82.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
