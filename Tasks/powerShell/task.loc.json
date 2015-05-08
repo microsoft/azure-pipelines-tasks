@@ -20,7 +20,6 @@
   "demands": [
     "DotNetFramework"
   ],
-  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",

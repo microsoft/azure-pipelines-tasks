@@ -12,7 +12,6 @@ function DoComplete-ResourceOperation
     $resourceOperationLog = New-OperationLog -Content $log
     $logs.Add($resourceOperationLog)
     
-    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
 }
 

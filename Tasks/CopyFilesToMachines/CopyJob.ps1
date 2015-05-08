@@ -27,7 +27,7 @@ param (
     }
 
     Write-Verbose "Initiating copy on $fqdn " -Verbose
-    import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+
    	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"	
 		
 	[scriptblock]$copyFilesToTargetMachineBlock = [scriptblock]::Create($copyFilesToTargetMachineBlockString)

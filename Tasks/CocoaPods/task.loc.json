@@ -19,7 +19,6 @@
   "demands": [
     "cocoapods"
   ],
-  "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "pod install",
   "inputs": [
     {
