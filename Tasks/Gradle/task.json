@@ -11,11 +11,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands" : [
         "java"
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"junitTestResults",

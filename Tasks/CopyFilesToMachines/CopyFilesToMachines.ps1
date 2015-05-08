@@ -18,6 +18,7 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 . ./CopyJob.ps1
 . ./CopyFilesHelper.ps1
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # Default + constants #

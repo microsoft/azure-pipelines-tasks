@@ -23,8 +23,8 @@ Write-Verbose "CodeCoverage Enabled = $codeCoverageEnabled"
 Write-Verbose "TestRun Parameters to override = $overrideRunParams"
 Write-Verbose "TestConfiguration = $testConfigurations"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DistributedTestAutomation"
 
 Write-Verbose "Getting the connection object"

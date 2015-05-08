@@ -165,6 +165,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
 
 Write-Host "Entering script Publish-AzureCloudDeployment.ps1"
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 Write-Host "ConnectedServiceName= $ConnectedServiceName "

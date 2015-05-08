@@ -13,7 +13,8 @@ param(
 
 Write-Verbose "Entering script VSTestConsole.ps1"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 # Import the Task.TestResults dll that has the cmdlet we need for publishing results
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"

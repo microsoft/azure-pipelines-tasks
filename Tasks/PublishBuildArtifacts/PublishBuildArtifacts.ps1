@@ -23,9 +23,8 @@ Write-Host "Contents = $Contents"
 Write-Host "ArtifactName = $ArtifactName"
 Write-Host "ArtifactType = $ArtifactType"
 
-# Import the Task.Common and Task.Build dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Build"
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
 $buildId = Get-Variable $distributedTaskContext "build.buildId"
 $teamProjectId = Get-Variable $distributedTaskContext "system.teamProjectId"
