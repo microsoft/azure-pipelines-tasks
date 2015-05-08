@@ -50,14 +50,16 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.platform",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here."
     },
     {
       "name": "configuration",
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here."
     },
     {
       "name": "runSettingsFile",

@@ -29,7 +29,7 @@ if ($testAssembly.Contains("*") -or $testAssembly.Contains("?"))
     Write-Verbose "Pattern found in solution parameter. Calling Find-Files."
     Write-Verbose "Calling Find-Files with pattern: $testAssembly"
     $testAssemblyFiles = Find-Files -SearchPattern $testAssembly
-	Write-Verbose "Found files: $testAssemblyFiles"
+    Write-Verbose "Found files: $testAssemblyFiles"
 }
 else
 {
@@ -52,11 +52,18 @@ if($testAssemblyFiles)
 
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
-    Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+    if($resultFiles)
+    {
+        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
 
+    }
+    else
+    {
+        Write-Warning "No results found to publish."   
+    }
 }
 else
 {
-    Write-Verbose "No test assemblies found matching the pattern: $testAssembly"
+    Write-Warning "No test assemblies found matching the pattern: $testAssembly"
 }
 Write-Verbose "Leaving script VSTestConsole.ps1"
