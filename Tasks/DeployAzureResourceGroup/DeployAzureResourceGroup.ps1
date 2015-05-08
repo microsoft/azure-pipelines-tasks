@@ -30,6 +30,7 @@ Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
 Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 #Find the matching deployment definition File

@@ -14,13 +14,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "msbuild",
     "visualstudio"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",

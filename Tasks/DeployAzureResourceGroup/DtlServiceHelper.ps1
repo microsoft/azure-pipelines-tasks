@@ -4,7 +4,6 @@ function Create-Provider
           [string]$providerType)
 
     Write-Verbose "Registering provider $providerName" -Verbose
-
     $provider = Register-Provider -Name $providerName -Type $providerType -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered provider $provider" -Verbose
@@ -49,7 +48,7 @@ function Create-EnvironmentDefinition
         $csmParameters = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $csmParametersFileContent)
         $propertyBag.Add("CsmParameters", $csmParameters)
     }
-
+    
     $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
     Write-Verbose "Registered machine group definition $environmentDefinition" -Verbose
@@ -106,7 +105,7 @@ function Create-Environment
     }
     
     Write-Verbose -Verbose "Registering machine group $environmentName"
-
+   
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
     Write-Host "Registered machine group $environment"
@@ -139,7 +138,7 @@ function Create-EnvironmentOperation
             $operationEndTime = $deploymentOperationLogs[0].EventTimestamp
             $operationStatus = $deploymentOperationLogs[0].Status
         }
-
+ 
         $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $operationStartTime -Connection $connection -ErrorAction Stop
 
         Create-ResourceOperations  -operationLogs $operationLogs -environment $environment -environmentOperationId $envOperationId

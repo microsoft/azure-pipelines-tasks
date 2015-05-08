@@ -15,7 +15,8 @@ Write-Verbose "timeout = $timeout"
 $activateAndroidLicense = Convert-String $activateAndroid Boolean
 Write-Verbose "activateAndroid (converted) = $activateAndroidLicense"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if (!$action)
@@ -51,7 +52,7 @@ if ($action -eq "Activate")
     $xamarinProducts = @()
     if ($activateAndroidLicense)
     {
-        $xamarinProducts += [Microsoft.TeamFoundation.DistributedTask.Task.Common.Core.XamarinProductType]::Android 
+        $xamarinProducts += [Microsoft.TeamFoundation.DistributedTask.Task.Internal.Core.XamarinProductType]::Android 
     }
 
     foreach ($p in $xamarinProducts)

@@ -18,7 +18,7 @@ function Get-SingleFile($files, $pattern)
 function Get-File($pattern)
 {
     #Find the File based on pattern
-    
+
     Write-Verbose -Verbose "Finding files based on $pattern"
     $filesMatchingPattern = Find-Files -SearchPattern "$pattern"
 
