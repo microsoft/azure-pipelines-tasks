@@ -297,9 +297,9 @@ function LoadDependentDlls
 
 	$vsRoot = Locate-TestVersionAndVsRoot($TestAgentVersion)
 	$assemblylist = 
-				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.TeamFoundation.Client.dll").ToString(),
-				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.TeamFoundation.Common.dll").ToString(),
-				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.VisualStudio.Services.Common.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Client.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Common.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.VisualStudio.Services.Common.dll").ToString(),
 				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\Microsoft.VisualStudio.TestService.Common.dll").ToString()
 
 	foreach ($asm in $assemblylist)
