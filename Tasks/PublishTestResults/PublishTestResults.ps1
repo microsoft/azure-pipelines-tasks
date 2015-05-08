@@ -15,12 +15,12 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if(!$testRunner)
 {
-    throw "testRunner parameter has to be specified"
+    throw (Get-LocalizedString -Key "Test runner parameter has to be specified")
 }
 
 if (!$testResultsFiles)
 {
-    throw "testResultsFiles parameter has to be specified"
+    throw (Get-LocalizedString -Key "Test results files parameter has to be specified")
 }
 
 # check for pattern in testResultsFiles
@@ -39,7 +39,7 @@ else
 
 if (!$matchingTestResultsFiles)
 {
-    throw "No test results files with search pattern '$testResultsFiles' were found."
+    throw (Get-LocalizedString -Key "No test result files were found using search pattern '{0}'." -ArgumentList $testResultsFiles)
 }
 
 $mergeResults = Convert-String $mergeTestResults Boolean
