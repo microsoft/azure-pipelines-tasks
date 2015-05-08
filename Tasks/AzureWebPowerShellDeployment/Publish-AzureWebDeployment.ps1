@@ -44,6 +44,8 @@ Write-Host "Package= $Package"
 Write-Host "AdditionalArguments= $AdditionalArguments"
 
 #Find the package to deploy
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 Write-Host "packageFile= Find-Files -SearchPattern $Package"
 $packageFile = Find-Files -SearchPattern $Package
 Write-Host "packageFile= $packageFile"

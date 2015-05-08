@@ -13,6 +13,7 @@ Write-Verbose -Verbose "MachineGroupName = $MachineGroupName"
 Write-Verbose -Verbose "Action = $Action"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
+import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"

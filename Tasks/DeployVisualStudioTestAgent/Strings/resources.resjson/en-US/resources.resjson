@@ -8,8 +8,6 @@
   "loc.group.displayName.agentConfiguration": "Agent Configuration",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.environment": "Test Machine Group",
-  "loc.input.label.alternateCredsUserName": "Alternate credentials Username",
-  "loc.input.label.alternateCredsPassword": "Alternate credentials Password",
   "loc.input.label.testMachines": "Deploy to machines",
   "loc.input.label.runAsProcess": "Run Test Agent as interactive process to execute UI Tests",
   "loc.input.label.machineUserName": "Username",

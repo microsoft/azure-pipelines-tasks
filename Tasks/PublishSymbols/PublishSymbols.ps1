@@ -10,7 +10,8 @@ param(
 
 Write-Verbose "Entering script PublishSymbols.ps1"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 # If symbols path is not set, we only index sources

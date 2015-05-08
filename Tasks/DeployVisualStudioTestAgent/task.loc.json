@@ -15,9 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "environment",
@@ -38,13 +39,13 @@
   "inputs": [
     {
       "name": "environment",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.environment",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
       "groupName": "environment"
-    },   
+    },
     {
       "name": "testMachines",
       "type": "string",
@@ -98,6 +99,14 @@
       "required": false,
       "helpMarkDown": "Optionally specify if test agent needs to be updated.",
       "groupName": "advanced"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "environment",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "Deploy and configure Test Agent",
