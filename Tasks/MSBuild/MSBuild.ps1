@@ -97,7 +97,7 @@ if ($cleanBuild)
 $nugetPath = Get-ToolPath -Name 'NuGet.exe'
 if (-not $nugetPath -and $nugetRestore)
 {
-    Write-Warning (Get-LocalizedString -Key "Unable to locate nuget.exe. Package restore will not be performed for the solutions")
+    Write-Warning (Get-LocalizedString -Key "Unable to locate {0}. Package restore will not be performed for the solutions" -ArgumentList 'nuget.exe')
 }
 
 foreach ($sf in $solutionFiles)

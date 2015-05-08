@@ -168,25 +168,25 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
 
 Write-Verbose "Entering script Publish-AzureCloudDeployment.ps1"
 
-Write-Verbose "ConnectedServiceName= $ConnectedServiceName "
-Write-Verbose "ServiceName= $ServiceName"
-Write-Verbose "ServiceLocation= $ServiceLocation"
-Write-Verbose "StorageAccount= $StorageAccount"
-Write-Verbose "CsPkg= $CsPkg"
-Write-Verbose "CsCfg= $CsCfg"
-Write-Verbose "Slot= $Slot"
-Write-Verbose "AllowUpgrade= $AllowUpgrade"
+Write-Host "ConnectedServiceName= $ConnectedServiceName "
+Write-Host "ServiceName= $ServiceName"
+Write-Host "ServiceLocation= $ServiceLocation"
+Write-Host "StorageAccount= $StorageAccount"
+Write-Host "CsPkg= $CsPkg"
+Write-Host "CsCfg= $CsCfg"
+Write-Host "Slot= $Slot"
+Write-Host "AllowUpgrade= $AllowUpgrade"
 
 $allowUpgrade = Convert-String $AllowUpgrade Boolean
 
-Write-Verbose "Find-Files -SearchPattern $CsCfg"
+Write-Host "Find-Files -SearchPattern $CsCfg"
 $serviceConfigFile = Find-Files -SearchPattern "$CsCfg"
-Write-Verbose "serviceConfigFile= $serviceConfigFile"
+Write-Host "serviceConfigFile= $serviceConfigFile"
 $serviceConfigFile = Get-SingleFile $serviceConfigFile $CsCfg
 
-Write-Verbose "Find-Files -SearchPattern $CsPkg"
+Write-Host "Find-Files -SearchPattern $CsPkg"
 $servicePackageFile = Find-Files -SearchPattern "$CsPkg"
-Write-Verbose "servicePackageFile= $servicePackageFile"
+Write-Host "servicePackageFile= $servicePackageFile"
 $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
 Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue"

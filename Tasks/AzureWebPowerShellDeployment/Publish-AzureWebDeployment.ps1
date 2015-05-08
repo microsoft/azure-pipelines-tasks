@@ -38,15 +38,15 @@ function Get-SingleFile($files, $pattern)
 
 Write-Verbose "Entering script Publish-AzureWebDeployment.ps1"
 
-Write-Verbose "ConnectedServiceName= $ConnectedServiceName"
-Write-Verbose "WebSiteName= $WebSiteName"
-Write-Verbose "Package= $Package"
-Write-Verbose "AdditionalArguments= $AdditionalArguments"
+Write-Host "ConnectedServiceName= $ConnectedServiceName"
+Write-Host "WebSiteName= $WebSiteName"
+Write-Host "Package= $Package"
+Write-Host "AdditionalArguments= $AdditionalArguments"
 
 #Find the package to deploy
-Write-Verbose "packageFile= Find-Files -SearchPattern $Package"
+Write-Host "packageFile= Find-Files -SearchPattern $Package"
 $packageFile = Find-Files -SearchPattern $Package
-Write-Verbose "packageFile= $packageFile"
+Write-Host "packageFile= $packageFile"
 
 #Ensure that at most a single package (.zip) file is found
 $packageFile = Get-SingleFile $packageFile $Package
