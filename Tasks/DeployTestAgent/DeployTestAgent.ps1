@@ -3,9 +3,10 @@ param(
     [string]$testMachines,
     [string]$runAsProcess,
     [string]$machineUserName,
-    [string]$machinePassword,    
+    [string]$machinePassword,
     [string]$agentLocation,
-    [string]$updateTestAgent
+    [string]$updateTestAgent,
+    [string]$isDataCollectionOnly
 )
 
 # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
@@ -19,6 +20,7 @@ Write-Verbose "runAsProcess = $runAsProcess"
 Write-Verbose "logonAutomatically = $logonAutomatically"
 Write-Verbose "disableScreenSaver = $disableScreenSaver"
 Write-Verbose "updateTestAgent = $updateTestAgent"
+Write-Verbose "isDataCollectionOnly = $isDataCollectionOnly"
 
 
 if ([string]::IsNullOrWhiteSpace($agentLocation))
@@ -58,6 +60,6 @@ if ( [string]::IsNullOrEmpty($personalAccessToken))
 }
 
 Write-Verbose "Calling Invoke-DeployTestAgent"
-Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -EnvironmentName $environment -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken
+Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -EnvironmentName $environment -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
 
 Write-Verbose "Leaving script DeployTestAgent.ps1"
