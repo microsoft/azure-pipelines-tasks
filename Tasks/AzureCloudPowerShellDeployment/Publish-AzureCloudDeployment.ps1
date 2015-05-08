@@ -138,7 +138,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
                         }
                         else
                         {
-                            Write-Warning (Get-LocalizedString -Key "Could not get the primary storage key for the public config storage account '{0}'.  Unable to apply any diagnostics extensions." -ArgumentList $publicConfigStorageAccountName)
+                            Write-Warning (Get-LocalizedString -Key "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions." -ArgumentList "$publicConfigStorageAccountName")
                             return
                         }
                     }
@@ -159,7 +159,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
         }
         else
         {
-            Write-Warning (Get-LocalizedString -Key "Could not get the primary storage key for storage account '{0}'.  Unable to apply any diagnostics extensions." -ArgumentList $storageAccount)
+            Write-Warning (Get-LocalizedString -Key "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions." -ArgumentList "$storageAccount")
         }
     }
     
@@ -181,12 +181,12 @@ $allowUpgrade = Convert-String $AllowUpgrade Boolean
 
 Write-Verbose "Find-Files -SearchPattern $CsCfg"
 $serviceConfigFile = Find-Files -SearchPattern "$CsCfg"
-Write-Verbose "serviceConfigFile= $serviceConfigFile" -ForegroundColor Yellow
+Write-Verbose "serviceConfigFile= $serviceConfigFile"
 $serviceConfigFile = Get-SingleFile $serviceConfigFile $CsCfg
 
 Write-Verbose "Find-Files -SearchPattern $CsPkg"
 $servicePackageFile = Find-Files -SearchPattern "$CsPkg"
-Write-Verbose "servicePackageFile= $servicePackageFile" -ForegroundColor Yellow
+Write-Verbose "servicePackageFile= $servicePackageFile"
 $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
 Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue"
