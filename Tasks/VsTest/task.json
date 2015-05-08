@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 12
   },
   "demands": [
     "vstest"
@@ -47,14 +47,16 @@
       "type": "string", 
       "label": "Platform", 
       "defaultValue":"", 
-      "required":false
+      "required":false,
+      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here."
     },
     {
       "name": "configuration", 
       "type": "string", 
       "label": "Configuration", 
       "defaultValue":"", 
-      "required":false 
+      "required":false, 
+      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here."
     },
     {
       "name": "runSettingsFile",
@@ -85,11 +87,12 @@
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "VSTest version",
-      "defaultValue": "14.0",
+      "defaultValue": "latest",
       "required": false,
       "helpMarkDown": "The version of VSTest to use.",
       "groupName":"advanced",
       "options": {
+                "latest":  "Latest",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013"
             }
