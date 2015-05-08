@@ -48,8 +48,7 @@ function Validate-DeploymentFileAndParameters
 
 function Get-CsmParameterObject
 {
-    param([string]$csmParameterFileContent,
-          [string]$overrideParameters)
+    param([string]$csmParameterFileContent)
 
     if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false)
     {
@@ -75,27 +74,6 @@ function Get-CsmParameterObject
         }
 
         Write-Verbose "Generated the parameter object" -Verbose
-
-        if ([string]::IsNullOrEmpty($overrideParameters) -eq $false)
-        {
-            $paramsList = New-Object System.Collections.Generic.List[string]
-
-            $paramsList = $overrideParameters.Split("-") | Where-Object {$_.Length -gt 0}
-
-            for($i = 0; $i -lt $paramsList.Count; $i = $i+1)
-            {
-                $space = $paramsList[$i].IndexOf(' ')
-                if($space -eq -1)
-                {
-                    Throw "Specified argument list is not in the correct format"
-                }
-            
-                $parameterName = $paramsList[$i].Substring(0, $space)
-                $parameterValue = $paramsList[$i].Substring($space + 1).TrimEnd(' ')
-                Write-Verbose "Overwrote the parameter $parameterName from the input with the vale $parameterValue" -Verbose
-                $newParametersObject[$parameterName] = $parameterValue
-            }
-        }
 
         return $newParametersObject
     }

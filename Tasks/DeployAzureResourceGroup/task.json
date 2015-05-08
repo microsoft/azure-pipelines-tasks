@@ -35,6 +35,12 @@
             "required": true,
             "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
         },
+	{
+            "name": "resourceGroupName", 
+            "type": "string", 
+            "label": "Resource Group",
+            "required": true
+        },
         {
             "name": "location",
             "type": "pickList",
@@ -52,12 +58,6 @@
             "properties": {
                 "EditableOptions": "True" 
             }
-        },
-        {
-            "name": "resourceGroupName", 
-            "type": "string", 
-            "label": "Resource Group",
-            "required": true
         },
         { 
             "name": "csmFile", 
