@@ -16,9 +16,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1,
-    "IsTest": false
+    "Patch": 2
   },
+  "demands": [
+    "Chef",
+    "KnifeReporting"
+  ],
+  "minimumAgentVersion": "1.82.0",
   "inputs": [
     {
       "name": "connectedServiceName",
@@ -42,7 +46,7 @@
       "label": "ms-resource:loc.input.label.Attributes",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify the value of the leaf node attribute(s) to be updated ex. {\"default_attributes.websiteName\":\"MyWebsite\",\"override_attributes.db\":\"MyDb\"}.Task will fail if the leaf node attribute does not exist, or if it is not a leaf node."
+      "helpMarkDown": "Specify the value of the leaf node attribute(s) to be updated. Example. {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. Task fails if the leaf node does not exist."
     },
     {
       "name": "chefWaitTime",

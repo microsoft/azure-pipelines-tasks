@@ -4,10 +4,13 @@
 {
   "loc.friendlyName": "Ant",
   "loc.description": "Build with Apache Ant",
+  "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.antBuildFile": "Ant build file",
   "loc.input.label.options": "Options",
   "loc.input.label.targets": "Target(s)",
+  "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
+  "loc.input.label.testResultsFiles": "Test Results Files",
   "loc.input.label.jdkVersion": "JDK Version",
   "loc.input.label.jdkArchitecture": "JDK Architecture"
 }

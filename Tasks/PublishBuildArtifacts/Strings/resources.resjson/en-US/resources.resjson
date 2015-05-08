@@ -1,0 +1,12 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Publish Build Artifacts",
+  "loc.description": "Publish Build artifacts to the server or a file share",
+  "loc.input.label.CopyRoot": "Copy Root",
+  "loc.input.label.Contents": "Contents",
+  "loc.input.label.ArtifactName": "Artifact Name",
+  "loc.input.label.ArtifactType": "Artifact Type",
+  "loc.input.label.TargetPath": "Path"
+}

@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "groups": [
     {
@@ -85,8 +85,12 @@
             "failOnStandardError": "$(failOnStandardError)"
         },
         "JavaScript": {
-            "target": "processRunner.js",
+            "target": "cmdLine.js",
             "argumentFormat": ""
-        }
+        },
+        "Node": {
+            "target": "cmdLine2.js",
+            "argumentFormat": ""
+        }        
     }
 }

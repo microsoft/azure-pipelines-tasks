@@ -9,16 +9,15 @@
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build",
-    "Release"
+    "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0,
-    "IsTest": false
+    "Patch": 1
   },
+  "minimumAgentVersion": "1.82.0",
   "groups": [
     {
       "name": "advanced",
@@ -29,7 +28,7 @@
   "inputs": [
     {
       "name": "EnvironmentName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
@@ -75,6 +74,14 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "Setting it to true will run powershell parellely on the machines."
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "EnvironmentName",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "Run PowerShell on Machine Group $(EnvironmentName)",

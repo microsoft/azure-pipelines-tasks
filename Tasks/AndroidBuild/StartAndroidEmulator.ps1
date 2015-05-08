@@ -13,8 +13,22 @@ Write-Verbose "emulatorName = $emulatorName"
 Write-Verbose "headlessEmulator = $headlessEmulator"
 Write-Verbose "timeout = $timeout seconds"
 
+if ($env:ANDROID_HOME -eq $null)
+{
+    throw 'Environment variable not set: ANDROID_HOME'
+}
+
 $adbexe = $env:ANDROID_HOME + "\platform-tools\adb.exe"
+if (!(Test-Path -Path $adbexe))
+{
+    throw "File not found: $adbexe"
+}
+
 $androidbat = $env:ANDROID_HOME + "\tools\android.bat"
+if (!(Test-Path -Path $androidbat))
+{
+    throw "File not found: $androidbat"
+}
 
 # Set up default emulator settings 
 $abi = "default/x86"
@@ -22,6 +36,7 @@ $abi = "default/x86"
 Stop-Process -processname emulator-x86 2> $null
 & $adbexe kill-server 2> $null
 & $androidbat delete avd -n $emulatorName 2> $null
+Stop-Process -processname 'adb' 2> $null
 
 # Create an emulator device
 # TODO: Figure out how to validate this. Exit code always returns 0. 
@@ -33,14 +48,18 @@ $emublock = {
 	param($headlessEmulator)
 	Push-Location $env:ANDROID_HOME
 	if($headlessEmulator) {
-		.\tools\emulator.exe -avd "AndroidBuildEmulator" -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save -no-skin -no-audio -no-window
+		$output=.\tools\emulator.exe -avd "AndroidBuildEmulator" -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save -no-skin -no-audio -no-window
 	}
 	else {
-	    .\tools\emulator.exe -avd "AndroidBuildEmulator" -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save
+	    $output=.\tools\emulator.exe -avd "AndroidBuildEmulator" -prop persist.sys.language=en -prop persist.sys.country=US -no-snapshot-load -no-snapshot-save
     }
 	Pop-Location
+
+    return $output
 }
-Start-Job -Name openEmulator -ScriptBlock $emublock -ArgumentList $headlessEmulator | Out-Null
+$startEmulatorJob = Start-Job -ScriptBlock $emublock -ArgumentList $headlessEmulator 
+Wait-Job $startEmulatorJob -Timeout $timeout | Out-Null
+Receive-Job $startEmulatorJob
 
 # Connect to emulator
 & $adbexe start-server
@@ -80,7 +99,7 @@ Receive-Job $bootJob -OutVariable bootCompleted | Out-Null
 
 # Check if emulator booted up successfully
 if([boolean]$bootCompleted -ne $TRUE) {
-	Write-Error "Error: Emulator failed to start within $timeout seconds."
+    Write-Error "Error: Emulator failed to start within $timeout seconds."
 }
 
 Write-Verbose "Leaving script StartAndroidEmulator.ps1"

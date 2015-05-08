@@ -6,7 +6,7 @@
 
 Before you run the builds, you need to configure an agent:
 
-[Windows](http://youtu.be/V2-cPzggChg)
+[Windows](https://youtu.be/ZzrDPmTOEEk)
 
 [OSX/Linux](https://github.com/Microsoft/vso-agent)
 
@@ -77,4 +77,4 @@ From the root of the repo (replace version with appropriate version)
 gulp package --version 1.0.29
 ```
 
-Tasks will be create a nuget package in the _package directory.
+Tasks will be create a nuget package in the _package directory.  This is only used for TFS internal engineering.

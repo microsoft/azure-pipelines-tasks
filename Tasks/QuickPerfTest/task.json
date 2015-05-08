@@ -1,0 +1,135 @@
+﻿{
+  "id": "9648625C-1523-4EB5-B015-DFE7C685840C",
+  "name": "QuickPerfTest",
+  "friendlyName": "Cloud-based Web Performance Test",
+  "description": "Quickly find perf regressions to your website under load. Powered by VS Online.",
+  "category": "Test",
+  "visibility": [
+                  "Preview",
+                  "Build"
+                ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "msbuild"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "websiteUrl",
+      "type": "string",
+      "label": "Website Url",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Enter your application website url as http://www.your.app/home.html"
+    },
+    {
+      "name": "testName",
+      "type": "string",
+      "label": "Test Name",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Name the load test for tracking and correlation."
+    },
+    {
+      "name": "vuLoad",
+      "type": "pickList",
+      "label": "User Load",
+      "required": true,
+      "helpMarkDown": "Maximum virtual users concurrently accessing the website.",
+      "defaultValue": "25",
+      "options": {
+        "25":"25",
+        "50":"50",
+        "100":"100",
+        "250":"250"
+      }
+    },
+    {
+      "name": "runDuration",
+      "type": "pickList",
+      "label": "Run Duration",
+      "required": true,
+      "helpMarkDown": "Load test run duration in seconds.",
+      "defaultValue": "60",
+      "options": {
+        "60":"60",
+        "120":"120",
+        "180":"180",
+        "240":"240",
+        "300":"300"
+      }
+    },
+    {
+      "name": "geoLocation",
+      "type": "pickList",
+      "label": "Geo Location",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Geographical region from where the load will be generated.",
+      "defaultValue": "Default",
+      "options": {
+        "Default":"Default",
+        "East US": "East US (Virginia)",
+        "East US 2": "East US 2 (Virginia)",
+        "Central US": "Central US (Iowa)",
+        "West US": "West US (California)",
+        "North Central US": "North Central US (Illinois)",
+        "South Central US": "South Central US (Texas)",
+        "North Europe": "North Europe (Ireland)",
+        "West Europe": "West Europe (Netherlands)",
+        "Southeast Asia": "Southeast Asia (Singapore)",
+        "East Asia": "East Asia (Hong Kong)",
+        "Japan East": "Japan East (Saitama Prefecture)",
+        "Japan West": "Japan West (Osaka Prefecture)",
+        "Brazil South": "Brazil South (Sao Paulo State)",
+        "Australia East": "Australia East (New South Wales)",
+        "Australia Southeast": "Australia Southeast (Victoria)"
+      }
+    },
+    {
+      "name": "Username",
+      "type": "string",
+      "label": "Alternate credential username",
+      "defaultValue": "$(System.Auth.UserName)",
+      "groupName":"advanced",
+      "required": true
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "label": "Alternate credential password",
+      "defaultValue": "$(System.Auth.Password)",
+      "groupName":"advanced",
+      "required": true
+    },
+    {
+      "name": "CltAccountUrl",
+      "type": "string",
+      "label": "VSO Account URL",
+      "defaultValue": "$(System.TeamFoundationServerUri)",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "Visual Studio Online Account's CLT URL."
+    }
+  ],
+  "instanceNameFormat": "Quick Perf Test $(testName)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Invoke-QuickPerfTest.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
+

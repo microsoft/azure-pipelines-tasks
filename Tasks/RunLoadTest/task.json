@@ -1,0 +1,93 @@
+﻿{
+  "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
+  "name": "CloudLoadTest",
+  "friendlyName": "Cloud-based Load Test with VSO",
+  "description": "Runs the load test in cloud; Powered by VS Online.",
+  "category": "Test",
+  "visibility": [
+    "Preview",
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "demands": [
+    "msbuild"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "TestDrop",
+      "type": "filePath",
+      "label": "Load test files folder",
+      "defaultValue": "$(Build.SourcesDirectory)\\loadtest",
+      "required": true,
+      "helpMarkDown": "Relative path from build source directory on the agent under which the load test solution output is placed."
+    },
+    {
+      "name": "LoadTest",
+      "type": "string",
+      "label": "Load test file",
+      "defaultValue": "loadtest1.loadtest",
+      "required": true,
+      "helpMarkDown": "Relative path to the load test filename under the test drop folder defined above."
+    },
+    {
+      "name": "TestSettings",
+      "type": "string",
+      "label": "Test settings file",
+      "defaultValue": "local.testsettings",
+      "required": true,
+      "helpMarkDown": "Relative path to the test settings filename under the test drop folder defined above."
+    },
+    {
+      "name": "ThresholdLimit",
+      "type": "string",
+      "label": "Number of permissible threshold violations",      
+      "required": false,
+      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsucessful."
+    },
+    {
+      "name": "VsoAccountUrl",
+      "type": "string",
+      "label": "VSO account uri",
+      "defaultValue": "$(System.TeamFoundationServerUri)",
+      "groupName":"advanced",
+      "required": true,
+      "helpMarkDown": "Visual Studio Online Account URL."
+    },
+    {
+      "name": "Username",
+      "type": "string",
+      "label": "Alternate credential username",
+      "defaultValue": "$(System.Auth.UserName)",
+      "groupName":"advanced",
+      "required": true
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "label": "Alternate credential password",
+      "defaultValue": "$(System.Auth.Password)",
+      "groupName":"advanced",
+      "required": true
+    }
+  ],
+  "instanceNameFormat": "Cloud Load Test $(LoadTest)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Start-CloudLoadTest.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

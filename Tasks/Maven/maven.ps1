@@ -2,6 +2,8 @@
     [string]$mavenPOMFile,
     [string]$options,
     [string]$goals,
+    [string]$publishJUnitResults,   
+    [string]$testResultsFiles, 
     [string]$jdkVersion,
     [string]$jdkArchitecture
 )
@@ -10,6 +12,8 @@ Write-Verbose 'Entering Maven.ps1'
 Write-Verbose "mavenPOMFile = $mavenPOMFile"
 Write-Verbose "options = $options"
 Write-Verbose "goals = $goals"
+Write-Verbose "publishJUnitResults = $publishJUnitResults"
+Write-Verbose "testResultsFiles = $testResultsFiles"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 
@@ -35,11 +39,30 @@ if($jdkVersion -and $jdkVersion -ne "default")
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
-Write-Verbose "Creating a new timeline for logging events"
-$timeline = Start-Timeline -Context $distributedTaskContext
-
 Write-Verbose "Running Maven..."
-Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals -Timeline $timeline
+Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
+
+# Publish test results files
+$publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
+if($publishJUnitResultsFromAntBuild)
+{
+   # check for JUnit test result files
+    $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
+    if (!$matchingTestResultsFiles)
+    {
+        Write-Host "No JUnit test results files were found matching pattern '$testResultsFiles', so publishing JUnit test results is being skipped."
+    }
+    else
+    {
+        Write-Verbose "Calling Publish-TestResults"
+        Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+    }    
+}
+else
+{
+    Write-Verbose "Option to publish JUnit Test results produced by Maven build was not selected and is being skipped."
+}
+
 
 Write-Verbose "Leaving script Maven.ps1"
 

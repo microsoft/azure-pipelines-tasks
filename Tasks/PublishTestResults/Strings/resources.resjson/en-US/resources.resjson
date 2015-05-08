@@ -7,6 +7,7 @@
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.testRunner": "Test Result Format",
   "loc.input.label.testResultsFiles": "Test Results Files",
+  "loc.input.label.mergeTestResults": "Merge Test Results",
   "loc.input.label.platform": "Platform",
   "loc.input.label.configuration": "Configuration"
 }

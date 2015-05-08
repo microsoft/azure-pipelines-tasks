@@ -38,7 +38,7 @@ function Create-EnvironmentDefinition
     param([string]$environmentDefinitionName,
           [string]$providerName)
   
-    Write-Verbose "Registering environment definition $environmentDefinitionName" -Verbose
+    Write-Verbose "Registering machine group definition $environmentDefinitionName" -Verbose
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
     $csmContent = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $csmFileContent)
@@ -52,7 +52,7 @@ function Create-EnvironmentDefinition
 
     $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
-    Write-Verbose "Registered environment definition $environmentDefinition" -Verbose
+    Write-Verbose "Registered machine group definition $environmentDefinition" -Verbose
 
     return $environmentDefinition   
 }
@@ -69,28 +69,47 @@ function Create-Environment
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
    
-    Write-Verbose "Adding parameters to the environment" -Verbose
+    Write-Verbose "Adding parameters to the machine group" -Verbose
     foreach($key in $azureResourceGroupDeployment.Parameters.Keys)
     {
-        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureResourceGroupDeployment.Parameters.Item($key).Value)
-        $propertyBag.Add($key, $property)
+        $propertyValue = $azureResourceGroupDeployment.Parameters.Item($key).Value
+        if([string]::IsNullOrEmpty($propertyValue) -eq $false)
+        {
+            $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $propertyValue)
+            $propertyBag.Add($key, $property)
+        }
     }
 
-    Write-Verbose "Adding tags to the environment" -Verbose
+    Write-Verbose "Adding tags to the machine group" -Verbose
     foreach($tagKey in $azureResourceGroup.Tags.Keys)
     {
-        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
-        $propertyBag.Add($tagKey, $property)
+        $tagValue = $azureResourceGroup.Tags.Item($tagKey)
+        if([string]::IsNullOrEmpty($tagValue) -eq $false)
+        {
+            $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $tagValue)
+            $propertyBag.Add($tagKey, $property)
+        }
     }
 
     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureResourceGroup.ResourceId)
     $propertyBag.Add("PlatformId", $property)
+
+    if ($vmCreds -eq "true")
+    {
+        $usernameTagKey = "Microsoft-Vslabs-MG-Resource-Username"
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $vmUserName)
+        $propertyBag.Add($usernameTagKey, $property)
+
+        $passwordTagKey = "Microsoft-Vslabs-MG-Resource-Password"
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $vmPassword)
+        $propertyBag.Add($passwordTagKey, $property)
+    }
     
-    Write-Verbose "Registering environment $environmentName" -Verbose
+    Write-Verbose -Verbose "Registering machine group $environmentName"
 
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
-    Write-Verbose "Registered environment $environment" -Verbose
+    Write-Host "Registered machine group $environment"
 
     return $environment
 }
@@ -103,31 +122,30 @@ function Create-EnvironmentOperation
     {
         $name = $environment.Name
 
-        Write-Verbose "Saving resource group creation logs" -Verbose
-
         $environmentPlatformId = $environment.Properties.GetProperty("PlatformId")
         $deploymentPlatformId = [System.String]::Format("{0}/{1}/{2}", $environmentPlatformId, "deployments", $environment.Name)
-        $deploymentOperationLogs = Get-AzureResourceLog -ResourceId $deploymentPlatformId -StartTime $startTime -Detailed -ErrorAction Stop
-        $logs = Get-OperationLogs -operationLogs $deploymentOperationLogs
+        $operationLogs = Get-AzureResourceGroupLog -ResourceGroup $environment.Name -StartTime $startTime -ErrorAction Stop
+        $deploymentOperationLogs = $operationLogs | Where-Object {$_.ResourceId -eq $deploymentPlatformId}
 
-        Write-Verbose "Saving environment $name provisioning operation" -Verbose
+        Write-Verbose "Saving machine group $name provisioning operation" -Verbose
 
         $operationStartTime = New-Object System.DateTime
         $operationEndTime = New-Object System.DateTime
         $operationStatus = "Unknown"
 
-        if(!$deploymentOperationLogs)
+        if($deploymentOperationLogs)
         {
-            $operationStartTime = $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].SubmissionTimestamp
-            $operationEndTime = $deploymentOperationLogs[0].SubmissionTimestamp
+            $operationStartTime = $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].EventTimestamp
+            $operationEndTime = $deploymentOperationLogs[0].EventTimestamp
             $operationStatus = $deploymentOperationLogs[0].Status
         }
 
         $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $operationStartTime -Connection $connection -ErrorAction Stop
 
-        Create-ResourceOperations -environment $environment -environmentOperationId $envOperationId
+        Create-ResourceOperations  -operationLogs $operationLogs -environment $environment -environmentOperationId $envOperationId
 
-        Complete-EnvironmentOperation -EnvironmentName $environment.Name -EnvironmentOperationId $envOperationId -Status $operationStatus -EndTime $operationEndTime -Logs $logs -Connection $connection -ErrorAction Stop
+        #TODO: Pass pointer to build logs as operation logs
+        Complete-EnvironmentOperation -EnvironmentName $environment.Name -EnvironmentOperationId $envOperationId -Status $operationStatus -EndTime $operationEndTime -Connection $connection -ErrorAction Stop
 
         Write-Verbose "Completed saving $name provisioning operation with id $envOperationId" -Verbose
 
@@ -137,7 +155,8 @@ function Create-EnvironmentOperation
 
 function Create-ResourceOperations
 {
-    param([Microsoft.VisualStudio.Services.DevTestLabs.Model.Environment]$environment,
+    param([System.Array]$operationLogs,
+          [Microsoft.VisualStudio.Services.DevTestLabs.Model.Environment]$environment,
           [guid]$environmentOperationId)
 
     if($environment -And $environmentOperationId)
@@ -146,51 +165,30 @@ function Create-ResourceOperations
         {
             $name = $resource.Name
             
-            Write-Verbose "Saving resource creation logs" -Verbose
-
             $resourcePlatformId = $resource.Properties.GetProperty("PlatformId")
-            $resourceOperationLogs = Get-AzureResourceLog -ResourceId $resourcePlatformId -StartTime $startTime -Detailed -ErrorAction Stop
-            $logs = Get-OperationLogs -operationLogs $resourceOperationLogs
+            $resourceOperationLogs = $operationLogs | Where-Object {$_.ResourceId -like "*$resourcePlatformId*"}
 
             $operationStartTime = New-Object System.DateTime
             $operationEndTime = New-Object System.DateTime
             $operationStatus = "Unknown"
 
-            if(!$logs)
+            if($resourceOperationLogs)
             {
-                $operationStartTime = $deploymentOperationLogs[$deploymentOperationLogs.Count - 1].SubmissionTimestamp
-                $operationEndTime = $deploymentOperationLogs[0].SubmissionTimestamp
-                $operationStatus = $deploymentOperationLogs[0].Status
+                $operationStartTime = $resourceOperationLogs[$resourceOperationLogs.Count - 1].EventTimestamp
+                $operationEndTime = $resourceOperationLogs[0].EventTimestamp
+                $operationStatus = $resourceOperationLogs[0].Status
             }
 
             Write-Verbose "Saving resource $name provisioning operation" -Verbose
 
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environment.Name -ResourceName $resource.Name -StartTime $operationStartTime -EnvironmentOperationId $environmentOperationId -Connection $connection -ErrorAction Stop
 
+            $logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
             Complete-ResourceOperation -EnvironmentName $environment.Name -EnvironmentOperationId $environmentOperationId -ResourceOperationId $resOperationId -Status $operationStatus -EndTime $operationEndTime -Logs $logs -Connection $connection -ErrorAction Stop
 
             Write-Verbose "Completed saving resource $name provisioning operation with id $resOperationId" -Verbose
         }
     }
-}
-
-function Get-OperationLogs
-{
-    param([System.Array]$operationLogs)
-
-    $logs = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.Log]'
-
-    foreach($log in $operationLogs)
-    {                
-        $logContent = [System.String]::Format("{0} {1} with message:{2}", $log.OperationName, $log.Status, $log.Properties)
-        $operationLog = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.Log
-        $operationLog.Content = $logContent
-        $operationLog.CreatedTime = $log.SubmissionTimestamp
-        $operationLog.Level = $log.Level
-        $logs.Add($operationLog)
-    }
-        
-    return $logs
 }
 
 function Check-EnvironmentNameAvailability
@@ -199,7 +197,7 @@ function Check-EnvironmentNameAvailability
 
     if ([string]::IsNullOrEmpty($environmentName) -eq $false)
     {
-        Write-Verbose "Checking environment name availability" -Verbose
+        Write-Verbose -Verbose "Checking machine group name availability"
 
         $environment = Get-Environment -EnvironmentName $environmentName -Connection $connection -ErrorAction silentlycontinue
 
@@ -207,11 +205,11 @@ function Check-EnvironmentNameAvailability
         {
             if($environment.Provider.Name -ne "AzureResourceGroupManagerV2")
             {
-                Throw "Environment with the name $environmentName is already registered. Please try a different name"
+                Throw "Machine Group with the name $environmentName is already registered. Please try a different name"
             }
         }
 
-        Write-Verbose "Checked environment name availability" -Verbose
+        Write-Host "Checked machine group name availability"
     }
 }
 

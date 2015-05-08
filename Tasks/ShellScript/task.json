@@ -11,7 +11,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands" : [
         "sh"
@@ -55,6 +55,10 @@
         "JavaScript": {
             "target": "shellscript.js",
             "argumentFormat": ""            
-        }
+        },
+        "Node": {
+            "target": "shellscript2.js",
+            "argumentFormat": ""
+        }        
     }    
 }

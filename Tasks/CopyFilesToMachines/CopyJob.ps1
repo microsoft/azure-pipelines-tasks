@@ -1,14 +1,13 @@
 $CopyJob = {
 param (
-    [string]$environmentName,
-    [guid]$envOperationId,
     [string]$fqdn, 
     [string]$sourcePath,
     [string]$targetPath,
-    [string]$username,
-	[string]$password,
+    [object]$credential,
     [string]$cleanTargetBeforeCopy,
-    [object]$connection
+	[string]$winRMPort,
+	[string]$httpProtocolOption,
+	[string]$skipCACheckOption
     )
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
@@ -20,31 +19,20 @@ param (
     [void][reflection.assembly]::LoadFrom( $_.FullName )
     Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
     }
+	
+	$cleanTargetPathOption = ''
+	if($cleanTargetBeforeCopy -eq "true")
+	{
+		$cleanTargetPathOption = '-CleanTargetPath'
+	}
 
-   $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $fqdn -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+    Write-Verbose "Initiating copy on $fqdn " -Verbose
+   
+   	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"	
+		
+	[scriptblock]$copyFilesToTargetMachineBlock = [scriptblock]::Create($copyFilesToTargetMachineBlockString)
+	
+	$copyResponse = Invoke-Command -ScriptBlock $copyFilesToTargetMachineBlock
 
-   Write-Verbose "ResourceOperationId = $resOperationId for resource $fqdn" -Verbose
-
-   $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $username, $password
-
-   Write-Verbose "Initiating copy on $fqdn, username: $username" -Verbose
-
-   if($cleanTargetBeforeCopy -eq "true")
-    {
-         $copyResponse = Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath $sourcePath -DestinationPath $targetPath -Credential $credential -CleanTargetPath -SkipCACheck -UseHttp
-    }
-
-    else
-    {
-         $copyResponse = Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath $sourcePath -DestinationPath $targetPath -Credential $credential -SkipCACheck -UseHttp
-    }
-
-    $logs = New-Object 'System.Collections.Generic.List[System.Object]'
-    $log = "Deployment Logs : " + $copyResponse.DeploymentLog + "`nService Logs : " + $copyResponse.ServiceLog               
-    $resourceOperationLog = New-OperationLog -Content $log
-    $logs.Add($resourceOperationLog)
-
-	Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
-    
     Write-Output $copyResponse
 }

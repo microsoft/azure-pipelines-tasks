@@ -24,6 +24,12 @@ function Validate-EnvironmentInput()
 	{
 		throw "Environment name `"$environment`" is not found on the chef server"	
 	}
+
+    $nodesList = Invoke-Knife @("node list -E $environmentName")
+    if([string]::isNullOrEmpty($nodesList))
+    {
+        throw "The chef environment: `"$environment`" has no nodes in it"	
+    }
 }
 
 function Validate-AttributesInput()
@@ -127,6 +133,11 @@ function Update-LocalEnvironmentAttributes()
 		{
 			throw "Cannot find environment attribute with key: $($attribute.Key)"
 		}
+		
+		if(-not ($jsonObject.SelectToken($attribute.Key).Value -is [String]))
+		{
+			throw "The attribute with key: '$($attribute.Key)' is not a leaf attribute"				
+		}
 
 		$jsonObject.SelectToken($attribute.Key).Value = $attribute.Value	
 	}
@@ -150,10 +161,10 @@ try
     Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 
     #fetching chef subscription details
-    $connectedServiceDetails = Get-ConnectedServiceDetails -Context $distributedTaskContext -ConnectedServiceName $connectedServiceName
+    $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
 	#setting up chef repo with the chef subscription details fetched before
-    Setup-ChefRepo $connectedServiceDetails
+    Initialize-ChefRepo $connectedServiceDetails
 
 	#this is the poll interval for checking in between runs
 	$pollIntervalForRunsInSeconds = 60;
@@ -180,7 +191,13 @@ finally
     if ([string]::IsNullOrEmpty($global:chefRepo) -eq $false)
     {
         Write-Verbose "Deleting Chef Repo" -verbose
-        Remove-Item -Recurse -Force $global:chefRepo
+        #adding this as knife sometimes takes hold of the repo for a little time before deleting
+        $deleteChefRepoScript = 
+        { 
+            Remove-Item -Recurse -Force $global:chefRepo 
+        }
+
+        Invoke-WithRetry -Command $deleteChefRepoScript -RetryDelay 10 -MaxRetries 10 -OperationDetail "deleting chef repo"
         Write-Verbose "Chef Repo Deleted" -verbose
     }
 }
