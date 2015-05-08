@@ -1,4 +1,4 @@
-function CompleteResourceOperation
+function DoComplete-ResourceOperation
 {
     param([string]$environmentName,
 		  [guid]$envOperationId,

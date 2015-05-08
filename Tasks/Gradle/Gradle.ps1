@@ -3,6 +3,8 @@ param(
     [string]$cwd,             # Optional - Root directory of gradle project. Defaults to folder of gradle wrapper.
     [string]$options,         # Gradle options
     [string]$tasks,           # Gradle tasks
+    [string]$publishJUnitResults,   
+    [string]$testResultsFiles, 
     [string]$jdkVersion,      # JDK version
     [string]$jdkArchitecture  # JDK arch
 )
@@ -11,6 +13,8 @@ Write-Verbose "Entering script Gradle.ps1"
 Write-Verbose "wrapperScript = $wrapperScript"
 Write-Verbose "options = $options"
 Write-Verbose "tasks = $tasks"
+Write-Verbose "publishJUnitResults = $publishJUnitResults"
+Write-Verbose "testResultsFiles = $testResultsFiles"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -49,4 +53,26 @@ Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
 Invoke-BatchScript -Path $wrapperScript -Arguments $arguments
 
 Pop-Location
+
+# Publish test results files
+$publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
+if($publishJUnitResultsFromAntBuild)
+{
+   # check for JUnit test result files
+    $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
+    if (!$matchingTestResultsFiles)
+    {
+        Write-Host "No JUnit test results files were found matching pattern '$testResultsFiles', so publishing JUnit test results is being skipped."
+    }
+    else
+    {
+        Write-Verbose "Calling Publish-TestResults"
+        Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+    }    
+}
+else
+{
+    Write-Verbose "Option to publish JUnit Test results produced by Gradle build was not selected and is being skipped."
+}
+
 Write-Verbose "Leaving script Gradle.ps1"

@@ -6,15 +6,13 @@
     "category": "Test",
     "visibility": [
                 "Preview",
-                "Build",
-                "Release"
+                "Build"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
-        "IsTest": false
+        "Patch": 1
     },
     "demands": [
 
@@ -39,31 +37,13 @@
     "inputs": [
         {
             "name": "environment",
-            "type": "string",
+            "type": "pickList",
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
             "groupName": "environment"
-        },
-        {
-            "name": "alternateCredsUserName",
-            "type": "string",
-            "label": "Alternate credentials Username",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Alternate Credentials Username, only required if connecting to Visual Studio Online",
-            "groupName": "environment"
-        },
-        {
-            "name": "alternateCredsPassword",
-            "type": "string",
-            "label": "Alternate credentials Password",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Alternate Credentials Password, only required if connecting to Visual Studio Online",
-            "groupName": "environment"
-        },
+        },       
         {
             "name": "testMachines",
             "type": "string",
@@ -107,7 +87,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkId=532768"
+            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkId=536423"
         },
         {
             "name": "updateTestAgent",
@@ -127,6 +107,14 @@
             "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
             "groupName": "advanced"
         }
+    ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "environment",
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
+     } 
     ],
     "instanceNameFormat": "Deploy and configure Test Agent",
     "execution": {

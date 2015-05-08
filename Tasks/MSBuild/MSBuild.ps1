@@ -57,9 +57,6 @@ if (!$solutionFiles)
     throw "No solution with search pattern '$solution' was found."
 }
 
-Write-Verbose "Creating a new timeline for logging events"
-$timeline = Start-Timeline -Context $distributedTaskContext
-
 $args = $msbuildArguments;
 if ($platform)
 {
@@ -93,12 +90,12 @@ if ($cleanBuild)
 {
     foreach ($sf in $solutionFiles)  
     {
-        Invoke-MSBuild $sf -Timeline $timeline -Targets Clean -LogFile "$sf-clean.log" -ToolLocation $msBuildLocation -CommandLineArgs $args -NoTimelineLogger:$noTimelineLogger
+        Invoke-MSBuild $sf -Targets Clean -LogFile "$sf-clean.log" -ToolLocation $msBuildLocation -CommandLineArgs $args -NoTimelineLogger:$noTimelineLogger
     }
 }
 
 $nugetPath = Get-ToolPath -Name 'NuGet.exe'
-if (-not $nugetPath)
+if (-not $nugetPath -and $nugetRestore)
 {
     Write-Warning "Unable to locate nuget.exe. Package restore will not be performed for the solutions"
 }
@@ -122,7 +119,7 @@ foreach ($sf in $solutionFiles)
         }
     }
 
-    Invoke-MSBuild $sf -Timeline $timeline -LogFile "$sf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args  -NoTimelineLogger:$noTimelineLogger
+    Invoke-MSBuild $sf -LogFile "$sf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args  -NoTimelineLogger:$noTimelineLogger
 }
 
 Write-Verbose "Leaving script MSBuild.ps1"

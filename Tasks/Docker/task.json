@@ -13,9 +13,9 @@
 	 "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0,
-        "IsTest": false
+        "Patch": 1
     },
+    "minimumAgentVersion": "1.82.0",
     "inputs": [
         {
             "name": "DockerEndpoint",

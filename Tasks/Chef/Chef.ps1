@@ -24,6 +24,12 @@ function Validate-EnvironmentInput()
 	{
 		throw "Environment name `"$environment`" is not found on the chef server"	
 	}
+
+    $nodesList = Invoke-Knife @("node list -E $environmentName")
+    if([string]::isNullOrEmpty($nodesList))
+    {
+        throw "The chef environment: `"$environment`" has no nodes in it"	
+    }
 }
 
 function Validate-AttributesInput()

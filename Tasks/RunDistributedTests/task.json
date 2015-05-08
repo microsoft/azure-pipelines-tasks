@@ -6,15 +6,13 @@
     "category": "Test",
     "visibility": [
                 "Preview",
-                "Build",
-                "Release"
+                    "Build"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
-        "IsTest": false
+        "Patch": 1
     },
     "demands": [
     ],
@@ -38,7 +36,7 @@
     "inputs": [
         {
             "name": "environment",
-            "type": "string",
+            "type": "pickList",
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
@@ -73,6 +71,22 @@
             "groupName": "testSettings"
         },
         {
+		    "name": "platform", 
+		    "type": "string", 
+		    "label": "Platform", 
+		    "defaultValue":"", 
+		    "required":false,
+			"groupName": "testSettings"
+		},
+		{
+		    "name": "configuration", 
+		    "type": "string", 
+		    "label": "Configuration", 
+		    "defaultValue":"", 
+		    "required":false,
+			"groupName": "testSettings"
+		},
+        {
             "name": "runSettingsFile",
             "type": "string",
             "label": "Run Settings File",
@@ -100,6 +114,15 @@
             "groupName": "testSettings"
         },
         {
+            "name": "testConfigurations",
+            "type": "string",
+            "label": "Test Configurations",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
+            "groupName": "testSettings"
+        },
+        {
             "name": "autEnvironmentName",
             "type": "string",
             "label": "Application Under Test Machine Group",
@@ -109,6 +132,14 @@
             "groupName": "advanced"
         }
     ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "environment", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
     "instanceNameFormat": "Test assemblies $(sourcefilters)",
     "execution": {
         "PowerShell": {

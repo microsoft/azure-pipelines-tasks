@@ -4,8 +4,6 @@ param(
     [string]$runAsProcess,
     [string]$machineUserName,
     [string]$machinePassword,
-    [string]$alternateCredsUserName,
-    [string]$alternateCredsPassword,
     [string]$agentLocation,
     [string]$updateTestAgent,
     [string]$isDataCollectionOnly
@@ -52,7 +50,16 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DistributedTestAuto
 Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
+Write-Verbose "Getting Personal Access Token for the Run"
+$vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
+$personalAccessToken = $vssEndpoint.Authorization.Parameters.AccessToken
+
+if ( [string]::IsNullOrEmpty($personalAccessToken))
+{
+  throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+}
+
 Write-Verbose "Calling Invoke-DeployTestAgent"
-Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -EnvironmentName $environment -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AlternateCredUserName $alternateCredsUserName -AlternateCredPassword $alternateCredsPassword -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -DataCollectionOnly $isDataCollectionOnly -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection
+Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -EnvironmentName $environment -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
 
 Write-Verbose "Leaving script DeployTestAgent.ps1"

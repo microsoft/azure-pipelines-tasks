@@ -20,7 +20,7 @@ function Create-AzureResourceGroup
         }
 
         $startTime = Get-Date
-        $startTime = $startTime.ToUniversalTime()
+        #$startTime = $startTime.ToUniversalTime()
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
         Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
@@ -93,6 +93,8 @@ function Get-Resources
 
         $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName 
 
+        $fqdnErrorCount = 0
+
         foreach ($resource in $azureResourceGroupResources)
         {
             $environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2
@@ -103,30 +105,58 @@ function Get-Resources
             $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
             $propertyBag.Add("Location", $resourceLocation)
             $propertyBag.Add("PlatformId", $platformId)
-                    
+               
             foreach($tagKey in $resource.Tags.Keys)
             {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
-                $propertyBag.Add($tagKey, $property)
+                $tagValue = $resource.Tags.Item($tagKey)
+                if([string]::IsNullOrEmpty($tagValue) -eq $false)
+                {
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $tagValue)
+                    $propertyBag.Add($tagKey, $property)
+                }
             }
 
             foreach($resourcePropertyKey in $resource.Properties.Keys)
             {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Properties.Item($resourcePropertyKey))
-                $propertyBag.Add($resourcePropertyKey, $property)
+                $propertyValue = $resource.Properties.Item($resourcePropertyKey)
+                if([string]::IsNullOrEmpty($propertyValue) -eq $false)
+                {
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $propertyValue)
+                    $propertyBag.Add($resourcePropertyKey, $property)
+                }
             }
             
             # getting fqdn value for vm resource
-            $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
             $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
-            $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
-            $propertyBag.Add($fqdnTagKey, $property)
 
+            if([string]::IsNullOrEmpty($fqdnTagValue) -eq $false)
+            {          
+                $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
+                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
+                $propertyBag.Add($fqdnTagKey, $property)
+            }
+            else
+            {
+                $fqdnErrorCount = $fqdnErrorCount + 1
+            }
+        
             $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
             $resources.Add($environmentResource)
         }
         
+        if($fqdnErrorCount -eq $azureResourceGroupResources.Count -and $azureResourceGroupResources.Count -ne 0)
+        {
+            throw "Unable to get FQDN for all resources in ResourceGroup : $resourceGroupName"
+        }
+        else
+        {
+            if($fqdnErrorCount -gt 0 -and $fqdnErrorCount -ne $azureResourceGroupResources.Count)
+            {
+                 Write-Warning "Unable to get FQDN for $fqdnErrorCount resources in ResourceGroup : $resourceGroupName" -Verbose
+            }
+        }
+    
         Write-Verbose -Verbose "Got resources: $resources"
 
         return $resources
@@ -140,38 +170,56 @@ function Get-FQDN
     
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($resourceName) -eq $false)
     {
-        Write-Verbose "Getting FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
 
-        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName
-        
-        foreach ($nic in $networkInterfaceResources)
+        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorAction silentlycontinue -ErrorVariable fqdnError
+
+        if(!$azureVM)
         {
-           if ($nic.Id -eq $azureVM.NetworkInterfaces)
-           {
-                $ipc = $nic.Properties.IpConfigurations
-                break
-           }
+            Write-Host $fqdnError -Verbose
         }
-
-        if($ipc)
+        else
         {
-            $publicIPAddr = $ipc.Properties.PublicIpAddress.Id
-
-            foreach ($publicIP in $publicIPAddressResources) 
+            foreach ($networkInterface in $azureVM.NetworkProfile.NetworkInterfaces)
             {
-                if($publicIP.id -eq $publicIPAddr)
+                $nic = $networkInterfaceResources | Where-Object {$_.Id -eq $networkInterface.ReferenceUri}
+                if($nic)
                 {
-                    $fqdn = $publicIP.Properties.DnsSettings.Fqdn
+                     $ipc = $nic.IpConfigurations
                     break
                 }
             }
+            if($ipc)
+            {
+                $publicIPAddr = $ipc.PublicIpAddress.Id
+            
+                foreach ($publicIP in $publicIPAddressResources) 
+                {
+                    if($publicIP.id -eq $publicIPAddr)
+                    {
+                        $fqdn = $publicIP.DnsSettings.Fqdn
+                        break
+                    }
+                }
 
-            Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+                if($fqdn -eq $null)
+                {
+                    Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
+                }
+                else
+                {
+                    Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+               
+                    return $fqdn;
+                }
 
-            return $fqdn;
+            }
+            else
+            {
+                Write-Host "Unable to find IPConfiguration of resource $resourceName" -Verbose
+            }
         }
     }
-
 }
 
 function Refresh-SASToken

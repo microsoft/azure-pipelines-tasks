@@ -83,13 +83,11 @@ function Get-TestAgentConfiguration
     param
     (
         [String] $TestAgentVersion,	
-        [System.Management.Automation.PSCredential] $UserCredential,
-        [String] $AlternateCredUserName,
-        [String] $AlternateCredPassword
+        [System.Management.Automation.PSCredential] $UserCredential        
     )
 
     Write-Verbose -Message ("Getting existing configuration") -Verbose
-    $configOut = InvokeTestAgentConfigExe -Arguments @( "List" ) -Version $TestAgentVersion -UserCredential $UserCredential -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword
+    $configOut = InvokeTestAgentConfigExe -Arguments @( "List" ) -Version $TestAgentVersion -UserCredential $UserCredential
     
     if (-not $configOut.CommandOutput)
     {
@@ -136,25 +134,25 @@ function Get-TestAgentConfiguration
             {
                 $machineName = GetConfigValue($line)
             }
-            elseif ($line.StartsWith("AlternativeCredUserName"))
+            elseif($line.StartsWith("PersonalAccessTokenUser"))
             {
-                $alternateCredUserName = GetConfigValue($line)
+                $personalAccessTokenUserName = GetConfigValue($line)
             }
             elseif ($line.StartsWith("Capabilities"))
             {
                 $capabilities = GetConfigValue($line)
-            }
         }
+    }
     }
 
     Write-Verbose -Message ("Existing Configuration : TfsCollection : {0}" -f $tfsCollection) -Verbose
     Write-Verbose -Message ("Existing Configuration : EnvUrl : {0}" -f $envUrl) -Verbose
     Write-Verbose -Message ("Existing Configuration : MachineName : {0}" -f $machineName) -Verbose
     Write-Verbose -Message ("Existing Configuration : Username : {0}" -f $userName) -Verbose
-    Write-Verbose -Message ("Existing Configuration : AlternateCredUserName : {0}" -f $alternateCredUserName) -Verbose
     Write-Verbose -Message ("Existing Configuration : EnableAutoLogon : {0}" -f $enableAutoLogon) -Verbose
     Write-Verbose -Message ("Existing Configuration : DisableScreenSaver : {0}" -f $disableScreenSaver) -Verbose
     Write-Verbose -Message ("Existing Configuration : RunningAsProcess : {0}" -f $runningAsProcess) -Verbose
+    Write-Verbose -Message ("Existing Configuration : PersonalAccessTokenUser : {0}" -f $personalAccessTokenUserName) -Verbose
     Write-Verbose -Message ("Existing Configuration : Capabilities : {0}" -f $capabilities) -Verbose
 
     @{
@@ -165,8 +163,8 @@ function Get-TestAgentConfiguration
         RunningAsProcess = $runningAsProcess
         EnvironmentUrl = $envUrl
         MachineName = $machineName 
-        AlternateCredUserName = $alternateCredUserName
-        Capabilities = $capabilities
+        PersonalAccessTokenUser = $personalAccessTokenUserName
+		Capabilities = $capabilities
     }
 }
 
@@ -181,9 +179,8 @@ function Set-TestAgentConfiguration
         [Bool] $DisableScreenSaver = $true,
         [Bool] $EnableAutoLogon = $false,
         [String] $TestAgentVersion,
+        [String] $PersonalAccessToken,
         [String] $EnvironmentUrl,
-        [String] $AlternateCredUserName,
-        [String] $AlternateCredPassword,
         [String] $MachineName,
         [String] $Capabilities
     )
@@ -227,23 +224,20 @@ function Set-TestAgentConfiguration
         $configArgs = $configArgs +  ("/dtlEnvUrl:{0}" -f $EnvironmentUrl)
     }
 
-    if (-not [string]::IsNullOrWhiteSpace($AlternateCredUserName) -and -not [string]::IsNullOrWhiteSpace($AlternateCredPassword))
+    if (-not [string]::IsNullOrWhiteSpace($PersonalAccessToken))
     {
-        $configArgs = $configArgs +  ("/alternativeCredUserName:{0}" -f $AlternateCredUserName)
-        $configArgs = $configArgs +  ("/alternativeCredPassword:{0}" -f $AlternateCredPassword)
+        $configArgs = $configArgs +  ("/personalAccessToken:{0}" -f $PersonalAccessToken)        
     }
 
     if (-not [string]::IsNullOrWhiteSpace($MachineName))
     {
         $configArgs = $configArgs +  ("/dtlMachineName:{0}" -f $MachineName)
     }
-
-    if (-not [string]::IsNullOrWhiteSpace($Capabilities))
+	if (-not [string]::IsNullOrWhiteSpace($Capabilities))
     {
         $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
-
-    $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $UserCredential -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword
+    $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $UserCredential
 
     # 3010 is exit code to indicate a reboot is required
     if ($configOut.ExitCode -eq 3010)
@@ -304,6 +298,41 @@ function IsDtaExecutionHostRunning
     return $false
 }
 
+function LoadDependentDlls
+{
+	param
+	(		
+		[string] $TestAgentVersion
+	)
+
+	$vsRoot = Locate-TestVersionAndVsRoot($TestAgentVersion)
+	$assemblylist = 
+				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.TeamFoundation.Client.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.TeamFoundation.Common.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\TestAgent\Microsoft.VisualStudio.Services.Common.dll").ToString(),
+				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\Microsoft.VisualStudio.TestService.Common.dll").ToString()
+
+	foreach ($asm in $assemblylist)
+	{
+		[Reflection.Assembly]::LoadFrom($asm)
+	}
+}
+
+
+function ReadCredentials 
+{
+    param
+    (
+    [String] $TFSCollectionUrl,
+    [String] $TestAgentVersion
+    )
+	
+    LoadDependentDlls($TestAgentVersion)    
+    $creds = [Microsoft.VisualStudio.TestService.AgentExecutionHost.CredentialStoreHelper]::GetStoredCredential($TFSCollectionUrl)       
+  
+    return $creds                    
+}
+
 function CanSkipTestAgentConfiguration
 {
     [OutputType([Bool])]
@@ -317,14 +346,13 @@ function CanSkipTestAgentConfiguration
         [Bool] $EnableAutoLogon,
         [String] $TestAgentVersion,
         [String] $EnvironmentUrl,
-        [String] $AlternateCredUserName,
-        [String] $AlternateCredPassword,
         [String] $MachineName,
+        [String] $PersonalAccessToken,
         [String] $Capabilities
     )
 
     Write-Verbose -Message "Finding whether TestAgent configuration is required" -Verbose
-    $existingConfiguration = Get-TestAgentConfiguration -TestAgentVersion $TestAgentVersion -UserCredential $UserCredential -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword
+    $existingConfiguration = Get-TestAgentConfiguration -TestAgentVersion $TestAgentVersion -UserCredential $UserCredential
 
     if (-not (IsDtaExecutionHostRunning)) 
     {
@@ -391,20 +419,33 @@ function CanSkipTestAgentConfiguration
         }
     }
 
-    if ($PSBoundParameters.ContainsKey('AlternateCredUserName'))
-    {
-        if ($AlternateCredUserName -ne $existingConfiguration.AlternateCredUserName)
-        {
-            Write-Verbose -Message ("AlternateCredentials UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $AlternateCredUserName, $existingConfiguration.AlternateCredUserName) -Verbose
-            return $false
-        }
-    }
-
     if ($PSBoundParameters.ContainsKey('UserCredential'))
     {
         if ($UserCredential.UserName -ne $existingConfiguration.UserName)
         {
-            Write-Verbose -Message ("AlternateCredentials UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $UserCredential.UserName, $existingConfiguration.UserName) -Verbose
+            Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $UserCredential.UserName, $existingConfiguration.UserName) -Verbose
+            return $false
+        }
+    }
+
+    if ($PSBoundParameters.ContainsKey('PersonalAccessToken'))
+    {
+      $creds = ReadCredentials -TFSCollectionUrl $TfsCollection -TestAgentVersion $TestAgentVersion
+       if ($creds -eq $null)
+       {
+	     Write-Verbose -Message "No personal access token found in the credential store" -Verbose
+         return $false
+    }
+
+       if($creds.Credentials -eq $null)
+    {
+	     Write-Verbose -Message "No credentials found in stored identity" -Verbose
+         return $false
+       }      
+        $storedString = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($creds.Credentials.SecurePassword))
+        if ($storedString -cne $PersonalAccessToken)
+        {
+		    Write-Verbose -Message "Stored Personal Access Token doesn't match with supplied value" -Verbose
             return $false
         }
     }
@@ -504,7 +545,7 @@ function EnableTracing
     Write-Verbose -Message ("Logs will now be stored at : {0}" -f $logFilePath) -Verbose
 }
 
-function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [System.Management.Automation.PSCredential] $UserCredential, [String] $AlternateCredUserName, [String] $AlternateCredPassword)
+function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [System.Management.Automation.PSCredential] $UserCredential)
 {
     $ExeName = "TestAgentConfig.exe"
     if (-not (Test-IsAdmin))
@@ -564,8 +605,7 @@ function ConfigureTestAgent
         [Bool] $EnableAutoLogon = $false,
         [String] $TestAgentVersion = "14.0",
         [String] $EnvironmentUrl,
-        [String] $AlternateCredUserName,
-        [String] $AlternateCredPassword,
+        [String] $PersonalAccessToken,
         [String] $MachineName,
         [String] $Capabilities
     )
@@ -575,11 +615,11 @@ function ConfigureTestAgent
     $ret = -1
     if ($AsServiceOrProcess -eq "Service")
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword -MachineName $MachineName -Capabilities $Capabilities
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities
     }
     else
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -AlternateCredUserName $AlternateCredUserName -AlternateCredPassword $AlternateCredPassword -MachineName $MachineName -Capabilities $Capabilities
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities
     }
     
     if ($ret -eq 0)
@@ -608,8 +648,8 @@ $enableAutoLogon = [Boolean] $enableAutoLogon
 
 $Credential = New-Object System.Management.Automation.PSCredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
 
-$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -AlternateCredUserName $alternateCredUserName -AlternateCredPassword $alternateCredPassword -Capabilities $capabilities
+$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon  -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities
 if ($ret -eq $false)
 {
-    ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -AlternateCredUserName $alternateCredUserName -AlternateCredPassword $alternateCredPassword -Capabilities $capabilities
+    ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $Credential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities
 }
