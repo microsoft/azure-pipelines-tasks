@@ -13,6 +13,7 @@ Write-Verbose -Verbose "MachineGroupName = $MachineGroupName"
 Write-Verbose -Verbose "Action = $Action"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
+import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"
@@ -49,8 +50,8 @@ Switch ($providerName)
 Switch ($Action)
 {
      "Delete" {
-         #Delete-MachinesHelper -machineGroupName $MachineGroupName -filters $Filters -machines $machineGroup.Resources
-         break         
+         Delete-MachinesHelper -machineGroupName $MachineGroupName -filters $Filters -machines $machineGroup.Resources
+         break
       }
 
      { @("Start", "Stop", "Restart") -contains $_ } {

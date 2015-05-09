@@ -1,5 +1,4 @@
-
-function CompleteResourceOperation
+function DoComplete-ResourceOperation
 {
     param([string]$environmentName,
 		  [guid]$envOperationId,
@@ -12,7 +11,6 @@ function CompleteResourceOperation
     $logs = New-Object 'System.Collections.Generic.List[System.Object]'         
     $resourceOperationLog = New-OperationLog -Content $log
     $logs.Add($resourceOperationLog)
-
     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
 }
 
@@ -35,4 +33,3 @@ function Output-ResponseLogs
         Write-Verbose ($deploymentResponse.ServiceLog | Format-List | Out-String) -Verbose
     }
 }
-

@@ -16,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -77,6 +77,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Specify the path for the parameters corresponding to the template."
+    },
+    {
+      "name": "overrideParameters",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.overrideParameters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify the template parameters which should be overwritten in the format -name $variable, where $variable is the name of a build definition variable"
     },
     {
       "name": "dscDeployment",

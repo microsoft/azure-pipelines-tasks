@@ -27,7 +27,7 @@
   "devDependencies": {
     "del": "^1.1.1",
     "gulp": "^3.8.11",
-    "gulp-typescript": "^2.6.0",
+    "gulp-typescript": "2.6.0",
     "gulp-util": "^3.0.4",
     "gulp-zip": "^3.0.2",
     "minimatch": "^2.0.7",
