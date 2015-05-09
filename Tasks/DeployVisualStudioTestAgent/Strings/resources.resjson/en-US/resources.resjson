@@ -2,7 +2,7 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Deploy Visual Studio Test Agent",
+  "loc.friendlyName": "Visual Studio Test Agent Deployment",
   "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group.",
   "loc.group.displayName.environment": "Test Machine Group",
   "loc.group.displayName.agentConfiguration": "Agent Configuration",

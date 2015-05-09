@@ -1,7 +1,7 @@
 ﻿{
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunVisualStudioTestsusingTestAgent",
-    "friendlyName": "Run Visual Studio Tests using Test Agent",
+    "friendlyName": "Visual Studio Test Run using Test Agent",
     "description": "Run tests distributedly using multiple test agents in a lab machine group.",
     "category": "Test",
     "visibility": [
@@ -92,15 +92,6 @@
             "groupName": "testSettings"
         },
         {
-            "name": "codeCoverageEnabled",
-            "type": "boolean",
-            "label": "Code Coverage Enabled",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Whether code coverage needs to be enabled.",
-            "groupName": "testSettings"
-        },
-        {
             "name": "overrideRunParams",
             "type": "string",
             "label": "Override TestRun Parameters",
@@ -116,6 +107,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
+            "groupName": "testSettings"
+        },
+        {
+            "name": "codeCoverageEnabled",
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Whether code coverage needs to be enabled.",
             "groupName": "testSettings"
         }
     ],
