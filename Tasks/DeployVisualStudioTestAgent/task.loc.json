@@ -53,7 +53,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
-      "groupName": "agentConfiguration"
+      "groupName": "environment"
     },
     {
       "name": "runAsProcess",
