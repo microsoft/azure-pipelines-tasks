@@ -21,12 +21,13 @@ Write-Verbose "clean = $clean"
 Write-Verbose "restoreNugetPackages = $restoreNugetPackages"
 Write-Verbose "logProjectEvents = $logProjectEvents"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if (!$solution)
 {
-    throw "solution parameter not set on script"
+    throw (Get-LocalizedString -Key "Solution parameter not set on script")
 }
 
 $nugetRestore = Convert-String $restoreNugetPackages Boolean
@@ -54,7 +55,7 @@ else
 
 if (!$solutionFiles)
 {
-    throw "No solution with search pattern '$solution' was found."
+    throw (Get-LocalizedString -Key "No solution was found using search pattern '{0}'." -ArgumentList $solution)
 }
 
 $args = $msbuildArguments;
@@ -97,7 +98,7 @@ if ($cleanBuild)
 $nugetPath = Get-ToolPath -Name 'NuGet.exe'
 if (-not $nugetPath -and $nugetRestore)
 {
-    Write-Warning "Unable to locate nuget.exe. Package restore will not be performed for the solutions"
+    Write-Warning (Get-LocalizedString -Key "Unable to locate {0}. Package restore will not be performed for the solutions" -ArgumentList 'nuget.exe')
 }
 
 foreach ($sf in $solutionFiles)

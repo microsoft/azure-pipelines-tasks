@@ -11,8 +11,9 @@ Write-Verbose "arguments = $arguments"
 Write-Verbose "workingFolder = $workingFolder"
 Write-Verbose "modifyEnvironment = $modifyEnvironment"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
 $allowModifyEnvironment = Convert-String $modifyEnvironment Boolean
 Write-Verbose "modifyEnvironment (converted) = $allowModifyEnvironment"
@@ -57,7 +58,7 @@ if ([System.IO.File]::Exists($filename))
 }
 else
 {
-    Write-Error "Unable to find script $filename"
+    Write-Error (Get-LocalizedString -Key "Unable to find script {0}" -ArgumentList $filename)
 }
 
 Write-Verbose "Leaving script CmdScript.ps1"

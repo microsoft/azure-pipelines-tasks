@@ -10,7 +10,8 @@ param(
 
 Write-Verbose "Entering script PublishSymbols.ps1"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 # If symbols path is not set, we only index sources
@@ -82,7 +83,7 @@ foreach ($pdbFile in $pdbFiles)
     Write-Verbose "pdbFile= $pdbFile"
 }
 $fileCount = $pdbFiles.Count
-Write-Host "Found $fileCount files to index..."
+Write-Host (Get-LocalizedString -Key "Found {0} files to index..." -ArgumentList $fileCount)
 
 Write-Host "Invoke-IndexSources -RepositoryEndpoint <repositoryEndpoint> -SourceFolder $sourceFolder -PdbFiles <pdbFiles>"
 Invoke-IndexSources -RepositoryEndpoint $repositoryEndpoint -SourceFolder $sourceFolder -PdbFiles $pdbFiles
