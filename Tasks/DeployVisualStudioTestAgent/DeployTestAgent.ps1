@@ -43,8 +43,8 @@ Write-Verbose "configureTestAgentScriptLocation = $configureTestAgentScriptLocat
 $checkAgentInstallationScriptLocation = Join-Path -Path $currentDirectory -ChildPath "CheckTestAgentInstallation.ps1"
 Write-Verbose "checkAgentInstallationScriptLocation = $checkAgentInstallationScriptLocation"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DistributedTestAutomation"
 
 Write-Verbose "Getting the connection object"

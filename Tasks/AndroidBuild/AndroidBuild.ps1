@@ -15,7 +15,8 @@ Write-Verbose "startEmulator = $startEmulator"
 Write-Verbose "emulatorTarget = $emulatorTarget"
 Write-Verbose "emulatorDevice = $emulatorDevice"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 $emulator = Convert-String $startEmulator Boolean

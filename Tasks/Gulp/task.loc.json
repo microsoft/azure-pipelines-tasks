@@ -14,11 +14,12 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "gulp"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",

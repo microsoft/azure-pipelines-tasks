@@ -15,9 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "testEnvironment",
@@ -98,15 +99,6 @@
       "groupName": "testSettings"
     },
     {
-      "name": "codeCoverageEnabled",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Whether code coverage needs to be enabled.",
-      "groupName": "testSettings"
-    },
-    {
       "name": "overrideRunParams",
       "type": "string",
       "label": "ms-resource:loc.input.label.overrideRunParams",
@@ -122,6 +114,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
+      "groupName": "testSettings"
+    },
+    {
+      "name": "codeCoverageEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Whether code coverage needs to be enabled.",
       "groupName": "testSettings"
     },
     {

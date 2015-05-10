@@ -15,9 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "environment",
@@ -52,7 +53,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
-      "groupName": "agentConfiguration"
+      "groupName": "environment"
     },
     {
       "name": "runAsProcess",

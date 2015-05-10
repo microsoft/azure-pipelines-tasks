@@ -15,11 +15,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 7
   },
   "demands": [
     "Cmd"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
