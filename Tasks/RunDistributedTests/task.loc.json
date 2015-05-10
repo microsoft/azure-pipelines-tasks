@@ -29,6 +29,11 @@
       "name": "testSettings",
       "displayName": "ms-resource:loc.group.displayName.testSettings",
       "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
     }
   ],
   "inputs": [
@@ -119,6 +124,15 @@
       "required": false,
       "helpMarkDown": "Whether code coverage needs to be enabled.",
       "groupName": "testSettings"
+    },
+    {
+      "name": "autEnvironmentName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.autEnvironmentName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+      "groupName": "advanced"
     }
   ],
   "sourceDefinitions": [

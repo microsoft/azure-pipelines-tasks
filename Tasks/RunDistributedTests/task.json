@@ -27,6 +27,11 @@
             "name": "testSettings",
             "displayName": "Test Settings",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -117,6 +122,15 @@
             "required": false,
             "helpMarkDown": "Whether code coverage needs to be enabled.",
             "groupName": "testSettings"
+        },
+        {
+            "name": "autEnvironmentName",
+            "type": "string",
+            "label": "Application Under Test Machine Group",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+            "groupName": "advanced"
         }
     ],
     "sourceDefinitions": [ 
