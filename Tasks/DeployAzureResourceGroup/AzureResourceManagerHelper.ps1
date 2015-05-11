@@ -7,7 +7,7 @@ function Create-AzureResourceGroup
     
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
-        $azureResourceGroup = Create-ResourceGroup -resourceGroupName $resourceGroupName -location $location
+        Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
 
         $startTime = Get-Date
         #$startTime = $startTime.ToUniversalTime()
@@ -367,7 +367,7 @@ function Create-AzureKeyVaultSecret
     return $response
 }
 
-function Create-ResourceGroup
+function Create-AzureResourceGroupIfNotExist
 {
     param([string]$resourceGroupName,
     [string]$location)

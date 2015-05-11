@@ -95,7 +95,7 @@ if ($configurePowerShellPorts -eq "true")
 
     Write-Verbose -Verbose "AzureKeyVaultSecretName = $azureKeyVaultSecretName"
 
-    Create-ResourceGroup -resourceGroupName $resourceGroupName -location $location
+    Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
 
     Create-AzureKeyVault -azureKeyVaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -Location $location
 

@@ -166,7 +166,7 @@ function Create-CSMForWinRMConfiguration
 
         Foreach($virtualMachineResource in $virtualMachineResources)
         {
-            Add-NodesForWinRmConfiguration -jtokenObject $virtualMachineResources -resourceGroupName $resourceGroupName -protocol $protocol -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
+            Add-NodesForWinRmConfiguration -jtokenObject $virtualMachineResource -resourceGroupName $resourceGroupName -protocol $protocol -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
         }
     }
     else
@@ -278,7 +278,7 @@ function Get-SecretValueForAzureKeyVault
     {
     ""data"": ""$filecontentencoded"",
     ""dataType"" :""pfx"",
-    ""password"": $certificatePassword
+    ""password"": ""$certificatePassword""
     }"
 
     $jsonObjectBytes = [System.Text.Encoding]::UTF8.GetBytes($jsonObject)
