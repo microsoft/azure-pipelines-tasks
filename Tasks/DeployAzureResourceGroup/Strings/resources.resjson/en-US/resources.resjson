@@ -15,5 +15,11 @@
   "loc.input.label.sasTokenParameterName": "SAS Token Parameter",
   "loc.input.label.vmCreds": "Virtual Machine Credentials",
   "loc.input.label.vmUserName": "Username",
-  "loc.input.label.vmPassword": "Password"
+  "loc.input.label.vmPassword": "Password",
+  "loc.input.label.configurePowerShellPorts": "Configure PowerShell Ports",
+  "loc.input.label.protocol": "Network Protocol",
+  "loc.input.label.certificatePath": "Certificate",
+  "loc.input.label.certificatePassword": "Certificate Password",
+  "loc.input.label.azureKeyVaultName": "Azure Key Vault Name",
+  "loc.input.label.azureKeyVaultSecretName": "Azure Key Vault Secret Name"
 }

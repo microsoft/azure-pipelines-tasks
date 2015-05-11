@@ -134,6 +134,69 @@
       "required": false,
       "groupName": "advanced",
       "visibleRule": "vmCreds = true"
+    },
+    {
+      "name": "configurePowerShellPorts",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.configurePowerShellPorts",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "Configure PowerShell Ports"
+    },
+    {
+      "name": "protocol",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.protocol",
+      "defaultValue": "WinRM HTTPS",
+      "required": true,
+      "helpMarkDown": "Network Protocol for WinRM configuration",
+      "groupName": "advanced",
+      "visibleRule": "configurePowerShellPorts = true",
+      "options": {
+        "WinRM HTTPS": "WinRM HTTPS",
+        "WinRM HTTP": "WinRM HTTP",
+        "Both": "Both"
+      }
+    },
+    {
+      "name": "certificatePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.certificatePath",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "advanced",
+      "visibleRule": "configurePowerShellPorts = true",
+      "helpMarkDown": "Specify the Certificate path."
+    },
+    {
+      "name": "certificatePassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.certificatePassword",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "advanced",
+      "visibleRule": "configurePowerShellPorts = true"
+    },
+    {
+      "name": "azureKeyVaultName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azureKeyVaultName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "visibleRule": "configurePowerShellPorts = true",
+      "helpMarkDown": "Azure KeyVault Name."
+    },
+    {
+      "name": "azureKeyVaultSecretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azureKeyVaultSecretName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "visibleRule": "configurePowerShellPorts = true",
+      "helpMarkDown": "Azure KeyVault Secret Name."
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",

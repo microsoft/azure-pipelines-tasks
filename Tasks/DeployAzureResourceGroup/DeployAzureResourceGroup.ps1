@@ -9,7 +9,13 @@ param(
     [string]$sasTokenParameterName,
     [string]$vmCreds,
     [string]$vmUserName,
-    [string]$vmPassword
+    [string]$vmPassword,
+    [string]$configurePowerShellPorts,
+    [string]$protocol,
+    [string]$certificatePath,
+    [string]$certificatePassword,
+    [string]$azureKeyVaultName,
+    [string]$azureKeyVaultSecretName
 )
 
 . ./AzureResourceManagerHelper.ps1
@@ -26,6 +32,7 @@ Write-Verbose -Verbose "environmentName = $resourceGroupName"
 Write-Verbose -Verbose "location = $location"
 Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
 Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
+Write-Verbose -Verbose "configurePowerShellPorts = $configurePowerShellPorts"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
@@ -61,9 +68,53 @@ $parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameter
 
 Switch-AzureMode AzureResourceManager
 
+if ($configurePowerShellPorts -eq "true")
+{
+    #Find the matching certificate File
+    $certificatePath = Get-File $certificatePath
+    Write-Verbose -Verbose "CertificatePath = $certificatePath"
+
+    Validate-AzureKeyVaultSecret -certificatePath $certificatePath -certificatePassword $certificatePassword
+
+    if([string]::IsNullOrEmpty($azureKeyVaultName) -eq $true)
+    {
+        $randomString = Get-RandomString
+        $azureKeyVaultName = "vlt-" + $randomString
+    }
+    
+    Write-Verbose -Verbose "AzureKeyVaultName = $azureKeyVaultName"
+
+    if([string]::IsNullOrEmpty($azureKeyVaultSecretName) -eq $true)
+    {
+        $randomString = Get-RandomString
+        $azureKeyVaultSecretName = "sec-" + $randomString
+    }
+
+    Write-Verbose -Verbose "AzureKeyVaultSecretName = $azureKeyVaultSecretName"
+
+    Create-ResourceGroup -resourceGroupName $resourceGroupName -location $location
+
+    Create-AzureKeyVault -azureKeyVaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -Location $location
+
+    $secretValue = Get-SecretValueForAzureKeyVault -certificatePath $certificatePath -certificatePassword $certificatePassword
+
+    $azureKeyVaultSecret = Create-AzureKeyVaultSecret -azureKeyVaultName $azureKeyVaultName -secretName $azureKeyVaultSecretName -secretValue $secretValue
+
+    #Storing in temp variable so that we can cleanup Temp File only later on
+    $tempFile = Create-CSMForWinRMConfiguration -baseCsmFileContent $csmFileContent -protocol $protocol -resourceGroupName $resourceGroupName -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecret.Id
+
+    $csmFile = $tempFile
+}
+
 $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
 
 $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location
+
+if([string]::IsNullOrEmpty($tempFile) -eq $false)
+{
+    Write-Verbose -Verbose "Removing temp file $tempFile"
+    Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
+}
 
 Initialize-DTLServiceHelper
 

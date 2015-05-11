@@ -7,17 +7,7 @@ function Create-AzureResourceGroup
     
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
-        $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
-    
-        if(!$azureResourceGroup)    
-        {
-            Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
-
-            $resourceGroup  = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
-
-            Write-Host "Created resource group $resourceGroup"
-
-        }
+        $azureResourceGroup = Create-ResourceGroup -resourceGroupName $resourceGroupName -location $location
 
         $startTime = Get-Date
         $startTime = $startTime.ToUniversalTime()
@@ -341,6 +331,51 @@ function Get-MachineLogs
     }
 }
 
+function Create-AzureKeyVault
+{
+    param([string]$azureKeyVaultName,
+    [string]$resourceGroupName,
+    [string]$location)
+
+    Write-Verbose -Verbose "Creating Azure Key Vault with name $azureKeyVaultName in group $resourceGroupName at $location"
+
+    $response = New-AzureKeyVault -VaultName $azureKeyVaultName -resourceGroupName $resourceGroupName -Location $location -EnabledForDeployment -Verbose -ErrorAction Stop
+
+    Write-Host "Created Azure Key Vault for secrets"
+}
+
+function Create-AzureKeyVaultSecret
+{
+    param([string]$azureKeyVaultName,
+    [string]$secretName,
+    [Security.SecureString]$secretValue)
+
+    Write-Verbose -Verbose "Setting a secret with name $secretName in an Azure Key Vault $azureKeyVaultName"
+
+    $response = Set-AzureKeyVaultSecret -VaultName $azureKeyVaultName -Name $secretName -SecretValue $secretValue -ErrorAction Stop
+
+    Write-Verbose -Verbose "Created a secret in an Azure Key Vault"
+
+    return $response
+}
+
+function Create-ResourceGroup
+{
+    param([string]$resourceGroupName,
+    [string]$location)
+
+    $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+    
+    if(!$azureResourceGroup)
+    {
+        Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
+
+        $response = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+
+        Write-Host "Created resource group $resourceGroupName"
+    }
+}
+
 function Print-OperationLog
 {
     param([System.Object]$log)
@@ -360,4 +395,3 @@ function Print-OperationLog
         }
     }
 }
-
