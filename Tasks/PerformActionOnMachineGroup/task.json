@@ -12,12 +12,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5,
-        "IsTest": false
+        "Patch": 6
     },
     "demands": [
         "azureps"
     ],
+    "minimumAgentVersion": "1.83.0",
     "inputs": [
         {
             "name": "ConnectedServiceName",
@@ -56,7 +56,7 @@
             "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 ."
         }    
      ],
-    "instanceNameFormat": "Actions on machine group : $(MachineGroupName)",
+    "instanceNameFormat": "$(Action) machine group : $(MachineGroupName)",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\PerformActionOnMachineGroup.ps1",

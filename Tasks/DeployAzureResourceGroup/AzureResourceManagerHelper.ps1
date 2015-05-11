@@ -10,7 +10,7 @@ function Create-AzureResourceGroup
         $azureResourceGroup = Create-ResourceGroup -resourceGroupName $resourceGroupName -location $location
 
         $startTime = Get-Date
-        $startTime = $startTime.ToUniversalTime()
+        #$startTime = $startTime.ToUniversalTime()
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
         Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
@@ -95,37 +95,47 @@ function Get-Resources
             $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
             $propertyBag.Add("Location", $resourceLocation)
             $propertyBag.Add("PlatformId", $platformId)
-                    
+               
             foreach($tagKey in $resource.Tags.Keys)
             {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Tags.Item($tagKey))
-                $propertyBag.Add($tagKey, $property)
+                $tagValue = $resource.Tags.Item($tagKey)
+                if([string]::IsNullOrEmpty($tagValue) -eq $false)
+                {
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $tagValue)
+                    $propertyBag.Add($tagKey, $property)
+                }
             }
 
             foreach($resourcePropertyKey in $resource.Properties.Keys)
             {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Properties.Item($resourcePropertyKey))
-                $propertyBag.Add($resourcePropertyKey, $property)
+                $propertyValue = $resource.Properties.Item($resourcePropertyKey)
+                if([string]::IsNullOrEmpty($propertyValue) -eq $false)
+                {
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $propertyValue)
+                    $propertyBag.Add($resourcePropertyKey, $property)
+                }
             }
             
             # getting fqdn value for vm resource
-            $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
             $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
 
-            if($fqdnTagValue -eq $null)
+            if([string]::IsNullOrEmpty($fqdnTagValue) -eq $false)
+            {          
+                $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
+                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
+                $propertyBag.Add($fqdnTagKey, $property)
+            }
+            else
             {
                 $fqdnErrorCount = $fqdnErrorCount + 1
             }
-
-            $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
-            $propertyBag.Add($fqdnTagKey, $property)
-
+        
             $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
             $resources.Add($environmentResource)
         }
         
-        if($fqdnErrorCount -eq $azureResourceGroupResources.Count)
+        if($fqdnErrorCount -eq $azureResourceGroupResources.Count -and $azureResourceGroupResources.Count -ne 0)
         {
             throw "Unable to get FQDN for all resources in ResourceGroup : $resourceGroupName"
         }
@@ -135,9 +145,8 @@ function Get-Resources
             {
                  Write-Warning "Unable to get FQDN for $fqdnErrorCount resources in ResourceGroup : $resourceGroupName" -Verbose
             }
-
         }
-
+    
         Write-Verbose -Verbose "Got resources: $resources"
 
         return $resources
@@ -151,25 +160,25 @@ function Get-FQDN
     
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($resourceName) -eq $false)
     {
-        Write-Verbose "Getting FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
 
-        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorVariable fqdnError
+        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorAction silentlycontinue -ErrorVariable fqdnError
 
-        if($azureVM -eq $null)
+        if(!$azureVM)
         {
             Write-Host $fqdnError -Verbose
         }
         else
         {
-            foreach ($nic in $networkInterfaceResources)
+            foreach ($networkInterface in $azureVM.NetworkProfile.NetworkInterfaces)
             {
-               if ($nic.Id -eq $azureVM.NetworkInterfaces)
-               {
-                    $ipc = $nic.IpConfigurations
+                $nic = $networkInterfaceResources | Where-Object {$_.Id -eq $networkInterface.ReferenceUri}
+                if($nic)
+                {
+                     $ipc = $nic.IpConfigurations
                     break
-               }
+                }
             }
-
             if($ipc)
             {
                 $publicIPAddr = $ipc.PublicIpAddress.Id
@@ -185,12 +194,12 @@ function Get-FQDN
 
                 if($fqdn -eq $null)
                 {
-                    Write-Host "Unable to find FQDN for resource $resourceName" -Verbose
+                    Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
                 }
                 else
                 {
                     Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
-                
+               
                     return $fqdn;
                 }
 
@@ -201,7 +210,6 @@ function Get-FQDN
             }
         }
     }
-
 }
 
 function Refresh-SASToken
@@ -393,5 +401,49 @@ function Print-OperationLog
         {
             Write-Verbose -Verbose "Message: $message"
         }
+    }
+}
+function Get-ServiceEndPointDetails
+{
+    param([String][Parameter(Mandatory = $true)]$ConnectedServiceName)
+
+    Write-Host "entering in Get-ServiceEndPointDetails"
+
+    $serviceEndpoint = Get-ServiceEndpoint -Name $ConnectedServiceName -Context $distributedTaskContext
+
+    if ($serviceEndpoint -eq $null)
+    {
+        throw "A Connected Service with name '$ConnectedServiceName' could not be found.  Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
+    }
+
+    if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')
+    {
+        $username = $serviceEndpoint.Authorization.Parameters.UserName
+        $password = $serviceEndpoint.Authorization.Parameters.Password
+        Write-Verbose "Username= $username" -Verbose
+
+        $azureSubscriptionId = $serviceEndpoint.Data.SubscriptionId
+        $azureSubscriptionName = $serviceEndpoint.Data.SubscriptionName
+        Write-Verbose "azureSubscriptionId= $azureSubscriptionId" -Verbose
+        Write-Verbose "azureSubscriptionName= $azureSubscriptionName" -Verbose
+
+        $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
+        
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureSubscriptionName)
+        $propertyBag.Add("SubscriptionName", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureSubscriptionId)
+        $propertyBag.Add("SubscriptionId", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $username)
+        $propertyBag.Add("Username", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $password)
+        $propertyBag.Add("Password", $property)
+
+        Write-Host "Completed Get-ServiceEndPointDetails"
+
+        return $propertyBag
+    }
+    else
+    {
+        throw "Unsupported authorization scheme for azure endpoint = " + $serviceEndpoint.Authorization.Scheme
     }
 }

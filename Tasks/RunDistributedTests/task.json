@@ -1,7 +1,7 @@
 ﻿{
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunVisualStudioTestsusingTestAgent",
-    "friendlyName": "Run Visual Studio Tests using Test Agent",
+    "friendlyName": "Visual Studio Test Run using Test Agent",
     "description": "Run tests distributedly using multiple test agents in a lab machine group.",
     "category": "Test",
     "visibility": [
@@ -12,11 +12,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1,
-        "IsTest": false
+        "Patch": 2
     },
     "demands": [
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name": "testEnvironment",
@@ -27,12 +27,17 @@
             "name": "testSettings",
             "displayName": "Test Settings",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
         {
             "name": "environment",
-            "type": "string",
+            "type": "pickList",
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
@@ -92,15 +97,6 @@
             "groupName": "testSettings"
         },
         {
-            "name": "codeCoverageEnabled",
-            "type": "boolean",
-            "label": "Code Coverage Enabled",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Whether code coverage needs to be enabled.",
-            "groupName": "testSettings"
-        },
-        {
             "name": "overrideRunParams",
             "type": "string",
             "label": "Override TestRun Parameters",
@@ -115,10 +111,36 @@
             "label": "Test Configurations",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Test Configuration against which test results should be reported. For example, DefaultConfigurationId:10;Name~chromedriver:11. Test configurations can be viewed/defined in Microsoft Test Manager. Test results will be reported against DefaultConfiguration if not mapped with any test case filter expression.",
+            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
             "groupName": "testSettings"
+        },
+        {
+            "name": "codeCoverageEnabled",
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Whether code coverage needs to be enabled.",
+            "groupName": "testSettings"
+        },
+        {
+            "name": "autEnvironmentName",
+            "type": "string",
+            "label": "Application Under Test Machine Group",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+            "groupName": "advanced"
         }
     ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "environment", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
     "instanceNameFormat": "Test assemblies $(sourcefilters)",
     "execution": {
         "PowerShell": {

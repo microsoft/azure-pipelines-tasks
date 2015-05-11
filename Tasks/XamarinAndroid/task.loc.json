@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 5
   },
   "demands": [
     "AndroidSDK",
@@ -22,6 +22,7 @@
     "MSBuild",
     "Xamarin.Android"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "msbuildOptions",

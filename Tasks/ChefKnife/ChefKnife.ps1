@@ -13,6 +13,7 @@ param
 
 Write-Host "Entering script ChefKnife.ps1"
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 
 #ENSURE: We pass arguments verbatim on the command line to the custom script

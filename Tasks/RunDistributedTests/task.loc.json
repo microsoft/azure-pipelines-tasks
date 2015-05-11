@@ -15,10 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1,
-    "IsTest": false
+    "Patch": 2
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "testEnvironment",
@@ -29,12 +29,17 @@
       "name": "testSettings",
       "displayName": "ms-resource:loc.group.displayName.testSettings",
       "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
     }
   ],
   "inputs": [
     {
       "name": "environment",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.environment",
       "defaultValue": "",
       "required": true,
@@ -94,15 +99,6 @@
       "groupName": "testSettings"
     },
     {
-      "name": "codeCoverageEnabled",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Whether code coverage needs to be enabled.",
-      "groupName": "testSettings"
-    },
-    {
       "name": "overrideRunParams",
       "type": "string",
       "label": "ms-resource:loc.input.label.overrideRunParams",
@@ -117,8 +113,34 @@
       "label": "ms-resource:loc.input.label.testConfigurations",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Test Configuration against which test results should be reported. For example, DefaultConfigurationId:10;Name~chromedriver:11. Test configurations can be viewed/defined in Microsoft Test Manager. Test results will be reported against DefaultConfiguration if not mapped with any test case filter expression.",
+      "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
       "groupName": "testSettings"
+    },
+    {
+      "name": "codeCoverageEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Whether code coverage needs to be enabled.",
+      "groupName": "testSettings"
+    },
+    {
+      "name": "autEnvironmentName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.autEnvironmentName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+      "groupName": "advanced"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "environment",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "Test assemblies $(sourcefilters)",

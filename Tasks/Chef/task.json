@@ -13,14 +13,13 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2,
-        "IsTest": false
+        "Patch": 3
     },
     "demands" : [
         "Chef",
         "KnifeReporting"
     ],
-    "minimumAgentVersion": "1.82.0",
+    "minimumAgentVersion": "1.83.0",
     "inputs": [
         {
             "name": "connectedServiceName",
