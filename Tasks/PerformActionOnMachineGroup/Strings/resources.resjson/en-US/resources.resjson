@@ -2,10 +2,12 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Perform action on machine group",
-  "loc.description": "Perform given action on machine group",
+  "loc.friendlyName": "Machine Group Actions",
+  "loc.description": "Machine Group Actions",
   "loc.input.label.ConnectedServiceName": "Subscription",
   "loc.input.label.MachineGroupName": "Machine Group",
   "loc.input.label.Action": "Action",
-  "loc.input.label.Filters": "Apply to Machines"
+  "loc.input.label.Filters": "Apply to Machines",
+  "loc.input.label.BlockedFor": "Block For",
+  "loc.input.label.TimeInHours": "Time in Hours"
 }

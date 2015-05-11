@@ -78,4 +78,31 @@ function End-MachineOperation
     Write-Verbose "Completed $operationName for the machine $machineName in machine group $machineGroupName" -Verbose
 }
 
+function Unblock-MachineGroup
+{
+    param([string]$machineGroupName)
 
+    Write-Verbose "Invoking unblock operation for machine group $machineGroupName" -Verbose
+    Invoke-UnblockEnvironment -EnvironmentName $machineGroupName -Connection $connection
+    Write-Verbose "Unblocked machine group $machineGroupName" -Verbose
+}
+
+function Block-MachineGroup
+{
+    param([string]$machineGroupName,
+          [string]$blockedFor,
+          [string]$timeInHours)
+
+    $time = $timeInHours -as [INT]
+    if(($time -eq $null) -or ($time -lt 0))
+    {
+        Write-Error("Cannot block machine group for $timeInHours hours. Time in hours should be a positive number of hours for which machine group will be blocked")
+    }
+    
+    Write-Verbose "Invoking block operation for machine group $machineGroupName" -Verbose
+    Invoke-BlockEnvironment -EnvironmentName $machineGroupName -BlockedFor $blockedFor -TimeInHours $time -Connection $connection
+    Write-Verbose "Blocked machine group $machineGroupName" -Verbose    
+
+    Set-TaskVariable -Variable "DTL_RESERVATION_CONTEXT" -Value $blockedFor
+    Write-Verbose "Task variable DTL_RESERVATION_CONTEXT set with the value $blockedFor"
+}
