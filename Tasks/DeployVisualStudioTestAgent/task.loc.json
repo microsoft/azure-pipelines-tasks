@@ -15,9 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "environment",
@@ -52,7 +53,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
-      "groupName": "agentConfiguration"
+      "groupName": "environment"
     },
     {
       "name": "runAsProcess",
@@ -97,6 +98,15 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "Optionally specify if test agent needs to be updated.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "isDataCollectionOnly",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isDataCollectionOnly",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
       "groupName": "advanced"
     }
   ],

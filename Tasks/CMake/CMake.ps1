@@ -7,9 +7,12 @@ Write-Verbose 'Entering CMake.ps1'
 Write-Verbose "cwd = $cwd"
 Write-Verbose "args = $args"
 
+# Import the Task.Common dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 if(!$cwd)
 {
-    throw "cwd parameter is not set"
+    throw (Get-LocalizedString -Key "Working directory parameter is not set")
 }
 
 if(!(Test-Path $cwd -PathType Container))
@@ -18,25 +21,33 @@ if(!(Test-Path $cwd -PathType Container))
     New-Item -Path $cwd -ItemType Container
 }
 
+# Force Get-Command errors to be "terminating" errors. Otherwise, control
+# will not transfer to the catch block.
+$defaultErrorActionPreference = $ErrorActionPreference
+$ErrorActionPreference = 'Stop'
 try
 {
 	$cmake = Get-Command cmake.exe
-	Write-Verbose "Using $cmake.Source"
+	Write-Verbose ('Using {0}' -f $cmake.Path)
 }
 catch
 {
-	throw 'Unable to find cmake.exe'
+	throw (Get-LocalizedString -Key 'Unable to find {0}' -ArgumentList 'cmake.exe')
+}
+finally
+{
+    $ErrorActionPreference = $defaultErrorActionPreference
 }
 
 Write-Verbose "Setting working directory to $cwd"
 Set-Location $cwd
 
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
 Write-Verbose "Running CMake..."
-Invoke-Tool -Path $cmake.Source -Arguments $args -WorkingFolder $buildPath
+Invoke-Tool -Path $cmake.Path -Arguments $args -WorkingFolder $buildPath
 
 Write-Verbose "Leaving script CMake.ps1"
 

@@ -21,12 +21,11 @@ param (
     }    
    
     Write-Verbose "Initiating deployment on $fqdn" -Verbose
-    
 	[String]$psOnRemoteScriptBlockString = "Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath `$scriptPath -WinRMPort $port -Credential `$credential -ScriptArguments `$scriptArguments -InitializationScriptPath `$initializationScriptPath $skipCACheckOption $httpProtocolOption"
 	
 	[scriptblock]$psOnRemoteScriptBlock = [scriptblock]::Create($psOnRemoteScriptBlockString)
 	
 	$deploymentResponse = Invoke-Command -ScriptBlock $psOnRemoteScriptBlock
-	
+    
     Write-Output $deploymentResponse
 }

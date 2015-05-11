@@ -14,8 +14,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
+    "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Maven $(args)",
     "groups": [
         {
@@ -51,7 +52,7 @@
             "label": "Goal(s)", 
             "defaultValue": "package", 
             "required": false 
-        },    
+        },        
         {
             "name":"publishJUnitResults",
             "type":"boolean",

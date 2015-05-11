@@ -26,17 +26,20 @@ param
     $AllowUpgrade
 )
 
+# Import the Task.Common dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
     {
-        throw "Found more than one file to deploy with search pattern $pattern.  There can be only one."
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern {0}. There can be only one." -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
-            throw "No files were found to deploy with search pattern $pattern"
+            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}" -ArgumentList $pattern)
         }
         return $files
     }
@@ -75,7 +78,7 @@ function Get-RoleName($extPath)
     }
     else
     {
-        Write-Warning "'$extPath' could not be parsed into parts for registering diagnostics extensions."
+        Write-Warning (Get-LocalizedString -Key "'{0}' could not be parsed into parts for registering diagnostics extensions." -ArgumentList $extPath)
     }
 
     return $roleName
@@ -96,7 +99,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
     }
     else
     {
-        Write-Host "Applying any configured diagnostics extensions..."
+        Write-Host (Get-LocalizedString -Key "Applying any configured diagnostics extensions.")
 
         Write-Verbose "Getting the primary AzureStorageKey..."
         $primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
@@ -135,7 +138,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
                         }
                         else
                         {
-                            Write-Warning "Could not get the primary storage key for the PublicConfig storage account '$publicConfigStorageAccountName'.  Unable to apply any diagnostics extensions."
+                            Write-Warning (Get-LocalizedString -Key "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions." -ArgumentList "$publicConfigStorageAccountName")
                             return
                         }
                     }
@@ -156,15 +159,16 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
         }
         else
         {
-            Write-Warning "Could not get the primary storage key for storage account '$storageAccount'.  Unable to apply any diagnostics extensions."
+            Write-Warning (Get-LocalizedString -Key "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions." -ArgumentList "$storageAccount")
         }
     }
     
     return $diagnosticsConfigurations
 }
 
-Write-Host "Entering script Publish-AzureCloudDeployment.ps1"
+Write-Verbose "Entering script Publish-AzureCloudDeployment.ps1"
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 Write-Host "ConnectedServiceName= $ConnectedServiceName "
@@ -180,12 +184,12 @@ $allowUpgrade = Convert-String $AllowUpgrade Boolean
 
 Write-Host "Find-Files -SearchPattern $CsCfg"
 $serviceConfigFile = Find-Files -SearchPattern "$CsCfg"
-Write-Host "serviceConfigFile= $serviceConfigFile" -ForegroundColor Yellow
+Write-Host "serviceConfigFile= $serviceConfigFile"
 $serviceConfigFile = Get-SingleFile $serviceConfigFile $CsCfg
 
 Write-Host "Find-Files -SearchPattern $CsPkg"
 $servicePackageFile = Find-Files -SearchPattern "$CsPkg"
-Write-Host "servicePackageFile= $servicePackageFile" -ForegroundColor Yellow
+Write-Host "servicePackageFile= $servicePackageFile"
 $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
 Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue"
@@ -221,4 +225,4 @@ else
 }
 
 
-Write-Host "Leaving script Publish-AzureCloudDeployment.ps1"
+Write-Verbose "Leaving script Publish-AzureCloudDeployment.ps1"
