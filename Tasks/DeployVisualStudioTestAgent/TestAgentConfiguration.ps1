@@ -200,12 +200,6 @@ function Set-TestAgentConfiguration
         $configArgs = $configArgs + ("/password:{0}" -f $AgentUserCredential.GetNetworkCredential().Password)
     }
 
-    if ($PSBoundParameters.ContainsKey('MachineUserCredential') -and $MachineUserCredential)
-    {
-        $configArgs = $configArgs + ("/adminUserName:{0}" -f $MachineUserCredential.UserName)
-        $configArgs = $configArgs + ("/adminPassword:{0}" -f $MachineUserCredential.GetNetworkCredential().Password)
-    }
-
     if ($PSBoundParameters.ContainsKey('EnableAutoLogon'))
     {
         if (-not $configAsProcess)
