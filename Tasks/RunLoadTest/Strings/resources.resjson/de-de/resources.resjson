@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Cloudbasierter Auslastungstext mit VSO",
+  "loc.description": "Führt den Auslastungstest in der Cloud aus. Bereitgestellt von VS Online.",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.TestDrop": "Ordner für Auslastungstestdatei",
+  "loc.input.label.LoadTest": "Aulastungstestdatei",
+  "loc.input.label.TestSettings": "Testeinstellungsdatei",
+  "loc.input.label.ThresholdLimit": "Anzahl zulässiger Schwellenwertverletzungen",
+  "loc.input.label.VsoAccountUrl": "VSO-Konto-URI",
+  "loc.input.label.Username": "Alternativer Anmeldebenutzername",
+  "loc.input.label.Password": "Alternatives Anmeldekennwort"
+}

@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "npm install",
+  "loc.description": "Consente di installare i pacchetti npm",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.arguments": "Argomenti",
+  "loc.input.label.cwd": "Directory di lavoro"
+}

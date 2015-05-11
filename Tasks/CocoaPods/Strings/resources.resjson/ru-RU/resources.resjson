@@ -1,0 +1,5 @@
+{
+  "loc.friendlyName": "CocoaPods",
+  "loc.description": "CocoaPods — это диспетчер зависимостей для проектов Swift и Objective-C Cocoa. Запускает установку pod.",
+  "loc.input.label.cwd": "Рабочий каталог"
+}

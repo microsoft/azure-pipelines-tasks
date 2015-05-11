@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Chef Knife",
+  "loc.description": "Выполнение скриптов с помощью команд Knife на рабочей станции Chef",
+  "loc.input.label.ConnectedServiceName": "Подписка Chef",
+  "loc.input.label.ScriptPath": "Путь к скрипту",
+  "loc.input.label.ScriptArguments": "Аргументы скрипта"
+}

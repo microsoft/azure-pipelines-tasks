@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Visual Studio Test Run using Test Agent",
+  "loc.description": "랩 컴퓨터 그룹에서 여러 테스트 에이전트를 사용하여 테스트를 분산되게 실행합니다.",
+  "loc.group.displayName.testEnvironment": "테스트 컴퓨터 그룹",
+  "loc.group.displayName.testSettings": "테스트 설정",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.environment": "테스트 컴퓨터 그룹",
+  "loc.input.label.dropLocation": "테스트 저장 위치",
+  "loc.input.label.sourcefilters": "테스트 어셈블리",
+  "loc.input.label.testFilterCriteria": "테스트 필터 조건",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.runSettingsFile": "실행 설정 파일",
+  "loc.input.label.overrideRunParams": "TestRun 매개 변수 재정의",
+  "loc.input.label.testConfigurations": "Test Configurations",
+  "loc.input.label.codeCoverageEnabled": "코드 검사 사용",
+  "loc.input.label.autEnvironmentName": "Application Under Test Machine Group"
+}

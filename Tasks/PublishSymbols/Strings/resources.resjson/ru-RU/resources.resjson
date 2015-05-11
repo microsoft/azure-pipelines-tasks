@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Индексация исходного кода и публикация символов",
+  "loc.description": "Индексация исходного кода и публикация символов в общем файловом ресурсе",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.SymbolsPath": "Путь для публикации символов",
+  "loc.input.label.SearchPattern": "Шаблон поиска",
+  "loc.input.label.SourceFolder": "Путь к папке исходного кода",
+  "loc.input.label.SymbolsFolder": "Путь к папке символов",
+  "loc.input.label.SymbolsMaximumWaitTime": "Максимальное время ожидания (в минутах)",
+  "loc.input.label.SymbolsProduct": "Продукт",
+  "loc.input.label.SymbolsVersion": "Версия"
+}

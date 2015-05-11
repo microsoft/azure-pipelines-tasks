@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "シェフ",
+  "loc.description": "環境属性を編集して Chef 環境を展開します",
+  "loc.input.label.connectedServiceName": "Chef 接続",
+  "loc.input.label.Environment": "環境",
+  "loc.input.label.Attributes": "環境属性",
+  "loc.input.label.chefWaitTime": "待機時間"
+}

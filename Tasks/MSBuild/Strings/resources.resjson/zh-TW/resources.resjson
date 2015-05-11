@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.description": "使用 MSBuild 建置",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.solution": "方案",
+  "loc.input.label.platform": "平台",
+  "loc.input.label.configuration": "組態",
+  "loc.input.label.msbuildArguments": "MSBuild 引數",
+  "loc.input.label.clean": "清除",
+  "loc.input.label.restoreNugetPackages": "還原 NuGet 套件",
+  "loc.input.label.logProjectEvents": "記錄專案詳細資料",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild 版本",
+  "loc.input.label.msbuildArchitecture": "MSBuild 架構",
+  "loc.input.label.msbuildLocation": "MSBuild 的路徑"
+}

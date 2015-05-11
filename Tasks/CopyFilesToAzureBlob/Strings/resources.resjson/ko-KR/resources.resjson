@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Azure Blob에 파일 복사",
+  "loc.description": "Azure Blob에 파일 복사",
+  "loc.input.label.ConnectedServiceName": "Azure 구독",
+  "loc.input.label.SourcePath": "소스",
+  "loc.input.label.StorageAccount": "저장소 계정",
+  "loc.input.label.ContainerName": "ContainerName",
+  "loc.input.label.BlobPrefix": "Blob 접두사"
+}

@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.description": "Générer avec MSBuild",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.solution": "Solution",
+  "loc.input.label.platform": "Plateforme",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.msbuildArguments": "Arguments MSBuild",
+  "loc.input.label.clean": "Nettoyer",
+  "loc.input.label.restoreNugetPackages": "Restaurer des packages NuGet",
+  "loc.input.label.logProjectEvents": "Enregistrer les détails du projet",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Version de MSBuild",
+  "loc.input.label.msbuildArchitecture": "Architecture MSBuild",
+  "loc.input.label.msbuildLocation": "Chemin d'accès de MSBuild"
+}

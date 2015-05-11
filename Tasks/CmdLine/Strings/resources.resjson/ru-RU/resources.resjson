@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Командная строка",
+  "loc.description": "Запуск командной строки с аргументами",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.filename": "Инструмент",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.label.workingFolder": "Рабочая папка",
+  "loc.input.label.errorPattern": "Шаблон ошибки",
+  "loc.input.label.warningPattern": "Шаблон предупреждения",
+  "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой"
+}

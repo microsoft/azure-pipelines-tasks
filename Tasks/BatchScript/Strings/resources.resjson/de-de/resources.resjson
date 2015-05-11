@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Batchskript",
+  "loc.description": "Windows-CMD- oder BAT-Skript ausführen und optional zulassen, dass es die Umgebung ändert",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.filename": "Pfad",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.label.modifyEnvironment": "Umgebung ändern",
+  "loc.input.label.workingFolder": "Arbeitsordner"
+}

@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.description": "Consente di distribuire in ambienti Chef modificando gli attributi dell'ambiente",
+  "loc.input.label.connectedServiceName": "Connessione a Chef",
+  "loc.input.label.Environment": "Ambiente",
+  "loc.input.label.Attributes": "Attributi dell'ambiente",
+  "loc.input.label.chefWaitTime": "Tempo di attesa"
+}

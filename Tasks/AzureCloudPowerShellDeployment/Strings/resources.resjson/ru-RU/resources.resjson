@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Развертывание облачной службы Azure",
+  "loc.description": "Развертывание облачной службы Azure",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure",
+  "loc.input.label.StorageAccount": "Учетная запись хранения",
+  "loc.input.label.ServiceName": "Имя службы",
+  "loc.input.label.ServiceLocation": "Расположение службы",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "Среда (слот)",
+  "loc.input.label.AllowUpgrade": "Разрешить обновление"
+}

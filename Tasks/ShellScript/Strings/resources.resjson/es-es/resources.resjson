@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Script de Shell",
+  "loc.description": "Ejecute un script de Shell con la terminal",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.scriptPath": "Ruta de acceso del script",
+  "loc.input.label.args": "Argumentos",
+  "loc.input.label.cwd": "Directorio de trabajo"
+}

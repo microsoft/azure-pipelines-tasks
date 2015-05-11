@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.description": "PowerShell 스크립트 실행",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.scriptName": "스크립트 파일 이름",
+  "loc.input.label.arguments": "인수",
+  "loc.input.label.workingFolder": "작업 폴더"
+}

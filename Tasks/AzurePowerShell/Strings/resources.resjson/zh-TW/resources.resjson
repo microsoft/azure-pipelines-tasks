@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.description": "在 Azure 環境中執行 PowerShell 指令碼",
+  "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
+  "loc.input.label.ScriptPath": "指令碼路徑",
+  "loc.input.label.ScriptArguments": "指令碼引數"
+}

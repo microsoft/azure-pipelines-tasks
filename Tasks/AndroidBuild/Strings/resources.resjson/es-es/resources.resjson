@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Compilación de Android",
+  "loc.description": "Compile una aplicación Android con Gradle y, opcionalmente, inicie el emulador para realizar pruebas unitarias",
+  "loc.group.displayName.emulatorOptions": "Opciones del emulador",
+  "loc.input.label.gradleWrapper": "Ubicación del contenedor de Gradle",
+  "loc.input.label.gradleProj": "Directorio del proyecto",
+  "loc.input.label.gradleArguments": "Argumentos",
+  "loc.input.label.startEmulator": "Iniciar el emulador de Android",
+  "loc.input.label.emulatorTarget": "SDK de destino del emulador",
+  "loc.input.label.emulatorDevice": "Dispositivo del emulador"
+}

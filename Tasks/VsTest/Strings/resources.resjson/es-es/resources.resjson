@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Prueba de Visual Studio",
+  "loc.description": "Ejecute pruebas con el ejecutor de pruebas de Visual Studio",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.testAssembly": "Ensamblado de la prueba",
+  "loc.input.label.testFiltercriteria": "Criterio de filtrado de la prueba",
+  "loc.input.label.platform": "Plataforma",
+  "loc.input.label.configuration": "Configuración",
+  "loc.input.label.runSettingsFile": "Archivo de configuración de ejecución",
+  "loc.input.label.overrideTestrunParameters": "Reemplazar los parámetros de TestRun",
+  "loc.input.label.codeCoverageEnabled": "Cobertura de código habilitada",
+  "loc.input.label.vsTestVersion": "Versión de VSTest",
+  "loc.input.label.pathtoCustomTestAdapters": "Ruta de acceso de los adaptadores de pruebas personalizados",
+  "loc.input.label.otherConsoleOptions": "Otras opciones de la consola"
+}

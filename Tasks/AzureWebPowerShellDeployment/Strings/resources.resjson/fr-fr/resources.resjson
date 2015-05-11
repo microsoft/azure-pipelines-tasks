@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Déploiement d'un site web Azure",
+  "loc.description": "Déployer un site web sur Microsoft Azure",
+  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
+  "loc.input.label.WebSiteLocation": "Emplacement du site web",
+  "loc.input.label.WebSiteName": "Nom du site web",
+  "loc.input.label.Package": "Package",
+  "loc.input.label.AdditionalArguments": "Arguments supplémentaires"
+}

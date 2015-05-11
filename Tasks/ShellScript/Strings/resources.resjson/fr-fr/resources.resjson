@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Script shell",
+  "loc.description": "Exécuter un script shell bash",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.scriptPath": "Chemin d'accès du script",
+  "loc.input.label.args": "Arguments",
+  "loc.input.label.cwd": "Répertoire de travail"
+}

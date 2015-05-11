@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "PowerShell auf Zielcomputern ausführen",
+  "loc.description": "PowerShell auf Zielcomputern ausführen. Führt PowerShell-Befehle remote auf Computern aus.",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.EnvironmentName": "Computergruppe",
+  "loc.input.label.MachineNames": "Auf Computern bereitstellen",
+  "loc.input.label.ScriptPath": "PowerShell-Skript",
+  "loc.input.label.ScriptArguments": "Skriptargumente",
+  "loc.input.label.InitializationScriptPath": "Initialisierungsskript",
+  "loc.input.label.RunPowershellInParallel": "PowerShell parallel ausführen"
+}

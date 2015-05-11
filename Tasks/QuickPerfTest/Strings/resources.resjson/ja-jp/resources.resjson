@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "クラウド ベースの Web パフォーマンス テスト",
+  "loc.description": "読み込み中の Web サイトのパフォーマンスの低下をすばやく検出します。VS Online で実行します。",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.websiteUrl": "Web サイトの URL",
+  "loc.input.label.testName": "テスト名",
+  "loc.input.label.vuLoad": "ユーザー ロード",
+  "loc.input.label.runDuration": "実行継続時間",
+  "loc.input.label.geoLocation": "地理的位置",
+  "loc.input.label.Username": "代替の資格情報のユーザー名",
+  "loc.input.label.Password": "代替の資格情報のパスワード",
+  "loc.input.label.CltAccountUrl": "VSO アカウントの URL"
+}

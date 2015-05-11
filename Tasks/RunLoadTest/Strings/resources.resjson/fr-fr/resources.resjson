@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Test de charge basé sur le cloud avec VSO",
+  "loc.description": "Exécute le test de charge dans le cloud avec VS Online.",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.TestDrop": "Dossier des fichiers de test de charge",
+  "loc.input.label.LoadTest": "Fichier de test de charge",
+  "loc.input.label.TestSettings": "Fichier des paramètres de test",
+  "loc.input.label.ThresholdLimit": "Nombre de violations de seuils admissibles",
+  "loc.input.label.VsoAccountUrl": "URI de compte VSO",
+  "loc.input.label.Username": "Nom d'utilisateur des autres informations d'identification",
+  "loc.input.label.Password": "Mot de passe des autres informations d'identification"
+}

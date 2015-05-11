@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "命令列",
+  "loc.description": "使用引數執行命令列",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.filename": "工具",
+  "loc.input.label.arguments": "引數",
+  "loc.input.label.workingFolder": "工作資料夾",
+  "loc.input.label.errorPattern": "錯誤模式",
+  "loc.input.label.warningPattern": "警告模式",
+  "loc.input.label.failOnStandardError": "發生標準錯誤的失敗"
+}

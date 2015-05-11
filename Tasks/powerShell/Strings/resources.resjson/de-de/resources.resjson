@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.description": "PowerShell-Skript ausführen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.scriptName": "Skriptdateiname",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.label.workingFolder": "Arbeitsordner"
+}

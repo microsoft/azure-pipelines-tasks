@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.description": "Развертывание в средах Chef путем изменения атрибутов среды",
+  "loc.input.label.connectedServiceName": "Подключение Chef",
+  "loc.input.label.Environment": "Среда",
+  "loc.input.label.Attributes": "Атрибуты среды",
+  "loc.input.label.chefWaitTime": "Время ожидания"
+}

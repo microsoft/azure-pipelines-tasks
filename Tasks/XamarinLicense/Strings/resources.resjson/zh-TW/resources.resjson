@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Xamarin 授權",
+  "loc.description": "啟動或停用 Xamarin 授權",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.action": "動作",
+  "loc.input.label.email": "電子郵件",
+  "loc.input.label.password": "密碼",
+  "loc.input.label.activateAndroid": "啟用 Xamarin.Android",
+  "loc.input.label.timeout": "逾時 (秒)"
+}

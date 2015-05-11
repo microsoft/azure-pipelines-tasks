@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "将文件复制到 Azure Blob",
+  "loc.description": "将文件复制到 Azure Blob",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
+  "loc.input.label.SourcePath": "源",
+  "loc.input.label.StorageAccount": "存储帐户",
+  "loc.input.label.ContainerName": "容器名称",
+  "loc.input.label.BlobPrefix": "Blob 前缀"
+}

@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Bereitstellung des Azure-Cloud-Diensts",
+  "loc.description": "Azure-Cloud-Dienst bereitstellen",
+  "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
+  "loc.input.label.StorageAccount": "Speicherkonto",
+  "loc.input.label.ServiceName": "Dienstname",
+  "loc.input.label.ServiceLocation": "Dienstspeicherort",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "Umgebung (Platz)",
+  "loc.input.label.AllowUpgrade": "Upgrade zulassen"
+}

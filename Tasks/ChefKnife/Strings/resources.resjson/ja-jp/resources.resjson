@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Chef Knife",
+  "loc.description": "Chef ワークステーションで knife コマンドを使ってスクリプトを実行します",
+  "loc.input.label.ConnectedServiceName": "Chef サブスクリプション",
+  "loc.input.label.ScriptPath": "スクリプト パス",
+  "loc.input.label.ScriptArguments": "スクリプトの引数"
+}

@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.description": "运行 PowerShell 脚本",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.scriptName": "脚本文件名",
+  "loc.input.label.arguments": "参数",
+  "loc.input.label.workingFolder": "工作文件夹"
+}

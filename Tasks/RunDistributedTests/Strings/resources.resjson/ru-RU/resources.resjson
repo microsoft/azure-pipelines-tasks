@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Visual Studio Test Run using Test Agent",
+  "loc.description": "Распределенный запуск тестов с помощью нескольких агентов тестирования в группе компьютеров лаборатории.",
+  "loc.group.displayName.testEnvironment": "Группа тестовых компьютеров",
+  "loc.group.displayName.testSettings": "Параметры тестирования",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.environment": "Группа тестовых компьютеров",
+  "loc.input.label.dropLocation": "Местоположение удаления теста",
+  "loc.input.label.sourcefilters": "Тестовая сборка",
+  "loc.input.label.testFilterCriteria": "Критерии фильтрации тестов",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.runSettingsFile": "Файл параметров запуска",
+  "loc.input.label.overrideRunParams": "Переопределить параметры тестового запуска",
+  "loc.input.label.testConfigurations": "Test Configurations",
+  "loc.input.label.codeCoverageEnabled": "Покрытие кода включено",
+  "loc.input.label.autEnvironmentName": "Application Under Test Machine Group"
+}

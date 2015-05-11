@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Visual Studio 빌드",
+  "loc.description": "Visual Studio 개발자 명령 프롬프트에서 MSBuild로 빌드",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.solution": "솔루션",
+  "loc.input.label.msbuildArgs": "MSBuild 인수",
+  "loc.input.label.platform": "플랫폼",
+  "loc.input.label.configuration": "구성",
+  "loc.input.label.clean": "클린",
+  "loc.input.label.restoreNugetPackages": "NuGet 패키지 복원",
+  "loc.input.label.vsLocationMethod": "Visual Studio",
+  "loc.input.label.vsVersion": "Visual Studio 버전",
+  "loc.input.label.vsLocation": "Visual Studio 위치",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild 버전",
+  "loc.input.label.msbuildArchitecture": "MSBuild 아키텍처",
+  "loc.input.label.msbuildLocation": "MSBuild 경로",
+  "loc.input.label.logProjectEvents": "프로젝트 정보 기록"
+}

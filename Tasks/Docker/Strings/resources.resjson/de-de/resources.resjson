@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "Docker-Bild auf einem Remotecomputer bereitstellen",
+  "loc.input.label.DockerEndpoint": "Docker-Endpunkt",
+  "loc.input.label.Repository": "Repository",
+  "loc.input.label.Tag": "Tag",
+  "loc.input.label.ContainerName": "Containername",
+  "loc.input.label.PortBindings": "Portbindungen"
+}

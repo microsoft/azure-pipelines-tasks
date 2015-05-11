@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Xcode-Build",
+  "loc.description": "Xcode-Arbeitsbereich auf Mac OS erstellen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.xcWorkspacePath": "Arbeitsbereichpfad",
+  "loc.input.label.scheme": "Schema",
+  "loc.input.label.actions": "Aktionen",
+  "loc.input.label.configuration": "Konfiguration",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.outputPattern": "Ausgabe"
+}
