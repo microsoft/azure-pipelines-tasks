@@ -2,7 +2,7 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Deploy Visual Studio Test Agent",
+  "loc.friendlyName": "Visual Studio Test Agent Deployment",
   "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group.",
   "loc.group.displayName.environment": "Test Machine Group",
   "loc.group.displayName.agentConfiguration": "Agent Configuration",
@@ -13,5 +13,6 @@
   "loc.input.label.machineUserName": "Username",
   "loc.input.label.machinePassword": "Password",
   "loc.input.label.agentLocation": "Test Agent Location",
-  "loc.input.label.updateTestAgent": "Update Test Agent"
+  "loc.input.label.updateTestAgent": "Update Test Agent",
+  "loc.input.label.isDataCollectionOnly": "Enable Data Collection Only"
 }
