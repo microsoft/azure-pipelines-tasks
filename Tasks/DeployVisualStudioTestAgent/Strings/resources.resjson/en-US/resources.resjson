@@ -4,10 +4,10 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent Deployment",
   "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group.",
-  "loc.group.displayName.environment": "Test Machine Group",
+  "loc.group.displayName.testMachineGroups": "Test Machine Group",
   "loc.group.displayName.agentConfiguration": "Agent Configuration",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.environment": "Test Machine Group",
+  "loc.input.label.testMachineGroup": "Test Machine Group",
   "loc.input.label.testMachines": "Deploy to machines",
   "loc.input.label.runAsProcess": "Interactive Process",
   "loc.input.label.machineUserName": "Username",
