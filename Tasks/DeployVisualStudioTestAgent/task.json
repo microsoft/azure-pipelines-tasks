@@ -57,7 +57,7 @@
         {
             "name": "runAsProcess",
             "type": "boolean",
-            "label": "Run Test Agent as interactive process to execute UI Tests",
+            "label": "Interactive Process",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Denotes if test agent needs to run as interactive process.",

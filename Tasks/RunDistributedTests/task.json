@@ -99,7 +99,7 @@
         {
             "name": "overrideRunParams",
             "type": "string",
-            "label": "Override TestRun Parameters",
+            "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",

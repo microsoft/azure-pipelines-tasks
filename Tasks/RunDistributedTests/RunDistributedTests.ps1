@@ -34,11 +34,11 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 # Get current directory.
 $currentDirectory = Convert-Path .
-$unregisterTestAgentLocation = Join-Path -Path $currentDirectory -ChildPath "TestAgentUnRegistration.ps1"
+$unregisterTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPath "TestAgentUnRegistration.ps1"
 Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
 
 
 Write-Verbose "Calling Invoke-RunDistributedTests"
-Invoke-RunDistributedTests -EnvironmentName $environment -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutEnvironmentName $autEnvironmentName -UnregisterAgentLocation  $unregisterTestAgentLocation 
+Invoke-RunDistributedTests -EnvironmentName $environment -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutEnvironmentName $autEnvironmentName -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation 
 
 Write-Verbose "Leaving script RunDistributedTests.ps1"
