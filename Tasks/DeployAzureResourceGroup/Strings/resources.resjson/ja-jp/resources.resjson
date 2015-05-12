@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Azure リソース グループの展開",
+  "loc.description": "Azure リソース グループをプロビジョニングし、展開します",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
+  "loc.input.label.location": "場所",
+  "loc.input.label.resourceGroupName": "リソース グループ",
+  "loc.input.label.csmFile": "テンプレート",
+  "loc.input.label.csmParametersFile": "テンプレート パラメーター",
+  "loc.input.label.overrideParameters": "Override Template Parameters",
+  "loc.input.label.dscDeployment": "SAS トークンの生成",
+  "loc.input.label.moduleUrlParameterName": "Azure BLOB パラメーター",
+  "loc.input.label.sasTokenParameterName": "SAS トークン パラメーター",
+  "loc.input.label.vmCreds": "仮想マシンの資格情報",
+  "loc.input.label.vmUserName": "ユーザー名",
+  "loc.input.label.vmPassword": "パスワード"
+}

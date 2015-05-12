@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Publier les artefacts de build",
+  "loc.description": "Publier les artefacts de build sur le serveur ou un partage de fichiers",
+  "loc.input.label.CopyRoot": "Copier la racine",
+  "loc.input.label.Contents": "Contenu",
+  "loc.input.label.ArtifactName": "Nom de l'artefact",
+  "loc.input.label.ArtifactType": "Type d'artefact",
+  "loc.input.label.TargetPath": "Chemin d'accès"
+}

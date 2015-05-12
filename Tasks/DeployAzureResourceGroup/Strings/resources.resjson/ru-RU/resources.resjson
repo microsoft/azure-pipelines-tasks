@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Развертывание группы ресурсов Azure",
+  "loc.description": "Подготовка и развертывание группы ресурсов Azure",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure",
+  "loc.input.label.location": "Расположение",
+  "loc.input.label.resourceGroupName": "Группа ресурсов",
+  "loc.input.label.csmFile": "Шаблон",
+  "loc.input.label.csmParametersFile": "Параметры шаблона",
+  "loc.input.label.overrideParameters": "Override Template Parameters",
+  "loc.input.label.dscDeployment": "Создать токен SAS",
+  "loc.input.label.moduleUrlParameterName": "Параметр BLOB-объекта Azure",
+  "loc.input.label.sasTokenParameterName": "Параметр токена SAS",
+  "loc.input.label.vmCreds": "Учетные данные виртуальной машины",
+  "loc.input.label.vmUserName": "Имя пользователя",
+  "loc.input.label.vmPassword": "Пароль"
+}

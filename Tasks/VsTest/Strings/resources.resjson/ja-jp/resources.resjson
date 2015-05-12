@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Visual Studio テスト",
+  "loc.description": "Visual Studio テスト ランナーを使用してテストを実行します",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.testAssembly": "テスト アセンブリ",
+  "loc.input.label.testFiltercriteria": "テスト フィルターの条件",
+  "loc.input.label.platform": "プラットフォーム",
+  "loc.input.label.configuration": "構成",
+  "loc.input.label.runSettingsFile": "実行設定ファイル",
+  "loc.input.label.overrideTestrunParameters": "TestRun パラメーターのオーバーライド",
+  "loc.input.label.codeCoverageEnabled": "コード カバレッジが有効",
+  "loc.input.label.vsTestVersion": "VSTest のバージョン",
+  "loc.input.label.pathtoCustomTestAdapters": "カスタム テスト アダプターへのパス",
+  "loc.input.label.otherConsoleOptions": "その他のコンソールのオプション"
+}

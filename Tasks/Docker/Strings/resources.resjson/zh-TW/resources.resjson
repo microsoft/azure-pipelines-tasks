@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "將 Docker 映像部署到遠端電腦",
+  "loc.input.label.DockerEndpoint": "Docker 端點",
+  "loc.input.label.Repository": "儲存機制",
+  "loc.input.label.Tag": "標記",
+  "loc.input.label.ContainerName": "容器名稱",
+  "loc.input.label.PortBindings": "連接埠繫結"
+}

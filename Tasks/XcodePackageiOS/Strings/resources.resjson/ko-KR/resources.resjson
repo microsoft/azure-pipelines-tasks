@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Xcode 패키지 iOS",
+  "loc.description": "Xcode 빌드 출력에서 .ipa 파일 생성",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.appName": ".app 이름",
+  "loc.input.label.ipaName": ".ipa 이름",
+  "loc.input.label.provisioningProfile": "프로필 이름 프로비전",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.appPath": ".app 경로",
+  "loc.input.label.ipaPath": ".ipa를 배치할 경로"
+}

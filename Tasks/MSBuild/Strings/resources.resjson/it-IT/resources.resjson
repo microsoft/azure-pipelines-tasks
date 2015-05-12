@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.description": "Consente di compilare con MSBuild",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.solution": "Soluzione",
+  "loc.input.label.platform": "Piattaforma",
+  "loc.input.label.configuration": "Configurazione",
+  "loc.input.label.msbuildArguments": "Argomenti MSBuild",
+  "loc.input.label.clean": "Pulisci",
+  "loc.input.label.restoreNugetPackages": "Ripristina pacchetti NuGet",
+  "loc.input.label.logProjectEvents": "Registra dettagli progetto",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Versione MSBuild",
+  "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
+  "loc.input.label.msbuildLocation": "Percorso di MSBuild"
+}

@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.description": "通过编辑环境属性部署到 Chef 环境",
+  "loc.input.label.connectedServiceName": "Chef 连接",
+  "loc.input.label.Environment": "环境",
+  "loc.input.label.Attributes": "环境属性",
+  "loc.input.label.chefWaitTime": "等待时间"
+}

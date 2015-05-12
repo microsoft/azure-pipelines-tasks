@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Azure Web のサイト展開",
+  "loc.description": "Microsoft Azure に Web サイトを展開します",
+  "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
+  "loc.input.label.WebSiteLocation": "Web サイトの場所",
+  "loc.input.label.WebSiteName": "Web サイト名",
+  "loc.input.label.Package": "パッケージ",
+  "loc.input.label.AdditionalArguments": "追加引数"
+}

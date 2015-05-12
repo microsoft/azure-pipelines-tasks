@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.description": "Сборка приложения Android с помощью Xamarin",
+  "loc.group.displayName.msbuildOptions": "Параметры MSBuild",
+  "loc.group.displayName.jdkOptions": "Параметры JDK",
+  "loc.input.label.project": "Проект",
+  "loc.input.label.target": "Целевой объект",
+  "loc.input.label.outputDir": "Выходной каталог",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.label.msbuildLocation": "Расположение MSBuild",
+  "loc.input.label.msbuildArguments": "Аргументы MSBuild",
+  "loc.input.label.jdkVersion": "Версия JDK",
+  "loc.input.label.jdkArchitecture": "Архитектура JDK"
+}

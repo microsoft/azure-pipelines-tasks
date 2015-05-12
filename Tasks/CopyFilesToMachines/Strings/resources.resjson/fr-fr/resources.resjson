@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Copier des fichiers sur des machines",
+  "loc.description": "Copier des fichiers sur une ou plusieurs machines distantes",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.EnvironmentName": "Groupe de machines cibles",
+  "loc.input.label.MachineNames": "Copier sur des machines",
+  "loc.input.label.SourcePath": "Source",
+  "loc.input.label.TargetPath": "Dossier de destination",
+  "loc.input.label.CleanTargetBeforeCopy": "Nettoyer la cible",
+  "loc.input.label.DeployFilesInParallel": "Copier des fichiers en parallèle"
+}

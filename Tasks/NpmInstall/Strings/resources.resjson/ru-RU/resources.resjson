@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "установка npm",
+  "loc.description": "установка пакетов npm",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.label.cwd": "Рабочий каталог"
+}

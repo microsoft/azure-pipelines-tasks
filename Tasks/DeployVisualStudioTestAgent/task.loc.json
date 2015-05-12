@@ -21,8 +21,8 @@
   "minimumAgentVersion": "1.83.0",
   "groups": [
     {
-      "name": "environment",
-      "displayName": "ms-resource:loc.group.displayName.environment",
+      "name": "testMachineGroups",
+      "displayName": "ms-resource:loc.group.displayName.testMachineGroups",
       "isExpanded": true
     },
     {
@@ -38,13 +38,13 @@
   ],
   "inputs": [
     {
-      "name": "environment",
+      "name": "testMachineGroup",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.environment",
+      "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
-      "groupName": "environment"
+      "groupName": "testMachineGroups"
     },
     {
       "name": "testMachines",
@@ -53,7 +53,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
-      "groupName": "agentConfiguration"
+      "groupName": "testMachineGroups"
     },
     {
       "name": "runAsProcess",
@@ -99,17 +99,26 @@
       "required": false,
       "helpMarkDown": "Optionally specify if test agent needs to be updated.",
       "groupName": "advanced"
+    },
+    {
+      "name": "isDataCollectionOnly",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isDataCollectionOnly",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+      "groupName": "advanced"
     }
   ],
   "sourceDefinitions": [
     {
-      "target": "environment",
+      "target": "testMachineGroup",
       "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
       "selector": "jsonpath:$.value[*].name",
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Deploy and configure Test Agent",
+  "instanceNameFormat": "Test Machine Group: $(testMachineGroup)",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\DeployTestAgent.ps1",

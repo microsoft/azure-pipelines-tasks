@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.description": "Realice implementaciones en entornos Chef mediante la edición de los atributos del entorno",
+  "loc.input.label.connectedServiceName": "Conexión Chef",
+  "loc.input.label.Environment": "Entorno",
+  "loc.input.label.Attributes": "Atributos del entorno",
+  "loc.input.label.chefWaitTime": "Tiempo de espera"
+}

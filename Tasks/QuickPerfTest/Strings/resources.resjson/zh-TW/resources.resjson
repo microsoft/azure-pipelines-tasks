@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "雲端 Web 效能測試",
+  "loc.description": "快速尋找回復網站在低負載情況下的效能。Powered by VS Online。",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.websiteUrl": "網站 URL",
+  "loc.input.label.testName": "測試名稱",
+  "loc.input.label.vuLoad": "使用者負載",
+  "loc.input.label.runDuration": "執行持續期間",
+  "loc.input.label.geoLocation": "地理位置",
+  "loc.input.label.Username": "替代認證使用者名稱",
+  "loc.input.label.Password": "替代認證密碼",
+  "loc.input.label.CltAccountUrl": "VSO 帳戶 URL"
+}

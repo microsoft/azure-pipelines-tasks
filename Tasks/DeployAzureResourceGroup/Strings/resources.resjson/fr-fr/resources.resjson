@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Déployer un groupe de ressources Azure",
+  "loc.description": "Approvisionner et déployer un groupe de ressources Azure",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
+  "loc.input.label.location": "Emplacement",
+  "loc.input.label.resourceGroupName": "Groupe de ressources",
+  "loc.input.label.csmFile": "Modèle",
+  "loc.input.label.csmParametersFile": "Paramètres du modèle",
+  "loc.input.label.overrideParameters": "Override Template Parameters",
+  "loc.input.label.dscDeployment": "Générer un jeton SAP",
+  "loc.input.label.moduleUrlParameterName": "Paramètre Azure Blob",
+  "loc.input.label.sasTokenParameterName": "Paramètre du jeton SAP",
+  "loc.input.label.vmCreds": "Informations d'identification de la machine virtuelle",
+  "loc.input.label.vmUserName": "Nom d'utilisateur",
+  "loc.input.label.vmPassword": "Mot de passe"
+}

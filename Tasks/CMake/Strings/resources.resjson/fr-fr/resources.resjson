@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "Générer avec le système de génération multiplateforme CMake",
+  "loc.input.label.cwd": "Répertoire de travail",
+  "loc.input.label.args": "Arguments"
+}

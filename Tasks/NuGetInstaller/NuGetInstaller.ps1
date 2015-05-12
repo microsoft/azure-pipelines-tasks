@@ -20,7 +20,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if(!$solution)
 {
-    throw "solution parameter must be set"
+    throw (Get-LocalizedString -Key "Solution parameter must be set")
 }
 
 $b_excludeVersion = Convert-String $excludeVersion Boolean
@@ -42,7 +42,7 @@ else
 
 if (!$solutionFiles)
 {
-    throw "No solution with search pattern '$solution' was found."
+    throw (Get-LocalizedString -Key "No solution was found using search pattern '{0}'." -ArgumentList $solution)
 }
 
 $args = " -NonInteractive";
@@ -71,7 +71,7 @@ if($nuGetArgs)
 
 if (-not $nugetPath)
 {
-    throw "Unable to locate nuget.exe"
+    throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
 }
 
 foreach($sf in $solutionFiles)

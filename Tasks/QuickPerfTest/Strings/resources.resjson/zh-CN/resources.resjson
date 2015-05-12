@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "基于云的 Web 性能测试",
+  "loc.description": "快速查找低负载网站的性能回归。受 VS Online 支持。",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.websiteUrl": "网站 URL",
+  "loc.input.label.testName": "测试名称",
+  "loc.input.label.vuLoad": "用户负载",
+  "loc.input.label.runDuration": "运行持续时间",
+  "loc.input.label.geoLocation": "地理位置",
+  "loc.input.label.Username": "替换凭据用户名",
+  "loc.input.label.Password": "替换凭据密码",
+  "loc.input.label.CltAccountUrl": "VSO 帐户 URL"
+}

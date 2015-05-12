@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Script de commandes",
+  "loc.description": "Exécuter un script cmd ou bat Windows, et lui permettre éventuellement de changer l'environnement",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.filename": "Chemin d'accès",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.label.modifyEnvironment": "Modifier l'environnement",
+  "loc.input.label.workingFolder": "Dossier de travail"
+}

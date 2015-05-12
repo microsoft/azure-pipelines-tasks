@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Pubblica elementi di compilazione",
+  "loc.description": "Consente di pubblicare elementi di compilazione nel server o in una condivisione file",
+  "loc.input.label.CopyRoot": "Copia radice",
+  "loc.input.label.Contents": "Contenuti",
+  "loc.input.label.ArtifactName": "Nome dell'elemento",
+  "loc.input.label.ArtifactType": "Tipo di elemento",
+  "loc.input.label.TargetPath": "Percorso"
+}

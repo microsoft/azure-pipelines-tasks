@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "Implemente una imagen de Docker en una máquina remota",
+  "loc.input.label.DockerEndpoint": "Extremo de Docker",
+  "loc.input.label.Repository": "Repositorio",
+  "loc.input.label.Tag": "Etiqueta",
+  "loc.input.label.ContainerName": "Nombre del contenedor",
+  "loc.input.label.PortBindings": "Enlaces de puertos"
+}

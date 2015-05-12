@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Azure BLOB にファイルをコピーします",
+  "loc.description": "Azure BLOB にファイルをコピーします",
+  "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
+  "loc.input.label.SourcePath": "ソース",
+  "loc.input.label.StorageAccount": "ストレージ アカウント",
+  "loc.input.label.ContainerName": "ContainerName",
+  "loc.input.label.BlobPrefix": "BLOB プレフィックス"
+}

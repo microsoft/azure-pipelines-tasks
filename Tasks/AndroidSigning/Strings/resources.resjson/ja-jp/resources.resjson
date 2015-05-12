@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Android の署名",
+  "loc.description": "署名し、Android APK ファイルを配置します",
+  "loc.group.displayName.jarsignerOptions": "Jarsigner オプション",
+  "loc.group.displayName.zipalignOptions": "Zipalign オプション",
+  "loc.input.label.files": "APK ファイル",
+  "loc.input.label.jarsign": "APK の署名",
+  "loc.input.label.keystoreFile": "Keystore ファイル",
+  "loc.input.label.keystorePass": "Keystore パスワード",
+  "loc.input.label.keystoreAlias": "エイリアス",
+  "loc.input.label.keyPass": "キー パスワード",
+  "loc.input.label.jarsignerArguments": "Jarsigner の引数",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Zipalign の場所"
+}

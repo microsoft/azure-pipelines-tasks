@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Compilazione Visual Studio",
+  "loc.description": "Consente di compilare con MSBuild al prompt dei comandi per gli sviluppatori di Visual Studio",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.solution": "Soluzione",
+  "loc.input.label.msbuildArgs": "Argomenti MSBuild",
+  "loc.input.label.platform": "Piattaforma",
+  "loc.input.label.configuration": "Configurazione",
+  "loc.input.label.clean": "Pulisci",
+  "loc.input.label.restoreNugetPackages": "Ripristina pacchetti NuGet",
+  "loc.input.label.vsLocationMethod": "Visual Studio",
+  "loc.input.label.vsVersion": "Versione Visual Studio",
+  "loc.input.label.vsLocation": "Percorso Visual Studio",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Versione MSBuild",
+  "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
+  "loc.input.label.msbuildLocation": "Percorso di MSBuild",
+  "loc.input.label.logProjectEvents": "Registra dettagli progetto"
+}

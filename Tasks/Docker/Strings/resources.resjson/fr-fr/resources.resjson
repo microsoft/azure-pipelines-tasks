@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "Déployer une image Docker sur un ordinateur distant",
+  "loc.input.label.DockerEndpoint": "Point de terminaison Docker",
+  "loc.input.label.Repository": "Référentiel",
+  "loc.input.label.Tag": "Balise",
+  "loc.input.label.ContainerName": "Nom du conteneur",
+  "loc.input.label.PortBindings": "Liaisons de ports"
+}

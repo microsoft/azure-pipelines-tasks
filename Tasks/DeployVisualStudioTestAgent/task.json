@@ -1,7 +1,7 @@
 ﻿{
     "id": "52A38A6A-1517-41D7-96CC-73EE0C60D2B6",
     "name": "DeployVisualStudioTestAgent",
-    "friendlyName": "Deploy Visual Studio Test Agent",
+    "friendlyName": "Visual Studio Test Agent Deployment",
     "description": "Deploy and configure Test Agent to run tests on a lab machine group.",
     "category": "Test",
     "visibility": [
@@ -20,7 +20,7 @@
     "minimumAgentVersion": "1.83.0",
     "groups":  [
         {
-            "name": "environment",
+            "name": "testMachineGroups",
             "displayName": "Test Machine Group",
             "isExpanded": true
         },
@@ -37,13 +37,13 @@
     ],
     "inputs": [
         {
-            "name": "environment",
+            "name": "testMachineGroup",
             "type": "pickList",
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
-            "groupName": "environment"
+            "groupName": "testMachineGroups"
         },       
         {
             "name": "testMachines",
@@ -52,12 +52,12 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
-            "groupName": "agentConfiguration"
+            "groupName": "testMachineGroups"
         },
         {
             "name": "runAsProcess",
             "type": "boolean",
-            "label": "Run Test Agent as interactive process to execute UI Tests",
+            "label": "Interactive Process",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Denotes if test agent needs to run as interactive process.",
@@ -98,17 +98,26 @@
             "required": false,
             "helpMarkDown": "Optionally specify if test agent needs to be updated.",
             "groupName": "advanced"
+        },
+        {
+            "name": "isDataCollectionOnly",
+            "type": "boolean",
+            "label": "Enable Data Collection Only",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+            "groupName": "advanced"
         }
     ],
     "sourceDefinitions": [ 
      { 
-         "target": "environment",
+         "target": "testMachineGroup",
          "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
          "selector": "jsonpath:$.value[*].name",
          "authKey": "tfs:DevTestLabs"
      } 
     ],
-    "instanceNameFormat": "Deploy and configure Test Agent",
+    "instanceNameFormat": "Test Machine Group: $(testMachineGroup)",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\DeployTestAgent.ps1",
