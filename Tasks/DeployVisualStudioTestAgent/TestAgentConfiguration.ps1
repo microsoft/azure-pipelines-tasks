@@ -200,6 +200,12 @@ function Set-TestAgentConfiguration
         $configArgs = $configArgs + ("/password:{0}" -f $AgentUserCredential.GetNetworkCredential().Password)
     }
 
+    if ($PSBoundParameters.ContainsKey('MachineUserCredential') -and $MachineUserCredential)
+    {
+        $configArgs = $configArgs + ("/adminUserName:{0}" -f $MachineUserCredential.UserName)
+        $configArgs = $configArgs + ("/adminPassword:{0}" -f $MachineUserCredential.GetNetworkCredential().Password)
+    }
+
     if ($PSBoundParameters.ContainsKey('EnableAutoLogon'))
     {
         if (-not $configAsProcess)
@@ -422,7 +428,7 @@ function CanSkipTestAgentConfiguration
         }
     }
 
-    if ($PSBoundParameters.ContainsKey('UserCredential'))
+    if ($PSBoundParameters.ContainsKey('AgentUserCredential'))
     {
         if ($AgentUserCredential.UserName -ne $existingConfiguration.UserName)
         {
@@ -619,11 +625,11 @@ function ConfigureTestAgent
     $ret = -1
     if ($AsServiceOrProcess -eq "Service")
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
     }
     else
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -UserCredential $UserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
     }
     
     if ($ret -eq 0)
@@ -653,7 +659,7 @@ $enableAutoLogon = [Boolean] $enableAutoLogon
 $machineCredential = New-Object System.Management.Automation.PSCredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
 $agentCredential = New-Object System.Management.Automation.PSCredential -ArgumentList $testAgentConfigUserName, (ConvertTo-SecureString -String $testAgentConfigPassword -AsPlainText -Force)
 
-$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -UserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon  -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
+$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon  -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
 if ($ret -eq $false)
 {
     ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
