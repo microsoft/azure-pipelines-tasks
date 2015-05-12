@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Copier des fichiers vers Azure Blob",
+  "loc.description": "Copier des fichiers vers Azure Blob",
+  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
+  "loc.input.label.SourcePath": "Source",
+  "loc.input.label.StorageAccount": "Compte de stockage",
+  "loc.input.label.ContainerName": "ContainerName",
+  "loc.input.label.BlobPrefix": "Préfixe Blob"
+}

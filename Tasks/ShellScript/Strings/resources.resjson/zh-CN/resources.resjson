@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Shell 脚本",
+  "loc.description": "使用 bash 运行 shell 脚本",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.scriptPath": "脚本路径",
+  "loc.input.label.args": "参数",
+  "loc.input.label.cwd": "工作目录"
+}

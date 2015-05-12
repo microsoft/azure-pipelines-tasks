@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "VSO 的雲端負載測試 ",
+  "loc.description": "在雲端中執行負載測試; Powered by VS Online。",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.TestDrop": "負載測試檔案資料夾",
+  "loc.input.label.LoadTest": "負載測試檔案",
+  "loc.input.label.TestSettings": "測試設定檔案",
+  "loc.input.label.ThresholdLimit": "允許的臨界值違規次數",
+  "loc.input.label.VsoAccountUrl": "VSO 帳戶 URI",
+  "loc.input.label.Username": "替代認證使用者名稱",
+  "loc.input.label.Password": "替代認證密碼"
+}

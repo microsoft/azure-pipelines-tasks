@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Xamarin 测试云",
+  "loc.description": "使用 Xamarin.UITest 测试包含 Xamarin 测试云的移动应用",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.app": "应用文件",
+  "loc.input.label.dsym": "dSYM 文件(仅 iOS)",
+  "loc.input.label.teamApiKey": "团队 API 密钥",
+  "loc.input.label.user": "用户电子邮件",
+  "loc.input.label.devices": "设备",
+  "loc.input.label.series": "系列",
+  "loc.input.label.testDir": "测试程序集目录",
+  "loc.input.label.parallelization": "并行化",
+  "loc.input.label.locale": "系统语言",
+  "loc.input.label.testCloudLocation": "test-cloud.exe 位置",
+  "loc.input.label.optionalArgs": "可选参数"
+}

@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Облачный тест веб-производительности",
+  "loc.description": "Быстро находите регрессию производительности для своего веб-сайта под нагрузкой. На платформе VS Online.",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.websiteUrl": "URL-адрес веб-сайта",
+  "loc.input.label.testName": "Имя теста",
+  "loc.input.label.vuLoad": "Пользовательская нагрузка",
+  "loc.input.label.runDuration": "Длительность выполнения",
+  "loc.input.label.geoLocation": "Географическое местоположение",
+  "loc.input.label.Username": "Альтернативное имя пользователя",
+  "loc.input.label.Password": "Альтернативный пароль",
+  "loc.input.label.CltAccountUrl": "URL-адрес учетной записи VSO"
+}

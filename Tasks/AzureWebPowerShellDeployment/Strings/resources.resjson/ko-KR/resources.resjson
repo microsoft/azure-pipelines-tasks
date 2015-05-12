@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Azure 웹 사이트 배포",
+  "loc.description": "Microsoft Azure에 웹 사이트 배포",
+  "loc.input.label.ConnectedServiceName": "Azure 구독",
+  "loc.input.label.WebSiteLocation": "웹 사이트 위치",
+  "loc.input.label.WebSiteName": "웹 사이트 이름",
+  "loc.input.label.Package": "패키지",
+  "loc.input.label.AdditionalArguments": "추가 인수"
+}

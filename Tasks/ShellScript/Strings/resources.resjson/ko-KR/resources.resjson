@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "셸 스크립트",
+  "loc.description": "bash를 사용하여 셸 스크립트 실행",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.scriptPath": "스크립트 경로",
+  "loc.input.label.args": "인수",
+  "loc.input.label.cwd": "작업 디렉터리"
+}

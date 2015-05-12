@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.description": "Запуск скрипта PowerShell",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.scriptName": "Имя файла скрипта",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.label.workingFolder": "Рабочая папка"
+}

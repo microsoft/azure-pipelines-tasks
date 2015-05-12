@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Лицензия Xamarin",
+  "loc.description": "Активация или деактивация лицензий Xamarin",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.action": "Действие",
+  "loc.input.label.email": "Электронная почта",
+  "loc.input.label.password": "Пароль",
+  "loc.input.label.activateAndroid": "Активировать Xamarin.Android",
+  "loc.input.label.timeout": "Время ожидания в секундах"
+}

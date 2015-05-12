@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Script por lotes",
+  "loc.description": "Ejecute un cmd o script .bat de Windows y, opcionalmente, permítale cambiar el entorno",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.filename": "Ruta de acceso",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.label.modifyEnvironment": "Modificar entorno",
+  "loc.input.label.workingFolder": "Carpeta de trabajo"
+}

@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Android のビルド",
+  "loc.description": "Gradle を使用して Android アプリを作成し、必要に応じて単体テストのエミュレーターを開始します",
+  "loc.group.displayName.emulatorOptions": "エミュレーター オプション",
+  "loc.input.label.gradleWrapper": "Gradle ラッパーの場所",
+  "loc.input.label.gradleProj": "プロジェクト ディレクトリ",
+  "loc.input.label.gradleArguments": "引数",
+  "loc.input.label.startEmulator": "Android エミュレーターの開始",
+  "loc.input.label.emulatorTarget": "エミュレーターのターゲット SDK",
+  "loc.input.label.emulatorDevice": "エミュレーター デバイス"
+}

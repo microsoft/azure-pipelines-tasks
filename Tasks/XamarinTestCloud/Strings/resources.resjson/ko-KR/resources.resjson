@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Xamarin 테스트 클라우드",
+  "loc.description": "Xamarin.UITest를 사용하여 Xamarin 테스트 클라우드로 모바일 앱 테스트",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.app": "앱 파일",
+  "loc.input.label.dsym": "dSYM 파일(iOS만)",
+  "loc.input.label.teamApiKey": "팀 API 키",
+  "loc.input.label.user": "사용자 메일",
+  "loc.input.label.devices": "장치",
+  "loc.input.label.series": "시리즈",
+  "loc.input.label.testDir": "테스트 어셈블리 디렉터리",
+  "loc.input.label.parallelization": "병렬 처리",
+  "loc.input.label.locale": "시스템 언어",
+  "loc.input.label.testCloudLocation": "test-cloud.exe 위치",
+  "loc.input.label.optionalArgs": "선택적 인수"
+}

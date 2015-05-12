@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Build Visual Studio",
+  "loc.description": "Générer avec MSBuild via l'invite de commandes développeur pour Visual Studio",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.solution": "Solution",
+  "loc.input.label.msbuildArgs": "Arguments MSBuild",
+  "loc.input.label.platform": "Plateforme",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.clean": "Nettoyer",
+  "loc.input.label.restoreNugetPackages": "Restaurer des packages NuGet",
+  "loc.input.label.vsLocationMethod": "Visual Studio",
+  "loc.input.label.vsVersion": "Version de Visual Studio",
+  "loc.input.label.vsLocation": "Emplacement de Visual Studio",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Version de MSBuild",
+  "loc.input.label.msbuildArchitecture": "Architecture MSBuild",
+  "loc.input.label.msbuildLocation": "Chemin d'accès de MSBuild",
+  "loc.input.label.logProjectEvents": "Enregistrer les détails du projet"
+}

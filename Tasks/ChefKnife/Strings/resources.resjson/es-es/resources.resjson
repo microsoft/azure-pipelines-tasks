@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Knife de Chef",
+  "loc.description": "Ejecute scripts con comandos Knife en la estación de trabajo Chef",
+  "loc.input.label.ConnectedServiceName": "Suscripción a Chef",
+  "loc.input.label.ScriptPath": "Ruta de acceso del script",
+  "loc.input.label.ScriptArguments": "Argumentos del script"
+}

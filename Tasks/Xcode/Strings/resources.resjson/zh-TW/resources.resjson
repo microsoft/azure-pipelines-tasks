@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Xcode 組建",
+  "loc.description": "在 Mac OS 上建置 Xcode 工作區",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.xcWorkspacePath": "工作區路徑",
+  "loc.input.label.scheme": "配置",
+  "loc.input.label.actions": "動作",
+  "loc.input.label.configuration": "組態",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.outputPattern": "輸出"
+}

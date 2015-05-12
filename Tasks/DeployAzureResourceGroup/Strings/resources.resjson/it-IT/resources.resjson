@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Distribuisci gruppo di risorse di Azure",
+  "loc.description": "Consente di effettuare il provisioning e la distribuzione di un gruppo di risorse di Azure",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
+  "loc.input.label.location": "Percorso",
+  "loc.input.label.resourceGroupName": "Gruppo di risorse",
+  "loc.input.label.csmFile": "Modello",
+  "loc.input.label.csmParametersFile": "Parametri modello",
+  "loc.input.label.overrideParameters": "Override Template Parameters",
+  "loc.input.label.dscDeployment": "Genera token SAS",
+  "loc.input.label.moduleUrlParameterName": "Parametro BLOB di Azure",
+  "loc.input.label.sasTokenParameterName": "Parametro token SAS",
+  "loc.input.label.vmCreds": "Credenziali macchina virtuale",
+  "loc.input.label.vmUserName": "Nome utente",
+  "loc.input.label.vmPassword": "Password"
+}

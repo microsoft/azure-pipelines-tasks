@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "Consente di distribuire un'immagine Docker in un computer remoto",
+  "loc.input.label.DockerEndpoint": "Endpoint Docker",
+  "loc.input.label.Repository": "Repository",
+  "loc.input.label.Tag": "Tag",
+  "loc.input.label.ContainerName": "Nome contenitore",
+  "loc.input.label.PortBindings": "Binding porte"
+}

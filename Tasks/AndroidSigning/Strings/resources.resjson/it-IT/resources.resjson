@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Firma per Android",
+  "loc.description": "Consente di firmare e allineare i file APK di Android",
+  "loc.group.displayName.jarsignerOptions": "Opzioni Jarsigner",
+  "loc.group.displayName.zipalignOptions": "Opzioni Zipalign",
+  "loc.input.label.files": "File APK",
+  "loc.input.label.jarsign": "Firma APK",
+  "loc.input.label.keystoreFile": "File dell'archivio chiavi",
+  "loc.input.label.keystorePass": "Password dell'archivio chiavi",
+  "loc.input.label.keystoreAlias": "Alias",
+  "loc.input.label.keyPass": "Password chiave",
+  "loc.input.label.jarsignerArguments": "Argomenti Jarsigner",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Percorso Zipalign"
+}

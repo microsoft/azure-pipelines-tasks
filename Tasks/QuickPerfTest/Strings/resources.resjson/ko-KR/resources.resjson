@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "클라우드 기반 웹 성능 테스트",
+  "loc.description": "부하가 큰 웹 사이트의 성능 저하를 신속하게 찾습니다. Powered by VS Online.",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.websiteUrl": "웹 사이트 URL",
+  "loc.input.label.testName": "테스트 이름",
+  "loc.input.label.vuLoad": "사용자 부하",
+  "loc.input.label.runDuration": "실행 지속 시간",
+  "loc.input.label.geoLocation": "지리적 위치",
+  "loc.input.label.Username": "대체 자격 증명 사용자 이름",
+  "loc.input.label.Password": "대체 자격 증명 암호",
+  "loc.input.label.CltAccountUrl": "VSO 계정 URL"
+}

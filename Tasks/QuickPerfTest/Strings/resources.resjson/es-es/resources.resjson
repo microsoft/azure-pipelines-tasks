@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Prueba de rendimiento de web basada en la nube",
+  "loc.description": "Encuentre regresiones perf a su sitio web en carga rápidamente. Con la tecnología de VS Online.",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.websiteUrl": "URL del sitio web",
+  "loc.input.label.testName": "Nombre de la prueba",
+  "loc.input.label.vuLoad": "Carga de usuarios",
+  "loc.input.label.runDuration": "Duración de la ejecución",
+  "loc.input.label.geoLocation": "Ubicación geográfica",
+  "loc.input.label.Username": "Nombre de usuario de las credenciales alternativas",
+  "loc.input.label.Password": "Contraseña de las credenciales alternativas",
+  "loc.input.label.CltAccountUrl": "Dirección URL de la cuenta de VSO"
+}

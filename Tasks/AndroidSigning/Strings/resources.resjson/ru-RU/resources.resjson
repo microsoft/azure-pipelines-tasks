@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Подписывание Android",
+  "loc.description": "Подписывание и назначение APK-файлов Android",
+  "loc.group.displayName.jarsignerOptions": "Параметры Jarsigner",
+  "loc.group.displayName.zipalignOptions": "Параметры Zipalign",
+  "loc.input.label.files": "APK-файлы",
+  "loc.input.label.jarsign": "Подписать APK",
+  "loc.input.label.keystoreFile": "Файл хранилища ключей",
+  "loc.input.label.keystorePass": "Пароль хранилища ключей",
+  "loc.input.label.keystoreAlias": "Псевдоним",
+  "loc.input.label.keyPass": "Пароль ключа",
+  "loc.input.label.jarsignerArguments": "Аргументы Jarsigner",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Расположение Zipalign"
+}

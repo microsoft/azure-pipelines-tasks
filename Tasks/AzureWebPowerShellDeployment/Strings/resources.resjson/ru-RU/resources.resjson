@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Развертывание веб-сайта Azure",
+  "loc.description": "Развертывание веб-сайта в Microsoft Azure",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure",
+  "loc.input.label.WebSiteLocation": "Расположение веб-сайта",
+  "loc.input.label.WebSiteName": "Имя веб-сайта",
+  "loc.input.label.Package": "Пакет",
+  "loc.input.label.AdditionalArguments": "Дополнительные аргументы"
+}

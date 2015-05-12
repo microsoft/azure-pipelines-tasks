@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "ビルド成果物の発行",
+  "loc.description": "ビルド成果物をサーバーまたはファイル共有に発行します",
+  "loc.input.label.CopyRoot": "コピー元",
+  "loc.input.label.Contents": "コンテンツ",
+  "loc.input.label.ArtifactName": "成果物の名前",
+  "loc.input.label.ArtifactType": "成果物の種類",
+  "loc.input.label.TargetPath": "パス"
+}

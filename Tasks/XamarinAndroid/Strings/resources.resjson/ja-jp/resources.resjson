@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.description": "Xamarin を使用して Android アプリをビルドします",
+  "loc.group.displayName.msbuildOptions": "MSBuild オプション",
+  "loc.group.displayName.jdkOptions": "JDK オプション",
+  "loc.input.label.project": "プロジェクト",
+  "loc.input.label.target": "ターゲット",
+  "loc.input.label.outputDir": "出力ディレクトリ",
+  "loc.input.label.configuration": "構成",
+  "loc.input.label.msbuildLocation": "MSBuild の場所",
+  "loc.input.label.msbuildArguments": "MSBuild 引数",
+  "loc.input.label.jdkVersion": "JDK のバージョン",
+  "loc.input.label.jdkArchitecture": "JDK アーキテクチャ"
+}

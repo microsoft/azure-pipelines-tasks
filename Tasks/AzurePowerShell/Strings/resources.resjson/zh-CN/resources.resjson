@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.description": "在 Azure 环境中运行 PowerShell 脚本",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
+  "loc.input.label.ScriptPath": "脚本路径",
+  "loc.input.label.ScriptArguments": "脚本参数"
+}

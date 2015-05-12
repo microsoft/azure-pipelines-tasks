@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure 雲端服務部署",
+  "loc.description": "部署 Azure 雲端服務",
+  "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
+  "loc.input.label.StorageAccount": "儲存體帳戶",
+  "loc.input.label.ServiceName": "服務名稱",
+  "loc.input.label.ServiceLocation": "服務位置",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "環境 (位置)",
+  "loc.input.label.AllowUpgrade": "允許升級"
+}

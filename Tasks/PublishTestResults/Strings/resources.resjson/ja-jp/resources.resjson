@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "テスト結果の発行",
+  "loc.description": "テスト結果を VSO/TFS に発行します",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.testRunner": "テスト結果の形式",
+  "loc.input.label.testResultsFiles": "テスト結果のファイル",
+  "loc.input.label.mergeTestResults": "テスト結果の結合",
+  "loc.input.label.platform": "プラットフォーム",
+  "loc.input.label.configuration": "構成"
+}

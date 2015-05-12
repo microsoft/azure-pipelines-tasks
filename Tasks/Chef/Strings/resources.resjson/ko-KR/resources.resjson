@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.description": "환경 특성을 편집하여 Chef 환경에 배포",
+  "loc.input.label.connectedServiceName": "Chef 연결",
+  "loc.input.label.Environment": "환경",
+  "loc.input.label.Attributes": "환경 특성",
+  "loc.input.label.chefWaitTime": "대기 시간"
+}

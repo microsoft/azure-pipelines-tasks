@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Riga di comando",
+  "loc.description": "Consente di eseguire una riga di comando con argomenti",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.filename": "Strumento",
+  "loc.input.label.arguments": "Argomenti",
+  "loc.input.label.workingFolder": "Cartella di lavoro",
+  "loc.input.label.errorPattern": "Criteri di errore",
+  "loc.input.label.warningPattern": "Criteri di avviso",
+  "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard"
+}
