@@ -20,7 +20,7 @@
     "minimumAgentVersion": "1.83.0",
     "groups":  [
         {
-            "name": "environment",
+            "name": "testMachineGroups",
             "displayName": "Test Machine Group",
             "isExpanded": true
         },
@@ -37,13 +37,13 @@
     ],
     "inputs": [
         {
-            "name": "environment",
+            "name": "testMachineGroup",
             "type": "pickList",
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
-            "groupName": "environment"
+            "groupName": "testMachineGroups"
         },       
         {
             "name": "testMachines",
@@ -52,12 +52,12 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
-            "groupName": "environment"
+            "groupName": "testMachineGroups"
         },
         {
             "name": "runAsProcess",
             "type": "boolean",
-            "label": "Run Test Agent as interactive process to execute UI Tests",
+            "label": "Interactive Process",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Denotes if test agent needs to run as interactive process.",
@@ -111,13 +111,13 @@
     ],
     "sourceDefinitions": [ 
      { 
-         "target": "environment",
+         "target": "testMachineGroup",
          "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
          "selector": "jsonpath:$.value[*].name",
          "authKey": "tfs:DevTestLabs"
      } 
     ],
-    "instanceNameFormat": "Deploy and configure Test Agent",
+    "instanceNameFormat": "Test Machine Group: $(testMachineGroup)",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\DeployTestAgent.ps1",
