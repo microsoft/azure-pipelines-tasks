@@ -66,11 +66,11 @@
         {
             "name": "RunPowershellInParallel",
             "type": "boolean",
-            "label": "Run Powershell Parallely",
+            "label": "Run Powershell Scripts In Parallel",
             "defaultValue": "true",
             "required": false,
             "groupName":"advanced",
-            "helpMarkDown": "Setting it to true will run powershell parellely on the machines."
+            "helpMarkDown": "Setting it to true will run powershell scripts in parallel on the target machines."
         }
     ],
     "sourceDefinitions": [ 
