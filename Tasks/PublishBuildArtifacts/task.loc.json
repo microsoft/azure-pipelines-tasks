@@ -6,6 +6,7 @@
   "name": "PublishBuildArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Publish Build artifacts to the server or a file share",
   "category": "Build",
   "visibility": [
     "Build"
@@ -49,7 +50,7 @@
       "label": "ms-resource:loc.input.label.ArtifactType",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of the artifact to create.",
+      "helpMarkDown": "The type of the artifact to create.",
       "options": {
         "Container": "Server",
         "FilePath": "File share"

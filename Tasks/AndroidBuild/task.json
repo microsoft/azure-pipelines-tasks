@@ -3,6 +3,7 @@
     "name": "AndroidBuild",
     "friendlyName": "Android Build",
     "description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
+    "helpMarkDown": "Build an Android app using **Gradle** and optionally start the emulator for unit tests",
     "category": "Build",
     "visibility": [
                 "Build"

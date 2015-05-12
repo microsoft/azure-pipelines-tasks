@@ -3,6 +3,7 @@
     "name": "DeployAzureResourceGroup",
     "friendlyName": "Deploy Azure Resource Group",
     "description": "Provision and Deploy an Azure Resource Group",
+    "helpMarkDown": "Provision and Deploy an Azure Resource Group",
     "category": "Deploy",
     "visibility": [
                 "Preview",

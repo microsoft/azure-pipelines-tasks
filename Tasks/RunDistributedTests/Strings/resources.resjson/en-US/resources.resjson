@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Test Run using Test Agent",
-  "loc.description": "Run tests distributedly using multiple test agents in a lab machine group.",
+  "loc.description": "Run tests distributedly using multiple test agents in a lab machine group",
   "loc.group.displayName.testEnvironment": "Test Machine Group",
   "loc.group.displayName.testSettings": "Test Settings",
   "loc.group.displayName.advanced": "Advanced",

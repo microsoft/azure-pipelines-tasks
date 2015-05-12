@@ -3,6 +3,7 @@
   "name": "PublishTestResults",
   "friendlyName": "Publish Test Results",
   "description": "Publish Test Results to VSO/TFS",
+  "helpMarkDown": "Publish Test Results to VSO/TFS",
   "category": "Test",
   "visibility": [
                   "Build"

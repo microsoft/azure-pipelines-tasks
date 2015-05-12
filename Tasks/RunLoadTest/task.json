@@ -2,7 +2,8 @@
   "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
   "name": "CloudLoadTest",
   "friendlyName": "Cloud-based Load Test with VSO",
-  "description": "Runs the load test in cloud; Powered by VS Online.",
+  "description": "Runs the load test in cloud; Powered by VS Online",
+  "helpMarkDown": "Runs the load test in cloud; Powered by VS Online",
   "category": "Test",
   "visibility": [
     "Preview",

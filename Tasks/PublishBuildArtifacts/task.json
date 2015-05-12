@@ -3,6 +3,7 @@
   "name": "PublishBuildArtifacts",
   "friendlyName": "Publish Build Artifacts",
   "description": "Publish Build artifacts to the server or a file share",
+  "helpMarkDown": "Publish Build artifacts to the server or a file share",
   "category": "Build",
   "visibility": [
     "Build"
@@ -47,7 +48,7 @@
       "label": "Artifact Type",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of the artifact to create.",
+      "helpMarkDown": "The type of the artifact to create.",
       "options": {
         "Container": "Server",
         "FilePath": "File share"

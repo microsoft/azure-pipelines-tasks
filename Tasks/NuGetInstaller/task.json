@@ -3,6 +3,7 @@
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
     "description": "Installs and updates missing NuGet packages",
+    "helpMarkDown": "Installs and updates missing NuGet packages",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {

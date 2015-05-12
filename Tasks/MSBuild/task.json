@@ -3,6 +3,7 @@
     "name": "MSBuild",
     "friendlyName": "MSBuild",
     "description": "Build with MSBuild",
+    "helpMarkDown": "Build with **MSBuild**",
     "category": "Build",
     "visibility": [
                 "Build"

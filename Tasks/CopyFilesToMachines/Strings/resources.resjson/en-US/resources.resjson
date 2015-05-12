@@ -10,5 +10,5 @@
   "loc.input.label.SourcePath": "Source",
   "loc.input.label.TargetPath": "Destination Folder",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
-  "loc.input.label.DeployFilesInParallel": "Copy Files Parallely"
+  "loc.input.label.CopyFilesInParallel": "Copy Files In Parallel"
 }

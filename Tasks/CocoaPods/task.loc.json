@@ -6,6 +6,7 @@
   "name": "CocoaPods",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install",
   "category": "Package",
   "visibility": [
     "Build"
