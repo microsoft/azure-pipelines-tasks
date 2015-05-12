@@ -3,6 +3,7 @@
     "name": "XamarinLicense",
     "friendlyName": "Xamarin License",
     "description": "Activate or deactivate Xamarin licenses",
+    "helpMarkDown": "Activate or deactivate Xamarin licenses",
     "category": "Utility",
     "visibility": [
                 "Build"

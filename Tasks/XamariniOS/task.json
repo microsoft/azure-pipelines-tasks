@@ -3,6 +3,7 @@
     "name": "XamariniOS",
     "friendlyName": "Xamarin.iOS",
     "description": "Build an iOS app with Xamarin on Mac OS",
+    "helpMarkDown": "Build an iOS app with Xamarin on Mac OS",
     "category": "Build",
     "visibility": [
                 "Build"

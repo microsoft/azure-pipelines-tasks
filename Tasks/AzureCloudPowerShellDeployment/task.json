@@ -3,6 +3,7 @@
   "name": "AzureCloudPowerShellDeployment",
   "friendlyName": "Azure Cloud Service Deployment",
   "description": "Deploy an Azure Cloud Service",
+  "helpMarkDown": "Deploy an Azure Cloud Service",
   "category": "Deploy",
   "visibility": [
                 "Build",

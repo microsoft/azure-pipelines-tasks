@@ -3,6 +3,7 @@
     "name": "CMake",
     "friendlyName": "CMake",
     "description": "Build with the CMake cross-platform build system",
+    "helpMarkDown": "Build with the CMake cross-platform build system",
     "category": "Build",
     "visibility": [
                 "Build"

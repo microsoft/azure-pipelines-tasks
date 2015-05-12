@@ -3,6 +3,7 @@
     "name": "CopyFilesToMachines",
     "friendlyName": "Copy Files To Machines",
     "description": "Copy files to remote machine(s)",
+    "helpMarkDown": "Copy files to remote machine(s)",
     "category": "Deploy",
     "visibility": [
                 "Preview",

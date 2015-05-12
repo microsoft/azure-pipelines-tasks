@@ -6,6 +6,7 @@
   "name": "Gradle",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Build using a Gradle wrapper script",
   "category": "Build",
   "visibility": [
     "Build"

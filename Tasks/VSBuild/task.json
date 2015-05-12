@@ -3,6 +3,7 @@
     "name":"VSBuild",
     "friendlyName": "Visual Studio Build",
     "description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
+    "helpMarkDown": "Build with **MSBuild** in the Visual Studio Developer Command Prompt",
     "category": "Build",
     "visibility": [
                 "Build"

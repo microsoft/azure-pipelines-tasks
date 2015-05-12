@@ -6,6 +6,7 @@
   "name": "CloudLoadTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Runs the load test in cloud; Powered by VS Online",
   "category": "Test",
   "visibility": [
     "Preview",

@@ -3,6 +3,7 @@
     "name": "AndroidSigning",
     "friendlyName": "Android Signing",
     "description": "Sign and align Android APK files",
+    "helpMarkDown": "Sign and align Android APK files",
     "category": "Build",
     "visibility": [
                 "Build"

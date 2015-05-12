@@ -3,6 +3,7 @@
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",
     "description": "Run Scripts with knife commands on your chef workstation",
+    "helpMarkDown": "Run Scripts with knife commands on your chef workstation",
     "category": "Deploy",
     "visibility": [
                 "Preview",

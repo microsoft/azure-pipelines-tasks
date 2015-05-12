@@ -6,6 +6,7 @@
   "name": "AndroidSigning",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Sign and align Android APK files",
   "category": "Build",
   "visibility": [
     "Build"

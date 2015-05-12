@@ -3,6 +3,7 @@
     "name": "Maven",
     "friendlyName": "Maven",
     "description": "Build with Apache Maven",
+    "helpMarkDown": "Build with Apache Maven",
     "category": "Build",
     "visibility": [
                 "Build"

@@ -3,6 +3,7 @@
   "name": "VSTest",
   "friendlyName": "Visual Studio Test",
   "description": "Run tests with Visual Studio test runner",
+  "helpMarkDown": "Run tests with Visual Studio test runner",
   "category": "Test",
   "visibility": [
                 "Build",

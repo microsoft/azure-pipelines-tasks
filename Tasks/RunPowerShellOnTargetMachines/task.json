@@ -2,7 +2,8 @@
     "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
     "name": "RunPowerShellOnTargetMachines",
     "friendlyName": "Run PowerShell on Target Machines",
-    "description": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s).",
+    "description": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s)",
+    "helpMarkDown": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s)",
     "category": "Deploy",
     "visibility": [
                 "Preview",
