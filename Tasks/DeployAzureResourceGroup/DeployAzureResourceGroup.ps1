@@ -1,8 +1,9 @@
 param(
-    [string][Parameter(Mandatory=$true)]$ConnectedServiceName, 
+    [string][Parameter(Mandatory=$true)]$ConnectedServiceName,
     [string][Parameter(Mandatory=$true)]$location,
     [string][Parameter(Mandatory=$true)]$resourceGroupName,
-    [string][Parameter(Mandatory=$true)]$csmFile, 
+    [string][Parameter(Mandatory=$true)]$csmFile,
+    [string][Parameter(Mandatory=$true)]$winrmListeners,
     [string]$csmParametersFile,
     [string]$overrideParameters,
     [string]$dscDeployment,
@@ -11,8 +12,6 @@ param(
     [string]$vmCreds,
     [string]$vmUserName,
     [string]$vmPassword,
-    [string]$configurePowerShellPorts,
-    [string]$protocol,
     [string]$certificatePath,
     [string]$certificatePassword,
     [string]$azureKeyVaultName,
@@ -22,6 +21,7 @@ param(
 . ./AzureResourceManagerHelper.ps1
 . ./DtlServiceHelper.ps1
 . ./Utility.ps1
+. ./Constants.ps1
 
 $ErrorActionPreference = "Stop"
 
@@ -34,7 +34,7 @@ Write-Verbose -Verbose "location = $location"
 Write-Verbose -Verbose "overrideParameters = $overrideParameters"
 Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
 Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
-Write-Verbose -Verbose "configurePowerShellPorts = $configurePowerShellPorts"
+Write-Verbose -Verbose "WinRM Listeners = $winrmListeners"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -71,40 +71,33 @@ $parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameter
 
 Switch-AzureMode AzureResourceManager
 
-if ($configurePowerShellPorts -eq "true")
+if ($winrmListeners -eq $winRmHttps)
 {
-    #Find the matching certificate File
-    $certificatePath = Get-File $certificatePath
-    Write-Verbose -Verbose "CertificatePath = $certificatePath"
-
-    Validate-AzureKeyVaultSecret -certificatePath $certificatePath -certificatePassword $certificatePassword
-
     if([string]::IsNullOrEmpty($azureKeyVaultName) -eq $true)
     {
+        Write-Verbose -Verbose "AzureKeyVaultName not specified, generating a random vault name"
         $randomString = Get-RandomString
-        $azureKeyVaultName = "vlt-" + $randomString
+        $azureKeyVaultName = "vault-" + $randomString
     }
-    
+
     Write-Verbose -Verbose "AzureKeyVaultName = $azureKeyVaultName"
 
     if([string]::IsNullOrEmpty($azureKeyVaultSecretName) -eq $true)
     {
+        Write-Verbose -Verbose "AzureKeyVaultSecretName not specified, generating a random secret name"
         $randomString = Get-RandomString
-        $azureKeyVaultSecretName = "sec-" + $randomString
+        $azureKeyVaultSecretName = "secret-" + $randomString
     }
 
     Write-Verbose -Verbose "AzureKeyVaultSecretName = $azureKeyVaultSecretName"
 
-    Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
+    $azureKeyVaultSecretId = Upload-CertificateOnAzureKeyVaultAsSecret -certificatePath $certificatePath -certificatePassword $certificatePassword -resourceGroupName $resourceGroupName -location $location -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretName $azureKeyVaultSecretName
+}
 
-    Create-AzureKeyVault -azureKeyVaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -Location $location
-
-    $secretValue = Get-SecretValueForAzureKeyVault -certificatePath $certificatePath -certificatePassword $certificatePassword
-
-    $azureKeyVaultSecret = Create-AzureKeyVaultSecret -azureKeyVaultName $azureKeyVaultName -secretName $azureKeyVaultSecretName -secretValue $secretValue
-
-    #Storing in temp variable so that we can cleanup Temp File only later on
-    $tempFile = Create-CSMForWinRMConfiguration -baseCsmFileContent $csmFileContent -protocol $protocol -resourceGroupName $resourceGroupName -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecret.Id
+if($winrmListeners -ne $none)
+{
+    #Storing in temp variable so that we can cleanup Temp file later on
+    $tempFile = Create-CSMForWinRMConfiguration -baseCsmFileContent $csmFileContent -winrmListeners $winrmListeners -resourceGroupName $resourceGroupName -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
 
     $csmFile = $tempFile
 }

@@ -339,17 +339,22 @@ function Get-MachineLogs
     }
 }
 
-function Create-AzureKeyVault
+function Create-AzureKeyVaultIfNotExist
 {
     param([string]$azureKeyVaultName,
     [string]$resourceGroupName,
     [string]$location)
 
-    Write-Verbose -Verbose "Creating Azure Key Vault with name $azureKeyVaultName in group $resourceGroupName at $location"
+    $azureKeyVault = Get-AzureKeyVault -VaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
 
-    $response = New-AzureKeyVault -VaultName $azureKeyVaultName -resourceGroupName $resourceGroupName -Location $location -EnabledForDeployment -Verbose -ErrorAction Stop
+    if($azureKeyVault -eq $null)
+    {
+        Write-Verbose -Verbose "Creating Azure Key Vault with name $azureKeyVaultName in group $resourceGroupName at $location"
 
-    Write-Host "Created Azure Key Vault for secrets"
+        $response = New-AzureKeyVault -VaultName $azureKeyVaultName -resourceGroupName $resourceGroupName -Location $location -EnabledForDeployment -ErrorAction Stop
+
+        Write-Host "Created Azure Key Vault for secrets"
+    }
 }
 
 function Create-AzureKeyVaultSecret

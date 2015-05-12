@@ -127,7 +127,7 @@ function Validate-AzureKeyVaultSecret
     param([string]$certificatePath,
           [string]$certificatePassword)
 
-    if (([string]::IsNullOrEmpty($certificatePassword) -eq $true) -or (-Not (Test-Path $certificatePath -pathType leaf)))
+    if (([string]::IsNullOrEmpty($certificatePath) -eq $true) -or (-Not (Test-Path $certificatePath -pathType leaf)))
     {
         Throw "Please specify valid certificate path"
     }
@@ -138,26 +138,58 @@ function Validate-AzureKeyVaultSecret
     }
 }
 
+function Upload-CertificateOnAzureKeyVaultAsSecret
+{
+    param([string]$certificatePath,
+    [string]$certificatePassword,
+    [string]$resourceGroupName,
+    [string]$location,
+    [string]$azureKeyVaultName,
+    [string]$azureKeyVaultSecretName)
+
+    #Find the matching certificate File
+    $certificatePath = Get-File $certificatePath
+    Write-Verbose -Verbose "CertificatePath = $certificatePath"
+
+    Validate-AzureKeyVaultSecret -certificatePath $certificatePath -certificatePassword $certificatePassword
+
+    Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
+
+    Create-AzureKeyVaultIfNotExist -azureKeyVaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -Location $location
+
+    $secretValue = Get-SecretValueForAzureKeyVault -certificatePath $certificatePath -certificatePassword $certificatePassword
+
+    $azureKeyVaultSecret = Create-AzureKeyVaultSecret -azureKeyVaultName $azureKeyVaultName -secretName $azureKeyVaultSecretName -secretValue $secretValue
+
+    $azureKeyVaultSecretId = $azureKeyVaultSecret.Id
+    
+    #TODO: Remove this log
+    Write-Verbose -Verbose "AzureKeyVaultSecretId = $azureKeyVaultSecretId"
+
+    return $azureKeyVaultSecretId
+}
+
 function Create-CSMForWinRMConfiguration
 {
     param([string]$baseCsmFileContent,
-          [string]$protocol,
+          [string]$winrmListeners,
           [string]$resourceGroupName,
           [string]$azureKeyVaultName,
           [string]$azureKeyVaultSecretId)
 
-    Write-Verbose -Verbose "Generating deplyoment template for WinRM configuration from base template file"
-    Write-Verbose -Verbose "Network Protocol : $protocol"
-    Write-Verbose -Verbose "azureKeyVaultSecretId : $azureKeyVaultSecretId"
-    . ./Constants.ps1
-
     $csmJTokenObject = [Newtonsoft.Json.Linq.JToken]::Parse($baseCsmFileContent)
-    $virtualMachineResources = $csmJTokenObject.SelectToken("resources") | Where-Object { $_["type"].Value -eq "Microsoft.Compute/virtualMachines" }
+    $virtualMachineResources = $csmJTokenObject.SelectToken($resources) | Where-Object { $_[$type].Value -eq $virtualMachineType }
 
     if($virtualMachineResources -eq $null)
     {
-        Throw "No virtual Machine Resource found in the deploymnet template"
+        Write-Warning  "No virtual Machine Resource found in the deployment template, can't add WinRm Configuration Node"
+        return
     }
+
+    Write-Verbose -Verbose "Generating deployment template for WinRM configuration from base template file"
+    Write-Verbose -Verbose "azureKeyVaultName : $azureKeyVaultName"
+    Write-Verbose -Verbose "azureKeyVaultSecretId : $azureKeyVaultSecretId"
+    . ./Constants.ps1
 
     # TODO: Explore to avoid if/else statement, didn't find better way to check if virtualMachineResources is returning as array or single item
     if ($virtualMachineResources -is [system.array])
@@ -166,14 +198,14 @@ function Create-CSMForWinRMConfiguration
 
         Foreach($virtualMachineResource in $virtualMachineResources)
         {
-            Add-NodesForWinRmConfiguration -jtokenObject $virtualMachineResource -resourceGroupName $resourceGroupName -protocol $protocol -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
+            Add-NodesForWinRmConfiguration -jtokenObject $virtualMachineResource -resourceGroupName $resourceGroupName -winrmListeners $winrmListeners -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
         }
     }
     else
     {
         Write-Verbose -Verbose "Found single Virtual Machine resource in the deployment template"
 
-        Add-NodesForWinRmConfiguration -jtokenObject $virtualMachineResources -resourceGroupName $resourceGroupName -protocol $protocol -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
+        Add-NodesForWinRmConfiguration -jtokenObject $virtualMachineResources -resourceGroupName $resourceGroupName -winrmListeners $winrmListeners -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
     }
 
     $tempFile = [System.IO.Path]::GetTempFileName()
@@ -187,18 +219,23 @@ function Add-NodesForWinRmConfiguration
 {
     param([Newtonsoft.Json.Linq.JObject]$jtokenObject,
           [string]$resourceGroupName,
-          [string]$protocol,
+          [string]$winrmListeners,
           [string]$azureKeyVaultName,
           [string]$azureKeyVaultSecretId)
 
-    $osProfile = $jtokenObject.SelectToken("properties.osProfile")
+    $osProfile = $jtokenObject.SelectToken($osProfile)
     if($osProfile -eq $null)
     {
-        Throw "No 'osProfile' found in Virtual Machine Resource, can't add WinRm Configuration Node'"
+        Write-Warning "No 'osProfile' found in Virtual Machine Resource, can't add WinRm Configuration Node'"
+        return
     }
 
-    Add-SecretsNode -jtokenObject $jtokenObject -resourceGroupName $resourceGroupName -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
-    Add-WindowsConfigurationNode -jtokenObject $jtokenObject -protocol $protocol -azureKeyVaultSecretId $azureKeyVaultSecretId
+    if($winrmListeners -eq $winRmHttps)
+    {
+        Add-SecretsNode -jtokenObject $jtokenObject -resourceGroupName $resourceGroupName -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
+    }
+
+    Add-WindowsConfigurationNode -jtokenObject $jtokenObject -winrmListeners $winrmListeners -azureKeyVaultSecretId $azureKeyVaultSecretId
 
     Write-Verbose -Verbose "Update OSProfile Node $osProfile"
 }
@@ -210,14 +247,14 @@ function Add-SecretsNode
           [string]$azureKeyVaultName,
           [string]$azureKeyVaultSecretId)
 
-    if($jtokenObject.SelectToken("secrets") -eq $null)
+    if($jtokenObject.SelectToken($secretsNode) -eq $null)
     {
         Write-Verbose -Verbose "No 'secrets' node found in virtual machine resource"
         $jArrayObject = New-Object 'Newtonsoft.Json.Linq.JArray'
-        $jtokenObject.properties.osProfile.Add("secrets", $jArrayObject)
+        $jtokenObject.properties.osProfile.Add($secretsNode, $jArrayObject)
     }
 
-    $secretsJObject = [Newtonsoft.Json.Linq.JToken]::Parse($secrets)
+    $secretsJObject = [Newtonsoft.Json.Linq.JToken]::Parse($secretsJson)
     $jtokenObject.properties.osProfile.secrets.Add($secretsJObject)
     Write-Verbose -Verbose "Added 'secrets' node for WinRM configuration"
 }
@@ -225,45 +262,41 @@ function Add-SecretsNode
 function Add-WindowsConfigurationNode
 {
     param([Newtonsoft.Json.Linq.JObject]$jtokenObject,
-          [string]$protocol,
+          [string]$winrmListeners,
           [string]$azureKeyVaultSecretId)
 
-    if($jtokenObject.SelectToken("windowsConfiguration") -eq $null)
+    if($jtokenObject.SelectToken($windowsConfigurationNode) -eq $null)
     {
         Write-Verbose -Verbose "No 'windowsConfiguration' node found in virtual machine resource"
         $jObject = New-Object 'Newtonsoft.Json.Linq.JObject'
-        $jtokenObject.properties.osProfile.Add("windowsConfiguration", $jObject)
+        $jtokenObject.properties.osProfile.Add($windowsConfigurationNode, $jObject)
     }
 
-    $jtokenObject.properties.osProfile.windowsConfiguration["provisionVMAgent"] = '"true"'
-    $jtokenObject.properties.osProfile.windowsConfiguration["enableAutomaticUpdates"] = '"true"'
+    $jtokenObject.properties.osProfile.windowsConfiguration[$provisionVMAgent] = '"true"'
+    $jtokenObject.properties.osProfile.windowsConfiguration[$enableAutomaticUpdates] = '"true"'
 
-    Switch ($protocol)
+    Switch ($winrmListeners)
     {
-         "WinRM HTTP" {
-             $protocolJObject=[Newtonsoft.Json.Linq.JToken]::Parse($winrmHttpListner)
+         $winRmHttp {
+             $winrmListenersJObject=[Newtonsoft.Json.Linq.JToken]::Parse($winrmHttpListenerJson)
          }
 
-         "WinRM HTTPS" {
-             $protocolJObject=[Newtonsoft.Json.Linq.JToken]::Parse($winrmHttpsListner)
+         $winRmHttps {
+             $winrmListenersJObject=[Newtonsoft.Json.Linq.JToken]::Parse($winrmHttpsListenerJson)
          }
 
-         "Both" {
-             $protocolJObject=[Newtonsoft.Json.Linq.JToken]::Parse($winrmBothListners)
-         }
- 
          default {
-              Write-Error("Invalid Protocol: $protocol.")
+              Write-Error("Invalid WinRM Listeners: $winrmListeners.")
          }
     }
 
-    $jtokenObject.properties.osProfile.windowsConfiguration["winRM"] = $protocolJObject
+    $jtokenObject.properties.osProfile.windowsConfiguration[$winRM] = $winrmListenersJObject
     Write-Verbose -Verbose "Added 'windowsConfiguration' node for WinRM configuration"
 }
 
 function Get-RandomString
 {
-    return [guid]::NewGuid().ToString("N").Substring(0,20)
+    return [guid]::NewGuid().ToString("N").Substring(0,17)
 }
 
 function Get-SecretValueForAzureKeyVault
@@ -277,7 +310,7 @@ function Get-SecretValueForAzureKeyVault
     $jsonObject = "
     {
     ""data"": ""$filecontentencoded"",
-    ""dataType"" :""pfx"",
+    ""dataType"" :""$pfxCertificateType"",
     ""password"": ""$certificatePassword""
     }"
 
