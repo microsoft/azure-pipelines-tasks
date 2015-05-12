@@ -71,7 +71,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName":"advanced",
-            "helpMarkDown": "Setting it to true will copy files in parellel on the target machines."
+            "helpMarkDown": "Setting it to true will copy files in parallel on the target machines."
         }
     ],
     "instanceNameFormat": "Copy files on machine group $(EnvironmentName)",
