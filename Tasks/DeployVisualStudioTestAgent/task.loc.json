@@ -118,7 +118,7 @@
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Deploy and configure Test Agent",
+  "instanceNameFormat": "Test Machine Group: $(environment)",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\DeployTestAgent.ps1",
