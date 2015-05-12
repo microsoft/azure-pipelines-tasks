@@ -379,7 +379,7 @@ function Get-ServiceEndPointDetails
 
     if ($serviceEndpoint -eq $null)
     {
-        throw "A Connected Service with name '$ConnectedServiceName' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
+        throw "A Connected Service with name '$ConnectedServiceName' could not be found.  Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
     }
 
     if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')
