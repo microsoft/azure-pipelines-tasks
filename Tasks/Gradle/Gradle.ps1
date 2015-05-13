@@ -49,7 +49,7 @@ if($jdkVersion -and $jdkVersion -ne "default")
 
 $arguments = "$options $tasks"
 Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
-Invoke-BatchScript -Path $wrapperScript -Arguments $arguments WorkingFolder $cwd
+Invoke-BatchScript -Path $wrapperScript -Arguments $arguments -WorkingFolder $cwd
 
 # Publish test results files
 $publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
