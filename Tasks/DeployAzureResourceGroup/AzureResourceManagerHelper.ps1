@@ -16,7 +16,7 @@ function Create-AzureResourceGroup
 
             $resourceGroup  = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
 
-            Write-Host "Created resource group $resourceGroup"
+            Write-Host (Get-LocalizedString -Key "Created resource group $resourceGroup")
 
         }
 
@@ -57,11 +57,11 @@ function Create-AzureResourceGroup
                     Write-Verbose -Verbose $error
                 }
 
-                Write-Host "Resource group deployment $resourceGroupName failed"
+                Write-Host (Get-LocalizedString -Key "Resource group deployment $resourceGroupName failed")
             }
             else
             {
-                Write-Host "Successfully created resource group deployment with name $resourceGroupName"
+                Write-Host (Get-LocalizedString -Key "Successfully created resource group deployment with name $resourceGroupName")
             }
 
             return $azureResourceGroupDeployment
@@ -155,13 +155,13 @@ function Get-Resources
         
         if($fqdnErrorCount -eq $azureResourceGroupResources.Count -and $azureResourceGroupResources.Count -ne 0)
         {
-            throw "Unable to get FQDN for all resources in ResourceGroup : $resourceGroupName"
+            throw (Get-LocalizedString -Key "Unable to get FQDN for all resources in ResourceGroup : '{0}'" -ArgumentList $resourceGroupName)
         }
         else
         {
             if($fqdnErrorCount -gt 0 -and $fqdnErrorCount -ne $azureResourceGroupResources.Count)
             {
-                 Write-Warning "Unable to get FQDN for $fqdnErrorCount resources in ResourceGroup : $resourceGroupName" -Verbose
+                Write-Warning (Get-LocalizedString -Key "Unable to get FQDN for {0} resources in ResourceGroup : '{1}'" -ArgumentList $fqdnErrorCount, $resourceGroupName)
             }
         }
     
@@ -224,7 +224,7 @@ function Get-FQDN
             }
             else
             {
-                Write-Host "Unable to find IPConfiguration of resource $resourceName" -Verbose
+                Write-Host (Get-LocalizedString -Key "Unable to find IPConfiguration of resource '{0}'" -ArgumentList $resourceName)
             }
         }
     }
@@ -242,19 +242,19 @@ function Refresh-SASToken
     {
         if ($csmParametersObject.ContainsKey($sasTokenParameterName) -eq $false)
         {
-            Throw "$sasTokenParameterName is not present in the csm parameter file. Specify correct parameter name"
+            throw (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $sasTokenParameterName)
         }
 
         if ($csmParametersObject.ContainsKey($moduleUrlParameterName) -eq $false)
         {
-            Throw "$moduleUrlParameterName is not present in the csm parameter file. Specify correct parameter name"
+            throw (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $moduleUrlParameterName)
         }
 
         $fullBlobUri = $csmParametersObject[$moduleUrlParameterName]
         $uri = $fullBlobUri -as [System.URI]
         if (($uri.AbsoluteURI -ne $null -And $uri.Scheme -match '[http|https]') -eq $false)
         {
-            Throw "$moduleUrlParameterName $fullBlobUri is not in the correct url format"
+            throw (Get-LocalizedString -Key "'{0}' '{1}' is not in the correct url format" -ArgumentList $moduleUrlParameterName, $fullBlobUri)
         }
 
         Write-Verbose -Verbose "Generating SAS token for $fullBlobUri"
@@ -290,7 +290,7 @@ function Refresh-SASToken
 
         $token  = New-AzureStorageBlobSASToken -Container $containerName -Blob $blobName -Permission r -StartTime $startTime -ExpiryTime $endTime -Verbose -ErrorAction Stop
 
-        Write-Host "Generated SAS token for $uri"
+        Write-Host (Get-LocalizedString -Key "Generated SAS token for '{0}'" -ArgumentList $uri)
 
         Write-Verbose -Verbose "Replacing SAS token for parameter $sasTokenParameterName"
 
@@ -381,13 +381,13 @@ function Get-ServiceEndPointDetails
 {
     param([String][Parameter(Mandatory = $true)]$ConnectedServiceName)
 
-    Write-Host "entering in Get-ServiceEndPointDetails"
+    Write-Host (Get-LocalizedString -Key "entering in Get-ServiceEndPointDetails")
 
     $serviceEndpoint = Get-ServiceEndpoint -Name $ConnectedServiceName -Context $distributedTaskContext
 
     if ($serviceEndpoint -eq $null)
     {
-        throw "A Connected Service with name '$ConnectedServiceName' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
+        throw (Get-LocalizedString -Key "A Connected Service with name '{0}' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI." -ArgumentList $ConnectedServiceName)
     }
 
     if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')
@@ -412,12 +412,12 @@ function Get-ServiceEndPointDetails
         $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $password)
         $propertyBag.Add("Password", $property)
 
-        Write-Host "Completed Get-ServiceEndPointDetails"
+        Write-Host (Get-LocalizedString -Key "Completed Get-ServiceEndPointDetails")
 
         return $propertyBag
     }
     else
     {
-        throw "Unsupported authorization scheme for azure endpoint = " + $serviceEndpoint.Authorization.Scheme
+        throw (Get-LocalizedString -Key "Unsupported authorization scheme for azure endpoint = '{0}'" -ArgumentList $serviceEndpoint.Authorization.Scheme)
     }
 }
