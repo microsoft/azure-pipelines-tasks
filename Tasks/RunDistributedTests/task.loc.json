@@ -22,8 +22,8 @@
   "minimumAgentVersion": "1.83.0",
   "groups": [
     {
-      "name": "testEnvironment",
-      "displayName": "ms-resource:loc.group.displayName.testEnvironment",
+      "name": "testMachineGroups",
+      "displayName": "ms-resource:loc.group.displayName.testMachineGroups",
       "isExpanded": true
     },
     {
@@ -39,13 +39,13 @@
   ],
   "inputs": [
     {
-      "name": "environment",
+      "name": "testMachineGroup",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.environment",
+      "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
-      "groupName": "testEnvironment"
+      "groupName": "testMachineGroups"
     },
     {
       "name": "dropLocation",
@@ -127,9 +127,9 @@
       "groupName": "testSettings"
     },
     {
-      "name": "autEnvironmentName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.autEnvironmentName",
+      "name": "autMachineGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.autMachineGroup",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
@@ -138,7 +138,13 @@
   ],
   "sourceDefinitions": [
     {
-      "target": "environment",
+      "target": "testMachineGroup",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    },
+    {
+      "target": "autMachineGroup",
       "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
       "selector": "jsonpath:$.value[*].name",
       "authKey": "tfs:DevTestLabs"

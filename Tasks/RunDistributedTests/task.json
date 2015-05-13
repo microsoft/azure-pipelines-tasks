@@ -20,7 +20,7 @@
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
-            "name": "testEnvironment",
+            "name": "testMachineGroups",
             "displayName": "Test Machine Group",
             "isExpanded": true
         },
@@ -37,13 +37,13 @@
     ],
     "inputs": [
         {
-            "name": "environment",
+            "name": "testMachineGroup",
             "type": "pickList",
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
-            "groupName": "testEnvironment"
+            "groupName": "testMachineGroups"
         },
         {
             "name": "dropLocation",
@@ -125,8 +125,8 @@
             "groupName": "testSettings"
         },
         {
-            "name": "autEnvironmentName",
-            "type": "string",
+            "name": "autMachineGroup",
+            "type": "pickList",
             "label": "Application Under Test Machine Group",
             "defaultValue": "",
             "required": false,
@@ -136,11 +136,17 @@
     ],
     "sourceDefinitions": [ 
      { 
-         "target": "environment", 
+         "target": "testMachineGroup", 
          "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
          "selector": "jsonpath:$.value[*].name", 
          "authKey": "tfs:DevTestLabs" 
-     } 
+     },
+     { 
+         "target": "autMachineGroup", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     }
     ], 
     "instanceNameFormat": "Test assemblies $(sourcefilters)",
     "execution": {
