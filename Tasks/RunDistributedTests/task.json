@@ -73,24 +73,24 @@
             "groupName": "testSettings"
         },
         {
-		    "name": "platform", 
-		    "type": "string", 
-		    "label": "Platform", 
-		    "defaultValue":"", 
-		    "required":false,
-			"groupName": "testSettings"
-		},
-		{
-		    "name": "configuration", 
-		    "type": "string", 
-		    "label": "Configuration", 
-		    "defaultValue":"", 
-		    "required":false,
-			"groupName": "testSettings"
-		},
+ 	          "name": "platform", 
+	          "type": "string", 
+	          "label": "Platform", 
+	          "defaultValue":"", 
+	          "required":false,
+	          "groupName": "testSettings"
+	      },
+	      {
+	          "name": "configuration", 
+	          "type": "string", 
+	          "label": "Configuration", 
+	          "defaultValue":"", 
+	          "required":false,
+	          "groupName": "testSettings"
+	      },
         {
             "name": "runSettingsFile",
-            "type": "string",
+            "type": "filePath",
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,

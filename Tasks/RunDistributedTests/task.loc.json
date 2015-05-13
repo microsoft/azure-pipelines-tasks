@@ -92,7 +92,7 @@
     },
     {
       "name": "runSettingsFile",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.runSettingsFile",
       "defaultValue": "",
       "required": false,
