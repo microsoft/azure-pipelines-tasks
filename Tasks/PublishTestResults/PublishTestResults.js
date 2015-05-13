@@ -1,12 +1,10 @@
-var fs = require('fs');
-var glob = require('glob');
 var tl = require('vso-task-lib');
 
 var testRunner = tl.getInput('testRunner', true);
 var testResultsFiles = tl.getInput('testResultsFiles', true);
 var mergeResults = tl.getInput('mergeTestResults');
 var platform = tl.getInput('platform');
-var config = tl.getInput('config');
+var config = tl.getInput('configuration');
 
 tl.debug('testRunner: ' + testRunner);
 tl.debug('testResultsFiles: ' + testResultsFiles);
@@ -22,7 +20,7 @@ var onError = function (errorMsg) {
 //check for pattern in testResultsFiles
 if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
   tl.debug('Pattern found in testResultsFiles parameter');
-  var matchingTestResultsFiles = glob.sync(testResultsFiles);
+  var matchingTestResultsFiles = tl.findFiles(testResultsFiles);
   tl.debug('matchingTestResultsFiles = ' + matchingTestResultsFiles);
 }
 else {
