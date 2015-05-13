@@ -20,15 +20,16 @@ Write-Verbose "modifyEnvironment (converted) = $allowModifyEnvironment"
 
 # Check for file existence
 if ([System.IO.File]::Exists($filename))
-{
-    $currentLocation = Get-Location
-    Write-Verbose "Current working folder: $currentLocation"
+{    
     if ($workingFolder)
     {
-        Write-Verbose "Changing the current working folder to: $workingFolder"
-        Set-Location -Path $workingFolder
+        $currentLocation = $workingFolder
+        Write-Verbose "Current working folder: $currentLocation"
+    }
+    else
+    {
         $currentLocation = Get-Location
-        Write-Verbose "New working folder: $currentLocation"
+        Write-Verbose "Current working folder: $currentLocation"
     }
 
     if ($allowModifyEnvironment)
@@ -36,11 +37,11 @@ if ([System.IO.File]::Exists($filename))
         Write-Verbose "Invoking script $filename with AllowScriptToChangeEnvironment flag set"
         if ($arguments)
         {
-            Invoke-BatchScript $filename -AllowScriptToChangeEnvironment -Arguments $arguments
+            Invoke-BatchScript $filename -AllowScriptToChangeEnvironment -Arguments $arguments -WorkingFolder $workingFolder
         }
         else
         {
-            Invoke-BatchScript $filename -AllowScriptToChangeEnvironment 
+            Invoke-BatchScript $filename -AllowScriptToChangeEnvironment -WorkingFolder $workingFolder
         }
     }
     else
@@ -48,11 +49,11 @@ if ([System.IO.File]::Exists($filename))
         Write-Verbose "Invoking script $filename without AllowScriptToChangeEnvironment flag"
         if ($arguments)
         {
-            Invoke-BatchScript $filename -Arguments $arguments
+            Invoke-BatchScript $filename -Arguments $arguments -WorkingFolder $workingFolder
         }
         else
         {
-            Invoke-BatchScript $filename
+            Invoke-BatchScript $filename -WorkingFolder $workingFolder
         }
     }
 }
