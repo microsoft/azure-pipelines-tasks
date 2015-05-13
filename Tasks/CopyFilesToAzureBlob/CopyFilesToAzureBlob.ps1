@@ -28,13 +28,13 @@ $copyResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAc
 $status = $copyResponse.Status
 $log = $copyResponse.Log
 
-Write-Output (Get-LocalizedString -Key 'Copy Status to blob : {0}' -ArgumentList $status)
+Write-Output (Get-LocalizedString -Key "Copy Status to blob : '{0}'" -ArgumentList $status)
 Write-Verbose "Logs for upload to blob : $log" -Verbose
 
 if($copyResponse.Status -ne "Succeeded")
 {
      $error = $copyResponse.Error
-     throw (Get-LocalizedString -Key 'Upload to blob failed. {0}' -ArgumentList $error)
+     throw (Get-LocalizedString -Key "Upload to blob failed. '{0}'" -ArgumentList $error)
 }
 
 Write-Verbose "Leaving script CopyFilesToAzureBlob.ps1" -Verbose

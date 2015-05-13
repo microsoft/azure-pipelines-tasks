@@ -73,7 +73,7 @@ function Validate-Port([int] $port )
 
     if ($port -lt 0 -or $port -gt 65535)
     {
-        throw (Get-LocalizedString -Key 'Port {0} is Invalid. The valid port range is [0,65535]' -ArgumentList $port)
+        throw (Get-LocalizedString -Key "Port '{0}' is Invalid. The valid port range is [0,65535]" -ArgumentList $port)
     }
 }
 
@@ -87,14 +87,14 @@ function Parse-PortBinding
 
         if( $ports.Count -ne 2 )
         {
-            throw (Get-LocalizedString -Key 'Port Bindings argument is not valid.  Valid port number format is {0}.' -ArgumentList 'hostport:containerport')
+            throw (Get-LocalizedString -Key "Port Bindings argument is not valid.  Valid port number format is '{0}'." -ArgumentList 'hostport:containerport')
         }
         elseif( $ports[1].Trim().Equals("") )
         {
-            throw (Get-LocalizedString -Key 'Port Bindings argument is not valid. Container port should not be empty.')
+            throw (Get-LocalizedString -Key "Port Bindings argument is not valid. Container port should not be empty.")
         }
 
-        Write-Host (Get-LocalizedString -Key 'Host Port: {0}, Container Port: {1}' -ArgumentList $ports[0], $ports[1])
+        Write-Host (Get-LocalizedString -Key "Host Port: '{0}', Container Port: '{1}'" -ArgumentList $ports[0], $ports[1])
 
         Validate-Port -port $ports[0]
         Validate-Port -port $ports[1]
@@ -170,7 +170,7 @@ function Handle-ImageNotFoundError($response)
     $imageNotFoundErrormsg = ("image {0} not found" -f $repository)
     if($response.contains($imageNotFoundErrormsg))
     {
-        throw (Get-LocalizedString -Key '{0} on docker hub' -ArgumentList $imageNotFoundErrormsg)
+        throw (Get-LocalizedString -Key "'{0}' on docker hub" -ArgumentList $imageNotFoundErrormsg)
     }
 }
 
@@ -208,7 +208,7 @@ function Create-Container()
 		}
 		else
 		{
-            Write-Host (Get-LocalizedString -Key "Exception Occurred while creating the container: {0}" -ArgumentList $_.Exception.Message)
+            Write-Host (Get-LocalizedString -Key "Exception Occurred while creating the container: '{0}'" -ArgumentList $_.Exception.Message)
 			throw $_
 		}
 	}
@@ -245,7 +245,7 @@ function Delete-Container($name)
 		# If the status code is 404, it means container doesn't exist
 		if( -not $errorCode -eq $notFoundErrorCode )
 		{
-            Write-Host (Get-LocalizedString -Key "Exception Occurred while deleting the container: {0}" -ArgumentList $_.Exception.Message)
+            Write-Host (Get-LocalizedString -Key "Exception Occurred while deleting the container: '{0}'" -ArgumentList $_.Exception.Message)
 			throw $_
 		}
 	}
@@ -280,7 +280,7 @@ try
 }
 catch
 {
-    Write-Host (Get-LocalizedString -Key "Exception Occurred while deploying: {0}" -ArgumentList $_.Exception.Message)
+    Write-Host (Get-LocalizedString -Key "Exception Occurred while deploying: '{0}'" -ArgumentList $_.Exception.Message)
     throw $_
 }
 

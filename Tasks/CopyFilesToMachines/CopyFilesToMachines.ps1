@@ -124,7 +124,7 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
         $machine = $resourceProperties.fqdn
 		
-        Write-Output (Get-LocalizedString -Key 'Copy Started for - {0}' -ArgumentList $machine)
+        Write-Output (Get-LocalizedString -Key "Copy Started for - '{0}'" -ArgumentList $machine)
 
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
@@ -134,7 +134,7 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $status = $copyResponse.Status
         Output-ResponseLogs -operationName "copy" -fqdn $machine -deploymentResponse $copyResponse
         
-        Write-Output (Get-LocalizedString -Key 'Copy Status for machine {0} : {1}' -ArgumentList $machine, $status)
+        Write-Output (Get-LocalizedString -Key "Copy Status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 		
 		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 		
@@ -159,7 +159,7 @@ else
 		
         $machine = $resourceProperties.fqdn
 		
-        Write-Output (Get-LocalizedString -Key 'Copy Started for - {0}' -ArgumentList $machine)
+        Write-Output (Get-LocalizedString -Key "Copy Started for - '{0}'" -ArgumentList $machine)
 		
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
@@ -193,7 +193,7 @@ else
 
                  Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
 				 
-                 Write-Output (Get-LocalizedString -Key 'Copy Status for machine {0} : {1}' -ArgumentList $machine, $status)
+                 Write-Output (Get-LocalizedString -Key "Copy Status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 				 
 				 DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
               } 
