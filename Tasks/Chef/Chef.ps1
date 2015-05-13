@@ -48,7 +48,7 @@ function Validate-AttributesInput()
 	}
 	catch
 	{
-        throw (Get-LocalizedString -Key "Give the environment attribute key value pairs to be updated as proper json. ex: {0}" -ArgumentList "{`"default_attributes.websiteName`":`"MyWebsite`",`"override_attributes.db`":`"MyDb`"}")
+        throw (Get-LocalizedString -Key "Give the environment attribute key value pairs to be updated as proper json. ex: '{0}'" -ArgumentList "{`"default_attributes.websiteName`":`"MyWebsite`",`"override_attributes.db`":`"MyDb`"}")
 	}
 
 	Write-Verbose "Parsed environment attributes" -verbose
