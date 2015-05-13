@@ -26,13 +26,13 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 		}
 		catch
 		{
-			Write-Warning -Verbose "Caught exception while installing Test Agent"
+            Write-Warning (Get-LocalizedString -Key "Caught exception while installing Test Agent")
 			throw $_.Exception
 		}
 
 		if(-not ($exitCode -eq 0 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641))
 		{
-			throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
+            throw (Get-LocalizedString -Key "The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -ArgumentList $exitCode.ToString())
 		}
 
 		if($exitCode -eq 3010 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641)
@@ -57,7 +57,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
    		}
 		else
 		{
-			throw "Look up in registry failed. Test agent failed to install."
+            throw (Get-LocalizedString -Key "Look up in registry failed. Test agent failed to install.")
 		}
 	}
 }

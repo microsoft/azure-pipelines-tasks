@@ -36,7 +36,7 @@ function Locate-TestVersionAndVsRoot([string] $Version)
     if (-not $installRoot)
     {
         # We still got nothing
-        throw "Unable to find TestAgent installation path"
+        throw (Get-LocalizedString -Key "Unable to find TestAgent installation path")
     }
     return $installRoot
 }
@@ -588,7 +588,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
         $stderr = $p.StandardError.ReadToEnd()
 
         Write-Verbose -Message ("Stdout : {0}" -f $stdout) -Verbose
-        Write-Warning -Message ("Stderr : {0}" -f $stderr)
+        Write-Warning (Get-LocalizedString -Key "Stderr : '{0}'" -ArgumentList $stderr)
         Write-Verbose -Message ("Exit code : {0}" -f $p.ExitCode) -Verbose
 
         $out = @{
@@ -599,7 +599,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
         return $out
     }
 
-    throw "Did not find TestAgentConfig.exe at : $exePath. Ensure that TestAgent is installed."
+    throw (Get-LocalizedString -Key "Did not find TestAgentConfig.exe at : '{0}'. Ensure that TestAgent is installed." -ArgumentList $exePath)
 }
 
 function ConfigureTestAgent
@@ -638,7 +638,7 @@ function ConfigureTestAgent
     }
     else
     {
-        throw ("TestAgent Configuration failed with exit code {0}" -f $LASTEXITCODE)
+        throw (Get-LocalizedString -Key "TestAgent Configuration failed with exit code {0}" -ArgumentList $LASTEXITCODE)
     }
 }
 
