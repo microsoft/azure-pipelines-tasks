@@ -247,7 +247,7 @@ function Delete-Container($name)
 		# If the status code is 404, it means container doesn't exist
 		if( -not $errorCode -eq $notFoundErrorCode )
 		{
-            Write-Host (Get-LocalizedString -Key "Exception Occurred while deleting the container: '{0}'" -ArgumentList $_.Exception.Message)
+            Write-Host (Get-LocalizedString -Key "Exception occurred while deleting the container: '{0}'" -ArgumentList $_.Exception.Message)
 			throw $_
 		}
 	}
