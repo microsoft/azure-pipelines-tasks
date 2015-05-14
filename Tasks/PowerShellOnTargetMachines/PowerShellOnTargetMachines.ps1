@@ -15,8 +15,8 @@ Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
 
-. ./RunPowerShellHelper.ps1
-. ./RunPowerShellJob.ps1
+. ./PowerShellHelper.ps1
+. ./PowerShellJob.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -210,4 +210,4 @@ if($envOperationStatus -ne "Passed")
     throw "deployment on one or more machine failed."
 }
 
-Write-Verbose "Leaving script RunPowerShellOnTargetMachines.ps1" -Verbose
+Write-Verbose "Leaving script PowerShellOnTargetMachines.ps1" -Verbose
