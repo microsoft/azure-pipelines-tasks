@@ -43,7 +43,7 @@
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of Test Machine Group on which tests need to be run.",
+            "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
             "groupName": "testMachineGroups"
         },       
         {
@@ -52,17 +52,8 @@
             "label": "Deploy to machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'",
+            "helpMarkDown": "Optionally specify comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'.",
             "groupName": "testMachineGroups"
-        },
-        {
-            "name": "runAsProcess",
-            "type": "boolean",
-            "label": "Interactive Process",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Denotes if test agent needs to run as interactive process.",
-            "groupName": "agentConfiguration"
         },
         {
             "name": "machineUserName",
@@ -70,7 +61,7 @@
             "label": "Username",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The username with which test agent process needs to run.",
+            "helpMarkDown": "Username with which test agent needs to run.",
             "groupName": "agentConfiguration"
         },
         {
@@ -79,7 +70,16 @@
             "label": "Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The password for the username given above.",
+            "helpMarkDown": "Password for the username given above.",
+            "groupName": "agentConfiguration"
+        },
+        {
+            "name": "runAsProcess",
+            "type": "boolean",
+            "label": "Interactive Process",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Denotes if test agent needs to run as an interactive process, needed for Coded UI Tests.",
             "groupName": "agentConfiguration"
         },
         {
