@@ -12,11 +12,6 @@ tl.debug('mergeResults: ' + mergeResults);
 tl.debug('platform: ' + platform);
 tl.debug('config: ' + config);
 
-var onError = function (errorMsg) {
-  tl.error(errorMsg);
-  tl.exit(1);
-}
-
 //check for pattern in testResultsFiles
 if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
   tl.debug('Pattern found in testResultsFiles parameter');
@@ -30,7 +25,8 @@ else {
 }
 
 if(!matchingTestResultsFiles) {
-  onError('No test result files matching ' + testResultsFiles + ' were found.');  
+  tl.warning('No test result files matching ' + testResultsFiles + ' were found.');  
+  tl.exit(0);
 }
 
 var tp = new tl.TestPublisher(testRunner);
