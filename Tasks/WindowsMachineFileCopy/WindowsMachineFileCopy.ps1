@@ -7,7 +7,7 @@ param (
     [string]$deployFilesInParallel
     )
 
-Write-Verbose "Entering script DeployFilesToMachines.ps1" -Verbose
+Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
@@ -15,8 +15,8 @@ Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
-. ./CopyJob.ps1
-. ./CopyFilesHelper.ps1
+. ./WindowsMachineFileCopyJob.ps1
+. ./WindowsMachineFileCopyHelper.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
@@ -206,3 +206,4 @@ if($envOperationStatus -ne "Passed")
     throw "copy to one or more machine failed."
 }
 
+Write-Verbose "Leaving script WindowsMachineFileCopy.ps1" -Verbose
