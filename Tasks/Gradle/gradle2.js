@@ -1,8 +1,17 @@
 ﻿var tl = require('vso-task-lib');
-var fs = require('fs')
+var fs = require('fs');
+var path = require('path');
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
 fs.chmodSync(wrapperScript, "755"); //Make sure the wrapper script is executable
+
+//working directory
+var cwd = tl.getInput('cwd');
+if(!cwd) {
+  cwd = path.dirname(wrapperScript);
+}
+tl.cd(cwd);
+
 var gb = new tl.ToolRunner(wrapperScript);
 
 var options = tl.getInput('options');
