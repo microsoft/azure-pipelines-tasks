@@ -16,7 +16,7 @@ Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
 . ./WindowsMachineFileCopyJob.ps1
-. ./WindowsMachineCopyFilesHelper.ps1
+. ./WindowsMachineFileCopyHelper.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
