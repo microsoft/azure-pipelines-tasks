@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Run PowerShell on Target Machines",
+  "loc.helpMarkDown": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s)",
   "loc.description": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.EnvironmentName": "Machine Group",

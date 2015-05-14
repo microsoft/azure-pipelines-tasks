@@ -6,7 +6,7 @@
   "name": "RunPowerShellOnTargetMachines",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s)",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Preview",
