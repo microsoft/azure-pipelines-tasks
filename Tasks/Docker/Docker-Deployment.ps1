@@ -172,7 +172,7 @@ function Handle-ImageNotFoundError($response)
     $imageNotFoundErrormsg = ("image {0} not found" -f $repository)
     if($response.contains($imageNotFoundErrormsg))
     {
-        throw (Get-LocalizedString -Key "'{0}' on docker hub" -ArgumentList $imageNotFoundErrormsg)
+        throw (Get-LocalizedString -Key "image '{0}' not found on docker hub" -ArgumentList $repository)
     }
 }
 
