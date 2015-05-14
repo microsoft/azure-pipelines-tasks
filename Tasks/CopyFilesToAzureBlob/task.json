@@ -3,6 +3,7 @@
     "name": "CopyFilesToAzureBlob",
     "friendlyName": "Copy Files To Azure Blob",
     "description": "Copy Files To Azure Blob",
+    "helpMarkDown": "Copy Files To Azure Blob",
     "category": "Utility",
     "visibility": [
                  "Preview",

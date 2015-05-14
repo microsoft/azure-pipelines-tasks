@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "Consente di compilare con il sistema di compilazione multipiattaforma CMake",
+  "loc.input.label.cwd": "Directory di lavoro",
+  "loc.input.label.args": "Argomenti"
+}

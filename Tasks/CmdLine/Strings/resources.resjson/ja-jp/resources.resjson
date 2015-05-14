@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "コマンド ライン",
+  "loc.description": "引数を持つコマンド ラインを実行します",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.filename": "ツール",
+  "loc.input.label.arguments": "引数",
+  "loc.input.label.workingFolder": "作業フォルダー",
+  "loc.input.label.errorPattern": "エラーのパターン",
+  "loc.input.label.warningPattern": "警告のパターン",
+  "loc.input.label.failOnStandardError": "標準エラーで失敗します"
+}

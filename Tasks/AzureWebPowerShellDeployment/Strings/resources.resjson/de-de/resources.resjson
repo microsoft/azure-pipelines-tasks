@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Bereitstellung der Azure-Website",
+  "loc.description": "Eine Website bei Microsoft Azure bereitstellen",
+  "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
+  "loc.input.label.WebSiteLocation": "Websitespeicherort",
+  "loc.input.label.WebSiteName": "Websitename",
+  "loc.input.label.Package": "Paket",
+  "loc.input.label.AdditionalArguments": "Zusätzliche Argumente"
+}

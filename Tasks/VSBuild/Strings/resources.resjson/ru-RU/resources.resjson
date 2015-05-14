@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Сборка Visual Studio",
+  "loc.description": "Сборка с помощью MSBuild в командной строке разработчика Visual Studio",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.solution": "Решение",
+  "loc.input.label.msbuildArgs": "Аргументы MSBuild",
+  "loc.input.label.platform": "Платформа",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.label.clean": "Очистить",
+  "loc.input.label.restoreNugetPackages": "Восстановить пакеты NuGet",
+  "loc.input.label.vsLocationMethod": "Visual Studio",
+  "loc.input.label.vsVersion": "Версия Visual Studio",
+  "loc.input.label.vsLocation": "Расположение Visual Studio",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Версия MSBuild",
+  "loc.input.label.msbuildArchitecture": "Архитектура MSBuild",
+  "loc.input.label.msbuildLocation": "Путь к MSBuild",
+  "loc.input.label.logProjectEvents": "Записать сведения о проекте"
+}

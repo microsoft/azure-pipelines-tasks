@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Android 서명",
+  "loc.description": "Android APK 파일 서명 및 정렬",
+  "loc.group.displayName.jarsignerOptions": "Jarsigner 옵션",
+  "loc.group.displayName.zipalignOptions": "Zipalign 옵션",
+  "loc.input.label.files": "APK 파일",
+  "loc.input.label.jarsign": "APK 서명",
+  "loc.input.label.keystoreFile": "Keystore 파일",
+  "loc.input.label.keystorePass": "Keystore 암호",
+  "loc.input.label.keystoreAlias": "별칭",
+  "loc.input.label.keyPass": "키 암호",
+  "loc.input.label.jarsignerArguments": "Jarsigner 인수",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Zipalign 위치"
+}

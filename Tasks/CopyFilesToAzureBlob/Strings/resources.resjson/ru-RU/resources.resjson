@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Копирование файлов в BLOB-объект Azure",
+  "loc.description": "Копирование файлов в BLOB-объект Azure",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure",
+  "loc.input.label.SourcePath": "Источник",
+  "loc.input.label.StorageAccount": "Учетная запись хранения",
+  "loc.input.label.ContainerName": "ContainerName",
+  "loc.input.label.BlobPrefix": "Префикс BLOB-объекта"
+}

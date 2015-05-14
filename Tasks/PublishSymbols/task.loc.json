@@ -6,6 +6,7 @@
   "name": "PublishSymbols",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Index your source code and publish symbols to a file share",
   "category": "Build",
   "visibility": [
     "Build"

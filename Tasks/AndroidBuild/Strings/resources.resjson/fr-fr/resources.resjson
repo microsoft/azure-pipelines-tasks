@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Build Android",
+  "loc.description": "Générer une application Android à l'aide de Gradle et démarrer éventuellement l'émulateur pour les tests unitaires",
+  "loc.group.displayName.emulatorOptions": "Options de l'émulateur",
+  "loc.input.label.gradleWrapper": "Emplacement du wrapper Gradle",
+  "loc.input.label.gradleProj": "Répertoire du projet",
+  "loc.input.label.gradleArguments": "Arguments",
+  "loc.input.label.startEmulator": "Démarrer l'émulateur Android",
+  "loc.input.label.emulatorTarget": "Kit de développement logiciel (SDK) cible de l'émulateur",
+  "loc.input.label.emulatorDevice": "Appareil d'émulation"
+}

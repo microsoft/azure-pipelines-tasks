@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "Развертывание образа Docker на удаленном компьютере",
+  "loc.input.label.DockerEndpoint": "Конечная точка Docker",
+  "loc.input.label.Repository": "Репозиторий",
+  "loc.input.label.Tag": "Тег",
+  "loc.input.label.ContainerName": "Имя контейнера",
+  "loc.input.label.PortBindings": "Привязки порта"
+}

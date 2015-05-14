@@ -3,7 +3,8 @@ function Create-AzureResourceGroup
     param([string]$csmFile, 
           [System.Collections.Hashtable]$csmParametersObject,
           [string]$resourceGroupName,
-          [string]$location)
+          [string]$location,
+          [string]$overrideParameters)
     
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
@@ -20,18 +21,25 @@ function Create-AzureResourceGroup
         }
 
         $startTime = Get-Date
-        #$startTime = $startTime.ToUniversalTime()
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
         Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
 
         if (!$csmParametersObject)
         {
-            $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError
+            $azureCommand = "New-AzureResourceGroupDeployment"
+            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+            $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+            Write-Host "$finalCommand"
+            Invoke-Expression -Command $finalCommand
         }
         else
         {
-            $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -TemplateParameterObject $csmParametersObject -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError
+            $azureCommand = "New-AzureResourceGroupDeployment"
+            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+            $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+            Write-Host "$finalCommand"
+            Invoke-Expression -Command $finalCommand
         }
 
         if ($azureResourceGroupDeployment)
@@ -379,7 +387,7 @@ function Get-ServiceEndPointDetails
 
     if ($serviceEndpoint -eq $null)
     {
-        throw "A Connected Service with name '$ConnectedServiceName' could not be found.  Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
+        throw "A Connected Service with name '$ConnectedServiceName' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
     }
 
     if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')

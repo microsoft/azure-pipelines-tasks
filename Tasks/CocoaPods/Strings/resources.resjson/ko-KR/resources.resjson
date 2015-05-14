@@ -1,0 +1,5 @@
+{
+  "loc.friendlyName": "CocoaPods",
+  "loc.description": "CocoaPods는 Swift 및 Objective-C Cocoa 프로젝트의 종속성 관리자입니다. pod install을 실행합니다.",
+  "loc.input.label.cwd": "작업 디렉터리"
+}

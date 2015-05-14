@@ -59,14 +59,14 @@ if(Test-Path -Path $csmParametersFile -PathType Leaf)
 
 Check-EnvironmentNameAvailability -environmentName $resourceGroupName
 
-$parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent -overrideParameters $overrideParameters
+$parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
 $parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameterName -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
 
 Switch-AzureMode AzureResourceManager
 
 $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
 
-$resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location
+$resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
 
 Initialize-DTLServiceHelper
 

@@ -2,7 +2,8 @@
   "id": "9648625C-1523-4EB5-B015-DFE7C685840C",
   "name": "QuickPerfTest",
   "friendlyName": "Cloud-based Web Performance Test",
-  "description": "Quickly find perf regressions to your website under load. Powered by VS Online.",
+  "description": "Quickly find perf regressions to your website under load. Powered by VS Online",
+  "helpMarkDown": "Quickly find perf regressions to your website under load. Powered by VS Online",
   "category": "Test",
   "visibility": [
                   "Preview",

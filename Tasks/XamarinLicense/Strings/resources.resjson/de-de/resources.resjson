@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Xamarin-Lizenz",
+  "loc.description": "Xamarin-Lizenzen aktivieren oder deaktivieren",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.action": "Aktion",
+  "loc.input.label.email": "E-Mail",
+  "loc.input.label.password": "Kennwort",
+  "loc.input.label.activateAndroid": "Xamarin.Android aktivieren",
+  "loc.input.label.timeout": "Zeitüberschreitung in Sekunden"
+}

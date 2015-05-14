@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Сборка Android",
+  "loc.description": "Сборка приложения Android с помощью Gradle и при необходимости запуск эмулятора для модульных тестов",
+  "loc.group.displayName.emulatorOptions": "Параметры эмулятора",
+  "loc.input.label.gradleWrapper": "Расположение программы-оболочки Gradle",
+  "loc.input.label.gradleProj": "Каталог проекта",
+  "loc.input.label.gradleArguments": "Аргументы",
+  "loc.input.label.startEmulator": "Запустить эмулятор Android",
+  "loc.input.label.emulatorTarget": "Пакет SDK для платформы эмулятора",
+  "loc.input.label.emulatorDevice": "Устройство эмулятора"
+}

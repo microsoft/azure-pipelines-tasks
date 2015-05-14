@@ -3,6 +3,7 @@
     "name": "Gradle",
     "friendlyName": "Gradle",
     "description": "Build using a Gradle wrapper script",
+    "helpMarkDown": "Build using a Gradle wrapper script",
     "category": "Build",
     "visibility": [
                 "Build"

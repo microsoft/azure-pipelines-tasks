@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Déploiement d'un service cloud Azure",
+  "loc.description": "Déployer un service cloud Azure",
+  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
+  "loc.input.label.StorageAccount": "Compte de stockage",
+  "loc.input.label.ServiceName": "Nom du service",
+  "loc.input.label.ServiceLocation": "Emplacement du service",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "Environnement (emplacement)",
+  "loc.input.label.AllowUpgrade": "Autoriser la mise à niveau"
+}

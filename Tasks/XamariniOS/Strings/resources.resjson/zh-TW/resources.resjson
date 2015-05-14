@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.description": "在 Mac OS 上使用 Xamarin 建置 iOS 應用程式",
+  "loc.input.label.solution": "方案",
+  "loc.input.label.configuration": "組態",
+  "loc.input.label.mdtoolLocation": "覆寫 mdtool 的路徑",
+  "loc.input.label.forSimulator": "iOS 模擬器的組建"
+}

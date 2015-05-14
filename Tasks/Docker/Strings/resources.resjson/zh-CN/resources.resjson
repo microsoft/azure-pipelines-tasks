@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "泊坞窗",
+  "loc.description": "将泊坞窗图像部署到远程计算机",
+  "loc.input.label.DockerEndpoint": "泊坞窗终结点",
+  "loc.input.label.Repository": "存储库",
+  "loc.input.label.Tag": "标记",
+  "loc.input.label.ContainerName": "容器名称",
+  "loc.input.label.PortBindings": "端口绑定"
+}

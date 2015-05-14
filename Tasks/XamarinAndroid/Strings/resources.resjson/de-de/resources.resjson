@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.description": "Android-App mit Xamarin erstellen",
+  "loc.group.displayName.msbuildOptions": "MSBuild-Optionen",
+  "loc.group.displayName.jdkOptions": "JDK-Optionen",
+  "loc.input.label.project": "Projekt",
+  "loc.input.label.target": "Ziel",
+  "loc.input.label.outputDir": "Ausgabeverzeichnis",
+  "loc.input.label.configuration": "Konfiguration",
+  "loc.input.label.msbuildLocation": "MSBuild-Speicherort",
+  "loc.input.label.msbuildArguments": "MSBuild-Argumente",
+  "loc.input.label.jdkVersion": "JDK-Version",
+  "loc.input.label.jdkArchitecture": "JDK-Architektur"
+}

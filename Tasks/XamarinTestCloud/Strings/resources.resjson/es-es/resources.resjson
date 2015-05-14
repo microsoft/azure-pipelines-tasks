@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Xamarin Test Cloud",
+  "loc.description": "Realice pruebas de aplicaciones móviles con Xamarin Test Cloud mediante Xamarin.UITest",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.app": "Archivo de la aplicación",
+  "loc.input.label.dsym": "Archivo dSYM (solo en iOS)",
+  "loc.input.label.teamApiKey": "Clave de API del equipo",
+  "loc.input.label.user": "Correo electrónico del usuario",
+  "loc.input.label.devices": "Dispositivos",
+  "loc.input.label.series": "Serie",
+  "loc.input.label.testDir": "Directorio de ensamblado de la prueba",
+  "loc.input.label.parallelization": "Paralelización",
+  "loc.input.label.locale": "Idioma del sistema",
+  "loc.input.label.testCloudLocation": "Ubicación de test-cloud.exe",
+  "loc.input.label.optionalArgs": "Argumentos opcionales"
+}

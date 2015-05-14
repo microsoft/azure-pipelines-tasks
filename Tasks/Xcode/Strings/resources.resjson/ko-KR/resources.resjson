@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Xcode 빌드",
+  "loc.description": "Mac OS에서 Xcode 작업 영역 빌드",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.xcWorkspacePath": "작업 영역 경로",
+  "loc.input.label.scheme": "구성표",
+  "loc.input.label.actions": "작업",
+  "loc.input.label.configuration": "구성",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.outputPattern": "출력"
+}

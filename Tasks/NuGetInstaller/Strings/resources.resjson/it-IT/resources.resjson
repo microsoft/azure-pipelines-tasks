@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Programma di installazione NuGet",
+  "loc.description": "Consente di installare e aggiornare i pacchetti NuGet mancanti",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.solution": "Percorso della soluzione",
+  "loc.input.label.excludeVersion": "Escludi versione",
+  "loc.input.label.noCache": "Disabilita cache locale",
+  "loc.input.label.nuGetRestoreArgs": "Argomenti NuGet",
+  "loc.input.label.nuGetPath": "Percorso di NuGet.exe"
+}

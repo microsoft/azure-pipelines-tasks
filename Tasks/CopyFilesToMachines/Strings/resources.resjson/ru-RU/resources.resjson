@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Копирование файлов на компьютеры",
+  "loc.description": "Копирование файлов на удаленные компьютеры",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.EnvironmentName": "Группа целевых компьютеров",
+  "loc.input.label.MachineNames": "Копировать на компьютеры",
+  "loc.input.label.SourcePath": "Источник",
+  "loc.input.label.TargetPath": "Конечная папка",
+  "loc.input.label.CleanTargetBeforeCopy": "Целевой объект Clean",
+  "loc.input.label.DeployFilesInParallel": "Копировать файлы параллельно"
+}

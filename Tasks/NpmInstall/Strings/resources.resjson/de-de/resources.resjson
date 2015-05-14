@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "NPM-Installation",
+  "loc.description": "NPM-Pakete installieren",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.label.cwd": "Arbeitsverzeichnis"
+}

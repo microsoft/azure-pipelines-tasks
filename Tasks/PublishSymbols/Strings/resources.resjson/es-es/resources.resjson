@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Indexar orígenes y publicar símbolos",
+  "loc.description": "Indexe el código fuente y publique los símbolos en un recurso compartido de archivos",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.SymbolsPath": "Ruta de acceso para publicar símbolos",
+  "loc.input.label.SearchPattern": "Patrón de búsqueda",
+  "loc.input.label.SourceFolder": "Ruta de acceso de la carpeta de origen",
+  "loc.input.label.SymbolsFolder": "Ruta de acceso a la carpeta de los símbolos",
+  "loc.input.label.SymbolsMaximumWaitTime": "Tiempo de espera máximo (en minutos)",
+  "loc.input.label.SymbolsProduct": "Producto",
+  "loc.input.label.SymbolsVersion": "Versión"
+}

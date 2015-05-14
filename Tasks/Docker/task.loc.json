@@ -6,6 +6,7 @@
   "name": "Docker",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Deploy a docker image to a remote machine",
   "category": "Deploy",
   "visibility": [
     "Preview",

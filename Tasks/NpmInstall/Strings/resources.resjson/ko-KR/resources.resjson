@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "npm 설치",
+  "loc.description": "npm 패키지 설치",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.arguments": "인수",
+  "loc.input.label.cwd": "작업 디렉터리"
+}

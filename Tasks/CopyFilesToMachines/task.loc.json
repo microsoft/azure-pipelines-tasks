@@ -6,6 +6,7 @@
   "name": "CopyFilesToMachines",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Copy files to remote machine(s)",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -68,13 +69,13 @@
       "helpMarkDown": "Setting it to true will clean up the destination folder before copying the files."
     },
     {
-      "name": "DeployFilesInParallel",
+      "name": "CopyFilesInParallel",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployFilesInParallel",
+      "label": "ms-resource:loc.input.label.CopyFilesInParallel",
       "defaultValue": "true",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Setting it to true will copying files parellely on the machines."
+      "helpMarkDown": "Setting it to true will copy files in parallel on the target machines."
     }
   ],
   "instanceNameFormat": "Copy files on machine group $(EnvironmentName)",

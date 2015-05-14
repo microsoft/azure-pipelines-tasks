@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Xcode-Paket (iOS)",
+  "loc.description": "IPA-Datei aus Xcode-Buildausgabe generieren",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.appName": "Name von \".app\"",
+  "loc.input.label.ipaName": "Name von \".ipa\"",
+  "loc.input.label.provisioningProfile": "Profilname wird bereitgestellt",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.appPath": "Pfad zu \".app\"",
+  "loc.input.label.ipaPath": "Pfad zur Platzierung von \".ipa\""
+}

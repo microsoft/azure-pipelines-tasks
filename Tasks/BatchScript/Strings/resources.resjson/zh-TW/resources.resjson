@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "批次指令碼",
+  "loc.description": "執行 Windows cmd 或 bat 指令碼，並視情況允許其變更環境",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.filename": "路徑",
+  "loc.input.label.arguments": "引數",
+  "loc.input.label.modifyEnvironment": "修改環境",
+  "loc.input.label.workingFolder": "工作資料夾"
+}

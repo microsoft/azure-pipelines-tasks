@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Visual Studio 테스트",
+  "loc.description": "Visual Studio Test Runner로 테스트 실행",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.testAssembly": "테스트 어셈블리",
+  "loc.input.label.testFiltercriteria": "테스트 필터 조건",
+  "loc.input.label.platform": "플랫폼",
+  "loc.input.label.configuration": "구성",
+  "loc.input.label.runSettingsFile": "실행 설정 파일",
+  "loc.input.label.overrideTestrunParameters": "TestRun 매개 변수 재정의",
+  "loc.input.label.codeCoverageEnabled": "코드 검사 사용",
+  "loc.input.label.vsTestVersion": "VSTest 버전",
+  "loc.input.label.pathtoCustomTestAdapters": "사용자 지정 테스트 어댑터 경로",
+  "loc.input.label.otherConsoleOptions": "기타 콘솔 옵션"
+}

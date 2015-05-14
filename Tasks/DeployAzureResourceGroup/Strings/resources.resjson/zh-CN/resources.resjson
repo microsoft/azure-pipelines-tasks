@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "部署 Azure 资源组",
+  "loc.description": "设置并部署 Azure 资源组",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
+  "loc.input.label.location": "位置",
+  "loc.input.label.resourceGroupName": "资源组",
+  "loc.input.label.csmFile": "模板",
+  "loc.input.label.csmParametersFile": "模板参数",
+  "loc.input.label.overrideParameters": "Override Template Parameters",
+  "loc.input.label.dscDeployment": "生成 SAS 令牌",
+  "loc.input.label.moduleUrlParameterName": "Azure Blob 参数",
+  "loc.input.label.sasTokenParameterName": "SAS 令牌参数",
+  "loc.input.label.vmCreds": "虚拟机凭据",
+  "loc.input.label.vmUserName": "用户名",
+  "loc.input.label.vmPassword": "密码"
+}

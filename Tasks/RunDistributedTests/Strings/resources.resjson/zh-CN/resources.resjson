@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Visual Studio Test Run using Test Agent",
+  "loc.description": "使用实验室计算机组中的多个测试代理以分布方式运行测试。",
+  "loc.group.displayName.testEnvironment": "测试计算机组",
+  "loc.group.displayName.testSettings": "测试设置",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.environment": "测试计算机组",
+  "loc.input.label.dropLocation": "测试失败位置",
+  "loc.input.label.sourcefilters": "测试程序集",
+  "loc.input.label.testFilterCriteria": "测试筛选器标准",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.runSettingsFile": "运行设置文件",
+  "loc.input.label.overrideRunParams": "替代 TestRun 参数",
+  "loc.input.label.testConfigurations": "Test Configurations",
+  "loc.input.label.codeCoverageEnabled": "代码覆盖率已启用",
+  "loc.input.label.autEnvironmentName": "Application Under Test Machine Group"
+}

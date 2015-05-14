@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Cloudbasierter Webleistungstest",
+  "loc.description": "Leistungsregressionen auf Ihrer Website unter Last schnell finden. Bereitgestellt von VS Online.",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.websiteUrl": "Website-URL",
+  "loc.input.label.testName": "Testname",
+  "loc.input.label.vuLoad": "Benutzerauslastung",
+  "loc.input.label.runDuration": "Testlaufdauer",
+  "loc.input.label.geoLocation": "Geografische Position",
+  "loc.input.label.Username": "Alternativer Anmeldebenutzername",
+  "loc.input.label.Password": "Alternatives Anmeldekennwort",
+  "loc.input.label.CltAccountUrl": "VSO-Konto-URL"
+}

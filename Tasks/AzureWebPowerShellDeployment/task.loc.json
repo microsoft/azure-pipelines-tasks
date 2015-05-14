@@ -6,6 +6,7 @@
   "name": "AzureWebPowerShellDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Deploy a website to Microsoft Azure",
   "category": "Deploy",
   "visibility": [
     "Build",
