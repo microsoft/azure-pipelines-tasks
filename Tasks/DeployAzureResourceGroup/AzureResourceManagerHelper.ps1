@@ -16,7 +16,7 @@ function Create-AzureResourceGroup
 
             $resourceGroup  = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
 
-            Write-Host (Get-LocalizedString -Key "Created resource group $resourceGroup")
+            Write-Host (Get-LocalizedString -Key "Created resource group '{0}'" -ArgumentList $resourceGroup)
 
         }
 
@@ -57,11 +57,11 @@ function Create-AzureResourceGroup
                     Write-Verbose -Verbose $error
                 }
 
-                Write-Host (Get-LocalizedString -Key "Resource group deployment $resourceGroupName failed")
+                Write-Host (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName)
             }
             else
             {
-                Write-Host (Get-LocalizedString -Key "Successfully created resource group deployment with name $resourceGroupName")
+                Write-Host (Get-LocalizedString -Key "Successfully created resource group deployment with name '{0}'" -ArgumentList $resourceGroupName)
             }
 
             return $azureResourceGroupDeployment
@@ -381,7 +381,7 @@ function Get-ServiceEndPointDetails
 {
     param([String][Parameter(Mandatory = $true)]$ConnectedServiceName)
 
-    Write-Host (Get-LocalizedString -Key "entering in Get-ServiceEndPointDetails")
+    Write-Verbose "Entering in Get-ServiceEndPointDetails" -Verbose
 
     $serviceEndpoint = Get-ServiceEndpoint -Name $ConnectedServiceName -Context $distributedTaskContext
 
@@ -412,7 +412,7 @@ function Get-ServiceEndPointDetails
         $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $password)
         $propertyBag.Add("Password", $property)
 
-        Write-Host (Get-LocalizedString -Key "Completed Get-ServiceEndPointDetails")
+        Write-Verbose "Completed Get-ServiceEndPointDetails" -Verbose
 
         return $propertyBag
     }
