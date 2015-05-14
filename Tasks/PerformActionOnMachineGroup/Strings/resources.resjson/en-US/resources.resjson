@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Perform action on machine group",
+  "loc.helpMarkDown": "Perform given action on machine group",
   "loc.description": "Perform given action on machine group",
   "loc.input.label.ConnectedServiceName": "Subscription",
   "loc.input.label.MachineGroupName": "Machine Group",

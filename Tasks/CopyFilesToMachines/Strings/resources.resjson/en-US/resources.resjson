@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Copy Files To Machines",
+  "loc.helpMarkDown": "Copy files to remote machine(s)",
   "loc.description": "Copy files to remote machine(s)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.EnvironmentName": "Target Machine Group",

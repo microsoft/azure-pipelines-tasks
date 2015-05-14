@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xamarin.Android",
+  "loc.helpMarkDown": "Build an Android app with Xamarin",
   "loc.description": "Build an Android app with Xamarin",
   "loc.group.displayName.msbuildOptions": "MSBuild Options",
   "loc.group.displayName.jdkOptions": "JDK Options",

@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Maven",
+  "loc.helpMarkDown": "Build with Apache Maven",
   "loc.description": "Build with Apache Maven",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.advanced": "Advanced",
