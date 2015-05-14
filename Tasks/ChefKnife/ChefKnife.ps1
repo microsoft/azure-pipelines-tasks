@@ -22,7 +22,7 @@ Write-Verbose "ScriptArguments = $ScriptArguments" -Verbose
 Write-Verbose "ScriptPath= $ScriptPath"  -Verbose
 
 $scriptCommand = "& `"$ScriptPath`" $scriptArguments"
-Write-Host (Get-LocalizedString -Key "scriptCommand= '{0}'" -ArgumentList $scriptCommand)
+Write-Verbose "scriptCommand= $scriptCommand"  -Verbose
 
 try
 {

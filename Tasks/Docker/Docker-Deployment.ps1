@@ -89,11 +89,11 @@ function Parse-PortBinding
 
         if( $ports.Count -ne 2 )
         {
-            throw (Get-LocalizedString -Key "Port Bindings argument is not valid.  Valid port number format is '{0}'." -ArgumentList 'hostport:containerport')
+            throw (Get-LocalizedString -Key "Port Bindings argument is not valid. Valid port number format is '{0}'" -ArgumentList 'hostport:containerport')
         }
         elseif( $ports[1].Trim().Equals("") )
         {
-            throw (Get-LocalizedString -Key "Port Bindings argument is not valid. Container port should not be empty.")
+            throw (Get-LocalizedString -Key "Port Bindings argument is not valid. Container port should not be empty")
         }
 
         Write-Host (Get-LocalizedString -Key "Host Port: '{0}', Container Port: '{1}'" -ArgumentList $ports[0], $ports[1])
@@ -172,7 +172,7 @@ function Handle-ImageNotFoundError($response)
     $imageNotFoundErrormsg = ("image {0} not found" -f $repository)
     if($response.contains($imageNotFoundErrormsg))
     {
-        throw (Get-LocalizedString -Key "image '{0}' not found on docker hub" -ArgumentList $repository)
+        throw (Get-LocalizedString -Key "Image '{0}' not found on docker hub" -ArgumentList $repository)
     }
 }
 

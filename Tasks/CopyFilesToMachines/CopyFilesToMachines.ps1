@@ -205,6 +205,6 @@ Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOper
 
 if($envOperationStatus -ne "Passed")
 {
-    throw (Get-LocalizedString -Key 'copy to one or more machine failed.')
+    throw (Get-LocalizedString -Key 'Copy to one or more machine failed')
 }
 

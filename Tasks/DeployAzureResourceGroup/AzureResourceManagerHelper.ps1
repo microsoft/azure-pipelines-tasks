@@ -387,7 +387,7 @@ function Get-ServiceEndPointDetails
 
     if ($serviceEndpoint -eq $null)
     {
-        throw (Get-LocalizedString -Key "A Connected Service with name '{0}' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI." -ArgumentList $ConnectedServiceName)
+        throw (Get-LocalizedString -Key "A Connected Service with name '{0}' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI" -ArgumentList $ConnectedServiceName)
     }
 
     if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')

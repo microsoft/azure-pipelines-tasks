@@ -207,7 +207,7 @@ Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOper
 
 if($envOperationStatus -ne "Passed")
 {
-    throw (Get-LocalizedString -Key 'deployment on one or more machine failed.')
+    throw (Get-LocalizedString -Key 'deployment on one or more machine failed')
 }
 
 Write-Verbose "Leaving script RunPowerShellOnTargetMachines.ps1" -Verbose

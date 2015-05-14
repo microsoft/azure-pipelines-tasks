@@ -34,7 +34,7 @@ Write-Verbose "Logs for upload to blob : $log" -Verbose
 if($copyResponse.Status -ne "Succeeded")
 {
      $error = $copyResponse.Error
-     throw (Get-LocalizedString -Key "Upload to blob failed. '{0}'" -ArgumentList $error)
+     throw (Get-LocalizedString -Key "Upload to blob failed with error: '{0}'" -ArgumentList $error)
 }
 
 Write-Verbose "Leaving script CopyFilesToAzureBlob.ps1" -Verbose

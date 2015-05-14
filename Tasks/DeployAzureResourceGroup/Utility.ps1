@@ -2,7 +2,7 @@ function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
     {
-        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern '{0}'. There can be only one." -ArgumentList $pattern)
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern '{0}'. There can be only one" -ArgumentList $pattern)
     }
     else
     {

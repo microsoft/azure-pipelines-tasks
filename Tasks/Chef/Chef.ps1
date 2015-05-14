@@ -73,7 +73,7 @@ function Validate-WaitTime()
 		}
 	}
 
-    throw (Get-LocalizedString -Key "Please provide a valid '{0}' input in minutes. It should be an integer greater than 0." -ArgumentList 'Wait Time')
+    throw (Get-LocalizedString -Key "Please provide a valid '{0}' input in minutes. It should be an integer greater than 0" -ArgumentList 'Wait Time')
 }
 
 function Add-NewtonsoftAsType()
