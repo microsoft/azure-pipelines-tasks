@@ -24,6 +24,8 @@ Write-Verbose "Tag= $Tag" -Verbose
 Write-Verbose "ContainerName= $ContainerName" -Verbose
 Write-Verbose "PortBindings= $PortBindings" -Verbose
 
+Import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 # VARIABLE DECLARATIONS
 $DockerEndpointRestUrl = ("http://{0}" -f $DockerEndpoint.Trim())
 $hostPort = $null
