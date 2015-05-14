@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xamarin License",
-  "loc.helpMarkDown": "Activate or deactivate Xamarin licenses",
   "loc.description": "Activate or deactivate Xamarin licenses",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.action": "Action",

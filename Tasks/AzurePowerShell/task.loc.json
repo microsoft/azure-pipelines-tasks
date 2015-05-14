@@ -6,7 +6,7 @@
   "name": "AzurePowerShell",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Run a PowerShell script within an Azure environment",
   "category": "Deploy",
   "visibility": [
     "Build",

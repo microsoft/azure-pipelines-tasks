@@ -78,7 +78,6 @@
 	          "label": "Platform", 
 	          "defaultValue":"", 
 	          "required":false,
-              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
 	          "groupName": "testSettings"
 	      },
 	      {
@@ -87,7 +86,6 @@
 	          "label": "Configuration", 
 	          "defaultValue":"", 
 	          "required":false,
-              "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
 	          "groupName": "testSettings"
 	      },
         {

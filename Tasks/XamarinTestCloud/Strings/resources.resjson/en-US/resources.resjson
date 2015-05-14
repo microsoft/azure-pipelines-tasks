@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
   "loc.description": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.app": "App File",

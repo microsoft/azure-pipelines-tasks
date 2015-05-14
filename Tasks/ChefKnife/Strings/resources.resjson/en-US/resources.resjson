@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "Run Scripts with knife commands on your chef workstation",
   "loc.description": "Run Scripts with knife commands on your chef workstation",
   "loc.input.label.ConnectedServiceName": "Chef Subscription",
   "loc.input.label.ScriptPath": "Script Path",

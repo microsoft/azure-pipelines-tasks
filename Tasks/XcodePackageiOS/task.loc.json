@@ -6,7 +6,7 @@
   "name": "XcodePackageiOS",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Generate an .ipa file from Xcode build output",
   "category": "Build",
   "visibility": [
     "Build"

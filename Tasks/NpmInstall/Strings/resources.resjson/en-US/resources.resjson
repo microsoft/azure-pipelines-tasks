@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "npm install",
-  "loc.helpMarkDown": "Install **npm** packages",
   "loc.description": "Install npm packages",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.arguments": "Arguments",

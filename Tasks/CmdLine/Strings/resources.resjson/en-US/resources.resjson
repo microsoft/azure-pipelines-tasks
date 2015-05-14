@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Command Line",
-  "loc.helpMarkDown": "Run a command line with arguments",
   "loc.description": "Run a command line with arguments",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.filename": "Tool",

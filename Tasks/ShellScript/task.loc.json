@@ -6,7 +6,7 @@
   "name": "ShellScript",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Run a shell script using bash",
   "category": "Utility",
   "visibility": [
     "Build"

@@ -6,7 +6,7 @@
   "name": "XamarinTestCloud",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
   "category": "Test",
   "visibility": [
     "Build"

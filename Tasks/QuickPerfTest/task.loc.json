@@ -6,7 +6,7 @@
   "name": "QuickPerfTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Quickly find perf regressions to your website under load. Powered by VS Online",
   "category": "Test",
   "visibility": [
     "Preview",

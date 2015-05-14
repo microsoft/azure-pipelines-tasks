@@ -6,7 +6,7 @@
   "name": "DeployAzureResourceGroup",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Provision and Deploy an Azure Resource Group",
   "category": "Deploy",
   "visibility": [
     "Preview",

@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "Build with **MSBuild**",
   "loc.description": "Build with MSBuild",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",

@@ -6,7 +6,7 @@
   "name": "ChefKnife",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Run Scripts with knife commands on your chef workstation",
   "category": "Deploy",
   "visibility": [
     "Preview",

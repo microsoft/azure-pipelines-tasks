@@ -3,16 +3,15 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Test Agent Deployment",
-  "loc.helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group",
   "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group",
   "loc.group.displayName.testMachineGroups": "Test Machine Group",
   "loc.group.displayName.agentConfiguration": "Agent Configuration",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.testMachineGroup": "Test Machine Group",
   "loc.input.label.testMachines": "Deploy to machines",
+  "loc.input.label.runAsProcess": "Interactive Process",
   "loc.input.label.machineUserName": "Username",
   "loc.input.label.machinePassword": "Password",
-  "loc.input.label.runAsProcess": "Interactive Process",
   "loc.input.label.agentLocation": "Test Agent Location",
   "loc.input.label.updateTestAgent": "Update Test Agent",
   "loc.input.label.isDataCollectionOnly": "Enable Data Collection Only"

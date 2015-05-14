@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Cloud-based Load Test with VSO",
-  "loc.helpMarkDown": "Runs the load test in cloud; Powered by VS Online",
   "loc.description": "Runs the load test in cloud; Powered by VS Online",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.TestDrop": "Load test files folder",

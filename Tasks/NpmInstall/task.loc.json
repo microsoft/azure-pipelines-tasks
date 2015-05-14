@@ -6,7 +6,7 @@
   "name": "NpmInstall",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Install **npm** packages",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {

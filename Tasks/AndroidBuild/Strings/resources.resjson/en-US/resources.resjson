@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Android Build",
-  "loc.helpMarkDown": "Build an Android app using **Gradle** and optionally start the emulator for unit tests",
   "loc.description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
   "loc.group.displayName.avdOptions": "Android Virtual Device (AVD) Options",
   "loc.group.displayName.emulatorOptions": "Emulator Options",

@@ -6,7 +6,7 @@
   "name": "AndroidBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Build an Android app using **Gradle** and optionally start the emulator for unit tests",
   "category": "Build",
   "visibility": [
     "Build"

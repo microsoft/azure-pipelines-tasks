@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Build",
-  "loc.helpMarkDown": "Build with **MSBuild** in the Visual Studio Developer Command Prompt",
   "loc.description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",

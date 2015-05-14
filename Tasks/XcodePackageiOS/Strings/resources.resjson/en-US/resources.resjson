@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xcode Package iOS",
-  "loc.helpMarkDown": "Generate an .ipa file from Xcode build output",
   "loc.description": "Generate an .ipa file from Xcode build output",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.appName": "Name of .app",

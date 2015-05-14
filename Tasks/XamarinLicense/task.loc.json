@@ -6,7 +6,7 @@
   "name": "XamarinLicense",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Activate or deactivate Xamarin licenses",
   "category": "Utility",
   "visibility": [
     "Build"

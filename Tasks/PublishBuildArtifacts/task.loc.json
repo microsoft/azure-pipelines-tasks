@@ -6,7 +6,7 @@
   "name": "PublishBuildArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Publish Build artifacts to the server or a file share",
   "category": "Build",
   "visibility": [
     "Build"

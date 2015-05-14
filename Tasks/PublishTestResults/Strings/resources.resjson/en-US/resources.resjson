@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Publish Test Results",
-  "loc.helpMarkDown": "Publish Test Results to VSO/TFS",
   "loc.description": "Publish Test Results to VSO/TFS",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.testRunner": "Test Result Format",

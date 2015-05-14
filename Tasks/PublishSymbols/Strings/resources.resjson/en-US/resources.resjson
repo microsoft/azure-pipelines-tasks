@@ -3,7 +3,6 @@
 // *******************************************************
 {
   "loc.friendlyName": "Index Sources & Publish Symbols",
-  "loc.helpMarkDown": "Index your source code and publish symbols to a file share",
   "loc.description": "Index your source code and publish symbols to a file share",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.SymbolsPath": "Path to publish symbols",
