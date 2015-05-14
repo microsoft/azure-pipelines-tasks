@@ -10,5 +10,5 @@
   "loc.input.label.MachineNames": "Copy to Machines",
   "loc.input.label.TargetPath": "Destination Folder",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
-  "loc.input.label.DeployFilesInParallel": "Copy Files in Parallel"
+  "loc.input.label.CopyFilesInParallel": "Copy Files in Parallel"
 }
