@@ -210,7 +210,7 @@ function Create-Container()
 		}
 		else
 		{
-            Write-Host (Get-LocalizedString -Key "Exception Occurred while creating the container: '{0}'" -ArgumentList $_.Exception.Message)
+            Write-Host (Get-LocalizedString -Key "Exception occurred while creating the container: '{0}'" -ArgumentList $_.Exception.Message)
 			throw $_
 		}
 	}
