@@ -21,13 +21,13 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
+[System.Reflection.Assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Microsoft.VisualStudio.Services.DevTestLabs.Common.dll")
+
 # Default + constants #
 $defaultWinRMPort = '5985'
-$defaultSkipCACheckOption = ''	
 $defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
 $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
-$resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
-$doSkipCACheckOption = '-SkipCACheck'
+$resourceWinRMHttpPortKeyName = Get-ResourceWinRMHttpTagKey
 $envOperationStatus = 'Passed'
 
 
@@ -76,11 +76,6 @@ function Get-ResourceConnectionDetails
 	
 	$resourceProperties.winrmPort = $winrmPort
 	
-	if($resourceProperties.httpProtocolOption -eq $defaultHttpProtocolOption)
-	{
-		$resourceProperties.skipCACheckOption = $doSkipCACheckOption	# If http option is opted , skip the CA check
-	}
-	
 	return $resourceProperties
 }
 
@@ -128,7 +123,7 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
+        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption
        
         $status = $copyResponse.Status
         Output-ResponseLogs -operationName "copy" -fqdn $machine -deploymentResponse $copyResponse
@@ -165,7 +160,7 @@ else
 		
 		$resourceProperties.resOperationId = $resOperationId
 
-        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
+        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption
 
         $Jobs.Add($job.Id, $resourceProperties)
     }

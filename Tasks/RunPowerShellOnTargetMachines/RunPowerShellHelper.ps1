@@ -14,6 +14,11 @@ function DoComplete-ResourceOperation
     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
 }
 
+function Get-ResourceWinRMHttpTagKey
+{
+	return [Microsoft.VisualStudio.Services.DevTestLabs.Common.DevTestLabsConstants]::WINRM_HttpTagKey
+}
+
 function Output-ResponseLogs
 {
     param([string]$operationName,
