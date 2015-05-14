@@ -71,18 +71,10 @@ antv.exec()
 })
 .then(function(code) {  
   publishTestResults(publishJUnitResults, testResultsFiles);
-	tl.exit(code);
+  tl.exit(code);
 })
 .fail(function(err) {
   publishTestResults(publishJUnitResults, testResultsFiles);
-	tl.debug('taskRunner fail');
-	tl.exit(1);
+  tl.debug('taskRunner fail');
+  tl.exit(1);
 })
-
-
-
-  
-
-  
-}
-
