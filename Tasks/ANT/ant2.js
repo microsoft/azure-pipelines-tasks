@@ -51,7 +51,7 @@ antv.exec()
 })
 
 //publish JUnit test results 
-var publishJUnitResults = tl.getIntput('publishJUnitResults');
+var publishJUnitResults = tl.getInput('publishJUnitResults');
 if(publishJUnitResults == 'true') {
   var testResultsFiles = tl.getInput('testResultsFiles', true);
 
