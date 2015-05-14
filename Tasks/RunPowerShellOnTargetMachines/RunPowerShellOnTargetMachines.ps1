@@ -27,8 +27,6 @@ $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
 $resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
 $defaultWinRMHttpPort = '5985'
 $defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
-$defaultSkipCACheckOption = ''	
-$doSkipCACheckOption = '-SkipCACheck'
 $envOperationStatus = "Passed"
 
 function Get-ResourceCredentials
@@ -74,11 +72,6 @@ function Get-ResourceConnectionDetails
 	$resourceProperties.credential = Get-ResourceCredentials -resource $resource
 	
 	$resourceProperties.winrmPort = $winrmPort
-	
-	if($resourceProperties.httpProtocolOption -eq $defaultHttpProtocolOption)
-	{
-		$resourceProperties.skipCACheckOption = $doSkipCACheckOption	# If http option is opted , skip the CA check
-	}
 	
 	return $resourceProperties
 }
@@ -128,7 +121,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
-        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
+        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.httpProtocolOption
 		
         Output-ResponseLogs -operationName "deployment" -fqdn $machine -deploymentResponse $deploymentResponse
 
@@ -166,7 +159,7 @@ else
 		
 		$resourceProperties.resOperationId = $resOperationId
 		
-        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
+        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.httpProtocolOption
 
         $Jobs.Add($job.Id, $resourceProperties)
     }
