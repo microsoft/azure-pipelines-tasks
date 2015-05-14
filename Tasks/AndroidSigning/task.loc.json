@@ -6,6 +6,7 @@
   "name": "AndroidSigning",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
@@ -14,12 +15,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "JDK",
     "AndroidSDK"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "jarsignerOptions",

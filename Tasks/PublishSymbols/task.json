@@ -3,6 +3,7 @@
     "name":"PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",
     "description": "Index your source code and publish symbols to a file share",
+    "helpMarkDown": "Index your source code and publish symbols to a file share",
     "category": "Build",
     "visibility": [
                     "Build"
@@ -11,9 +12,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 2
     },
-    "minimumAgentVersion": "1.82.0",
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name": "advanced",

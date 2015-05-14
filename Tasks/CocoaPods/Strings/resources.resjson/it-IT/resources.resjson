@@ -1,0 +1,5 @@
+{
+  "loc.friendlyName": "CocoaPods",
+  "loc.description": "CocoaPods è l'utilità di gestione dipendenze per progetti Cocoa Swift e Objective-C. Consente di eseguire l'installazione dei pod.",
+  "loc.input.label.cwd": "Directory di lavoro"
+}

@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.description": "使用 MSBuild 生成",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.solution": "解决方案",
+  "loc.input.label.platform": "平台",
+  "loc.input.label.configuration": "配置",
+  "loc.input.label.msbuildArguments": "MSBuild 参数",
+  "loc.input.label.clean": "清理",
+  "loc.input.label.restoreNugetPackages": "还原 NuGet 包",
+  "loc.input.label.logProjectEvents": "记录项目详情",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild 版本",
+  "loc.input.label.msbuildArchitecture": "MSBuild 体系结构",
+  "loc.input.label.msbuildLocation": "MSBuild 的路径"
+}

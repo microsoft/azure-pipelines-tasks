@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "コンピューターにファイルをコピーします",
+  "loc.description": "リモート コンピューターにファイルをコピーします",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.EnvironmentName": "ターゲット コンピューター グループ",
+  "loc.input.label.MachineNames": "コンピューターにコピーします",
+  "loc.input.label.SourcePath": "ソース",
+  "loc.input.label.TargetPath": "アップロード先のフォルダー",
+  "loc.input.label.CleanTargetBeforeCopy": "クリーン ターゲット",
+  "loc.input.label.DeployFilesInParallel": "ファイルの並列コピー"
+}

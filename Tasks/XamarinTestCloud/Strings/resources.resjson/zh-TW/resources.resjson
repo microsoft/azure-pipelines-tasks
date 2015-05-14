@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Xamarin Test Cloud",
+  "loc.description": "使用採用 Xamarin.UITest 的 Xamarin Test Cloud 測試行動應用程式",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.app": "應用程式檔案",
+  "loc.input.label.dsym": "dSYM 檔案 (僅限 iOS)",
+  "loc.input.label.teamApiKey": "Team API 金鑰",
+  "loc.input.label.user": "使用者電子郵件",
+  "loc.input.label.devices": "裝置",
+  "loc.input.label.series": "系列",
+  "loc.input.label.testDir": "測試組件目錄",
+  "loc.input.label.parallelization": "並行",
+  "loc.input.label.locale": "系統語言",
+  "loc.input.label.testCloudLocation": "test-cloud.exe 位置",
+  "loc.input.label.optionalArgs": "選擇性引數"
+}

@@ -6,6 +6,7 @@
   "name": "CMake",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
@@ -17,8 +18,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 6
   },
+  "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "CMake $(args)",
   "inputs": [
     {

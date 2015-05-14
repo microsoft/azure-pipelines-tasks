@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.description": "Consente di compilare un'app iOS con Xamarin su Mac OS",
+  "loc.input.label.solution": "Soluzione",
+  "loc.input.label.configuration": "Configurazione",
+  "loc.input.label.mdtoolLocation": "Percorso di override per mdtool",
+  "loc.input.label.forSimulator": "Compila per simulatore iOS"
+}

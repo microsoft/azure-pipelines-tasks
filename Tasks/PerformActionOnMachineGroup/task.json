@@ -3,6 +3,7 @@
     "name": "PerformActionOnMachineGroup",
     "friendlyName": "Machine Group Actions",
     "description": "Machine Group Actions",
+    "helpMarkDown": "Perform given action on machine group",
     "category": "Deploy",
     "visibility": [
                 "Preview",
@@ -12,11 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [
         "azureps"
     ],
+    "minimumAgentVersion": "1.83.0",
     "inputs": [
         {
             "name": "ConnectedServiceName",

@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "CocoaPods",
-  "loc.description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install.",
+  "loc.helpMarkDown": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install",
+  "loc.description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install",
   "loc.input.label.cwd": "Working Directory"
 }

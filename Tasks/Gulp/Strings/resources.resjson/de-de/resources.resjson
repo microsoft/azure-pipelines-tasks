@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.description": "Auf Node.js-Streamingaufgabe basierendes Buildsystem",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.gulpFile": "Gulp-Dateipfad",
+  "loc.input.label.targets": "Gulp-Aufgabe(n)",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.label.cwd": "Arbeitsverzeichnis"
+}

@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Visual Studio Test Run using Test Agent",
+  "loc.description": "ラボ コンピューター グループ内の複数のテスト エージェントを使用して、テストを分散して実行します。",
+  "loc.group.displayName.testEnvironment": "テスト コンピューター グループ",
+  "loc.group.displayName.testSettings": "テストの設定",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.environment": "テスト コンピューター グループ",
+  "loc.input.label.dropLocation": "テストの格納場所",
+  "loc.input.label.sourcefilters": "テスト アセンブリ",
+  "loc.input.label.testFilterCriteria": "テスト フィルターの条件",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.runSettingsFile": "実行設定ファイル",
+  "loc.input.label.overrideRunParams": "TestRun パラメーターのオーバーライド",
+  "loc.input.label.testConfigurations": "Test Configurations",
+  "loc.input.label.codeCoverageEnabled": "コード カバレッジが有効",
+  "loc.input.label.autEnvironmentName": "Application Under Test Machine Group"
+}

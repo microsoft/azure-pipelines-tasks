@@ -18,7 +18,7 @@ function Get-SingleFile($files, $pattern)
 function Get-File($pattern)
 {
     #Find the File based on pattern
-    
+
     Write-Verbose -Verbose "Finding files based on $pattern"
     $filesMatchingPattern = Find-Files -SearchPattern "$pattern"
 
@@ -48,8 +48,7 @@ function Validate-DeploymentFileAndParameters
 
 function Get-CsmParameterObject
 {
-    param([string]$csmParameterFileContent,
-          [string]$overrideParameters)
+    param([string]$csmParameterFileContent)
 
     if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false)
     {

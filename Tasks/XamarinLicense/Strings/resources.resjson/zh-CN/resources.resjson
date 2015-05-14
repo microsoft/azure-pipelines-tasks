@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Xamarin 许可证",
+  "loc.description": "激活或禁用 Xamarin 许可证",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.action": "操作",
+  "loc.input.label.email": "电子邮件",
+  "loc.input.label.password": "密码",
+  "loc.input.label.activateAndroid": "激活 Xamarin.Android",
+  "loc.input.label.timeout": "超时秒数"
+}

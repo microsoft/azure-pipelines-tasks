@@ -1,0 +1,94 @@
+﻿{
+    "id": "731004D4-1D66-4F70-8C05-638018B22210",
+    "name": "WindowsMachineFileCopy",
+    "friendlyName": "Windows Machine File Copy",
+    "description": "Copy files to remote machine(s)",
+    "helpMarkDown": "Copy files to remote machine(s)",
+    "category": "Deploy",
+    "visibility": [
+                "Preview",
+                "Build",
+                "Release"
+                  ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 2
+    },
+    "minimumAgentVersion": "1.83.0",
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
+    "inputs": [
+	{
+            "name": "SourcePath",
+            "type": "string",
+            "label": "Source",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Location of the source folder or file. Variables can be used for binaries in the Automation Agent like $(Build.Repository.LocalPath)\\BudgetIT\\Web." 
+        },
+        {
+            "name": "EnvironmentName",
+            "type": "pickList",
+            "label": "Machine Group",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the target Machine Group for copying the files to.​"
+        },
+        {
+            "name": "MachineNames",
+            "type": "string",
+            "label": "Copy to Machines",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a comma separated list of machines like Machine1, Machine2. Default is all machines in the Machine Group."
+        },        
+        {
+            "name": "TargetPath",
+            "type": "string",
+            "label": "Destination Folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Local Path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web."
+        },
+        {
+            "name": "CleanTargetBeforeCopy",
+            "type": "boolean",
+            "label": "Clean Target",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Setting it to true will clean the destination folder before copying the files."
+        },
+        {
+            "name": "CopyFilesInParallel",
+            "type": "boolean",
+            "label": "Copy Files in Parallel",
+            "defaultValue": "true",
+            "required": false,
+            "groupName":"advanced",
+            "helpMarkDown": "Setting it to true will copy files in parallel to the machines."
+        }
+    ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "EnvironmentName", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
+    "instanceNameFormat": "Machine Group: $(EnvironmentName)",
+	 "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Android-Signatur",
+  "loc.description": "Android-APK-Dateien signieren und ausrichten",
+  "loc.group.displayName.jarsignerOptions": "Jarsigner-Optionen",
+  "loc.group.displayName.zipalignOptions": "Zipalign-Optionen",
+  "loc.input.label.files": "APK-Dateien",
+  "loc.input.label.jarsign": "APK signieren",
+  "loc.input.label.keystoreFile": "Keystore-Datei",
+  "loc.input.label.keystorePass": "Keystore-Kennwort",
+  "loc.input.label.keystoreAlias": "Alias",
+  "loc.input.label.keyPass": "Schlüsselkennwort",
+  "loc.input.label.jarsignerArguments": "Jarsigner-Argumente",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Zipalign-Speicherort"
+}

@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Сборка Xcode",
+  "loc.description": "Сборка рабочей области Xcode на Mac OS",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.xcWorkspacePath": "Путь к рабочей области",
+  "loc.input.label.scheme": "Схема",
+  "loc.input.label.actions": "Действия",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.outputPattern": "Выходные данные"
+}

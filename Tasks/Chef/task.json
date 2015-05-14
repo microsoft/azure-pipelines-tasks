@@ -3,6 +3,7 @@
     "name": "Chef",
     "friendlyName": "Chef",
     "description": "Deploy to Chef environments by editing environment attributes",
+    "helpMarkDown": "Deploy to Chef environments by editing environment attributes",
     "category": "Deploy",
     "visibility": [
                 "Preview",
@@ -13,13 +14,13 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands" : [
         "Chef",
         "KnifeReporting"
     ],
-    "minimumAgentVersion": "1.82.0",
+    "minimumAgentVersion": "1.83.0",
     "inputs": [
         {
             "name": "connectedServiceName",

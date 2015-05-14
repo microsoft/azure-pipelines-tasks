@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.description": "Node.js 스트리밍 작업 기반 빌드 시스템",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.gulpFile": "Gulp 파일 경로",
+  "loc.input.label.targets": "Gulp 작업",
+  "loc.input.label.arguments": "인수",
+  "loc.input.label.cwd": "작업 디렉터리"
+}

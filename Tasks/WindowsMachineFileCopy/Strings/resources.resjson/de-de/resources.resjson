@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Dateien auf Computer kopieren",
+  "loc.description": "Dateien auf Remotecomputer kopieren",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.EnvironmentName": "Zielcomputergruppe",
+  "loc.input.label.MachineNames": "Auf Computer kopieren",
+  "loc.input.label.SourcePath": "Quelle",
+  "loc.input.label.TargetPath": "Zielordner",
+  "loc.input.label.CleanTargetBeforeCopy": "Ziel bereinigen",
+  "loc.input.label.DeployFilesInParallel": "Dateien parallel kopieren"
+}

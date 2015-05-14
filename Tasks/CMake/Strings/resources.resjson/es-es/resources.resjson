@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "Realice compilaciones con el sistema de compilación multiplataforma de CMake",
+  "loc.input.label.cwd": "Directorio de trabajo",
+  "loc.input.label.args": "Argumentos"
+}

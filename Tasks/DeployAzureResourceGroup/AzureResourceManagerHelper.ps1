@@ -3,7 +3,8 @@ function Create-AzureResourceGroup
     param([string]$csmFile, 
           [System.Collections.Hashtable]$csmParametersObject,
           [string]$resourceGroupName,
-          [string]$location)
+          [string]$location,
+          [string]$overrideParameters)
     
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
@@ -20,18 +21,25 @@ function Create-AzureResourceGroup
         }
 
         $startTime = Get-Date
-        $startTime = $startTime.ToUniversalTime()
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
         Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
 
         if (!$csmParametersObject)
         {
-            $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError
+            $azureCommand = "New-AzureResourceGroupDeployment"
+            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+            $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+            Write-Host "$finalCommand"
+            Invoke-Expression -Command $finalCommand
         }
         else
         {
-            $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -TemplateParameterObject $csmParametersObject -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError
+            $azureCommand = "New-AzureResourceGroupDeployment"
+            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+            $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+            Write-Host "$finalCommand"
+            Invoke-Expression -Command $finalCommand
         }
 
         if ($azureResourceGroupDeployment)
@@ -169,65 +177,57 @@ function Get-FQDN
           [string]$resourceName)
     
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($resourceName) -eq $false)
-	{
-		$retryMaxCount = 5
-		$retryMaxWait = 15
-		for($retryCount = 0; $retryCount -lt $retryMaxCount; $retryCount = $retryCount + 1)
-		{
-			Write-Verbose "Trying to get FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
+    {
+        Write-Verbose "Trying to get FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
 
-			$azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorAction silentlycontinue -ErrorVariable fqdnError
+        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorAction silentlycontinue -ErrorVariable fqdnError
 
-			if(!$azureVM)
-			{
-				Write-Host $fqdnError -Verbose
-			}
-			else
-			{
-				foreach ($nic in $networkInterfaceResources)
-				{
-				   if ($nic.Id -eq $azureVM.NetworkInterfaces)
-				   {
-						$ipc = $nic.IpConfigurations
-						break
-				   }
-				}
-
-				if($ipc)
-				{
-					$publicIPAddr = $ipc.PublicIpAddress.Id
+        if(!$azureVM)
+        {
+            Write-Host $fqdnError -Verbose
+        }
+        else
+        {
+            foreach ($networkInterface in $azureVM.NetworkProfile.NetworkInterfaces)
+            {
+                $nic = $networkInterfaceResources | Where-Object {$_.Id -eq $networkInterface.ReferenceUri}
+                if($nic)
+                {
+                     $ipc = $nic.IpConfigurations
+                    break
+                }
+            }
+            if($ipc)
+            {
+                $publicIPAddr = $ipc.PublicIpAddress.Id
             
-					foreach ($publicIP in $publicIPAddressResources) 
-					{
-						if($publicIP.id -eq $publicIPAddr)
-						{
-							$fqdn = $publicIP.DnsSettings.Fqdn
-							break
-						}
-					}
+                foreach ($publicIP in $publicIPAddressResources) 
+                {
+                    if($publicIP.id -eq $publicIPAddr)
+                    {
+                        $fqdn = $publicIP.DnsSettings.Fqdn
+                        break
+                    }
+                }
 
-					if($fqdn -eq $null)
-					{
-						Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
-					}
-					else
-					{
-						Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
-                
-						return $fqdn;
-					}
+                if($fqdn -eq $null)
+                {
+                    Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
+                }
+                else
+                {
+                    Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+               
+                    return $fqdn;
+                }
 
-				}
-				else
-				{
-					Write-Host "Unable to find IPConfiguration of resource $resourceName" -Verbose
-				}
-			}
-
-			Start-Sleep -s $retryMaxWait
-		}
-	}
-
+            }
+            else
+            {
+                Write-Host "Unable to find IPConfiguration of resource $resourceName" -Verbose
+            }
+        }
+    }
 }
 
 function Refresh-SASToken
@@ -377,3 +377,47 @@ function Print-OperationLog
     }
 }
 
+function Get-ServiceEndPointDetails
+{
+    param([String][Parameter(Mandatory = $true)]$ConnectedServiceName)
+
+    Write-Host "entering in Get-ServiceEndPointDetails"
+
+    $serviceEndpoint = Get-ServiceEndpoint -Name $ConnectedServiceName -Context $distributedTaskContext
+
+    if ($serviceEndpoint -eq $null)
+    {
+        throw "A Connected Service with name '$ConnectedServiceName' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
+    }
+
+    if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')
+    {
+        $username = $serviceEndpoint.Authorization.Parameters.UserName
+        $password = $serviceEndpoint.Authorization.Parameters.Password
+        Write-Verbose "Username= $username" -Verbose
+
+        $azureSubscriptionId = $serviceEndpoint.Data.SubscriptionId
+        $azureSubscriptionName = $serviceEndpoint.Data.SubscriptionName
+        Write-Verbose "azureSubscriptionId= $azureSubscriptionId" -Verbose
+        Write-Verbose "azureSubscriptionName= $azureSubscriptionName" -Verbose
+
+        $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
+        
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureSubscriptionName)
+        $propertyBag.Add("SubscriptionName", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureSubscriptionId)
+        $propertyBag.Add("SubscriptionId", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $username)
+        $propertyBag.Add("Username", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $password)
+        $propertyBag.Add("Password", $property)
+
+        Write-Host "Completed Get-ServiceEndPointDetails"
+
+        return $propertyBag
+    }
+    else
+    {
+        throw "Unsupported authorization scheme for azure endpoint = " + $serviceEndpoint.Authorization.Scheme
+    }
+}

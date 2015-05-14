@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.description": "使用 Xamarin 生成 Android 应用",
+  "loc.group.displayName.msbuildOptions": "MSBuild 选项",
+  "loc.group.displayName.jdkOptions": "JDK 选项",
+  "loc.input.label.project": "项目",
+  "loc.input.label.target": "目标",
+  "loc.input.label.outputDir": "输出目录",
+  "loc.input.label.configuration": "配置",
+  "loc.input.label.msbuildLocation": "MSBuild 位置",
+  "loc.input.label.msbuildArguments": "MSBuild 参数",
+  "loc.input.label.jdkVersion": "JDK 版本",
+  "loc.input.label.jdkArchitecture": "JDK 体系结构"
+}

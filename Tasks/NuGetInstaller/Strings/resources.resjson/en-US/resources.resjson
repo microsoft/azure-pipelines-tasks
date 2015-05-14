@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "NuGet Installer",
+  "loc.helpMarkDown": "Installs and updates missing NuGet packages",
   "loc.description": "Installs and updates missing NuGet packages",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Path to Solution",

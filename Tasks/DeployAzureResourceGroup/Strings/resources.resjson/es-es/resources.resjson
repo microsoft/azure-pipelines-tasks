@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Implementar un grupo de recursos de Azure",
+  "loc.description": "Aprovisione e implemente un grupo de recursos de Azure",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
+  "loc.input.label.location": "Ubicación",
+  "loc.input.label.resourceGroupName": "Grupo de recursos",
+  "loc.input.label.csmFile": "Plantilla",
+  "loc.input.label.csmParametersFile": "Parámetros de la plantilla",
+  "loc.input.label.overrideParameters": "Override Template Parameters",
+  "loc.input.label.dscDeployment": "Generar el token SAS",
+  "loc.input.label.moduleUrlParameterName": "Parámetro de blob de Azure",
+  "loc.input.label.sasTokenParameterName": "Parámetro de token de SAS",
+  "loc.input.label.vmCreds": "Credenciales de la máquina virtual",
+  "loc.input.label.vmUserName": "Nombre de usuario",
+  "loc.input.label.vmPassword": "Contraseña"
+}

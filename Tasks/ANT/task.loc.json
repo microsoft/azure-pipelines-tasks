@@ -6,6 +6,7 @@
   "name": "Ant",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
@@ -14,12 +15,18 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 7
   },
   "demands": [
     "ant"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
+    {
+      "name": "junitTestResults",
+      "displayName": "ms-resource:loc.group.displayName.junitTestResults",
+      "isExpanded": true
+    },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
@@ -49,6 +56,24 @@
       "label": "ms-resource:loc.input.label.targets",
       "defaultValue": "",
       "required": false
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishJUnitResults",
+      "required": true,
+      "defaultValue": "true",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "Select this option to publish JUnit Test results produced by the Ant build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
+    },
+    {
+      "name": "testResultsFiles",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.testResultsFiles",
+      "defaultValue": "**/TEST-*.xml",
+      "required": true,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
     },
     {
       "name": "jdkVersion",

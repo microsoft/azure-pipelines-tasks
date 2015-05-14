@@ -3,6 +3,7 @@
     "name": "ShellScript",
     "friendlyName": "Shell Script",
     "description": "Run a shell script using bash",
+    "helpMarkDown": "Run a shell script using bash",
     "category": "Utility",
     "visibility": [
                 "Build"

@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "发布测试结果",
+  "loc.description": "将测试结果发布到 VSO/TFS",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.testRunner": "测试结果格式",
+  "loc.input.label.testResultsFiles": "测试结果文件",
+  "loc.input.label.mergeTestResults": "合并测试结果",
+  "loc.input.label.platform": "平台",
+  "loc.input.label.configuration": "配置"
+}

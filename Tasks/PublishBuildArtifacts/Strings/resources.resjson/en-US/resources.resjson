@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Publish Build Artifacts",
+  "loc.helpMarkDown": "Publish Build artifacts to the server or a file share",
   "loc.description": "Publish Build artifacts to the server or a file share",
   "loc.input.label.CopyRoot": "Copy Root",
   "loc.input.label.Contents": "Contents",

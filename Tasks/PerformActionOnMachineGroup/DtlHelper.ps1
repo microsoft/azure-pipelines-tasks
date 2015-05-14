@@ -1,7 +1,6 @@
 function Initialize-DTLServiceHelper
 {
     Write-Verbose "Getting the vss connection object" -Verbose
-
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
     Set-Variable -Name connection -Value $connection -Scope "Script"

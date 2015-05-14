@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Xcode パッケージ iOS",
+  "loc.description": "Xcode ビルド出力から .ipa ファイルを生成します",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.appName": ".app の名前",
+  "loc.input.label.ipaName": ".ipa の名前",
+  "loc.input.label.provisioningProfile": "プロファイル名のプロビジョニング",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.appPath": ".app へのパス",
+  "loc.input.label.ipaPath": ".ipa を配置するためのパス"
+}

@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.description": "Выполнение скрипта PowerShell в среде Azure",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure",
+  "loc.input.label.ScriptPath": "Путь к скрипту",
+  "loc.input.label.ScriptArguments": "Аргументы скрипта"
+}

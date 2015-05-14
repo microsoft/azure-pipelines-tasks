@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "VSO를 사용한 클라우드 기반 부하 테스트",
+  "loc.description": "클라우드에서 부하 테스트를 실행합니다. Powered by VS Online.",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.TestDrop": "부하 테스트 파일 폴더",
+  "loc.input.label.LoadTest": "부하 테스트 파일",
+  "loc.input.label.TestSettings": "테스트 설정 파일",
+  "loc.input.label.ThresholdLimit": "허용 가능한 임계값 위반 수",
+  "loc.input.label.VsoAccountUrl": "VSO 계정 URI",
+  "loc.input.label.Username": "대체 자격 증명 사용자 이름",
+  "loc.input.label.Password": "대체 자격 증명 암호"
+}

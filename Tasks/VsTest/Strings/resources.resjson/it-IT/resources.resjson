@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Test con Visual Studio",
+  "loc.description": "Consente di eseguire test con Visual Studio Test Runner",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.testAssembly": "Assembly di test",
+  "loc.input.label.testFiltercriteria": "Criteri di filtro test",
+  "loc.input.label.platform": "Piattaforma",
+  "loc.input.label.configuration": "Configurazione",
+  "loc.input.label.runSettingsFile": "File di impostazioni esecuzione test",
+  "loc.input.label.overrideTestrunParameters": "Esegui override parametri di esecuzione test",
+  "loc.input.label.codeCoverageEnabled": "Code coverage abilitato",
+  "loc.input.label.vsTestVersion": "Versione di VSTest",
+  "loc.input.label.pathtoCustomTestAdapters": "Percorso degli adattatori di test personalizzati",
+  "loc.input.label.otherConsoleOptions": "Altre opzioni della console"
+}

@@ -16,6 +16,7 @@ Write-Verbose -Verbose "Action = $Action"
 Write-Verbose -Verbose "BlockedFor = $BlockedFor"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
+import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"

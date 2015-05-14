@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Android-Build",
+  "loc.description": "Erstellen Sie eine Android-App mithilfe von Gradle, und starten Sie optional den Emulator für Komponententests.",
+  "loc.group.displayName.emulatorOptions": "Emulatoroptionen",
+  "loc.input.label.gradleWrapper": "Speicherort des Gradle-Wrappers",
+  "loc.input.label.gradleProj": "Projektverzeichnis",
+  "loc.input.label.gradleArguments": "Argumente",
+  "loc.input.label.startEmulator": "Android-Emulator starten",
+  "loc.input.label.emulatorTarget": "Emulator-Ziel-SDK",
+  "loc.input.label.emulatorDevice": "Emulatorgerät"
+}

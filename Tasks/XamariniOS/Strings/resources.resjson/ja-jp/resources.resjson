@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.description": "Xamarin を使用して Mac OS 上で iOS アプリをビルドします",
+  "loc.input.label.solution": "ソリューション",
+  "loc.input.label.configuration": "構成",
+  "loc.input.label.mdtoolLocation": "mdtool へのパスのオーバーライド",
+  "loc.input.label.forSimulator": "iOS シミュレーターのビルド"
+}

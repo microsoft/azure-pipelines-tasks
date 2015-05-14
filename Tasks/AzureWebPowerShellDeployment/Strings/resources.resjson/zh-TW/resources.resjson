@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Azure 網站部署",
+  "loc.description": "將網站部署到 Microsoft Azure",
+  "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
+  "loc.input.label.WebSiteLocation": "網站位置",
+  "loc.input.label.WebSiteName": "網站名稱",
+  "loc.input.label.Package": "套件",
+  "loc.input.label.AdditionalArguments": "其他引數"
+}

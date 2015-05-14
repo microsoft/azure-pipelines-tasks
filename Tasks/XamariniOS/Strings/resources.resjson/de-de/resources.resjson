@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.description": "iOS-App mit Xamarin auf Mac OS erstellen",
+  "loc.input.label.solution": "Lösung",
+  "loc.input.label.configuration": "Konfiguration",
+  "loc.input.label.mdtoolLocation": "Pfad zu mdtool überschreiben",
+  "loc.input.label.forSimulator": "Für iOS-Simulator erstellen"
+}

@@ -25,10 +25,12 @@ Write-Host "Starting Azure Resource Group Deployment Task"
 Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "environmentName = $resourceGroupName"
 Write-Verbose -Verbose "location = $location"
+Write-Verbose -Verbose "overrideParameters = $overrideParameters"
 Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
 Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 #Find the matching deployment definition File
@@ -57,14 +59,14 @@ if(Test-Path -Path $csmParametersFile -PathType Leaf)
 
 Check-EnvironmentNameAvailability -environmentName $resourceGroupName
 
-$parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent -overrideParameters $overrideParameters
+$parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
 $parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameterName -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
 
 Switch-AzureMode AzureResourceManager
 
 $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
 
-$resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location
+$resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
 
 Initialize-DTLServiceHelper
 

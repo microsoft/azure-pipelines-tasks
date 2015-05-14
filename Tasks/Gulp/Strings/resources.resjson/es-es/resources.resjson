@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.description": "Sistema de compilación basado en la tarea de streaming de Node.js",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.gulpFile": "Ruta de acceso del archivo Gulp",
+  "loc.input.label.targets": "Tareas de Gulp",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.label.cwd": "Directorio de trabajo"
+}

@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "CMake 플랫폼 간 빌드 시스템으로 빌드",
+  "loc.input.label.cwd": "작업 디렉터리",
+  "loc.input.label.args": "인수"
+}
