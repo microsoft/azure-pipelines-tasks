@@ -20,8 +20,9 @@ var onError = function (errorMsg) {
 //check for pattern in testResultsFiles
 if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
   tl.debug('Pattern found in testResultsFiles parameter');
-  var matchingTestResultsFiles = tl.findFiles(testResultsFiles);
-  tl.debug('matchingTestResultsFiles = ' + matchingTestResultsFiles);
+  var buildFolder = tl.getVariable('agent.buildDirectory');
+  var allFiles = tl.find(buildFolder);
+  var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
 }
 else {
   tl.debug('No pattern found in testResultsFiles parameter');
