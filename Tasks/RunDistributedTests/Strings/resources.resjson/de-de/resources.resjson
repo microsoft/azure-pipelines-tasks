@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Visual Studio Test Run using Test Agent",
+  "loc.description": "Tests verteilt mithilfe von Test-Agents in einer Lab-Computergruppe ausführen",
+  "loc.group.displayName.testEnvironment": "Testcomputergruppe",
+  "loc.group.displayName.testSettings": "Testeinstellungen",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.environment": "Testcomputergruppe",
+  "loc.input.label.dropLocation": "Testablagespeicherort",
+  "loc.input.label.sourcefilters": "Testassembly",
+  "loc.input.label.testFilterCriteria": "Testfilterkriterien",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.runSettingsFile": "Testlaufeinstellungsdatei",
+  "loc.input.label.overrideRunParams": "Testlaufparameter überschreiben",
+  "loc.input.label.testConfigurations": "Test Configurations",
+  "loc.input.label.codeCoverageEnabled": "Codeabdeckung aktiviert",
+  "loc.input.label.autEnvironmentName": "Application Under Test Machine Group"
+}

@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Distribuzione del servizio cloud di Azure",
+  "loc.description": "Consente di distribuire un servizio cloud di Azure",
+  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
+  "loc.input.label.StorageAccount": "Account di archiviazione",
+  "loc.input.label.ServiceName": "Nome del servizio",
+  "loc.input.label.ServiceLocation": "Percorso servizio",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "Ambiente (slot)",
+  "loc.input.label.AllowUpgrade": "Consenti aggiornamento"
+}

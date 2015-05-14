@@ -1,0 +1,5 @@
+{
+  "loc.friendlyName": "CocoaPods",
+  "loc.description": "CocoaPods 是 Swift 及 Objective-C Cocoa 專案的相依性管理員。 執行 POD 安裝。",
+  "loc.input.label.cwd": "工作目錄"
+}

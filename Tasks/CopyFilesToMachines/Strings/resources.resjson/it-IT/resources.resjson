@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Copia file in computer remoti",
+  "loc.description": "Consente di copiare file nei computer remoti",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.EnvironmentName": "Gruppo di computer di destinazione",
+  "loc.input.label.MachineNames": "Copia in computer",
+  "loc.input.label.SourcePath": "Origine",
+  "loc.input.label.TargetPath": "Cartella di destinazione",
+  "loc.input.label.CleanTargetBeforeCopy": "Pulisci destinazione",
+  "loc.input.label.DeployFilesInParallel": "Copia file in parallelo"
+}

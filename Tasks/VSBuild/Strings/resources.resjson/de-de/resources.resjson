@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Visual Studio-Build",
+  "loc.description": "Mit MSBuild in der Eingabeaufforderung für Visual Studio-Entwickler erstellen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.solution": "Lösung",
+  "loc.input.label.msbuildArgs": "MSBuild-Argumente",
+  "loc.input.label.platform": "Plattform",
+  "loc.input.label.configuration": "Konfiguration",
+  "loc.input.label.clean": "Bereinigen",
+  "loc.input.label.restoreNugetPackages": "NuGet-Pakete wiederherstellen",
+  "loc.input.label.vsLocationMethod": "Visual Studio",
+  "loc.input.label.vsVersion": "Visual Studio-Version",
+  "loc.input.label.vsLocation": "Visual Studio-Speicherort",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild-Version",
+  "loc.input.label.msbuildArchitecture": "MSBuild-Architektur",
+  "loc.input.label.msbuildLocation": "Pfad zu MSBuild",
+  "loc.input.label.logProjectEvents": "Projektdetails aufzeichnen"
+}

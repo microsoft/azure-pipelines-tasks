@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Compilación de Xcode",
+  "loc.description": "Compile un área de trabajo de Xcode en Mac OS",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.xcWorkspacePath": "Ruta de acceso del área de trabajo",
+  "loc.input.label.scheme": "Esquema",
+  "loc.input.label.actions": "Acciones",
+  "loc.input.label.configuration": "Configuración",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.outputPattern": "Resultados"
+}

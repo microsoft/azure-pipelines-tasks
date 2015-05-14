@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.description": "MSBuild로 빌드",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.solution": "솔루션",
+  "loc.input.label.platform": "플랫폼",
+  "loc.input.label.configuration": "구성",
+  "loc.input.label.msbuildArguments": "MSBuild 인수",
+  "loc.input.label.clean": "클린",
+  "loc.input.label.restoreNugetPackages": "NuGet 패키지 복원",
+  "loc.input.label.logProjectEvents": "프로젝트 정보 기록",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild 버전",
+  "loc.input.label.msbuildArchitecture": "MSBuild 아키텍처",
+  "loc.input.label.msbuildLocation": "MSBuild 경로"
+}

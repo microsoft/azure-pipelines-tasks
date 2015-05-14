@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Azure 리소스 그룹 배포",
+  "loc.description": "Azure 리소스 그룹 프로비전 및 배포",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.ConnectedServiceName": "Azure 구독",
+  "loc.input.label.location": "위치",
+  "loc.input.label.resourceGroupName": "리소스 그룹",
+  "loc.input.label.csmFile": "템플릿",
+  "loc.input.label.csmParametersFile": "템플릿 매개 변수",
+  "loc.input.label.overrideParameters": "Override Template Parameters",
+  "loc.input.label.dscDeployment": "SAS 토큰 생성",
+  "loc.input.label.moduleUrlParameterName": "Azure Blob 매개 변수",
+  "loc.input.label.sasTokenParameterName": "SAS 토큰 매개 변수",
+  "loc.input.label.vmCreds": "가상 컴퓨터 자격 증명",
+  "loc.input.label.vmUserName": "사용자 이름",
+  "loc.input.label.vmPassword": "암호"
+}

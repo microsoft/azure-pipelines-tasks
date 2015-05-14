@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Shellskript",
+  "loc.description": "Shellskript mithilfe von Bash ausführen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.scriptPath": "Skriptpfad",
+  "loc.input.label.args": "Argumente",
+  "loc.input.label.cwd": "Arbeitsverzeichnis"
+}

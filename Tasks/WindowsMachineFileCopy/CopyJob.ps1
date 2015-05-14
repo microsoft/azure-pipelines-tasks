@@ -19,20 +19,20 @@ param (
     [void][reflection.assembly]::LoadFrom( $_.FullName )
     Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
     }
-	
+
 	$cleanTargetPathOption = ''
-	if($cleanTargetBeforeCopy -eq "true")
-	{
+   if($cleanTargetBeforeCopy -eq "true")
+    {
 		$cleanTargetPathOption = '-CleanTargetPath'
-	}
+    }
 
     Write-Verbose "Initiating copy on $fqdn " -Verbose
-   
+
    	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"	
 		
 	[scriptblock]$copyFilesToTargetMachineBlock = [scriptblock]::Create($copyFilesToTargetMachineBlockString)
 	
 	$copyResponse = Invoke-Command -ScriptBlock $copyFilesToTargetMachineBlock
-
+    
     Write-Output $copyResponse
 }

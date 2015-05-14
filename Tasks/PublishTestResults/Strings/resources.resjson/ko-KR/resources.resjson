@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "테스트 결과 게시",
+  "loc.description": "VSO/TFS에 테스트 결과 게시",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.testRunner": "테스트 결과 형식",
+  "loc.input.label.testResultsFiles": "테스트 결과 파일",
+  "loc.input.label.mergeTestResults": "테스트 결과 병합",
+  "loc.input.label.platform": "플랫폼",
+  "loc.input.label.configuration": "구성"
+}

@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Script batch",
+  "loc.description": "Consente di eseguire uno script cmd o bat di Windows e facoltativamente consente di modificare l'ambiente",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.filename": "Percorso",
+  "loc.input.label.arguments": "Argomenti",
+  "loc.input.label.modifyEnvironment": "Modifica ambiente",
+  "loc.input.label.workingFolder": "Cartella di lavoro"
+}

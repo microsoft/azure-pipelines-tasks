@@ -6,6 +6,7 @@
   "name": "MSBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Build with **MSBuild**",
   "category": "Build",
   "visibility": [
     "Build"
@@ -14,12 +15,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 10
   },
   "demands": [
     "msbuild"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",

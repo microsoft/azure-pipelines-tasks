@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure 클라우드 서비스 배포",
+  "loc.description": "Azure 클라우드 서비스 배포",
+  "loc.input.label.ConnectedServiceName": "Azure 구독",
+  "loc.input.label.StorageAccount": "저장소 계정",
+  "loc.input.label.ServiceName": "서비스 이름",
+  "loc.input.label.ServiceLocation": "서비스 위치",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "환경(슬롯)",
+  "loc.input.label.AllowUpgrade": "업그레이드 허용"
+}

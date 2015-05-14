@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "編製來源索引及發行符號",
+  "loc.description": "編製原始程式碼的索引，並將符號發行到檔案共用",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.SymbolsPath": "發行符號的路徑",
+  "loc.input.label.SearchPattern": "搜尋模式",
+  "loc.input.label.SourceFolder": "來源資料夾的路徑",
+  "loc.input.label.SymbolsFolder": "符號資料夾的路徑",
+  "loc.input.label.SymbolsMaximumWaitTime": "等候時間上限 (分鐘)",
+  "loc.input.label.SymbolsProduct": "產品",
+  "loc.input.label.SymbolsVersion": "版本"
+}

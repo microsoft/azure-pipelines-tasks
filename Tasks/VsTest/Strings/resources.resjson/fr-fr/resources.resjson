@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Visual Studio Test",
+  "loc.description": "Exécuter des tests avec Visual Studio Test Runner",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.testAssembly": "Assembly de test",
+  "loc.input.label.testFiltercriteria": "Tester les critères de filtre",
+  "loc.input.label.platform": "Plateforme",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.runSettingsFile": "Fichier de paramètres d'exécution",
+  "loc.input.label.overrideTestrunParameters": "Remplacer les paramètres TestRun",
+  "loc.input.label.codeCoverageEnabled": "Couverture du code activée",
+  "loc.input.label.vsTestVersion": "Version de VSTest",
+  "loc.input.label.pathtoCustomTestAdapters": "Chemin d'accès des adaptateurs de tests personnalisés",
+  "loc.input.label.otherConsoleOptions": "Autres options de console"
+}

@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Licencia de Xamarin",
+  "loc.description": "Active o desactive licencias de Xamarin",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.action": "Acción",
+  "loc.input.label.email": "Correo electrónico",
+  "loc.input.label.password": "Contraseña",
+  "loc.input.label.activateAndroid": "Activar Xamarin.Android",
+  "loc.input.label.timeout": "Tiempo de espera en segundos"
+}

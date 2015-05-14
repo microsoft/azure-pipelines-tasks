@@ -3,13 +3,15 @@
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
     "description": "Installs and updates missing NuGet packages",
+    "helpMarkDown": "Installs and updates missing NuGet packages",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 10
     },
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"advanced",

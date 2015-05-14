@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.description": "Exécuter un script PowerShell dans un environnement Azure",
+  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
+  "loc.input.label.ScriptPath": "Chemin d'accès du script",
+  "loc.input.label.ScriptArguments": "Arguments de script"
+}

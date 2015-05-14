@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "NuGet-Installer",
+  "loc.description": "Installiert und aktualisiert fehlende NuGet-Pakete",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.solution": "Pfad zur Lösung",
+  "loc.input.label.excludeVersion": "Version ausschließen",
+  "loc.input.label.noCache": "Lokalen Cache deaktivieren",
+  "loc.input.label.nuGetRestoreArgs": "NuGet-Argumente",
+  "loc.input.label.nuGetPath": "Pfad zu NuGet.exe"
+}

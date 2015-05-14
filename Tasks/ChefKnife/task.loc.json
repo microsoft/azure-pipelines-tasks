@@ -6,6 +6,7 @@
   "name": "ChefKnife",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Run Scripts with knife commands on your chef workstation",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -16,12 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "Chef"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",

@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "使用 CMake 跨平台建置系統建置",
+  "loc.input.label.cwd": "工作目錄",
+  "loc.input.label.args": "引數"
+}

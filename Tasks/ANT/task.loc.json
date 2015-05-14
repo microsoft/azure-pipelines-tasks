@@ -6,6 +6,7 @@
   "name": "Ant",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Build with Apache Ant",
   "category": "Build",
   "visibility": [
     "Build"
@@ -14,11 +15,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [
     "ant"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "junitTestResults",

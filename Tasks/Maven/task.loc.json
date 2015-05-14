@@ -6,6 +6,7 @@
   "name": "Maven",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Build with Apache Maven",
   "category": "Build",
   "visibility": [
     "Build"
@@ -17,8 +18,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
+  "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "Maven $(args)",
   "groups": [
     {

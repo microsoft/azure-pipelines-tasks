@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure 云服务部署",
+  "loc.description": "部署 Azure 云服务",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
+  "loc.input.label.StorageAccount": "存储帐户",
+  "loc.input.label.ServiceName": "服务名称",
+  "loc.input.label.ServiceLocation": "服务位置",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "环境(槽)",
+  "loc.input.label.AllowUpgrade": "允许升级"
+}

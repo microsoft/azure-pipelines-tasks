@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "컴퓨터에 파일 복사",
+  "loc.description": "원격 컴퓨터에 파일 복사",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.EnvironmentName": "대상 컴퓨터 그룹",
+  "loc.input.label.MachineNames": "컴퓨터에 복사",
+  "loc.input.label.SourcePath": "소스",
+  "loc.input.label.TargetPath": "대상 폴더",
+  "loc.input.label.CleanTargetBeforeCopy": "클린 대상",
+  "loc.input.label.DeployFilesInParallel": "병렬로 파일 복사"
+}

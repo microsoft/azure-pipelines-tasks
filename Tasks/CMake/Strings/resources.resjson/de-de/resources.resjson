@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "Mit dem plattformübergreifenden CMake-Buildsystem erstellen",
+  "loc.input.label.cwd": "Arbeitsverzeichnis",
+  "loc.input.label.args": "Argumente"
+}

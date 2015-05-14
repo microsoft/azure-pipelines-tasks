@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Maven",
+  "loc.description": "Apache Maven으로 빌드",
+  "loc.group.displayName.junitTestResults": "JUnit Test Results",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.mavenPOMFile": "Maven POM 파일",
+  "loc.input.label.options": "옵션",
+  "loc.input.label.goals": "목표",
+  "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
+  "loc.input.label.testResultsFiles": "Test Results Files",
+  "loc.input.label.jdkVersion": "JDK 버전",
+  "loc.input.label.jdkArchitecture": "JDK 아키텍처"
+}

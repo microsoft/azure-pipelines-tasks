@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "대상 컴퓨터에서 PowerShell 실행",
+  "loc.description": "대상 컴퓨터에서 PowerShell을 실행합니다. PowerShell 명령을 컴퓨터에서 원격으로 실행합니다.",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.EnvironmentName": "컴퓨터 그룹",
+  "loc.input.label.MachineNames": "컴퓨터에 배포",
+  "loc.input.label.ScriptPath": "PowerShell 스크립트",
+  "loc.input.label.ScriptArguments": "스크립트 인수",
+  "loc.input.label.InitializationScriptPath": "초기화 스크립트",
+  "loc.input.label.RunPowershellInParallel": "병렬로 Powershell 실행"
+}

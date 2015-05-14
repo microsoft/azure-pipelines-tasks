@@ -6,6 +6,7 @@
   "name": "XamarinTestCloud",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
   "category": "Test",
   "visibility": [
     "Build"
@@ -14,9 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",

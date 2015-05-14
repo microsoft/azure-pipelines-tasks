@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.description": "Node.js 串流工作建置系統",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.gulpFile": "Gulp 檔案路徑",
+  "loc.input.label.targets": "Gulp 工作",
+  "loc.input.label.arguments": "引數",
+  "loc.input.label.cwd": "工作目錄"
+}

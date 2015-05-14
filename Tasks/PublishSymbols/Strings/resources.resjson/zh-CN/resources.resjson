@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "为源编制索引并发布符号",
+  "loc.description": "为你的源代码编制索引并将符号发布到文件共享",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.SymbolsPath": "发布符号的路径",
+  "loc.input.label.SearchPattern": "搜索模式",
+  "loc.input.label.SourceFolder": "源文件夹的路径",
+  "loc.input.label.SymbolsFolder": "符号文件夹的路径",
+  "loc.input.label.SymbolsMaximumWaitTime": "最长等待时间(分钟)",
+  "loc.input.label.SymbolsProduct": "产品",
+  "loc.input.label.SymbolsVersion": "版本"
+}

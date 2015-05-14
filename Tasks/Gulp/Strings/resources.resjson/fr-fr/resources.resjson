@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.description": "Système de génération basé sur les tâches de diffusion en continu Node.js",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.gulpFile": "Chemin d'accès du fichier Gulp",
+  "loc.input.label.targets": "Tâche(s) Gulp",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.label.cwd": "Répertoire de travail"
+}

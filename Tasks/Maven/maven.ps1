@@ -23,8 +23,10 @@ if(!$mavenPOMFile)
     throw "Maven POM file is not specified"
 }
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if($jdkVersion -and $jdkVersion -ne "default")
 {

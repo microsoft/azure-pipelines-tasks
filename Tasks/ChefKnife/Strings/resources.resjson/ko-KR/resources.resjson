@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Chef Knife",
+  "loc.description": "chef 워크스테이션에서 knife 명령을 사용하여 스크립트 실행",
+  "loc.input.label.ConnectedServiceName": "Chef 구독",
+  "loc.input.label.ScriptPath": "스크립트 경로",
+  "loc.input.label.ScriptArguments": "스크립트 인수"
+}

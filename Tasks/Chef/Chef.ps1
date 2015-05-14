@@ -157,7 +157,8 @@ try
 {
 	#setting error action preference
 	$ErrorActionPreference = "Stop"
-    
+
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
     Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 
     #fetching chef subscription details

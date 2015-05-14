@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "소스 인덱싱 및 기호 게시 ",
+  "loc.description": "소스 코드를 인덱싱하고 파일 공유에 기호 게시",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.SymbolsPath": "기호를 게시할 경로",
+  "loc.input.label.SearchPattern": "검색 패턴",
+  "loc.input.label.SourceFolder": "소스 폴더 경로",
+  "loc.input.label.SymbolsFolder": "기호 폴더 경로",
+  "loc.input.label.SymbolsMaximumWaitTime": "최대 대기 시간(분)",
+  "loc.input.label.SymbolsProduct": "제품",
+  "loc.input.label.SymbolsVersion": "버전"
+}

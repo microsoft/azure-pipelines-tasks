@@ -3,7 +3,8 @@ function Create-AzureResourceGroup
     param([string]$csmFile, 
           [System.Collections.Hashtable]$csmParametersObject,
           [string]$resourceGroupName,
-          [string]$location)
+          [string]$location,
+          [string]$overrideParameters)
     
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
@@ -20,18 +21,25 @@ function Create-AzureResourceGroup
         }
 
         $startTime = Get-Date
-        #$startTime = $startTime.ToUniversalTime()
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
         Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
 
         if (!$csmParametersObject)
         {
-            $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError
+            $azureCommand = "New-AzureResourceGroupDeployment"
+            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+            $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+            Write-Host "$finalCommand"
+            Invoke-Expression -Command $finalCommand
         }
         else
         {
-            $azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $csmFile -TemplateParameterObject $csmParametersObject -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError
+            $azureCommand = "New-AzureResourceGroupDeployment"
+            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+            $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+            Write-Host "$finalCommand"
+            Invoke-Expression -Command $finalCommand
         }
 
         if ($azureResourceGroupDeployment)
@@ -369,3 +377,47 @@ function Print-OperationLog
     }
 }
 
+function Get-ServiceEndPointDetails
+{
+    param([String][Parameter(Mandatory = $true)]$ConnectedServiceName)
+
+    Write-Host "entering in Get-ServiceEndPointDetails"
+
+    $serviceEndpoint = Get-ServiceEndpoint -Name $ConnectedServiceName -Context $distributedTaskContext
+
+    if ($serviceEndpoint -eq $null)
+    {
+        throw "A Connected Service with name '$ConnectedServiceName' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
+    }
+
+    if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')
+    {
+        $username = $serviceEndpoint.Authorization.Parameters.UserName
+        $password = $serviceEndpoint.Authorization.Parameters.Password
+        Write-Verbose "Username= $username" -Verbose
+
+        $azureSubscriptionId = $serviceEndpoint.Data.SubscriptionId
+        $azureSubscriptionName = $serviceEndpoint.Data.SubscriptionName
+        Write-Verbose "azureSubscriptionId= $azureSubscriptionId" -Verbose
+        Write-Verbose "azureSubscriptionName= $azureSubscriptionName" -Verbose
+
+        $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
+        
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureSubscriptionName)
+        $propertyBag.Add("SubscriptionName", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureSubscriptionId)
+        $propertyBag.Add("SubscriptionId", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $username)
+        $propertyBag.Add("Username", $property)
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $password)
+        $propertyBag.Add("Password", $property)
+
+        Write-Host "Completed Get-ServiceEndPointDetails"
+
+        return $propertyBag
+    }
+    else
+    {
+        throw "Unsupported authorization scheme for azure endpoint = " + $serviceEndpoint.Authorization.Scheme
+    }
+}

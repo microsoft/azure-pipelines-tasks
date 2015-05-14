@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Запуск PowerShell на целевых компьютерах",
+  "loc.description": "Запуск PowerShell на целевых компьютерах. Удаленное выполнение команд PowerShell на компьютерах.",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.EnvironmentName": "Группа компьютеров",
+  "loc.input.label.MachineNames": "Развертывание на компьютерах",
+  "loc.input.label.ScriptPath": "Скрипт PowerShell",
+  "loc.input.label.ScriptArguments": "Аргументы скрипта",
+  "loc.input.label.InitializationScriptPath": "Скрипт инициализации",
+  "loc.input.label.RunPowershellInParallel": "Параллельный запуск PowerShell"
+}

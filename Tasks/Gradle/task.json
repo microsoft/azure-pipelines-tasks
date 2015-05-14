@@ -3,6 +3,7 @@
     "name": "Gradle",
     "friendlyName": "Gradle",
     "description": "Build using a Gradle wrapper script",
+    "helpMarkDown": "Build using a Gradle wrapper script",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -11,11 +12,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands" : [
         "java"
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"junitTestResults",

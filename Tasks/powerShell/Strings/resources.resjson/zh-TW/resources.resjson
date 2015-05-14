@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.description": "執行 PowerShell 指令碼",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.scriptName": "指令碼檔名",
+  "loc.input.label.arguments": "引數",
+  "loc.input.label.workingFolder": "工作資料夾"
+}

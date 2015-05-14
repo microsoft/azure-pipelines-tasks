@@ -6,6 +6,7 @@
   "name": "RunPowerShellOnTargetMachines",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "Run PowerShell on Target Machines.  Executes PowerShell commands remotely on machine(s)",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -15,9 +16,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -73,7 +74,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Setting it to true will run powershell parellely on the machines."
+      "helpMarkDown": "Setting it to true will run powershell scripts in parallel on the target machines."
     }
   ],
   "sourceDefinitions": [

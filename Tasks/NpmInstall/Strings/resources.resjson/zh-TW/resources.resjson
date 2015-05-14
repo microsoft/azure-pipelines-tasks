@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "npm 安裝",
+  "loc.description": "安裝 npm 套件",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.arguments": "引數",
+  "loc.input.label.cwd": "工作目錄"
+}
