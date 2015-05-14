@@ -7,7 +7,7 @@ param (
     [string]$deployFilesInParallel
     )
 
-Write-Verbose "Entering script DeployFilesToMachines.ps1" -Verbose
+Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
