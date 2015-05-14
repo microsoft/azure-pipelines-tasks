@@ -38,41 +38,51 @@ if(jdkVersion != 'default') {
    process.env['JAVA_HOME'] = specifiedJavaHome;
 }
 
+var publishJUnitResults = tl.getInput('publishJUnitResults');
+var testResultsFiles = tl.getInput('testResultsFiles', true);
+
+function publishTestResults(publishJUnitResults, testResultsFiles) {
+  if(publishJUnitResults == 'true') {
+    //check for pattern in testResultsFiles
+    if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
+      tl.debug('Pattern found in testResultsFiles parameter');
+      var buildFolder = tl.getVariable('agent.buildDirectory');
+      var allFiles = tl.find(buildFolder);
+      var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
+    }
+    else {
+      tl.debug('No pattern found in testResultsFiles parameter');
+      var matchingTestResultsFiles = [testResultsFiles];
+    }
+
+    if(!matchingTestResultsFiles) {
+      tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');  
+      return 0;
+    }
+
+    var tp = new tl.TestPublisher("JUnit");
+    tp.publish(matchingTestResultsFiles, false, "", "");
+  } 
+}
+
 antv.exec()
 .then(function(code) {
 	return antb.exec();
 })
-.then(function(code) {
+.then(function(code) {  
+  publishTestResults(publishJUnitResults, testResultsFiles);
 	tl.exit(code);
 })
 .fail(function(err) {
+  publishTestResults(publishJUnitResults, testResultsFiles);
 	tl.debug('taskRunner fail');
 	tl.exit(1);
 })
 
-//publish JUnit test results 
-var publishJUnitResults = tl.getInput('publishJUnitResults');
-if(publishJUnitResults == 'true') {
-  var testResultsFiles = tl.getInput('testResultsFiles', true);
 
-  //check for pattern in testResultsFiles
-  if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
-    tl.debug('Pattern found in testResultsFiles parameter');
-    var buildFolder = tl.getVariable('agent.buildDirectory');
-    var allFiles = tl.find(buildFolder);
-    var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
-  }
-  else {
-    tl.debug('No pattern found in testResultsFiles parameter');
-    var matchingTestResultsFiles = [testResultsFiles];
-  }
 
-  if(!matchingTestResultsFiles) {
-    tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');  
-    tl.exit(0);
-  }
+  
 
-  var tp = new tl.TestPublisher("JUnit");
-  tp.publish(matchingTestResultsFiles, false, "", "");
+  
 }
 
