@@ -136,6 +136,11 @@ function Validate-AzureKeyVaultSecret
     {
         Throw "Please specify valid certificate password"
     }
+
+    if([System.IO.Path]::GetExtension($certificatePath) -ne ".pfx")
+    {
+        Throw "Please specify pfx certificate file"
+    }
 }
 
 function Upload-CertificateOnAzureKeyVaultAsSecret
@@ -162,9 +167,6 @@ function Upload-CertificateOnAzureKeyVaultAsSecret
     $azureKeyVaultSecret = Create-AzureKeyVaultSecret -azureKeyVaultName $azureKeyVaultName -secretName $azureKeyVaultSecretName -secretValue $secretValue
 
     $azureKeyVaultSecretId = $azureKeyVaultSecret.Id
-    
-    #TODO: Remove this log
-    Write-Verbose -Verbose "AzureKeyVaultSecretId = $azureKeyVaultSecretId"
 
     return $azureKeyVaultSecretId
 }
@@ -178,8 +180,7 @@ function Create-CSMForWinRMConfiguration
           [string]$azureKeyVaultSecretId)
 
     $csmJTokenObject = [Newtonsoft.Json.Linq.JToken]::Parse($baseCsmFileContent)
-    $virtualMachineResources = $csmJTokenObject.SelectToken($resources) | Where-Object { $_[$type].Value -eq $virtualMachineType }
-
+    $virtualMachineResources = $csmJTokenObject.SelectToken("resources") | Where-Object { $_["type"].Value -eq "Microsoft.Compute/virtualMachines" }
     if($virtualMachineResources -eq $null)
     {
         Write-Warning  "No virtual Machine Resource found in the deployment template, can't add WinRm Configuration Node"
@@ -189,8 +190,7 @@ function Create-CSMForWinRMConfiguration
     Write-Verbose -Verbose "Generating deployment template for WinRM configuration from base template file"
     Write-Verbose -Verbose "azureKeyVaultName : $azureKeyVaultName"
     Write-Verbose -Verbose "azureKeyVaultSecretId : $azureKeyVaultSecretId"
-    . ./Constants.ps1
-
+    
     # TODO: Explore to avoid if/else statement, didn't find better way to check if virtualMachineResources is returning as array or single item
     if ($virtualMachineResources -is [system.array])
     {
@@ -223,14 +223,14 @@ function Add-NodesForWinRmConfiguration
           [string]$azureKeyVaultName,
           [string]$azureKeyVaultSecretId)
 
-    $osProfile = $jtokenObject.SelectToken($osProfile)
+    $osProfile = $jtokenObject.SelectToken("properties.osProfile")
     if($osProfile -eq $null)
     {
         Write-Warning "No 'osProfile' found in Virtual Machine Resource, can't add WinRm Configuration Node'"
         return
     }
 
-    if($winrmListeners -eq $winRmHttps)
+    if($winrmListeners -eq "winrmhttps")
     {
         Add-SecretsNode -jtokenObject $jtokenObject -resourceGroupName $resourceGroupName -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
     }
@@ -247,12 +247,24 @@ function Add-SecretsNode
           [string]$azureKeyVaultName,
           [string]$azureKeyVaultSecretId)
 
-    if($jtokenObject.SelectToken($secretsNode) -eq $null)
+    if($jtokenObject.SelectToken("secrets") -eq $null)
     {
         Write-Verbose -Verbose "No 'secrets' node found in virtual machine resource"
         $jArrayObject = New-Object 'Newtonsoft.Json.Linq.JArray'
-        $jtokenObject.properties.osProfile.Add($secretsNode, $jArrayObject)
+        $jtokenObject.properties.osProfile.Add("secrets", $jArrayObject)
     }
+
+    $secretsJson = "{
+                ""sourceVault"": {
+                    ""id"": ""[resourceId('$resourceGroupName', 'Microsoft.KeyVault/vaults', '$azureKeyVaultName')]""
+                  },
+                  ""vaultCertificates"": [
+                    {
+                      ""certificateUrl"": ""$azureKeyVaultSecretId"",
+                      ""certificateStore"": ""My""
+                    }
+                  ]
+           }"
 
     $secretsJObject = [Newtonsoft.Json.Linq.JToken]::Parse($secretsJson)
     $jtokenObject.properties.osProfile.secrets.Add($secretsJObject)
@@ -265,23 +277,40 @@ function Add-WindowsConfigurationNode
           [string]$winrmListeners,
           [string]$azureKeyVaultSecretId)
 
-    if($jtokenObject.SelectToken($windowsConfigurationNode) -eq $null)
+    if($jtokenObject.SelectToken("windowsConfiguration") -eq $null)
     {
         Write-Verbose -Verbose "No 'windowsConfiguration' node found in virtual machine resource"
         $jObject = New-Object 'Newtonsoft.Json.Linq.JObject'
-        $jtokenObject.properties.osProfile.Add($windowsConfigurationNode, $jObject)
+        $jtokenObject.properties.osProfile.Add("windowsConfiguration", $jObject)
     }
 
-    $jtokenObject.properties.osProfile.windowsConfiguration[$provisionVMAgent] = '"true"'
-    $jtokenObject.properties.osProfile.windowsConfiguration[$enableAutomaticUpdates] = '"true"'
+    $jtokenObject.properties.osProfile.windowsConfiguration["provisionVMAgent"] = '"true"'
+    $jtokenObject.properties.osProfile.windowsConfiguration["enableAutomaticUpdates"] = '"true"'
+
+    $winrmHttpListenerJson = "{
+                          ""Listeners"": [
+                            {
+                              ""protocol"": ""http""
+                            }
+                          ]
+                     }"
+
+    $winrmHttpsListenerJson = "{
+                          ""Listeners"": [
+                            {
+                              ""protocol"": ""https"",
+                              ""certificateUrl"": ""$azureKeyVaultSecretId""
+                            }
+                          ]
+                     }"
 
     Switch ($winrmListeners)
     {
-         $winRmHttp {
+         "winrmhttp" {
              $winrmListenersJObject=[Newtonsoft.Json.Linq.JToken]::Parse($winrmHttpListenerJson)
          }
 
-         $winRmHttps {
+         "winrmhttps" {
              $winrmListenersJObject=[Newtonsoft.Json.Linq.JToken]::Parse($winrmHttpsListenerJson)
          }
 
@@ -290,7 +319,7 @@ function Add-WindowsConfigurationNode
          }
     }
 
-    $jtokenObject.properties.osProfile.windowsConfiguration[$winRM] = $winrmListenersJObject
+    $jtokenObject.properties.osProfile.windowsConfiguration["winRM"] = $winrmListenersJObject
     Write-Verbose -Verbose "Added 'windowsConfiguration' node for WinRM configuration"
 }
 
@@ -310,7 +339,7 @@ function Get-SecretValueForAzureKeyVault
     $jsonObject = "
     {
     ""data"": ""$filecontentencoded"",
-    ""dataType"" :""$pfxCertificateType"",
+    ""dataType"" :""pfx"",
     ""password"": ""$certificatePassword""
     }"
 

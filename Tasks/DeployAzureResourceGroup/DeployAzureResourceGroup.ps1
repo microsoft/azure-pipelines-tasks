@@ -21,7 +21,6 @@ param(
 . ./AzureResourceManagerHelper.ps1
 . ./DtlServiceHelper.ps1
 . ./Utility.ps1
-. ./Constants.ps1
 
 $ErrorActionPreference = "Stop"
 
@@ -71,7 +70,7 @@ $parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameter
 
 Switch-AzureMode AzureResourceManager
 
-if ($winrmListeners -eq $winRmHttps)
+if ($winrmListeners -eq "winrmhttps")
 {
     if([string]::IsNullOrEmpty($azureKeyVaultName) -eq $true)
     {
@@ -94,12 +93,15 @@ if ($winrmListeners -eq $winRmHttps)
     $azureKeyVaultSecretId = Upload-CertificateOnAzureKeyVaultAsSecret -certificatePath $certificatePath -certificatePassword $certificatePassword -resourceGroupName $resourceGroupName -location $location -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretName $azureKeyVaultSecretName
 }
 
-if($winrmListeners -ne $none)
+if($winrmListeners -ne "none")
 {
     #Storing in temp variable so that we can cleanup Temp file later on
     $tempFile = Create-CSMForWinRMConfiguration -baseCsmFileContent $csmFileContent -winrmListeners $winrmListeners -resourceGroupName $resourceGroupName -azureKeyVaultName $azureKeyVaultName -azureKeyVaultSecretId $azureKeyVaultSecretId
 
-    $csmFile = $tempFile
+    if([string]::IsNullOrEmpty($tempFile) -eq $false)
+    {
+        $csmFile = $tempFile
+    }
 }
 
 $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName

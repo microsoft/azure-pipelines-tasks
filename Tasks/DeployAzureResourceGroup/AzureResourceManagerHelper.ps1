@@ -355,6 +355,13 @@ function Create-AzureKeyVaultIfNotExist
 
         Write-Host "Created Azure Key Vault for secrets"
     }
+    else
+    {
+        if($azureKeyVault.EnabledForDeployment -eq $false)
+        {
+            Throw "Secrets not enabled to be retrieved from KeyVault $azureKeyVaultName by the Microsoft.Compute resource provider, can't proceed with WinRM configuration"
+        }
+    }
 }
 
 function Create-AzureKeyVaultSecret
@@ -418,7 +425,7 @@ function Get-ServiceEndPointDetails
 
     if ($serviceEndpoint -eq $null)
     {
-        throw "A Connected Service with name '$ConnectedServiceName' could not be found.  Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
+        throw "A Connected Service with name '$ConnectedServiceName' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI."
     }
 
     if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')

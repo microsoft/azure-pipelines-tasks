@@ -152,8 +152,8 @@
       "groupName": "advancedDeploymentOptions",
       "options": {
         "none": "None",
-        "winrmhttp": "WinRM HTTP",
-        "winrmhttps": "WinRM HTTPS"
+        "winrmhttp": "HTTP",
+        "winrmhttps": "HTTPS"
       }
     },
     {
@@ -164,7 +164,7 @@
       "required": true,
       "groupName": "advancedDeploymentOptions",
       "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "Location of the certificate to install on the VMs for WinRM HTTPS. Variables like $(Build.Repository.LocalPath) can be used for binaries in the Automation Agent. Wildcards like **\\*.pfx can be also used."
+      "helpMarkDown": "Location of the certificate to install on the VMs for WinRM HTTPS. Variables like $(Build.Repository.LocalPath) and wildcards like `**\\*.pfx` can be also used."
     },
     {
       "name": "certificatePassword",
