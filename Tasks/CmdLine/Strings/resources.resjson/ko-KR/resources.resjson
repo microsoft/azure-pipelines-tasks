@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "명령줄",
+  "loc.description": "인수를 사용하여 명령줄 실행",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.filename": "도구",
+  "loc.input.label.arguments": "인수",
+  "loc.input.label.workingFolder": "작업 폴더",
+  "loc.input.label.errorPattern": "오류 패턴",
+  "loc.input.label.warningPattern": "경고 패턴",
+  "loc.input.label.failOnStandardError": "표준 오류 시 실패"
+}

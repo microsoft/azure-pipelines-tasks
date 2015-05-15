@@ -55,7 +55,7 @@ nugetRunner.exec()
     var mdtoolRunner = new tl.ToolRunner(mdtoolPath);
     mdtoolRunner.arg('--verbose');
     mdtoolRunner.arg('build');
-    mdtoolRunner.arg('--configuration:' + configuration + '|' + device);
+    mdtoolRunner.arg('--configuration:\'' + configuration + '|' + device + '\'');
     mdtoolRunner.arg(solutionPath);
 
     // Execute build

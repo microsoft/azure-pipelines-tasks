@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.description": "Сборка с помощью MSBuild",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.solution": "Решение",
+  "loc.input.label.platform": "Платформа",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.label.msbuildArguments": "Аргументы MSBuild",
+  "loc.input.label.clean": "Очистить",
+  "loc.input.label.restoreNugetPackages": "Восстановить пакеты NuGet",
+  "loc.input.label.logProjectEvents": "Записать сведения о проекте",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Версия MSBuild",
+  "loc.input.label.msbuildArchitecture": "Архитектура MSBuild",
+  "loc.input.label.msbuildLocation": "Путь к MSBuild"
+}

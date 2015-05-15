@@ -21,7 +21,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if (!$testAssembly)
 {
-    throw "testAssembly parameter not set on script"
+    throw (Get-LocalizedString -Key "Test assembly parameter not set on script")
 }
 
 # check for solution pattern
@@ -30,7 +30,7 @@ if ($testAssembly.Contains("*") -or $testAssembly.Contains("?"))
     Write-Verbose "Pattern found in solution parameter. Calling Find-Files."
     Write-Verbose "Calling Find-Files with pattern: $testAssembly"
     $testAssemblyFiles = Find-Files -SearchPattern $testAssembly
-	Write-Verbose "Found files: $testAssemblyFiles"
+    Write-Verbose "Found files: $testAssemblyFiles"
 }
 else
 {
@@ -44,6 +44,12 @@ if($testAssemblyFiles)
 {
     Write-Verbose -Verbose "Calling Invoke-VSTest for all test assemblies"
 
+    if($vsTestVersion -eq "latest")
+    {
+        # null out vsTestVersion before passing to cmdlet so it will default to the latest on the machine.
+        $vsTestVersion = $null
+    }
+
     $artifactsDirectory = Get-Variable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
     $workingDirectory = $artifactsDirectory
@@ -53,11 +59,17 @@ if($testAssemblyFiles)
 
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
-    Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
-
+    if($resultFiles) 
+    {
+        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+    }
+    else
+    {
+        Write-Warning "No results found to publish."
+    }
 }
 else
 {
-    Write-Verbose "No test assemblies found matching the pattern: $testAssembly"
+    Write-Warning "No test assemblies found matching the pattern: $testAssembly"
 }
 Write-Verbose "Leaving script VSTestConsole.ps1"

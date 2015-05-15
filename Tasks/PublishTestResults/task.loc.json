@@ -6,6 +6,7 @@
   "name": "PublishTestResults",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
     "Build"
@@ -14,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -80,6 +81,10 @@
       "target": "$(currentDirectory)\\PublishTestResults.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
+    },
+    "Node": {
+      "target": "PublishTestResults.js",
+      "argumentFormat": ""
     }
   }
 }

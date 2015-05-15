@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.description": "Задача потоковой передачи Node.js на основе системы сборки",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.gulpFile": "Путь к файлу Gulp",
+  "loc.input.label.targets": "Задачи Gulp",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.label.cwd": "Рабочий каталог"
+}

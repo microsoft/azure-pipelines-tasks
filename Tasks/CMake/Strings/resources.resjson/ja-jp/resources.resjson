@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "CMake クロス プラットフォームのビルド システムを使ったビルド",
+  "loc.input.label.cwd": "作業ディレクトリ",
+  "loc.input.label.args": "引数"
+}

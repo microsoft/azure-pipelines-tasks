@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Chef Knife",
+  "loc.description": "在 chef 工作站上使用 knife 命令运行脚本",
+  "loc.input.label.ConnectedServiceName": "Chef 订阅",
+  "loc.input.label.ScriptPath": "脚本路径",
+  "loc.input.label.ScriptArguments": "脚本参数"
+}

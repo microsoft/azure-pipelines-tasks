@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Publicar resultados de la prueba",
+  "loc.description": "Publique los resultados de la prueba en VSO o TFS",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.testRunner": "Formato del resultado de la prueba",
+  "loc.input.label.testResultsFiles": "Archivos de los resultados de la prueba",
+  "loc.input.label.mergeTestResults": "Combinar los resultados de la prueba",
+  "loc.input.label.platform": "Plataforma",
+  "loc.input.label.configuration": "Configuración"
+}

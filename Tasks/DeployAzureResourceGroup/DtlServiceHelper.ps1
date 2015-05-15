@@ -22,12 +22,6 @@ function Create-ProviderData
 
     $propertyBag = Get-ServiceEndPointDetails -ConnectedServiceName $ConnectedServiceName
 
-    if($propertyBag -eq $null)
-    {
-        $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
-        $subscriptionIdPropertyBagData = New-Object 'Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData' -ArgumentList $false, $subscriptionId
-        $propertyBag.Add("SubscriptionId", $subscriptionIdPropertyBagData)
-    }
     #TODO Figure out authentication mechanism and store it
     $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
@@ -112,7 +106,7 @@ function Create-Environment
    
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
-    Write-Host "Registered machine group $environment"
+    Write-Host (Get-LocalizedString -Key "Registered machine group '{0}'" -ArgumentList $environment)
 
     return $environment
 }
@@ -212,7 +206,7 @@ function Check-EnvironmentNameAvailability
             }
         }
 
-        Write-Host "Checked machine group name availability"
+        Write-Host (Get-LocalizedString -Key "Checked machine group name availability")
     }
 }
 

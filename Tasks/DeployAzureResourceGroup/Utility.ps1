@@ -2,13 +2,13 @@ function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
     {
-        throw "Found more than one file to deploy with search pattern $pattern. There can be only one."
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern '{0}'. There can be only one" -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
-            throw "No files were found to deploy with search pattern $pattern"
+            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern '{0}'" -ArgumentList $pattern)
         }
 
         return $files
@@ -37,19 +37,18 @@ function Validate-DeploymentFileAndParameters
 
     if (!(Test-Path -Path $csmFile -PathType Leaf))
     {
-        Throw "Please specify a complete and a valid template file path"
+        throw (Get-LocalizedString -Key "Please specify a complete and a valid template file path")
     }
 
     if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
     {
-         Throw "Please specify a complete and a valid template parameters file path"
+         throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
     }
 }
 
 function Get-CsmParameterObject
 {
-    param([string]$csmParameterFileContent,
-          [string]$overrideParameters)
+    param([string]$csmParameterFileContent)
 
     if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false)
     {
@@ -76,27 +75,6 @@ function Get-CsmParameterObject
 
         Write-Verbose "Generated the parameter object" -Verbose
 
-        if ([string]::IsNullOrEmpty($overrideParameters) -eq $false)
-        {
-            $paramsList = New-Object System.Collections.Generic.List[string]
-
-            $paramsList = $overrideParameters.Split("-") | Where-Object {$_.Length -gt 0}
-
-            for($i = 0; $i -lt $paramsList.Count; $i = $i+1)
-            {
-                $space = $paramsList[$i].IndexOf(' ')
-                if($space -eq -1)
-                {
-                    Throw "Specified argument list is not in the correct format"
-                }
-            
-                $parameterName = $paramsList[$i].Substring(0, $space)
-                $parameterValue = $paramsList[$i].Substring($space + 1).TrimEnd(' ')
-                Write-Verbose "Overwrote the parameter $parameterName from the input with the vale $parameterValue" -Verbose
-                $newParametersObject[$parameterName] = $parameterValue
-            }
-        }
-
         return $newParametersObject
     }
 }
@@ -111,12 +89,12 @@ function Validate-Credentials
     {
         if([string]::IsNullOrEmpty($vmUserName) -eq $true)
         {
-            Throw "Please specify valid username"
+            throw (Get-LocalizedString -Key "Please specify valid username")
         }
 
         if([string]::IsNullOrEmpty($vmPassword) -eq $true)
         {
-            Throw "Please specify valid password"
+            throw (Get-LocalizedString -Key "Please specify valid password")
         }
     }
 

@@ -3,6 +3,7 @@
     "name": "Gulp",
     "friendlyName": "Gulp",
     "description": "Node.js streaming task based build system",
+    "helpMarkDown": "Node.js streaming task based build system",
     "category": "Build",
     "visibility": [
                 "Build"

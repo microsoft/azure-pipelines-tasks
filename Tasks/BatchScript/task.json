@@ -3,6 +3,7 @@
     "name": "BatchScript",
     "friendlyName": "Batch Script",
     "description": "Run a windows cmd or bat script and optionally allow it to change the environment",
+    "helpMarkDown": "Run a windows cmd or bat script and optionally allow it to change the environment",
     "category": "Utility",
     "visibility": [
                   "Build",
@@ -12,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 8
     },
     "demands": [
         "Cmd"

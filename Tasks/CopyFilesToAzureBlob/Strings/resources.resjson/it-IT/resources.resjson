@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Consente di copiare file nel BLOB di Azure",
+  "loc.description": "Consente di copiare file nel BLOB di Azure",
+  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
+  "loc.input.label.SourcePath": "Origine",
+  "loc.input.label.StorageAccount": "Account di archiviazione",
+  "loc.input.label.ContainerName": "Nome contenitore",
+  "loc.input.label.BlobPrefix": "Prefisso BLOB"
+}

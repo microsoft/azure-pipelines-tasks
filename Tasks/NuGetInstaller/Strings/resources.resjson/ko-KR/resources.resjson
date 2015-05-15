@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "NuGet 설치 관리자",
+  "loc.description": "누락된 NuGet 패키지 설치 및 업데이트",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.solution": "솔루션 경로",
+  "loc.input.label.excludeVersion": "제외 버전",
+  "loc.input.label.noCache": "로컬 캐시 사용 안 함",
+  "loc.input.label.nuGetRestoreArgs": "NuGet 인수",
+  "loc.input.label.nuGetPath": "NuGet.exe 경로"
+}

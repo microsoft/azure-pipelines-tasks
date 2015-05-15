@@ -17,23 +17,26 @@ param
     $AdditionalArguments
 )
 
+# Import the Task.Common dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
     {
-        throw "Found more than one file to deploy with search pattern $pattern.  There can be only one."
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern {0}. There can be only one." -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
-            throw "No files were found to deploy with search pattern $pattern"
+            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}" -ArgumentList $pattern)
         }
         return $files
     }
 }
 
-Write-Host "Entering script Publish-AzureWebDeployment.ps1"
+Write-Verbose "Entering script Publish-AzureWebDeployment.ps1"
 
 Write-Host "ConnectedServiceName= $ConnectedServiceName"
 Write-Host "WebSiteName= $WebSiteName"
@@ -69,4 +72,4 @@ $finalCommand = "$azureCommand $azureCommandArguments"
 Write-Host "$finalCommand"
 Invoke-Expression -Command $finalCommand
 
-Write-Host "Leaving script Publish-AzureWebDeployment.ps1"
+Write-Verbose "Leaving script Publish-AzureWebDeployment.ps1"

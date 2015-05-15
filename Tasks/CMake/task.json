@@ -3,6 +3,7 @@
     "name": "CMake",
     "friendlyName": "CMake",
     "description": "Build with the CMake cross-platform build system",
+    "helpMarkDown": "Build with the CMake cross-platform build system",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -14,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "CMake $(args)",

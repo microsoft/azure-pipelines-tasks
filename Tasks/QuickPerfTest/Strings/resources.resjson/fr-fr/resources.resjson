@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Test de performances web basé sur le cloud",
+  "loc.description": "Recherchez rapidement les régressions relatives aux performances de votre site web en situation de charge. Avec VS Online.",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.websiteUrl": "URL du site web",
+  "loc.input.label.testName": "Nom du test",
+  "loc.input.label.vuLoad": "Charge utilisateur",
+  "loc.input.label.runDuration": "Durée d'exécution",
+  "loc.input.label.geoLocation": "Géolocalisation",
+  "loc.input.label.Username": "Nom d'utilisateur des autres informations d'identification",
+  "loc.input.label.Password": "Mot de passe des autres informations d'identification",
+  "loc.input.label.CltAccountUrl": "URL de compte VSO"
+}

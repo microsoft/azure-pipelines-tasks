@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Shell 指令碼",
+  "loc.description": "使用 bash 執行 Shell 指令碼",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.scriptPath": "指令碼路徑",
+  "loc.input.label.args": "引數",
+  "loc.input.label.cwd": "工作目錄"
+}

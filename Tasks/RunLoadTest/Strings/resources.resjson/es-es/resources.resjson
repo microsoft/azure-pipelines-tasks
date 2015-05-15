@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Prueba de carga basada en la nube con VSO",
+  "loc.description": "Ejecuta la prueba de carga en la nube. Con la tecnología de VS Online.",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.TestDrop": "Cargar la carpeta de los archivos de la prueba",
+  "loc.input.label.LoadTest": "Cargar el archivo de la prueba",
+  "loc.input.label.TestSettings": "Archivo de la configuración de la prueba",
+  "loc.input.label.ThresholdLimit": "Número de infracciones del umbral permitidas",
+  "loc.input.label.VsoAccountUrl": "URI de la cuenta de VSO",
+  "loc.input.label.Username": "Nombre de usuario de las credenciales alternativas",
+  "loc.input.label.Password": "Contraseña de las credenciales alternativas"
+}

@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "发布生成项目",
+  "loc.description": "将生成项目发布到服务器或文件共享",
+  "loc.input.label.CopyRoot": "复制根",
+  "loc.input.label.Contents": "内容",
+  "loc.input.label.ArtifactName": "项目名称",
+  "loc.input.label.ArtifactType": "项目类型",
+  "loc.input.label.TargetPath": "路径"
+}

@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.description": "Сборка приложения iOS с помощью Xamarin на Mac OS",
+  "loc.input.label.solution": "Решение",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.label.mdtoolLocation": "Переопределить путь к mdtool",
+  "loc.input.label.forSimulator": "Сборка для симулятора iOS"
+}

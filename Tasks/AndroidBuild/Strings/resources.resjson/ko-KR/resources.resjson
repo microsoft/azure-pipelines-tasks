@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Android 빌드",
+  "loc.description": "Gradle을 사용하여 Android 앱을 빌드하고 필요에 따라 단위 테스트를 수행하기 위해 에뮬레이터 시작",
+  "loc.group.displayName.emulatorOptions": "에뮬레이터 옵션",
+  "loc.input.label.gradleWrapper": "Gradle 래퍼 위치",
+  "loc.input.label.gradleProj": "프로젝트 디렉터리",
+  "loc.input.label.gradleArguments": "인수",
+  "loc.input.label.startEmulator": "Android 에뮬레이터 시작",
+  "loc.input.label.emulatorTarget": "에뮬레이터 대상 SDK",
+  "loc.input.label.emulatorDevice": "에뮬레이터 장치"
+}

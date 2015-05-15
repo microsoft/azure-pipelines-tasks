@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Xamarin ライセンス",
+  "loc.description": "Xamarin ライセンスをアクティブ化または非アクティブ化します",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.action": "アクション",
+  "loc.input.label.email": "電子メール",
+  "loc.input.label.password": "パスワード",
+  "loc.input.label.activateAndroid": "Xamarin.Android のアクティブ化",
+  "loc.input.label.timeout": "タイムアウト (秒)"
+}

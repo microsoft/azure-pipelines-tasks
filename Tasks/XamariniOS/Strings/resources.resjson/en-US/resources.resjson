@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xamarin.iOS",
+  "loc.helpMarkDown": "Build an iOS app with Xamarin on Mac OS",
   "loc.description": "Build an iOS app with Xamarin on Mac OS",
   "loc.input.label.solution": "Solution",
   "loc.input.label.configuration": "Configuration",

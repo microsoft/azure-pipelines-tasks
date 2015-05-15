@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Exécuter PowerShell sur des machines cibles",
+  "loc.description": "Exécutez PowerShell sur des machines cibles. Exécute des commandes PowerShell à distance sur une ou plusieurs machines.",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.EnvironmentName": "Groupe de machines",
+  "loc.input.label.MachineNames": "Déployer sur des machines",
+  "loc.input.label.ScriptPath": "Script PowerShell",
+  "loc.input.label.ScriptArguments": "Arguments de script",
+  "loc.input.label.InitializationScriptPath": "Script d'initialisation",
+  "loc.input.label.RunPowershellInParallel": "Exécuter PowerShell en parallèle"
+}

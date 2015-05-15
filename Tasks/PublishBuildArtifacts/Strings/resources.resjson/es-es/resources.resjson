@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Publicar los artefactos de la compilación",
+  "loc.description": "Publique los artefactos de la compilación en el servidor o en un recurso compartido de archivos",
+  "loc.input.label.CopyRoot": "Copiar la raíz",
+  "loc.input.label.Contents": "Contenido",
+  "loc.input.label.ArtifactName": "Nombre del artefacto",
+  "loc.input.label.ArtifactType": "Tipo de artefacto",
+  "loc.input.label.TargetPath": "Ruta de acceso"
+}

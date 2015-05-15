@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Публикация артефактов сборки",
+  "loc.description": "Публикация артефактов сборки на сервере или в общей папке",
+  "loc.input.label.CopyRoot": "Копировать корень",
+  "loc.input.label.Contents": "Содержимое",
+  "loc.input.label.ArtifactName": "Имя артефакта",
+  "loc.input.label.ArtifactType": "Тип артефакта",
+  "loc.input.label.TargetPath": "Путь"
+}

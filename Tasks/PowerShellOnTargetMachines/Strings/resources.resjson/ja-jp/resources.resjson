@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "ターゲット コンピューターでの PowerShell の実行",
+  "loc.description": "コンピューターで PowerShell を実行します。コンピューター上で PowerShell コマンドをリモートで実行します。",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.EnvironmentName": "コンピューター グループ",
+  "loc.input.label.MachineNames": "コンピューターへの展開",
+  "loc.input.label.ScriptPath": "PowerShell スクリプト",
+  "loc.input.label.ScriptArguments": "スクリプトの引数",
+  "loc.input.label.InitializationScriptPath": "初期化スクリプト",
+  "loc.input.label.RunPowershellInParallel": "Powershell の並列実行"
+}

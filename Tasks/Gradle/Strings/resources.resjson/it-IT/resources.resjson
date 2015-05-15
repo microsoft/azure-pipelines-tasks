@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Gradle",
+  "loc.description": "Consente di compilare con uno script wrapper di Gradle",
+  "loc.group.displayName.junitTestResults": "JUnit Test Results",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.wrapperScript": "Wrapper di Gradle",
+  "loc.input.label.options": "Opzioni",
+  "loc.input.label.tasks": "Attività",
+  "loc.input.label.cwd": "Directory di lavoro",
+  "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
+  "loc.input.label.testResultsFiles": "Test Results Files",
+  "loc.input.label.jdkVersion": "Versione JDK",
+  "loc.input.label.jdkArchitecture": "Architettura JDK"
+}

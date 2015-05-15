@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.description": "Déployer dans des environnements Chef en modifiant les attributs d'environnement",
+  "loc.input.label.connectedServiceName": "Connexion Chef",
+  "loc.input.label.Environment": "Environnement",
+  "loc.input.label.Attributes": "Attributs d'environnement",
+  "loc.input.label.chefWaitTime": "Durée d'attente"
+}

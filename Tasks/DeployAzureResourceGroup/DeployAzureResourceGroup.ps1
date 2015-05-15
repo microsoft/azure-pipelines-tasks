@@ -19,8 +19,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "******************************************************************************"
-Write-Host "Starting Azure Resource Group Deployment Task"
+Write-Verbose "Starting Azure Resource Group Deployment Task" -Verbose
 
 Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "environmentName = $resourceGroupName"
@@ -59,14 +58,14 @@ if(Test-Path -Path $csmParametersFile -PathType Leaf)
 
 Check-EnvironmentNameAvailability -environmentName $resourceGroupName
 
-$parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent -overrideParameters $overrideParameters
+$parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
 $parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameterName -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
 
 Switch-AzureMode AzureResourceManager
 
 $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
 
-$resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location
+$resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
 
 Initialize-DTLServiceHelper
 
@@ -89,8 +88,7 @@ $environmentOperationId = Create-EnvironmentOperation -environment $environment
 
 if($deploymentError)
 {
-    Throw "Deploy Azure Resource Group Task failed. View logs for details"
+    Throw (Get-LocalizedString -Key "Deploy Azure Resource Group Task failed. View logs for details")
 }
 
-Write-Host "Completing Azure Resource Group Deployment Task"
-Write-Host "******************************************************************************"
+Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose

@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Ant",
+  "loc.helpMarkDown": "Build with Apache Ant",
   "loc.description": "Build with Apache Ant",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.advanced": "Advanced",

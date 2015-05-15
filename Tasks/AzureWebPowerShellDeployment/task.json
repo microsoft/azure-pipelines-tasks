@@ -3,6 +3,7 @@
   "name": "AzureWebPowerShellDeployment",
   "friendlyName": "Azure Web Site Deployment",
   "description": "Deploy a website to Microsoft Azure",
+  "helpMarkDown": "Deploy a website to Microsoft Azure",
   "category": "Deploy",
   "visibility": [
                 "Build",
@@ -12,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "demands": [
     "azureps"

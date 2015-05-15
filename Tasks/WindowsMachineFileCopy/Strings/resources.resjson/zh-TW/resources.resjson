@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "將檔案複製到電腦",
+  "loc.description": "將檔案複製到遠端電腦",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.EnvironmentName": "目標電腦群組",
+  "loc.input.label.MachineNames": "複製到電腦",
+  "loc.input.label.SourcePath": "來源",
+  "loc.input.label.TargetPath": "目的資料夾",
+  "loc.input.label.CleanTargetBeforeCopy": "清除目標",
+  "loc.input.label.DeployFilesInParallel": "並行複製檔案"
+}

@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Visual Studio Test Run using Test Agent",
+  "loc.description": "Ejecute pruebas de forma distribuida mediante varios agentes de pruebas en un grupo de máquinas de laboratorio.",
+  "loc.group.displayName.testEnvironment": "Grupo de máquinas de la prueba",
+  "loc.group.displayName.testSettings": "Configuración de la prueba",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.environment": "Grupo de máquinas de la prueba",
+  "loc.input.label.dropLocation": "Ubicación de almacenamiento de la prueba",
+  "loc.input.label.sourcefilters": "Ensamblado de la prueba",
+  "loc.input.label.testFilterCriteria": "Criterio de filtrado de la prueba",
+  "loc.input.label.platform": "Platform",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.runSettingsFile": "Archivo de configuración de ejecución",
+  "loc.input.label.overrideRunParams": "Reemplazar los parámetros de TestRun",
+  "loc.input.label.testConfigurations": "Test Configurations",
+  "loc.input.label.codeCoverageEnabled": "Cobertura de código habilitada",
+  "loc.input.label.autEnvironmentName": "Application Under Test Machine Group"
+}

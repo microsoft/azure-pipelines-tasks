@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Android 組建",
+  "loc.description": "使用 Gradle 建置 Android 應用程式，並視情況啟動模擬器進行單元測試",
+  "loc.group.displayName.emulatorOptions": "模擬器選項",
+  "loc.input.label.gradleWrapper": "Gradle 包裝函式的位置",
+  "loc.input.label.gradleProj": "專案目錄",
+  "loc.input.label.gradleArguments": "引數",
+  "loc.input.label.startEmulator": "啟動 Android 模擬器",
+  "loc.input.label.emulatorTarget": "模擬器目標 SDK",
+  "loc.input.label.emulatorDevice": "模擬器裝置"
+}

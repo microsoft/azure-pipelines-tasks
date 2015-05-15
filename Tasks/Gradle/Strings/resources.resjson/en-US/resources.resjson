@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Gradle",
+  "loc.helpMarkDown": "Build using a Gradle wrapper script",
   "loc.description": "Build using a Gradle wrapper script",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.advanced": "Advanced",

@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "PowerShell",
+  "loc.helpMarkDown": "Run a PowerShell script",
   "loc.description": "Run a PowerShell script",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.scriptName": "Script filename",

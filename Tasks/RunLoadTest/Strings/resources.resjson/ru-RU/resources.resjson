@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Облачный нагрузочный тест в VSO",
+  "loc.description": "Запуск нагрузочного теста в облаке. На платформе VS Online.",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.TestDrop": "Папка файлов нагрузочного теста",
+  "loc.input.label.LoadTest": "Файл нагрузочного теста",
+  "loc.input.label.TestSettings": "Файл параметров тестирования",
+  "loc.input.label.ThresholdLimit": "Количество допустимых превышений порогового значения",
+  "loc.input.label.VsoAccountUrl": "Универсальный код ресурса (URI) учетной записи VSO",
+  "loc.input.label.Username": "Альтернативное имя пользователя",
+  "loc.input.label.Password": "Альтернативный пароль"
+}

@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Indicizza origini e pubblica simboli",
+  "loc.description": "Consente di indicizza il codice sorgente e di pubblicare i simboli in una condivisione file",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.SymbolsPath": "Percorso per la pubblicazione dei simboli",
+  "loc.input.label.SearchPattern": "Criteri di ricerca",
+  "loc.input.label.SourceFolder": "Percorso della cartella di origine",
+  "loc.input.label.SymbolsFolder": "Percorso della cartella dei simboli",
+  "loc.input.label.SymbolsMaximumWaitTime": "Tempo massimo di attesa (min)",
+  "loc.input.label.SymbolsProduct": "Prodotto",
+  "loc.input.label.SymbolsVersion": "Versione"
+}

@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "Docker イメージをリモート コンピューターに展開します",
+  "loc.input.label.DockerEndpoint": "Docker エンドポイント",
+  "loc.input.label.Repository": "リポジトリ",
+  "loc.input.label.Tag": "タグ",
+  "loc.input.label.ContainerName": "コンテナー名",
+  "loc.input.label.PortBindings": "ポート バインド"
+}

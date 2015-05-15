@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.description": "Durch Bearbeiten der Umgebungsattribute in Chef-Umgebungen bereitstellen",
+  "loc.input.label.connectedServiceName": "Chef-Verbindung",
+  "loc.input.label.Environment": "Umgebung",
+  "loc.input.label.Attributes": "Umgebungsattribute",
+  "loc.input.label.chefWaitTime": "Wartezeit"
+}

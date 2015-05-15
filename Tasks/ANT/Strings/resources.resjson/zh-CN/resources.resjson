@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Ant",
+  "loc.description": "使用 Apache Ant 生成",
+  "loc.group.displayName.junitTestResults": "JUnit Test Results",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.antBuildFile": "Ant 版本文件",
+  "loc.input.label.options": "选项",
+  "loc.input.label.targets": "对象",
+  "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
+  "loc.input.label.testResultsFiles": "Test Results Files",
+  "loc.input.label.jdkVersion": "JDK 版本",
+  "loc.input.label.jdkArchitecture": "JDK 体系结构"
+}

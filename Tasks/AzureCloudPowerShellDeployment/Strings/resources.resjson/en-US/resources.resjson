@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure Cloud Service Deployment",
+  "loc.helpMarkDown": "Deploy an Azure Cloud Service",
   "loc.description": "Deploy an Azure Cloud Service",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.label.StorageAccount": "Storage Account",

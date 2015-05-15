@@ -39,12 +39,12 @@ function Invoke-OperationHelper
             {
                 $machineStatus = "Failed"
                 $passedOperationCount--
-                Write-Warning("Operation $operationName on machine $machine.Name failed with error $operation.Error")
+                Write-Warning("Operation $operationName on machine $machine.Name failed with error $operation.Error.Message")
             }
         }
 
         # Logs the completion of particular machine operation. Updates the status based on the provider response.
-        End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $operation.Error
+        End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $operation.Error.Message
     }
     
     # Logs completion of the machine group operation.

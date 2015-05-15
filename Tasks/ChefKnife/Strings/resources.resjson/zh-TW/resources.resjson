@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Chef Knife",
+  "loc.description": "在您 Chef 工作站上使用 knife 命令執行指令碼。",
+  "loc.input.label.ConnectedServiceName": "Chef 訂用帳戶",
+  "loc.input.label.ScriptPath": "指令碼路徑",
+  "loc.input.label.ScriptArguments": "指令碼引數"
+}
