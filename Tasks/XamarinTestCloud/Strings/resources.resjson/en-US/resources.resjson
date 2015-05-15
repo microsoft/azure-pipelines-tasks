@@ -16,5 +16,6 @@
   "loc.input.label.parallelization": "Parallelization",
   "loc.input.label.locale": "System Language",
   "loc.input.label.testCloudLocation": "test-cloud.exe Location",
-  "loc.input.label.optionalArgs": "Optional Arguments"
+  "loc.input.label.optionalArgs": "Optional Arguments",
+  "loc.input.label.publishNUnitResults": "Publish test cloud NUnit results to VSO/TFS"
 }

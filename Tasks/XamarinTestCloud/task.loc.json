@@ -130,6 +130,14 @@
       "defaultValue": "",
       "groupName": "advanced",
       "helpMarkDown": "Additional arguments passed to test-cloud.exe."
+    },
+    {
+      "name": "publishNUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishNUnitResults",
+      "groupName": "advanced",
+      "defaultValue": "true",
+      "helpMarkDown": "When selected, --nunit-xml option will be passed to testcloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
     }
   ],
   "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
