@@ -16,6 +16,7 @@ var parallelization = tl.getInput('parallelization', true);
 var locale = tl.getInput('locale', true);
 var testCloudLocation = tl.getInput('testCloudLocation', true);
 var optionalArgs = tl.getInput('optionalArgs', false);
+var publishNUnitResults = tl.getInput('publishNUnitResults', false);
 
 // Output debug information for inputs
 tl.debug('app: ' + app);
@@ -137,6 +138,13 @@ var submitToTestCloud = function (index) {
     }
     if (optionalArgs) {
         mdtoolRunner.arg(optionalArgs.split(' '));
+    }
+    if(publishNUnitResults == 'true') {
+        var date = new Date();
+        var dateString = date.getYear() + date.getMonth() + date.getDate() + '_' + date.getHour() + date.getMinutes() + date.getSeconds();
+        var nunitFile = testDir + '/xamarin_test_' + dateString + '.xml';
+        mdtoolRunner.arg('--nunit-xml');
+        mdtoolRunner.arg(nunitFile);    
     }
 
     // For an iOS .ipa app, look for an accompanying dSYM file

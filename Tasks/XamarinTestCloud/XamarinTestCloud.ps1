@@ -8,7 +8,8 @@
     [string]$locale,
     [string]$testCloudLocation,
     [string]$parallelization,
-    [string]$optionalArgs
+    [string]$optionalArgs,
+    [string]$publishNUnitResults
 )
 
 Write-Verbose "Entering script XamarinTestCloud.ps1"
@@ -22,6 +23,7 @@ Write-Verbose "locale = $locale"
 Write-Verbose "testCloudLocation = $testCloudLocation"
 Write-Verbose "parallelization = $parallelization"
 Write-Verbose "optionalArgs = $optionalArgs"
+Write-Verbose "publishNUnitResults = $publishNUnitResults"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -82,7 +84,7 @@ if (!$testDir -or !(Test-Path -Path $testDir -PathType Container))
 {
     throw "Test assembly directory does not exist or is not a folder."
 }
-$parameters = "$parameters --assembly-dir $testDir"
+$parameters = "$parameters --assembly-dir ""$testDir"""
 
 if ("none" -ne $parallelization)
 {
@@ -129,11 +131,26 @@ if ($optionalArgs)
     $parameters = "$parameters $optionalArgs"
 }
 
+$publishResults = Convert-String $publishNUnitResults Boolean
+if($publishResults) 
+{
+    $dateString = Get-Date -UFormat %Y%m%d_%H%M%S
+    $nunitFile = Join-Path $testDir "xamarin_test_$dateString.xml"
+    $parameters = "$parameters --nunit-xml ""$nunitFile"""
+}
+
 foreach ($ap in $appFiles)
 {
     $argument = "submit $ap $teamApiKey $parameters"
     Write-Host "Submit $ap to Xamarin Test Cloud."
     Invoke-Tool -Path $testCloud -Arguments $argument
+}
+
+//Publish nunit test results to VSO
+if(Test-Path -Path $nunitFile && publishResults) 
+{
+    $resultFiles = ,$nunitFile
+    Publish-TestResults -TestRunner "NUnit" -TestResultsFiles $resultFiles -Context $distributedTaskContext
 }
 
 Write-Verbose "Leaving script XamarinTestCloud.ps1"
