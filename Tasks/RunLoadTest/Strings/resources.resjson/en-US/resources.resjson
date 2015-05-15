@@ -3,8 +3,8 @@
 // *******************************************************
 {
   "loc.friendlyName": "Cloud-based Load Test",
+  "loc.helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
   "loc.description": "Runs the load test in cloud, with Visual Studio Online",
-  "loc.helpMarkDown": "Runs the load test in cloud; Powered by VS Online",
   "loc.input.label.connectedServiceName": "Registered connection",
   "loc.input.label.TestSettings": "Test settings file",
   "loc.input.label.TestDrop": "Load test files folder",
