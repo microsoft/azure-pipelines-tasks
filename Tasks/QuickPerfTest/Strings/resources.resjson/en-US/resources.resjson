@@ -3,14 +3,11 @@
 // *******************************************************
 {
   "loc.friendlyName": "Cloud-based Web Performance Test",
-  "loc.description": "Quickly find perf regressions to your website under load. Powered by VS Online",
-  "loc.group.displayName.advanced": "Advanced",
+  "loc.description": "Runs the quick web performance test in cloud, with Visual Studio Online",
+  "loc.input.label.connectedServiceName": "Registered connection",
   "loc.input.label.websiteUrl": "Website Url",
   "loc.input.label.testName": "Test Name",
   "loc.input.label.vuLoad": "User Load",
-  "loc.input.label.runDuration": "Run Duration",
-  "loc.input.label.geoLocation": "Geo Location",
-  "loc.input.label.Username": "Alternate credential username",
-  "loc.input.label.Password": "Alternate credential password",
-  "loc.input.label.CltAccountUrl": "VSO Account URL"
+  "loc.input.label.runDuration": "Run Duration (sec)",
+  "loc.input.label.geoLocation": "Load Location"
 }
