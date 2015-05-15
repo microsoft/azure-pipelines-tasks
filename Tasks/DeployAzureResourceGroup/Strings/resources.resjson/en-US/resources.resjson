@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Deploy Azure Resource Group",
+  "loc.helpMarkDown": "Provision and Deploy an Azure Resource Group",
   "loc.description": "Provision and Deploy an Azure Resource Group",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",

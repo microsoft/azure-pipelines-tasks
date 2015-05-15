@@ -6,7 +6,7 @@
   "name": "CloudLoadTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
     "Build"

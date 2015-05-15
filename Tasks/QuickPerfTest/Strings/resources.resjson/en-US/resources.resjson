@@ -5,6 +5,7 @@
   "loc.friendlyName": "Cloud-based Web Performance Test",
   "loc.description": "Runs the quick web performance test in cloud, with Visual Studio Online",
   "loc.input.label.connectedServiceName": "Registered connection",
+  "loc.helpMarkDown": "Quickly find perf regressions to your website under load. Powered by VS Online",
   "loc.input.label.websiteUrl": "Website Url",
   "loc.input.label.testName": "Test Name",
   "loc.input.label.vuLoad": "User Load",

@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Copy Files To Azure Blob",
+  "loc.helpMarkDown": "Copy Files To Azure Blob",
   "loc.description": "Copy Files To Azure Blob",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.label.SourcePath": "Source",

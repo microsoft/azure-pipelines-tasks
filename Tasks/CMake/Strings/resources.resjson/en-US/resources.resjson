@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "CMake",
+  "loc.helpMarkDown": "Build with the CMake cross-platform build system",
   "loc.description": "Build with the CMake cross-platform build system",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.label.args": "Arguments"

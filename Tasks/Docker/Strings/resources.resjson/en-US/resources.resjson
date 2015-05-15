@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "Deploy a docker image to a remote machine",
   "loc.description": "Deploy a docker image to a remote machine",
   "loc.input.label.DockerEndpoint": "Docker Endpoint",
   "loc.input.label.Repository": "Repository",

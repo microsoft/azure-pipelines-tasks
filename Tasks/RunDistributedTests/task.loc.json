@@ -6,7 +6,7 @@
   "name": "RunVisualStudioTestsusingTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Run tests distributedly using multiple test agents in a lab machine group",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
     "Preview",
@@ -44,7 +44,7 @@
       "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
+      "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
       "groupName": "testMachineGroups"
     },
     {
@@ -53,7 +53,7 @@
       "label": "ms-resource:loc.input.label.dropLocation",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+      "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
       "groupName": "testSettings"
     },
     {
@@ -71,7 +71,7 @@
       "label": "ms-resource:loc.input.label.testFilterCriteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Filter criteria for the tests.",
+      "helpMarkDown": "Optionally specify the test case filter criteria. For example, 'Owner=james&Priority=1'.",
       "groupName": "testSettings"
     },
     {
@@ -80,6 +80,7 @@
       "label": "ms-resource:loc.input.label.platform",
       "defaultValue": "",
       "required": false,
+      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here."
       "groupName": "testSettings"
     },
     {
@@ -88,6 +89,7 @@
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "",
       "required": false,
+      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here."
       "groupName": "testSettings"
     },
     {
@@ -105,7 +107,7 @@
       "label": "ms-resource:loc.input.label.overrideRunParams",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080.",
       "groupName": "testSettings"
     },
     {
@@ -124,7 +126,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "Whether code coverage needs to be enabled.",
-      "groupName": "testSettings"
+      "groupName": "advanced"
     },
     {
       "name": "autMachineGroup",

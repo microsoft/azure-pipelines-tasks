@@ -1,9 +1,9 @@
 ﻿{
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunVisualStudioTestsusingTestAgent",
-    "friendlyName": "Visual Studio Test Run using Test Agent",
-    "description": "Run tests distributedly using multiple test agents in a lab machine group",
-    "helpMarkDown": "Run tests distributedly using multiple test agents in a lab machine group",
+    "friendlyName": "Visual Studio Test using Test Agent",
+    "description": "Run tests distributedly using multiple test agents on a lab machine group",
+    "helpMarkDown": "Run tests distributedly using multiple test agents on a lab machine group",
     "category": "Test",
     "visibility": [
                     "Preview",
@@ -42,7 +42,7 @@
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
+            "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
             "groupName": "testMachineGroups"
         },
         {
@@ -51,7 +51,7 @@
             "label": "Test Drop Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
             "groupName": "testSettings"
         },
         {
@@ -69,7 +69,7 @@
             "label": "Test Filter criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Filter criteria for the tests.",
+            "helpMarkDown": "Optionally specify the test case filter criteria. For example, 'Owner=james&Priority=1'.",
             "groupName": "testSettings"
         },
         {
@@ -78,6 +78,7 @@
 	          "label": "Platform", 
 	          "defaultValue":"", 
 	          "required":false,
+              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
 	          "groupName": "testSettings"
 	      },
 	      {
@@ -86,6 +87,7 @@
 	          "label": "Configuration", 
 	          "defaultValue":"", 
 	          "required":false,
+              "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
 	          "groupName": "testSettings"
 	      },
         {
@@ -103,7 +105,7 @@
             "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080.",
             "groupName": "testSettings"
         },
         {
@@ -122,7 +124,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Whether code coverage needs to be enabled.",
-            "groupName": "testSettings"
+            "groupName": "advanced"
         },
         {
             "name": "autMachineGroup",
