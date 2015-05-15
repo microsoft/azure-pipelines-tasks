@@ -13,7 +13,9 @@ Write-Output "Entering script PerformActionOnMachineGroup.ps1"
 Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "MachineGroupName = $MachineGroupName"
 Write-Verbose -Verbose "Action = $Action"
+Write-Verbose -Verbose "Filters = $Filters"
 Write-Verbose -Verbose "BlockedFor = $BlockedFor"
+Write-Verbose -Verbose "TimeInHours = $TimeInHours"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal

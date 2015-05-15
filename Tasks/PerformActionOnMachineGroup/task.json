@@ -56,7 +56,7 @@
             "type": "string", 
             "label": "Apply to Machines",
             "required": false,
-            "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 . Applicable only to Start, Delete, Stop, Restart actions"
+            "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 .Filters are not applied for block and unblock actions"
         },
         {
            "name": "BlockedFor",
