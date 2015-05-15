@@ -9,7 +9,8 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
@@ -21,6 +22,7 @@
     "msbuild",
     "azureps"
   ],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "connectedServiceName",

@@ -6,7 +6,8 @@
   "helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
   "category": "Test",
   "visibility": [
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
@@ -18,6 +19,7 @@
     "msbuild",
     "azureps"
   ],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "connectedServiceName",
