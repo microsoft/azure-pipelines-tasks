@@ -45,6 +45,7 @@ Write-Verbose "checkAgentInstallationScriptLocation = $checkAgentInstallationScr
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DistributedTestAutomation"
 
 Write-Verbose "Getting the connection object"
@@ -56,7 +57,7 @@ $personalAccessToken = $vssEndpoint.Authorization.Parameters.AccessToken
 
 if ( [string]::IsNullOrEmpty($personalAccessToken))
 {
-  throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+  throw (Get-LocalizedString -Key "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator")
 }
 
 Write-Verbose "Calling Invoke-DeployTestAgent"
