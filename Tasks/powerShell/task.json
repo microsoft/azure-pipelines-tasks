@@ -3,6 +3,7 @@
     "name": "PowerShell",
     "friendlyName": "PowerShell",
     "description": "Run a PowerShell script",
+    "helpMarkDown": "Run a PowerShell script",
     "category": "Utility",
     "visibility": [
                   "Build",

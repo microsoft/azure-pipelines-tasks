@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "在目标计算机上运行 PowerShell",
+  "loc.description": "在目标计算机上运行 PowerShell。在远程计算机上执行 PowerShell 命令。",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.EnvironmentName": "计算机组",
+  "loc.input.label.MachineNames": "部署到计算机",
+  "loc.input.label.ScriptPath": "PowerShell 脚本",
+  "loc.input.label.ScriptArguments": "脚本参数",
+  "loc.input.label.InitializationScriptPath": "初始化脚本",
+  "loc.input.label.RunPowershellInParallel": "并行运行 Powershell"
+}

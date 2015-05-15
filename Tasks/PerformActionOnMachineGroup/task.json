@@ -3,6 +3,7 @@
     "name": "PerformActionOnMachineGroup",
     "friendlyName": "Perform action on machine group",
     "description": "Perform given action on machine group",
+    "helpMarkDown": "Perform given action on machine group",
     "category": "Deploy",
     "visibility": [
                 "Preview",

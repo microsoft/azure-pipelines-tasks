@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Android 版本",
+  "loc.description": "使用 Gradle 生成 Android 应用，可选择启动用于单元测试的仿真器",
+  "loc.group.displayName.emulatorOptions": "模拟器选项",
+  "loc.input.label.gradleWrapper": "Gradle 包装器的位置",
+  "loc.input.label.gradleProj": "项目目录",
+  "loc.input.label.gradleArguments": "参数",
+  "loc.input.label.startEmulator": "启动 Android 模拟器",
+  "loc.input.label.emulatorTarget": "模拟器对象 SDK",
+  "loc.input.label.emulatorDevice": "模拟器设备"
+}

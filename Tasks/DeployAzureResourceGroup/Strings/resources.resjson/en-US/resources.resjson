@@ -3,11 +3,12 @@
 // *******************************************************
 {
   "loc.friendlyName": "Deploy Azure Resource Group",
+  "loc.helpMarkDown": "Provision and Deploy an Azure Resource Group",
   "loc.description": "Provision and Deploy an Azure Resource Group",
   "loc.group.displayName.advancedDeploymentOptions": "Advanced Deployment Options",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
-  "loc.input.label.location": "Location",
   "loc.input.label.resourceGroupName": "Resource Group",
+  "loc.input.label.location": "Location",
   "loc.input.label.csmFile": "Template",
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.label.overrideParameters": "Override Template Parameters",

@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Implementación de servicios en la nube de Azure",
+  "loc.description": "Implemente un servicio en la nube de Azure",
+  "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
+  "loc.input.label.StorageAccount": "Cuenta de almacenamiento",
+  "loc.input.label.ServiceName": "Nombre del servicio",
+  "loc.input.label.ServiceLocation": "Ubicación del servicio",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "Entorno (ranura)",
+  "loc.input.label.AllowUpgrade": "Permitir actualización"
+}

@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.description": "Mac OS에서 Xamarin으로 iOS 앱 빌드",
+  "loc.input.label.solution": "솔루션",
+  "loc.input.label.configuration": "구성",
+  "loc.input.label.mdtoolLocation": "mdtool 경로 재정의",
+  "loc.input.label.forSimulator": "iOS 시뮬레이터용 빌드"
+}

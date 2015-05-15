@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "基于云的负载测试和 VSO",
+  "loc.description": "在云中运行负载测试；受 VS Online 支持。",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.TestDrop": "负载测试文件文件夹",
+  "loc.input.label.LoadTest": "负载测试文件",
+  "loc.input.label.TestSettings": "测试设置文件",
+  "loc.input.label.ThresholdLimit": "可允许的阈值违规次数",
+  "loc.input.label.VsoAccountUrl": "VSO 帐户 URL",
+  "loc.input.label.Username": "替换凭据用户名",
+  "loc.input.label.Password": "替换凭据密码"
+}

@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Установщик NuGet",
+  "loc.description": "Установка и обновление отсутствующих пакетов NuGet",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.solution": "Путь к решению",
+  "loc.input.label.excludeVersion": "Исключить версию",
+  "loc.input.label.noCache": "Отключить локальный кэш",
+  "loc.input.label.nuGetRestoreArgs": "Аргументы NuGet",
+  "loc.input.label.nuGetPath": "Путь к NuGet.exe"
+}

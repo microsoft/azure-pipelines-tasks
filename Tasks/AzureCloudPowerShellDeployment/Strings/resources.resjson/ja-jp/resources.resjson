@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure クラウド サービスの展開",
+  "loc.description": "Azure クラウド サービスの展開",
+  "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
+  "loc.input.label.StorageAccount": "ストレージ アカウント",
+  "loc.input.label.ServiceName": "サービス名",
+  "loc.input.label.ServiceLocation": "サービスの場所",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.label.Slot": "環境 (スロット)",
+  "loc.input.label.AllowUpgrade": "アップグレードを許可"
+}

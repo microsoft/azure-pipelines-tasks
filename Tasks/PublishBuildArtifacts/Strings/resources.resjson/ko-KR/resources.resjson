@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "빌드 아티팩트 게시",
+  "loc.description": "서버 또는 파일 공유에 빌드 아티팩트 게시",
+  "loc.input.label.CopyRoot": "루트 복사",
+  "loc.input.label.Contents": "콘텐츠",
+  "loc.input.label.ArtifactName": "아티팩트 이름",
+  "loc.input.label.ArtifactType": "아티팩트 형식",
+  "loc.input.label.TargetPath": "경로"
+}

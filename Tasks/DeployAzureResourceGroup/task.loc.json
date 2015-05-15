@@ -6,6 +6,7 @@
   "name": "DeployAzureResourceGroup",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -39,6 +40,12 @@
       "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
     },
     {
+      "name": "resourceGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
+      "required": true
+    },
+    {
       "name": "location",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.location",
@@ -55,12 +62,6 @@
       "properties": {
         "EditableOptions": "True"
       }
-    },
-    {
-      "name": "resourceGroupName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.resourceGroupName",
-      "required": true
     },
     {
       "name": "csmFile",

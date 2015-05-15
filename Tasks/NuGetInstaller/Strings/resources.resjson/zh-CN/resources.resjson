@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "NuGet 安装程序",
+  "loc.description": "安装和更新丢失的 NuGet 包",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.solution": "解决方案的路径",
+  "loc.input.label.excludeVersion": "排除版本",
+  "loc.input.label.noCache": "禁用本地缓存",
+  "loc.input.label.nuGetRestoreArgs": "NuGet 参数",
+  "loc.input.label.nuGetPath": "NuGet.exe 的路径"
+}

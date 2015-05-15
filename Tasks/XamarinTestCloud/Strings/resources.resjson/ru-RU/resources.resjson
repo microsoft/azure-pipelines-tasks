@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Xamarin Test Cloud",
+  "loc.description": "Тестирование мобильных приложений в Xamarin Test Cloud с помощью Xamarin.UITest",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.app": "Файл приложения",
+  "loc.input.label.dsym": "dSYM-файл (только iOS)",
+  "loc.input.label.teamApiKey": "Ключ API группы",
+  "loc.input.label.user": "Адрес электронной почты пользователя",
+  "loc.input.label.devices": "Устройства",
+  "loc.input.label.series": "Ряд",
+  "loc.input.label.testDir": "Каталог тестовой сборки",
+  "loc.input.label.parallelization": "Распараллеливание",
+  "loc.input.label.locale": "Системный язык",
+  "loc.input.label.testCloudLocation": "Расположение test-cloud.exe",
+  "loc.input.label.optionalArgs": "Дополнительные аргументы"
+}

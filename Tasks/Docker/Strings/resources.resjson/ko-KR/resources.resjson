@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.description": "원격 컴퓨터에 Docker 이미지 배포",
+  "loc.input.label.DockerEndpoint": "Docker 끝점",
+  "loc.input.label.Repository": "리포지토리",
+  "loc.input.label.Tag": "태그",
+  "loc.input.label.ContainerName": "컨테이너 이름",
+  "loc.input.label.PortBindings": "포트 바인딩"
+}

@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Тест Visual Studio",
+  "loc.description": "Запуск тестов с помощью средства запуска тестов Visual Studio",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.testAssembly": "Тестовая сборка",
+  "loc.input.label.testFiltercriteria": "Критерии фильтрации тестов",
+  "loc.input.label.platform": "Платформа",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.label.runSettingsFile": "Файл параметров запуска",
+  "loc.input.label.overrideTestrunParameters": "Переопределить параметры тестового запуска",
+  "loc.input.label.codeCoverageEnabled": "Покрытие кода включено",
+  "loc.input.label.vsTestVersion": "Версия VSTest",
+  "loc.input.label.pathtoCustomTestAdapters": "Путь к пользовательским адаптерам теста",
+  "loc.input.label.otherConsoleOptions": "Другие параметры консоли"
+}

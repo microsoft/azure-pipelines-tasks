@@ -3,6 +3,7 @@
     "name": "CmdLine",
     "friendlyName": "Command Line",
     "description": "Run a command line with arguments",
+    "helpMarkDown": "Run a command line with arguments",
     "category": "Utility",
     "visibility": [
                   "Build",

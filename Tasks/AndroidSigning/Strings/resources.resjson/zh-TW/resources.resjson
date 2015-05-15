@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Android 簽署",
+  "loc.description": "簽署並對齊 Android APK 檔案",
+  "loc.group.displayName.jarsignerOptions": "Jarsigner 選項",
+  "loc.group.displayName.zipalignOptions": "Zipalign 選項",
+  "loc.input.label.files": "APK 檔案",
+  "loc.input.label.jarsign": "簽署 APK",
+  "loc.input.label.keystoreFile": "Keystore 檔案",
+  "loc.input.label.keystorePass": "Keystore 密碼",
+  "loc.input.label.keystoreAlias": "別名",
+  "loc.input.label.keyPass": "金鑰密碼",
+  "loc.input.label.jarsignerArguments": "Jarsigner 引數",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Zipalign 位置"
+}

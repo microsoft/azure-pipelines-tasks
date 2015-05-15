@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Test di carico basato sul cloud con VSO",
+  "loc.description": "Consente di eseguire il test di carico nel cloud. Basato su tecnologia VS Online.",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.TestDrop": "Cartella dei file dei test di carico",
+  "loc.input.label.LoadTest": "File del test di carico",
+  "loc.input.label.TestSettings": "File di impostazioni test",
+  "loc.input.label.ThresholdLimit": "Numero di violazioni consentite della soglia",
+  "loc.input.label.VsoAccountUrl": "URI account VSO",
+  "loc.input.label.Username": "Nome utente credenziali alternative",
+  "loc.input.label.Password": "Password credenziali alternative"
+}

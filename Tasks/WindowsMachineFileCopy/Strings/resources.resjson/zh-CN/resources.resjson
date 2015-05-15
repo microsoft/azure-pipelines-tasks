@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "将文件复制到计算机",
+  "loc.description": "将文件复制到远程计算机",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.EnvironmentName": "目标计算机组",
+  "loc.input.label.MachineNames": "复制到计算机",
+  "loc.input.label.SourcePath": "源",
+  "loc.input.label.TargetPath": "目标文件夹",
+  "loc.input.label.CleanTargetBeforeCopy": "清除目标",
+  "loc.input.label.DeployFilesInParallel": "并行复制文件"
+}

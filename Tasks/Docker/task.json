@@ -3,6 +3,7 @@
     "name": "Docker",
     "friendlyName": "Docker",
     "description": "Deploy a docker image to a remote machine",
+    "helpMarkDown": "Deploy a docker image to a remote machine",
     "category": "Deploy",
     "visibility": [
                 "Preview",

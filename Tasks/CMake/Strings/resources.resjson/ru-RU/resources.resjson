@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.description": "Сборка с помощью кроссплатформенной системы сборок CMake",
+  "loc.input.label.cwd": "Рабочий каталог",
+  "loc.input.label.args": "Аргументы"
+}

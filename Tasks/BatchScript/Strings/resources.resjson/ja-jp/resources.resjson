@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "バッチ スクリプト",
+  "loc.description": "Windows コマンドまたはバッチ スクリプトを実行し、必要に応じて環境を変更できるようにします",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.filename": "パス",
+  "loc.input.label.arguments": "引数",
+  "loc.input.label.modifyEnvironment": "環境の変更",
+  "loc.input.label.workingFolder": "作業フォルダー"
+}

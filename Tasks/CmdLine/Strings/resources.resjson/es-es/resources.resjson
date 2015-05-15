@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Línea de comandos",
+  "loc.description": "Ejecute una línea de comando con argumentos",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.filename": "Herramienta",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.label.workingFolder": "Carpeta de trabajo",
+  "loc.input.label.errorPattern": "Patrón de error",
+  "loc.input.label.warningPattern": "Patrón de aviso",
+  "loc.input.label.failOnStandardError": "Error en Error estándar"
+}

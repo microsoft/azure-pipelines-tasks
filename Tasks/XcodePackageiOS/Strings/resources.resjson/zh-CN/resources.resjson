@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Xcode 包 iOS",
+  "loc.description": "从 Xcode 版本输出生成 .ipa 文件",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.appName": ".app 的名称",
+  "loc.input.label.ipaName": ".ipa 的名称",
+  "loc.input.label.provisioningProfile": "设置配置文件名称",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.appPath": ".app 的路径",
+  "loc.input.label.ipaPath": "place .ipa 的路径"
+}

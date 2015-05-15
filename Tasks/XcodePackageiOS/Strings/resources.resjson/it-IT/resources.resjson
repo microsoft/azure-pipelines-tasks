@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "iOS pacchetto Xcode",
+  "loc.description": "Consente di generare un file con estensione ipa dall'output della compilazione Xcode",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.appName": "Nome del file con estensione app",
+  "loc.input.label.ipaName": "Nome del file con estensione ipa",
+  "loc.input.label.provisioningProfile": "Nome profilo di provisioning",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.label.appPath": "Percorso del file con estensione app",
+  "loc.input.label.ipaPath": "Percorso in cui inserire il file con estensione ipa"
+}

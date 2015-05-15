@@ -1,0 +1,5 @@
+{
+  "loc.friendlyName": "CocoaPod",
+  "loc.description": "CocoaPod 是 Swift 和 Objective-C Cocoa 项目的依赖管理器。运行 pod 安装。",
+  "loc.input.label.cwd": "工作目录"
+}

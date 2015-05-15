@@ -1,0 +1,15 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "PowerShell on Target Machines",
+  "loc.helpMarkDown": "Execute PowerShell scripts on remote machine(s)",
+  "loc.description": "Execute PowerShell scripts on remote machine(s)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.EnvironmentName": "Machine Group",
+  "loc.input.label.MachineNames": "Deploy to Machines",
+  "loc.input.label.ScriptPath": "PowerShell Script",
+  "loc.input.label.ScriptArguments": "Script Arguments",
+  "loc.input.label.InitializationScriptPath": "Initialization Script",
+  "loc.input.label.RunPowershellInParallel": "Run PowerShell in Parallel"
+}

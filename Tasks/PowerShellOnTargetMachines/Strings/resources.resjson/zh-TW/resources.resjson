@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "在目標電腦上執行 PowerShell",
+  "loc.description": "在目標電腦上執行 PowerShell。在電腦上從遠端執行 PowerShell 命令。",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.EnvironmentName": "電腦群組",
+  "loc.input.label.MachineNames": "部署到電腦",
+  "loc.input.label.ScriptPath": "PowerShell 指令碼",
+  "loc.input.label.ScriptArguments": "指令碼引數",
+  "loc.input.label.InitializationScriptPath": "初始化指令碼",
+  "loc.input.label.RunPowershellInParallel": "並行執行 Powershell"
+}

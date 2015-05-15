@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "發行測試結果",
+  "loc.description": "將測試結果發行到 VSO/TFS",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.testRunner": "測試結果格式",
+  "loc.input.label.testResultsFiles": "測試結果檔案",
+  "loc.input.label.mergeTestResults": "合併測試結果",
+  "loc.input.label.platform": "平台",
+  "loc.input.label.configuration": "組態"
+}

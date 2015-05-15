@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Azure-Ressourcengruppe bereitstellen",
+  "loc.description": "Azure-Ressourcengruppe bereitstellen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
+  "loc.input.label.location": "Speicherort",
+  "loc.input.label.resourceGroupName": "Ressourcengruppe",
+  "loc.input.label.csmFile": "Vorlage",
+  "loc.input.label.csmParametersFile": "Vorlagenparameter",
+  "loc.input.label.overrideParameters": "Override Template Parameters",
+  "loc.input.label.dscDeployment": "SAS-Token generieren",
+  "loc.input.label.moduleUrlParameterName": "Azure-Blob-Parameter",
+  "loc.input.label.sasTokenParameterName": "SAS-Token-Parameter",
+  "loc.input.label.vmCreds": "Anmeldeinformationen für virtuellen Computer",
+  "loc.input.label.vmUserName": "Benutzername",
+  "loc.input.label.vmPassword": "Kennwort"
+}

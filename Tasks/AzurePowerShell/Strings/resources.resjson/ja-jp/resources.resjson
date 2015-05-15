@@ -1,0 +1,7 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.description": "Azure 環境内で PowerShell スクリプトを実行します",
+  "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
+  "loc.input.label.ScriptPath": "スクリプト パス",
+  "loc.input.label.ScriptArguments": "スクリプトの引数"
+}

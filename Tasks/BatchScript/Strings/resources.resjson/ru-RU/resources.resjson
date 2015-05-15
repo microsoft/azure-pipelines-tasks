@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Пакетный сценарий",
+  "loc.description": "Выполнение скрипта bat или cmd Windows и при необходимости предоставление разрешения на изменение среды",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.filename": "Путь",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.label.modifyEnvironment": "Изменить среду",
+  "loc.input.label.workingFolder": "Рабочая папка"
+}

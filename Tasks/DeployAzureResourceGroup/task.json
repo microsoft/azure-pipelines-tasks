@@ -3,6 +3,7 @@
     "name": "DeployAzureResourceGroup",
     "friendlyName": "Deploy Azure Resource Group",
     "description": "Provision and Deploy an Azure Resource Group",
+    "helpMarkDown": "Provision and Deploy an Azure Resource Group",
     "category": "Deploy",
     "visibility": [
                 "Preview",
@@ -35,6 +36,12 @@
             "required": true,
             "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
         },
+	{
+            "name": "resourceGroupName", 
+            "type": "string", 
+            "label": "Resource Group",
+            "required": true
+        },
         {
             "name": "location",
             "type": "pickList",
@@ -52,12 +59,6 @@
             "properties": {
                 "EditableOptions": "True" 
             }
-        },
-        {
-            "name": "resourceGroupName", 
-            "type": "string", 
-            "label": "Resource Group",
-            "required": true
         },
         { 
             "name": "csmFile", 

@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Buildartefakte veröffentlichen",
+  "loc.description": "Buildartefakte auf dem Server oder einer Dateifreigabe veröffentlichen",
+  "loc.input.label.CopyRoot": "Stamm kopieren",
+  "loc.input.label.Contents": "Inhalt",
+  "loc.input.label.ArtifactName": "Artefaktname",
+  "loc.input.label.ArtifactType": "Artefakttyp",
+  "loc.input.label.TargetPath": "Pfad"
+}
