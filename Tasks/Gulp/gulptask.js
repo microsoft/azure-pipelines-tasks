@@ -4,7 +4,7 @@ var tl = require('vso-task-lib');
 var gt = new tl.ToolRunner(tl.which('gulp', true));
 
 // optional - no tasks will concat nothing
-gt.arg(tl.getDelimitedInput('tasks', ' ', false));
+gt.arg(tl.getDelimitedInput('targets', ' ', false));
 
 gt.arg('--gulpfile');
 var gulpFile = tl.getPathInput('gulpFile', true);
