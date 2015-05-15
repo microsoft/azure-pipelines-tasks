@@ -1,8 +1,8 @@
 ﻿{
     "id": "434AFC5D-31F0-4E3E-BE20-90AF34B75D7A",
     "name": "PerformActionOnMachineGroup",
-    "friendlyName": "Perform action on machine group",
-    "description": "Perform given action on machine group",
+    "friendlyName": "Machine Group Actions",
+    "description": "Machine Group Actions",
     "helpMarkDown": "Perform given action on machine group",
     "category": "Deploy",
     "visibility": [
@@ -41,12 +41,14 @@
             "label": "Action",
             "defaultValue": "Delete",
             "required": true,
-            "helpMarkDown": "Allowed operations are : Delete, Stop, Start, Restart",
+            "helpMarkDown" : "Actions to be performed on the machines or machine group",
             "options": {
                  "Delete": "Delete",
                  "Start": "Start",
                  "Stop": "Stop",
-                 "Restart": "Restart"
+                 "Restart": "Restart",
+                 "Block": "Block",
+                 "Unblock": "Unblock"
                 }
         },
         {
@@ -54,10 +56,41 @@
             "type": "string", 
             "label": "Apply to Machines",
             "required": false,
-            "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 ."
-        }    
+            "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 .Filters are not applied for block and unblock actions"
+        },
+        {
+           "name": "BlockedFor",
+           "type": "pickList",
+           "label": "Block For",
+           "defaultValue": "Instance",
+           "required": "true",
+           "helpMarkDown": "Can block a machine group either for a this instance or for entire definition i.e. for all instances of the definition",
+           "options": {
+                "Release": "Instance",
+                "Definition": "Definition"
+           },
+           "visibleRule": "Action = Block"
+        },
+        {
+           "name": "TimeInHours",
+           "type": "pickList",
+           "label": "Time in Hours",
+           "defaultValue": "0",
+           "required": "true",
+           "helpMarkDown": "Specifies number of hours for which machine group is to be blocked. Default value is 0 which blocks machine indefinitely",
+           "options": {
+                "0": "0",
+                "8": "8",
+                "24": "24",
+                "48": "48"
+            },
+           "visibleRule": "Action = Block",
+           "properties": {
+                "EditableOptions": "True" 
+            }
+        }
      ],
-    "instanceNameFormat": "$(Action) machine group : $(MachineGroupName)",
+    "instanceNameFormat": "$(Action) machine group ",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\PerformActionOnMachineGroup.ps1",
