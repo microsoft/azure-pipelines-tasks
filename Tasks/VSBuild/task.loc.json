@@ -6,7 +6,7 @@
   "name": "VSBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Build with **MSBuild** in the Visual Studio Developer Command Prompt",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"

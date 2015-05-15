@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Chef",
+  "loc.helpMarkDown": "Deploy to Chef environments by editing environment attributes",
   "loc.description": "Deploy to Chef environments by editing environment attributes",
   "loc.input.label.connectedServiceName": "Chef Connection",
   "loc.input.label.Environment": "Environment",

@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xcode Build",
+  "loc.helpMarkDown": "Build an Xcode workspace on Mac OS",
   "loc.description": "Build an Xcode workspace on Mac OS",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.xcWorkspacePath": "Workspace Path",

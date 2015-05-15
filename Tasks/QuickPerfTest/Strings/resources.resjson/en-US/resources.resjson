@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Cloud-based Web Performance Test",
+  "loc.helpMarkDown": "Quickly find perf regressions to your website under load. Powered by VS Online",
   "loc.description": "Quickly find perf regressions to your website under load. Powered by VS Online",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.websiteUrl": "Website Url",

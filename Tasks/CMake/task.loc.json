@@ -6,7 +6,7 @@
   "name": "CMake",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Build with the CMake cross-platform build system",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"

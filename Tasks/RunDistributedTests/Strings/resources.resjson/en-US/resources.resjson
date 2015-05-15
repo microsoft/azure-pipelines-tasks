@@ -2,12 +2,13 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Visual Studio Test Run using Test Agent",
-  "loc.description": "Run tests distributedly using multiple test agents in a lab machine group",
-  "loc.group.displayName.testEnvironment": "Test Machine Group",
+  "loc.friendlyName": "Visual Studio Test using Test Agent",
+  "loc.helpMarkDown": "Run tests distributedly using multiple test agents on a lab machine group",
+  "loc.description": "Run tests distributedly using multiple test agents on a lab machine group",
+  "loc.group.displayName.testMachineGroups": "Test Machine Group",
   "loc.group.displayName.testSettings": "Test Settings",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.environment": "Test Machine Group",
+  "loc.input.label.testMachineGroup": "Test Machine Group",
   "loc.input.label.dropLocation": "Test Drop Location",
   "loc.input.label.sourcefilters": "Test Assembly",
   "loc.input.label.testFilterCriteria": "Test Filter criteria",
@@ -17,5 +18,5 @@
   "loc.input.label.overrideRunParams": "Override Test Run Parameters",
   "loc.input.label.testConfigurations": "Test Configurations",
   "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
-  "loc.input.label.autEnvironmentName": "Application Under Test Machine Group"
+  "loc.input.label.autMachineGroup": "Application Under Test Machine Group"
 }

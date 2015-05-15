@@ -34,9 +34,6 @@ if(!$cwd)
     $cwd = $wrapperScriptItem.Directory.FullName
 }
 
-Write-Verbose "Setting working directory to $cwd"
-Push-Location $cwd
-
 if($jdkVersion -and $jdkVersion -ne "default")
 {
     $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
@@ -52,9 +49,7 @@ if($jdkVersion -and $jdkVersion -ne "default")
 
 $arguments = "$options $tasks"
 Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
-Invoke-BatchScript -Path $wrapperScript -Arguments $arguments
-
-Pop-Location
+Invoke-BatchScript -Path $wrapperScript -Arguments $arguments -WorkingFolder $cwd
 
 # Publish test results files
 $publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
