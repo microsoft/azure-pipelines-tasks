@@ -3,6 +3,7 @@ param(
     [string]$username,
     [string]$password,
     [string]$url,
+    [string]$redirectStderr,
     [string]$options
 )
 
@@ -10,11 +11,15 @@ Write-Verbose "Entering script cURLUploader.ps1"
 Write-Verbose "files = $files"
 Write-Verbose "username = $username"
 Write-Verbose "url = $url"
+Write-Verbose "redirectStderr = $redirectStderr"
 Write-Verbose "options = $options"
 
 # Import the Task dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+
+$redirectStderrChecked = Convert-String $redirectStderr Boolean
+Write-Verbose "redirectStderrChecked (converted) = $redirectStderrChecked"
 
 #Verify curl is installed correctly
 try
@@ -58,7 +63,13 @@ Write-Verbose "uploadFiles = $uploadFiles"
 $updatedSlashes = $uploadFiles -replace "\\","/"
 Write-Verbose "updatedSlashes = $updatedSlashes"
 
-$args = "$options"
+if ($redirectStderrChecked) 
+{
+    $args = "--stderr -"
+}
+
+$args = "$args $options"
+
 if ($username -or $password)
 {
     $args = "$args -u `"$username`"" + ":" + "`"$password`""

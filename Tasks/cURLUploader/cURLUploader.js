@@ -25,6 +25,7 @@ var firstWildcardIndex = function (str) {
 // Get files to be uploaded 
 var filesPattern = tl.getInput('files', true);
 tl.debug('filesPattern: ' + filesPattern); 
+
 // Get username for server authentication
 var username = tl.getInput('username', false);
 tl.debug('user: ' + username);
@@ -36,6 +37,10 @@ tl.debug('password nil?: ' + !(password));
 // Get where to upload
 var url = tl.getInput('url', true);
 tl.debug('URL: ' + url);
+
+// Should redirect stderr to stdout (curl by defaults write progress bar to stderr, and they show up as error text) 
+var redirectStderr = tl.getInput('redirectStderr', false);
+tl.debug('redirectStderr: ' + redirectStderr);
 
 var options = tl.getInput('options', false);
 tl.debug("options: " + options);
@@ -83,6 +88,10 @@ tl.debug("upload files: " + uploadFiles);
 
 // Prepare curl upload command line
 var curlRunner = new tl.ToolRunner('curl');
+
+if (redirectStderr === 'true') {
+    curlRunner.arg('--stderr -');
+}
 
 if (options) {
     curlRunner.arg(options);

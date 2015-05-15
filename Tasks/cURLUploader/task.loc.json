@@ -50,10 +50,18 @@
       "helpMarkDown": "Specify the URL where the file(s) will be uploaded to.  Directory should end with a trailing slash.  Possible protocols include DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET and TFTP."
     },
     {
+      "name": "redirectStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.redirectStderr",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Add '--stderr -' to cURL.  By default cURL writes progress bar to stderr, and build will pick it up as error output. Suppressing this behavior."
+    },
+    {
       "name": "options",
       "type": "string",
       "label": "ms-resource:loc.input.label.options",
-      "defaultValue": "--stderr -",
+      "defaultValue": "",
       "required": false,
       "helpMarkDown": "Additional arguments that will be passed to cURL."
     }

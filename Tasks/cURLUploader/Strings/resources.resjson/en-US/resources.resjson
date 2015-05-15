@@ -8,5 +8,6 @@
   "loc.input.label.username": "Username",
   "loc.input.label.password": "Password",
   "loc.input.label.url": "URL",
+  "loc.input.label.redirectStderr": "Redirect Standard Error to Standard Out",
   "loc.input.label.options": "Optional Arguments"
 }
