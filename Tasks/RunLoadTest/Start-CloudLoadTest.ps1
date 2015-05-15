@@ -15,6 +15,7 @@ param
 )
 
 $userAgent = "CloudLoadTestBuildTask"
+$apiVersion = "api-version=1.0"
 
 $global:ThresholdExceeded = $false
 $global:RestTimeout = 5
@@ -35,7 +36,7 @@ function InitializeRestHeaders()
 
 function CreateTestDrop($headers)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testdrops?api-version=1.0", $global:ElsAccountUrl)
+    $uri = [String]::Format("{0}/_apis/clt/testdrops?{1}", $global:ElsAccountUrl, $apiVersion)
     $drop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers -Method Post -Body "{ ""dropType"": ""TestServiceBlobDrop"" }"
     return $drop
 }
@@ -55,28 +56,28 @@ function Get($headers, $uri)
 
 function GetTestDrop($drop, $headers)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?api-version=1.0", $global:ElsAccountUrl, $drop.id)
+    $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?{2}", $global:ElsAccountUrl, $drop.id, $apiVersion)
     $testdrop = Get $headers $uri
     return $testdrop
 }
 
 function GetTestRun($headers, $runId)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $global:ElsAccountUrl, $runId)
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $runId, $apiVersion)
     $run = Get $headers $uri
     return $run
 }
 
 function GetTestErrors($headers, $run)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?detailed=true&api-version=1.0", $global:ElsAccountUrl, $run.id)
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?detailed=true&{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
     $testerrors = Get $headers $uri
     return $testerrors
 }
 
 function QueueTestRun($headers, $runJson)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $global:ElsAccountUrl)
+    $uri = [String]::Format("{0}/_apis/clt/testruns?{1}", $global:ElsAccountUrl, $apiVersion)
     $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $runJson
 
 $start = @"
@@ -85,7 +86,7 @@ $start = @"
     }
 "@
 
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $global:ElsAccountUrl, $run.id)
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
     Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $start
     $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
 
@@ -99,7 +100,7 @@ $stop = @"
       "state": "aborted"
     }
 "@
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $global:ElsAccountUrl, $run.id)
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
     Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $stop
     $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
     return $run
@@ -145,7 +146,7 @@ function CheckTestErrors($headers, $run)
 {
     if ($global:MonitorThresholds)
     {
-        $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?type=ThresholdMessage&detailed=True&api-version=1.0", $global:ElsAccountUrl, $run.id)
+        $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?type=ThresholdMessage&detailed=True&{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
         $errors = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
 
         if ($errors -and $errors.count -gt 0 -and  $errors.types.count -gt 0)
@@ -165,7 +166,7 @@ function CheckTestErrors($headers, $run)
 
 function ShowMessages($headers, $run)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/messages?api-version=1.0", $global:ElsAccountUrl, $run.id)
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/messages?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
     $messages = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
     if ($messages)
     {
@@ -189,12 +190,12 @@ function UploadTestDrop($testdrop, $src)
     $dest = $testdrop.accessData.dropContainerUrl
     $sas = $testdrop.accessData.sasKey
 
-    $agentHomeDir = $env:AGENT_HOMEDIRECTORY
-    $azcopy = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy\AzCopy.exe"
-    $args = ("{0} {1} /DestSAS:{2} /S" -f $src, $dest, $sas)
-
+    $azcopy = Get-ToolPath -Name "AzCopy\AzCopy.exe"
     Write-Verbose "Calling AzCopy = $azcopy" -Verbose
-    Write-Verbose "Args = $args" -Verbose
+
+    $azlog = ("{0}\..\azlog" -f $src)
+    $args = ("/Source:{0} /Dest:{1} /DestSAS:{2} /S /Z:{3}" -f $src, $dest, $sas, $azlog)
+    Write-Verbose "AzCopy Args = $args" -Verbose
 
     Invoke-Tool -Path $azcopy -Arguments $args
 }
