@@ -27,7 +27,7 @@ $defaultWinRMPort = '5985'
 $defaultSkipCACheckOption = ''	
 $defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
 $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
-$resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
+$resourceWinRMHttpPortKeyName = 'WinRM_Http'
 $doSkipCACheckOption = '-SkipCACheck'
 $envOperationStatus = 'Passed'
 
@@ -193,7 +193,7 @@ else
 
                  Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
 				 
-                 Write-Output (Get-LocalizedString -Key "Copy Status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
+                 Write-Output (Get-LocalizedString -Key "Copy Status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
 				 
 				 DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
               } 

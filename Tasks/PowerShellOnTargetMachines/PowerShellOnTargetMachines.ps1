@@ -24,7 +24,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 	# Constants +  Defaults #
 $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
-$resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
+$resourceWinRMHttpPortKeyName = 'WinRM_Http'
 $defaultWinRMHttpPort = '5985'
 $defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
 $defaultSkipCACheckOption = ''	
