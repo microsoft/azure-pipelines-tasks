@@ -1,5 +1,4 @@
 param(
-    [string][Parameter(Mandatory=$true)]$ConnectedServiceName, 
     [string][Parameter(Mandatory=$true)]$MachineGroupName,
     [string][Parameter(Mandatory=$true)]$Action,
     [string][Parameter(Mandatory=$false)]$Filters,
@@ -10,7 +9,6 @@ param(
 Write-Verbose -Verbose "Beginning action on Machine Group"
 Write-Output "Entering script PerformActionOnMachineGroup.ps1"
 
-Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "MachineGroupName = $MachineGroupName"
 Write-Verbose -Verbose "Action = $Action"
 Write-Verbose -Verbose "Filters = $Filters"
@@ -59,12 +57,12 @@ Switch ($Action)
          break
       }
 
-      { @("Start", "Stop", "Restart") -contains $_ } {
+     { @("Start", "Stop", "Restart") -contains $_ } {
          Invoke-OperationHelper -machineGroupName $MachineGroupName -operationName $Action -machines $machineGroup.Resources
          break
       }
- 
-      "Block" {
+
+	  "Block" {
           Block-MachineGroup -machineGroupName $MachineGroupName -blockedFor $BlockedFor -timeInHours $TimeInHours
           break
       }
