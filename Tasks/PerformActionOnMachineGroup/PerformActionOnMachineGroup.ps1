@@ -61,8 +61,8 @@ Switch ($Action)
          Invoke-OperationHelper -machineGroupName $MachineGroupName -operationName $Action -machines $machineGroup.Resources
          break
       }
-
-	  "Block" {
+      
+        "Block" {
           Block-MachineGroup -machineGroupName $MachineGroupName -blockedFor $BlockedFor -timeInHours $TimeInHours
           break
       }
