@@ -57,12 +57,12 @@ Switch ($Action)
          break
       }
 
-     { @("Start", "Stop", "Restart") -contains $_ } {
+      { @("Start", "Stop", "Restart") -contains $_ } {
          Invoke-OperationHelper -machineGroupName $MachineGroupName -operationName $Action -machines $machineGroup.Resources
          break
       }
       
-        "Block" {
+       "Block" {
           Block-MachineGroup -machineGroupName $MachineGroupName -blockedFor $BlockedFor -timeInHours $TimeInHours
           break
       }
