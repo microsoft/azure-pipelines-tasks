@@ -62,7 +62,7 @@ Switch ($Action)
          break
       }
       
-       "Block" {
+      "Block" {
           Block-MachineGroup -machineGroupName $MachineGroupName -blockedFor $BlockedFor -timeInHours $TimeInHours
           break
       }
