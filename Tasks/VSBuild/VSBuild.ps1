@@ -9,7 +9,7 @@ param(
     [string]$platform,
     [string]$configuration,
     [string]$clean,
-	[string]$restoreNugetPackages,
+    [string]$restoreNugetPackages,
     [string]$logProjectEvents
 )
 

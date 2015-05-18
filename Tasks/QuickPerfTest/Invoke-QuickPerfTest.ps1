@@ -2,6 +2,9 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
+    $connectedServiceName,
+
+    [String] [Parameter(Mandatory = $true)]
     $websiteUrl,
     [String] [Parameter(Mandatory = $true)]
     $testName,
@@ -10,14 +13,7 @@ param
     [String] [Parameter(Mandatory = $true)]
     $runDuration,
     [String] [Parameter(Mandatory = $true)]
-    $geoLocation,
-
-    [String] [Parameter(Mandatory = $true)]
-    $CltAccountUrl,
-    [String] [Parameter(Mandatory = $true)]
-    $Username,
-    [String] [Parameter(Mandatory = $true)]
-    $Password
+    $geoLocation
 )
 
 $userAgent = "QuickPerfTestBuildTask"
@@ -29,7 +25,6 @@ function InitializeRestHeaders()
     $alternateCreds = [String]::Concat($Username, ":", $Password)
     $basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
     $restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
-    $restHeaders.Add("Content-Type", "application/json")
 
     return $restHeaders
 }
@@ -39,18 +34,20 @@ function ComposeTestDropJson($name, $duration, $homepage, $vu)
 $tdjson = @"
 {
     "dropType": "InplaceDrop",
-	"loadTestDefinition":{
-		"loadTestName":"$name",
-		"runDuration":$duration,
-		"urls":["$homepage"],
-		"browserMixs":[
-			{"browserName":"Internet Explorer 11.0","browserPercentage":60.0},
-			{"browserName":"Chrome 2","browserPercentage":40.0}
-		],
-		"loadPatternName":"Constant",
-		"maxVusers":$vu,
-		"loadGenerationGeoLocations":[]
-	}
+    "loadTestDefinition":{
+        "loadTestName":"$name",
+        "runDuration":$duration,
+        "urls":["$homepage"],
+        "browserMixs":[
+            {"browserName":"Internet Explorer 11.0","browserPercentage":60.0},
+            {"browserName":"Chrome 2","browserPercentage":40.0}
+        ],
+        "loadPatternName":"Constant",
+        "maxVusers":$vu,
+        "loadGenerationGeoLocations":[
+            {"Location":"$geoLocation","Percentage":100}
+        ]
+    }
 }
 "@
 
@@ -60,7 +57,7 @@ $tdjson = @"
 function CreateTestDrop($headers, $dropJson)
 {
     $uri = [String]::Format("{0}/_apis/clt/testdrops?api-version=1.0", $CltAccountUrl)
-    $drop = Invoke-RestMethod -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $dropJson
+    $drop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $dropJson
 
     return $drop
 }
@@ -68,7 +65,7 @@ function CreateTestDrop($headers, $dropJson)
 function GetTestDrop($headers, $drop)
 {
     $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?api-version=1.0", $CltAccountUrl, $drop.id)
-    $testdrop = Invoke-RestMethod -UserAgent $userAgent -Uri $uri -Headers $headers
+    $testdrop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
 
     return $testdrop
 }
@@ -85,7 +82,7 @@ function UploadTestDrop($testdrop)
 function GetTestRuns($headers)
 {
     $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
-    $runs = Invoke-RestMethod -UserAgent $userAgent -Uri $uri -Headers $headers
+    $runs = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
 
     return $runs
 }
@@ -98,15 +95,45 @@ function RunInProgress($run)
 function MonitorTestRun($headers, $run)
 {
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl, $run.id)
+    $prevState = $run.state
+    $prevSubState = $run.subState
+    Write-Output ("Load test '{0}' is in state '{1}|{2}'." -f  $run.name, $run.state, $run.subState)
 
     do
     {
         Start-Sleep -s 5
-        Write-Output "Invoke-RestMethod -Uri $uri"
-        $run = Invoke-RestMethod -UserAgent $userAgent -Uri $uri -Headers $headers
-        Write-Output $run.state
+        $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+        if ($prevState -ne $run.state -or $prevSubState -ne $run.subState)
+        {
+            $prevState = $run.state
+            $prevSubState = $run.subState
+            Write-Output ("Load test '{0}' is in state '{1}|{2}'." -f  $run.name, $run.state, $run.subState)
+        }
     }
     while (RunInProgress $run)
+
+    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    Write-Output "------------------------------------"
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/messages?api-version=1.0", $CltAccountUrl, $run.id)
+    $messages = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+
+    if ($messages)
+    {
+        $timeSorted = $messages.value | Sort-Object loggedDate
+        foreach ($message in $timeSorted)
+        {
+            switch ($message.messageType)
+            {
+                "info"      { Write-Host -NoNewline ("[Message]{0}" -f $message.message) }
+                "output"    { Write-Host -NoNewline ("[Output]{0}" -f $message.message) }
+                "warning"   { Write-Warning $message.message }
+                "error"     { Write-Error $message.message }
+                "critical"  { Write-Error $message.message }
+            }
+        }
+    }
+
+    Write-Output "------------------------------------"
 }
 
 function ComposeTestRunJson($name, $tdid)
@@ -126,7 +153,7 @@ $trjson = @"
 function QueueTestRun($headers, $runJson)
 {
     $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
-    $run = Invoke-RestMethod -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $runJson
+    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $runJson
 
 $start = @"
 {
@@ -135,10 +162,26 @@ $start = @"
 "@
 
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl, $run.id)
-    Invoke-RestMethod -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $start
-    $run = Invoke-RestMethod -UserAgent $userAgent -Uri $uri -Headers $headers
+    Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $start
+    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
 
     return $run
+}
+
+function ComposeAccountUrl($vsoUrl)
+{
+    $elsUrl = $vsoUrl
+
+    if ($vsoUrl -notlike "*VSCLT.VISUALSTUDIO.COM*")
+    {
+        if ($vsoUrl -like "*VISUALSTUDIO.COM*")
+        {
+            $accountName = $vsoUrl.Split('//')[2].Split('.')[0]
+            $elsUrl = ("https://{0}.vsclt.visualstudio.com" -f $accountName)
+        }
+    }
+
+    return $elsUrl
 }
 
 Write-Output "Starting Quick Perf Test Script"
@@ -147,29 +190,35 @@ $testName = $testName + ".loadtest"
 Write-Output "Test Name = $testName"
 Write-Output "Run Duration = $runDuration"
 Write-Output "Website Url = $websiteUrl"
-Write-Output "VU Load = $vuLoad"
+Write-Output "Virtual User Load = $vuLoad"
+Write-Output "Load Location = $geoLocation"
+
+$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+
+$Username = $connectedServiceDetails.Authorization.Parameters.Username
+Write-Verbose "userName = $userName" -Verbose
+$Password = $connectedServiceDetails.Authorization.Parameters.Password
+$CltAccountUrl = ComposeAccountUrl($connectedServiceDetails.Url.AbsoluteUri)
+Write-Verbose "CltAccountUrl = $CltAccountUrl" -Verbose
 
 $h = InitializeRestHeaders
 
 $dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad
-Write-Output "------------------------------"
-Write-Output $dropjson
-Write-Output "------------------------------"
-
 $drop = CreateTestDrop $h $dropjson
+if ($drop.dropType -eq "InPlaceDrop")
+{
+    $runJson = ComposeTestRunJson $testName $drop.id
 
-$runJson = ComposeTestRunJson $testName $drop.id
-Write-Output "------------------------------"
-Write-Output $runJson
-Write-Output "------------------------------"
+    $run = QueueTestRun $h $runJson
+    MonitorTestRun $h $run
 
-$run = QueueTestRun $h $runJson
-Write-Output $run
-
-MonitorTestRun $h $run
-Write-Output $run
-
-Write-Output ("Run-id for this load test is {0} and its name is '{1}'. To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run." -f  $run.runNumber, $run.name )
+    Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
+    Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
+}
+else
+{
+    Write-Error ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $CltAccountUrl)
+}
 
 Write-Output "Finished Quick Perf Test Script"
 

@@ -50,27 +50,15 @@ $startEmulatorCommand = "& `"$StartEmulatorScript`" $createAvdArgs $emulatorArgs
 Write-Verbose "Calling start emulator script: $startEmulatorCommand"
 Invoke-Expression -Command $startEmulatorCommand
 
-# Change working directory to specified gradle project. 
-if ($gradleProj) 
-{
-    Write-Verbose "Setting working directory to $gradleProj"
-    Push-Location $gradleProj
-}
-
 # Use Gradle Wrapper
 if ([System.IO.File]::Exists($gradleWrapper)) 
 {
-    Write-Verbose "Invoking gradle wrapper $gradleWrapper with arguments $gradleArguments"
-    Invoke-BatchScript $gradleWrapper -Arguments $gradleArguments
+    Write-Verbose "Invoking gradle wrapper $gradleWrapper with arguments $gradleArguments in working directory $gradleProj"
+    Invoke-BatchScript $gradleWrapper -Arguments $gradleArguments -WorkingFolder $gradleProj
 }
 else 
 {
     throw "Unable to find script $gradleWrapper"
-}
-
-if ($gradleProj) 
-{
-    Pop-Location
 }
 
 # Always invoke the post build script, emulator must be stopped if we started it

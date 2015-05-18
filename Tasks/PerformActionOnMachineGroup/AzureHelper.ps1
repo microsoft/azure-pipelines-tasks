@@ -60,6 +60,43 @@ function Restart-MachineInProvider
 
 function Initialize-AzureHelper
 {
+    Write-Verbose "Initializing azure resource provider" -Verbose
+
+    Import-AzurePowerShellModule
+
     Switch-AzureMode AzureResourceManager
-    Write-Verbose "Switched to AzureResourceManager" -Verbose
+
+    if($machineGroup.ProviderDataList.Count -gt 0)
+    {
+        $providerDataName = $machineGroup.ProviderDataList[0].Name
+        Write-Verbose "Getting providerData : $providerDataName" -Verbose
+        $providerData = Get-ProviderData -ProviderDataName $providerDataName -Connection $connection
+        $subscriptionName = $providerData.Properties.GetProperty("SubscriptionName")     
+        $username = $providerData.Properties.GetProperty("Username")
+        $password = $providerData.Properties.GetProperty("Password")
+
+        if( ![string]::IsNullOrEmpty($subscriptionName) -and ![string]::IsNullOrEmpty($username) -and ![string]::IsNullOrEmpty($password) )
+        {
+            Write-Verbose "SubscriptionName : $subscriptionName" -Verbose
+            Write-Verbose "Username : $username" -Verbose
+            $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+            $psCredential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+            $azureAccount = Add-AzureAccount -Credential $psCredential
+            if(!$azureAccount)
+            {
+                throw "There was an error with the Azure credentials used for machine group deployment"
+            }
+            Select-AzureSubscription -SubscriptionName $subscriptionName
+        }
+        else
+        {
+            throw "ProviderData for machine group is containing null or empty values for either of subscriptionname, username or Password"
+        }
+    }
+    else
+    {
+        throw "No providerdata is specified in machine group"
+    }
+
+    Write-Verbose "Initialized azure resource provider" -Verbose
 }

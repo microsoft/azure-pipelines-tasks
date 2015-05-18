@@ -6,7 +6,7 @@
   "name": "DeployVisualStudioTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
     "Preview",

@@ -6,7 +6,7 @@
   "name": "CmdLine",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Run a command line with arguments",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",

@@ -2,14 +2,12 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Cloud-based Load Test with VSO",
-  "loc.description": "Runs the load test in cloud; Powered by VS Online",
-  "loc.group.displayName.advanced": "Advanced",
+  "loc.friendlyName": "Cloud-based Load Test",
+  "loc.helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.description": "Runs the load test in cloud, with Visual Studio Online",
+  "loc.input.label.connectedServiceName": "Registered connection",
+  "loc.input.label.TestSettings": "Test settings file",
   "loc.input.label.TestDrop": "Load test files folder",
   "loc.input.label.LoadTest": "Load test file",
-  "loc.input.label.TestSettings": "Test settings file",
-  "loc.input.label.ThresholdLimit": "Number of permissible threshold violations",
-  "loc.input.label.VsoAccountUrl": "VSO account uri",
-  "loc.input.label.Username": "Alternate credential username",
-  "loc.input.label.Password": "Alternate credential password"
+  "loc.input.label.ThresholdLimit": "Number of permissible threshold violations"
 }

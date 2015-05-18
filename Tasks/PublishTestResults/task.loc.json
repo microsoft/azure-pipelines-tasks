@@ -6,7 +6,7 @@
   "name": "PublishTestResults",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Publish Test Results to VSO/TFS",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
     "Build"
@@ -81,6 +81,10 @@
       "target": "$(currentDirectory)\\PublishTestResults.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
+    },
+    "Node": {
+      "target": "PublishTestResults.js",
+      "argumentFormat": ""
     }
   }
 }

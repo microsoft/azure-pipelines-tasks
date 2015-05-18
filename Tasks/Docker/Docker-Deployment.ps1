@@ -17,12 +17,14 @@ param
     $PortBindings
 )
 
-Write-Host "Entering script Docker-Deployment.ps1"
-Write-Host "DockerHost= $DockerEndpoint"
-Write-Host "Repository= $Repository"
-Write-Host "Tag= $Tag"
-Write-Host "ContainerName= $ContainerName"
-Write-Host "PortBindings= $PortBindings"
+Write-Verbose "Entering script Docker-Deployment.ps1" -Verbose
+Write-Verbose "DockerHost= $DockerEndpoint" -Verbose
+Write-Verbose "Repository= $Repository" -Verbose
+Write-Verbose "Tag= $Tag" -Verbose
+Write-Verbose "ContainerName= $ContainerName" -Verbose
+Write-Verbose "PortBindings= $PortBindings" -Verbose
+
+Import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 # VARIABLE DECLARATIONS
 $DockerEndpointRestUrl = ("http://{0}" -f $DockerEndpoint.Trim())
@@ -73,7 +75,7 @@ function Validate-Port([int] $port )
 
     if ($port -lt 0 -or $port -gt 65535)
     {
-        throw "Port $port is Invalid. The valid port range is [0,65535]"
+        throw (Get-LocalizedString -Key "Port '{0}' is Invalid. The valid port range is [0,65535]" -ArgumentList $port)
     }
 }
 
@@ -87,14 +89,14 @@ function Parse-PortBinding
 
         if( $ports.Count -ne 2 )
         {
-            throw "Port Bindings argument is not valid.  Valid port number format is 'hostport:containerport'."
+            throw (Get-LocalizedString -Key "Port Bindings argument is not valid. Valid port number format is '{0}'" -ArgumentList 'hostport:containerport')
         }
         elseif( $ports[1].Trim().Equals("") )
         {
-            throw "Port Bindings argument is not valid. Container port should not be empty."
+            throw (Get-LocalizedString -Key "Port Bindings argument is not valid. Container port should not be empty")
         }
 
-        Write-Host ("Host Port: {0}, Container Port: {1}" -f $ports[0], $ports[1])
+        Write-Host (Get-LocalizedString -Key "Host Port: '{0}', Container Port: '{1}'" -ArgumentList $ports[0], $ports[1])
 
         Validate-Port -port $ports[0]
         Validate-Port -port $ports[1]
@@ -170,13 +172,13 @@ function Handle-ImageNotFoundError($response)
     $imageNotFoundErrormsg = ("image {0} not found" -f $repository)
     if($response.contains($imageNotFoundErrormsg))
     {
-        throw ("{0} on docker hub" -f $imageNotFoundErrormsg)
+        throw (Get-LocalizedString -Key "Image '{0}' not found on docker hub" -ArgumentList $repository)
     }
 }
 
 function Create-Image()
 {
-    Write-Host ("Creating the image '{0}'" -f $Repository)
+    Write-Verbose ("Creating the image '{0}'" -f $Repository) -Verbose
 
     $uri = Get-CreateImageRestUrl
     $response = Invoke-RestMethod -Method Post -Uri $uri -Body "" -ContentType $jsonContentType
@@ -188,7 +190,7 @@ function Create-Image()
 
 function Create-Container()
 {
-    Write-Host ("Creating the container '{0}'" -f $ContainerName)
+    Write-Verbose ("Creating the container '{0}'" -f $ContainerName) -Verbose
 
     $payload = Get-CreateContainerRestPayload
 
@@ -203,12 +205,12 @@ function Create-Container()
 		# If the status code is 404, it means the image doesn't exist
         if( $errorCode -eq $notFoundErrorCode )
 		{
-            Write-Host ("Image '{0}' doesn't exists" -f $Repository)			            
+            Write-Host (Get-LocalizedString -Key "Image '{0}' does not exist" -ArgumentList $Repository)			            
             $global:isImageExists = $false
 		}
 		else
 		{
-			Write-Host ("Exception Occurred while creating the container: {0}" -f $_.Exception.Message)
+            Write-Host (Get-LocalizedString -Key "Exception occurred while creating the container: '{0}'" -ArgumentList $_.Exception.Message)
 			throw $_
 		}
 	}
@@ -219,7 +221,7 @@ function Create-Container()
 
 function Start-Container($id)
 {
-    Write-Host ("Starting the container '{0}'" -f $ContainerName)
+    Write-Verbose ("Starting the container '{0}'" -f $ContainerName) -Verbose
 
     $uri = ($startContainerRestUrl -f $id)
     $payload = Get-StartContainerRestPayload
@@ -231,7 +233,7 @@ function Start-Container($id)
 
 function Delete-Container($name)
 {
-    Write-Host ("Deleting the container '{0}'" -f $ContainerName)
+    Write-Verbose ("Deleting the container '{0}'" -f $ContainerName) -Verbose
     $uri = ($deleteContainerRestUrl -f $name)
 
 	try
@@ -245,7 +247,7 @@ function Delete-Container($name)
 		# If the status code is 404, it means container doesn't exist
 		if( -not $errorCode -eq $notFoundErrorCode )
 		{
-			Write-Host ("Exception Occurred while deleting the container: {0}" -f $_.Exception.Message)
+            Write-Host (Get-LocalizedString -Key "Exception occurred while deleting the container: '{0}'" -ArgumentList $_.Exception.Message)
 			throw $_
 		}
 	}
@@ -267,21 +269,21 @@ try
 	# Pull the image if it doesn't exists and retry the container creation
     if( -not $global:isImageExists )
     {
-        Write-Host ("Image '{0}' doesn't exists on the host, pulling it from the registry" -f $Repository)
+        Write-Host (Get-LocalizedString -Key "Image '{0}' doesn't exists on the host, pulling it from the registry" -ArgumentList $Repository)
         Create-Image
         $result = Create-Container
     }
 
-    Write-Host ("Container '{0}' created successfully with ID: {1}" -f $ContainerName, $result.Id)
+    Write-Host (Get-LocalizedString -Key "Container '{0}' created successfully with ID: {1}" -ArgumentList $ContainerName, $result.Id)
 
 	# Start the container
     Start-Container -id $result.Id
-    Write-Host ("Container {0} started successfully" -f $result.Id)
+    Write-Host (Get-LocalizedString -Key "Container '{0}' started successfully" -ArgumentList $result.Id)
 }
 catch
 {
-    Write-Host ("Exception Occurred while deploying: {0}" -f $_.Exception.Message)
+    Write-Host (Get-LocalizedString -Key "Exception occurred while deploying: '{0}'" -ArgumentList $_.Exception.Message)
     throw $_
 }
 
-Write-Host "Leaving script Docker-Deployment.ps1"
+Write-Verbose "Leaving script Docker-Deployment.ps1" -Verbose

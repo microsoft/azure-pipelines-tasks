@@ -1,0 +1,14 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "cURL Upload Files",
+  "loc.description": "Use cURL to upload files with supported protocols. (FTP, FTPS, SFTP, HTTP, and more)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.files": "Files",
+  "loc.input.label.username": "Username",
+  "loc.input.label.password": "Password",
+  "loc.input.label.url": "URL",
+  "loc.input.label.options": "Optional Arguments",
+  "loc.input.label.redirectStderr": "Redirect Standard Error to Standard Out"
+}

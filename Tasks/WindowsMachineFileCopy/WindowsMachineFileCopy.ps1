@@ -7,7 +7,7 @@ param (
     [string]$deployFilesInParallel
     )
 
-Write-Verbose "Entering script DeployFilesToMachines.ps1" -Verbose
+Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
@@ -15,9 +15,10 @@ Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
-. ./CopyJob.ps1
-. ./CopyFilesHelper.ps1
+. ./WindowsMachineFileCopyJob.ps1
+. ./WindowsMachineFileCopyHelper.ps1
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
@@ -26,7 +27,7 @@ $defaultWinRMPort = '5985'
 $defaultSkipCACheckOption = ''	
 $defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
 $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
-$resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
+$resourceWinRMHttpPortKeyName = 'WinRM_Http'
 $doSkipCACheckOption = '-SkipCACheck'
 $envOperationStatus = 'Passed'
 
@@ -123,7 +124,7 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
         $machine = $resourceProperties.fqdn
 		
-        Write-Output "Copy Started for - $machine"
+        Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
@@ -132,7 +133,8 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
        
         $status = $copyResponse.Status
         Output-ResponseLogs -operationName "copy" -fqdn $machine -deploymentResponse $copyResponse
-        Write-Output "Copy Status for machine $machine : $status"
+        
+        Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 		
 		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 		
@@ -157,7 +159,7 @@ else
 		
         $machine = $resourceProperties.fqdn
 		
-		Write-Output "Copy Started for - $machine"
+        Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 		
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
@@ -191,7 +193,7 @@ else
 
                  Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
 				 
-                 Write-Output "Copy Status for machine $machineName : $status"
+                 Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
 				 
 				 DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
               } 
@@ -203,6 +205,7 @@ Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOper
 
 if($envOperationStatus -ne "Passed")
 {
-    throw "copy to one or more machine failed."
+    throw (Get-LocalizedString -Key 'Copy to one or more machines failed')
 }
 
+Write-Verbose "Leaving script WindowsMachineFileCopy.ps1" -Verbose

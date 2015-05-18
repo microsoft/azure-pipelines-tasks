@@ -79,6 +79,10 @@
       "target": "$(currentDirectory)\\PublishTestResults.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
+    },
+    "Node": {
+            "target": "PublishTestResults.js",
+            "argumentFormat": ""
     }
   }
 }

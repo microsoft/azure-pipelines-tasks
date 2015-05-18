@@ -19,8 +19,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "******************************************************************************"
-Write-Host "Starting Azure Resource Group Deployment Task"
+Write-Verbose "Starting Azure Resource Group Deployment Task" -Verbose
 
 Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "environmentName = $resourceGroupName"
@@ -91,8 +90,7 @@ $environmentOperationId = Create-EnvironmentOperation -environment $environment
 
 if($deploymentError)
 {
-    Throw "Deploy Azure Resource Group Task failed. View logs for details"
+    Throw (Get-LocalizedString -Key "Deploy Azure Resource Group Task failed. View logs for details")
 }
 
-Write-Host "Completing Azure Resource Group Deployment Task"
-Write-Host "******************************************************************************"
+Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose

@@ -41,6 +41,7 @@ var validate = function(folderName, task) {
 };
 
 var LOC_FRIENDLYNAME = 'loc.friendlyName';
+var LOC_HELPMARKDOWN = 'loc.helpMarkDown';
 var LOC_DESCRIPTION = 'loc.description';
 var LOC_GROUPDISPLAYNAME = 'loc.group.displayName.';
 var LOC_INPUTLABEL = 'loc.input.label.';
@@ -59,6 +60,9 @@ var createStrings = function(task, pkgPath, srcPath) {
 	var strings = {};
 	strings[LOC_FRIENDLYNAME] = task.friendlyName;
 	task['friendlyName'] = 'ms-resource:' + LOC_FRIENDLYNAME;
+	
+	strings[LOC_HELPMARKDOWN] = task.helpMarkDown;
+	task['helpMarkDown'] = 'ms-resource:' + LOC_HELPMARKDOWN;
 
 	strings[LOC_DESCRIPTION] = task.description;
 	task['description'] = 'ms-resource:' + LOC_DESCRIPTION;

@@ -6,7 +6,7 @@
   "name": "Chef",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Deploy to Chef environments by editing environment attributes",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Preview",

@@ -14,6 +14,7 @@ Write-Verbose "storageAccount = $storageAccount" -Verbose
 Write-Verbose "containerName = $containerName" -Verbose
 Write-Verbose "blobPrefix = $blobPrefix" -Verbose
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
@@ -27,13 +28,13 @@ $copyResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAc
 $status = $copyResponse.Status
 $log = $copyResponse.Log
 
-Write-Output "Copy Status to blob : $status"
+Write-Output (Get-LocalizedString -Key "Copy Status to blob : '{0}'" -ArgumentList $status)
 Write-Verbose "Logs for upload to blob : $log" -Verbose
 
 if($copyResponse.Status -ne "Succeeded")
 {
      $error = $copyResponse.Error
-     throw "Upload to blob failed. $error"
+     throw (Get-LocalizedString -Key "Upload to blob failed with error: '{0}'" -ArgumentList $error)
 }
 
 Write-Verbose "Leaving script CopyFilesToAzureBlob.ps1" -Verbose

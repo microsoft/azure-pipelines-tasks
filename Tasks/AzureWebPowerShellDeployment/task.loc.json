@@ -6,7 +6,7 @@
   "name": "AzureWebPowerShellDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Deploy a website to Microsoft Azure",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -83,9 +83,9 @@
   "sourceDefinitions": [
     {
       "target": "WebSiteName",
-      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/webspaces/{$WebSiteLocation}Webspace/sites",
+      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/webspaces/$(WebSiteLocation)Webspace/sites",
       "selector": "xpath://Site/Name",
-      "authKey": "{$ConnectedServiceName}"
+      "authKey": "$(ConnectedServiceName)"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",

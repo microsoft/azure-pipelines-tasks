@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure Web Site Deployment",
+  "loc.helpMarkDown": "Deploy a website to Microsoft Azure",
   "loc.description": "Deploy a website to Microsoft Azure",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.label.WebSiteLocation": "Web Site Location",

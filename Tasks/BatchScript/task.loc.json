@@ -6,7 +6,7 @@
   "name": "BatchScript",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpMarkDown": "Run a windows cmd or bat script and optionally allow it to change the environment",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [
     "Cmd"

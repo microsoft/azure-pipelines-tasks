@@ -3,6 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Shell Script",
+  "loc.helpMarkDown": "Run a shell script using bash",
   "loc.description": "Run a shell script using bash",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.scriptPath": "Script Path",
