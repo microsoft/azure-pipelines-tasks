@@ -161,7 +161,7 @@ function Get-Resources
         {
             if($fqdnErrorCount -gt 0 -and $fqdnErrorCount -ne $azureResourceGroupResources.Count)
             {
-                Write-Warning (Get-LocalizedString -Key "Unable to get FQDN for {0} resources in ResourceGroup : '{1}'" -ArgumentList $fqdnErrorCount, $resourceGroupName)
+                Write-Warning (Get-LocalizedString -Key "Unable to get FQDN for '{0}' resources in ResourceGroup : '{1}'" -ArgumentList $fqdnErrorCount, $resourceGroupName)
             }
         }
     
