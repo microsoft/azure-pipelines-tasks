@@ -366,7 +366,7 @@ function Create-AzureKeyVaultIfNotExist
     {
         if($azureKeyVault.EnabledForDeployment -eq $false)
         {
-            Throw "Secrets not enabled to be retrieved from KeyVault $azureKeyVaultName by the Microsoft.Compute resource provider, can't proceed with WinRM configuration"
+            throw (Get-LocalizedString -Key "Secrets not enabled to be retrieved from KeyVault '{0}' by the Microsoft.Compute resource provider, can't proceed with WinRM configuration" -ArgumentList $azureKeyVaultName)
         }
     }
 }
