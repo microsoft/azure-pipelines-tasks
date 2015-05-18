@@ -62,7 +62,10 @@ function Initialize-AzureHelper
 {
     Write-Verbose "Entering in azure-initializer" -Verbose
 
+    Import-AzurePowerShellModule
+
     Switch-AzureMode AzureResourceManager
+
     if($machineGroup.ProviderDataList.Count -gt 0)
     {
         $providerDataName = $machineGroup.ProviderDataList[0].Name
