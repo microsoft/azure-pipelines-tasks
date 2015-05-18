@@ -33,6 +33,8 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
+Validate-AzurePowershellVersion
+
 #Find the matching deployment definition File
 $csmFile = Get-File $csmFile
 Write-Verbose -Verbose "deplyomentDefinitionFile = $csmFile"

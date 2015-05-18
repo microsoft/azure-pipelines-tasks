@@ -1,3 +1,17 @@
+function Validate-AzurePowershellVersion
+{
+    $currentVersion =  Get-AzureCmdletsVersion
+    $minimumAzureVersion = New-Object System.Version(0, 9, 0)
+    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+    
+    if(!$versionCompatible)
+    {
+        Throw "The required minimum version $minimumAzureVersion of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell"
+    }
+
+    Write-Verbose -Verbose "Validated the required azure powershell version"
+}
+
 function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
