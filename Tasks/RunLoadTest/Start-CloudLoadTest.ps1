@@ -1,32 +1,27 @@
 [CmdletBinding(DefaultParameterSetName = 'None')]
 param
 (
-    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-    $TestDrop,
-
-    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-    $LoadTest,
+    [String] [Parameter(Mandatory = $true)]
+    $connectedServiceName,
 
     [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
     $TestSettings,
-
+    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+    $TestDrop,
+    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+    $LoadTest,
     [String]
-    $ThresholdLimit,
-
-    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-    $VsoAccountUrl,
-
-    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-    $Username,
-
-    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-    $Password
+    $ThresholdLimit
 )
+
+$userAgent = "CloudLoadTestBuildTask"
+$apiVersion = "api-version=1.0"
 
 $global:ThresholdExceeded = $false
 $global:RestTimeout = 5
 $global:MonitorThresholds = $false
-$global:ElsAccountUrl = $VsoAccountUrl
+$global:ElsAccountUrl = "http://www.visualstudio.com"
+$global:ScopedTestDrop = $TestDrop
 
 function InitializeRestHeaders()
 {
@@ -35,15 +30,14 @@ function InitializeRestHeaders()
     $alternateCreds = [String]::Concat($Username, ":", $Password)
     $basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
     $restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
-    $restHeaders.Add("Content-Type", "application/json")
-    $restHeaders.Add("User-Agent", "BuildVnext")
+
     return $restHeaders
 }
 
 function CreateTestDrop($headers)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testdrops?api-version=1.0", $global:ElsAccountUrl)
-    $drop = Invoke-RestMethod  -Uri $uri -Headers $headers -Method Post -Body "{ ""dropType"": ""TestServiceBlobDrop"" }"
+    $uri = [String]::Format("{0}/_apis/clt/testdrops?{1}", $global:ElsAccountUrl, $apiVersion)
+    $drop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers -Method Post -Body "{ ""dropType"": ""TestServiceBlobDrop"" }"
     return $drop
 }
 
@@ -51,7 +45,7 @@ function Get($headers, $uri)
 {
     try
     {
-        $result = Invoke-RestMethod -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
+        $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
         return $result
     }
     catch
@@ -60,32 +54,31 @@ function Get($headers, $uri)
     }
 }
 
-
 function GetTestDrop($drop, $headers)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?api-version=1.0", $global:ElsAccountUrl, $drop.id)
+    $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?{2}", $global:ElsAccountUrl, $drop.id, $apiVersion)
     $testdrop = Get $headers $uri
     return $testdrop
 }
 
 function GetTestRun($headers, $runId)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $global:ElsAccountUrl, $runId)
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $runId, $apiVersion)
     $run = Get $headers $uri
     return $run
 }
 
 function GetTestErrors($headers, $run)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/Errors?detailed=true&api-version=1.0", $global:ElsAccountUrl, $run.id)
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?detailed=true&{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
     $testerrors = Get $headers $uri
     return $testerrors
 }
 
 function QueueTestRun($headers, $runJson)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $global:ElsAccountUrl)
-    $run = Invoke-RestMethod -Uri $uri -Method Post -Headers $headers -Body $runJson
+    $uri = [String]::Format("{0}/_apis/clt/testruns?{1}", $global:ElsAccountUrl, $apiVersion)
+    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $runJson
 
 $start = @"
     {
@@ -93,9 +86,9 @@ $start = @"
     }
 "@
 
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $global:ElsAccountUrl, $run.id)
-    Invoke-RestMethod -Uri $uri -Method Patch -Headers $headers -Body $start
-    $run = Invoke-RestMethod -Uri $uri -Headers $headers
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
+    Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $start
+    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
 
     return $run
 }
@@ -107,9 +100,9 @@ $stop = @"
       "state": "aborted"
     }
 "@
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $global:ElsAccountUrl, $run.id)
-    Invoke-RestMethod -Uri $uri -Method Patch -Headers $headers -Body $stop
-    $run = Invoke-RestMethod -Uri $uri -Headers $headers
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
+    Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $stop
+    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
     return $run
 
 }
@@ -153,8 +146,8 @@ function CheckTestErrors($headers, $run)
 {
     if ($global:MonitorThresholds)
     {
-        $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/Errors?type=ThresholdMessage&detailed=True&api-version=1.0", $global:ElsAccountUrl, $run.id)
-        $errors = Invoke-RestMethod -Uri $uri -Headers $headers
+        $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?type=ThresholdMessage&detailed=True&{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
+        $errors = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
 
         if ($errors -and $errors.count -gt 0 -and  $errors.types.count -gt 0)
         {
@@ -162,7 +155,7 @@ function CheckTestErrors($headers, $run)
             {
                 if ($subType.subTypeName -eq 'Critical' -and $subType.occurrences -gt $ThresholdLimit)
                 {
-                    $global:ThresholdExceeded=$true
+                    $global:ThresholdExceeded = $true
                     return $true;
                 }
             }
@@ -173,48 +166,38 @@ function CheckTestErrors($headers, $run)
 
 function ShowMessages($headers, $run)
 {
-     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/Messages?api-version=1.0", $global:ElsAccountUrl, $run.id)
-     $messages = Invoke-RestMethod -Uri $uri -Headers $headers
-     if ($messages)
-     {
+    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/messages?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
+    $messages = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    if ($messages)
+    {
         $sMessages = $messages.value | Sort-Object loggedDate
         foreach ($message in $sMessages)
         {
             switch ($message.messageType)
             {
-                "info" { Write-Host -NoNewline ("[Message] {0}" -f $message.message )}
-                "output" { Write-Host -NoNewline ("[Message] {0}" -f $message.message )}
-                "warning" { Write-Warning $message.message }
-                "error" {Write-Error $message.message}
-                "critical" {Write-Error $message.message}
+                "info"     { Write-Host -NoNewline ("[Message]{0}" -f $message.message) }
+                "output"   { Write-Host -NoNewline ("[Message]{0}" -f $message.message) }
+                "warning"  { Write-Warning $message.message }
+                "error"    { Write-Error $message.message }
+                "critical" { Write-Error $message.message }
             }
         }
-     }
- }
-
-function UploadFile($container, $file)
-{
-    try
-    {
-        $blob = $container.GetBlockBlobReference($file.Name)
-        $stream = [System.IO.File]::OpenRead($file.FullName);
-        $blob.UploadFromStream($stream)
-    }finally
-    {
-        $stream.Close();
     }
 }
 
-function UploadTestDrop($testdrop, $dir)
+function UploadTestDrop($testdrop, $src)
 {
-    $uri = New-Object System.Uri($testdrop.accessData.dropContainerUrl)
-    $sas = New-Object Microsoft.WindowsAzure.StorageCredentialsSharedAccessSignature($testdrop.accessData.sasKey)
-    $container = New-Object Microsoft.WindowsAzure.StorageClient.CloudBlobContainer($uri, $sas)
+    $dest = $testdrop.accessData.dropContainerUrl
+    $sas = $testdrop.accessData.sasKey
 
-    foreach ($file in Get-ChildItem -Path $dir -recurse | where {!($_.psiscontainer)})
-    {
-        UploadFile $container $file
-    }
+    $azcopy = Get-ToolPath -Name "AzCopy\AzCopy.exe"
+    Write-Verbose "Calling AzCopy = $azcopy" -Verbose
+
+    $azlog = ("{0}\..\azlog" -f $src)
+    $args = ("/Source:{0} /Dest:{1} /DestSAS:{2} /S /Z:{3}" -f $src, $dest, $sas, $azlog)
+    Write-Verbose "AzCopy Args = $args" -Verbose
+
+    Invoke-Tool -Path $azcopy -Arguments $args
 }
 
 function ComposeTestRunJson($name, $tdid)
@@ -223,25 +206,21 @@ function ComposeTestRunJson($name, $tdid)
     $setupScript=""
     $cleanupScript=""
 
-    $testSettingsFile = Get-ChildItem -Path $TestDrop -recurse | where {$_.Name -eq $TestSettings}
-    if ($testSettingsFile) #If testsettingsfile exists
+    [xml]$tsxml = Get-Content $TestSettings
+    if ($tsxml.TestSettings.Scripts.setupScript)
     {
-        $fullName = $testSettingsFile.FullName
-        [xml]$testSettings = Get-Content $fullName
-        if ($testSettings.TestSettings.Scripts.setupScript)
-        {
-            $setupScript = [System.IO.Path]::GetFileName($testSettings.TestSettings.Scripts.setupScript)
-        }
-        if ($testSettings.TestSettings.Scripts.cleanupScript)
-        {
-            $cleanupScript = [System.IO.Path]::GetFileName($testSettings.TestSettings.Scripts.cleanupScript)
-        }
-        if ($testSettings.TestSettings.Execution.hostProcessPlatform)
-        {
-            $processPlatform = $testSettings.TestSettings.Execution.hostProcessPlatform
-        }
+        $setupScript = [System.IO.Path]::GetFileName($tsxml.TestSettings.Scripts.setupScript)
     }
-        $trjson = @"
+    if ($tsxml.TestSettings.Scripts.cleanupScript)
+    {
+        $cleanupScript = [System.IO.Path]::GetFileName($tsxml.TestSettings.Scripts.cleanupScript)
+    }
+    if ($tsxml.TestSettings.Execution.hostProcessPlatform)
+    {
+        $processPlatform = $tsxml.TestSettings.Execution.hostProcessPlatform
+    }
+
+$trjson = @"
     {
         "name":"$name",
         "description":"Load Test queued from build",
@@ -254,7 +233,7 @@ function ComposeTestRunJson($name, $tdid)
 
 function WriteTaskMessages($message)
 {
-    Write-Host ("{0} " -f $message ) -NoNewline
+    Write-Host ("{0}" -f $message ) -NoNewline
 }
 
 function MonitorTestRun($headers, $run)
@@ -296,11 +275,20 @@ function MonitorAcquireResource($headers, $run)
     }
 }
 
-function SetAccountUrl()
+function ComposeAccountUrl($vsoUrl)
 {
-    $accountName = $VsoAccountUrl.Split('//')[2].Split('.')[0]
-    $elsUrl = ("https://{0}.vsclt.visualstudio.com" -f $accountName)
-    $global:ElsAccountUrl = $elsUrl
+    $elsUrl = $vsoUrl
+
+    if ($vsoUrl -notlike "*VSCLT.VISUALSTUDIO.COM*")
+    {
+        if ($vsoUrl -like "*VISUALSTUDIO.COM*")
+        {
+            $accountName = $vsoUrl.Split('//')[2].Split('.')[0]
+            $elsUrl = ("https://{0}.vsclt.visualstudio.com" -f $accountName)
+        }
+    }
+
+    return $elsUrl
 }
 
 function ErrorMessage($message)
@@ -309,14 +297,14 @@ function ErrorMessage($message)
     exit $LastExitCode
 }
 
-
 function ValidateFiles($inputName, $fileName)
 {
-    $file = Get-ChildItem -Path $TestDrop -recurse | where {$_.Name -eq $fileName}
+    $file = Get-ChildItem -Path $TestDrop -recurse | where {$_.Name -eq $fileName} | Select -First 1
     if ($file)
     {
-        #Check for fileName
-        Write-Host -NoNewline ("{0} = {1}"  -f $inputName, $file.FullName)
+        # Check for fileName
+        $global:ScopedTestDrop = $file.Directory.FullName
+        Write-Host -NoNewline ("Selected {0} is '{1}' under '{2}'"  -f $inputName, $file.FullName, $global:ScopedTestDrop)
     }
     else
     {
@@ -326,80 +314,92 @@ function ValidateFiles($inputName, $fileName)
 
 function Validate()
 {
+    if (-Not (Test-Path $TestSettings))
+    {
+        ErrorMessage "The path for the test settings file does not exist. Please provide a valid path."
+    }
+
     if (-Not (Test-Path $TestDrop))
     {
         ErrorMessage "The path for the load test files does not exist. Please provide a valid path."
     }
 
-    ValidateFiles "Load test File" $LoadTest
-    ValidateFiles "Test settings File" $TestSettings
-
-    if ($PSVersionTable.PSVersion.Major -lt 3)
-    {
-        ErrorMessage "Major version of powershell installed on agent needs to be 3 or more."
-    }
-
-    try
-    {
-        Add-Type -Path 'C:\Program Files\Microsoft SDKs\Azure\.NET SDK\*\bin\Microsoft.WindowsAzure.StorageClient.dll'
-    }
-    catch
-    {
-        $_.LoaderExceptions | %
-        {
-            ErrorMessage "For cloud load test to work, the build agent needs Azure SDK."
-        }
-    }
+    ValidateFiles "load test file" $LoadTest
 }
 
 ############################################## PS Script execution starts here ##########################################
 WriteTaskMessages "Starting Load Test Script"
 
+Write-Output "Test settings = $TestSettings"
+Write-Output "Test drop = $TestDrop"
+Write-Output "Load test = $LoadTest"
+
 #Validate Input
 Validate
-
-#Setting Headers and account Url accordingly
-$headers = InitializeRestHeaders
-SetAccountUrl
 
 #Setting monitoring of Threshold rule appropriately
 if ($ThresholdLimit -and $ThresholdLimit -ge 0)
 {
     $global:MonitorThresholds = $true
+    Write-Output "Threshold limit = $ThresholdLimit"
 }
+
+$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+
+$Username = $connectedServiceDetails.Authorization.Parameters.Username
+Write-Verbose "Username = $userName" -Verbose
+$Password = $connectedServiceDetails.Authorization.Parameters.Password
+$global:ElsAccountUrl = ComposeAccountUrl($connectedServiceDetails.Url.AbsoluteUri)
+Write-Verbose "Account Url = $global:ElsAccountUrl" -Verbose
+
+#Setting Headers and account Url accordingly
+$headers = InitializeRestHeaders
 
 #Upload the test drop
 $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
 $drop = CreateTestDrop $headers
-$drop = GetTestDrop $drop $headers
-UploadTestDrop $drop $TestDrop
-WriteTaskMessages ( "Uploading test files took {0}. Queuing the test run." -f $($elapsed.Elapsed.ToString()))
 
-#Queue the test run
-$runJson = ComposeTestRunJson $LoadTest $drop.id
-$run = QueueTestRun $headers $runJson
-MonitorAcquireResource $headers $run
-
-#Monitor the test run
-$elapsed = [System.Diagnostics.Stopwatch]::StartNew()
-MonitorTestRun $headers $run
-WriteTaskMessages ( "Run execution took {0}. Collecting results." -f $($elapsed.Elapsed.ToString()))
-
-#Print the error and messages
-$run = GetTestRun $headers $run.id
-ShowMessages $headers $run
-PrintErrorSummary $headers $run
-
-if ($global:ThresholdExceeded -eq $true -or $run.state -ne "completed" )
+if ($drop.dropType -eq "TestServiceBlobDrop")
 {
-    Write-Error "The Cloud Load Test has failed."
+    $drop = GetTestDrop $drop $headers
+    UploadTestDrop $drop $global:ScopedTestDrop
+    WriteTaskMessages ("Uploading test files took {0}. Queuing the test run." -f $($elapsed.Elapsed.ToString()))
 
+    #Queue the test run
+    $runJson = ComposeTestRunJson $LoadTest $drop.id
+    $run = QueueTestRun $headers $runJson
+    MonitorAcquireResource $headers $run
+
+    #Monitor the test run
+    $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
+    MonitorTestRun $headers $run
+    WriteTaskMessages ( "Run execution took {0}. Collecting results." -f $($elapsed.Elapsed.ToString()))
+
+    #Print the error and messages
+    $run = GetTestRun $headers $run.id
+    ShowMessages $headers $run
+    PrintErrorSummary $headers $run
+
+    if ($run.state -ne "completed")
+    {
+        Write-Error "Load test has failed. Please check error messages to fix the problem."
+    }
+    elseif ($global:ThresholdExceeded -eq $true)
+    {
+        Write-Error "Load test task is marked as failed, as the number of threshold errors has exceeded permissible limit."
+    }
+    else
+    {
+        WriteTaskMessages "The load test completed successfully."
+    }
+
+    Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
+    Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
 }
 else
 {
-    WriteTaskMessages "The load test completed successfully."
+    Write-Error ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri)
 }
 
-WriteTaskMessages ("Run Id for this load test is {0} and the load test name is '{1}'. To view detailed results go to the load test manager in Visual Studio Ulitmate IDE." -f  $run.runNumber, $run.name )
 WriteTaskMessages "Finished Load Test Script"
 

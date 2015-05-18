@@ -22,13 +22,13 @@ function Validate-EnvironmentInput()
 	$environmentsList = Invoke-Knife @("environment list")
 	if(-not $environmentsList.Contains($environmentName))
 	{
-		throw "Environment name `"$environment`" is not found on the chef server"	
+        throw (Get-LocalizedString -Key "Environment name '{0}' is not found on the chef server" -ArgumentList $environment)
 	}
 
     $nodesList = Invoke-Knife @("node list -E $environmentName")
     if([string]::isNullOrEmpty($nodesList))
     {
-        throw "The chef environment: `"$environment`" has no nodes in it"	
+        throw (Get-LocalizedString -Key "The chef environment: '{0}' has no nodes in it" -ArgumentList $environment)	
     }
 }
 
@@ -48,7 +48,7 @@ function Validate-AttributesInput()
 	}
 	catch
 	{
-		throw "Give the environment attribute key value pairs to be updated as proper json. ex: {`"default_attributes.websiteName`":`"MyWebsite`",`"override_attributes.db`":`"MyDb`"}"	
+        throw (Get-LocalizedString -Key "Give the environment attribute key value pairs to be updated as proper json. ex: '{0}'" -ArgumentList "{`"default_attributes.websiteName`":`"MyWebsite`",`"override_attributes.db`":`"MyDb`"}")
 	}
 
 	Write-Verbose "Parsed environment attributes" -verbose
@@ -73,7 +73,7 @@ function Validate-WaitTime()
 		}
 	}
 
-	throw "Please provide a valid ""Wait Time"" input in minutes. It should be an integer greater than 0."
+    throw (Get-LocalizedString -Key "Please provide a valid '{0}' input in minutes. It should be an integer greater than 0" -ArgumentList 'Wait Time')
 }
 
 function Add-NewtonsoftAsType()
@@ -131,12 +131,12 @@ function Update-LocalEnvironmentAttributes()
 	{
 		if($jsonObject.SelectToken($attribute.Key) -eq $null)
 		{
-			throw "Cannot find environment attribute with key: $($attribute.Key)"
+            throw (Get-LocalizedString -Key "Cannot find environment attribute with key: '{0}'" -ArgumentList $attribute.Key)
 		}
 		
 		if(-not ($jsonObject.SelectToken($attribute.Key).Value -is [String]))
 		{
-			throw "The attribute with key: '$($attribute.Key)' is not a leaf attribute"				
+            throw (Get-LocalizedString -Key "The attribute with key: '{0}' is not a leaf attribute" -ArgumentList $attribute.Key)		
 		}
 
 		$jsonObject.SelectToken($attribute.Key).Value = $attribute.Value	
@@ -158,6 +158,7 @@ try
 	#setting error action preference
 	$ErrorActionPreference = "Stop"
 
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
     import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
     Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 

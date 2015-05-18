@@ -24,7 +24,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 	# Constants +  Defaults #
 $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
-$resourceWinRMHttpPortKeyName = 'WinRM_HttpPort'
+$resourceWinRMHttpPortKeyName = 'WinRM_Http'
 $defaultWinRMHttpPort = '5985'
 $defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
 $defaultSkipCACheckOption = ''	
@@ -122,7 +122,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
         $machine = $resourceProperties.fqdn
 		
-		Write-Output "Deployment Started for - $machine"
+		Write-Output (Get-LocalizedString -Key "Deployment Started for - '{0}'" -ArgumentList $machine)
 		
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
@@ -134,7 +134,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 
         $status = $deploymentResponse.Status
 
-        Write-Output "Deployment Status for machine $machine : $status"
+        Write-Output (Get-LocalizedString -Key "Deployment Status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 		
 		Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 		
@@ -158,7 +158,7 @@ else
 		
         $machine = $resourceProperties.fqdn
 		
-		Write-Output "Deployment Started for - $machine"
+        Write-Output (Get-LocalizedString -Key "Deployment Started for - '{0}'" -ArgumentList $machine)
 		
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
 		
@@ -192,7 +192,7 @@ else
 				 
 				 Output-ResponseLogs -operationName "Deployment" -fqdn $machineName -deploymentResponse $output
 				 
-                 Write-Output "Deployment Status for machine $machineName : $status"
+                 Write-Output (Get-LocalizedString -Key "Deployment Status for machine $machineName : '{0}'" -ArgumentList $status)
 				 
 				 Write-Verbose "Do complete ResourceOperation for  - $machine" -Verbose
 				 
@@ -207,7 +207,7 @@ Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOper
 
 if($envOperationStatus -ne "Passed")
 {
-    throw "deployment on one or more machine failed."
+    throw (Get-LocalizedString -Key 'deployment on one or more machine failed')
 }
 
 Write-Verbose "Leaving script PowerShellOnTargetMachines.ps1" -Verbose

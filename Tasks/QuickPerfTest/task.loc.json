@@ -9,26 +9,29 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Preview",
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
-    "msbuild"
+    "msbuild",
+    "azureps"
   ],
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
-    }
-  ],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select a previously registered service connection to talk to the Cloud-based Load Test service. Choose 'Manage' to register a new connection."
+    },
     {
       "name": "websiteUrl",
       "type": "string",
@@ -79,8 +82,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.geoLocation",
       "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "Geographical region from where the load will be generated.",
+      "helpMarkDown": "Geographical region to generate the load from. See task help for more details.",
       "defaultValue": "Default",
       "options": {
         "Default": "Default",
@@ -100,34 +102,9 @@
         "Australia East": "Australia East (New South Wales)",
         "Australia Southeast": "Australia Southeast (Victoria)"
       }
-    },
-    {
-      "name": "Username",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Username",
-      "defaultValue": "$(System.Auth.UserName)",
-      "groupName": "advanced",
-      "required": true
-    },
-    {
-      "name": "Password",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Password",
-      "defaultValue": "$(System.Auth.Password)",
-      "groupName": "advanced",
-      "required": true
-    },
-    {
-      "name": "CltAccountUrl",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.CltAccountUrl",
-      "defaultValue": "$(System.TeamFoundationServerUri)",
-      "groupName": "advanced",
-      "required": false,
-      "helpMarkDown": "Visual Studio Online Account's CLT URL."
     }
   ],
-  "instanceNameFormat": "Quick Perf Test $(testName)",
+  "instanceNameFormat": "Quick Web Performance Test $(testName)",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\Invoke-QuickPerfTest.ps1",

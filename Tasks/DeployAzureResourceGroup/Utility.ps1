@@ -2,13 +2,13 @@ function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
     {
-        throw "Found more than one file to deploy with search pattern $pattern. There can be only one."
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern '{0}'. There can be only one" -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
-            throw "No files were found to deploy with search pattern $pattern"
+            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern '{0}'" -ArgumentList $pattern)
         }
 
         return $files
@@ -37,12 +37,12 @@ function Validate-DeploymentFileAndParameters
 
     if (!(Test-Path -Path $csmFile -PathType Leaf))
     {
-        Throw "Please specify a complete and a valid template file path"
+        throw (Get-LocalizedString -Key "Please specify a complete and a valid template file path")
     }
 
     if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
     {
-         Throw "Please specify a complete and a valid template parameters file path"
+         throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
     }
 }
 
@@ -89,12 +89,12 @@ function Validate-Credentials
     {
         if([string]::IsNullOrEmpty($vmUserName) -eq $true)
         {
-            Throw "Please specify valid username"
+            throw (Get-LocalizedString -Key "Please specify valid username")
         }
 
         if([string]::IsNullOrEmpty($vmPassword) -eq $true)
         {
-            Throw "Please specify valid password"
+            throw (Get-LocalizedString -Key "Please specify valid password")
         }
     }
 
@@ -107,17 +107,17 @@ function Validate-AzureKeyVaultSecret
 
     if (([string]::IsNullOrEmpty($certificatePath) -eq $true) -or (-Not (Test-Path $certificatePath -pathType leaf)))
     {
-        Throw "Please specify valid certificate path"
+        throw (Get-LocalizedString -Key "Please specify valid certificate path")
     }
 
     if([string]::IsNullOrEmpty($certificatePassword) -eq $true)
     {
-        Throw "Please specify valid certificate password"
+        throw (Get-LocalizedString -Key "Please specify valid certificate password")
     }
 
     if([System.IO.Path]::GetExtension($certificatePath) -ne ".pfx")
     {
-        Throw "Please specify pfx certificate file"
+        throw (Get-LocalizedString -Key "Please specify pfx certificate file")
     }
 }
 
@@ -161,7 +161,7 @@ function Create-CSMForWinRMConfiguration
     $virtualMachineResources = $csmJTokenObject.SelectToken("resources") | Where-Object { $_["type"].Value -eq "Microsoft.Compute/virtualMachines" }
     if($virtualMachineResources -eq $null)
     {
-        Write-Warning  "No virtual Machine Resource found in the deployment template, can't add WinRm Configuration Node"
+        Write-Warning (Get-LocalizedString -Key "No virtual Machine Resource found in the deployment template, can't add WinRm Configuration Node")
         return
     }
 
@@ -204,7 +204,7 @@ function Add-NodesForWinRmConfiguration
     $osProfile = $jtokenObject.SelectToken("properties.osProfile")
     if($osProfile -eq $null)
     {
-        Write-Warning "No 'osProfile' found in Virtual Machine Resource, can't add WinRm Configuration Node'"
+        Write-Warning (Get-LocalizedString -Key "No 'osProfile' found in Virtual Machine Resource, can't add WinRm Configuration Node'")
         return
     }
 
@@ -293,7 +293,7 @@ function Add-WindowsConfigurationNode
          }
 
          default {
-              Write-Error("Invalid WinRM Listeners: $winrmListeners.")
+              Write-Error (Get-LocalizedString -Key "Invalid WinRM Listeners: {0}." -ArgumentList $winrmListeners)
          }
     }
 
