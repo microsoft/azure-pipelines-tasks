@@ -69,21 +69,29 @@ function Initialize-AzureHelper
     if($machineGroup.ProviderDataList.Count -gt 0)
     {
         $providerDataName = $machineGroup.ProviderDataList[0].Name
-        Write-Verbose "ProviderDataName : $providerDataName" -Verbose
+        Write-Verbose "Getting providerData : $providerDataName" -Verbose
         $providerData = Get-ProviderData -ProviderDataName $providerDataName -Connection $connection
         $subscriptionName = $providerData.Properties.GetProperty("SubscriptionName")     
         $username = $providerData.Properties.GetProperty("Username")
         $password = $providerData.Properties.GetProperty("Password")
-        Write-Verbose "SubscriptionName : $subscriptionName" -Verbose
-        Write-Verbose "Username : $username" -Verbose
-        $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
-        $psCredential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-        $azureAccount = Add-AzureAccount -Credential $psCredential
-        if(!$azureAccount)
+
+        if( ![string]::IsNullOrEmpty($subscriptionName) -and ![string]::IsNullOrEmpty($username) -and ![string]::IsNullOrEmpty($password) )
         {
-            throw "There was an error with the Azure credentials used for machine group deployment"
+            Write-Verbose "SubscriptionName : $subscriptionName" -Verbose
+            Write-Verbose "Username : $username" -Verbose
+            $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+            $psCredential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+            $azureAccount = Add-AzureAccount -Credential $psCredential
+            if(!$azureAccount)
+            {
+                throw "There was an error with the Azure credentials used for machine group deployment"
+            }
+            Select-AzureSubscription -SubscriptionName $subscriptionName
         }
-        Select-AzureSubscription -SubscriptionName $subscriptionName
+        else
+        {
+            throw "ProviderData for machine group is containing null or empty values for either of subscriptionname, username or Password"
+        }
     }
     else
     {
