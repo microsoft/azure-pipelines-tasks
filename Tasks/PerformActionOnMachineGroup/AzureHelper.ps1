@@ -58,38 +58,6 @@ function Restart-MachineInProvider
     Write-Verbose "Restarted machine $machineName on Azure provider" -Verbose
 }
 
-function Get-AzureModuleLocation
-{
-    #Locations are from Web Platform Installer
-    $azureModuleFolder = ""
-    $azureX86Location = "${env:ProgramFiles(x86)}\Microsoft SDKs\Azure\PowerShell\ServiceManagement\Azure\Azure.psd1"
-    $azureLocation = "${env:ProgramFiles}\Microsoft SDKs\Azure\PowerShell\ServiceManagement\Azure\Azure.psd1"
-
-    if (Test-Path($azureX86Location))
-    {
-        $azureModuleFolder = $azureX86Location
-    } 
-    elseif (Test-Path($azureLocation))
-    {
-        $azureModuleFolder = $azureLocation
-    }
-    else
-    {
-        throw "Windows Azure Powershell module (Azure.psd1) not found."
-    }
-
-    $azureModuleFolder
-}
-
-function Import-AzurePowerShellModule
-{
-    # Try this to ensure the module is actually loaded...
-    $folder = Get-AzureModuleLocation
-    Write-Host "Looking for Azure PowerShell module at $folder"
-
-    Import-Module -Name $folder -Global:$true
-}
-
 function Initialize-AzureHelper
 {
     Write-Verbose "Entering in azure-initializer" -Verbose
