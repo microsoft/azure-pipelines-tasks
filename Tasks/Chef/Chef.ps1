@@ -28,7 +28,7 @@ function Validate-EnvironmentInput()
     $nodesList = Invoke-Knife @("node list -E $environmentName")
     if([string]::isNullOrEmpty($nodesList))
     {
-        throw (Get-LocalizedString -Key "The chef environment: '{0}' has no nodes in it" -ArgumentList $environment)	
+        throw (Get-LocalizedString -Key "The chef environment '{0}' has no nodes in it" -ArgumentList $environment)	
     }
 }
 

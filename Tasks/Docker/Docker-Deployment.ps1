@@ -282,7 +282,7 @@ try
 }
 catch
 {
-    Write-Host (Get-LocalizedString -Key "Exception Occurred while deploying: '{0}'" -ArgumentList $_.Exception.Message)
+    Write-Host (Get-LocalizedString -Key "Exception occurred while deploying: '{0}'" -ArgumentList $_.Exception.Message)
     throw $_
 }
 
