@@ -60,7 +60,7 @@ function Restart-MachineInProvider
 
 function Initialize-AzureHelper
 {
-    Write-Verbose "Entering in azure-initializer" -Verbose
+    Write-Verbose "Initializing azure resource provider" -Verbose
 
     Import-AzurePowerShellModule
 
@@ -98,5 +98,5 @@ function Initialize-AzureHelper
         throw "No providerdata is specified in machine group"
     }
 
-    Write-Verbose "Leaving azure-initializer" -Verbose
+    Write-Verbose "Initialized azure resource provider" -Verbose
 }
