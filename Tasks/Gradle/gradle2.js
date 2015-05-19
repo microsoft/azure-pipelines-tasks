@@ -14,15 +14,8 @@ tl.cd(cwd);
 
 var gb = new tl.ToolRunner(wrapperScript);
 
-var options = tl.getInput('options');
-if (options) {
-    gb.arg(options);
-}
-
-var tasks = tl.getInput('tasks', true);
-if (tasks) {
-    gb.arg(tasks);
-}
+gb.arg(tl.getDelimitedInput('options', ' ', false));
+gb.arg(tl.getDelimitedInput('tasks', ' ', true));
 
 // update JAVA_HOME if user selected specific JDK version
 var jdkVersion = tl.getInput('jdkVersion');
