@@ -9,15 +9,8 @@ var mvnb = new tl.ToolRunner(mvntool);
 mvnb.arg('-f');
 mvnb.arg(tl.getPathInput('mavenPOMFile', true, true));
 
-var options = tl.getInput('options');
-if(options) {
-  mvnb.arg(options);
-}
-
-var goals = tl.getInput('goals');
-if(goals) {
-  mvnb.arg(goals);
-}
+mvnb.arg(tl.getDelimitedInput('options', ' ', false));
+mvnb.arg(tl.getDelimitedInput('goals', ' ', true));
 
 // update JAVA_HOME if user selected specific JDK version
 var jdkVersion = tl.getInput('jdkVersion');
