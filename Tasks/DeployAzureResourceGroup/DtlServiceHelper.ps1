@@ -20,8 +20,10 @@ function Create-ProviderData
     
     Write-Verbose "Registering provider data $providerDataName" -Verbose
 
-    $propertyBag = Get-ServiceEndPointDetails -ConnectedServiceName $ConnectedServiceName
-
+    $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'        
+    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $subscriptionId)
+    $propertyBag.Add("SubscriptionId", $property)
+     
     #TODO Figure out authentication mechanism and store it
     $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 
