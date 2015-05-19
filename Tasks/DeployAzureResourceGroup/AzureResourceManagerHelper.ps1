@@ -8,18 +8,7 @@ function Create-AzureResourceGroup
     
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
-        $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
-    
-        if(!$azureResourceGroup)    
-        {
-            Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
-
-            $resourceGroup  = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
-
-            Write-Host (Get-LocalizedString -Key "Created resource group '{0}'" -ArgumentList $resourceGroup)
-
-        }
-
+        Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
         $startTime = Get-Date
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
@@ -357,6 +346,63 @@ function Get-MachineLogs
     }
 }
 
+function Create-AzureKeyVaultIfNotExist
+{
+    param([string]$azureKeyVaultName,
+    [string]$resourceGroupName,
+    [string]$location)
+
+    $azureKeyVault = Get-AzureKeyVault -VaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+
+    if($azureKeyVault -eq $null)
+    {
+        Write-Verbose -Verbose "Creating Azure Key Vault with name $azureKeyVaultName in group $resourceGroupName at $location"
+
+        $response = New-AzureKeyVault -VaultName $azureKeyVaultName -resourceGroupName $resourceGroupName -Location $location -EnabledForDeployment -ErrorAction Stop
+
+        Write-Host (Get-LocalizedString -Key "Created Azure Key Vault for secrets")
+    }
+    else
+    {
+        if($azureKeyVault.EnabledForDeployment -eq $false)
+        {
+            throw (Get-LocalizedString -Key "Secrets not enabled to be retrieved from KeyVault '{0}' by the Microsoft.Compute resource provider, can't proceed with WinRM configuration" -ArgumentList $azureKeyVaultName)
+        }
+    }
+}
+
+function Create-AzureKeyVaultSecret
+{
+    param([string]$azureKeyVaultName,
+    [string]$secretName,
+    [Security.SecureString]$secretValue)
+
+    Write-Verbose -Verbose "Setting a secret with name $secretName in an Azure Key Vault $azureKeyVaultName"
+
+    $response = Set-AzureKeyVaultSecret -VaultName $azureKeyVaultName -Name $secretName -SecretValue $secretValue -ErrorAction Stop
+
+    Write-Verbose -Verbose "Created a secret in an Azure Key Vault"
+
+    return $response
+}
+
+function Create-AzureResourceGroupIfNotExist
+{
+    param([string]$resourceGroupName,
+    [string]$location)
+
+    $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+    
+    if(!$azureResourceGroup)
+    {
+        Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
+
+        $response = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+
+        Write-Host (Get-LocalizedString -Key "Created resource group '{0}'" -ArgumentList $resourceGroupName)
+    }
+}
+
 function Print-OperationLog
 {
     param([System.Object]$log)
@@ -376,7 +422,6 @@ function Print-OperationLog
         }
     }
 }
-
 function Get-ServiceEndPointDetails
 {
     param([String][Parameter(Mandatory = $true)]$ConnectedServiceName)
