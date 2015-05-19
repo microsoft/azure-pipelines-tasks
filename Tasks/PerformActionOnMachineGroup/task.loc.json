@@ -18,19 +18,8 @@
     "Minor": 0,
     "Patch": 6
   },
-  "demands": [
-    "azureps"
-  ],
   "minimumAgentVersion": "1.83.0",
   "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
-      "label": "ms-resource:loc.input.label.ConnectedServiceName",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Subscription to target for performing action."
-    },
     {
       "name": "MachineGroupName",
       "type": "string",
@@ -95,7 +84,7 @@
   ],
   "instanceNameFormat": "$(Action) machine group ",
   "execution": {
-    "AzurePowerShell": {
+    "PowerShell": {
       "target": "$(currentDirectory)\\PerformActionOnMachineGroup.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"

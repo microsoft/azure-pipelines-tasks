@@ -82,7 +82,7 @@
          "authKey": "tfs:DevTestLabs" 
      } 
     ], 
-    "instanceNameFormat": "Machine Group: $(EnvironmentName)",
+    "instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
 	 "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\PowerShellOnTargetMachines.ps1",
