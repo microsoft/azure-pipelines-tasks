@@ -6,7 +6,7 @@ function Validate-AzurePowershellVersion
     
     if(!$versionCompatible)
     {
-        Throw "The required minimum version $minimumAzureVersion of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell"
+        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
     }
 
     Write-Verbose -Verbose "Validated the required azure powershell version"
