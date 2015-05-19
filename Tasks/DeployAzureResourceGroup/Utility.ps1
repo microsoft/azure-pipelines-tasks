@@ -225,7 +225,7 @@ function Add-SecretsNode
           [string]$azureKeyVaultName,
           [string]$azureKeyVaultSecretId)
 
-    if($jtokenObject.SelectToken("secrets") -eq $null)
+    if($jtokenObject.SelectToken("properties.osProfile.secrets") -eq $null)
     {
         Write-Verbose -Verbose "No 'secrets' node found in virtual machine resource"
         $jArrayObject = New-Object 'Newtonsoft.Json.Linq.JArray'
@@ -255,7 +255,7 @@ function Add-WindowsConfigurationNode
           [string]$winrmListeners,
           [string]$azureKeyVaultSecretId)
 
-    if($jtokenObject.SelectToken("windowsConfiguration") -eq $null)
+    if($jtokenObject.SelectToken("properties.osProfile.windowsConfiguration") -eq $null)
     {
         Write-Verbose -Verbose "No 'windowsConfiguration' node found in virtual machine resource"
         $jObject = New-Object 'Newtonsoft.Json.Linq.JObject'
@@ -264,23 +264,21 @@ function Add-WindowsConfigurationNode
 
     $jtokenObject.properties.osProfile.windowsConfiguration["provisionVMAgent"] = '"true"'
     $jtokenObject.properties.osProfile.windowsConfiguration["enableAutomaticUpdates"] = '"true"'
+    if($jtokenObject.SelectToken("properties.osProfile.windowsConfiguration.winRM") -eq $null)
+    {
+        Write-Verbose -Verbose "No 'winRM' node found under windowsConfiguration node"
+        $jWinRmObject = New-Object 'Newtonsoft.Json.Linq.JObject'
+        $jtokenObject.properties.osProfile.windowsConfiguration.Add("winRM", $jWinRmObject)
+    }
 
     $winrmHttpListenerJson = "{
-                          ""Listeners"": [
-                            {
                               ""protocol"": ""http""
-                            }
-                          ]
-                     }"
+                              }"
 
     $winrmHttpsListenerJson = "{
-                          ""Listeners"": [
-                            {
                               ""protocol"": ""https"",
                               ""certificateUrl"": ""$azureKeyVaultSecretId""
-                            }
-                          ]
-                     }"
+                               }"
 
     Switch ($winrmListeners)
     {
@@ -297,7 +295,14 @@ function Add-WindowsConfigurationNode
          }
     }
 
-    $jtokenObject.properties.osProfile.windowsConfiguration["winRM"] = $winrmListenersJObject
+    if($jtokenObject.SelectToken("properties.osProfile.windowsConfiguration.winRM.Listeners") -eq $null)
+    {
+        Write-Verbose -Verbose "No WinRM Listeners node found under windowsConfiguration node"
+        $jArrayObject = New-Object 'Newtonsoft.Json.Linq.JArray'
+        $jtokenObject.properties.osProfile.windowsConfiguration.winRM.Add("Listeners", $jArrayObject)
+    }
+
+    $jtokenObject.properties.osProfile.windowsConfiguration.winRM.Listeners.Add($winrmListenersJObject)
     Write-Verbose -Verbose "Added 'windowsConfiguration' node for WinRM configuration"
 }
 
