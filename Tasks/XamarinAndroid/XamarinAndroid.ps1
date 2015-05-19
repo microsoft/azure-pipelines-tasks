@@ -68,7 +68,7 @@ $args = "$args /t:PackageForAndroid"
 if ($outputDir) 
 {
     Write-Verbose "adding OutputPath: $outputDir"
-    $args = "$args /p:OutputPath=""$outputDir"""
+    $args = "$args /p:OutputPath=$outputDir"
 }
 
 if ($jdkVersion -and $jdkVersion -ne "default")

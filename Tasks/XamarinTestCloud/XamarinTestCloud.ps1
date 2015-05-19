@@ -82,7 +82,7 @@ if (!$testDir -or !(Test-Path -Path $testDir -PathType Container))
 {
     throw "Test assembly directory does not exist or is not a folder."
 }
-$parameters = "$parameters --assembly-dir ""$testDir"""
+$parameters = "$parameters --assembly-dir $testDir"
 
 if ("none" -ne $parallelization)
 {
@@ -131,7 +131,7 @@ if ($optionalArgs)
 
 foreach ($ap in $appFiles)
 {
-    $argument = "submit ""$ap"" $teamApiKey $parameters"
+    $argument = "submit $ap $teamApiKey $parameters"
     Write-Host "Submit $ap to Xamarin Test Cloud."
     Invoke-Tool -Path $testCloud -Arguments $argument
 }

@@ -5,7 +5,7 @@
   "loc.friendlyName": "Deploy Azure Resource Group",
   "loc.helpMarkDown": "Provision and Deploy an Azure Resource Group",
   "loc.description": "Provision and Deploy an Azure Resource Group",
-  "loc.group.displayName.advancedDeploymentOptions": "Advanced Deployment Options",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.label.resourceGroupName": "Resource Group",
   "loc.input.label.location": "Location",
@@ -17,10 +17,5 @@
   "loc.input.label.sasTokenParameterName": "SAS Token Parameter",
   "loc.input.label.vmCreds": "Virtual Machine Credentials",
   "loc.input.label.vmUserName": "Username",
-  "loc.input.label.vmPassword": "Password",
-  "loc.input.label.winrmListeners": "WinRM Listeners",
-  "loc.input.label.certificatePath": "Certificate",
-  "loc.input.label.certificatePassword": "Certificate Password",
-  "loc.input.label.azureKeyVaultName": "Azure Key Vault Name",
-  "loc.input.label.azureKeyVaultSecretName": "Azure Key Vault Secret Name"
+  "loc.input.label.vmPassword": "Password"
 }

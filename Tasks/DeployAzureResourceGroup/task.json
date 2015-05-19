@@ -22,8 +22,8 @@
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
-            "name": "advancedDeploymentOptions",
-            "displayName": "Advanced Deployment Options",
+            "name": "advanced",
+            "displayName": "Advanced",
             "isExpanded": false
         }
     ],
@@ -90,7 +90,7 @@
             "label": "Generate SAS token",
             "required": false,
             "defaultValue": "false",
-            "groupName": "advancedDeploymentOptions",
+            "groupName": "advanced",
             "helpMarkDown": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly."
         },
         {
@@ -99,7 +99,7 @@
             "label": "Azure Blob Parameter",
             "defaultValue": "",
             "required": false,
-            "groupName": "advancedDeploymentOptions",
+            "groupName": "advanced",
             "helpMarkDown": "Name of the parameter corresponding to the Azure blob.",
             "visibleRule": "dscDeployment = true"
         },
@@ -109,7 +109,7 @@
             "label": "SAS Token Parameter",
             "defaultValue": "",
             "required": false,
-            "groupName": "advancedDeploymentOptions",
+            "groupName": "advanced",
             "helpMarkDown": "Name of the SAS token parameter.",
             "visibleRule": "dscDeployment = true"
         },
@@ -119,7 +119,7 @@
             "label": "Virtual Machine Credentials",
             "required": false,
             "defaultValue": "false",
-            "groupName": "advancedDeploymentOptions",
+            "groupName": "advanced",
             "helpMarkDown": "These VM resource's credentials are used by some of the deployment and test tasks. The username and password should be same for all the Virtual Machines."
         },
         {
@@ -128,7 +128,7 @@
             "label": "Username",
             "defaultValue": "",
             "required": false,
-            "groupName": "advancedDeploymentOptions",
+            "groupName": "advanced",
             "visibleRule": "vmCreds = true"
         },
         {
@@ -137,62 +137,8 @@
             "label": "Password",
             "defaultValue": "",
             "required": false,
-            "groupName": "advancedDeploymentOptions",
+            "groupName": "advanced",
             "visibleRule": "vmCreds = true"
-        },
-        {
-            "name": "winrmListeners",
-            "type": "pickList",
-            "label": "WinRM Listeners",
-            "defaultValue": "None",
-            "required": true,
-            "helpMarkDown": "Configure the WinRM HTTP or HTTPS ports and listeners on the Azure Windows VMs to run PowerShell commands on them from a remote machine.",
-            "groupName": "advancedDeploymentOptions",
-            "options": {
-                "none": "None",
-                "winrmhttp": "HTTP",
-                "winrmhttps": "HTTPS"
-            }
-        },
-        {
-            "name": "certificatePath",
-            "type": "filePath",
-            "label": "Certificate",
-            "defaultValue": "",
-            "required": true,
-            "groupName": "advancedDeploymentOptions",
-            "visibleRule": "winrmListeners = winrmhttps",
-            "helpMarkDown": "Location of the certificate to install on the VMs for WinRM HTTPS. Variables like $(Build.Repository.LocalPath) and wildcards like `**\\*.pfx` can be also used."
-        },
-        {
-            "name": "certificatePassword",
-            "type": "string",
-            "label": "Certificate Password",
-            "defaultValue": "",
-            "required": true,
-            "groupName": "advancedDeploymentOptions",
-            "visibleRule": "winrmListeners = winrmhttps",
-            "helpMarkDown": "The password for the certificate that is required to install the certificate on the VMs. "
-        },
-        {
-            "name": "azureKeyVaultName",
-            "type": "string",
-            "label": "Azure Key Vault Name",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "visibleRule": "winrmListeners = winrmhttps",
-            "helpMarkDown": "The name of the Azure Key Vault for uploading the certificate. If no name is provided then a Key Vault name will be generated automatically."
-        },
-        {
-            "name": "azureKeyVaultSecretName",
-            "type": "string",
-            "label": "Azure Key Vault Secret Name",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "visibleRule": "winrmListeners = winrmhttps",
-            "helpMarkDown": "The secret name for the certificate in the Key Vault. Used to retrieve the certificate from the Key Vault. If no name is provided then a Secret name will be generated automatically. "
         }
     ],
     "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",

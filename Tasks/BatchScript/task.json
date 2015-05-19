@@ -63,11 +63,10 @@
     ],
     "instanceNameFormat": "Run script $(filename)",
     "execution": {
-        "Process": {
-            "target": "$(filename)",
-            "argumentFormat": "$(arguments)",
-            "workingDirectory": "$(workingFolder)",
-            "modifyEnvironment": "$(modifyEnvironment)"
+        "PowerShell": {
+            "target": "$(currentDirectory)\\BatchScript.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
         }
     }
 }
