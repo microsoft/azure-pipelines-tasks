@@ -6,6 +6,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
                 
 	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName         
 
+        $versionToInstall = ((Get-Item $SetupPath).VersionInfo.FileVersion) 
         $versionInstalled = (Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName "version")
 
         if($versionToInstall -ne $null)
