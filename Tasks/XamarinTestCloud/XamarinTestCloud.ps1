@@ -141,7 +141,7 @@ if($publishResults)
 
 foreach ($ap in $appFiles)
 {
-    $argument = "submit $ap $teamApiKey $parameters"
+    $argument = "submit ""$ap"" $teamApiKey $parameters"
     Write-Host "Submit $ap to Xamarin Test Cloud."
     Invoke-Tool -Path $testCloud -Arguments $argument
 }

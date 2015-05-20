@@ -3,13 +3,19 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 	$InstalledCheckRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testagentcore" -f $ProductVersion)
 	$InstalledCheckRegValueName = "Install"
 	$InstalledCheckRegValueData = "1"
+                
+	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName         
 
-	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName -InstalledCheckRegValueData $InstalledCheckRegValueData
-        $testAgentFileExists = Test-Path "$env:SystemDrive\TestAgent\testagent"
+        $versionToInstall = ((Get-Item $SetupPath).VersionInfo.FileVersion) 
+        $versionInstalled = (Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName "version")
 
-	if($testAgentFileExists -and $isProductExists)
+        if($versionToInstall -ne $null)
+        {
+		$versionToInstall = $versionToInstall.SubString(0, $versionToInstall.LastIndexOf('.'))
+        }
+       
+	if(($isProductExists -eq $InstalledCheckRegValueData) -and ($versionToInstall -ne $null) -and ($versionInstalled -ne $null) -and ([version]$versionToInstall -le [version]$versionInstalled))
 	{
-	    # Bug 266057 remove the logic of testagent file creation. Remove the if check, always install testagent.
 		Write-Verbose -Message ("Test Agent already exists") -verbose
 	}
 	else
@@ -47,13 +53,11 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 		}
 
 		# Verify the TA registry entry
-		$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName -InstalledCheckRegValueData $InstalledCheckRegValueData
+		$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName
 
-		if($isProductExists)
+		if($isProductExists -eq $InstalledCheckRegValueData)
 		{
-			Write-Verbose "Test Agent installed successfully" -Verbose
-                        #creating testagent file to indicate testagent installed successfully
-             		New-Item -Path "$env:SystemDrive\TestAgent\testagent" -type File
+			Write-Verbose "Test Agent installed successfully" -Verbose                        
    		}
 		else
 		{
@@ -105,14 +109,13 @@ function Get-ProductEntry {
 	param
 	(
 		[string] $InstalledCheckRegKey,
-		[string] $InstalledCheckRegValueName,
-		[string] $InstalledCheckRegValueData
+		[string] $InstalledCheckRegValueName
 	)
+
+        $installValue = $null
 
 	if ($InstalledCheckRegKey -and $InstalledCheckRegValueName -and $InstalledCheckRegValueData)
 	{
-		$installValue = $null
-
 		#if 64bit OS, check 64bit registry view first
 		if ((Get-WmiObject -Class Win32_OperatingSystem -ComputerName "localhost" -ea 0).OSArchitecture -eq '64-bit')
 		{
@@ -123,17 +126,9 @@ function Get-ProductEntry {
 		{
 			$installValue = Get-RegistryValue -RegistryHive LocalMachine -Key $InstalledCheckRegKey -Value $InstalledCheckRegValueName -RegistryView Registry32
 		}
-
-		if($installValue)
-		{
-			if($InstalledCheckRegValueData -and $installValue -eq $InstalledCheckRegValueData)
-			{
-				return $true
-			}
-		}
 	}
 
-	return $false
+	return $installValue
 }
 
 Install-Product -SetupPath $setupPath -UserName $userName -Password $password -ProductVersion "14.0" -Arguments "/Quiet /NoRestart"
