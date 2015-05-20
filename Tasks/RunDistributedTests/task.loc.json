@@ -152,7 +152,7 @@
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Run Tests on $(testMachineGrup)",
+  "instanceNameFormat": "Run Tests on $(testMachineGroup)",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\RunDistributedTests.ps1",

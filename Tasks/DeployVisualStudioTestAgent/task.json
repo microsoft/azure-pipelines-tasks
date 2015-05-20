@@ -118,6 +118,7 @@
          "authKey": "tfs:DevTestLabs"
      } 
     ],
+    "instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\DeployTestAgent.ps1",
