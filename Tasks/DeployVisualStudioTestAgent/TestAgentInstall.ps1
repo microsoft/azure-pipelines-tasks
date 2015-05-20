@@ -12,14 +12,20 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
         if($versionToInstall -ne $null)
         {
 		$versionToInstall = $versionToInstall.split('.')
-                $versionToInstall[3] = $null
+                if($versionToInstall.length -gt 3)
+                {
+                	$versionToInstall[3] = $null
+		}
                 $versionToInstall = -join $versionToInstall
         }
 
         if($versionInstalled -ne $null)
         {
 		$versionInstalled = $versionInstalled.split('.')
-                $versionInstalled[3] = $null
+		if($versionInstalled.length -gt 3)
+		{
+                	$versionInstalled[3] = $null
+		}
                 $versionInstalled = -join $versionInstalled
         }
         
