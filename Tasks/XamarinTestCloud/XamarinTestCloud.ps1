@@ -135,7 +135,6 @@ $publishResults = Convert-String $publishNUnitResults Boolean
 if($publishResults) 
 {
     $buildId = Get-Variable $distributedTaskContext "build.buildId"
-    $nunitFile = Join-Path $testDir "xamarin_test_$buildId"  
     $indx = 0;
 }
 
@@ -143,7 +142,7 @@ foreach ($ap in $appFiles)
 {    
     if($publishResults) 
     {
-        $nunitFileCurrent = "$nunitFile_$indx.xml"
+        $nunitFileCurrent = Join-Path $testDir "xamarintest_$buildId.$indx.xml"
         $indx++;
         $parameters = "$parameters --nunit-xml ""$nunitFileCurrent"""
     }
@@ -154,10 +153,12 @@ foreach ($ap in $appFiles)
 }
 
 # Publish nunit test results to VSO
-if(publishResults) 
-{    $matchingTestResultsFiles = Find-Files -SearchPattern "$nunitFile_*.xml"
-     if($matchingTestResultsFiles)
-     {
+if($publishResults) 
+{    
+    $searchPattern = Join-Path $testDir "xamarintest_$buildId*.xml"
+    $matchingTestResultsFiles = Find-Files -SearchPattern $searchPattern
+    if($matchingTestResultsFiles)
+    {
         Publish-TestResults -TestRunner "NUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
     }
 }

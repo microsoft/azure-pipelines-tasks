@@ -99,8 +99,10 @@ if (!monoPath) {
 }
 
 // Invoke test-cloud.exe for each app file
+var buildId = tl.getVariable('build.buildId');        
 var appFileIndex = 0;
 var onFailedExecution = function (err) {
+    publishTestResults();
     // Error executing
     tl.debug('ToolRunner execution failure: ' + err);
     tl.exit(1);
@@ -110,11 +112,22 @@ var onSuccessfulExecution = function (code) {
     appFileIndex++;
 
     if (appFileIndex >= appFiles.length) {
+        publishTestResults();
         tl.exit(0); // Done submitting all app files
     }
 
     // Submit next app file
     submitToTestCloud(appFileIndex);
+}
+function publishTestResults() {
+  if(publishNUnitResults == 'true') {
+    
+    var allFiles = tl.find(testDir);
+    var matchingTestResultsFiles = tl.match(allFiles, 'xamarintest_' + buildId + '*.xml', { matchBase: true });    
+
+    var tp = new tl.TestPublisher("NUnit");
+    tp.publish(matchingTestResultsFiles, false, "", "");
+  } 
 }
 var submitToTestCloud = function (index) {
     // Form basic arguments
@@ -140,8 +153,7 @@ var submitToTestCloud = function (index) {
         monoToolRunner.arg(optionalArgs.split(' '));
     }
     if(publishNUnitResults == 'true') {
-        var buildId = tl.getVariable('build.buildId');;
-        var nunitFile = testDir + '/' + buidlId + '.xml';
+        var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');
         monoToolRunner.arg('--nunit-xml');
         monoToolRunner.arg(nunitFile);    
     }
