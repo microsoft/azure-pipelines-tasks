@@ -94,7 +94,7 @@ function Initialize-AzureHelper
                 $azureAccount = Add-AzureAccount -Credential $psCredential
                 if(!$azureAccount)
                 {
-                    throw (Get-LocalizedString -Key "There was an error with the Azure credentials used for machine group deployment")
+                    throw "There was an error with the Azure credentials used for machine group deployment"
                 }
                 Select-AzureSubscription -SubscriptionName $subscriptionName
             }
