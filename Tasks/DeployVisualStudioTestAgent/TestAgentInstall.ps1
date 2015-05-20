@@ -12,14 +12,18 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
         if($versionToInstall -ne $null)
         {
 		$versionToInstall = $versionToInstall.split('.')
+                $versionToInstall[3] = $null
+                $versionToInstall = -join $versionToInstall
         }
 
         if($versionInstalled -ne $null)
         {
 		$versionInstalled = $versionInstalled.split('.')
+                $versionInstalled[3] = $null
+                $versionInstalled = -join $versionInstalled
         }
         
-	if(($isProductExists -eq $InstalledCheckRegValueData) -and ($versionToInstall -ne $null) -and ($versionInstalled -ne $null) -and ($versionToInstall[0] -le $versionInstalled[0]) -and ($versionToInstall[1] -le $versionInstalled[1]) -and ($versionToInstall[2] -le $versionInstalled[2]))
+	if(($isProductExists -eq $InstalledCheckRegValueData) -and ($versionToInstall -ne $null) -and ($versionInstalled -ne $null) -and ($versionToInstall -le $versionInstalled))
 	{
 		Write-Verbose -Message ("Test Agent already exists") -verbose
 	}
