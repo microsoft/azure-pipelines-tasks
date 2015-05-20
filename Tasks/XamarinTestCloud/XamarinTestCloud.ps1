@@ -134,8 +134,8 @@ if ($optionalArgs)
 $publishResults = Convert-String $publishNUnitResults Boolean
 if($publishResults) 
 {
-    $dateString = Get-Date -UFormat %Y%m%d_%H%M%S
-    $nunitFile = Join-Path $testDir "xamarin_test_$dateString.xml"
+    $buildId = Get-Variable $distributedTaskContext "build.buildId"
+    $nunitFile = Join-Path $testDir "xamarin_test_$buildId.xml"
     $parameters = "$parameters --nunit-xml ""$nunitFile"""
 }
 
