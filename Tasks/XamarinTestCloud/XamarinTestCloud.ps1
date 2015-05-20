@@ -135,22 +135,31 @@ $publishResults = Convert-String $publishNUnitResults Boolean
 if($publishResults) 
 {
     $buildId = Get-Variable $distributedTaskContext "build.buildId"
-    $nunitFile = Join-Path $testDir "xamarin_test_$buildId.xml"
-    $parameters = "$parameters --nunit-xml ""$nunitFile"""
+    $nunitFile = Join-Path $testDir "xamarin_test_$buildId"  
+    $indx = 0;
 }
 
 foreach ($ap in $appFiles)
-{
+{    
+    if($publishResults) 
+    {
+        $nunitFileCurrent = "$nunitFile_$indx.xml"
+        $indx++;
+        $parameters = "$parameters --nunit-xml ""$nunitFileCurrent"""
+    }
+
     $argument = "submit ""$ap"" $teamApiKey $parameters"
     Write-Host "Submit $ap to Xamarin Test Cloud."
-    Invoke-Tool -Path $testCloud -Arguments $argument
+    Invoke-Tool -Path $testCloud -Arguments $argument 
 }
 
-//Publish nunit test results to VSO
-if(Test-Path -Path $nunitFile && publishResults) 
-{
-    $resultFiles = ,$nunitFile
-    Publish-TestResults -TestRunner "NUnit" -TestResultsFiles $resultFiles -Context $distributedTaskContext
+# Publish nunit test results to VSO
+if(publishResults) 
+{    $matchingTestResultsFiles = Find-Files -SearchPattern "$nunitFile_*.xml"
+     if($matchingTestResultsFiles)
+     {
+        Publish-TestResults -TestRunner "NUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+    }
 }
 
 Write-Verbose "Leaving script XamarinTestCloud.ps1"

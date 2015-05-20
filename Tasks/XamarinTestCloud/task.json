@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
     ],
@@ -132,7 +132,7 @@
         {
             "name": "publishNUnitResults",
             "type": "boolean",
-            "label": "Publish test cloud NUnit results to VSO/TFS",
+            "label": "Publish results to VSO/TFS",
             "groupName": "advanced",
             "defaultValue": "true",
             "helpMarkDown": "When selected, --nunit-xml option will be passed to testcloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
