@@ -80,7 +80,7 @@
       "label": "ms-resource:loc.input.label.platform",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here."
+      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
       "groupName": "testSettings"
     },
     {
@@ -89,7 +89,7 @@
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here."
+      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
       "groupName": "testSettings"
     },
     {
@@ -152,7 +152,7 @@
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Test assemblies $(sourcefilters)",
+  "instanceNameFormat": "Run Tests on $(testMachineGrup)",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\RunDistributedTests.ps1",
