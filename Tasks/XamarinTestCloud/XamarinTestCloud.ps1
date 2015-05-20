@@ -139,15 +139,14 @@ if($publishResults)
 }
 
 foreach ($ap in $appFiles)
-{    
+{   
+    $argument = "submit ""$ap"" $teamApiKey $parameters"
     if($publishResults) 
     {
         $nunitFileCurrent = Join-Path $testDir "xamarintest_$buildId.$indx.xml"
         $indx++;
-        $parameters = "$parameters --nunit-xml ""$nunitFileCurrent"""
+        $argument = "$argument --nunit-xml ""$nunitFileCurrent"""
     }
-
-    $argument = "submit ""$ap"" $teamApiKey $parameters"
     Write-Host "Submit $ap to Xamarin Test Cloud."
     Invoke-Tool -Path $testCloud -Arguments $argument 
 }
