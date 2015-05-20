@@ -20,12 +20,18 @@ if(!$npm)
     throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'npm')
 }
 
-$args = " install "
+Write-Verbose $npm.Path
+
+Set-Location $cwd
+
+$npmArgs = " install"
 
 if($arguments)
 {
     $argsSplit = $arguments.Split(' ')
-    $argsSplit | ForEach-Object { $args = $args + " " + $_ }
+    $argsSplit | ForEach-Object { $npmArgs = $npmArgs + " " + $_ }
 }
 
-Invoke-Tool -Path $npm -Arguments $args
+Write-Verbose (Get-Location)
+Write-Verbose "Running npm $npm"
+Invoke-Tool -Path $npm.Path -Arguments $npmArgs -WorkingFolder $cwd
