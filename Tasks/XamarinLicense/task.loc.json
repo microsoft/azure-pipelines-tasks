@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -44,7 +44,7 @@
       "label": "ms-resource:loc.input.label.email",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Xamarin account email address."
+      "helpMarkDown": "ms-resource:loc.input.help.email"
     },
     {
       "name": "password",
@@ -52,7 +52,7 @@
       "label": "ms-resource:loc.input.label.password",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Xamarin account password."
+      "helpMarkDown": "ms-resource:loc.input.help.password"
     },
     {
       "name": "activateAndroid",
@@ -71,7 +71,7 @@
       "required": false
     }
   ],
-  "instanceNameFormat": "$(action) Xamarin license",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\XamarinLicense.ps1",

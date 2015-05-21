@@ -25,7 +25,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.MachineGroupName",
       "required": true,
-      "helpMarkDown": "Name of the Machine Group on which the operation is to be performed."
+      "helpMarkDown": "ms-resource:loc.input.help.MachineGroupName"
     },
     {
       "name": "Action",
@@ -33,7 +33,7 @@
       "label": "ms-resource:loc.input.label.Action",
       "defaultValue": "Delete",
       "required": true,
-      "helpMarkDown": "Actions to be performed on the machines or machine group",
+      "helpMarkDown": "ms-resource:loc.input.help.Action",
       "options": {
         "Delete": "Delete",
         "Start": "Start",
@@ -48,7 +48,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.Filters",
       "required": false,
-      "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 .Filters are not applied for block and unblock actions"
+      "helpMarkDown": "ms-resource:loc.input.help.Filters"
     },
     {
       "name": "BlockedFor",
@@ -56,7 +56,7 @@
       "label": "ms-resource:loc.input.label.BlockedFor",
       "defaultValue": "Instance",
       "required": "true",
-      "helpMarkDown": "Can block a machine group either for a this instance or for entire definition i.e. for all instances of the definition",
+      "helpMarkDown": "ms-resource:loc.input.help.BlockedFor",
       "options": {
         "Release": "Instance",
         "Definition": "Definition"
@@ -69,7 +69,7 @@
       "label": "ms-resource:loc.input.label.TimeInHours",
       "defaultValue": "0",
       "required": "true",
-      "helpMarkDown": "Specifies number of hours for which machine group is to be blocked. Default value is 0 which blocks machine indefinitely",
+      "helpMarkDown": "ms-resource:loc.input.help.TimeInHours",
       "options": {
         "0": "0",
         "8": "8",
@@ -82,7 +82,7 @@
       }
     }
   ],
-  "instanceNameFormat": "$(Action) machine group ",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\PerformActionOnMachineGroup.ps1",

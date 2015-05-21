@@ -1,80 +1,47 @@
-# VSO Build.Preview Tasks
+# VSO DevOps Tasks
 <br/>
-![Build Tasks](/taskbanner.png?raw=true "Build Tasks")
+![Tasks](/taskbanner.png?raw=true "Tasks")
 <br/>
 ## Configure
 
 Before you run the builds, you need to configure an agent:
 
-[Windows](https://youtu.be/ZzrDPmTOEEk)
+[Windows](https://youtu.be/ZzrDPmTOEEk): Use the hosted pool or [bring your own](https://youtu.be/ZzrDPmTOEEk)
 
 [OSX/Linux](https://github.com/Microsoft/vso-agent)
 
-## Available Build Steps
-
-* Android
-* Ant
-* BashScript
-* Azure Cloud Deployment
-* [Azure PowerShell (Video)](http://youtu.be/uRI94SJ_XoE)
-* [Azure WebSite Deployment (Video)](http://youtu.be/aLprCE3uRHs)
-* CMake
-* Command Line
-* Gulp
-* Gradle
-* Maven
-* MSBuild
-* PowerShell
-* ShellScript
-* [VSBuild (Video)](http://youtu.be/Jx8s7KAATH4)
-* Visual Studio Test
-* Xamarin
-* [Xcode Build (Video)](http://youtu.be/OxmBuqtgHuM)
-
 ## Overview
-Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in a first class way and handle return codes, how to treat std/err out, and how to write timeline records based on expected output.  Your build logic should be in the build
-DSL that the CI server runs ... the same as what the dev runs.
+This repo contains the tasks that are provided out of the box with Visual Studio Online and Team Foundation Server.
+
+This provides open examples on how we write tasks which will help you write other tasks which can be uploaded to your account or server.  See writing tasks below.
+
+## How to Use Tasks
+
+### Visual Studio Build: [How To Use](https://msdn.microsoft.com/Library/vs/alm/Build/vs/define-build)
+
+### Publish Build Artifacts
+
+Publish artifacts to a server or share from a copy root.  Supports multiple lines of [minimatch](https://github.com/isaacs/minimatch) patterns.
+
+Examples:
+```
+**/bin/**
+out/package.zip
+out/**/*.zip
+$(agent.builddirectory)/out/pkg?(2|1).zip
+```
+[more examples](https://realguess.net/tags/minimatch/)
+
+### Azure Website Deployment: [How To Use](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
+### Azure PowerShell: [How To Use](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
+### Xcode Build: [How To Use](http://youtu.be/OxmBuqtgHuM)
+
+## Writing Tasks
+
+Before writing a task, consider simply customizing your build using the script running tasks such as PowerShell or shell scripts.  That is often the most appropriate path.
+
+Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in a first class way and handle return codes, how to treat std/err out, and how to write timeline records based on expected output.  They also get access to credentials to write back to VSO/TFS. 
+
 
 ## Contributing
-Tasks are built using gulp.  
-
-### Node and Npm:
-**Windows and Mac OSX**: Download and install node from [nodejs.org](http://nodejs.org/)
-
-**Linux**: Install [using package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
-
-From a terminal ensure at least node 0.10 and npm 1.4:
-```bash
-$ node -v && npm -v
-v0.12.0
-2.5.1
-```
-
-### Gulp
-
-Install gulp
-```bash
-npm install gulp -g
-```
-
-From the root of the repo, install the dependencies to build:
-```bash
-npm install
-```
-
-### Build
-From the root of the repo:
-```bash
-gulp
-```
-
-Tasks will be created in the _build directory.  It will also generate a tasks.loc.json and an english strings file under Strings in your source tree.  You can check these back in.  Another localization process will create the other strings files.
-
-### Package
-This must be done on a windows machine with nuget.exe in the path
-From the root of the repo (replace version with appropriate version)
-```bash
-gulp package --version 1.0.29
-```
-
-Tasks will be create a nuget package in the _package directory.  This is only used for TFS internal engineering.
+We take contributions.  [Read here](docs/contribute.md) how to contribute.

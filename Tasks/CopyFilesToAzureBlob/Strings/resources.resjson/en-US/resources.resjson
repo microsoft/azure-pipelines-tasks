@@ -5,9 +5,15 @@
   "loc.friendlyName": "Copy Files To Azure Blob",
   "loc.helpMarkDown": "Copy Files To Azure Blob",
   "loc.description": "Copy Files To Azure Blob",
+  "loc.instanceNameFormat": "Copy Files To Azure Blob",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.help.ConnectedServiceName": "Azure subscription to configure before running PowerShell",
   "loc.input.label.SourcePath": "Source",
+  "loc.input.help.SourcePath": "Location of the source folder or file.",
   "loc.input.label.StorageAccount": "Storage Account",
+  "loc.input.help.StorageAccount": "Storage Account must exist prior to copy.",
   "loc.input.label.ContainerName": "ContainerName",
-  "loc.input.label.BlobPrefix": "Blob Prefix"
+  "loc.input.help.ContainerName": "We will create the container if it does not exist.",
+  "loc.input.label.BlobPrefix": "Blob Prefix",
+  "loc.input.help.BlobPrefix": "Useful while downloading, as it acts as a filter. Example - you can apppend your build number to all your blobs."
 }

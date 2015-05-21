@@ -15,9 +15,9 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 4
+    "Patch": 5
   },
-  "instanceNameFormat": "Xcode Package $(appName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "demands": [
     "xcode"
   ],
@@ -35,7 +35,7 @@
       "label": "ms-resource:loc.input.label.appName",
       "defaultValue": "name.app",
       "required": true,
-      "helpMarkDown": "Name of the .app, which is sometimes different from the .ipa"
+      "helpMarkDown": "ms-resource:loc.input.help.appName"
     },
     {
       "name": "ipaName",
@@ -43,7 +43,7 @@
       "label": "ms-resource:loc.input.label.ipaName",
       "defaultValue": "name.ipa",
       "required": true,
-      "helpMarkDown": "Name of the .ipa, which is sometimes different from the .app"
+      "helpMarkDown": "ms-resource:loc.input.help.ipaName"
     },
     {
       "name": "provisioningProfile",
@@ -51,7 +51,7 @@
       "label": "ms-resource:loc.input.label.provisioningProfile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the provisioning profile to use when signing."
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfile"
     },
     {
       "name": "sdk",
@@ -59,7 +59,7 @@
       "label": "ms-resource:loc.input.label.sdk",
       "defaultValue": "iphoneos",
       "required": true,
-      "helpMarkDown": "Use the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs."
+      "helpMarkDown": "ms-resource:loc.input.help.sdk"
     },
     {
       "name": "appPath",
@@ -67,7 +67,7 @@
       "label": "ms-resource:loc.input.label.appPath",
       "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)",
       "required": true,
-      "helpMarkDown": "Relative path to the built .app file",
+      "helpMarkDown": "ms-resource:loc.input.help.appPath",
       "groupName": "advanced"
     },
     {
@@ -76,7 +76,7 @@
       "label": "ms-resource:loc.input.label.ipaPath",
       "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)/output",
       "required": true,
-      "helpMarkDown": "Relative path where the .ipa will be placed. The directory will be created if it doesn't exist.",
+      "helpMarkDown": "ms-resource:loc.input.help.ipaPath",
       "groupName": "advanced"
     }
   ],

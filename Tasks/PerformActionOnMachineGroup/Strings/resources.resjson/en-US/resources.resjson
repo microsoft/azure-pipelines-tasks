@@ -3,11 +3,17 @@
 // *******************************************************
 {
   "loc.friendlyName": "Machine Group Actions",
-  "loc.helpMarkDown": "Perform given action on machine group",
+  "loc.helpMarkDown": "Perform actions like start, stop, delete on a machine group",
   "loc.description": "Machine Group Actions",
+  "loc.instanceNameFormat": "$(Action) machine group ",
   "loc.input.label.MachineGroupName": "Machine Group",
+  "loc.input.help.MachineGroupName": "Name of the target machine group for performing the action.",
   "loc.input.label.Action": "Action",
+  "loc.input.help.Action": "Action to be performed on the machines or machine group.",
   "loc.input.label.Filters": "Apply to Machines",
+  "loc.input.help.Filters": "By default, actions apply to all machines in a machine group. To apply the action to a subset of machines, provide tags or machine names like Role: Web, Role: Test, BudgetIT01. Filters are not applied for block or unblock actions.",
   "loc.input.label.BlockedFor": "Block For",
-  "loc.input.label.TimeInHours": "Time in Hours"
+  "loc.input.help.BlockedFor": "Block a machine group either for an instance like a particular Build, or for the definition i.e. for all the instances of the definition.",
+  "loc.input.label.TimeInHours": "Time in Hours",
+  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value is 0, and that blocks the machines indefinitely."
 }

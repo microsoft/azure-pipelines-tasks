@@ -36,7 +36,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "resourceGroupName",
@@ -50,7 +50,7 @@
       "label": "ms-resource:loc.input.label.location",
       "defaultValue": "East US",
       "required": true,
-      "helpMarkDown": "Location of the deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.location",
       "options": {
         "East US": "East US",
         "West US": "West US",
@@ -68,7 +68,7 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify the path to the Azure Resource Manager template."
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
     },
     {
       "name": "csmParametersFile",
@@ -76,7 +76,7 @@
       "label": "ms-resource:loc.input.label.csmParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Specify the path for the parameters corresponding to the template."
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile"
     },
     {
       "name": "overrideParameters",
@@ -84,7 +84,7 @@
       "label": "ms-resource:loc.input.label.overrideParameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Specify the template parameters which should be overwritten in the format -name $variable, where $variable is the name of a build definition variable"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters"
     },
     {
       "name": "dscDeployment",
@@ -93,7 +93,7 @@
       "required": false,
       "defaultValue": "false",
       "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly."
+      "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
     },
     {
       "name": "moduleUrlParameterName",
@@ -102,7 +102,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "Name of the parameter corresponding to the Azure blob.",
+      "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
       "visibleRule": "dscDeployment = true"
     },
     {
@@ -112,7 +112,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "Name of the SAS token parameter.",
+      "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
       "visibleRule": "dscDeployment = true"
     },
     {
@@ -122,7 +122,7 @@
       "required": false,
       "defaultValue": "false",
       "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "These VM resource's credentials are used by some of the deployment and test tasks. The username and password should be same for all the Virtual Machines."
+      "helpMarkDown": "ms-resource:loc.input.help.vmCreds"
     },
     {
       "name": "vmUserName",
@@ -148,7 +148,7 @@
       "label": "ms-resource:loc.input.label.winrmListeners",
       "defaultValue": "None",
       "required": true,
-      "helpMarkDown": "Configure the WinRM HTTP or HTTPS ports and listeners on the Azure Windows VMs to run PowerShell commands on them from a remote machine.",
+      "helpMarkDown": "ms-resource:loc.input.help.winrmListeners",
       "groupName": "advancedDeploymentOptions",
       "options": {
         "none": "None",
@@ -164,7 +164,7 @@
       "required": true,
       "groupName": "advancedDeploymentOptions",
       "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "Location of the certificate to install on the VMs for WinRM HTTPS. Variables like $(Build.Repository.LocalPath) and wildcards like `**\\*.pfx` can be also used."
+      "helpMarkDown": "ms-resource:loc.input.help.certificatePath"
     },
     {
       "name": "certificatePassword",
@@ -174,7 +174,7 @@
       "required": true,
       "groupName": "advancedDeploymentOptions",
       "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "The password for the certificate that is required to install the certificate on the VMs. "
+      "helpMarkDown": "ms-resource:loc.input.help.certificatePassword"
     },
     {
       "name": "azureKeyVaultName",
@@ -184,7 +184,7 @@
       "required": false,
       "groupName": "advancedDeploymentOptions",
       "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "The name of the Azure Key Vault for uploading the certificate. If no name is provided then a Key Vault name will be generated automatically."
+      "helpMarkDown": "ms-resource:loc.input.help.azureKeyVaultName"
     },
     {
       "name": "azureKeyVaultSecretName",
@@ -194,10 +194,10 @@
       "required": false,
       "groupName": "advancedDeploymentOptions",
       "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "The secret name for the certificate in the Key Vault. Used to retrieve the certificate from the Key Vault. If no name is provided then a Secret name will be generated automatically. "
+      "helpMarkDown": "ms-resource:loc.input.help.azureKeyVaultSecretName"
     }
   ],
-  "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
