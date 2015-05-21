@@ -119,7 +119,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testCloudLocation",
       "groupName": "advanced",
-      "defaultValue": "$(Agent.BuildDirectory)\\**\\packages\\**\\tools\\test-cloud.exe",
+      "defaultValue": "**/packages/**/tools/test-cloud.exe",
       "required": true
     },
     {

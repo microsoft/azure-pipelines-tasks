@@ -117,7 +117,7 @@
             "type": "filePath",
             "label": "test-cloud.exe Location",
             "groupName": "advanced",
-            "defaultValue": "$(Agent.BuildDirectory)\\**\\packages\\**\\tools\\test-cloud.exe",
+            "defaultValue": "**/packages/**/tools/test-cloud.exe",
             "required": true
         },
         {
