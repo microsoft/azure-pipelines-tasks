@@ -1,4 +1,4 @@
-# VSO DevOps Taska
+# VSO DevOps Tasks
 <br/>
 ![Tasks](/taskbanner.png?raw=true "Tasks")
 <br/>
