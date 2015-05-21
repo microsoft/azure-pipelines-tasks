@@ -93,15 +93,11 @@ function Get-Resources
     {
         Write-Verbose -Verbose "Getting resources in $resourceGroupName"
 
+        Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
+
         $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
         $resources = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]'
-
-        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName 
-
-        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName 
-
-        $fqdnErrorCount = 0
 
         foreach ($resource in $azureResourceGroupResources)
         {
@@ -113,7 +109,8 @@ function Get-Resources
             $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
             $propertyBag.Add("Location", $resourceLocation)
             $propertyBag.Add("PlatformId", $platformId)
-               
+             
+            #Adding resource tags
             foreach($tagKey in $resource.Tags.Keys)
             {
                 $tagValue = $resource.Tags.Item($tagKey)
@@ -124,6 +121,7 @@ function Get-Resources
                 }
             }
 
+            #Adding resource platform properties
             foreach($resourcePropertyKey in $resource.Properties.Keys)
             {
                 $propertyValue = $resource.Properties.Item($resourcePropertyKey)
@@ -134,100 +132,271 @@ function Get-Resources
                 }
             }
             
-            # getting fqdn value for vm resource
-            $fqdnTagValue = Get-FQDN -ResourceGroupName $resourceGroupName -resourceName $resource.Name
-
-            if([string]::IsNullOrEmpty($fqdnTagValue) -eq $false)
-            {          
-                $fqdnTagKey = "Microsoft-Vslabs-MG-Resource-FQDN"
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnTagValue)
-                $propertyBag.Add($fqdnTagKey, $property)
-            }
-            else
+            #Adding FQDN property
+            if([string]::IsNullOrEmpty($fqdnMap[$resource.Name]) -eq $false)
             {
-                $fqdnErrorCount = $fqdnErrorCount + 1
+                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnMap[$resource.Name])
+                $propertyBag.Add("Microsoft-Vslabs-MG-Resource-FQDN", $property)
             }
         
+            #Adding WinRMHttp port property
+            if([string]::IsNullOrEmpty($winRmHttpPortMap[$resource.Name]) -eq $false)
+            {
+                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $winRmHttpPortMap[$resource.Name])
+                $propertyBag.Add("WinRM_Http", $property)
+            }
+
             $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
             $resources.Add($environmentResource)
         }
         
-        if($fqdnErrorCount -eq $azureResourceGroupResources.Count -and $azureResourceGroupResources.Count -ne 0)
-        {
-            throw (Get-LocalizedString -Key "Unable to get FQDN for all resources in ResourceGroup : '{0}'" -ArgumentList $resourceGroupName)
-        }
-        else
-        {
-            if($fqdnErrorCount -gt 0 -and $fqdnErrorCount -ne $azureResourceGroupResources.Count)
-            {
-                Write-Warning (Get-LocalizedString -Key "Unable to get FQDN for '{0}' resources in ResourceGroup : '{1}'" -ArgumentList $fqdnErrorCount, $resourceGroupName)
-            }
-        }
-    
         Write-Verbose -Verbose "Got resources: $resources"
 
         return $resources
     }
 }
 
-function Get-FQDN
+function Get-MachineConnectionInformation
 {
-    param([string]$resourceGroupName,
-          [string]$resourceName)
+    param([string]$resourceGroupName)
     
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($resourceName) -eq $false)
+    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
-        Write-Verbose "Trying to get FQDN for the resource $resourceName from resource Group $resourceGroupName" -Verbose
+        $azureVms = Get-AzureVm -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Set-Variable -Name azureVms -Value $azureVms -Scope "Global"
+        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Set-Variable -Name networkInterfaceResources -Value $networkInterfaceResources -Scope "Global"
+        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Set-Variable -Name publicIPAddressResources -Value $publicIPAddressResources -Scope "Global"
 
-        $azureVM = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $resourceName -ErrorAction silentlycontinue -ErrorVariable fqdnError
+        $lb = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Network/loadBalancers"}
 
-        if(!$azureVM)
+        if($lb)
         {
-            Write-Host $fqdnError -Verbose
+            $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+            Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
+
+            $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
+            $winRmHttpPortMap = Get-FrontEndPorts -BackEndPort "5985"
         }
         else
         {
-            foreach ($networkInterface in $azureVM.NetworkProfile.NetworkInterfaces)
+            $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
+            $winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
+        }
+
+        Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
+        Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
+    }
+}
+
+function Get-FrontEndPorts
+{
+    param([string]$backEndPort)
+
+    $portList = @{}
+
+    if([string]::IsNullOrEmpty($backEndPort) -eq $false -and $networkInterfaceResources -and $loadBalancer -and $azureVms)
+    {
+        $rules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer
+        $filteredRules = $rules | Where-Object {$_.BackendPort -eq $backEndPort}
+
+        foreach($rule in $filteredRules)
+        {
+            $portList[$rule.BackendIPConfiguration.Id] = $rule.FrontendPort
+        }
+
+        foreach($nic in $networkInterfaceResources)
+        {
+            foreach($ipConfig in $nic.IpConfigurations)
             {
-                $nic = $networkInterfaceResources | Where-Object {$_.Id -eq $networkInterface.ReferenceUri}
-                if($nic)
+                $frontEndPort = $portList[$ipConfig.Id]
+                if([string]::IsNullOrEmpty($frontEndPort) -eq $false)
                 {
-                     $ipc = $nic.IpConfigurations
-                    break
+                    $portList.Remove($ipConfig.Id)
+                    $portList[$nic.VirtualMachine.Id] = $frontEndPort
                 }
             }
-            if($ipc)
+        }
+
+        $portError = 0
+        foreach($vm in $azureVms)
+        {
+            $frontEndPort = $portList[$vm.Id]
+            $resourceName = $vm.Name
+            if([string]::IsNullOrEmpty($frontEndPort) -eq $false)
             {
-                $publicIPAddr = $ipc.PublicIpAddress.Id
-            
-                foreach ($publicIP in $publicIPAddressResources) 
-                {
-                    if($publicIP.id -eq $publicIPAddr)
-                    {
-                        $fqdn = $publicIP.DnsSettings.Fqdn
-                        break
-                    }
-                }
-
-                if($fqdn -eq $null)
-                {
-                    Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
-                }
-                else
-                {
-                    Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
-               
-                    return $fqdn;
-                }
-
+                Write-Verbose "Front end port for resource $resourceName backend port $backEndPort is $frontEndPort" -Verbose
+                $portList.Remove($vm.Id)
+                $portList[$vm.Name] = $frontEndPort
             }
             else
             {
-                Write-Host (Get-LocalizedString -Key "Unable to find IPConfiguration of resource '{0}'" -ArgumentList $resourceName)
+                $portError = $portError + 1
+                Write-Verbose "Unable to find front end port for resource $resourceName backend port $backEndPort" -Verbose
+            }
+        }
+
+        if($portError -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
+        {
+            throw (Get-LocalizedString -Key "Unable to get front end ports for all resources in ResourceGroup : '{0}'" -ArgumentList $resourceGroupName)
+        }
+        else
+        {
+            if($portError -gt 0 -and $portError -ne $azureVMs.Count)
+            {
+                Write-Warning (Get-LocalizedString -Key "Unable to get front end ports for '{0}' resources in ResourceGroup : '{1}'" -ArgumentList $portError, $resourceGroupName)
             }
         }
     }
+    
+    return $portList
+}
+
+function Get-MachinesFqdnsForLB
+{
+    param([string]$resourceGroupName)
+
+    $fqdnMap = @{}
+    
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
+    {
+        Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
+
+        $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
+
+        foreach($publicIp in $publicIPAddressResources)
+        {
+            $fqdnMap[$publicIp.Id] =  $publicIP.DnsSettings.Fqdn
+        }
+
+        foreach($config in $frontEndIPConfigs)
+        {
+            $fqdn = $fqdnMap[$config.PublicIpAddress.Id]
+            if([string]::IsNullOrEmpty($fqdn) -eq $false)
+            {
+                $fqdnMap.Remove($config.PublicIpAddress.Id)
+                foreach($rule in $config.InboundNatRules)
+                {
+                    $fqdnMap[$rule.Id] =  $fqdn
+                }
+            }
+        }
+
+        foreach($nic in $networkInterfaceResources)
+        {
+            foreach($ipc in $nic.IpConfigurations)
+            {
+                foreach($rule in $ipc.LoadBalancerInboundNatRules)
+                {
+                    $fqdn = $fqdnMap[$rule.Id]
+                    if([string]::IsNullOrEmpty($fqdn) -eq $false)
+                    {
+                        $fqdnMap.Remove($rule.Id)
+                        $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+                    }
+                }
+            }
+        }
+
+        $fqdnError = 0
+        foreach($vm in $azureVms)
+        {
+            $fqdn = $fqdnMap[$vm.Id]
+            $resourceName = $vm.Name
+
+            if([string]::IsNullOrEmpty($fqdn) -eq $false)
+            {
+                Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+                $fqdnMap.Remove($vm.Id)
+                $fqdnMap[$resourceName] = $fqdn
+            }
+            else
+            {
+                $fqdnError = $fqdnError + 1
+                Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
+            }
+        }
+
+        if($fqdnError -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
+        {
+            throw (Get-LocalizedString -Key "Unable to get FQDN for all resources in ResourceGroup : '{0}'" -ArgumentList $resourceGroupName)
+        }
+        else
+        {
+            if($fqdnError -gt 0 -and $fqdnError -ne $azureVMs.Count)
+            {
+                Write-Warning (Get-LocalizedString -Key "Unable to get FQDN for '{0}' resources in ResourceGroup : '{1}'" -ArgumentList $fqdnError, $resourceGroupName)
+            }
+        }
+    }
+
+    return $fqdnMap
+}
+
+function Get-MachinesFqdns 
+{
+    param([string]$resourceGroupName)
+
+    $fqdnMap = @{}
+    
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
+    {
+        Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
+
+        foreach($publicIp in $publicIPAddressResources)
+        {
+            $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
+        }
+
+        foreach($nic in $networkInterfaceResources)
+        {
+            foreach($ipc in $nic.IpConfigurations)
+            {
+                $fqdn =  $fqdnMap[$ipc.Id]
+                if([string]::IsNullOrEmpty($fqdn) -eq $false)
+                {
+                    $fqdnMap.Remove($ipc.Id)
+                    $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+                }
+            }
+        }
+
+        $fqdnError = 0
+        foreach($vm in $azureVms)
+        {
+            $fqdn = $fqdnMap[$vm.Id]
+            $resourceName = $vm.Name
+
+            if([string]::IsNullOrEmpty($fqdn) -eq $false)
+            {
+                Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
+                $fqdnMap.Remove($vm.Id)
+                $fqdnMap[$resourceName] = $fqdn
+            }
+            else
+            {
+                $fqdnError = $fqdnError + 1
+                Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
+            }
+        }
+
+        if($fqdnError -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
+        {
+            throw (Get-LocalizedString -Key "Unable to get FQDN for all resources in ResourceGroup : '{0}'" -ArgumentList $resourceGroupName)
+        }
+        else
+        {
+            if($fqdnError -gt 0 -and $fqdnError -ne $azureVMs.Count)
+            {
+                Write-Warning (Get-LocalizedString -Key "Unable to get FQDN for '{0}' resources in ResourceGroup : '{1}'" -ArgumentList $fqdnError, $resourceGroupName)
+            }
+        }
+    
+    }
+
+    return $fqdnMap
 }
 
 function Refresh-SASToken
