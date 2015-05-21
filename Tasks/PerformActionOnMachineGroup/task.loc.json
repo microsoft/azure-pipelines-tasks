@@ -18,25 +18,14 @@
     "Minor": 0,
     "Patch": 6
   },
-  "demands": [
-    "azureps"
-  ],
   "minimumAgentVersion": "1.83.0",
   "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
-      "label": "ms-resource:loc.input.label.ConnectedServiceName",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Subscription to target for performing action."
-    },
     {
       "name": "MachineGroupName",
       "type": "string",
       "label": "ms-resource:loc.input.label.MachineGroupName",
       "required": true,
-      "helpMarkDown": "Name of the Machine Group on which the operation is to be performed."
+      "helpMarkDown": "Name of the target machine group for performing the action."
     },
     {
       "name": "Action",
@@ -44,7 +33,7 @@
       "label": "ms-resource:loc.input.label.Action",
       "defaultValue": "Delete",
       "required": true,
-      "helpMarkDown": "Actions to be performed on the machines or machine group",
+      "helpMarkDown": "Action to be performed on the machines or machine group.",
       "options": {
         "Delete": "Delete",
         "Start": "Start",
@@ -59,7 +48,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.Filters",
       "required": false,
-      "helpMarkDown": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 .Filters are not applied for block and unblock actions"
+      "helpMarkDown": "By default, actions apply to all machines in a machine group. To apply the action to a subset of machines, provide tags or machine names like Role: Web, Role: Test, BudgetIT01. Filters are not applied for block or unblock actions."
     },
     {
       "name": "BlockedFor",
@@ -67,7 +56,7 @@
       "label": "ms-resource:loc.input.label.BlockedFor",
       "defaultValue": "Instance",
       "required": "true",
-      "helpMarkDown": "Can block a machine group either for a this instance or for entire definition i.e. for all instances of the definition",
+      "helpMarkDown": "Block a machine group either for an instance like a particular Build, or for the definition i.e. for all the instances of the definition.",
       "options": {
         "Release": "Instance",
         "Definition": "Definition"
@@ -80,7 +69,7 @@
       "label": "ms-resource:loc.input.label.TimeInHours",
       "defaultValue": "0",
       "required": "true",
-      "helpMarkDown": "Specifies number of hours for which machine group is to be blocked. Default value is 0 which blocks machine indefinitely",
+      "helpMarkDown": "The number of hours that the machines will be blocked for. Default value is 0, and that blocks the machines indefinitely.",
       "options": {
         "0": "0",
         "8": "8",
@@ -95,7 +84,7 @@
   ],
   "instanceNameFormat": "$(Action) machine group ",
   "execution": {
-    "AzurePowerShell": {
+    "PowerShell": {
       "target": "$(currentDirectory)\\PerformActionOnMachineGroup.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"

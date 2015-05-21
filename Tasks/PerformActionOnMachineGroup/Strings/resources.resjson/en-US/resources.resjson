@@ -3,9 +3,8 @@
 // *******************************************************
 {
   "loc.friendlyName": "Machine Group Actions",
-  "loc.helpMarkDown": "Perform given action on machine group",
+  "loc.helpMarkDown": "Perform actions like start, stop, delete on a machine group",
   "loc.description": "Machine Group Actions",
-  "loc.input.label.ConnectedServiceName": "Subscription",
   "loc.input.label.MachineGroupName": "Machine Group",
   "loc.input.label.Action": "Action",
   "loc.input.label.Filters": "Apply to Machines",
