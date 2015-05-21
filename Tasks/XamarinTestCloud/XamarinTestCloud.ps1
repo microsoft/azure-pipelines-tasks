@@ -8,7 +8,8 @@
     [string]$locale,
     [string]$testCloudLocation,
     [string]$parallelization,
-    [string]$optionalArgs
+    [string]$optionalArgs,
+    [string]$publishNUnitResults
 )
 
 Write-Verbose "Entering script XamarinTestCloud.ps1"
@@ -22,6 +23,7 @@ Write-Verbose "locale = $locale"
 Write-Verbose "testCloudLocation = $testCloudLocation"
 Write-Verbose "parallelization = $parallelization"
 Write-Verbose "optionalArgs = $optionalArgs"
+Write-Verbose "publishNUnitResults = $publishNUnitResults"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -82,7 +84,7 @@ if (!$testDir -or !(Test-Path -Path $testDir -PathType Container))
 {
     throw "Test assembly directory does not exist or is not a folder."
 }
-$parameters = "$parameters --assembly-dir $testDir"
+$parameters = "$parameters --assembly-dir ""$testDir"""
 
 if ("none" -ne $parallelization)
 {
@@ -129,11 +131,35 @@ if ($optionalArgs)
     $parameters = "$parameters $optionalArgs"
 }
 
-foreach ($ap in $appFiles)
+$publishResults = Convert-String $publishNUnitResults Boolean
+if($publishResults) 
 {
-    $argument = "submit $ap $teamApiKey $parameters"
+    $buildId = Get-Variable $distributedTaskContext "build.buildId"
+    $indx = 0;
+}
+
+foreach ($ap in $appFiles)
+{   
+    $argument = "submit ""$ap"" $teamApiKey $parameters"
+    if($publishResults) 
+    {
+        $nunitFileCurrent = Join-Path $testDir "xamarintest_$buildId.$indx.xml"
+        $indx++;
+        $argument = "$argument --nunit-xml ""$nunitFileCurrent"""
+    }
     Write-Host "Submit $ap to Xamarin Test Cloud."
-    Invoke-Tool -Path $testCloud -Arguments $argument
+    Invoke-Tool -Path $testCloud -Arguments $argument 
+}
+
+# Publish nunit test results to VSO
+if($publishResults) 
+{    
+    $searchPattern = Join-Path $testDir "xamarintest_$buildId*.xml"
+    $matchingTestResultsFiles = Find-Files -SearchPattern $searchPattern
+    if($matchingTestResultsFiles)
+    {
+        Publish-TestResults -TestRunner "NUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+    }
 }
 
 Write-Verbose "Leaving script XamarinTestCloud.ps1"

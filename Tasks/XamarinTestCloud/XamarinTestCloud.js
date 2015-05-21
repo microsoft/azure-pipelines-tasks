@@ -1,5 +1,4 @@
 ﻿var fs = require('fs');
-var glob = require('glob');
 var path = require('path');
 var shell = require('shelljs');
 var tl = require('vso-task-lib');
@@ -11,11 +10,12 @@ var teamApiKey = tl.getInput('teamApiKey', true);
 var user = tl.getInput('user', true);
 var devices = tl.getInput('devices', true);
 var series = tl.getInput('series', true);
-var testDir = tl.getInput('testDir', true);
+var testDir = tl.getPathInput('testDir', true);
 var parallelization = tl.getInput('parallelization', true);
 var locale = tl.getInput('locale', true);
 var testCloudLocation = tl.getInput('testCloudLocation', true);
 var optionalArgs = tl.getInput('optionalArgs', false);
+var publishNUnitResults = tl.getInput('publishNUnitResults', false);
 
 // Output debug information for inputs
 tl.debug('app: ' + app);
@@ -47,9 +47,11 @@ if (app.indexOf('*') == -1 && app.indexOf('?') == -1) {
     var appFiles = [app];
 }
 else {
-    // Find app files matching the specified pattern
-    tl.debug('Invoking glob with path: ' + app);
-    var appFiles = glob.sync(app);
+    // Find app files matching the specified pattern    
+    tl.debug('Pattern found in app parameter');
+    var buildFolder = tl.getVariable('agent.buildDirectory');
+    var allappFiles = tl.find(buildFolder);
+    var appFiles = tl.match(allappFiles, app, { matchBase: true });    
 
     // Fail if no matching app files were found
     if (!appFiles || appFiles.length == 0) {
@@ -79,8 +81,10 @@ if (testCloudLocation.indexOf('*') == -1 && testCloudLocation.indexOf('?') == -1
 }
 else {
     // Find test-cloud.exe under the specified directory pattern
-    tl.debug('Invoking glob with path: ' + testCloudLocation);
-    var testCloudExecutables = glob.sync(testCloudLocation);
+    tl.debug('Pattern found in testCloudLocation parameter');
+    var buildFolder = tl.getVariable('agent.buildDirectory');
+    var allexeFiles = tl.find(buildFolder);
+    var testCloudExecutables = tl.match(allexeFiles, testCloudLocation, { matchBase: true }); 
 
     // Fail if not found
     if (!testCloudExecutables || testCloudExecutables.length == 0) {
@@ -98,73 +102,94 @@ if (!monoPath) {
 }
 
 // Invoke test-cloud.exe for each app file
+var buildId = tl.getVariable('build.buildId');        
 var appFileIndex = 0;
-var onFailedExecution = function (err) {
-    // Error executing
-    tl.debug('ToolRunner execution failure: ' + err);
-    tl.exit(1);
-}
-var onSuccessfulExecution = function (code) {
-    // Executed successfully
+var runFailures;
+var onRunComplete = function() {
     appFileIndex++;
 
     if (appFileIndex >= appFiles.length) {
-        tl.exit(0); // Done submitting all app files
+        publishTestResults();
+
+        if(runFailures == 'true') {
+            // Error executing
+            tl.exit(1);
+        }
+        else {
+            tl.exit(0); // Done submitting all app files
+        }
     }
 
     // Submit next app file
     submitToTestCloud(appFileIndex);
 }
+var onFailedExecution = function (err) {
+    runFailures = 'true';
+    tl.debug('Error executing test run: ' + err);
+    onRunComplete();    
+}
+function publishTestResults() {
+  if(publishNUnitResults == 'true') {
+    
+    var allFiles = tl.find(testDir);
+    var matchingTestResultsFiles = tl.match(allFiles, 'xamarintest_' + buildId + '*.xml', { matchBase: true });    
+
+    var tp = new tl.TestPublisher("NUnit");
+    tp.publish(matchingTestResultsFiles, false, "", "");
+  } 
+}
 var submitToTestCloud = function (index) {
     // Form basic arguments
-    var mdtoolRunner = new tl.ToolRunner(monoPath);
-    mdtoolRunner.arg(testCloud);
-    mdtoolRunner.arg('submit');
-    mdtoolRunner.arg(appFiles[index]);
-    mdtoolRunner.arg(teamApiKey);
-    mdtoolRunner.arg('--user');
-    mdtoolRunner.arg(user);
-    mdtoolRunner.arg('--devices');
-    mdtoolRunner.arg(devices);
-    mdtoolRunner.arg('--series');
-    mdtoolRunner.arg('"' + series + '"');
-    mdtoolRunner.arg('--locale');
-    mdtoolRunner.arg(locale);
-    mdtoolRunner.arg('--assembly-dir');
-    mdtoolRunner.arg(testDir);
+    var monoToolRunner = new tl.ToolRunner(monoPath);
+    monoToolRunner.arg(testCloud);
+    monoToolRunner.arg('submit');
+    monoToolRunner.arg(appFiles[index]);
+    monoToolRunner.arg(teamApiKey);
+    monoToolRunner.arg('--user');
+    monoToolRunner.arg(user);
+    monoToolRunner.arg('--devices');
+    monoToolRunner.arg(devices);
+    monoToolRunner.arg('--series');
+    monoToolRunner.arg(series);
+    monoToolRunner.arg('--locale');
+    monoToolRunner.arg(locale);
+    monoToolRunner.arg('--assembly-dir');
+    monoToolRunner.arg(testDir);
     if (parallelization != 'none') {
-        mdtoolRunner.arg(parallelization);
+        monoToolRunner.arg(parallelization);
     }
     if (optionalArgs) {
-        mdtoolRunner.arg(optionalArgs.split(' '));
+        monoToolRunner.arg(optionalArgs.split(' '));
+    }
+    if(publishNUnitResults == 'true') {
+        var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');
+        monoToolRunner.arg('--nunit-xml');
+        monoToolRunner.arg(nunitFile);    
     }
 
     // For an iOS .ipa app, look for an accompanying dSYM file
     if (dsym && path.extname(appFiles[index]) == '.ipa') {
         // Find dSYM files matching the specified pattern
-        var dsymPath = path.join(path.dirname(appFiles[index]), dsym);
-        tl.debug('Invoking glob with path: ' + dsymPath);
-        var dsymFiles = glob.sync(dsymPath);
+        var alldsymFiles = tl.find(path.dirname(appFiles[index]));
+        var dsymFiles = tl.match(alldsymFiles, dsym, { matchBase: true }); 
 
-        // Fail if no matching dSYM files were found in path
         if (!dsymFiles || dsymFiles.length == 0) {
-            onError('No matching dSYM files were found with pattern: ' + dsymPath);
+            tl.warning('No matching dSYM files were found with pattern: ' + dsym);
         }
-
-        // Fail if more than one dSYM file was found in path
-        if (dsymFiles.length > 1) {
-            onError('More than one matching dSYM file was found with pattern: ' + dsymPath);
+        else if (dsymFiles.length > 1) {
+            tl.warning('More than one matching dSYM file was found with pattern: ' + dsym);
         }
-
-        // Include dSYM file in Test Cloud arguments
-        mdtoolRunner.arg('--dsym');
-        mdtoolRunner.arg(dsymFiles[0]);
+        else {
+            // Include dSYM file in Test Cloud arguments
+            monoToolRunner.arg('--dsym');
+            monoToolRunner.arg(dsymFiles[0]);
+        }
     }
 
     // Submit to Test Cloud
     tl.debug('Submitting to Xamarin Test Cloud: ' + appFiles[index]);
-    mdtoolRunner.exec()
-        .then(onSuccessfulExecution)
+    monoToolRunner.exec()
+        .then(onRunComplete)
         .fail(onFailedExecution)
 }
 submitToTestCloud(appFileIndex);
