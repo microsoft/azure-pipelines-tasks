@@ -46,7 +46,7 @@ Write-Verbose "checkAgentInstallationScriptLocation = $checkAgentInstallationScr
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.DistributedTestAutomation"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
 
 Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
