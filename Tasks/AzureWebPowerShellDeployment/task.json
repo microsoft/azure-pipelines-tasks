@@ -3,7 +3,7 @@
   "name": "AzureWebPowerShellDeployment",
   "friendlyName": "Azure Web Site Deployment",
   "description": "Deploy a website to Microsoft Azure",
-  "helpMarkDown": "Deploy a website to Microsoft Azure",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
   "category": "Deploy",
   "visibility": [
                 "Build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 12
   },
   "demands": [
     "azureps"

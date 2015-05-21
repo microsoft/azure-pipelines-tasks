@@ -37,7 +37,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "resourceGroupName",
@@ -51,7 +51,7 @@
       "label": "ms-resource:loc.input.label.location",
       "defaultValue": "East US",
       "required": true,
-      "helpMarkDown": "Location of the deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.location",
       "options": {
         "East US": "East US",
         "West US": "West US",
@@ -69,7 +69,7 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify the path to the Azure Resource Manager template."
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
     },
     {
       "name": "csmParametersFile",
@@ -77,7 +77,7 @@
       "label": "ms-resource:loc.input.label.csmParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Specify the path for the parameters corresponding to the template."
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile"
     },
     {
       "name": "overrideParameters",
@@ -85,7 +85,7 @@
       "label": "ms-resource:loc.input.label.overrideParameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Specify the template parameters which should be overwritten in the format -name $variable, where $variable is the name of a build definition variable"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters"
     },
     {
       "name": "dscDeployment",
@@ -94,7 +94,7 @@
       "required": false,
       "defaultValue": "false",
       "groupName": "advanced",
-      "helpMarkDown": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly."
+      "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
     },
     {
       "name": "moduleUrlParameterName",
@@ -103,7 +103,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Name of the parameter corresponding to the Azure blob.",
+      "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
       "visibleRule": "dscDeployment = true"
     },
     {
@@ -113,7 +113,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Name of the SAS token parameter.",
+      "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
       "visibleRule": "dscDeployment = true"
     },
     {
@@ -123,7 +123,7 @@
       "required": false,
       "defaultValue": "false",
       "groupName": "advanced",
-      "helpMarkDown": "These VM resource's credentials are used by some of the deployment and test tasks. The username and password should be same for all the Virtual Machines."
+      "helpMarkDown": "ms-resource:loc.input.help.vmCreds"
     },
     {
       "name": "vmUserName",
@@ -144,7 +144,7 @@
       "visibleRule": "vmCreds = true"
     }
   ],
-  "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",

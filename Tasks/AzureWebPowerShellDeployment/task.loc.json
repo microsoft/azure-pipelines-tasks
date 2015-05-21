@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 12
   },
   "demands": [
     "azureps"
@@ -29,7 +29,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to target for deployment."
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "WebSiteLocation",
@@ -37,7 +37,7 @@
       "label": "ms-resource:loc.input.label.WebSiteLocation",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Select a region for deployment.",
+      "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
       "options": {
         "South Central US": "South Central US",
         "North Europe": "North Europe",
@@ -69,7 +69,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "",
-      "helpMarkDown": "Path of package under the default artifact directory.",
+      "helpMarkDown": "ms-resource:loc.input.help.Package",
       "required": true
     },
     {
@@ -88,7 +88,7 @@
       "authKey": "{$ConnectedServiceName}"
     }
   ],
-  "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",

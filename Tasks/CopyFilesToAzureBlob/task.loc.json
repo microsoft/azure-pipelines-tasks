@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -30,7 +30,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to configure before running PowerShell"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "SourcePath",
@@ -38,7 +38,7 @@
       "label": "ms-resource:loc.input.label.SourcePath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Location of the source folder or file."
+      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
     },
     {
       "name": "StorageAccount",
@@ -46,7 +46,7 @@
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Storage Account must exist prior to copy."
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
     },
     {
       "name": "ContainerName",
@@ -54,7 +54,7 @@
       "label": "ms-resource:loc.input.label.ContainerName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "We will create the container if it does not exist."
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerName"
     },
     {
       "name": "BlobPrefix",
@@ -62,7 +62,7 @@
       "label": "ms-resource:loc.input.label.BlobPrefix",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Useful while downloading, as it acts as a filter. Example - you can apppend your build number to all your blobs."
+      "helpMarkDown": "ms-resource:loc.input.help.BlobPrefix"
     }
   ],
   "sourceDefinitions": [
@@ -73,7 +73,7 @@
       "authKey": "$(ConnectedServiceName)"
     }
   ],
-  "instanceNameFormat": "Copy Files To Azure Blob",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\CopyFilesToAzureBlob.ps1",

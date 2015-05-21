@@ -3,7 +3,7 @@
     "name": "Maven",
     "friendlyName": "Maven",
     "description": "Build with Apache Maven",
-    "helpMarkDown": "Build with Apache Maven",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -15,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Maven $(args)",

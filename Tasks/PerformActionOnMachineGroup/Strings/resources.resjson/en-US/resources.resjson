@@ -5,10 +5,17 @@
   "loc.friendlyName": "Machine Group Actions",
   "loc.helpMarkDown": "Perform given action on machine group",
   "loc.description": "Machine Group Actions",
+  "loc.instanceNameFormat": "$(Action) machine group ",
   "loc.input.label.ConnectedServiceName": "Subscription",
+  "loc.input.help.ConnectedServiceName": "Subscription to target for performing action.",
   "loc.input.label.MachineGroupName": "Machine Group",
+  "loc.input.help.MachineGroupName": "Name of the Machine Group on which the operation is to be performed.",
   "loc.input.label.Action": "Action",
+  "loc.input.help.Action": "Actions to be performed on the machines or machine group",
   "loc.input.label.Filters": "Apply to Machines",
+  "loc.input.help.Filters": "By default action is performed on all machines, to apply the action on a subset use tags or machine names like Role: Web, Role: Test, BudgetIT01 .Filters are not applied for block and unblock actions",
   "loc.input.label.BlockedFor": "Block For",
-  "loc.input.label.TimeInHours": "Time in Hours"
+  "loc.input.help.BlockedFor": "Can block a machine group either for a this instance or for entire definition i.e. for all instances of the definition",
+  "loc.input.label.TimeInHours": "Time in Hours",
+  "loc.input.help.TimeInHours": "Specifies number of hours for which machine group is to be blocked. Default value is 0 which blocks machine indefinitely"
 }

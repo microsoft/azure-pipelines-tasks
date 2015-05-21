@@ -34,7 +34,7 @@
       "label": "ms-resource:loc.input.label.SourcePath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Location of the source folder or file. Variables can be used for binaries in the Automation Agent like $(Build.Repository.LocalPath)\\BudgetIT\\Web."
+      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
     },
     {
       "name": "EnvironmentName",
@@ -42,7 +42,7 @@
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the target Machine Group for copying the files to.​"
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
     },
     {
       "name": "MachineNames",
@@ -50,7 +50,7 @@
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide a comma separated list of machines like Machine1, Machine2. Default is all machines in the Machine Group."
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {
       "name": "TargetPath",
@@ -58,7 +58,7 @@
       "label": "ms-resource:loc.input.label.TargetPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Local Path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web."
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPath"
     },
     {
       "name": "CleanTargetBeforeCopy",
@@ -66,7 +66,7 @@
       "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Setting it to true will clean the destination folder before copying the files."
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy"
     },
     {
       "name": "CopyFilesInParallel",
@@ -75,7 +75,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Setting it to true will copy files in parallel to the machines."
+      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel"
     }
   ],
   "sourceDefinitions": [
@@ -86,7 +86,7 @@
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Machine Group: $(EnvironmentName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",

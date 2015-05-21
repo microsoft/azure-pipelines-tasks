@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "groups": [
     {
@@ -32,7 +32,7 @@
       "label": "ms-resource:loc.input.label.filename",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Tool name to run.  Tool should be in path or resolvable via which.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent."
+      "helpMarkDown": "ms-resource:loc.input.help.filename"
     },
     {
       "name": "arguments",
@@ -47,7 +47,7 @@
       "label": "ms-resource:loc.input.label.workingFolder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Arguments passed to the tool",
+      "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
       "groupName": "advanced"
     },
     {
@@ -56,7 +56,7 @@
       "label": "ms-resource:loc.input.label.errorPattern",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optional regex to interpret output as an error.",
+      "helpMarkDown": "ms-resource:loc.input.help.errorPattern",
       "groupName": "advanced"
     },
     {
@@ -65,7 +65,7 @@
       "label": "ms-resource:loc.input.label.warningPattern",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optional regex to interpret output as a warning.",
+      "helpMarkDown": "ms-resource:loc.input.help.warningPattern",
       "groupName": "advanced"
     },
     {
@@ -74,11 +74,11 @@
       "label": "ms-resource:loc.input.label.failOnStandardError",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
       "groupName": "advanced"
     }
   ],
-  "instanceNameFormat": "Run $(filename)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Process": {
       "target": "$(filename)",
