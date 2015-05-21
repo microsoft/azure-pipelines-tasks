@@ -24,8 +24,8 @@
   "minimumAgentVersion": "1.83.0",
   "groups": [
     {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "name": "advancedDeploymentOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedDeploymentOptions",
       "isExpanded": false
     }
   ],
@@ -92,7 +92,7 @@
       "label": "ms-resource:loc.input.label.dscDeployment",
       "required": false,
       "defaultValue": "false",
-      "groupName": "advanced",
+      "groupName": "advancedDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
     },
     {
@@ -101,7 +101,7 @@
       "label": "ms-resource:loc.input.label.moduleUrlParameterName",
       "defaultValue": "",
       "required": false,
-      "groupName": "advanced",
+      "groupName": "advancedDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
       "visibleRule": "dscDeployment = true"
     },
@@ -111,7 +111,7 @@
       "label": "ms-resource:loc.input.label.sasTokenParameterName",
       "defaultValue": "",
       "required": false,
-      "groupName": "advanced",
+      "groupName": "advancedDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
       "visibleRule": "dscDeployment = true"
     },
@@ -121,7 +121,7 @@
       "label": "ms-resource:loc.input.label.vmCreds",
       "required": false,
       "defaultValue": "false",
-      "groupName": "advanced",
+      "groupName": "advancedDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.vmCreds"
     },
     {
@@ -130,7 +130,7 @@
       "label": "ms-resource:loc.input.label.vmUserName",
       "defaultValue": "",
       "required": false,
-      "groupName": "advanced",
+      "groupName": "advancedDeploymentOptions",
       "visibleRule": "vmCreds = true"
     },
     {
@@ -139,8 +139,62 @@
       "label": "ms-resource:loc.input.label.vmPassword",
       "defaultValue": "",
       "required": false,
-      "groupName": "advanced",
+      "groupName": "advancedDeploymentOptions",
       "visibleRule": "vmCreds = true"
+    },
+    {
+      "name": "winrmListeners",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.winrmListeners",
+      "defaultValue": "None",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.winrmListeners",
+      "groupName": "advancedDeploymentOptions",
+      "options": {
+        "none": "None",
+        "winrmhttp": "HTTP",
+        "winrmhttps": "HTTPS"
+      }
+    },
+    {
+      "name": "certificatePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.certificatePath",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "advancedDeploymentOptions",
+      "visibleRule": "winrmListeners = winrmhttps",
+      "helpMarkDown": "ms-resource:loc.input.help.certificatePath"
+    },
+    {
+      "name": "certificatePassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.certificatePassword",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "advancedDeploymentOptions",
+      "visibleRule": "winrmListeners = winrmhttps",
+      "helpMarkDown": "ms-resource:loc.input.help.certificatePassword"
+    },
+    {
+      "name": "azureKeyVaultName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azureKeyVaultName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advancedDeploymentOptions",
+      "visibleRule": "winrmListeners = winrmhttps",
+      "helpMarkDown": "ms-resource:loc.input.help.azureKeyVaultName"
+    },
+    {
+      "name": "azureKeyVaultSecretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azureKeyVaultSecretName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advancedDeploymentOptions",
+      "visibleRule": "winrmListeners = winrmhttps",
+      "helpMarkDown": "ms-resource:loc.input.help.azureKeyVaultSecretName"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

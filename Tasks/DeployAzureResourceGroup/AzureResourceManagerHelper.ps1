@@ -8,18 +8,7 @@ function Create-AzureResourceGroup
     
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
-        $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
-    
-        if(!$azureResourceGroup)    
-        {
-            Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
-
-            $resourceGroup  = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
-
-            Write-Host (Get-LocalizedString -Key "Created resource group '{0}'" -ArgumentList $resourceGroup)
-
-        }
-
+        Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
         $startTime = Get-Date
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
@@ -357,6 +346,63 @@ function Get-MachineLogs
     }
 }
 
+function Create-AzureKeyVaultIfNotExist
+{
+    param([string]$azureKeyVaultName,
+    [string]$resourceGroupName,
+    [string]$location)
+
+    $azureKeyVault = Get-AzureKeyVault -VaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+
+    if($azureKeyVault -eq $null)
+    {
+        Write-Verbose -Verbose "Creating Azure Key Vault with name $azureKeyVaultName in group $resourceGroupName at $location"
+
+        $response = New-AzureKeyVault -VaultName $azureKeyVaultName -resourceGroupName $resourceGroupName -Location $location -EnabledForDeployment -ErrorAction Stop
+
+        Write-Host (Get-LocalizedString -Key "Created Azure Key Vault for secrets")
+    }
+    else
+    {
+        if($azureKeyVault.EnabledForDeployment -eq $false)
+        {
+            throw (Get-LocalizedString -Key "Secrets not enabled to be retrieved from KeyVault '{0}' by the Microsoft.Compute resource provider, can't proceed with WinRM configuration" -ArgumentList $azureKeyVaultName)
+        }
+    }
+}
+
+function Create-AzureKeyVaultSecret
+{
+    param([string]$azureKeyVaultName,
+    [string]$secretName,
+    [Security.SecureString]$secretValue)
+
+    Write-Verbose -Verbose "Setting a secret with name $secretName in an Azure Key Vault $azureKeyVaultName"
+
+    $response = Set-AzureKeyVaultSecret -VaultName $azureKeyVaultName -Name $secretName -SecretValue $secretValue -ErrorAction Stop
+
+    Write-Verbose -Verbose "Created a secret in an Azure Key Vault"
+
+    return $response
+}
+
+function Create-AzureResourceGroupIfNotExist
+{
+    param([string]$resourceGroupName,
+    [string]$location)
+
+    $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+    
+    if(!$azureResourceGroup)
+    {
+        Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
+
+        $response = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+
+        Write-Host (Get-LocalizedString -Key "Created resource group '{0}'" -ArgumentList $resourceGroupName)
+    }
+}
+
 function Print-OperationLog
 {
     param([System.Object]$log)
@@ -374,50 +420,5 @@ function Print-OperationLog
         {
             Write-Verbose -Verbose "Message: $message"
         }
-    }
-}
-
-function Get-ServiceEndPointDetails
-{
-    param([String][Parameter(Mandatory = $true)]$ConnectedServiceName)
-
-    Write-Verbose "Entering in Get-ServiceEndPointDetails" -Verbose
-
-    $serviceEndpoint = Get-ServiceEndpoint -Name $ConnectedServiceName -Context $distributedTaskContext
-
-    if ($serviceEndpoint -eq $null)
-    {
-        throw (Get-LocalizedString -Key "A Connected Service with name '{0}' could not be found. Ensure that this Connected Service was successfully provisioned using services tab in Admin UI" -ArgumentList $ConnectedServiceName)
-    }
-
-    if ($serviceEndpoint.Authorization.Scheme -eq 'UserNamePassword')
-    {
-        $username = $serviceEndpoint.Authorization.Parameters.UserName
-        $password = $serviceEndpoint.Authorization.Parameters.Password
-        Write-Verbose "Username= $username" -Verbose
-
-        $azureSubscriptionId = $serviceEndpoint.Data.SubscriptionId
-        $azureSubscriptionName = $serviceEndpoint.Data.SubscriptionName
-        Write-Verbose "azureSubscriptionId= $azureSubscriptionId" -Verbose
-        Write-Verbose "azureSubscriptionName= $azureSubscriptionName" -Verbose
-
-        $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
-        
-        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureSubscriptionName)
-        $propertyBag.Add("SubscriptionName", $property)
-        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $azureSubscriptionId)
-        $propertyBag.Add("SubscriptionId", $property)
-        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $username)
-        $propertyBag.Add("Username", $property)
-        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $password)
-        $propertyBag.Add("Password", $property)
-
-        Write-Verbose "Completed Get-ServiceEndPointDetails" -Verbose
-
-        return $propertyBag
-    }
-    else
-    {
-        throw (Get-LocalizedString -Key "Unsupported authorization scheme for azure endpoint = '{0}'" -ArgumentList $serviceEndpoint.Authorization.Scheme)
     }
 }
