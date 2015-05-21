@@ -135,7 +135,7 @@
             "label": "Publish results to VSO/TFS",
             "groupName": "advanced",
             "defaultValue": "true",
-            "helpMarkDown": "When selected, --nunit-xml option will be passed to testcloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
+            "helpMarkDown": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
         }
 
     ],
