@@ -25,5 +25,7 @@
   "loc.input.label.locale": "System Language",
   "loc.input.label.testCloudLocation": "test-cloud.exe Location",
   "loc.input.label.optionalArgs": "Optional Arguments",
-  "loc.input.help.optionalArgs": "Additional arguments passed to test-cloud.exe."
+  "loc.input.help.optionalArgs": "Additional arguments passed to test-cloud.exe.",
+  "loc.input.label.publishNUnitResults": "Publish results to VSO/TFS",
+  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
 }
