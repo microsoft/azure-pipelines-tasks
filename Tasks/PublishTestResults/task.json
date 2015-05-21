@@ -3,7 +3,7 @@
   "name": "PublishTestResults",
   "friendlyName": "Publish Test Results",
   "description": "Publish Test Results to VSO/TFS",
-  "helpMarkDown": "Publish Test Results to VSO/TFS",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613742)",
   "category": "Test",
   "visibility": [
                   "Build"
@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [ 
   ], 

@@ -34,7 +34,7 @@
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the Machine Group for deploying application.​"
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
     },
     {
       "name": "MachineNames",
@@ -42,7 +42,7 @@
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide a comma separated list of machines for the deployment like Machine1, Machine2. Default is all machines in the Machine Group."
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {
       "name": "ScriptPath",
@@ -50,7 +50,7 @@
       "label": "ms-resource:loc.input.label.ScriptPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path like c:\\BudgetIT\\Web\\Deploy\\Website.ps1"
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath"
     },
     {
       "name": "ScriptArguments",
@@ -58,7 +58,7 @@
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Arguments for the PowerShell script. Can be ordinal parameters or named parameters like -testParam test"
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
     },
     {
       "name": "InitializationScriptPath",
@@ -66,7 +66,7 @@
       "label": "ms-resource:loc.input.label.InitializationScriptPath",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Location of the data script for DSC on the target machines or on a UNC path like c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1"
+      "helpMarkDown": "ms-resource:loc.input.help.InitializationScriptPath"
     },
     {
       "name": "RunPowershellInParallel",
@@ -75,7 +75,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Setting it to true will run powershell scripts in parallel on the target machines."
+      "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel"
     }
   ],
   "sourceDefinitions": [
@@ -86,7 +86,7 @@
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\PowerShellOnTargetMachines.ps1",

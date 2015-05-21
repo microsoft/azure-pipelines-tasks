@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "demands": [
     "msbuild"
@@ -35,7 +35,7 @@
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "**\\*.sln",
       "required": true,
-      "helpMarkDown": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
+      "helpMarkDown": "ms-resource:loc.input.help.solution"
     },
     {
       "name": "platform",
@@ -57,7 +57,7 @@
       "label": "ms-resource:loc.input.label.msbuildArguments",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Additional arguments passed to MSBuild."
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildArguments"
     },
     {
       "name": "clean",
@@ -100,7 +100,7 @@
       "required": false,
       "groupName": "advanced",
       "defaultValue": "latest",
-      "helpMarkDown": "Optionally specify the version of MSBuild. It defaults to searching for the latest version.",
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildVersion",
       "visibleRule": "msbuildLocationMethod = version",
       "options": {
         "latest": "Latest",
@@ -115,7 +115,7 @@
       "label": "ms-resource:loc.input.label.msbuildArchitecture",
       "defaultValue": "x86",
       "required": false,
-      "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildArchitecture",
       "groupName": "advanced",
       "visibleRule": "msbuildLocationMethod = version",
       "options": {
@@ -129,12 +129,12 @@
       "label": "ms-resource:loc.input.label.msbuildLocation",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally supply the path to MSBuild.",
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildLocation",
       "visibleRule": "msbuildLocationMethod = location",
       "groupName": "advanced"
     }
   ],
-  "instanceNameFormat": "Build solution $(solution)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\MSBuild.ps1",

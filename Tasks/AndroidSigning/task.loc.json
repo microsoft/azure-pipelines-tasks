@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "JDK",
@@ -41,7 +41,7 @@
       "label": "ms-resource:loc.input.label.files",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\bin\\*.apk` for all APK files in bin subfolder."
+      "helpMarkDown": "ms-resource:loc.input.help.files"
     },
     {
       "name": "jarsign",
@@ -57,7 +57,7 @@
       "label": "ms-resource:loc.input.label.keystoreFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Full path to the keystore file.",
+      "helpMarkDown": "ms-resource:loc.input.help.keystoreFile",
       "visibleRule": "jarsign = true",
       "groupName": "jarsignerOptions"
     },
@@ -111,12 +111,12 @@
       "label": "ms-resource:loc.input.label.zipalignLocation",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally supply the path to zipalign.exe.  It defaults to use any zipalign.exe found in Android SDK folder.",
+      "helpMarkDown": "ms-resource:loc.input.help.zipalignLocation",
       "visibleRule": "zipalign = true",
       "groupName": "zipalignOptions"
     }
   ],
-  "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\AndroidSigning.ps1",

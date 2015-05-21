@@ -3,7 +3,7 @@
     "name": "Xcode",
     "friendlyName": "Xcode Build",
     "description": "Build an Xcode workspace on Mac OS",
-    "helpMarkDown": "Build an Xcode workspace on Mac OS",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613730)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "demands" : [
         "xcode"

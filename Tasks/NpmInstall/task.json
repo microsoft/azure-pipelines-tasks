@@ -3,7 +3,7 @@
     "name": "NpmInstall",
     "friendlyName": "npm install",
     "description": "Install npm packages",
-    "helpMarkDown": "Install **npm** packages",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {

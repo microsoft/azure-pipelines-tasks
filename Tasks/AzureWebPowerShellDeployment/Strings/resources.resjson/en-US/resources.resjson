@@ -3,11 +3,15 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure Web Site Deployment",
-  "loc.helpMarkDown": "Deploy a website to Microsoft Azure",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Deploy a website to Microsoft Azure",
+  "loc.instanceNameFormat": "Azure Deployment: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.help.ConnectedServiceName": "Azure subscription to target for deployment.",
   "loc.input.label.WebSiteLocation": "Web Site Location",
+  "loc.input.help.WebSiteLocation": "Select a region for deployment.",
   "loc.input.label.WebSiteName": "Web Site Name",
   "loc.input.label.Package": "Package",
+  "loc.input.help.Package": "Path of package under the default artifact directory.",
   "loc.input.label.AdditionalArguments": "Additional Arguments"
 }

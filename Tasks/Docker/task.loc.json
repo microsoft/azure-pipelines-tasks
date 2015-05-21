@@ -26,7 +26,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.DockerEndpoint",
       "defaultValue": "hostname:remote_api_port",
-      "helpMarkDown": "Docker server remote connection url. The valid remote_api_port range is [0,65535]",
+      "helpMarkDown": "ms-resource:loc.input.help.DockerEndpoint",
       "required": true
     },
     {
@@ -35,14 +35,14 @@
       "label": "ms-resource:loc.input.label.Repository",
       "defaultValue": "namespace/repo_name",
       "required": true,
-      "helpMarkDown": "Name of the image"
+      "helpMarkDown": "ms-resource:loc.input.help.Repository"
     },
     {
       "name": "Tag",
       "type": "string",
       "label": "ms-resource:loc.input.label.Tag",
       "defaultValue": "latest",
-      "helpMarkDown": "Image tag",
+      "helpMarkDown": "ms-resource:loc.input.help.Tag",
       "required": false
     },
     {
@@ -50,7 +50,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.ContainerName",
       "defaultValue": "",
-      "helpMarkDown": "Name of the container",
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerName",
       "required": true
     },
     {
@@ -58,11 +58,11 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.PortBindings",
       "defaultValue": "",
-      "helpMarkDown": "Provide the port binding information in the format 'hostport:containerport'",
+      "helpMarkDown": "ms-resource:loc.input.help.PortBindings",
       "required": false
     }
   ],
-  "instanceNameFormat": "Docker Deployment: $(Repository)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\Docker-Deployment.ps1",
