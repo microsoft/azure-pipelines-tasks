@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "demands": [
     "msbuild",
@@ -36,7 +36,7 @@
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "**\\*.sln",
       "required": true,
-      "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
+      "helpMarkDown": "ms-resource:loc.input.help.solution"
     },
     {
       "name": "msbuildArgs",
@@ -44,7 +44,7 @@
       "label": "ms-resource:loc.input.label.msbuildArgs",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Additional arguments passed to MSBuild."
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildArgs"
     },
     {
       "name": "platform",
@@ -107,7 +107,7 @@
       "label": "ms-resource:loc.input.label.vsLocation",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally supply the path to Visual Studio install location, used to locate the developer command prompt batch file.  It defaults to searching for latest version.",
+      "helpMarkDown": "ms-resource:loc.input.help.vsLocation",
       "groupName": "advanced",
       "visibleRule": "vsLocationMethod = location"
     },
@@ -131,7 +131,7 @@
       "required": false,
       "groupName": "advanced",
       "visibleRule": "msbuildLocationMethod = version",
-      "helpMarkDown": "Version of MSBuild to run.  Defaults to searching for latest version",
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildVersion",
       "options": {
         "latest": "Latest",
         "14.0": "MSBuild 14.0",
@@ -145,7 +145,7 @@
       "label": "ms-resource:loc.input.label.msbuildArchitecture",
       "defaultValue": "x86",
       "required": false,
-      "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildArchitecture",
       "groupName": "advanced",
       "visibleRule": "msbuildLocationMethod = version",
       "options": {
@@ -159,7 +159,7 @@
       "label": "ms-resource:loc.input.label.msbuildLocation",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally supply the path to MSBuild.  It defaults to searching for latest version.",
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildLocation",
       "visibleRule": "msbuildLocationMethod = location",
       "groupName": "advanced"
     },
@@ -172,7 +172,7 @@
       "groupName": "advanced"
     }
   ],
-  "instanceNameFormat": "Build solution $(solution)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\VSBuild.ps1",

@@ -3,18 +3,24 @@
 // *******************************************************
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "Build with **MSBuild**",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Build with MSBuild",
+  "loc.instanceNameFormat": "Build solution $(solution)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",
+  "loc.input.help.solution": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders.",
   "loc.input.label.platform": "Platform",
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.msbuildArguments": "MSBuild Arguments",
+  "loc.input.help.msbuildArguments": "Additional arguments passed to MSBuild.",
   "loc.input.label.clean": "Clean",
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
   "loc.input.label.logProjectEvents": "Record Project Details",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.msbuildVersion": "Optionally specify the version of MSBuild. It defaults to searching for the latest version.",
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
-  "loc.input.label.msbuildLocation": "Path to MSBuild"
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+  "loc.input.label.msbuildLocation": "Path to MSBuild",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild."
 }

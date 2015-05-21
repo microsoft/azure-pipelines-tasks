@@ -5,11 +5,18 @@
   "loc.friendlyName": "PowerShell on Target Machines",
   "loc.helpMarkDown": "Execute PowerShell scripts on remote machine(s)",
   "loc.description": "Execute PowerShell scripts on remote machine(s)",
+  "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.EnvironmentName": "Machine Group",
+  "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.​",
   "loc.input.label.MachineNames": "Deploy to Machines",
+  "loc.input.help.MachineNames": "Provide a comma separated list of machines for the deployment like Machine1, Machine2. Default is all machines in the Machine Group.",
   "loc.input.label.ScriptPath": "PowerShell Script",
+  "loc.input.help.ScriptPath": "Location of the PowerShell script on the target machines or on a UNC path like c:\\BudgetIT\\Web\\Deploy\\Website.ps1",
   "loc.input.label.ScriptArguments": "Script Arguments",
+  "loc.input.help.ScriptArguments": "Arguments for the PowerShell script. Can be ordinal parameters or named parameters like -testParam test",
   "loc.input.label.InitializationScriptPath": "Initialization Script",
-  "loc.input.label.RunPowershellInParallel": "Run PowerShell in Parallel"
+  "loc.input.help.InitializationScriptPath": "Location of the data script for DSC on the target machines or on a UNC path like c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
+  "loc.input.label.RunPowershellInParallel": "Run PowerShell in Parallel",
+  "loc.input.help.RunPowershellInParallel": "Setting it to true will run powershell scripts in parallel on the target machines."
 }

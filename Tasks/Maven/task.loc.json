@@ -18,10 +18,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "minimumAgentVersion": "1.83.0",
-  "instanceNameFormat": "Maven $(args)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
       "name": "junitTestResults",
@@ -41,7 +41,7 @@
       "label": "ms-resource:loc.input.label.mavenPOMFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from the repo root to the `Maven POM file`."
+      "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile"
     },
     {
       "name": "options",
@@ -64,7 +64,7 @@
       "required": true,
       "defaultValue": "true",
       "groupName": "junitTestResults",
-      "helpMarkDown": "Select this option to publish JUnit Test results produced by the Maven build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
+      "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
     },
     {
       "name": "testResultsFiles",
@@ -73,7 +73,7 @@
       "defaultValue": "**/TEST-*.xml",
       "required": true,
       "groupName": "junitTestResults",
-      "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
     },
     {
       "name": "jdkVersion",
@@ -82,7 +82,7 @@
       "required": false,
       "groupName": "advanced",
       "defaultValue": "default",
-      "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkVersion",
       "options": {
         "default": "default",
         "1.8": "JDK 8",
@@ -96,7 +96,7 @@
       "label": "ms-resource:loc.input.label.jdkArchitecture",
       "defaultValue": "x86",
       "required": false,
-      "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
       "groupName": "advanced",
       "options": {
         "x86": "x86",

@@ -15,12 +15,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [
     "sh"
   ],
-  "instanceNameFormat": "Shell Script $(scriptPath)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
       "name": "advanced",
@@ -35,7 +35,7 @@
       "label": "ms-resource:loc.input.label.scriptPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from repo root of the shell script file to run."
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
     },
     {
       "name": "args",
@@ -43,7 +43,7 @@
       "label": "ms-resource:loc.input.label.args",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Arguments passed to the shell script"
+      "helpMarkDown": "ms-resource:loc.input.help.args"
     },
     {
       "name": "cwd",
@@ -51,7 +51,7 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
     }
   ],

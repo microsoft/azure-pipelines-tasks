@@ -3,13 +3,13 @@
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
     "description": "Installs and updates missing NuGet packages",
-    "helpMarkDown": "Installs and updates missing NuGet packages",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 10
+        "Patch": 11
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -68,7 +68,7 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\NuGetInstaller.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": ""
         }
     }
 }

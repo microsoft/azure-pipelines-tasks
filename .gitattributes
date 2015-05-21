@@ -1,7 +1,7 @@
 ###############################################################################
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
-* text=auto
+*           text=auto
 
 ###############################################################################
 # Set default behavior for command prompt diff.
@@ -22,6 +22,15 @@
 # these files as binary and thus will always conflict and require user
 # intervention with every merge. To do so, just uncomment the entries below
 ###############################################################################
+*.js         text
+*.json       text
+*.resjson    text
+*.htm        text
+*.html       text
+*.xml        text
+*.txt        text
+*.ini        text
+*.inc        text
 #*.sln       merge=binary
 #*.csproj    merge=binary
 #*.vbproj    merge=binary
@@ -40,9 +49,21 @@
 #
 # image files are treated as binary by default.
 ###############################################################################
-#*.jpg   binary
-#*.png   binary
-#*.gif   binary
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.ico     binary
+*.mov     binary
+*.mp4     binary
+*.mp3     binary
+*.flv     binary
+*.fla     binary
+*.swf     binary
+*.gz      binary
+*.zip     binary
+*.7z      binary
+*.ttf     binary
 
 ###############################################################################
 # diff behavior for common document formats
@@ -51,13 +72,13 @@
 # is only available from the command line. Turn it on by uncommenting the 
 # entries below.
 ###############################################################################
-#*.doc   diff=astextplain
-#*.DOC   diff=astextplain
-#*.docx  diff=astextplain
-#*.DOCX  diff=astextplain
-#*.dot   diff=astextplain
-#*.DOT   diff=astextplain
-#*.pdf   diff=astextplain
-#*.PDF   diff=astextplain
-#*.rtf   diff=astextplain
-#*.RTF   diff=astextplain
+*.doc   diff=astextplain
+*.DOC   diff=astextplain
+*.docx  diff=astextplain
+*.DOCX  diff=astextplain
+*.dot   diff=astextplain
+*.DOT   diff=astextplain
+*.pdf   diff=astextplain
+*.PDF   diff=astextplain
+*.rtf   diff=astextplain
+*.RTF   diff=astextplain

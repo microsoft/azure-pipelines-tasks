@@ -3,8 +3,11 @@
 // *******************************************************
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "Build with the CMake cross-platform build system",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Build with the CMake cross-platform build system",
+  "loc.instanceNameFormat": "CMake $(args)",
   "loc.input.label.cwd": "Working Directory",
-  "loc.input.label.args": "Arguments"
+  "loc.input.help.cwd": "Current working directory when cmake is run.",
+  "loc.input.label.args": "Arguments",
+  "loc.input.help.args": "Arguments passed to cmake"
 }
