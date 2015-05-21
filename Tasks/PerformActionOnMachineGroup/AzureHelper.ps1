@@ -4,7 +4,7 @@ function Delete-MachineGroupFromProvider
 
     Write-Verbose "Deleting resource group $machineGroupName from Azure provider" -Verbose
     Remove-AzureResourceGroup -ResourceGroupName $machineGroupName -Force -ErrorAction Stop -Verbose
-    Write-Verbose "Deleted resource group $machineGroupName from Azure provider"-Verbose
+    Write-Host (Get-LocalizedString -Key "Deleted resource group '{0}' from Azure provider" -ArgumentList $machineGroupName)
 }
 
 function Delete-MachineFromProvider
@@ -18,12 +18,12 @@ function Delete-MachineFromProvider
 
     if($errorVariable.Count -eq 0)
     {
-         Write-Verbose "Deleted machine $machineName from Azure provider" -Verbose
+         Write-Host (Get-LocalizedString -Key "Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
          return "Succedded"
     }
     else
     {
-         Write-Warning("Deletion of machine $machineName failed in azure with error $errorVaraible")
+         Write-Warning(Get-LocalizedString -Key "Deletion of machine '{0}' failed in Azure with error '{1}'" -ArgumentList $machineName, $errorVariable)
          return "Failed"
     }
 }
@@ -35,7 +35,7 @@ function Start-MachineInProvider
 
     Write-Verbose "Starting machine $machineName on Azure provider" -Verbose
     Start-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose
-    Write-Verbose "Started machine $machineName on Azure provider" -Verbose
+    Write-Host (Get-LocalizedString -Key "Started machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Stop-MachineInProvider
@@ -45,7 +45,7 @@ function Stop-MachineInProvider
 
     Write-Verbose "Stopping machine $machineName on Azure provider" -Verbose
     Stop-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose -Force
-    Write-Verbose "Stopped machine $machineName on Azure provider" -Verbose
+    Write-Host (Get-LocalizedString -Key "Stopped machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Restart-MachineInProvider
@@ -55,7 +55,7 @@ function Restart-MachineInProvider
 
     Write-Verbose "Restarting machine $machineName on Azure provider" -Verbose
     Restart-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose 
-    Write-Verbose "Restarted machine $machineName on Azure provider" -Verbose
+    Write-Host (Get-LocalizedString -Key "Restarted machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Initialize-AzureHelper
@@ -84,18 +84,18 @@ function Initialize-AzureHelper
             $azureAccount = Add-AzureAccount -Credential $psCredential
             if(!$azureAccount)
             {
-                throw "There was an error with the Azure credentials used for machine group deployment"
+                throw ( Get-LocalizedString -Key "There was an error with the Azure credentials used for machine group deployment" )
             }
             Select-AzureSubscription -SubscriptionName $subscriptionName
         }
         else
         {
-            throw "ProviderData for machine group is containing null or empty values for either of subscriptionname, username or Password"
+            throw ( Get-LocalizedString -Key "ProviderData for machine group is containing null or empty values for either of subscriptionname, username or password" )
         }
     }
     else
     {
-        throw "No providerdata is specified in machine group"
+        throw ( Get-LocalizedString -Key "No providerdata is specified in machine group" )
     }
 
     Write-Verbose "Initialized azure resource provider" -Verbose
