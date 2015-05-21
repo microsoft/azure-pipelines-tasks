@@ -49,6 +49,11 @@
     "Node": {
       "target": "npminstall.js",
       "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\NpmInstall.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(cwd)"
     }
   }
 }

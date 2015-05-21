@@ -5,7 +5,7 @@
   "loc.friendlyName": "PowerShell on Target Machines",
   "loc.helpMarkDown": "Execute PowerShell scripts on remote machine(s)",
   "loc.description": "Execute PowerShell scripts on remote machine(s)",
-  "loc.instanceNameFormat": "Machine Group: $(EnvironmentName)",
+  "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.EnvironmentName": "Machine Group",
   "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.​",

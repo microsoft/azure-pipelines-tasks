@@ -5,7 +5,7 @@
   "loc.friendlyName": "Windows Machine File Copy",
   "loc.helpMarkDown": "Copy files to remote machine(s)",
   "loc.description": "Copy files to remote machine(s)",
-  "loc.instanceNameFormat": "Machine Group: $(EnvironmentName)",
+  "loc.instanceNameFormat": "Copy files to $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.SourcePath": "Source",
   "loc.input.help.SourcePath": "Location of the source folder or file. Variables can be used for binaries in the Automation Agent like $(Build.Repository.LocalPath)\\BudgetIT\\Web.",

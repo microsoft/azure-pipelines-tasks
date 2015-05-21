@@ -83,7 +83,7 @@
          "authKey": "tfs:DevTestLabs" 
      } 
     ], 
-    "instanceNameFormat": "Machine Group: $(EnvironmentName)",
+    "instanceNameFormat": "Copy files to $(EnvironmentName)",
 	 "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",

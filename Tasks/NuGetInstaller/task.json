@@ -68,7 +68,7 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\NuGetInstaller.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": ""
         }
     }
 }
