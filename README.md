@@ -6,7 +6,7 @@
 
 Before you run the builds, you need to configure an agent:
 
-[Windows](https://youtu.be/ZzrDPmTOEEk)
+[Windows] Use the hosted pool or [bring your own](https://youtu.be/ZzrDPmTOEEk)
 
 [OSX/Linux](https://github.com/Microsoft/vso-agent)
 
