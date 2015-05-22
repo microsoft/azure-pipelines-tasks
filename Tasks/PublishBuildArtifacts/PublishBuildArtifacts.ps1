@@ -26,9 +26,9 @@ Write-Host "ArtifactType = $ArtifactType"
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
-$buildId = Get-Variable $distributedTaskContext "build.buildId"
-$teamProjectId = Get-Variable $distributedTaskContext "system.teamProjectId"
-$stagingFolder = Get-Variable $distributedTaskContext "build.artifactstagingdirectory"
+$buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
+$teamProjectId = Get-TaskVariable $distributedTaskContext "system.teamProjectId"
+$stagingFolder = Get-TaskVariable $distributedTaskContext "build.artifactstagingdirectory"
 
 # gather files into staging folder
 Write-Host "Preparing artifact content in staging folder $stagingFolder..."

@@ -50,7 +50,7 @@ if($testAssemblyFiles)
         $vsTestVersion = $null
     }
 
-    $artifactsDirectory = Get-Variable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
+    $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
     $workingDirectory = $artifactsDirectory
     $testResultsDirectory = $workingDirectory + "\" + "TestResults"
