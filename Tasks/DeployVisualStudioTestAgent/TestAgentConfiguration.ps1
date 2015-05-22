@@ -247,13 +247,12 @@ function Set-TestAgentConfiguration
     
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
+	$doReboot = $false
     # 3010 is exit code to indicate a reboot is required
     if ($configOut.ExitCode -eq 3010)
     {
 		Write-Verbose -Message "Marking the machine for reboot as exit code 3010 received" -Verbose
-		SetRebootKey;
-
-        return 0
+		$doReboot = $true        
     }
 	# Todo<Bug 227810>. This restart should not be required if DSC doesnt throw a requirement of restart at every step.
 	elseif ($configOut.ExitCode -eq 0) 
@@ -261,16 +260,25 @@ function Set-TestAgentConfiguration
 		if(-not (IsDtaExecutionHostRunning))
 		{
 			Write-Verbose -Message "Marking the machine for reboot as exit code 0 received and TestAgent is not running" -Verbose
-			SetRebootKey;
+			$doReboot = $true  
 		}
 		# DSC launches dta host as non interactive and because user has selected configure as process, we need to restart.
         	elseif ($configAsProcess)
 		{
 			Write-Verbose -Message "Restarting the machine as error code 0 received and agent is launched as non interactive prcoess." -verbose
-			SetRebootKey;
+			$doReboot = $true  
 		}
     }
-    return $configOut.ExitCode
+	
+	if($doReboot)
+	{
+		Write-Verbose "Reboot required post test agent configuration , return 3010" -Verbose
+		return 3010; # 3010 is exit code will indicate a reboot is required
+	}
+	else
+	{
+		return $configOut.ExitCode
+	}
 }
 
 function GetConfigValue([string] $line)
@@ -636,21 +644,15 @@ function ConfigureTestAgent
     {
         Write-Verbose("TestAgent Configured Successfully")
     }
+	elseif($ret -eq 3010)
+	{
+		Write-Verbose("TestAgent configuration requested for reboot")
+	}
     else
     {
         throw ("TestAgent Configuration failed with exit code {0}" -f $LASTEXITCODE)
     }
-}
-
-function SetRebootKey
-{
-	# check if the key is not already present. Else set the key
-	if(-not ((Get-ItemProperty 'hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\').PendingFileRenameOperations.Length -gt 0))
-	{
-		# todo: Check with Pavan if this is ok
-	    Write-Verbose -Message "Reboot key does not exist. Adding it." -verbose
-	    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name "PendingFileRenameOperations" -Value true -EA SilentlyContinue
-	}
+	return $ret;
 }
 
 $disableScreenSaver = [Boolean] $disableScreenSaver
@@ -662,5 +664,7 @@ $agentCredential = New-Object System.Management.Automation.PSCredential -Argumen
 $ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon  -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
 if ($ret -eq $false)
 {
-    ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
+    $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
+	return $returnCode;
 }
+
