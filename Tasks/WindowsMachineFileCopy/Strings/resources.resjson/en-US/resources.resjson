@@ -8,7 +8,7 @@
   "loc.instanceNameFormat": "Copy files to $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.SourcePath": "Source",
-  "loc.input.help.SourcePath": "Location of the source folder or file. Variables can be used for binaries in the Automation Agent like $(Build.Repository.LocalPath)\\BudgetIT\\Web.",
+  "loc.input.help.SourcePath": "Absolute path of the source folder or file on the local machine, or a UNC Share.",
   "loc.input.label.EnvironmentName": "Machine Group",
   "loc.input.help.EnvironmentName": "Name of the target Machine Group for copying the files to.​",
   "loc.input.label.MachineNames": "Copy to Machines",
