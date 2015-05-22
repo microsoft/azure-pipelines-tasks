@@ -6,14 +6,16 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
                 
 	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName         
 
-        $versionToInstall = ((Get-Item $SetupPath).VersionInfo.FileVersion) 
-        $versionInstalled = (Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName "version")
+	$versionToInstall = ((Get-Item $SetupPath).VersionInfo.FileVersion) 
+	$versionInstalled = (Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName "version")
 
-        if($versionToInstall -ne $null)
-        {
+	if($versionToInstall -ne $null)
+	{
 		$versionToInstall = $versionToInstall.SubString(0, $versionToInstall.LastIndexOf('.'))
-        }
-       
+	}
+
+	$exitCode = 0
+	
 	if(($isProductExists -eq $InstalledCheckRegValueData) -and ($versionToInstall -ne $null) -and ($versionInstalled -ne $null) -and ([version]$versionToInstall -le [version]$versionInstalled))
 	{
 		Write-Verbose -Message ("Test Agent already exists") -verbose
@@ -41,15 +43,11 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 			throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
 		}
 
-		if($exitCode -eq 3010 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641)
+		if($exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641)
 		{
-		    # check if the key is not already present. Else set the key
-			if(-not ((Get-ItemProperty 'hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\').PendingFileRenameOperations.Length -gt 0))
-			{
-				# todo: Check with Pavan if this is ok
-				Write-Verbose -Message "Reboot key does not exist. Adding it." -verbose
-				Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name "PendingFileRenameOperations" -Value true -EA SilentlyContinue
-			}
+		    # Return the required reboot code 3010
+			Write-Verbose "Reboot required post test agent installation , return 3010" -Verbose
+			return 3010;
 		}
 
 		# Verify the TA registry entry
@@ -64,6 +62,8 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 			throw "Look up in registry failed. Test agent failed to install."
 		}
 	}
+	
+	return $exitCode
 }
 
 function Get-RegistryValue {
@@ -131,4 +131,4 @@ function Get-ProductEntry {
 	return $installValue
 }
 
-Install-Product -SetupPath $setupPath -UserName $userName -Password $password -ProductVersion "14.0" -Arguments "/Quiet /NoRestart"
+return Install-Product -SetupPath $setupPath -UserName $userName -Password $password -ProductVersion "14.0" -Arguments "/Quiet /NoRestart"
