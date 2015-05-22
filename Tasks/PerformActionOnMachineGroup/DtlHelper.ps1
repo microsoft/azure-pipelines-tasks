@@ -33,7 +33,7 @@ function Delete-MachineGroup
     else
     {
         Remove-Environment -EnvironmentName $machineGroupName -Connection $connection -ErrorAction Stop
-        Write-Verbose "Deleted machine group $machineGroupName" -Verbose 
+        Write-Verbose "Deleted machine group $machineGroupName" -Verbose
     } 
 
 }
