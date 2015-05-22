@@ -10,15 +10,8 @@ antb.arg('-buildfile');
 antb.arg(tl.getPathInput('antBuildFile', true, true));
 
 // options and targets are optional
-var options = tl.getInput('options');
-if(options) {
-  antb.arg(options);
-}
-
-var targets = tl.getInput('targets');
-if(targets) {
-  antb.arg(targets);
-}
+antb.arg(tl.getDelimitedInput('options', ' ', false));
+antb.arg(tl.getDelimitedInput('targets', ' ', false));
 
 // update JAVA_HOME if user selected specific JDK version
 var jdkVersion = tl.getInput('jdkVersion');
