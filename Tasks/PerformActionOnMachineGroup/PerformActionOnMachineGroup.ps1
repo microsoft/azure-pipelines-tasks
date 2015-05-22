@@ -44,7 +44,7 @@ Switch ($providerName)
         break
    }
 
-   default { Write-Error("Machine group provider is not supported.") }
+   default { throw (Get-LocalizedString -Key "Machine group provider is not supported") }
 }
 
 # Determines which action is to be performed.
@@ -72,7 +72,7 @@ Switch ($Action)
           break
       }
 
-     default { Write-Error("Action $action is not supported on the provider $providerName.") }
+     default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $Action, $providerName) }
 }
 
 Write-Verbose -Verbose  "Completing action on machine group"
