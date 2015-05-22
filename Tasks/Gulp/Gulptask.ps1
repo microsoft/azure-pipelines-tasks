@@ -15,7 +15,7 @@ $gulp = Get-Command -Name gulp -ErrorAction Ignore
 if(!$gulp)
 {
     Write-Verbose "try to find gulp in the node_modules in the sources directory"
-    $buildSourcesDirectory = Get-Variable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+    $buildSourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
     $nodeBinPath = Join-Path -Path $buildSourcesDirectory -ChildPath 'node_modules\.bin'
 
     if(Test-Path -Path $nodeBinPath -PathType Container)
