@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure subscription to configure before running PowerShell",
   "loc.input.label.SourcePath": "Source",
-  "loc.input.help.SourcePath": "Location of the source folder or file.",
+  "loc.input.help.SourcePath": "Absolute path of the source folder or file on the local machine, or a UNC Share.",
   "loc.input.label.StorageAccount": "Storage Account",
   "loc.input.help.StorageAccount": "Storage Account must exist prior to copy.",
   "loc.input.label.ContainerName": "ContainerName",
