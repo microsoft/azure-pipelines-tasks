@@ -30,7 +30,7 @@ function Invoke-OperationHelper
         {
             $status = "Failed"
             $machineStatus = "Failed"
-            Write-Warning("Operation $operation on machine $machine.Name failed.")
+            Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed" -ArgumentList $operationName, $machine.Name)
         }
         else
         {
@@ -39,7 +39,7 @@ function Invoke-OperationHelper
             {
                 $machineStatus = "Failed"
                 $passedOperationCount--
-                Write-Warning("Operation $operationName on machine $machine.Name failed with error $operation.Error.Message")
+                Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed with error '{2}'" -ArgumentList $operationName, $machine.Name, $operation.Error.Message)
             }
         }
 
@@ -115,7 +115,7 @@ function Invoke-OperationOnProvider
          }
  
          default {
-              Write-Error("Tried to invoke an invalid operation: $operationName.")
+              throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
          }
     }
     return $operation
@@ -130,6 +130,6 @@ function Throw-ExceptionIfOperationFailesOnAllMachine
 
   if(($passedOperationCount -ne $null) -and ($passedOperationCount -eq 0))
   {
-        Write-Error("Operation $operationName failed on the machines in $machineGroupName")
+        throw ( Get-LocalizedString -Key "Operation '{0}' failed on the machines in '{1}'" -ArgumentList $operationName, $machineGroupName )
   }
 }
