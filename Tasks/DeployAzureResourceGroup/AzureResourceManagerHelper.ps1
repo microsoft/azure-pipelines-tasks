@@ -190,7 +190,7 @@ function Get-MachineConnectionInformation
 		{
 			$fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
 			$winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
-			$winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
+			$winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
 		}
 
 		Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
