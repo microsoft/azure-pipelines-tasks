@@ -1,0 +1,146 @@
+﻿{
+  "id": "94875CAE-C3AE-4540-88A5-2FA2440D8AFE",
+  "name": "AzureFileCopy",
+  "friendlyName": "Azure File Copy",
+  "description": "Copy files to azure blob or vm(s)",
+  "helpMarkDown": "Copy files to azure blob or vm(s)",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.84.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "Azure Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure subscription is needed for accessing the storage account. Storage account is also used as an intermediary for copying to Azure VMs."
+    },
+    {
+      "name": "SourcePath",
+      "type": "string",
+      "label": "Source",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share."
+    },
+    {
+      "name": "StorageAccount",
+      "type": "pickList",
+      "label": "Storage Account",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "A pre-existing storage account is required."
+    },
+    {
+      "name": "Destination",
+      "type": "pickList",
+      "label": "Destination",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "AzureBlob": "Azure Blob",
+        "AzureVMs": "Azure VMs"
+      },
+      "helpMarkDown": "Select the destination either Azure Blob or VMs."
+    },
+    {
+      "name": "ContainerName",
+      "type": "string",
+      "label": "ContainerName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Provide a pre-existing container or else a new one will be created automatically.",
+      "visibleRule": "Destination = AzureBlob"
+    },
+    {
+      "name": "BlobPrefix",
+      "type": "string",
+      "label": "Blob Prefix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Useful while downloading, as it acts as a filter. Example - you can apppend your build number to all your blobs.",
+      "visibleRule": "Destination = AzureBlob"
+    },
+    {
+      "name": "EnvironmentName",
+      "type": "pickList",
+      "label": "Target Machine Group",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Name of the target Machine Group for copying the files to.​",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "Copy to Machines",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Provide a comma separated list of machines like Machine1, Machine2. Default is all machines in the Machine Group.",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "Destination Folder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Local Path on the target machines for copying the files from the source. Environment variable can be used. For example, $env:windir\\BudgetIT\\Web.",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "CleanTargetBeforeCopy",
+      "type": "boolean",
+      "label": "Clean Target",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Setting it to true will clean up the destination folder before copying the files.",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "CopyFilesInParallel",
+      "type": "boolean",
+      "label": "Copy Files In Parallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Setting it to true will copy files in parallel to the target machines.",
+      "visibleRule": "Destination = AzureVMs"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "StorageAccount",
+      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
+      "selector": "xpath://ServiceName",
+      "authKey": "$(ConnectedServiceName)"
+    },
+    {
+      "target": "EnvironmentName",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    }
+  ],
+  "instanceNameFormat": "$(Destination) File Copy",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\AzureFileCopy.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
