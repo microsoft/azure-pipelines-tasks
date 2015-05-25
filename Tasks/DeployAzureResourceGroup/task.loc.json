@@ -134,27 +134,13 @@
       "visibleRule": "vmCreds = true"
     },
     {
-        "name": "vmPassword",
-        "type": "string",
-        "label": "ms-resource:loc.input.label.vmPassword",
-        "defaultValue": "",
-        "required": false,
-        "groupName": "advancedDeploymentOptions",
-        "visibleRule": "vmCreds = true"
-    },
-    {
-      "name": "winrmListeners",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.winrmListeners",
-      "defaultValue": "None",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.winrmListeners",
+      "name": "vmPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vmPassword",
+      "defaultValue": "",
+      "required": false,
       "groupName": "advancedDeploymentOptions",
-      "options": {
-        "none": "None",
-        "winrmhttp": "HTTP",
-        "winrmhttps": "HTTPS"
-      }
+      "visibleRule": "vmCreds = true"
     },
     {
       "name": "skipCACheck",
@@ -163,7 +149,7 @@
       "required": false,
       "defaultValue": "true",
       "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "Indicates whether the client validates that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
+      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
