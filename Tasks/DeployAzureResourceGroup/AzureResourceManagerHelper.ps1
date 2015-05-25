@@ -1,593 +1,579 @@
 function Create-AzureResourceGroup
 {
-    param([string]$csmFile, 
-          [System.Collections.Hashtable]$csmParametersObject,
-          [string]$resourceGroupName,
-          [string]$location,
-          [string]$overrideParameters)
-    
-    if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
-    {
-        Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
-        $startTime = Get-Date
-        Set-Variable -Name startTime -Value $startTime -Scope "Global"
+	param([string]$csmFile, 
+		  [System.Collections.Hashtable]$csmParametersObject,
+		  [string]$resourceGroupName,
+		  [string]$location,
+		  [string]$overrideParameters)
+	
+	if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
+	{
+		Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
+		$startTime = Get-Date
+		Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
-        Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
+		Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
 
-        if (!$csmParametersObject)
-        {
-            $azureCommand = "New-AzureResourceGroupDeployment"
-            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
-            $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
-            Write-Host "$finalCommand"
-            Invoke-Expression -Command $finalCommand
-        }
-        else
-        {
-            $azureCommand = "New-AzureResourceGroupDeployment"
-            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
-            $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
-            Write-Host "$finalCommand"
-            Invoke-Expression -Command $finalCommand
-        }
+		if (!$csmParametersObject)
+		{
+			$azureCommand = "New-AzureResourceGroupDeployment"
+			$azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+			$finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+			Write-Host "$finalCommand"
+			Invoke-Expression -Command $finalCommand
+		}
+		else
+		{
+			$azureCommand = "New-AzureResourceGroupDeployment"
+			$azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+			$finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+			Write-Host "$finalCommand"
+			Invoke-Expression -Command $finalCommand
+		}
 
-        if ($azureResourceGroupDeployment)
-        {
-            Set-Variable -Name azureResourceGroupDeployment -Value $azureResourceGroupDeployment -Scope "Global"
+		if ($azureResourceGroupDeployment)
+		{
+			Set-Variable -Name azureResourceGroupDeployment -Value $azureResourceGroupDeployment -Scope "Global"
 
-            Get-MachineLogs -ResourceGroupName $resourceGroupName
+			Get-MachineLogs -ResourceGroupName $resourceGroupName
 
-            if($deploymentError)
-            {
-                Set-Variable -Name deploymentError -Value $deploymentError -Scope "Global"
+			if($deploymentError)
+			{
+				Set-Variable -Name deploymentError -Value $deploymentError -Scope "Global"
 
-                foreach($error in $deploymentError)
-                {
-                    Write-Verbose -Verbose $error
-                }
+				foreach($error in $deploymentError)
+				{
+					Write-Verbose -Verbose $error
+				}
 
-                Write-Host (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName)
-            }
-            else
-            {
-                Write-Host (Get-LocalizedString -Key "Successfully created resource group deployment with name '{0}'" -ArgumentList $resourceGroupName)
-            }
+				Write-Host (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName)
+			}
+			else
+			{
+				Write-Host (Get-LocalizedString -Key "Successfully created resource group deployment with name '{0}'" -ArgumentList $resourceGroupName)
+			}
 
-            return $azureResourceGroupDeployment
-        }
-        else
-        {
-            Throw $deploymentError
-        }
-    }
+			return $azureResourceGroupDeployment
+		}
+		else
+		{
+			Throw $deploymentError
+		}
+	}
 }
 
 function Get-SubscriptionInformation
 {
-    param([string]$subscriptionId)
+	param([string]$subscriptionId)
 
-    if ([string]::IsNullOrEmpty($subscriptionId) -eq $false)
-    {
-        $subscription = Get-AzureSubscription -SubscriptionId $subscriptionId -Verbose -ErrorAction Stop
-    }
+	if ([string]::IsNullOrEmpty($subscriptionId) -eq $false)
+	{
+		$subscription = Get-AzureSubscription -SubscriptionId $subscriptionId -Verbose -ErrorAction Stop
+	}
 
-    return $subscription
+	return $subscription
 }
 
 function Get-Resources
 {
-    param([string]$resourceGroupName)
+	param([string]$resourceGroupName)
 
-    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
-    {
-        Write-Verbose -Verbose "Getting resources in $resourceGroupName"
+	if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+	{
+		Write-Verbose -Verbose "Getting resources in $resourceGroupName"
 
-        Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
+		$azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
-        $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
+		$resources = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]'
 
-        $resources = New-Object 'System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]'
+		if($azureResourceGroupResources)
+		{
+			Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
 
-        foreach ($resource in $azureResourceGroupResources)
-        {
-            $environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2
-            $environmentResource.Name = $resource.Name
-            $environmentResource.Type = $resource.ResourceType
-            $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
-            $resourceLocation = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Location)
-            $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
-            $propertyBag.Add("Location", $resourceLocation)
-            $propertyBag.Add("PlatformId", $platformId)
-             
-            #Adding resource tags
-            foreach($tagKey in $resource.Tags.Keys)
-            {
-                $tagValue = $resource.Tags.Item($tagKey)
-                if([string]::IsNullOrEmpty($tagValue) -eq $false)
-                {
-                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $tagValue)
-                    $propertyBag.Add($tagKey, $property)
-                }
-            }
+			foreach ($resource in $azureResourceGroupResources)
+			{
+				$environmentResource = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2
+				$environmentResource.Name = $resource.Name
+				$environmentResource.Type = $resource.ResourceType
+				$propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
+				$resourceLocation = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.Location)
+				$platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
+				$propertyBag.Add("Location", $resourceLocation)
+				$propertyBag.Add("PlatformId", $platformId)
+			 
+				#Adding resource tags
+				foreach($tagKey in $resource.Tags.Keys)
+				{
+					$tagValue = $resource.Tags.Item($tagKey)
+					if([string]::IsNullOrEmpty($tagValue) -eq $false)
+					{
+						$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $tagValue)
+						$propertyBag.Add($tagKey, $property)
+					}
+				}
 
-            #Adding resource platform properties
-            foreach($resourcePropertyKey in $resource.Properties.Keys)
-            {
-                $propertyValue = $resource.Properties.Item($resourcePropertyKey)
-                if([string]::IsNullOrEmpty($propertyValue) -eq $false)
-                {
-                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $propertyValue)
-                    $propertyBag.Add($resourcePropertyKey, $property)
-                }
-            }
-            
-            #Adding FQDN property
-            if([string]::IsNullOrEmpty($fqdnMap[$resource.Name]) -eq $false)
-            {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnMap[$resource.Name])
-                $propertyBag.Add("Microsoft-Vslabs-MG-Resource-FQDN", $property)
-            }
-        
-            #Adding WinRMHttp port property
-            if([string]::IsNullOrEmpty($winRmHttpPortMap[$resource.Name]) -eq $false)
-            {
-                $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $winRmHttpPortMap[$resource.Name])
-                $propertyBag.Add("WinRM_Http", $property)
-            }
+				#Adding resource platform properties
+				foreach($resourcePropertyKey in $resource.Properties.Keys)
+				{
+					$propertyValue = $resource.Properties.Item($resourcePropertyKey)
+					if([string]::IsNullOrEmpty($propertyValue) -eq $false)
+					{
+						$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $propertyValue)
+						$propertyBag.Add($resourcePropertyKey, $property)
+					}
+				}
+			
+				#Adding FQDN property
+				if([string]::IsNullOrEmpty($fqdnMap[$resource.Name]) -eq $false)
+				{
+					$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnMap[$resource.Name])
+					$propertyBag.Add("Microsoft-Vslabs-MG-Resource-FQDN", $property)
+				}
+		
+				#Adding WinRMHttp port property
+				if([string]::IsNullOrEmpty($winRmHttpPortMap[$resource.Name]) -eq $false)
+				{
+					$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $winRmHttpPortMap[$resource.Name])
+					$propertyBag.Add("WinRM_Http", $property)
+				}
 
-            $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
+				#Adding WinRMHttps port property
+				if([string]::IsNullOrEmpty($winRmHttpsPortMap[$resource.Name]) -eq $false)
+				{
+					$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $winRmHttpsPortMap[$resource.Name])
+					$propertyBag.Add("WinRM_Https", $property)
+				}
 
-            $resources.Add($environmentResource)
-        }
-        
-        Write-Verbose -Verbose "Got resources: $resources"
+				$environmentResource.Properties.AddOrUpdateProperties($propertyBag)
 
-        return $resources
-    }
+				$resources.Add($environmentResource)
+			}
+		
+		}
+
+		Write-Verbose -Verbose "Got resources: $resources"
+
+		return $resources
+	}
 }
 
 function Get-MachineConnectionInformation
 {
-    param([string]$resourceGroupName)
-    
-    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
-    {
-        $azureVms = Get-AzureVm -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Set-Variable -Name azureVms -Value $azureVms -Scope "Global"
-        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Set-Variable -Name networkInterfaceResources -Value $networkInterfaceResources -Scope "Global"
-        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Set-Variable -Name publicIPAddressResources -Value $publicIPAddressResources -Scope "Global"
+	param([string]$resourceGroupName)
+	
+	if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+	{
+		$azureVms = Get-AzureVm -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+		Set-Variable -Name azureVms -Value $azureVms -Scope "Global"
+		$networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+		Set-Variable -Name networkInterfaceResources -Value $networkInterfaceResources -Scope "Global"
+		$publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+		Set-Variable -Name publicIPAddressResources -Value $publicIPAddressResources -Scope "Global"
 
-        $lb = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Network/loadBalancers"}
+		$lb = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Network/loadBalancers"}
 
-        if($lb)
-        {
-            $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-            Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
+		if($lb.Count -gt 1)
+		{
+			Throw (Get-LocalizedString -Key "Current version of the task supports only templates with single load balancer.")
+		}
+		
+		if($lb)
+		{
+			$loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+			Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
 
-            $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
-            $winRmHttpPortMap = Get-FrontEndPorts -BackEndPort "5985"
-        }
-        else
-        {
-            $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
-            $winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
-        }
+			$fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
+			$winRmHttpPortMap = Get-FrontEndPorts -BackEndPort "5985"
+			$winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986"
+		}
+		else
+		{
+			$fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
+			$winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
+			$winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
+		}
 
-        Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
-        Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
-    }
+		Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
+		Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
+		Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
+	}
 }
 
 function Get-FrontEndPorts
 {
-    param([string]$backEndPort)
+	param([string]$backEndPort)
 
-    $portList = @{}
+	$portList = @{}
 
-    if([string]::IsNullOrEmpty($backEndPort) -eq $false -and $networkInterfaceResources -and $loadBalancer -and $azureVms)
-    {
-        $rules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer
-        $filteredRules = $rules | Where-Object {$_.BackendPort -eq $backEndPort}
+	if([string]::IsNullOrEmpty($backEndPort) -eq $false -and $networkInterfaceResources -and $loadBalancer -and $azureVms)
+	{
+		$rules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer
+		$filteredRules = $rules | Where-Object {$_.BackendPort -eq $backEndPort}
 
-        foreach($rule in $filteredRules)
-        {
-            $portList[$rule.BackendIPConfiguration.Id] = $rule.FrontendPort
-        }
+		#Map front end port to back end ipc
+		foreach($rule in $filteredRules)
+		{
+			$portList[$rule.BackendIPConfiguration.Id] = $rule.FrontendPort
+		}
 
-        foreach($nic in $networkInterfaceResources)
-        {
-            foreach($ipConfig in $nic.IpConfigurations)
-            {
-                $frontEndPort = $portList[$ipConfig.Id]
-                if([string]::IsNullOrEmpty($frontEndPort) -eq $false)
-                {
-                    $portList.Remove($ipConfig.Id)
-                    $portList[$nic.VirtualMachine.Id] = $frontEndPort
-                }
-            }
-        }
+		#Get the nic, and the corresponding machine id for a given back end ipc
+		foreach($nic in $networkInterfaceResources)
+		{
+			foreach($ipConfig in $nic.IpConfigurations)
+			{
+				$frontEndPort = $portList[$ipConfig.Id]
+				if([string]::IsNullOrEmpty($frontEndPort) -eq $false)
+				{
+					$portList.Remove($ipConfig.Id)
+					$portList[$nic.VirtualMachine.Id] = $frontEndPort
+				}
+			}
+		}
 
-        $portError = 0
-        foreach($vm in $azureVms)
-        {
-            $frontEndPort = $portList[$vm.Id]
-            $resourceName = $vm.Name
-            if([string]::IsNullOrEmpty($frontEndPort) -eq $false)
-            {
-                Write-Verbose "Front end port for resource $resourceName backend port $backEndPort is $frontEndPort" -Verbose
-                $portList.Remove($vm.Id)
-                $portList[$vm.Name] = $frontEndPort
-            }
-            else
-            {
-                $portError = $portError + 1
-                Write-Verbose "Unable to find front end port for resource $resourceName backend port $backEndPort" -Verbose
-            }
-        }
-
-        if($portError -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
-        {
-            throw (Get-LocalizedString -Key "Unable to get front end ports for all resources in ResourceGroup : '{0}'" -ArgumentList $resourceGroupName)
-        }
-        else
-        {
-            if($portError -gt 0 -and $portError -ne $azureVMs.Count)
-            {
-                Write-Warning (Get-LocalizedString -Key "Unable to get front end ports for '{0}' resources in ResourceGroup : '{1}'" -ArgumentList $portError, $resourceGroupName)
-            }
-        }
-    }
-    
-    return $portList
+		$portList = GetMachineNameFromId -Map $portList -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
+	}
+	
+	return $portList
 }
 
 function Get-MachinesFqdnsForLB
 {
-    param([string]$resourceGroupName)
+	param([string]$resourceGroupName)
 
-    $fqdnMap = @{}
-    
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
-    {
-        Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
+	$fqdnMap = @{}
+	
+	if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
+	{
+		Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
 
-        $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
+		$frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
 
-        foreach($publicIp in $publicIPAddressResources)
-        {
-            $fqdnMap[$publicIp.Id] =  $publicIP.DnsSettings.Fqdn
-        }
+		#Map the public ip id to the fqdn
+		foreach($publicIp in $publicIPAddressResources)
+		{
+			$fqdnMap[$publicIp.Id] =  $publicIP.DnsSettings.Fqdn
+		}
 
-        foreach($config in $frontEndIPConfigs)
-        {
-            $fqdn = $fqdnMap[$config.PublicIpAddress.Id]
-            if([string]::IsNullOrEmpty($fqdn) -eq $false)
-            {
-                $fqdnMap.Remove($config.PublicIpAddress.Id)
-                foreach($rule in $config.InboundNatRules)
-                {
-                    $fqdnMap[$rule.Id] =  $fqdn
-                }
-            }
-        }
+		#Get the NAT rule for a given ip id
+		foreach($config in $frontEndIPConfigs)
+		{
+			$fqdn = $fqdnMap[$config.PublicIpAddress.Id]
+			if([string]::IsNullOrEmpty($fqdn) -eq $false)
+			{
+				$fqdnMap.Remove($config.PublicIpAddress.Id)
+				foreach($rule in $config.InboundNatRules)
+				{
+					$fqdnMap[$rule.Id] =  $fqdn
+				}
+			}
+		}
 
-        foreach($nic in $networkInterfaceResources)
-        {
-            foreach($ipc in $nic.IpConfigurations)
-            {
-                foreach($rule in $ipc.LoadBalancerInboundNatRules)
-                {
-                    $fqdn = $fqdnMap[$rule.Id]
-                    if([string]::IsNullOrEmpty($fqdn) -eq $false)
-                    {
-                        $fqdnMap.Remove($rule.Id)
-                        $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
-                    }
-                }
-            }
-        }
+		#Find out the NIC, and thus the corresponding machine to which the HAT rule belongs
+		foreach($nic in $networkInterfaceResources)
+		{
+			foreach($ipc in $nic.IpConfigurations)
+			{
+				foreach($rule in $ipc.LoadBalancerInboundNatRules)
+				{
+					$fqdn = $fqdnMap[$rule.Id]
+					if([string]::IsNullOrEmpty($fqdn) -eq $false)
+					{
+						$fqdnMap.Remove($rule.Id)
+						$fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+					}
+				}
+			}
+		}
 
-        $fqdnError = 0
-        foreach($vm in $azureVms)
-        {
-            $fqdn = $fqdnMap[$vm.Id]
-            $resourceName = $vm.Name
+		$fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
+	}
 
-            if([string]::IsNullOrEmpty($fqdn) -eq $false)
-            {
-                Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
-                $fqdnMap.Remove($vm.Id)
-                $fqdnMap[$resourceName] = $fqdn
-            }
-            else
-            {
-                $fqdnError = $fqdnError + 1
-                Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
-            }
-        }
-
-        if($fqdnError -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
-        {
-            throw (Get-LocalizedString -Key "Unable to get FQDN for all resources in ResourceGroup : '{0}'" -ArgumentList $resourceGroupName)
-        }
-        else
-        {
-            if($fqdnError -gt 0 -and $fqdnError -ne $azureVMs.Count)
-            {
-                Write-Warning (Get-LocalizedString -Key "Unable to get FQDN for '{0}' resources in ResourceGroup : '{1}'" -ArgumentList $fqdnError, $resourceGroupName)
-            }
-        }
-    }
-
-    return $fqdnMap
+	return $fqdnMap
 }
 
 function Get-MachinesFqdns 
 {
-    param([string]$resourceGroupName)
+	param([string]$resourceGroupName)
 
-    $fqdnMap = @{}
-    
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
-    {
-        Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
+	$fqdnMap = @{}
+	
+	if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
+	{
+		Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
 
-        foreach($publicIp in $publicIPAddressResources)
-        {
-            $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
-        }
+		#Map the ipc to the fqdn
+		foreach($publicIp in $publicIPAddressResources)
+		{
+			$fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
+		}
 
-        foreach($nic in $networkInterfaceResources)
-        {
-            foreach($ipc in $nic.IpConfigurations)
-            {
-                $fqdn =  $fqdnMap[$ipc.Id]
-                if([string]::IsNullOrEmpty($fqdn) -eq $false)
-                {
-                    $fqdnMap.Remove($ipc.Id)
-                    $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
-                }
-            }
-        }
+		#Find out the NIC, and thus the VM corresponding to a given ipc
+		foreach($nic in $networkInterfaceResources)
+		{
+			foreach($ipc in $nic.IpConfigurations)
+			{
+				$fqdn =  $fqdnMap[$ipc.Id]
+				if([string]::IsNullOrEmpty($fqdn) -eq $false)
+				{
+					$fqdnMap.Remove($ipc.Id)
+					$fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+				}
+			}
+		}
 
-        $fqdnError = 0
-        foreach($vm in $azureVms)
-        {
-            $fqdn = $fqdnMap[$vm.Id]
-            $resourceName = $vm.Name
+		$fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
+	
+	}
 
-            if([string]::IsNullOrEmpty($fqdn) -eq $false)
-            {
-                Write-Verbose "FQDN value for resource $resourceName is $fqdn" -Verbose
-                $fqdnMap.Remove($vm.Id)
-                $fqdnMap[$resourceName] = $fqdn
-            }
-            else
-            {
-                $fqdnError = $fqdnError + 1
-                Write-Verbose "Unable to find FQDN for resource $resourceName" -Verbose
-            }
-        }
+	return $fqdnMap
+}
 
-        if($fqdnError -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
-        {
-            throw (Get-LocalizedString -Key "Unable to get FQDN for all resources in ResourceGroup : '{0}'" -ArgumentList $resourceGroupName)
-        }
-        else
-        {
-            if($fqdnError -gt 0 -and $fqdnError -ne $azureVMs.Count)
-            {
-                Write-Warning (Get-LocalizedString -Key "Unable to get FQDN for '{0}' resources in ResourceGroup : '{1}'" -ArgumentList $fqdnError, $resourceGroupName)
-            }
-        }
-    
-    }
+function GetMachineNameFromId
+{
+	param([System.Collections.Hashtable]$map,
+		  [string]$mapParameter,
+		  [boolean]$throwOnTotalUnavaialbility)
+	
+	if($map)
+	{	
+		$errorCount = 0
+		foreach($vm in $azureVms)
+		{
+			$value = $map[$vm.Id]
+			$resourceName = $vm.Name
 
-    return $fqdnMap
+			if([string]::IsNullOrEmpty($value) -eq $false)
+			{
+				Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
+				$map.Remove($vm.Id)
+				$map[$resourceName] = $value
+			}
+			else
+			{
+				$errorCount = $errorCount + 1
+				Write-Verbose "Unable to find $mapParameter for resource $resourceName" -Verbose
+			}
+		}
+		
+		if($throwOnTotalUnavaialbility -eq $true)
+		{
+			if($errorCount -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
+			{
+				throw (Get-LocalizedString -Key "Unable to get {0} for all resources in ResourceGroup : '{1}'" -ArgumentList $mapParameter, $resourceGroupName)
+			}
+			else
+			{
+				if($errorCount -gt 0 -and $errorCount -ne $azureVMs.Count)
+				{
+					Write-Warning (Get-LocalizedString -Key "Unable to get {0} for '{1}' resources in ResourceGroup : '{2}'" -ArgumentList $mapParameter, $errorCount, $resourceGroupName)
+				}
+			}
+		}
+
+		return $map
+	}
 }
 
 function Refresh-SASToken
 {
-    param([string]$moduleUrlParameterName,
-    [string]$sasTokenParameterName,
-    [System.Collections.Hashtable]$csmParametersObject,
-    [string]$subscriptionId,
-    [string]$dscDeployment)
+	param([string]$moduleUrlParameterName,
+	[string]$sasTokenParameterName,
+	[System.Collections.Hashtable]$csmParametersObject,
+	[string]$subscriptionId,
+	[string]$dscDeployment)
 
-    if ($dscDeployment -eq "true")
-    {
-        if ($csmParametersObject.ContainsKey($sasTokenParameterName) -eq $false)
-        {
-            throw (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $sasTokenParameterName)
-        }
+	if ($dscDeployment -eq "true")
+	{
+		if ($csmParametersObject.ContainsKey($sasTokenParameterName) -eq $false)
+		{
+			throw (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $sasTokenParameterName)
+		}
 
-        if ($csmParametersObject.ContainsKey($moduleUrlParameterName) -eq $false)
-        {
-            throw (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $moduleUrlParameterName)
-        }
+		if ($csmParametersObject.ContainsKey($moduleUrlParameterName) -eq $false)
+		{
+			throw (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $moduleUrlParameterName)
+		}
 
-        $fullBlobUri = $csmParametersObject[$moduleUrlParameterName]
-        $uri = $fullBlobUri -as [System.URI]
-        if (($uri.AbsoluteURI -ne $null -And $uri.Scheme -match '[http|https]') -eq $false)
-        {
-            throw (Get-LocalizedString -Key "'{0}' '{1}' is not in the correct url format" -ArgumentList $moduleUrlParameterName, $fullBlobUri)
-        }
+		$fullBlobUri = $csmParametersObject[$moduleUrlParameterName]
+		$uri = $fullBlobUri -as [System.URI]
+		if (($uri.AbsoluteURI -ne $null -And $uri.Scheme -match '[http|https]') -eq $false)
+		{
+			throw (Get-LocalizedString -Key "'{0}' '{1}' is not in the correct url format" -ArgumentList $moduleUrlParameterName, $fullBlobUri)
+		}
 
-        Write-Verbose -Verbose "Generating SAS token for $fullBlobUri"
+		Write-Verbose -Verbose "Generating SAS token for $fullBlobUri"
 
-        $startTime = Get-Date
+		$startTime = Get-Date
 
-        $endTime = $startTime.AddHours(24.0)
+		$endTime = $startTime.AddHours(24.0)
 
-        $fullBlobUri = $fullBlobUri.TrimEnd('/')
+		$fullBlobUri = $fullBlobUri.TrimEnd('/')
 
-        $i = $fullBlobUri.LastIndexOf('/')
-        if($i -ne -1)
-        {
-            $blobName = $fullBlobUri.Substring($i + 1)
-            $fullBlobUri = $fullBlobUri.Remove($i)
-        }
+		$i = $fullBlobUri.LastIndexOf('/')
+		if($i -ne -1)
+		{
+			$blobName = $fullBlobUri.Substring($i + 1)
+			$fullBlobUri = $fullBlobUri.Remove($i)
+		}
 
-        $i = $fullBlobUri.LastIndexOf('/')
-        if($i -ne -1)
-        {
-            $containerName = $fullBlobUri.Substring($i + 1)
-            $fullBlobUri = $fullBlobUri.Remove($i)
-        }
+		$i = $fullBlobUri.LastIndexOf('/')
+		if($i -ne -1)
+		{
+			$containerName = $fullBlobUri.Substring($i + 1)
+			$fullBlobUri = $fullBlobUri.Remove($i)
+		}
 
-        $i = $fullBlobUri.IndexOf('.')
-        if($i -ne -1)
-        {
-            $fullBlobUri = $fullBlobUri.Remove($i)
-            $storageAccountName = $fullBlobUri.Substring($fullBlobUri.IndexOf("//") + 2)
-        }
+		$i = $fullBlobUri.IndexOf('.')
+		if($i -ne -1)
+		{
+			$fullBlobUri = $fullBlobUri.Remove($i)
+			$storageAccountName = $fullBlobUri.Substring($fullBlobUri.IndexOf("//") + 2)
+		}
 
-        Set-AzureSubscription -SubscriptionId $subscriptionId -CurrentStorageAccountName $storageAccountName
+		Set-AzureSubscription -SubscriptionId $subscriptionId -CurrentStorageAccountName $storageAccountName
 
-        $token  = New-AzureStorageBlobSASToken -Container $containerName -Blob $blobName -Permission r -StartTime $startTime -ExpiryTime $endTime -Verbose -ErrorAction Stop
+		$token  = New-AzureStorageBlobSASToken -Container $containerName -Blob $blobName -Permission r -StartTime $startTime -ExpiryTime $endTime -Verbose -ErrorAction Stop
 
-        Write-Host (Get-LocalizedString -Key "Generated SAS token for '{0}'" -ArgumentList $uri)
+		Write-Host (Get-LocalizedString -Key "Generated SAS token for '{0}'" -ArgumentList $uri)
 
-        Write-Verbose -Verbose "Replacing SAS token for parameter $sasTokenParameterName"
+		Write-Verbose -Verbose "Replacing SAS token for parameter $sasTokenParameterName"
 
-        $csmParametersObject.Remove($sasTokenParameterName)
-        $csmParametersObject.Add($sasTokenParameterName, $token)
+		$csmParametersObject.Remove($sasTokenParameterName)
+		$csmParametersObject.Add($sasTokenParameterName, $token)
 
-        Write-Verbose -Verbose "Replaced SAS token for parameter $sasTokenParameterName"
-    }
+		Write-Verbose -Verbose "Replaced SAS token for parameter $sasTokenParameterName"
+	}
 
-    return $csmParametersObject
+	return $csmParametersObject
 }
 
 function Get-MachineLogs
 {
-    param([string]$resourceGroupName)
+	param([string]$resourceGroupName)
 
-    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
-    {
-        $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
+	if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+	{
+		$azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
 
-        Set-Variable -Name azureResourceGroup -Value $azureResourceGroup -Scope "Global"
-        
-        $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
+		Set-Variable -Name azureResourceGroup -Value $azureResourceGroup -Scope "Global"
+		
+		$azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
-        foreach($resource in $azureResourceGroupResources)
-        {
-            $name = $resource.Name
-            $vmInstanceView = Get-AzureVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
+		foreach($resource in $azureResourceGroupResources)
+		{
+			$name = $resource.Name
+			$vmInstanceView = Get-AzureVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
 
-            Write-Verbose -Verbose "Machine $name status:"
-            foreach($status in $vmInstanceView.Statuses)
-            {
-                Print-OperationLog -Log $status
-            }
+			Write-Verbose -Verbose "Machine $name status:"
+			foreach($status in $vmInstanceView.Statuses)
+			{
+				Print-OperationLog -Log $status
+			}
 
-            if($vmInstanceView.VMAgent.ExtensionHandlers)
-            {
-                Write-Verbose -Verbose "Machine $name VM agent status:"
-                foreach($extensionHandler in $vmInstanceView.VMAgent.ExtensionHandlers)
-                {
-                    Print-OperationLog -Log $extensionHandler.Status
-                }
-            }
+			if($vmInstanceView.VMAgent.ExtensionHandlers)
+			{
+				Write-Verbose -Verbose "Machine $name VM agent status:"
+				foreach($extensionHandler in $vmInstanceView.VMAgent.ExtensionHandlers)
+				{
+					Print-OperationLog -Log $extensionHandler.Status
+				}
+			}
 
-            foreach($extension in $vmInstanceView.Extensions)
-            {
-                $extensionName = $extension.Name
+			foreach($extension in $vmInstanceView.Extensions)
+			{
+				$extensionName = $extension.Name
 
-                Write-Verbose -Verbose "Extension $extensionName status:"
-                foreach($status in $extension.Statuses)
-                {
-                    Print-OperationLog -Log $status
-                }
+				Write-Verbose -Verbose "Extension $extensionName status:"
+				foreach($status in $extension.Statuses)
+				{
+					Print-OperationLog -Log $status
+				}
 
-                Write-Verbose -Verbose "Extension $extensionName sub status:"
-                foreach($status in $extension.SubStatuses)
-                {
-                    Print-OperationLog -Log $status
-                }
-            }
-        }
+				Write-Verbose -Verbose "Extension $extensionName sub status:"
+				foreach($status in $extension.SubStatuses)
+				{
+					Print-OperationLog -Log $status
+				}
+			}
+		}
 
-        Write-Verbose -Verbose "End of machine group deployment logs"
-    }
+		Write-Verbose -Verbose "End of machine group deployment logs"
+	}
 }
 
 function Create-AzureKeyVaultIfNotExist
 {
-    param([string]$azureKeyVaultName,
-    [string]$resourceGroupName,
-    [string]$location)
+	param([string]$azureKeyVaultName,
+	[string]$resourceGroupName,
+	[string]$location)
 
-    $azureKeyVault = Get-AzureKeyVault -VaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+	$azureKeyVault = Get-AzureKeyVault -VaultName $azureKeyVaultName -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
 
-    if($azureKeyVault -eq $null)
-    {
-        Write-Verbose -Verbose "Creating Azure Key Vault with name $azureKeyVaultName in group $resourceGroupName at $location"
+	if($azureKeyVault -eq $null)
+	{
+		Write-Verbose -Verbose "Creating Azure Key Vault with name $azureKeyVaultName in group $resourceGroupName at $location"
 
-        $response = New-AzureKeyVault -VaultName $azureKeyVaultName -resourceGroupName $resourceGroupName -Location $location -EnabledForDeployment -ErrorAction Stop
+		$response = New-AzureKeyVault -VaultName $azureKeyVaultName -resourceGroupName $resourceGroupName -Location $location -EnabledForDeployment -ErrorAction Stop
 
-        Write-Host (Get-LocalizedString -Key "Created Azure Key Vault for secrets")
-    }
-    else
-    {
-        if($azureKeyVault.EnabledForDeployment -eq $false)
-        {
-            throw (Get-LocalizedString -Key "Secrets not enabled to be retrieved from KeyVault '{0}' by the Microsoft.Compute resource provider, can't proceed with WinRM configuration" -ArgumentList $azureKeyVaultName)
-        }
-    }
+		Write-Host (Get-LocalizedString -Key "Created Azure Key Vault for secrets")
+	}
+	else
+	{
+		if($azureKeyVault.EnabledForDeployment -eq $false)
+		{
+			throw (Get-LocalizedString -Key "Secrets not enabled to be retrieved from KeyVault '{0}' by the Microsoft.Compute resource provider, can't proceed with WinRM configuration" -ArgumentList $azureKeyVaultName)
+		}
+	}
 }
 
 function Create-AzureKeyVaultSecret
 {
-    param([string]$azureKeyVaultName,
-    [string]$secretName,
-    [Security.SecureString]$secretValue)
+	param([string]$azureKeyVaultName,
+	[string]$secretName,
+	[Security.SecureString]$secretValue)
 
-    Write-Verbose -Verbose "Setting a secret with name $secretName in an Azure Key Vault $azureKeyVaultName"
+	Write-Verbose -Verbose "Setting a secret with name $secretName in an Azure Key Vault $azureKeyVaultName"
 
-    $response = Set-AzureKeyVaultSecret -VaultName $azureKeyVaultName -Name $secretName -SecretValue $secretValue -ErrorAction Stop
+	$response = Set-AzureKeyVaultSecret -VaultName $azureKeyVaultName -Name $secretName -SecretValue $secretValue -ErrorAction Stop
 
-    Write-Verbose -Verbose "Created a secret in an Azure Key Vault"
+	Write-Verbose -Verbose "Created a secret in an Azure Key Vault"
 
-    return $response
+	return $response
 }
 
 function Create-AzureResourceGroupIfNotExist
 {
-    param([string]$resourceGroupName,
-    [string]$location)
+	param([string]$resourceGroupName,
+	[string]$location)
 
-    $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
-    
-    if(!$azureResourceGroup)
-    {
-        Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
+	$azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+	
+	if(!$azureResourceGroup)
+	{
+		Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
 
-        $response = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+		$response = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
 
-        Write-Host (Get-LocalizedString -Key "Created resource group '{0}'" -ArgumentList $resourceGroupName)
-    }
+		Write-Host (Get-LocalizedString -Key "Created resource group '{0}'" -ArgumentList $resourceGroupName)
+	}
 }
 
 function Print-OperationLog
 {
-    param([System.Object]$log)
+	param([System.Object]$log)
 
-    if($log)
-    {
-        $status = $log.DisplayStatus
-        if([string]::IsNullOrEmpty($status) -eq $false)
-        {
-            Write-Verbose -Verbose "Status: $status"
-        }
+	if($log)
+	{
+		$status = $log.DisplayStatus
+		if([string]::IsNullOrEmpty($status) -eq $false)
+		{
+			Write-Verbose -Verbose "Status: $status"
+		}
 
-        $message = $log.Message
-        if([string]::IsNullOrEmpty($message) -eq $false)
-        {
-            Write-Verbose -Verbose "Message: $message"
-        }
-    }
+		$message = $log.Message
+		if([string]::IsNullOrEmpty($message) -eq $false)
+		{
+			Write-Verbose -Verbose "Message: $message"
+		}
+	}
 }

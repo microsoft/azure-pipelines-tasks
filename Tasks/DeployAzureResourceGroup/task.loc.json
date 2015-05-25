@@ -26,7 +26,7 @@
     {
       "name": "advancedDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.advancedDeploymentOptions",
-      "isExpanded": false
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -143,58 +143,13 @@
       "visibleRule": "vmCreds = true"
     },
     {
-      "name": "winrmListeners",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.winrmListeners",
-      "defaultValue": "None",
-      "required": true,
-      "helpMarkDown": "Configure the WinRM HTTP or HTTPS ports and listeners on the Azure Windows VMs to run PowerShell commands on them from a remote machine.",
-      "groupName": "advancedDeploymentOptions",
-      "options": {
-        "none": "None",
-        "winrmhttp": "HTTP",
-        "winrmhttps": "HTTPS"
-      }
-    },
-    {
-      "name": "certificatePath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.certificatePath",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "Location of the certificate to install on the VMs for WinRM HTTPS. Variables like $(Build.Repository.LocalPath) and wildcards like `**\\*.pfx` can be also used."
-    },
-    {
-      "name": "certificatePassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.certificatePassword",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "The password for the certificate that is required to install the certificate on the VMs. "
-    },
-    {
-      "name": "azureKeyVaultName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.azureKeyVaultName",
-      "defaultValue": "",
+      "name": "skipCACheck",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipCACheck",
       "required": false,
+      "defaultValue": "true",
       "groupName": "advancedDeploymentOptions",
-      "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "The name of the Azure Key Vault for uploading the certificate. If no name is provided then a Key Vault name will be generated automatically."
-    },
-    {
-      "name": "azureKeyVaultSecretName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.azureKeyVaultSecretName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "The secret name for the certificate in the Key Vault. Used to retrieve the certificate from the Key Vault. If no name is provided then a Secret name will be generated automatically. "
+      "helpMarkDown": "Indicates whether the client validates that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
