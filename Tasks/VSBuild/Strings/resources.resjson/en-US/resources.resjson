@@ -3,11 +3,14 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Build",
-  "loc.helpMarkDown": "Build with **MSBuild** in the Visual Studio Developer Command Prompt",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
+  "loc.instanceNameFormat": "Build solution $(solution)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",
+  "loc.input.help.solution": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders.",
   "loc.input.label.msbuildArgs": "MSBuild Arguments",
+  "loc.input.help.msbuildArgs": "Additional arguments passed to MSBuild.",
   "loc.input.label.platform": "Platform",
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.clean": "Clean",
@@ -15,9 +18,13 @@
   "loc.input.label.vsLocationMethod": "Visual Studio",
   "loc.input.label.vsVersion": "Visual Studio Version",
   "loc.input.label.vsLocation": "Visual Studio Location",
+  "loc.input.help.vsLocation": "Optionally supply the path to Visual Studio install location, used to locate the developer command prompt batch file.  It defaults to searching for latest version.",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.msbuildVersion": "Version of MSBuild to run.  Defaults to searching for latest version",
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildLocation": "Path to MSBuild",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild.  It defaults to searching for latest version.",
   "loc.input.label.logProjectEvents": "Record Project Details"
 }

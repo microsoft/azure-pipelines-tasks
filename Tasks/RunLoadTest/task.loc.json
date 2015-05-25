@@ -30,7 +30,7 @@
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Select a previously registered service connection to talk to the Cloud-based Load Test service. Choose 'Manage' to register a new connection."
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
       "name": "TestSettings",
@@ -38,7 +38,7 @@
       "label": "ms-resource:loc.input.label.TestSettings",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from repo root for the test settings file to use for the load test."
+      "helpMarkDown": "ms-resource:loc.input.help.TestSettings"
     },
     {
       "name": "TestDrop",
@@ -46,7 +46,7 @@
       "label": "ms-resource:loc.input.label.TestDrop",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from repo root where the load test solution build output will be available."
+      "helpMarkDown": "ms-resource:loc.input.help.TestDrop"
     },
     {
       "name": "LoadTest",
@@ -54,17 +54,17 @@
       "label": "ms-resource:loc.input.label.LoadTest",
       "defaultValue": "loadtest1.loadtest",
       "required": true,
-      "helpMarkDown": "The load test filename to be used under the load test folder specified above."
+      "helpMarkDown": "ms-resource:loc.input.help.LoadTest"
     },
     {
       "name": "ThresholdLimit",
       "type": "string",
       "label": "ms-resource:loc.input.label.ThresholdLimit",
       "required": false,
-      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsucessful."
+      "helpMarkDown": "ms-resource:loc.input.help.ThresholdLimit"
     }
   ],
-  "instanceNameFormat": "Cloud Load Test $(LoadTest)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\Start-CloudLoadTest.ps1",

@@ -19,7 +19,7 @@ function Start-MachineOnProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Error("Start operation is not supported by the pre-existing machines")
+    throw (Get-LocalizedString -Key "Start operation is not supported by the pre-existing machines")
 }
 
 function Stop-MachineOnProvider
@@ -27,7 +27,7 @@ function Stop-MachineOnProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Error("Stop operation is not supported by the pre-existing machines")
+    throw (Get-LocalizedString -Key "Stop operation is not supported by the pre-existing machines")
 }
 
 function Restart-MachineOnProvider
@@ -35,5 +35,5 @@ function Restart-MachineOnProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Error("Restart operation is not supported by the pre-existing machines")
+    throw (Get-LocalizedString -Key "Restart operation is not supported by the pre-existing machines")
 }

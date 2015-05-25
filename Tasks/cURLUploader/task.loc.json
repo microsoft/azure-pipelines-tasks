@@ -30,7 +30,7 @@
       "label": "ms-resource:loc.input.label.files",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "File(s) to be uploaded.  Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders."
+      "helpMarkDown": "ms-resource:loc.input.help.files"
     },
     {
       "name": "username",
@@ -38,7 +38,7 @@
       "label": "ms-resource:loc.input.label.username",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Specify the username to use for server authentication."
+      "helpMarkDown": "ms-resource:loc.input.help.username"
     },
     {
       "name": "password",
@@ -46,7 +46,7 @@
       "label": "ms-resource:loc.input.label.password",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Specify the password to use for server authentication.  Password should reference a secret variable defined on the variable tab."
+      "helpMarkDown": "ms-resource:loc.input.help.password"
     },
     {
       "name": "url",
@@ -54,7 +54,7 @@
       "label": "ms-resource:loc.input.label.url",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify the URL where the file(s) will be uploaded to.  Directory should end with a trailing slash.  Possible protocols include DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET and TFTP."
+      "helpMarkDown": "ms-resource:loc.input.help.url"
     },
     {
       "name": "options",
@@ -62,7 +62,7 @@
       "label": "ms-resource:loc.input.label.options",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Additional arguments that will be passed to cURL."
+      "helpMarkDown": "ms-resource:loc.input.help.options"
     },
     {
       "name": "redirectStderr",
@@ -71,10 +71,10 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Add '--stderr -' to cURL.  By default cURL writes progress bar to stderr, and build will pick it up as error output. Suppressing this behavior."
+      "helpMarkDown": "ms-resource:loc.input.help.redirectStderr"
     }
   ],
-  "instanceNameFormat": "Upload $(files) with cURL",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\cURLUploader.ps1",

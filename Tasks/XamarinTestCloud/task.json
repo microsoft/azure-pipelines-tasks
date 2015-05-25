@@ -3,7 +3,7 @@
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
     "description": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
-    "helpMarkDown": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [
                 "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
     ],
@@ -117,7 +117,7 @@
             "type": "filePath",
             "label": "test-cloud.exe Location",
             "groupName": "advanced",
-            "defaultValue": "$(Agent.BuildDirectory)\\**\\packages\\**\\tools\\test-cloud.exe",
+            "defaultValue": "**/packages/**/tools/test-cloud.exe",
             "required": true
         },
         {
@@ -128,7 +128,16 @@
             "defaultValue": "",
             "groupName": "advanced",
             "helpMarkDown": "Additional arguments passed to test-cloud.exe."
+        },
+        {
+            "name": "publishNUnitResults",
+            "type": "boolean",
+            "label": "Publish results to VSO/TFS",
+            "groupName": "advanced",
+            "defaultValue": "true",
+            "helpMarkDown": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
         }
+
     ],
     "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
     "execution": {

@@ -3,7 +3,7 @@
   "name": "AzureCloudPowerShellDeployment",
   "friendlyName": "Azure Cloud Service Deployment",
   "description": "Deploy an Azure Cloud Service",
-  "helpMarkDown": "Deploy an Azure Cloud Service",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "category": "Deploy",
   "visibility": [
                 "Build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [
     "azureps"

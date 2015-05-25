@@ -18,10 +18,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "minimumAgentVersion": "1.83.0",
-  "instanceNameFormat": "CMake $(args)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "cwd",
@@ -29,7 +29,7 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "build",
       "required": false,
-      "helpMarkDown": "Current working directory when cmake is run."
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
     },
     {
       "name": "args",
@@ -37,7 +37,7 @@
       "label": "ms-resource:loc.input.label.args",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Arguments passed to cmake"
+      "helpMarkDown": "ms-resource:loc.input.help.args"
     }
   ],
   "execution": {

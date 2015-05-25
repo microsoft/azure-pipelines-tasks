@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands" : [
                    "azureps"
@@ -34,7 +34,7 @@
             "label": "Source",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the source folder or file." 
+            "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share." 
         },
         {
             "name": "StorageAccount",

@@ -44,7 +44,7 @@
       "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
       "groupName": "testMachineGroups"
     },
     {
@@ -53,7 +53,7 @@
       "label": "ms-resource:loc.input.label.testMachines",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally specify comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'.",
+      "helpMarkDown": "ms-resource:loc.input.help.testMachines",
       "groupName": "testMachineGroups"
     },
     {
@@ -62,7 +62,7 @@
       "label": "ms-resource:loc.input.label.machineUserName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Username with which test agent needs to run.",
+      "helpMarkDown": "ms-resource:loc.input.help.machineUserName",
       "groupName": "agentConfiguration"
     },
     {
@@ -71,7 +71,7 @@
       "label": "ms-resource:loc.input.label.machinePassword",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Password for the username given above.",
+      "helpMarkDown": "ms-resource:loc.input.help.machinePassword",
       "groupName": "agentConfiguration"
     },
     {
@@ -80,7 +80,7 @@
       "label": "ms-resource:loc.input.label.runAsProcess",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Denotes if test agent needs to run as an interactive process, needed for Coded UI Tests.",
+      "helpMarkDown": "ms-resource:loc.input.help.runAsProcess",
       "groupName": "agentConfiguration"
     },
     {
@@ -90,7 +90,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkId=536423"
+      "helpMarkDown": "ms-resource:loc.input.help.agentLocation"
     },
     {
       "name": "updateTestAgent",
@@ -98,7 +98,7 @@
       "label": "ms-resource:loc.input.label.updateTestAgent",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "Optionally specify if test agent needs to be updated.",
+      "helpMarkDown": "ms-resource:loc.input.help.updateTestAgent",
       "groupName": "advanced"
     },
     {
@@ -107,7 +107,7 @@
       "label": "ms-resource:loc.input.label.isDataCollectionOnly",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+      "helpMarkDown": "ms-resource:loc.input.help.isDataCollectionOnly",
       "groupName": "advanced"
     }
   ],
@@ -119,7 +119,7 @@
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Test Machine Group: $(testMachineGroup)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\DeployTestAgent.ps1",

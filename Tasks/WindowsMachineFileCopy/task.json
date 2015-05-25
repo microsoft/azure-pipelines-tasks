@@ -31,7 +31,7 @@
             "label": "Source",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the source folder or file. Variables can be used for binaries in the Automation Agent like $(Build.Repository.LocalPath)\\BudgetIT\\Web." 
+            "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share." 
         },
         {
             "name": "EnvironmentName",

@@ -44,7 +44,7 @@
       "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
       "groupName": "testMachineGroups"
     },
     {
@@ -53,7 +53,7 @@
       "label": "ms-resource:loc.input.label.dropLocation",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+      "helpMarkDown": "ms-resource:loc.input.help.dropLocation",
       "groupName": "testSettings"
     },
     {
@@ -62,7 +62,7 @@
       "label": "ms-resource:loc.input.label.sourcefilters",
       "defaultValue": "**\\*test*.dll",
       "required": true,
-      "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, '**\\*test*.dll;' for all dlls containing 'test' in their name.",
+      "helpMarkDown": "ms-resource:loc.input.help.sourcefilters",
       "groupName": "testSettings"
     },
     {
@@ -71,7 +71,7 @@
       "label": "ms-resource:loc.input.label.testFilterCriteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally specify the test case filter criteria. For example, 'Owner=james&Priority=1'.",
+      "helpMarkDown": "ms-resource:loc.input.help.testFilterCriteria",
       "groupName": "testSettings"
     },
     {
@@ -80,7 +80,7 @@
       "label": "ms-resource:loc.input.label.platform",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+      "helpMarkDown": "ms-resource:loc.input.help.platform",
       "groupName": "testSettings"
     },
     {
@@ -89,7 +89,7 @@
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+      "helpMarkDown": "ms-resource:loc.input.help.configuration",
       "groupName": "testSettings"
     },
     {
@@ -98,7 +98,7 @@
       "label": "ms-resource:loc.input.label.runSettingsFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to runsettings file to use with the tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder.",
+      "helpMarkDown": "ms-resource:loc.input.help.runSettingsFile",
       "groupName": "testSettings"
     },
     {
@@ -107,7 +107,7 @@
       "label": "ms-resource:loc.input.label.overrideRunParams",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080.",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideRunParams",
       "groupName": "testSettings"
     },
     {
@@ -116,7 +116,7 @@
       "label": "ms-resource:loc.input.label.testConfigurations",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
+      "helpMarkDown": "ms-resource:loc.input.help.testConfigurations",
       "groupName": "testSettings"
     },
     {
@@ -125,7 +125,7 @@
       "label": "ms-resource:loc.input.label.codeCoverageEnabled",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Whether code coverage needs to be enabled.",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
       "groupName": "advanced"
     },
     {
@@ -134,7 +134,7 @@
       "label": "ms-resource:loc.input.label.autMachineGroup",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+      "helpMarkDown": "ms-resource:loc.input.help.autMachineGroup",
       "groupName": "advanced"
     }
   ],
@@ -152,7 +152,7 @@
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Test assemblies $(sourcefilters)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\RunDistributedTests.ps1",

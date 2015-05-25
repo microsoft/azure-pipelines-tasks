@@ -29,7 +29,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Chef subscription to configure before running knife commands"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "ScriptPath",
@@ -37,7 +37,7 @@
       "label": "ms-resource:loc.input.label.ScriptPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory."
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath"
     },
     {
       "name": "ScriptArguments",
@@ -45,10 +45,10 @@
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Additional parameters to pass to Script.  Can be either ordinal or named parameters."
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
     }
   ],
-  "instanceNameFormat": "Chef Knife script: $(ScriptPath)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\ChefKnife.ps1",
