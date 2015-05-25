@@ -28,14 +28,6 @@
   "loc.input.help.vmCreds": "These VM resource's credentials are used by some of the deployment and test tasks. The username and password should be same for all the Virtual Machines.",
   "loc.input.label.vmUserName": "Username",
   "loc.input.label.vmPassword": "Password",
-  "loc.input.label.winrmListeners": "WinRM Listeners",
-  "loc.input.help.winrmListeners": "Configure the WinRM HTTP or HTTPS ports and listeners on the Azure Windows VMs to run PowerShell commands on them from a remote machine.",
-  "loc.input.label.certificatePath": "Certificate",
-  "loc.input.help.certificatePath": "Location of the certificate to install on the VMs for WinRM HTTPS. Variables like $(Build.Repository.LocalPath) and wildcards like `**\\*.pfx` can be also used.",
-  "loc.input.label.certificatePassword": "Certificate Password",
-  "loc.input.help.certificatePassword": "The password for the certificate that is required to install the certificate on the VMs. ",
-  "loc.input.label.azureKeyVaultName": "Azure Key Vault Name",
-  "loc.input.help.azureKeyVaultName": "The name of the Azure Key Vault for uploading the certificate. If no name is provided then a Key Vault name will be generated automatically.",
-  "loc.input.label.azureKeyVaultSecretName": "Azure Key Vault Secret Name",
-  "loc.input.help.azureKeyVaultSecretName": "The secret name for the certificate in the Key Vault. Used to retrieve the certificate from the Key Vault. If no name is provided then a Secret name will be generated automatically. "
+  "loc.input.label.skipCACheck": "SkipCACheck",
+  "loc.input.help.skipCACheck": "Indicates whether the client validates that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
 }
