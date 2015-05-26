@@ -6,7 +6,6 @@
     "helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group",
     "category": "Test",
     "visibility": [
-                "Preview",
                 "Build"
                   ],
     "author": "Microsoft Corporation",
