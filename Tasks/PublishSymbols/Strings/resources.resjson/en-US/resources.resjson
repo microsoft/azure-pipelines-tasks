@@ -20,5 +20,7 @@
   "loc.input.label.SymbolsProduct": "Product",
   "loc.input.help.SymbolsProduct": "Specify the product parameter to symstore.exe.  The default is $(Build.DefinitionName)",
   "loc.input.label.SymbolsVersion": "Version",
-  "loc.input.help.SymbolsVersion": "Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)"
+  "loc.input.help.SymbolsVersion": "Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)",
+  "loc.input.label.SymbolsArtifactName": "Artifact Name",
+  "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)"
 }
