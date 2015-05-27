@@ -26,7 +26,7 @@
     {
       "name": "advancedDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.advancedDeploymentOptions",
-      "isExpanded": false
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -143,58 +143,13 @@
       "visibleRule": "vmCreds = true"
     },
     {
-      "name": "winrmListeners",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.winrmListeners",
-      "defaultValue": "None",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.winrmListeners",
-      "groupName": "advancedDeploymentOptions",
-      "options": {
-        "none": "None",
-        "winrmhttp": "HTTP",
-        "winrmhttps": "HTTPS"
-      }
-    },
-    {
-      "name": "certificatePath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.certificatePath",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "ms-resource:loc.input.help.certificatePath"
-    },
-    {
-      "name": "certificatePassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.certificatePassword",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "ms-resource:loc.input.help.certificatePassword"
-    },
-    {
-      "name": "azureKeyVaultName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.azureKeyVaultName",
-      "defaultValue": "",
+      "name": "skipCACheck",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipCACheck",
       "required": false,
+      "defaultValue": "true",
       "groupName": "advancedDeploymentOptions",
-      "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "ms-resource:loc.input.help.azureKeyVaultName"
-    },
-    {
-      "name": "azureKeyVaultSecretName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.azureKeyVaultSecretName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "winrmListeners = winrmhttps",
-      "helpMarkDown": "ms-resource:loc.input.help.azureKeyVaultSecretName"
+      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
