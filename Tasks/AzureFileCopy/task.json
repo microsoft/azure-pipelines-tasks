@@ -7,8 +7,7 @@
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build",
-    "Release"
+    "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
@@ -27,7 +26,7 @@
       "label": "Azure Subscription",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription is needed for accessing the storage account. Storage account is also used as an intermediary for copying to Azure VMs."
+      "helpMarkDown": "Azure subscription is needed for accessing the storage account."
     },
     {
       "name": "SourcePath",
@@ -43,7 +42,7 @@
       "label": "Storage Account",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "A pre-existing storage account is required."
+      "helpMarkDown": "A pre-existing storage account is required. Storage account is also used as an intermediary for copying to Azure VMs"
     },
     {
       "name": "Destination",

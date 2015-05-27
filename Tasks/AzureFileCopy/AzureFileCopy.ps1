@@ -54,8 +54,8 @@ function Remove-AzureContainer
           [object]$storageContext,
           [string]$storageAccount)
 
+    Write-Verbose "Deleting container: $containerName in storage account: $storageAccount" -Verbose
     Remove-AzureStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
-    Write-Verbose "Deleted container $containerName in storage account $storageAccount" -Verbose
 }
 
 function Get-ResourceCredentials
@@ -83,33 +83,40 @@ function Get-ResourceConnectionDetails
 
     $resourceProperties.fqdn = $fqdn
 
+    $winrmPortToUse = ''
+    $protocolToUse = ''
     # check whether https port is defined for resource
     $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
     if ([string]::IsNullOrEmpty($winrmHttpsPort))
     {
-        Write-Verbose "`t`t Resource $resourceName does not have any winrm https port defined, check for winrm http port" -Verbose
+        Write-Verbose "`t`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
 
         $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
         # if resource does not have any port defined then, use https port by default
         if ([string]::IsNullOrEmpty($winrmHttpPort))
         {
-            Write-Verbose "`t`t Resource $resourceName does not have any winrm http port, use the default https port- $defaultWinRMPort" -Verbose
-            $winrmHttpsPort = $defaultWinRMPort
+            Write-Verbose "`t`t Resource: $resourceName does not have any winrm http port or https port defined, using https port by default" -Verbose
+            $winrmPortToUse = $defaultWinRMPort
+            $protocolToUse = $useHttpsProtocolOption
         }
         else
         {
             # if resource has winrm http port defined
-            $resourceProperties.winrmPort = $winrmHttpPort
-            $resourceProperties.httpProtocolOption = $useHttpProtocolOption
+            $winrmPortToUse = $winrmHttpPort
+            $protocolToUse = $useHttpProtocolOption
         }
     }
     else
     {
         # if resource has winrm https port opened
-        $resourceProperties.winrmPort = $winrmHttpsPort
-        $resourceProperties.httpProtocolOption = $useHttpsProtocolOption
+        $winrmPortToUse = $winrmHttpsPort
+        $protocolToUse = $useHttpsProtocolOption
     }
 
+    Write-Verbose "`t`t Trying to use port: $winrmPortToUse" -Verbose
+
+    $resourceProperties.winrmPort = $winrmPortToUse
+    $resourceProperties.httpProtocolOption = $protocolToUse
     $resourceProperties.credential = Get-ResourceCredentials -resource $resource
 
     return $resourceProperties
@@ -120,14 +127,17 @@ function Get-SkipCACheckOption
     param([string]$environmentName,
           [object]$connection)
 
+    $skipCACheckOption = $doSkipCACheckOption
+
     # get skipCACheck option from environment
     $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection -ErrorAction Stop
-    if ($skipCACheckBool -eq "true")
+
+    if ($skipCACheckBool -eq "false")
     {
-        return $doSkipCACheckOption
+        $skipCACheckOption = $doNotSkipCACheckOption
     }
 
-    return $doNotSkipCACheckOption
+    return $skipCACheckOption
 }
 
 function Get-ResourcesProperties
@@ -166,17 +176,15 @@ $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -S
 # creating temporary container for uploading files
 if ([string]::IsNullOrEmpty($containerName))
 {
-    $destinationAzureBlob = $false
-
     $containerName = [guid]::NewGuid().ToString();
     $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container
-    Write-Verbose "Created container $containerName in storage account $storageAccount" -Verbose
+    Write-Verbose "Created container: $containerName in storage account: $storageAccount" -Verbose
 }
 
 # uploading files to container
 try
 {
-    Write-Output "Uploading files from source path: $sourcePath to storage account: $storageAccount in container: $containerName" -Verbose
+    Write-Output "Uploading files from source path: $sourcePath to storage account: $storageAccount in container: $containerName with blobprefix: $blobPrefix" -Verbose
     $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccount -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation
 }
 catch
@@ -204,7 +212,7 @@ finally
     }
     elseif ($uploadResponse.Status -eq "Succeeded")
     {
-        Write-Output "Uploaded files successfully from source path: $sourcePath to storage account: $storageAccount in container: $containerName" -Verbose
+        Write-Output "Uploaded files successfully from source path: $sourcePath to storage account: $storageAccount in container: $containerName with blobprefix: $blobPrefix" -Verbose
     }
 }
 
@@ -212,7 +220,7 @@ finally
 if ($destination -eq "AzureBlob")
 {
     Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination" -Verbose
-    break
+    return
 }
 
 # copying files to azure vms
@@ -229,9 +237,9 @@ try
 
     # create container sas token with full permissions
     $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours) -Context $storageContext -Permission rwdl
-    Write-Verbose "Created SasToken $containerSasToken for container $containerName in storage $storageAccount" -Verbose
+    Write-Verbose "Created SasToken: $containerSasToken for container: $containerName in storage: $storageAccount" -Verbose
 
-    # copies files sequencially
+    # copies files sequentially
     if ($copyFilesInParallel -eq "false" -or ( $resources.Count -eq 1 ))
     {
         foreach ($resource in $resources)
@@ -241,7 +249,7 @@ try
 
             Write-Output "Copy Started for - $machine"
 
-            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
             $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
@@ -272,7 +280,7 @@ try
 
             Write-Output "Copy Started for - $machine"
 
-            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
             $resourceProperties.resOperationId = $resOperationId
