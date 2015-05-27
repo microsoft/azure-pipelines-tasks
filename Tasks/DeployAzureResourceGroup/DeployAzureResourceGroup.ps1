@@ -3,7 +3,7 @@ param(
     [string][Parameter(Mandatory=$true)]$location,
     [string][Parameter(Mandatory=$true)]$resourceGroupName,
     [string][Parameter(Mandatory=$true)]$csmFile,
-    [string][Parameter(Mandatory=$true)]$winrmListeners,
+    [string]$winrmListeners,
     [string]$csmParametersFile,
     [string]$overrideParameters,
     [string]$dscDeployment,
@@ -12,10 +12,7 @@ param(
     [string]$vmCreds,
     [string]$vmUserName,
     [string]$vmPassword,
-    [string]$certificatePath,
-    [string]$certificatePassword,
-    [string]$azureKeyVaultName,
-    [string]$azureKeyVaultSecretName
+    [string]$skipCACheck
 )
 
 . ./AzureResourceManagerHelper.ps1
@@ -40,6 +37,7 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 Validate-AzurePowershellVersion
 
+$winrmListeners = "none"
 #Find the matching deployment definition File
 $csmFile = Get-File $csmFile
 Write-Verbose -Verbose "deplyomentDefinitionFile = $csmFile"
