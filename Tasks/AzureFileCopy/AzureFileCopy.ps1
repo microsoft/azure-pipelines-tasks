@@ -26,8 +26,8 @@ Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 
 # Constants #
 $defaultWinRMPort = '5986'
+$defaultProtocolOption = ''
 
-$defaultHttpProtocolOption = ''
 $useHttpProtocolOption = '-UseHttp'
 $useHttpsProtocolOption = ''
 
@@ -73,15 +73,14 @@ function Get-ResourceCredentials
 
 function Get-ResourceConnectionDetails
 {
-    param([object]$resource)
+    param([object]$resource,
+          [object]$connection)
 
     $resourceProperties = @{}
     $resourceName = $resource.Name
 
     $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
     Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose
-
-    $resourceProperties.fqdn = $fqdn
 
     $winrmPortToUse = ''
     $protocolToUse = ''
@@ -97,7 +96,7 @@ function Get-ResourceConnectionDetails
         {
             Write-Verbose "`t`t Resource: $resourceName does not have any winrm http port or https port defined, using https port by default" -Verbose
             $winrmPortToUse = $defaultWinRMPort
-            $protocolToUse = $useHttpsProtocolOption
+            $protocolToUse = $defaultProtocolOption
         }
         else
         {
@@ -115,6 +114,7 @@ function Get-ResourceConnectionDetails
 
     Write-Verbose "`t`t Trying to use port: $winrmPortToUse" -Verbose
 
+    $resourceProperties.fqdn = $fqdn
     $resourceProperties.winrmPort = $winrmPortToUse
     $resourceProperties.httpProtocolOption = $protocolToUse
     $resourceProperties.credential = Get-ResourceCredentials -resource $resource
@@ -131,7 +131,6 @@ function Get-SkipCACheckOption
 
     # get skipCACheck option from environment
     $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection -ErrorAction Stop
-
     if ($skipCACheckBool -eq "false")
     {
         $skipCACheckOption = $doNotSkipCACheckOption
@@ -142,7 +141,8 @@ function Get-SkipCACheckOption
 
 function Get-ResourcesProperties
 {
-    param([object]$resources)
+    param([object]$resources,
+          [object]$connection)
 
     $skipCACheckOption = Get-SkipCACheckOption -environmentName $environmentName -connection $connection
 
@@ -153,7 +153,7 @@ function Get-ResourcesProperties
         Write-Verbose "Get Resource properties for $resourceName" -Verbose
 
         # Get other connection details for resource like - fqdn wirmport, http protocol, skipCACheckOption, resource credentials
-        $resourceProperties = Get-ResourceConnectionDetails -resource $resource
+        $resourceProperties = Get-ResourceConnectionDetails -resource $resource -connection $connection
         $resourceProperties.skipCACheckOption = $skipCACheckOption
 
         $resourcesPropertyBag.Add($resourceName, $resourceProperties)
@@ -233,7 +233,7 @@ try
     $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Azure File Copy" -Connection $connection -ErrorAction Stop
     Write-Verbose "envOperationId = $envOperationId" -Verbose
 
-    $resourcesPropertyBag = Get-ResourcesProperties -resources $resources
+    $resourcesPropertyBag = Get-ResourcesProperties -resources $resources -connection $connection
 
     # create container sas token with full permissions
     $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours) -Context $storageContext -Permission rwdl
@@ -310,7 +310,7 @@ try
                     Write-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
                     Write-Output "Copy Status for machine $machineName : $status"
 
-                    Write-Verbose "Complete ResourceOperation for  - $machine" -Verbose
+                    Write-Verbose "Complete ResourceOperation for machine: $machine" -Verbose
                     $logs = Get-ResourceOperationLogs -deploymentResponse $output
                     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection -ErrorAction Stop
                 }
