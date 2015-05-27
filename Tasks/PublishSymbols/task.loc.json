@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -86,6 +86,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.SymbolsVersion",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsArtifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsArtifactName",
+      "defaultValue": "Symbols_$(BuildConfiguration)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsArtifactName",
       "groupName": "advanced"
     }
   ],
