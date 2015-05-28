@@ -343,7 +343,6 @@ function ReadCredentials
     [String] $TestAgentVersion
     )
 	
-    LoadDependentDlls($TestAgentVersion)    
     $creds = [Microsoft.VisualStudio.TestService.Common.CredentialStoreHelper]::GetStoredCredential($TFSCollectionUrl)       
   
     return $creds                    
