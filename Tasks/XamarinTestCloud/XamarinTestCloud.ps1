@@ -133,8 +133,8 @@ if ($optionalArgs)
 
 $publishResults = Convert-String $publishNUnitResults Boolean
 if($publishResults) 
-{
-    $buildId = Get-Variable $distributedTaskContext "build.buildId"
+{   
+    $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
     $indx = 0;
 }
 
