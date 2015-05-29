@@ -1,6 +1,6 @@
 param (
     [string][Parameter(Mandatory=$true)]$connectedServiceName,
-    [string][Parameter(Mandatory=$true)]$sourcePath, 
+    [string][Parameter(Mandatory=$true)]$sourcePath,
     [string][Parameter(Mandatory=$true)]$storageAccount,
     [string][Parameter(Mandatory=$true)]$destination,
     [string]$containerName,
@@ -28,7 +28,7 @@ Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 
 # Constants #
 $defaultWinRMPort = '5986'
-$defaultProtocolOption = ''
+$defaultConnectionProtocolOption = ''
 $defaultSasTokenTimeOutInHours = 2
 
 $useHttpProtocolOption = '-UseHttp'
@@ -38,6 +38,7 @@ $doSkipCACheckOption = '-SkipCACheck'
 $doNotSkipCACheckOption = ''
 
 $azureFileCopyOperation = 'AzureFileCopy'
+$ErrorActionPreference = 'Stop'
 
 . ./AzureFileCopyJob.ps1
 
@@ -83,24 +84,24 @@ function Get-ResourceConnectionDetails
     $resourceProperties = @{}
     $resourceName = $resource.Name
 
-    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName
     Write-Verbose "`t Resource fqdn - $fqdn" -Verbose
 
     $winrmPortToUse = ''
     $protocolToUse = ''
     # check whether https port is defined for resource
-    $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+    $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
     if ([string]::IsNullOrEmpty($winrmHttpsPort))
     {
         Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
 
-        $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
+        $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
         # if resource does not have any port defined then, use https port by default
         if ([string]::IsNullOrEmpty($winrmHttpPort))
         {
             Write-Verbose "`t Resource: $resourceName does not have any winrm http port or https port defined, using https port by default" -Verbose
             $winrmPortToUse = $defaultWinRMPort
-            $protocolToUse = $defaultProtocolOption
+            $protocolToUse = $defaultConnectionProtocolOption
         }
         else
         {
@@ -134,7 +135,7 @@ function Get-SkipCACheckOption
     $skipCACheckOption = $doSkipCACheckOption
 
     # get skipCACheck option from environment
-    $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection -ErrorAction Stop
+    $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection
     if ($skipCACheckBool -eq "false")
     {
         $skipCACheckOption = $doNotSkipCACheckOption
@@ -156,7 +157,7 @@ function Get-ResourcesProperties
         $resourceName = $resource.Name
         Write-Verbose "Get Resource properties for $resourceName" -Verbose
 
-        # Get other connection details for resource like - fqdn winrmport, http protocol, skipCACheckOption, resource credentials
+        # Get other connection details for resource like - Fqdn WinRM Port, Http Protocol, SkipCACheck Option, Resource Credentials
         $resourceProperties = Get-ResourceConnectionDetails -resource $resource -connection $connection
         $resourceProperties.skipCACheckOption = $skipCACheckOption
 
@@ -238,9 +239,9 @@ try
 {
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
 
-    $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection -ErrorAction Stop
+    $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection
     Write-Verbose "Invoking Azure File Copy Operation on environment: $environmentName with operationId: $envOperationId" -Verbose
 
     $resourcesPropertyBag = Get-ResourcesProperties -resources $resources -connection $connection
@@ -258,9 +259,9 @@ try
             $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
             $machine = $resourceProperties.fqdn
 
-            Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
+            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $machine)
 
-            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
             $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
@@ -271,12 +272,12 @@ try
 
             Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
             $logs = Get-ResourceOperationLogs -deploymentResponse $copyResponse
-            Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
+            Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection
 
             if ($status -ne "Passed")
             {
                 Write-Verbose "Completed operation: $azureFileCopyOperation with operationId: $envOperationId on environment: $environmentName with status: Failed" -Verbose
-                Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection -ErrorAction Stop
+                Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection
                 
                 Write-Verbose $copyResponse.Error.ToString() -Verbose
                 throw $copyResponse.Error
@@ -292,9 +293,9 @@ try
             $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
             $machine = $resourceProperties.fqdn
 
-            Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
+            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $machine)
 
-            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
             $resourceProperties.resOperationId = $resOperationId
@@ -326,14 +327,14 @@ try
 
                     Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
                     $logs = Get-ResourceOperationLogs -deploymentResponse $output
-                    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection -ErrorAction Stop
+                    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
                 }
             }
         }
     }
 
     Write-Verbose "Completed operation: $azureFileCopyOperation with operationId: $envOperationId on environment: $environmentName with status: $envOperationStatus" -Verbose
-    Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection -ErrorAction Stop
+    Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection
 
     if ($envOperationStatus -ne "Passed")
     {
