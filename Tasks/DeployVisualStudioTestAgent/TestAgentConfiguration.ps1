@@ -628,7 +628,7 @@ function ConfigureTestAgent
         [System.Management.Automation.PSCredential] $AgentUserCredential
     )
 
-    EnableTracing -TestAgentVersion $TestAgentVersion
+    EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     $ret = -1
     if ($AsServiceOrProcess -eq "Service")
