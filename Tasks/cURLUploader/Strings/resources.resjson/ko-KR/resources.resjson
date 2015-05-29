@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "cURL 파일 업로드",
+  "loc.description": "cURL을 사용하여 지원되는 프로토콜이 있는 파일을 업로드하세요. (FTP, FTPS, SFTP, HTTP 등)",
+  "loc.instanceNameFormat": "cURL로 $(files) 업로드",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.files": "파일",
+  "loc.input.help.files": "업로드할 파일입니다. 와일드카드를 사용할 수 있습니다. 예를 들어, 모든 하위 폴더에 있는 ZIP 파일을 모두 표시하기 위해 `**\\*.zip`을 사용할 수 있습니다.",
+  "loc.input.label.username": "사용자 이름",
+  "loc.input.help.username": "서버 인증에 사용할 사용자 이름을 지정하세요.",
+  "loc.input.label.password": "암호",
+  "loc.input.help.password": "서버 인증에 사용할 암호를 지정하세요. 암호는 변수 탭에서 정의된 암호 변수를 참조해야 합니다.",
+  "loc.input.label.url": "URL",
+  "loc.input.help.url": "파일을 업로드할 URL을 지정하세요. 디렉터리는 후행 슬래시로 끝나야 합니다. DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, 텔넷, TFTP과 같은 프로토콜을 사용할 수 있습니다.",
+  "loc.input.label.options": "선택적 인수",
+  "loc.input.help.options": "cURL에 전달할 추가 인수입니다.",
+  "loc.input.label.redirectStderr": "표준 오류를 표준 출력으로 리디렉션",
+  "loc.input.help.redirectStderr": "'--stderr -'을 cURL에 추가합니다. 기본적으로 cURL은 진행률 표시줄을 stderr에 쓰고 빌드는 이것을 오류 출력으로 선택합니다. 이 동작을 무시하는 중입니다."
+}

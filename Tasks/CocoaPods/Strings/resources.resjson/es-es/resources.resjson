@@ -1,5 +1,8 @@
 {
   "loc.friendlyName": "CocoaPods",
-  "loc.description": "CocoaPods es el administrador de dependencias para proyectos Swift y Objective-C de Cocoa. Ejecuta la instalación de Pod.",
-  "loc.input.label.cwd": "Directorio de trabajo"
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.description": "CocoaPods es el administrador de dependencias para proyectos Swift y Objective-C de Cocoa. Ejecuta la instalación de Pod",
+  "loc.instanceNameFormat": "instalación de pod",
+  "loc.input.label.cwd": "Directorio de trabajo",
+  "loc.input.help.cwd": "Directorio de repositorio actual. Se establece de forma predeterminada en el directorio de repositorio."
 }

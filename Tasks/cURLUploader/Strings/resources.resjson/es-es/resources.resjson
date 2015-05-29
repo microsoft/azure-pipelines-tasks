@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Cargar archivos con cURL",
+  "loc.description": "Use cURL para cargar archivos con los protocolos admitidos (FTP, FTPS, SFTP, HTTP, etc.).",
+  "loc.instanceNameFormat": "Cargar $(files) con cURL",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.files": "Archivos",
+  "loc.input.help.files": "Archivos que se van a cargar. Puede usar caracteres comodín. Por ejemplo: \"**\\*.zip\" para todos los archivos ZIP en todas las subcarpetas.",
+  "loc.input.label.username": "Nombre de usuario",
+  "loc.input.help.username": "Especifique el nombre de usuario que se va a usar para la autenticación de servidor.",
+  "loc.input.label.password": "Contraseña",
+  "loc.input.help.password": "Especifique la contraseña que se va a usar para la autenticación de servidor. La contraseña tiene que hacer referencia a una variable secreta definida en la pestaña de variables.",
+  "loc.input.label.url": "Dirección URL",
+  "loc.input.help.url": "Especifique la dirección URL a la que se van a cargar los archivos. El directorio debe finalizar con una barra diagonal. Los protocolos posibles son DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET y TFTP.",
+  "loc.input.label.options": "Argumentos opcionales",
+  "loc.input.help.options": "Argumentos adicionales que se van a pasar a cURL.",
+  "loc.input.label.redirectStderr": "Redirigir error estándar a resultado estándar",
+  "loc.input.help.redirectStderr": "Agregue \"--stderr -\" a cURL. cURL escribe una barra de progreso en stderr de forma predeterminada, cosa que la compilación considerará un resultado erróneo. Suprimiendo este comportamiento."
+}
