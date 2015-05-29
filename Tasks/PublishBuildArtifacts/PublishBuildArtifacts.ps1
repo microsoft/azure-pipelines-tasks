@@ -44,7 +44,7 @@ elseif ($ArtifactType -ieq "filepath")
 {
     if ("$TargetPath".StartsWith('//'))
     {
-        Write-Warning (Get-LocalizedString -Key 'UNC paths must start with ''\\''. Invalid UNC path: {0}' -ArgumentList $TargetPath)
+        Write-Warning (Get-LocalizedString -Key 'The share path cannot start with ''//''. Use ''\\'' instead. Invalid share path: {0}' -ArgumentList $TargetPath)
     }
 
     if ((Test-Path $TargetPath) -eq 0)
