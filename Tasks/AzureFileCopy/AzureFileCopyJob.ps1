@@ -10,7 +10,8 @@ param (
     [string]$cleanTargetBeforeCopy,
     [string]$winRMPort,
     [string]$httpProtocolOption,
-    [string]$skipCACheckOption
+    [string]$skipCACheckOption,
+    [string]$enableDetailedLogging
     )
 
     Write-Verbose "fqdn = $fqdn" -Verbose
@@ -23,6 +24,7 @@ param (
     Write-Verbose "winRMPort = $winRMPort" -Verbose
     Write-Verbose "httpProtocolOption = $httpProtocolOption" -Verbose
     Write-Verbose "skipCACheckOption = $skipCACheckOption" -Verbose
+    Write-Verbose "enableDetailedLogging = $enableDetailedLogging" -Verbose
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
         [void][reflection.assembly]::LoadFrom( $_.FullName )
@@ -42,7 +44,7 @@ param (
 
     Write-Verbose "Initiating copy on $fqdn " -Verbose
 
-    [String]$copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"
+    [String]$copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -WinRMPort $winRMPort -EnableDetailedLogging $enableDetailedLogging $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"
     [scriptblock]$copyToAzureMachinesBlock = [scriptblock]::Create($copyToAzureMachinesBlockString)
 
     $copyResponse = Invoke-Command -ScriptBlock $copyToAzureMachinesBlock

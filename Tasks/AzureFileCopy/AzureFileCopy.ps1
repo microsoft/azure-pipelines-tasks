@@ -167,6 +167,13 @@ function Get-ResourcesProperties
     return $resourcesPropertyBag
 }
 
+# enabling detailed logging only when system.debug is true
+$enableDetailedLoggingString = $env:system_debug
+if ($enableDetailedLoggingString -ne "true")
+{
+    $enableDetailedLoggingString = "false"
+}
+
 # azcopy location on automation agent
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
@@ -264,7 +271,7 @@ try
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
-            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
+            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
             $status = $copyResponse.Status
 
             Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machine -deploymentResponse $copyResponse
@@ -299,7 +306,7 @@ try
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
             $resourceProperties.resOperationId = $resOperationId
-            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
+            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
             $Jobs.Add($job.Id, $resourceProperties)
         }
 
