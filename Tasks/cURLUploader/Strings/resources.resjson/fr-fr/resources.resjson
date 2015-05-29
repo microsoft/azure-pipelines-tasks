@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Fichiers de téléchargement cURL",
+  "loc.description": "Utilisez cURL pour télécharger des fichiers avec des protocoles pris en charge. (FTP, FTPS, SFTP, HTTP, etc.)",
+  "loc.instanceNameFormat": "Télécharger $(files) avec cURL",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.files": "Fichiers",
+  "loc.input.help.files": "Fichier(s) à télécharger. Les caractères génériques sont autorisés. Par exemple, '**\\*.zip' pour tous les fichiers ZIP de tous les sous-dossiers.",
+  "loc.input.label.username": "Nom d'utilisateur",
+  "loc.input.help.username": "Spécifiez le nom d'utilisateur à utiliser pour l'authentification du serveur.",
+  "loc.input.label.password": "Mot de passe",
+  "loc.input.help.password": "Spécifiez le mot de passe à utiliser pour l'authentification du serveur. Le mot de passe doit faire référence à une variable secrète définie sous l'onglet des variables.",
+  "loc.input.label.url": "URL",
+  "loc.input.help.url": "Spécifiez l'URL à laquelle télécharger le ou les fichiers. Le répertoire doit se terminer par une barre oblique finale. Les protocoles possibles sont notamment DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET et TFTP.",
+  "loc.input.label.options": "Arguments facultatifs",
+  "loc.input.help.options": "Arguments supplémentaires qui seront passés à cURL.",
+  "loc.input.label.redirectStderr": "Rediriger une erreur standard vers une sortie standard",
+  "loc.input.help.redirectStderr": "Ajoutez '--stderr -' à cURL. Par défaut, cURL écrit une barre de progression dans stderr, que la build choisit comme sortie d'erreur. Suppression de ce comportement."
+}

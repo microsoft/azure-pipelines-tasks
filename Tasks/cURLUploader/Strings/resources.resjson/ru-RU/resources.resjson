@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Отправка файлов с помощью cURL",
+  "loc.description": "Используйте cURL для отправки файлов по поддерживаемым протоколам (FTP, FTPS, SFTP, HTTP и другим).",
+  "loc.instanceNameFormat": "Отправить $(files) с помощью cURL",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.files": "Файлы",
+  "loc.input.help.files": "Файлы, которые нужно отправить. Можно использовать подстановочные знаки. Пример: \"**\\*.zip\" для всех ZIP-файлов во всех вложенных папках.",
+  "loc.input.label.username": "Имя пользователя",
+  "loc.input.help.username": "Укажите имя пользователя, которое следует использовать для аутентификации сервера.",
+  "loc.input.label.password": "Пароль",
+  "loc.input.help.password": "Укажите пароль, используемый для аутентификации сервера. Пароль должен ссылаться на секретную переменную, определенную на вкладке переменной.",
+  "loc.input.label.url": "URL-адрес",
+  "loc.input.help.url": "Укажите URL-адрес, по которому будут отправлены файлы. Каталог должен завершаться косой чертой. Возможные протоколы: DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET и TFTP.",
+  "loc.input.label.options": "Дополнительные аргументы",
+  "loc.input.help.options": "Дополнительные аргументы, которые будут переданы в cURL.",
+  "loc.input.label.redirectStderr": "Перенаправление стандартной ошибки на стандартный выход",
+  "loc.input.help.redirectStderr": "Добавьте параметр \"--stderr -\" в cURL. По умолчанию cURL записывает данные индикатора выполнения в stderr. Сборка использует эти данные в качестве выходных данных ошибки. Это поведение будет переопределено."
+}
