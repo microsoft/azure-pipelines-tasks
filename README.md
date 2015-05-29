@@ -17,10 +17,9 @@
  
  ## How to Use Tasks
  
--### Visual Studio Build: [How To Use](https://msdn.microsoft.com/Library/vs/alm/Build/vs/define-build)
-+### Visual Studio Build: [How To](https://msdn.microsoft.com/Library/vs/alm/Build/vs/define-build)
-+
-+### Build and Deploy ASP.NET5 Web App [How To](https://msdn.microsoft.com/Library/vs/alm/Build/azure/deploy-aspnet5)
+ ### Visual Studio Build: [How To](https://msdn.microsoft.com/Library/vs/alm/Build/vs/define-build)
+
+ ### Build and Deploy ASP.NET5 Web App [How To](https://msdn.microsoft.com/Library/vs/alm/Build/azure/deploy-aspnet5)
  
  ### Publish Build Artifacts
  
@@ -35,14 +34,11 @@
  ```
  [more examples](https://realguess.net/tags/minimatch/)
  
--### Azure Website Deployment: [How To Use](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
--### Azure PowerShell: [How To Use](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
--### Xcode Build: [How To Use](http://youtu.be/OxmBuqtgHuM)
-+### Azure Website Deployment: [How To](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
-+
-+### Azure PowerShell: [How To](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
-+
-+### Xcode Build: [How To](http://youtu.be/OxmBuqtgHuM)
+ ### Azure Website Deployment: [How To](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
+ 
+ ### Azure PowerShell: [How To](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
+ 
+ ### Xcode Build: [How To](http://youtu.be/OxmBuqtgHuM)
  
  ## Writing Tasks
  
