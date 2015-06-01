@@ -42,9 +42,15 @@ param (
         $cleanTargetPathOption = '-CleanTargetPath'
     }
 
+    $enableDetailedLoggingOption = ''
+    if ($enableDetailedLogging -eq "true")
+    {
+        $enableDetailedLoggingOption = '-EnableDetailedLogging'
+    }
+
     Write-Verbose "Initiating copy on $fqdn " -Verbose
 
-    [String]$copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -WinRMPort $winRMPort -EnableDetailedLogging $enableDetailedLogging $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"
+    [String]$copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
     [scriptblock]$copyToAzureMachinesBlock = [scriptblock]::Create($copyToAzureMachinesBlockString)
 
     $copyResponse = Invoke-Command -ScriptBlock $copyToAzureMachinesBlock
