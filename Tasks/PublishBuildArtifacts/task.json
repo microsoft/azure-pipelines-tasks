@@ -58,7 +58,7 @@
       "name": "TargetPath",
       "type": "string",
       "label": "Path",
-      "defaultValue": "",
+      "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
       "required": false,
       "helpMarkDown": "The file share to which to copy the files",
       "visibleRule": "ArtifactType = FilePath"
