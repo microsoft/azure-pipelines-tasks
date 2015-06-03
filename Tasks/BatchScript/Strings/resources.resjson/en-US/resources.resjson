@@ -14,5 +14,7 @@
   "loc.input.label.modifyEnvironment": "Modify Environment",
   "loc.input.help.modifyEnvironment": "Determines whether environment variable modifications will affect subsequent tasks.",
   "loc.input.label.workingFolder": "Working folder",
-  "loc.input.help.workingFolder": "Current working directory when script is run.  Defaults to the folder where the script is located."
+  "loc.input.help.workingFolder": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
 }

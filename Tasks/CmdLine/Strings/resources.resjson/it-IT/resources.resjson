@@ -9,10 +9,6 @@
   "loc.input.label.arguments": "Argomenti",
   "loc.input.label.workingFolder": "Cartella di lavoro",
   "loc.input.help.workingFolder": "Argomenti passati allo strumento",
-  "loc.input.label.errorPattern": "Criteri di errore",
-  "loc.input.help.errorPattern": "Regex facoltativo per interpretare l'output come errore.",
-  "loc.input.label.warningPattern": "Criteri di avviso",
-  "loc.input.help.warningPattern": "Regex facoltativo per interpretare l'output come avviso.",
   "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard",
   "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError."
 }
