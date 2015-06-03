@@ -7,6 +7,9 @@ function getCommonLocalPath(files) {
     if (!files || files.length === 0) {
         return "";
     }
+    else if (files.length === 1) {
+        return path.dirname(files[0]);
+    }
     else {
         var root = files[0];
         for (var index = 1; index < files.length; index++) {

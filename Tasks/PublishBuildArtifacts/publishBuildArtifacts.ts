@@ -11,6 +11,9 @@ function getCommonLocalPath(files: string[]): string {
     if (!files || files.length === 0) {
         return "";
     }
+    else if (files.length === 1) {
+        return path.dirname(files[0]);
+    }
     else {
         var root: string = files[0];
 
