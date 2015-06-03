@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -60,7 +60,7 @@
       "name": "TargetPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.TargetPath",
-      "defaultValue": "",
+      "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
       "visibleRule": "ArtifactType = FilePath"
