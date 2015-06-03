@@ -6,7 +6,6 @@
     "helpMarkDown": "Run tests distributedly using multiple test agents on a lab machine group",
     "category": "Test",
     "visibility": [
-                    "Preview",
                     "Build"
                   ],
     "author": "Microsoft Corporation",

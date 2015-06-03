@@ -9,7 +9,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
