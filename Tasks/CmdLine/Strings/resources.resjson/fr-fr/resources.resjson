@@ -9,10 +9,6 @@
   "loc.input.label.arguments": "Arguments",
   "loc.input.label.workingFolder": "Dossier de travail",
   "loc.input.help.workingFolder": "Arguments passés à l'outil",
-  "loc.input.label.errorPattern": "Modèle d'erreur",
-  "loc.input.help.errorPattern": "Expression régulière facultative pour laquelle la sortie doit être interprétée comme une erreur.",
-  "loc.input.label.warningPattern": "Modèle d'avertissement",
-  "loc.input.help.warningPattern": "Expression régulière pour laquelle la sortie doit être interprétée comme un avertissement.",
   "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
   "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError."
 }

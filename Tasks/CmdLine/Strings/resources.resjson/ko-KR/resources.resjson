@@ -9,10 +9,6 @@
   "loc.input.label.arguments": "인수",
   "loc.input.label.workingFolder": "작업 폴더",
   "loc.input.help.workingFolder": "인수를 도구에 전달했습니다.",
-  "loc.input.label.errorPattern": "오류 패턴",
-  "loc.input.help.errorPattern": "출력을 오류로 해석할 정규식(선택 사항)입니다.",
-  "loc.input.label.warningPattern": "경고 패턴",
-  "loc.input.help.warningPattern": "출력을 경고로 해석할 정규식(선택 사항)입니다.",
   "loc.input.label.failOnStandardError": "표준 오류 시 실패",
   "loc.input.help.failOnStandardError": "true일 경우 StandardError 스트림에 오류가 작성되면 이 작업은 실패하게 됩니다."
 }
