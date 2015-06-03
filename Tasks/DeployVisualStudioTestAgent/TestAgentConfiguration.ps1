@@ -343,7 +343,7 @@ function ReadCredentials
     [String] $TestAgentVersion
     )
 	
-    LoadDependentDlls($TestAgentVersion)    
+    LoadDependentDlls($TestAgentVersion) | Out-Null   
     $creds = [Microsoft.VisualStudio.TestService.Common.CredentialStoreHelper]::GetStoredCredential($TFSCollectionUrl)       
   
     return $creds                    
@@ -628,7 +628,7 @@ function ConfigureTestAgent
         [System.Management.Automation.PSCredential] $AgentUserCredential
     )
 
-    EnableTracing -TestAgentVersion $TestAgentVersion
+    EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     $ret = -1
     if ($AsServiceOrProcess -eq "Service")

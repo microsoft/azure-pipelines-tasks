@@ -1,9 +1,16 @@
 {
   "loc.friendlyName": "將檔案複製到 Azure Blob",
+  "loc.helpMarkDown": "將檔案複製到 Azure Blob",
   "loc.description": "將檔案複製到 Azure Blob",
+  "loc.instanceNameFormat": "將檔案複製到 Azure Blob",
   "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
+  "loc.input.help.ConnectedServiceName": "執行 PowerShell 前用來設定的 Azure 訂用帳戶。",
   "loc.input.label.SourcePath": "來源",
+  "loc.input.help.SourcePath": "來源資料夾或本機電腦上檔案的絕對路徑，或是 UNC 共用。",
   "loc.input.label.StorageAccount": "儲存體帳戶",
+  "loc.input.help.StorageAccount": "儲存體帳戶必須存在才能複製。",
   "loc.input.label.ContainerName": "ContainerName",
-  "loc.input.label.BlobPrefix": "Blob 前置詞"
+  "loc.input.help.ContainerName": "若容器不存在我們將加以建立。",
+  "loc.input.label.BlobPrefix": "Blob 前置詞",
+  "loc.input.help.BlobPrefix": "其做為篩選使用，所以下載時很有用。範例 - 您可將組建編號附加至所有 blob。"
 }

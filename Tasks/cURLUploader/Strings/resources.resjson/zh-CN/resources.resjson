@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "cURL 上载文件",
+  "loc.description": "通过支持的协议，使用 cURL 上载文件。(FTP、FTPS、SFTP、HTTP 等)",
+  "loc.instanceNameFormat": "使用 cURL 上载 $(files)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.files": "文件",
+  "loc.input.help.files": "要上载的文件。可以使用通配符。例如，\"**\\*.zip\" 表示所有子文件夹中的所有 ZIP 文件。",
+  "loc.input.label.username": "用户名",
+  "loc.input.help.username": "指定要用于服务器身份验证的用户名。",
+  "loc.input.label.password": "密码",
+  "loc.input.help.password": "指定要用于服务器身份验证的密码。密码应引用变量选项卡上定义的机密变量。",
+  "loc.input.label.url": "URL",
+  "loc.input.help.url": "指定将在其中上传文件的 URL。目录应以尾部反斜杠结尾。可能的协议包括 DICT、FILE、FTP、FTPS、GOPHER、HTTP、HTTPS、IMAP、MAPS、LDAP、LDAPS、POP3、POP3S、RTMP、RTSP、SCP、SFTP、SMTP、SMTPS、TELNET 和 TFTP。",
+  "loc.input.label.options": "可选参数",
+  "loc.input.help.options": "将传递给 cURL 的其他参数。",
+  "loc.input.label.redirectStderr": "将标准错误重定向到标准输出",
+  "loc.input.help.redirectStderr": "向 cURL 添加 \"--stderr -\"。默认情况下，cURL 会向 stderr 写入进度栏，生成会选取它作为错误输出。请禁止此行为。"
+}

@@ -1,9 +1,16 @@
 {
   "loc.friendlyName": "Azure BLOB にファイルをコピーします",
+  "loc.helpMarkDown": "Azure BLOB にファイルをコピーします",
   "loc.description": "Azure BLOB にファイルをコピーします",
+  "loc.instanceNameFormat": "Azure BLOB にファイルをコピーします",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
+  "loc.input.help.ConnectedServiceName": "PowerShell を実行する前に構成する Azure サブスクリプション",
   "loc.input.label.SourcePath": "ソース",
+  "loc.input.help.SourcePath": "ローカル コンピューターまたは UNC 共有にあるソース フォルダーまたはファイルの絶対パス。",
   "loc.input.label.StorageAccount": "ストレージ アカウント",
+  "loc.input.help.StorageAccount": "コピーする前にストレージ アカウントが存在する必要があります。",
   "loc.input.label.ContainerName": "ContainerName",
-  "loc.input.label.BlobPrefix": "BLOB プレフィックス"
+  "loc.input.help.ContainerName": "コンテナーが存在しない場合は、コンテナーを作成します。",
+  "loc.input.label.BlobPrefix": "BLOB プレフィックス",
+  "loc.input.help.BlobPrefix": "フィルターとして機能するため、ダウンロード中に役立ちます。例: すべての BLOB にビルド番号を付加することができます。"
 }

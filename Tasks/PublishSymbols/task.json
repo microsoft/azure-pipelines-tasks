@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -83,6 +83,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "SymbolsArtifactName",
+            "type": "string",
+            "label": "Artifact Name",
+            "defaultValue": "Symbols_$(BuildConfiguration)",
+            "required": false,
+            "helpMarkDown": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)",
             "groupName": "advanced"
         }
     ],

@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "ファイルを cURL でアップロード",
+  "loc.description": "cURL を使用して、サポートするプロトコル (FTP、FTPS、SFTP、HTTP など) でファイルをアップロードします。",
+  "loc.instanceNameFormat": "cURL で $(files) をアップロード",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.files": "ファイル",
+  "loc.input.help.files": "アップロードするファイル。ワイルドカードを使用できます。たとえば、全サブフォルダー内のすべての ZIP ファイルの場合は `**\\*.zip` です。",
+  "loc.input.label.username": "ユーザー名",
+  "loc.input.help.username": "サーバーの認証に使用するユーザー名を指定します。",
+  "loc.input.label.password": "パスワード",
+  "loc.input.help.password": "サーバーの認証に使用するパスワードを指定します。パスワードは [変数] タブで定義される秘密の変数を参照する必要があります。",
+  "loc.input.label.url": "URL",
+  "loc.input.help.url": "ファイルのアップロード先の URL を指定します。ディレクトリは末尾のスラッシュで終わる必要があります。使用可能なプロトコルは DICT、FILE、FTP、FTPS、GOPHER、HTTP、HTTPS、IMAP、IMAPS、LDAP、LDAPS、POP3、POP3S、RTMP、RTSP、SCP、SFTP、SMTP、SMTPS、TELNET、および TFTP などです。",
+  "loc.input.label.options": "オプションの引数",
+  "loc.input.help.options": "cURL に渡す追加の引数。",
+  "loc.input.label.redirectStderr": "標準エラーを標準出力にリダイレクトします。",
+  "loc.input.help.redirectStderr": "'--stderr -' を cURL に追加します。既定では、cURL は stderr に進行状況バーを書き込み、ビルドはそれをエラー出力と見なします。この動作を抑制します。"
+}
