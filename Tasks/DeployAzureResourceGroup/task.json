@@ -1,13 +1,14 @@
 ﻿{
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-    "name": "DeployAzureResourceGroup",
-    "friendlyName": "Deploy Azure Resource Group",
+    "name": "AzureResourceGroupDeployment",
+    "friendlyName": "Azure Resource Group Deployment",
     "description": "Provision and Deploy an Azure Resource Group",
     "helpMarkDown": "Provision and Deploy an Azure Resource Group",
     "category": "Deploy",
     "visibility": [
                 "Preview",
-                "Build"
+                "Build",
+                "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
