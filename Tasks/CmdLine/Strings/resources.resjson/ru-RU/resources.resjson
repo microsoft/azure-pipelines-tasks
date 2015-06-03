@@ -9,10 +9,6 @@
   "loc.input.label.arguments": "Аргументы",
   "loc.input.label.workingFolder": "Рабочая папка",
   "loc.input.help.workingFolder": "Аргументы, передаваемые в средство",
-  "loc.input.label.errorPattern": "Шаблон ошибки",
-  "loc.input.help.errorPattern": "Дополнительное регулярное выражение для интерпретации выходных данных как ошибки.",
-  "loc.input.label.warningPattern": "Шаблон предупреждения",
-  "loc.input.help.warningPattern": "Дополнительное регулярное выражение для интерпретации выходных данных как предупреждения.",
   "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой",
   "loc.input.help.failOnStandardError": "Если имеет значение true, задача завершится сбоем при записи любых ошибок в поток StandardError."
 }

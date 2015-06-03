@@ -11,5 +11,7 @@
   "loc.input.label.modifyEnvironment": "Umgebung ändern",
   "loc.input.help.modifyEnvironment": "Bestimmt, ob sich Änderungen an Umgebungsvariablen auf nachfolgende Aufgaben auswirken.",
   "loc.input.label.workingFolder": "Arbeitsordner",
-  "loc.input.help.workingFolder": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist."
+  "loc.input.help.workingFolder": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist.",
+  "loc.input.label.failOnStandardError": "Fehler bei Standardfehler",
+  "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden."
 }

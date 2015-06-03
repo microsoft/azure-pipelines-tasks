@@ -9,10 +9,6 @@
   "loc.input.label.arguments": "引數",
   "loc.input.label.workingFolder": "工作資料夾",
   "loc.input.help.workingFolder": "傳遞至工具的引數",
-  "loc.input.label.errorPattern": "錯誤模式",
-  "loc.input.help.errorPattern": "將輸出解譯為錯誤的選擇性 regex。",
-  "loc.input.label.warningPattern": "警告模式",
-  "loc.input.help.warningPattern": "將輸出解譯為警告的選擇性 regex。",
   "loc.input.label.failOnStandardError": "發生標準錯誤的失敗",
   "loc.input.help.failOnStandardError": "如果為 true，則任何錯誤寫入至 StandardError 資料流時，此工作會失敗。"
 }
