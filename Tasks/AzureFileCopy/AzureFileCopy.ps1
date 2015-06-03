@@ -187,6 +187,12 @@ Write-Verbose "Retrieved storage key successfully for the storage account: $stor
 # creating storage context to be used while creating container, sas token, deleting container
 $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
+# Creating Build Uri to be used as log content
+$teamFoundationCollectionUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+$teamProject = $env:SYSTEM_TEAMPROJECT
+$buildId = $env:BUILD_BUILDID
+$buildUri = $teamFoundationCollectionUri + $teamProject + "/_build#_a=summary&buildId=" + $buildId
+
 # creating temporary container for uploading files
 if ([string]::IsNullOrEmpty($containerName))
 {
@@ -278,7 +284,12 @@ try
             Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
             Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-            $logs = Get-ResourceOperationLogs -deploymentResponse $copyResponse
+
+            # Uploading BuildUri as log content.
+            $logs = New-Object 'System.Collections.Generic.List[System.Object]'
+            $resourceOperationLog = New-OperationLog -Content $buildUri
+            $logs.Add($resourceOperationLog)
+
             Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection
 
             if ($status -ne "Passed")
@@ -333,7 +344,12 @@ try
                     Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
                     Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-                    $logs = Get-ResourceOperationLogs -deploymentResponse $output
+
+                    # Uploading BuildUri as log content.
+                    $logs = New-Object 'System.Collections.Generic.List[System.Object]'
+                    $resourceOperationLog = New-OperationLog -Content $buildUri
+                    $logs.Add($resourceOperationLog)
+
                     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
                 }
             }

@@ -1,16 +1,24 @@
+# Creating Build Uri to be used as log content
+$teamFoundationCollectionUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+$teamProject = $env:SYSTEM_TEAMPROJECT
+$buildId = $env:BUILD_BUILDID
+$buildUri = $teamFoundationCollectionUri + $teamProject + "/_build#_a=summary&buildId=" + $buildId
+
 function DoComplete-ResourceOperation
 {
     param([string]$environmentName,
-		  [guid]$envOperationId,
-		  [guid]$resOperationId,
-		  [object]$connection,
-		  [object]$deploymentResponse)
+          [guid]$envOperationId,
+          [guid]$resOperationId,
+          [object]$connection,
+          [object]$deploymentResponse)
     
-	$log = "Deployment Logs : " + $deploymentResponse.DeploymentLog + "`nService Logs : " + $deploymentResponse.ServiceLog;
-
-    $logs = New-Object 'System.Collections.Generic.List[System.Object]'         
-    $resourceOperationLog = New-OperationLog -Content $log
+    # $log = "Deployment Logs : " + $deploymentResponse.DeploymentLog + "`nService Logs : " + $deploymentResponse.ServiceLog;
+    
+    # Uploading BuildUri as log content.
+    $logs = New-Object 'System.Collections.Generic.List[System.Object]'
+    $resourceOperationLog = New-OperationLog -Content $buildUri
     $logs.Add($resourceOperationLog)
+
     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
 }
 
