@@ -6,7 +6,6 @@
     "helpMarkDown": "Copy files to remote machine(s)",
     "category": "Deploy",
     "visibility": [
-                "Preview",
                 "Build",
                 "Release"
                   ],
