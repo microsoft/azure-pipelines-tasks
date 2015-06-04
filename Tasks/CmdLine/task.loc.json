@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "groups": [
     {
@@ -51,24 +51,6 @@
       "groupName": "advanced"
     },
     {
-      "name": "errorPattern",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.errorPattern",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.errorPattern",
-      "groupName": "advanced"
-    },
-    {
-      "name": "warningPattern",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.warningPattern",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.warningPattern",
-      "groupName": "advanced"
-    },
-    {
       "name": "failOnStandardError",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnStandardError",
@@ -84,8 +66,6 @@
       "target": "$(filename)",
       "argumentFormat": "$(arguments)",
       "workingDirectory": "$(workingFolder)",
-      "errorPattern": "$(errorPattern)",
-      "warningPattern": "$(warningPattern)",
       "failOnStandardError": "$(failOnStandardError)"
     },
     "JavaScript": {

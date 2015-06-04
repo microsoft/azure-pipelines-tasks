@@ -12,10 +12,6 @@
   "loc.input.label.arguments": "Arguments",
   "loc.input.label.workingFolder": "Working folder",
   "loc.input.help.workingFolder": "Arguments passed to the tool",
-  "loc.input.label.errorPattern": "Error Pattern",
-  "loc.input.help.errorPattern": "Optional regex to interpret output as an error.",
-  "loc.input.label.warningPattern": "Warning Pattern",
-  "loc.input.help.warningPattern": "Optional regex to interpret output as a warning.",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
   "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
 }

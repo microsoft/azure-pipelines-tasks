@@ -11,5 +11,7 @@
   "loc.input.label.modifyEnvironment": "Modifica ambiente",
   "loc.input.help.modifyEnvironment": "Determina se le modifiche apportate alle variabili di ambiente influiranno sulle attività successive.",
   "loc.input.label.workingFolder": "Cartella di lavoro",
-  "loc.input.help.workingFolder": "Directory di lavoro corrente durante l'esecuzione dello script. Per impostazione predefinita, corrisponde alla cartella in cui si trova lo script."
+  "loc.input.help.workingFolder": "Directory di lavoro corrente durante l'esecuzione dello script. Per impostazione predefinita, corrisponde alla cartella in cui si trova lo script.",
+  "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard",
+  "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError."
 }

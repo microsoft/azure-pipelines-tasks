@@ -48,24 +48,6 @@
             "groupName":"advanced"
         },
         { 
-            "name": "errorPattern", 
-            "type": "string", 
-            "label": "Error Pattern", 
-            "defaultValue": "", 
-            "required": false,
-            "helpMarkDown": "Optional regex to interpret output as an error.",
-            "groupName":"advanced"
-        },
-        {
-            "name": "warningPattern",
-            "type": "string",
-            "label": "Warning Pattern",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optional regex to interpret output as a warning.",
-            "groupName": "advanced"
-        },
-        { 
             "name": "failOnStandardError", 
             "type": "boolean",
             "label": "Fail on Standard Error", 
@@ -81,8 +63,6 @@
             "target": "$(filename)",
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
-            "errorPattern": "$(errorPattern)",
-            "warningPattern": "$(warningPattern)",
             "failOnStandardError": "$(failOnStandardError)"
         },
         "JavaScript": {

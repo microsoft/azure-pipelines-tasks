@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "demands": [
     "Cmd"
@@ -62,6 +62,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
       "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -70,7 +79,8 @@
       "target": "$(filename)",
       "argumentFormat": "$(arguments)",
       "workingDirectory": "$(workingFolder)",
-      "modifyEnvironment": "$(modifyEnvironment)"
+      "modifyEnvironment": "$(modifyEnvironment)",
+      "failOnStandardError": "$(failOnStandardError)"
     }
   }
 }
