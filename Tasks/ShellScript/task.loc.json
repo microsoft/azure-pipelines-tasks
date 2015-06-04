@@ -53,6 +53,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
     }
   ],
   "execution": {
