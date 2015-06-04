@@ -4,7 +4,7 @@
 {
   "loc.friendlyName": "Grunt",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613721)",
-  "loc.description": "Node.js streaming task based build system",
+  "loc.description": "The JavaScript Task Runner",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.gruntFile": "Grunt File Path",
