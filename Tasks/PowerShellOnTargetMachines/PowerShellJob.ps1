@@ -10,6 +10,15 @@ param (
 	[string]$skipCACheckOption
     )
 
+	Write-Verbose "fqdn = $fqdn" -Verbose
+    Write-Verbose "scriptPath = $scriptPath" -Verbose
+    Write-Verbose "port = $port" -Verbose
+    Write-Verbose "scriptArguments = $scriptArguments" -Verbose
+    Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose	
+    Write-Verbose "protocolOption = $httpProtocolOption" -Verbose
+    Write-Verbose "skipCACheckOption = $skipCACheckOption" -Verbose
+    
+
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
     [void][reflection.assembly]::LoadFrom( $_.FullName )
     Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
