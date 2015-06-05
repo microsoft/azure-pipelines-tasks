@@ -8,12 +8,12 @@
   "visibility": [
                 "Build",
                 "Release"
-                ],  
+                ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 14
   },
   "demands": [
     "azureps"
@@ -51,15 +51,23 @@
         "Brazil South": "Brazil South"
       },
       "properties": {
-		"EditableOptions": "True"
-	  }
-	},
+        "EditableOptions": "True"
+      }
+    },
     {
       "name": "WebSiteName",
       "type": "pickList",
       "label": "Web Site Name",
       "defaultValue": "",
       "required": true
+    },
+    {
+      "name": "Slot",
+      "type": "string",
+      "label": "Slot",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Slot"
     },
     {
       "name": "Package",
