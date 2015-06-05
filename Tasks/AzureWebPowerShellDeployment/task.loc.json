@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [
     "azureps"
@@ -32,6 +32,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
+      "name": "WebSiteName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebSiteName",
+      "defaultValue": "",
+      "required": true
+    },
+    {
       "name": "WebSiteLocation",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebSiteLocation",
@@ -39,30 +46,23 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
       "options": {
-        "South Central US": "South Central US",
-        "North Europe": "North Europe",
-        "West Europe": "West Europe",
-        "North Central US": "North Central US",
-        "West US": "West US",
+        "Brazil South": "Brazil South",
+        "Central US": "Central US",
         "East Asia": "East Asia",
         "East US": "East US",
-        "Southeast Asia": "Southeast Asia",
         "East US2": "East US2",
-        "Japan West": "Japan West",
         "Japan East": "Japan East",
-        "Central US": "Central US",
-        "Brazil South": "Brazil South"
+        "Japan West": "Japan West",
+        "North Central US": "North Central US",
+        "North Europe": "North Europe",
+        "South Central US": "South Central US",
+        "Southeast Asia": "Southeast Asia",
+        "West Europe": "West Europe",
+        "West US": "West US"
       },
       "properties": {
         "EditableOptions": "True"
       }
-    },
-    {
-      "name": "WebSiteName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebSiteName",
-      "defaultValue": "",
-      "required": true
     },
     {
       "name": "Package",
