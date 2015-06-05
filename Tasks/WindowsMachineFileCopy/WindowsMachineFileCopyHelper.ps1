@@ -1,8 +1,4 @@
-# Creating Build Uri to be used as log content
-$teamFoundationCollectionUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
-$teamProject = $env:SYSTEM_TEAMPROJECT
-$buildId = $env:BUILD_BUILDID
-$buildUri = $teamFoundationCollectionUri + $teamProject + "/_build#_a=summary&buildId=" + $buildId
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
 function DoComplete-ResourceOperation
 {
@@ -12,7 +8,7 @@ function DoComplete-ResourceOperation
           [object]$connection,
           [object]$deploymentResponse)
     
-    # $log = "Copy Logs : " + $deploymentResponse.DeploymentLog + "`nService Logs : " + $deploymentResponse.ServiceLog;
+    $buildUri = Get-BuildUri
     
     # Uploading BuildUri as log content.	
     $logs = New-Object 'System.Collections.Generic.List[System.Object]'

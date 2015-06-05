@@ -187,11 +187,8 @@ Write-Verbose "Retrieved storage key successfully for the storage account: $stor
 # creating storage context to be used while creating container, sas token, deleting container
 $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
-# Creating Build Uri to be used as log content
-$teamFoundationCollectionUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
-$teamProject = $env:SYSTEM_TEAMPROJECT
-$buildId = $env:BUILD_BUILDID
-$buildUri = $teamFoundationCollectionUri + $teamProject + "/_build#_a=summary&buildId=" + $buildId
+# getting build Uri
+$buildUri = Get-BuildUri
 
 # creating temporary container for uploading files
 if ([string]::IsNullOrEmpty($containerName))

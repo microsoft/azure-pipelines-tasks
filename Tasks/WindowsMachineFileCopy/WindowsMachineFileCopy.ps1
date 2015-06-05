@@ -21,6 +21,7 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
 # Default + constants #
 $defaultWinRMPort = '5985'
