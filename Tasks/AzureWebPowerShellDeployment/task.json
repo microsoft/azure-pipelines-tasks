@@ -71,7 +71,7 @@
     },
     {
       "name": "AdditionalArguments",
-      "type": "string",
+      "type": "multiLine",
       "label": "Additional Arguments",
       "defaultValue": "",
       "required": false
