@@ -22,7 +22,7 @@
   "inputs": [
     {
       "name": "MachineGroupName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.MachineGroupName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.MachineGroupName"
@@ -80,6 +80,14 @@
       "properties": {
         "EditableOptions": "True"
       }
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "MachineGroupName",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

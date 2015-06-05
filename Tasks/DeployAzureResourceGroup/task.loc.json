@@ -3,14 +3,15 @@
 // *******************************************************
 {
   "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-  "name": "DeployAzureResourceGroup",
+  "name": "AzureResourceGroupDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
