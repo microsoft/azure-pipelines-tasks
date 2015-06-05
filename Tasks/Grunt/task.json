@@ -48,7 +48,7 @@
             "type": "string",
             "label": "Arguments",
             "defaultValue":"",
-            "helpMarkDown": "Additional arguments passed to gulp.  --gruntfile is not needed since already added via gruntFile input above.",
+            "helpMarkDown": "Additional arguments passed to grunt.  --gruntfile is not needed since already added via gruntFile input above.",
             "required":false,
             "groupName":"advanced"
         },

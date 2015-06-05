@@ -9,10 +9,10 @@ param(
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
-# try to find gulp in the path
-$gulp = Get-Command -Name grunt -ErrorAction Ignore
+# try to find grunt in the path
+$grunt = Get-Command -Name grunt -ErrorAction Ignore
 
-if(!$gulp)
+if(!$grunt)
 {
     Write-Verbose "try to find grunt in the node_modules in the sources directory"
     $buildSourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
@@ -59,5 +59,5 @@ else
     $cwd = $location.Path
 }
 
-Write-Verbose "Running Gulp $grunt"
+Write-Verbose "Running Grunt $grunt"
 Invoke-Tool -Path $grunt.Path -Arguments $arguments -WorkingFolder $cwd
