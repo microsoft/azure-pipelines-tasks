@@ -1,5 +1,3 @@
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
-
 function DoComplete-ResourceOperation
 {
     param([string]$environmentName,
@@ -8,12 +6,11 @@ function DoComplete-ResourceOperation
           [object]$connection,
           [object]$deploymentResponse)
     
-    $buildUri = Get-BuildUri
-    
-    # Uploading BuildUri as log content.	
-    $logs = New-Object 'System.Collections.Generic.List[System.Object]'
-    $resourceOperationLog = New-OperationLog -Content $buildUri
-    $logs.Add($resourceOperationLog)
+    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+
+    # getting operation logs
+    $logs = Get-OperationLogs
+    Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
 
     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
 }

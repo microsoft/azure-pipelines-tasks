@@ -187,9 +187,6 @@ Write-Verbose "Retrieved storage key successfully for the storage account: $stor
 # creating storage context to be used while creating container, sas token, deleting container
 $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
-# getting build Uri
-$buildUri = Get-BuildUri
-
 # creating temporary container for uploading files
 if ([string]::IsNullOrEmpty($containerName))
 {
@@ -282,10 +279,9 @@ try
 
             Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
 
-            # Uploading BuildUri as log content.
-            $logs = New-Object 'System.Collections.Generic.List[System.Object]'
-            $resourceOperationLog = New-OperationLog -Content $buildUri
-            $logs.Add($resourceOperationLog)
+            # getting operation logs
+            $logs = Get-OperationLogs
+            Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
 
             Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection
 
@@ -342,10 +338,9 @@ try
 
                     Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
 
-                    # Uploading BuildUri as log content.
-                    $logs = New-Object 'System.Collections.Generic.List[System.Object]'
-                    $resourceOperationLog = New-OperationLog -Content $buildUri
-                    $logs.Add($resourceOperationLog)
+                    # getting operation logs
+                    $logs = Get-OperationLogs
+                    Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
 
                     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
                 }
