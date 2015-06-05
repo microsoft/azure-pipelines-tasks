@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [
     "azureps"
@@ -63,6 +63,14 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "Slot",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Slot",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Slot"
     },
     {
       "name": "Package",
