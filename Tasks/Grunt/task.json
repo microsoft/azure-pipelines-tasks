@@ -2,7 +2,7 @@
     "id": "521D1E15-F5FB-4B73-A93B-B2FE88A9A286",
     "name": "Grunt",
     "friendlyName": "Grunt",
-    "description": "Node.js streaming task based build system",
+    "description": "The JavaScript Task Runner",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613721)",
     "category": "Build",
     "visibility": [
