@@ -8,12 +8,12 @@
   "visibility": [
                 "Build",
                 "Release"
-                ],  
+                ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [
     "azureps"
@@ -60,6 +60,14 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "Slot",
+      "type": "string",
+      "label": "Slot",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Slot"
     },
     {
       "name": "Package",
