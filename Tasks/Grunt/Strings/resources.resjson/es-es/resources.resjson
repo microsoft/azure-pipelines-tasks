@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "Sistema de compilación basado en la tarea de streaming de Node.js",
+  "loc.instanceNameFormat": "$(targets) de Gulp",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.gulpFile": "Ruta de acceso del archivo Gulp",
+  "loc.input.help.gulpFile": "Ruta de acceso relativa de la raíz del repositorio del archivo de script de archivo Gulp que se va a ejecutar.",
+  "loc.input.label.targets": "Tareas de Gulp",
+  "loc.input.help.targets": "Opcional. Se ejecutará la tarea predeterminada si no se especifica una. Lista delimitada por espacios de tareas que se van a ejecutar. Si no se especifica, se ejecutará la tarea predeterminada.",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Argumentos adicionales pasados a Gulp. --gulpfile no es necesario porque ya se agregó a través de la entrada gulpFile anterior.",
+  "loc.input.label.cwd": "Directorio de trabajo",
+  "loc.input.help.cwd": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script."
+}

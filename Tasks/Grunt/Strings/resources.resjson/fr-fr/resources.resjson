@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "Système de génération basé sur les tâches de diffusion en continu Node.js",
+  "loc.instanceNameFormat": "gulp $(targets)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.gulpFile": "Chemin d'accès du fichier Gulp",
+  "loc.input.help.gulpFile": "Chemin d'accès relatif depuis la racine du référentiel au fichier script du fichier gulp à exécuter.",
+  "loc.input.label.targets": "Tâche(s) Gulp",
+  "loc.input.help.targets": "Facultatif. La tâche par défaut est exécutée si aucune tâche n'est spécifiée. Liste de tâches séparées par des espaces à exécuter. Si non spécifié, la tâche par défaut est exécutée.",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments supplémentaires passés à gulp.  --gulpfile n'est pas nécessaire, car il est déjà ajouté via l'entrée gulpFile ci-dessus.",
+  "loc.input.label.cwd": "Répertoire de travail",
+  "loc.input.help.cwd": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script."
+}
