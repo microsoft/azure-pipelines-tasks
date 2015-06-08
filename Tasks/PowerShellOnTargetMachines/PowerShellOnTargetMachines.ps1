@@ -22,7 +22,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
-	# Constants +  Defaults #
+# Constants +  Defaults #
 $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
 $resourceWinRMHttpPortKeyName = 'WinRM_Http'
 $defaultWinRMHttpPort = '5985'

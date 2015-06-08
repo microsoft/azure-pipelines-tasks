@@ -278,7 +278,11 @@ try
             Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
             Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-            $logs = Get-ResourceOperationLogs -deploymentResponse $copyResponse
+
+            # getting operation logs
+            $logs = Get-OperationLogs
+            Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
+
             Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection
 
             if ($status -ne "Passed")
@@ -333,7 +337,11 @@ try
                     Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
                     Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-                    $logs = Get-ResourceOperationLogs -deploymentResponse $output
+
+                    # getting operation logs
+                    $logs = Get-OperationLogs
+                    Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
+
                     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
                 }
             }
