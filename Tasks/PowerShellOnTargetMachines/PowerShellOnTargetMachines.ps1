@@ -40,9 +40,9 @@ $envOperationStatus = "Passed"
 function Get-ResourceWinRmConfig
 {
 	param([string]$resourceName)
-
-	$resourceProperties = @{}
 		
+	$resourceProperties = @{}
+
 	$winrmPortToUse = ''
     $protocolToUse = ''
     # check whether https port is defined for resource
@@ -51,14 +51,14 @@ function Get-ResourceWinRmConfig
     {
         Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
         $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
-
+	
         # if resource does not have any port defined then, use https port by default
         if ([string]::IsNullOrEmpty($winrmHttpPort))
         {
             throw("`t Resource: $resourceName does not have any winrm http or https port defined, failing the operation")
-        }
+}
         else
-        {
+{
             # if resource has winrm http port defined
             $winrmPortToUse = $winrmHttpPort
             $protocolToUse = $useHttpProtocolOption
@@ -70,12 +70,12 @@ function Get-ResourceWinRmConfig
         $winrmPortToUse = $winrmHttpsPort
         $protocolToUse = $useHttpsProtocolOption
     }
-
+	
 	$resourceProperties.protocolOption = $protocolToUse
 	$resourceProperties.winrmPort = $winrmPortToUse
-
+	
 	return $resourceProperties;
-
+		
 }
 
 function Get-SkipCACheckOption
@@ -86,46 +86,46 @@ function Get-SkipCACheckOption
 		[string]$environmentName,
         [Microsoft.VisualStudio.Services.Client.VssConnection]$connection
 	)
-
+		
 	$doSkipCACheckOption = '-SkipCACheck'
 	$doNotSkipCACheckOption = ''
     $skipCACheckOption = $doSkipCACheckOption
-
+	
 	$skipCACheckKeyName = Get-SkipCACheckTagKey
-
+		
     # get skipCACheck option from environment
     $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection
-
+		
     if ($skipCACheckBool -eq "false")
-    {
+	{
         $skipCACheckOption = $doNotSkipCACheckOption
     }
 
     return $skipCACheckOption
-}
+	}
 
 function Get-ResourceConnectionDetails
-{
+	{
     param([object]$resource)
-	
+		
 	$resourceProperties = @{}
 	$resourceName = $resource.Name 
 	
 	$fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop	
 	$winrmconfig = Get-ResourceWinRmConfig -resourceName $resourceName
-			
+	
 	$resourceProperties.fqdn = $fqdn
 	$resourceProperties.winrmPort = $winrmconfig.winrmPort
 	$resourceProperties.protocolOption = $winrmconfig.protocolOption
 	$resourceProperties.credential = Get-ResourceCredentials -resource $resource	
-		
+	
 	return $resourceProperties
 }
 
 function Get-ResourcesProperties
 {
 	param([object]$resources)
-
+	
 	$skipCACheckOption = Get-SkipCACheckOption -environmentName $environmentName -connection $connection
 	
 	[hashtable]$resourcesPropertyBag = @{}

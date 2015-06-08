@@ -19,7 +19,7 @@
     "inputs": [      
         {
             "name": "MachineGroupName", 
-            "type": "string", 
+            "type": "pickList", 
             "label": "Machine Group",
             "required": true,
             "helpMarkDown": "Name of the target machine group for performing the action."
@@ -79,6 +79,14 @@
             }
         }
      ],
+    "sourceDefinitions": [ 
+        { 
+            "target": "MachineGroupName", 
+            "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+            "selector": "jsonpath:$.value[*].name", 
+            "authKey": "tfs:DevTestLabs" 
+        } 
+    ], 
     "instanceNameFormat": "$(Action) machine group ",
   "execution": {
     "PowerShell": {
