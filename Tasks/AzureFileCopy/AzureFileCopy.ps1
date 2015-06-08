@@ -332,7 +332,7 @@ try
                     Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machineName -deploymentResponse $output
                     Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
-                    Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
+                    Write-Verbose "Complete ResourceOperation for resource operation id: $resOperationId" -Verbose
                     $logs = Get-ResourceOperationLogs -deploymentResponse $output
                     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
                 }
