@@ -9,10 +9,6 @@
   "loc.input.label.arguments": "Argumente",
   "loc.input.label.workingFolder": "Arbeitsordner",
   "loc.input.help.workingFolder": "An das Tool übergebene Argumente",
-  "loc.input.label.errorPattern": "Fehlermuster",
-  "loc.input.help.errorPattern": "Optionaler regulärer Ausdruck zum Interpretieren der Ausgabe als Fehler",
-  "loc.input.label.warningPattern": "Warnungsmuster",
-  "loc.input.help.warningPattern": "Optionaler regulärer Ausdruck zum Interpretieren der Ausgabe als Warnung",
   "loc.input.label.failOnStandardError": "Fehler bei Standardfehler",
   "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden."
 }

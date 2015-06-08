@@ -14,6 +14,9 @@ param
     $Package,
 
     [String] [Parameter(Mandatory = $false)]
+    $Slot, 
+
+    [String] [Parameter(Mandatory = $false)]
     $AdditionalArguments
 )
 
@@ -41,6 +44,7 @@ Write-Verbose "Entering script Publish-AzureWebDeployment.ps1"
 Write-Host "ConnectedServiceName= $ConnectedServiceName"
 Write-Host "WebSiteName= $WebSiteName"
 Write-Host "Package= $Package"
+Write-Host "Slot= $Slot"
 Write-Host "AdditionalArguments= $AdditionalArguments"
 
 #Find the package to deploy
@@ -56,18 +60,42 @@ $packageFile = Get-SingleFile $packageFile $Package
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)
 {
-    Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue"
-    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue
+    if ($Slot)
+    {
+        Write-Host "Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue"
+        $azureWebSite = Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue
+    }
+    else
+    {
+        Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue"
+        $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue
+    }
+    
     if(!$azureWebSite)
     {
-        Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation"
-        $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation
+        if ($Slot)
+        {
+            Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Slot $Slot"
+            $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Slot $Slot
+        }
+        else
+        {
+            Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation"
+            $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation
+        }
     }
 }
 
 #Deploy the package
 $azureCommand = "Publish-AzureWebsiteProject"
-$azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments"
+if ($Slot)
+{
+    $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" -Slot `"$Slot`" $AdditionalArguments"
+}
+else
+{
+    $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments"
+}
 $finalCommand = "$azureCommand $azureCommandArguments"
 Write-Host "$finalCommand"
 Invoke-Expression -Command $finalCommand
