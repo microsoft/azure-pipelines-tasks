@@ -47,11 +47,11 @@ if ($enableDetailedLoggingString -ne "true")
 
 function Get-ResourceWinRmConfig
 {
-    param([string]$resourceName)
+	param([string]$resourceName)
 
-    $resourceProperties = @{}
-
-    $winrmPortToUse = ''
+	$resourceProperties = @{}
+		
+	$winrmPortToUse = ''
     $protocolToUse = ''
     # check whether https port is defined for resource
     $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
@@ -79,24 +79,24 @@ function Get-ResourceWinRmConfig
         $protocolToUse = $useHttpsProtocolOption
     }
 
-    $resourceProperties.protocolOption = $protocolToUse
-    $resourceProperties.winrmPort = $winrmPortToUse
+	$resourceProperties.protocolOption = $protocolToUse
+	$resourceProperties.winrmPort = $winrmPortToUse
 
-    return $resourceProperties;
+	return $resourceProperties;
 
 }
 
 function Get-SkipCACheckOption
 {
-    [CmdletBinding()]
+	[CmdletBinding()]
     Param
-    (
-        [string]$environmentName,
+	(
+		[string]$environmentName,
         [Microsoft.VisualStudio.Services.Client.VssConnection]$connection
-    )
+	)
 
     $skipCACheckOption = $doNotSkipCACheckOption
-    $skipCACheckKeyName = Get-SkipCACheckTagKey
+	$skipCACheckKeyName = Get-SkipCACheckTagKey
 
     # get skipCACheck option from environment
     $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection
@@ -112,37 +112,37 @@ function Get-SkipCACheckOption
 function Get-ResourceConnectionDetails
 {
     param([object]$resource)
-
-    $resourceProperties = @{}
-    $resourceName = $resource.Name
-
+	
+	$resourceProperties = @{}
+	$resourceName = $resource.Name 
+	
     $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName
-    $winrmconfig = Get-ResourceWinRmConfig -resourceName $resourceName
-    $resourceProperties.fqdn = $fqdn
-    $resourceProperties.winrmPort = $winrmconfig.winrmPort
-    $resourceProperties.protocolOption = $winrmconfig.protocolOption
-    $resourceProperties.credential = Get-ResourceCredentials -resource $resource
-
-    return $resourceProperties
+	$winrmconfig = Get-ResourceWinRmConfig -resourceName $resourceName
+	$resourceProperties.fqdn = $fqdn
+	$resourceProperties.winrmPort = $winrmconfig.winrmPort
+	$resourceProperties.protocolOption = $winrmconfig.protocolOption
+	$resourceProperties.credential = Get-ResourceCredentials -resource $resource	
+		
+	return $resourceProperties
 }
 
 function Get-ResourcesProperties
 {
-    param([object]$resources)
+	param([object]$resources)
 
-    $skipCACheckOption = Get-SkipCACheckOption -environmentName $environmentName -connection $connection
-    [hashtable]$resourcesPropertyBag = @{}
-
-    foreach ($resource in $resources)
+	$skipCACheckOption = Get-SkipCACheckOption -environmentName $environmentName -connection $connection
+	[hashtable]$resourcesPropertyBag = @{}
+	
+	foreach ($resource in $resources)
     {
-        $resourceName = $resource.Name
-        Write-Verbose "Get Resource properties for $resourceName " -Verbose
-        $resourceProperties = Get-ResourceConnectionDetails -resource $resource
-        $resourceProperties.skipCACheckOption = $skipCACheckOption
-        $resourcesPropertyBag.add($resourceName, $resourceProperties)
-    }
-
-    return $resourcesPropertyBag
+		$resourceName = $resource.Name
+		Write-Verbose "Get Resource properties for $resourceName " -Verbose			
+		$resourceProperties = Get-ResourceConnectionDetails -resource $resource
+		$resourceProperties.skipCACheckOption = $skipCACheckOption
+		$resourcesPropertyBag.add($resourceName, $resourceProperties)
+	}
+	
+	return $resourcesPropertyBag
 }
 
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
@@ -158,20 +158,20 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
     {
-        $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
+		$resourceProperties = $resourcesPropertyBag.Item($resource.Name)
         $machine = $resourceProperties.fqdn
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
-        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
-        Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
         $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString 
         Write-ResponseLogs -operationName $deploymentOperation -fqdn $machine -deploymentResponse $deploymentResponse
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
         Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-
-        $logs = Get-ResourceOperationLogs -deploymentResponse $deploymentResponse
-        Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection
+		
+		$logs = Get-ResourceOperationLogs -deploymentResponse $deploymentResponse		
+		Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection
         if ($status -ne "Passed")
         {
             Write-Verbose "Completed operation: $deploymentOperation with operationId: $envOperationId on environment: $environmentName with status: Failed" -Verbose
@@ -182,44 +182,44 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 }
 else
 {
-    [hashtable]$Jobs = @{} 
+	[hashtable]$Jobs = @{} 
 
-    foreach($resource in $resources)
+	foreach($resource in $resources)
     {
-        $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
+		$resourceProperties = $resourcesPropertyBag.Item($resource.Name)
         $machine = $resourceProperties.fqdn
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
-        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
-        Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-
-        $resourceProperties.resOperationId = $resOperationId
+		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+		
+		$resourceProperties.resOperationId = $resOperationId
         $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
         $Jobs.Add($job.Id, $resourceProperties)
     }
     While (Get-Job)
     {
-        Start-Sleep 10 
-        foreach($job in Get-Job)
-        {
-            if($job.State -ne "Running")
-            {
-                $output = Receive-Job -Id $job.Id
-                Remove-Job $Job
-                $status = $output.Status
-                if($status -ne "Passed")
-                {
-                    $envOperationStatus = "Failed"
-                }
-                $machineName = $Jobs.Item($job.Id).fqdn
-                $resOperationId = $Jobs.Item($job.Id).resOperationId
-
+         Start-Sleep 10 
+         foreach($job in Get-Job)
+         {
+             if($job.State -ne "Running")
+             {
+                 $output = Receive-Job -Id $job.Id
+                 Remove-Job $Job
+                 $status = $output.Status
+                 if($status -ne "Passed")
+                 {
+                     $envOperationStatus = "Failed"
+                 }
+                 $machineName = $Jobs.Item($job.Id).fqdn
+				 $resOperationId = $Jobs.Item($job.Id).resOperationId
+				 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $machineName -deploymentResponse $output
-                Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
+                 Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
                 Write-Verbose "Complete ResourceOperation for resource operation id: $resOperationId" -Verbose
-
-                $logs = Get-ResourceOperationLogs -deploymentResponse $output
-                Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
-            } 
+				 
+				 $logs = Get-ResourceOperationLogs -deploymentResponse $output		
+				 Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
+              } 
         }
     }
 }

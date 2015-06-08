@@ -2,7 +2,7 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Deploy Azure Resource Group",
+  "loc.friendlyName": "Azure Resource Group Deployment",
   "loc.helpMarkDown": "Provision and Deploy an Azure Resource Group",
   "loc.description": "Provision and Deploy an Azure Resource Group",
   "loc.instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
