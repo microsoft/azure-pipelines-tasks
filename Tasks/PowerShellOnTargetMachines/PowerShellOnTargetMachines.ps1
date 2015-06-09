@@ -47,11 +47,11 @@ if ($enableDetailedLoggingString -ne "true")
 
 function Get-ResourceWinRmConfig
 {
-	param([string]$resourceName)
+    param([string]$resourceName)
 
-	$resourceProperties = @{}
-		
-	$winrmPortToUse = ''
+    $resourceProperties = @{}
+
+    $winrmPortToUse = ''
     $protocolToUse = ''
     # check whether https port is defined for resource
     $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
@@ -79,10 +79,10 @@ function Get-ResourceWinRmConfig
         $protocolToUse = $useHttpsProtocolOption
     }
 
-	$resourceProperties.protocolOption = $protocolToUse
-	$resourceProperties.winrmPort = $winrmPortToUse
+    $resourceProperties.protocolOption = $protocolToUse
+    $resourceProperties.winrmPort = $winrmPortToUse
 
-	return $resourceProperties;
+    return $resourceProperties;
 
 }
 
