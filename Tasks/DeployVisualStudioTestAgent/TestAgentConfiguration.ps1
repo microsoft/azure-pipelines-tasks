@@ -438,7 +438,19 @@ function CanSkipTestAgentConfiguration
 
     if ($PSBoundParameters.ContainsKey('AgentUserCredential'))
     {
-        if ($AgentUserCredential.UserName -ne $existingConfiguration.UserName)
+        if ($AgentUserCredential.UserName -like ".\*" -or ( -not ($AgentUserCredential.UserName.Contains("\")) ) )
+        {
+            # for azure machines user name is either like .\username or username   
+            $existingUserName = $existingConfiguration.UserName.split('\')
+            $requiredUserName = $AgentUserCredential.UserName.split('\')
+           
+            if($existingUserName[$existingUserName.Length -1] -ne $requiredUserName[$requiredUserName.Length -1])
+            {
+ 	       Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length -1]) -Verbose
+                return $false
+            }
+        }
+        elseif ($AgentUserCredential.UserName -ne $existingConfiguration.UserName)
         {
             Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $AgentUserCredential.UserName, $existingConfiguration.UserName) -Verbose
             return $false
