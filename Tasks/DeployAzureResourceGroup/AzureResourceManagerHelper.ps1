@@ -170,40 +170,47 @@ function Get-MachineConnectionInformation
 		$publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
 		Set-Variable -Name publicIPAddressResources -Value $publicIPAddressResources -Scope "Global"
 
-		$lb = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Network/loadBalancers"}
+		$lbGroup = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Network/loadBalancers"}
+        
+        $fqdnMap = @{}
+        Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
 
-		if($lb.Count -gt 1)
-		{
-			Throw (Get-LocalizedString -Key "Current version of the task supports only templates with single load balancer.")
-		}
-		
-		if($lb)
-		{
-			$loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-			Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
+        $winRmHttpPortMap = @{}
+        Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
 
-			$fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
-			$winRmHttpPortMap = Get-FrontEndPorts -BackEndPort "5985"
-			$winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986"
-		}
-		else
+        $winRmHttpsPortMap = @{}
+        Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
+        
+        if($lbGroup.Count -gt 0)
+        {
+            foreach($lb in $lbGroup)
+            {
+                $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+			    Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
+
+			    $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
+			    $winRmHttpPortMap = Get-FrontEndPorts -BackEndPort "5985" -PortList $winRmHttpPortMap
+			    $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap
+            }
+
+            $fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
+            $winRmHttpPortMap = GetMachineNameFromId -Map $winRmHttpPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
+            $winRmHttpsPortMap = GetMachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
+        }
+        else
 		{
 			$fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
 			$winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
 			$winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
 		}
 
-		Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
-		Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
-		Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
 	}
 }
 
 function Get-FrontEndPorts
 {
-	param([string]$backEndPort)
-
-	$portList = @{}
+	param([string]$backEndPort,
+           [System.Collections.Hashtable]$portList)
 
 	if([string]::IsNullOrEmpty($backEndPort) -eq $false -and $networkInterfaceResources -and $loadBalancer -and $azureVms)
 	{
@@ -230,7 +237,6 @@ function Get-FrontEndPorts
 			}
 		}
 
-		$portList = GetMachineNameFromId -Map $portList -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
 	}
 	
 	return $portList
@@ -240,7 +246,6 @@ function Get-MachinesFqdnsForLB
 {
 	param([string]$resourceGroupName)
 
-	$fqdnMap = @{}
 	
 	if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
 	{
@@ -285,7 +290,6 @@ function Get-MachinesFqdnsForLB
 			}
 		}
 
-		$fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
 	}
 
 	return $fqdnMap
@@ -295,7 +299,6 @@ function Get-MachinesFqdns
 {
 	param([string]$resourceGroupName)
 
-	$fqdnMap = @{}
 	
 	if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
 	{
