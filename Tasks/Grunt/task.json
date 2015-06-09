@@ -1,0 +1,76 @@
+{
+    "id": "521D1E15-F5FB-4B73-A93B-B2FE88A9A286",
+    "name": "Grunt",
+    "friendlyName": "Grunt",
+    "description": "The JavaScript Task Runner",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613721)",
+    "category": "Build",
+    "visibility": [
+                "Build"
+                  ],    
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 5,
+        "Patch": 2
+    },
+    "demands" : [
+        "grunt"
+    ],
+    "minimumAgentVersion": "1.83.0",
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],    
+    "instanceNameFormat": "grunt $(targets)",
+    "inputs": [
+        { 
+            "name": "gruntFile",
+            "type": "filePath",
+            "label": "Grunt File Path",
+            "defaultValue":"gruntfile.js",
+            "required":true,
+            "helpMarkDown": "Relative path from repo root of the grunt file script file to run."
+        },
+        {
+            "name": "targets",
+            "type": "string",
+            "label": "Grunt Task(s)",
+            "defaultValue":"",
+            "helpMarkDown": "Optional.  default task will get run if not specified. Space delimited list of tasks to run.  If not specified, the default task will run.",
+            "required":false
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue":"",
+            "helpMarkDown": "Additional arguments passed to grunt.  --gruntfile is not needed since already added via gruntFile input above.",
+            "required":false,
+            "groupName":"advanced"
+        },
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue":"",
+            "required":false,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+            "groupName":"advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "grunttask.js",
+            "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\Grunttask.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
