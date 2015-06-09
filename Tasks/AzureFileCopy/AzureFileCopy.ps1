@@ -336,8 +336,7 @@ try
                     Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machineName -deploymentResponse $output
                     Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
-                    Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-
+                    Write-Verbose "Complete ResourceOperation for resource operation id: $resOperationId" -Verbose
                     # getting operation logs
                     $logs = Get-OperationLogs
                     Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
