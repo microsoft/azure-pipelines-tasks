@@ -101,10 +101,11 @@ function Get-Resources
 				$propertyBag.Add("Location", $resourceLocation)
 				$propertyBag.Add("PlatformId", $platformId)
 			 
-				#Adding resource tags
-				foreach($tagKey in $resource.Tags.Keys)
-				{
-					$tagValue = $resource.Tags.Item($tagKey)
+				#Adding resource tags				
+				foreach($tag in $resource.Tags)
+				{					
+					$tagKey = $tag.Name
+					$tagValue = $tag.Value
 					if([string]::IsNullOrEmpty($tagValue) -eq $false)
 					{
 						$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $tagValue)
