@@ -1,17 +1,17 @@
 function DoComplete-ResourceOperation
 {
     param([string]$environmentName,
-		  [guid]$envOperationId,
-		  [guid]$resOperationId,
-		  [object]$connection,
-		  [object]$deploymentResponse)
+          [guid]$envOperationId,
+          [guid]$resOperationId,
+          [object]$connection,
+          [object]$deploymentResponse)
     
-	$log = "Copy Logs : " + $deploymentResponse.DeploymentLog + "`nService Logs : " + $deploymentResponse.ServiceLog;
+    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
-    $logs = New-Object 'System.Collections.Generic.List[System.Object]'         
-    $resourceOperationLog = New-OperationLog -Content $log
-    $logs.Add($resourceOperationLog)
-    
+    # getting operation logs
+    $logs = Get-OperationLogs
+    Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
+
     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
 }
 

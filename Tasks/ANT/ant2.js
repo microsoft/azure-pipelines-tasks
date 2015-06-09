@@ -1,6 +1,6 @@
 var tl = require('vso-task-lib');
 
-var anttool = tl.which('ant', false);
+var anttool = tl.which('ant', true);
 
 var antv = new tl.ToolRunner(anttool);
 antv.arg('-version');

@@ -6,7 +6,6 @@
     "helpMarkDown": "Execute PowerShell scripts on remote machine(s)",
     "category": "Deploy",
     "visibility": [
-                "Preview",
                 "Build",
                 "Release"
                   ],

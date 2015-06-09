@@ -6,14 +6,13 @@
     "helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group",
     "category": "Test",
     "visibility": [
-                "Preview",
                 "Build"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
 

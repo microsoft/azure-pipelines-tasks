@@ -1,6 +1,6 @@
 var tl = require('vso-task-lib');
 
-var mvntool = tl.which('mvn', false);
+var mvntool = tl.which('mvn', true);
 
 var mvnv = new tl.ToolRunner(mvntool);
 mvnv.arg('-version');

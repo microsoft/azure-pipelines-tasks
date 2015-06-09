@@ -9,10 +9,6 @@
   "loc.input.label.arguments": "Argumentos",
   "loc.input.label.workingFolder": "Carpeta de trabajo",
   "loc.input.help.workingFolder": "Argumentos pasados a la herramienta",
-  "loc.input.label.errorPattern": "Patrón de error",
-  "loc.input.help.errorPattern": "Regex opcional para interpretar el resultado como un error.",
-  "loc.input.label.warningPattern": "Patrón de aviso",
-  "loc.input.help.warningPattern": "Regex opcional para interpretar el resultado como una advertencia.",
   "loc.input.label.failOnStandardError": "Error en Error estándar",
   "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."
 }
