@@ -1,5 +1,5 @@
 param(
-    [string]$ConnectedServiceName,
+    [string][Parameter(Mandatory=$false)]$ConnectedServiceName,
     [string][Parameter(Mandatory=$true)]$MachineGroupName,
     [string][Parameter(Mandatory=$true)]$Action,
     [string][Parameter(Mandatory=$false)]$Filters,
