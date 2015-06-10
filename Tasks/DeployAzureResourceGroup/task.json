@@ -50,11 +50,11 @@
             "required": true,
             "helpMarkDown": "Location of the deployment",
             "options": {
-                "East US": "East US",
-                "West US": "West US",
-                "West Europe": "West Europe",
                 "East Asia": "East Asia",
-                "Southeast Asia": "Southeast Asia"
+                "East US": "East US",
+                "Southeast Asia": "Southeast Asia",
+                "West Europe": "West Europe",
+                "West US": "West US"
             },
             "properties": {
                 "EditableOptions": "True" 
@@ -66,7 +66,7 @@
             "label": "Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template."
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates:https://github.com/Azure/azure-quickstart-templates"
         },
         {
             "name": "csmParametersFile",
@@ -74,15 +74,15 @@
             "label": "Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the path for the parameters corresponding to the template."
+            "helpMarkDown": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template."
         },
 	{
             "name": "overrideParameters",
-            "type": "string",
+            "type": "multiLine",
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters which should be overwritten in the format -name $variable, where $variable is the name of a build definition variable"
+            "helpMarkDown": "Specify the template parameters which should be overwritten in the format -parameterName $parameterValue, where $parameterValue is a variable or the actual value of the parameter."
         },
         {
             "name": "dscDeployment",
