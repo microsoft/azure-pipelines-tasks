@@ -14,7 +14,7 @@ function Delete-MachineFromProvider
     return "Succedded"
 }
 
-function Start-MachineOnProvider
+function Start-MachineInProvider
 {
     param([string]$machineGroupName,
           [string]$machineName)
@@ -22,7 +22,7 @@ function Start-MachineOnProvider
     throw (Get-LocalizedString -Key "Start operation is not supported by the pre-existing machines")
 }
 
-function Stop-MachineOnProvider
+function Stop-MachineInProvider
 {
     param([string]$machineGroupName,
           [string]$machineName)
@@ -30,7 +30,7 @@ function Stop-MachineOnProvider
     throw (Get-LocalizedString -Key "Stop operation is not supported by the pre-existing machines")
 }
 
-function Restart-MachineOnProvider
+function Restart-MachineInProvider
 {
     param([string]$machineGroupName,
           [string]$machineName)
