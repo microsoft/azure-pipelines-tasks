@@ -66,7 +66,7 @@
             "label": "Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates:https://github.com/Azure/azure-quickstart-templates"
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates:http://aka.ms/azuretemplates."
         },
         {
             "name": "csmParametersFile",
@@ -82,7 +82,7 @@
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters which should be overwritten in the format -parameterName $parameterValue, where $parameterValue is a variable or the actual value of the parameter."
+            "helpMarkDown": "Specify the template parameters which should be overwritten in the format -parameterName $(parameterValue), where $(parameterValue) is a variable or the actual value of the parameter."
         },
         {
             "name": "dscDeployment",

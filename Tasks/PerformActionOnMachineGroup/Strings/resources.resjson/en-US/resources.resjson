@@ -15,5 +15,5 @@
   "loc.input.label.BlockedFor": "Block For",
   "loc.input.help.BlockedFor": "Block a machine group either for an instance like a particular Build, or for the definition i.e. for all the instances of the definition.",
   "loc.input.label.TimeInHours": "Time in Hours",
-  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value - 0 blocks the machines indefinitely."
+  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely."
 }
