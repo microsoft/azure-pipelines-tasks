@@ -28,14 +28,16 @@ Initialize-DTLServiceHelper
 
 $machineGroup = Get-MachineGroup -machineGroupName $MachineGroupName -filters $Filters
 
-$providerName = $machineGroup.Provider.Name
-Write-Verbose -Verbose "ProviderName = $providerName"
-
 # if providerName is null or empty then follow same path as standard environment.
-if([string]::IsNullOrEmpty($providerName) -eq $true)
+if([string]::IsNullOrEmpty($machineGroup.Provider) -eq $true)
 {
     $providerName = "Pre-existing machines"
 }
+else
+{
+	$providerName = $machineGroup.Provider.Name
+}
+Write-Verbose -Verbose "ProviderName = $providerName"
 
 # Loads the required file based on the provider , so that functions in that provider are called.
 Switch ($providerName)
