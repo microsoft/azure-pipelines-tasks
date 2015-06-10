@@ -66,7 +66,7 @@ function Get-AzureStorageAccountResourceGroupName
     $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
     if ([string]::IsNullOrEmpty($azureResourceGroupName) -eq $true)
     {
-        Write-Verbose "Storage sccount: $storageAccountName not found" -Verbose
+        Write-Verbose "(ARM)Storage sccount: $storageAccountName not found" -Verbose
         Throw (Get-LocalizedString -Key "Storage acccout: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
     }
 
@@ -251,7 +251,7 @@ try
 }
 catch [Hyak.Common.CloudException]
 {
-    Write-Verbose $_.Exception.Message.ToString() -Verbose
+    Write-Verbose "(RDFE)$_.Exception.Message.ToString()" -Verbose
 
     # checking azure powershell version to make calls to ARM endpoint
     Validate-AzurePowershellVersion
