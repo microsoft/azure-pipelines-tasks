@@ -29,7 +29,7 @@ Initialize-DTLServiceHelper
 $machineGroup = Get-MachineGroup -machineGroupName $MachineGroupName -filters $Filters
 
 # if providerName is null or empty then follow same path as standard environment.
-if([string]::IsNullOrEmpty($machineGroup.Provider) -eq $true)
+if($machineGroup.Provider -eq $null)
 {
     $providerName = "Pre-existing machines"
 }
