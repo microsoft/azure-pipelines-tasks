@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -38,7 +38,7 @@
     },
     {
       "name": "StorageAccount",
-      "type": "pickList",
+      "type": "string",
       "label": "Storage Account",
       "defaultValue": "",
       "required": true,
@@ -121,12 +121,6 @@
     }
   ],
   "sourceDefinitions": [
-    {
-      "target": "StorageAccount",
-      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
-      "selector": "xpath://ServiceName",
-      "authKey": "$(ConnectedServiceName)"
-    },
     {
       "target": "EnvironmentName",
       "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",

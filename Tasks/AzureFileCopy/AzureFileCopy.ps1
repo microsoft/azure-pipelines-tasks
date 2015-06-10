@@ -53,6 +53,62 @@ $resourceWinRMHttpPortKeyName = Get-ResourceHttpTagKey
 $resourceWinRMHttpsPortKeyName = Get-ResourceHttpsTagKey
 $skipCACheckKeyName = Get-SkipCACheckTagKey
 
+function Get-AzureStorageAccountResourceGroupName
+{
+    param([string]$storageAccountName)
+
+    $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
+
+    Write-Verbose "(ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+    $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
+    Write-Verbose "(ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+
+    return $azureStorageAccountResourceDetails.ResourceGroupName
+}
+
+function Get-AzureStorageKeyFromARM
+{
+    param([string]$storageAccountName)
+
+    # get azure storage account resource group name
+    $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccount
+
+    Write-Verbose "(ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+    $storageKeyDetails = Get-AzureStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
+    $storageKey = $storageKeyDetails.Key1
+    Write-Verbose "(ARM)Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+
+    return $storageKey
+}
+
+function Get-AzureStorageKeyFromRDFE
+{
+    param([string]$storageAccountName)
+
+    Write-Verbose "(RDFE)Retrieving storage key for the storage account: $storageAccount" -Verbose
+    $storageKeyDetails = Get-AzureStorageKey -StorageAccountName $storageAccountName
+    $storageKey = $storageKeyDetails.Primary
+    Write-Verbose "(RDFE)Retrieved storage key successfully for the storage account: $storageAccount" -Verbose
+
+    return $storageKey
+}
+
+function Validate-AzurePowershellVersion
+{
+    Write-Verbose "Validating minimum required azure powershell version" -Verbose
+
+    $currentVersion =  Get-AzureCmdletsVersion
+    $minimumAzureVersion = New-Object System.Version(0, 9, 0)
+    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+    
+    if(!$versionCompatible)
+    {
+        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
+    }
+
+    Write-Verbose -Verbose "Validated the required azure powershell version"
+}
+
 function Remove-AzureContainer
 {
     param([string]$containerName,
@@ -178,11 +234,24 @@ if ($enableDetailedLoggingString -ne "true")
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
-# getting storage account key
-Write-Verbose "Retrieving storage key for the storage account: $storageAccount" -Verbose
-$storageKeyDetails = Get-AzureStorageKey -StorageAccountName $storageAccount
-$storageKey = $storageKeyDetails.Primary
-Write-Verbose "Retrieved storage key successfully for the storage account: $storageAccount" -Verbose
+# try to get storage key from RDFE, if not exists will try from ARM endpoint
+try
+{
+    # getting storage key from RDFE
+    $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
+}
+catch [Hyak.Common.CloudException]
+{
+    Write-Verbose "(RDFE)Not able to find storage account: $storageAccount" -Verbose
+
+    # checking azure powershell version to make calls to ARM endpoint
+    Validate-AzurePowershellVersion
+
+    Switch-AzureMode AzureResourceManager
+
+    # getting storage account key from ARM endpoint
+    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount -azureResourceGroupName $azureResourceGroupName
+}
 
 # creating storage context to be used while creating container, sas token, deleting container
 $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
