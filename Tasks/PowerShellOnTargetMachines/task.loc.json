@@ -44,6 +44,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {
+      "name": "Tags",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Tags",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Tags"
+    },
+    {
       "name": "ScriptPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.ScriptPath",

@@ -1,6 +1,7 @@
 param (
     [string]$environmentName,
-    [string]$machineNames, 
+    [string]$machineNames,
+    [string]$tags,
     [string]$scriptPath,
     [string]$scriptArguments,
     [string]$initializationScriptPath,
@@ -10,6 +11,7 @@ param (
 Write-Verbose "Entering script PowerShellOnTargetMachines.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
+Write-Verbose "tags = $tags" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
@@ -144,9 +146,53 @@ function Get-ResourcesProperties
     return $resourcesPropertyBag
 }
 
+function Get-WellFormedTagsList
+{
+    [CmdletBinding()]
+    Param
+    (
+        [string]$tagsListString
+    )
+
+    if([string]::IsNullOrWhiteSpace($tagsListString))
+    {
+        return $null
+    }
+
+    $tagsArray = $tagsListString.Split(';')
+    $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
+    foreach($tag in $tagsArray)
+    {
+        $tagKeyValue = $tag.Split(':')
+        if($tagKeyValue.Length -ne 2)
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        if([string]::IsNullOrWhiteSpace($tagKeyValue[0]) -or [string]::IsNullOrWhiteSpace($tagKeyValue[1]))
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        $tagTuple = New-Object "System.Tuple[string,string]" ($tagKeyValue[0].Trim(), $tagKeyValue[1].Trim())
+        $tagList.Add($tagTuple) | Out-Null
+    }
+
+    $tagList = [System.Collections.Generic.IEnumerable[Tuple[string,string]]]$tagList
+    return ,$tagList
+}
+
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-$resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
+if(-not [string]::IsNullOrWhiteSpace($machineNames))
+{
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
+}
+else
+{
+    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $tags
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
+}
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $deploymentOperation -Connection $connection
 Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose

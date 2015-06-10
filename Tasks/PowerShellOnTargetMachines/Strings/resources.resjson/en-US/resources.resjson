@@ -11,6 +11,8 @@
   "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.​",
   "loc.input.label.MachineNames": "Deploy to Machines",
   "loc.input.help.MachineNames": "Provide a comma separated list of machines for the deployment like Machine1, Machine2. Default is all machines in the Machine Group.",
+  "loc.input.label.Tags": "Deploy to Tags",
+  "loc.input.help.Tags": "Provide a comma separated list of machines for the deployment like Tag1:Value1;Tag2:FirstValue,SecondValue. Default is all machines in the Machine Group.",
   "loc.input.label.ScriptPath": "PowerShell Script",
   "loc.input.help.ScriptPath": "Location of the PowerShell script on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\Website.ps1",
   "loc.input.label.ScriptArguments": "Script Arguments",
