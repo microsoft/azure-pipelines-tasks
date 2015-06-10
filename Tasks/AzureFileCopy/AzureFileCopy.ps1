@@ -63,6 +63,13 @@ function Get-AzureStorageAccountResourceGroupName
     $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
     Write-Verbose "(ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
 
+    $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
+    if ([string]::IsNullOrEmpty($azureResourceGroupName) -eq $true)
+    {
+        Write-Verbose "Storage sccount: $storageAccountName not found" -Verbose
+        Throw (Get-LocalizedString -Key "Storage acccout: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
+    }
+
     return $azureStorageAccountResourceDetails.ResourceGroupName
 }
 
@@ -242,7 +249,7 @@ try
 }
 catch [Hyak.Common.CloudException]
 {
-    Write-Verbose "(RDFE)Not able to find storage account: $storageAccount" -Verbose
+    Write-Verbose $_.Exception.Message.ToString() -Verbose
 
     # checking azure powershell version to make calls to ARM endpoint
     Validate-AzurePowershellVersion
@@ -250,7 +257,7 @@ catch [Hyak.Common.CloudException]
     Switch-AzureMode AzureResourceManager
 
     # getting storage account key from ARM endpoint
-    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount -azureResourceGroupName $azureResourceGroupName
+    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
 }
 
 # creating storage context to be used while creating container, sas token, deleting container
