@@ -35,7 +35,7 @@
       "label": "Source",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Absolute path of the source folder or file on the local machine. Example: C:/Build/**/deploy.ps1". The expression should return a single folder or a file.
+      "helpMarkDown": "Absolute path of the source folder or file on the local machine. Example: C:/Build/**/deploy.ps1". The expression should return a single folder or a file."
     },
     {
       "name": "StorageAccount",
