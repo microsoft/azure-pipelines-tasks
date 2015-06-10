@@ -40,6 +40,8 @@ $doNotSkipCACheckOption = ''
 $azureFileCopyOperation = 'AzureFileCopy'
 $ErrorActionPreference = 'Stop'
 
+$ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
+
 . ./AzureFileCopyJob.ps1
 
 # Import all the dlls and modules which have cmdlets we need
@@ -56,8 +58,6 @@ $skipCACheckKeyName = Get-SkipCACheckTagKey
 function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
-
-    $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
 
     Write-Verbose "(ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
     $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
@@ -78,7 +78,7 @@ function Get-AzureStorageKeyFromARM
     param([string]$storageAccountName)
 
     # get azure storage account resource group name
-    $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccount
+    $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
     Write-Verbose "(ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
     $storageKeyDetails = Get-AzureStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
