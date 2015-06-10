@@ -46,7 +46,7 @@
             "label": "Deploy to Tags",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a comma separated list of machines for the deployment like Tag1:Value1;Tag2:FirstValue,SecondValue. Default is all machines in the Machine Group."
+            "helpMarkDown": "Provide a semi-colon separated list of machines for the deployment like Tag1:Value1;Tag2:FirstValue,SecondValue. Default is all machines in the Machine Group."
         },
         {
             "name": "ScriptPath",
