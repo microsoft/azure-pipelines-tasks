@@ -1,19 +1,20 @@
 ﻿{
-  "id": "94875CAE-C3AE-4540-88A5-2FA2440D8AFE",
+  "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
   "name": "AzureFileCopy",
   "friendlyName": "Azure File Copy",
-  "description": "Copy files to azure blob or vm(s)",
-  "helpMarkDown": "Copy files to azure blob or vm(s)",
+  "description": "Copy files to Azure blob or VM(s)",
+  "helpMarkDown": "Copy files to Azure blob or VM(s)",
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -34,7 +35,7 @@
       "label": "Source",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share."
+      "helpMarkDown": "Absolute path of the source folder or file on the local machine. Example: C:/Build/**/deploy.ps1". The expression should return a single folder or a file.
     },
     {
       "name": "StorageAccount",
@@ -42,7 +43,7 @@
       "label": "Storage Account",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "A pre-existing storage account is required. Storage account is also used as an intermediary for copying to Azure VMs"
+      "helpMarkDown": "Specify a pre-existing storage account. It is also used as an intermediary for copying to Azure VMs"
     },
     {
       "name": "Destination",
@@ -54,7 +55,7 @@
         "AzureBlob": "Azure Blob",
         "AzureVMs": "Azure VMs"
       },
-      "helpMarkDown": "Select the destination either Azure Blob or VMs."
+      "helpMarkDown": "Select the destination, either Azure Blob or Azure VMs."
     },
     {
       "name": "ContainerName",
@@ -62,7 +63,7 @@
       "label": "ContainerName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Provide a pre-existing container or else a new one will be created automatically.",
+      "helpMarkDown": "Container name where the files will be uploaded. We will create a container with the given name if it does not exist.",
       "visibleRule": "Destination = AzureBlob"
     },
     {
@@ -80,7 +81,7 @@
       "label": "Target Machine Group",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the target Machine Group for copying the files to.​",
+      "helpMarkDown": "Name of the target Machine Group where the files will be copied.​",
       "visibleRule": "Destination = AzureVMs"
     },
     {
@@ -89,7 +90,7 @@
       "label": "Copy to Machines",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide a comma separated list of machines like Machine1, Machine2. Default is all machines in the Machine Group.",
+      "helpMarkDown": "Provide a comma separated list of machine names like Machine1, Machine2. By default we copy to all machines in the Machine Group.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
@@ -98,7 +99,7 @@
       "label": "Destination Folder",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Local Path on the target machines for copying the files from the source. Environment variable can be used. For example, $env:windir\\BudgetIT\\Web.",
+      "helpMarkDown": "Local Path on the target machines where the files will be copied. Environment variable can be used. For example, $env:windir\\BudgetIT\\Web.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
