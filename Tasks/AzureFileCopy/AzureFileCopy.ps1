@@ -244,6 +244,8 @@ $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 # try to get storage key from RDFE, if not exists will try from ARM endpoint
 try
 {
+    Switch-AzureMode AzureServiceManagement
+
     # getting storage key from RDFE
     $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
 }
