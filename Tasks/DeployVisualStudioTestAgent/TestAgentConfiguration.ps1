@@ -141,8 +141,8 @@ function Get-TestAgentConfiguration
             elseif ($line.StartsWith("Capabilities"))
             {
                 $capabilities = GetConfigValue($line)
+            }
         }
-    }
     }
 
     Write-Verbose -Message ("Existing Configuration : TfsCollection : {0}" -f $tfsCollection) -Verbose
@@ -164,7 +164,7 @@ function Get-TestAgentConfiguration
         EnvironmentUrl = $envUrl
         MachineName = $machineName 
         PersonalAccessTokenUser = $personalAccessTokenUserName
-		Capabilities = $capabilities
+        Capabilities = $capabilities
     }
 }
 
@@ -212,6 +212,7 @@ function Set-TestAgentConfiguration
         {
             throw "EnableAutoLogon option is not valid for configureAsService."
         }
+
         $yesno = GetBoolAsYesNo($EnableAutoLogon)
         $configArgs = $configArgs + ("/enableAutoLogon:{0}" -f $yesno)
     }
@@ -222,6 +223,7 @@ function Set-TestAgentConfiguration
         {
             throw "DisableScreenSaver option is not valid for configureAsService."
         }
+
         $yesno = GetBoolAsYesNo($DisableScreenSaver)
         $configArgs = $configArgs + ("/disableScreenSaver:{0}" -f $yesno)
     }
@@ -247,38 +249,37 @@ function Set-TestAgentConfiguration
     
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
-	$doReboot = $false
+    if ($configOut.ExitCode -eq 0 -and $configAsProcess -eq $true)
+    {
+        Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
+        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential
+    }
+
+    $doReboot = $false
     # 3010 is exit code to indicate a reboot is required
     if ($configOut.ExitCode -eq 3010)
     {
-		Write-Verbose -Message "Marking the machine for reboot as exit code 3010 received" -Verbose
-		$doReboot = $true        
+        Write-Verbose -Message "Marking the machine for reboot as exit code 3010 received" -Verbose
+        $doReboot = $true
     }
-	# Todo<Bug 227810>. This restart should not be required if DSC doesnt throw a requirement of restart at every step.
-	elseif ($configOut.ExitCode -eq 0) 
+    elseif ($configOut.ExitCode -eq 0)
     {
-		if(-not (IsDtaExecutionHostRunning))
-		{
-			Write-Verbose -Message "Marking the machine for reboot as exit code 0 received and TestAgent is not running" -Verbose
-			$doReboot = $true  
-		}
-		# DSC launches dta host as non interactive and because user has selected configure as process, we need to restart.
-        	elseif ($configAsProcess)
-		{
-			Write-Verbose -Message "Restarting the machine as error code 0 received and agent is launched as non interactive prcoess." -verbose
-			$doReboot = $true  
-		}
+        if (-not (IsDtaExecutionHostRunning))
+        {
+            Write-Verbose -Message "Marking the machine for reboot as exit code 0 received and TestAgent is not running" -Verbose
+            $doReboot = $true
+        }
     }
 	
-	if($doReboot)
-	{
-		Write-Verbose "Reboot required post test agent configuration , return 3010" -Verbose
-		return 3010; # 3010 is exit code will indicate a reboot is required
-	}
-	else
-	{
-		return $configOut.ExitCode
-	}
+    if ($doReboot)
+    {
+        Write-Verbose "Reboot required post test agent configuration, returning 3010" -Verbose
+        return 3010; # 3010 is exit code will indicate a reboot is required
+    }
+    else
+    {
+        return $configOut.ExitCode
+    }
 }
 
 function GetConfigValue([string] $line)
@@ -310,6 +311,7 @@ function IsDtaExecutionHostRunning
         Write-Verbose -Message "DTAExecutionHost.exe is running" -Verbose
         return $true
     }
+
     Write-Verbose -Message "DTAExecutionHost.exe is not running" -Verbose
     return $false
 }
@@ -323,14 +325,14 @@ function LoadDependentDlls
 
 	$vsRoot = Locate-TestVersionAndVsRoot($TestAgentVersion)
 	$assemblylist = 
-				 (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Client.dll").ToString(),
-				 (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Common.dll").ToString(),
-				 (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.VisualStudio.Services.Common.dll").ToString(),
-				 (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\Microsoft.VisualStudio.TestService.Common.dll").ToString()
+            (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Client.dll").ToString(),
+            (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Common.dll").ToString(),
+            (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.VisualStudio.Services.Common.dll").ToString(),
+            (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\Microsoft.VisualStudio.TestService.Common.dll").ToString()
 
 	foreach ($asm in $assemblylist)
 	{
-		[Reflection.Assembly]::LoadFrom($asm)
+            [Reflection.Assembly]::LoadFrom($asm)
 	}
 }
 
@@ -339,11 +341,11 @@ function ReadCredentials
 {
     param
     (
-    [String] $TFSCollectionUrl,
-    [String] $TestAgentVersion
+        [String] $TFSCollectionUrl,
+        [String] $TestAgentVersion
     )
 	
-    LoadDependentDlls($TestAgentVersion) | Out-Null   
+    LoadDependentDlls($TestAgentVersion) | Out-Null
     $creds = [Microsoft.VisualStudio.TestService.Common.CredentialStoreHelper]::GetStoredCredential($TFSCollectionUrl)       
   
     return $creds                    
@@ -459,22 +461,23 @@ function CanSkipTestAgentConfiguration
 
     if ($PSBoundParameters.ContainsKey('PersonalAccessToken'))
     {
-      $creds = ReadCredentials -TFSCollectionUrl $TfsCollection -TestAgentVersion $TestAgentVersion
-       if ($creds -eq $null)
-       {
+        $creds = ReadCredentials -TFSCollectionUrl $TfsCollection -TestAgentVersion $TestAgentVersion
+        if ($creds -eq $null)
+        {
 	     Write-Verbose -Message "No personal access token found in the credential store" -Verbose
-         return $false
-    }
+             return $false
+        }
 
-       if($creds.Credentials -eq $null)
-    {
+        if($creds.Credentials -eq $null)
+        {
 	     Write-Verbose -Message "No credentials found in stored identity" -Verbose
-         return $false
-       }      
+             return $false
+        }
+  
         $storedString = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($creds.Credentials.SecurePassword))
         if ($storedString -cne $PersonalAccessToken)
         {
-		    Write-Verbose -Message "Stored Personal Access Token doesn't match with supplied value" -Verbose
+            Write-Verbose -Message "Stored Personal Access Token doesn't match with supplied value" -Verbose
             return $false
         }
     }
@@ -574,6 +577,32 @@ function EnableTracing
     Write-Verbose -Message ("Logs will now be stored at : {0}" -f $logFilePath) -Verbose
 }
 
+function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.PSCredential] $MachineCredential)
+{
+    if(IsDtaExecutionHostRunning)
+    {
+        Write-Verbose -Message "Killing any existing instances" -Verbose
+        Stop-Process -processname "DTAExecutionHost"
+    }
+
+    $ExeName = "DTAExecutionHost.exe"
+    $vsRoot = Locate-TestVersionAndVsRoot($Version)
+    if ([string]::IsNullOrWhiteSpace($vsRoot))
+    {
+        throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
+    }
+    $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
+    $exePath = "'" + $exePath + "'"
+
+    $session = New-PSSession -ComputerName . -Credential $MachineCredential
+    Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SD:01/01/2050 /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath
+
+    Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
+    Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+
+}
+
+
 function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [System.Management.Automation.PSCredential] $UserCredential)
 {
     $ExeName = "TestAgentConfig.exe"
@@ -642,7 +671,6 @@ function ConfigureTestAgent
 
     EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
-    $ret = -1
     if ($AsServiceOrProcess -eq "Service")
     {
         $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
@@ -651,20 +679,29 @@ function ConfigureTestAgent
     {
         $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
     }
-    
-    if ($ret -eq 0)
+
+    $retCode = -1
+    if ($ret.Count -gt 0)
     {
-        Write-Verbose("TestAgent Configured Successfully")
+        $retCode = $ret[$ret.Count - 1]
     }
-	elseif($ret -eq 3010)
-	{
-		Write-Verbose("TestAgent configuration requested for reboot")
-	}
+
+    Write-Verbose -Message ("Return code received : {0}" -f $retCode) -Verbose
+
+    if ($retCode -eq 0)
+    {
+        Write-Verbose -Message ("TestAgent Configured Successfully") -Verbose
+    }
+    elseif($retCode -eq 3010)
+    {
+        Write-Verbose -Message ("TestAgent configuration requested for reboot") -Verbose
+    }
     else
     {
-        throw ("TestAgent Configuration failed with exit code {0}" -f $LASTEXITCODE)
+        throw ("TestAgent Configuration failed with exit code {0}. Error code : {1}" -f $LASTEXITCODE, $retCode)
     }
-	return $ret;
+
+    return $ret;
 }
 
 $disableScreenSaver = [Boolean] $disableScreenSaver
@@ -673,10 +710,10 @@ $enableAutoLogon = [Boolean] $enableAutoLogon
 $machineCredential = New-Object System.Management.Automation.PSCredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
 $agentCredential = New-Object System.Management.Automation.PSCredential -ArgumentList $testAgentConfigUserName, (ConvertTo-SecureString -String $testAgentConfigPassword -AsPlainText -Force)
 
-$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon  -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
+$ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
+
 if ($ret -eq $false)
 {
     $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
-	return $returnCode;
+    return $returnCode;
 }
-
