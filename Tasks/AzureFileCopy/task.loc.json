@@ -2,7 +2,7 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "id": "94875CAE-C3AE-4540-88A5-2FA2440D8AFE",
+  "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
   "name": "AzureFileCopy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -10,13 +10,14 @@
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -41,7 +42,7 @@
     },
     {
       "name": "StorageAccount",
-      "type": "pickList",
+      "type": "string",
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
       "required": true,
@@ -124,12 +125,6 @@
     }
   ],
   "sourceDefinitions": [
-    {
-      "target": "StorageAccount",
-      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
-      "selector": "xpath://ServiceName",
-      "authKey": "$(ConnectedServiceName)"
-    },
     {
       "target": "EnvironmentName",
       "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
