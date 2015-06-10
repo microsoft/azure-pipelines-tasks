@@ -1,4 +1,5 @@
 param(
+    [string]$ConnectedServiceName,
     [string][Parameter(Mandatory=$true)]$MachineGroupName,
     [string][Parameter(Mandatory=$true)]$Action,
     [string][Parameter(Mandatory=$false)]$Filters,
@@ -29,6 +30,12 @@ $machineGroup = Get-MachineGroup -machineGroupName $MachineGroupName -filters $F
 
 $providerName = $machineGroup.Provider.Name
 Write-Verbose -Verbose "ProviderName = $providerName"
+
+# if providerName is null or empty then follow same path as standard environment.
+if([string]::IsNullOrEmpty($providerName) -eq $true)
+{
+    $providerName = "Pre-existing machines"
+}
 
 # Loads the required file based on the provider , so that functions in that provider are called.
 Switch ($providerName)

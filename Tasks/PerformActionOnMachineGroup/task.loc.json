@@ -21,6 +21,14 @@
   "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
       "name": "MachineGroupName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.MachineGroupName",

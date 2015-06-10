@@ -6,6 +6,8 @@
   "loc.helpMarkDown": "Perform actions like start, stop, delete on a machine group",
   "loc.description": "Machine Group Actions",
   "loc.instanceNameFormat": "$(Action) machine group ",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.help.ConnectedServiceName": "Azure subscription under which the Resource Group is deployed.",
   "loc.input.label.MachineGroupName": "Machine Group",
   "loc.input.help.MachineGroupName": "Name of the target machine group for performing the action.",
   "loc.input.label.Action": "Action",

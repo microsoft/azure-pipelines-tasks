@@ -12,11 +12,19 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
+        "Minor": 0,	
         "Patch": 6
     },
     "minimumAgentVersion": "1.83.0",
-    "inputs": [      
+    "inputs": [ 
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:Azure",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
+        },
         {
             "name": "MachineGroupName", 
             "type": "pickList", 
