@@ -184,14 +184,14 @@ function Get-WellFormedTagsList
 
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-if(-not [string]::IsNullOrWhiteSpace($machineNames))
-{
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
-}
-else
+if(-not [string]::IsNullOrWhiteSpace($tags))
 {
     $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $tags
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
+}
+else
+{
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
 }
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $deploymentOperation -Connection $connection
