@@ -18,5 +18,7 @@
   "loc.input.label.InitializationScriptPath": "Initialization Script",
   "loc.input.help.InitializationScriptPath": "Location of the data script for DSC on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
   "loc.input.label.RunPowershellInParallel": "Run PowerShell in Parallel",
-  "loc.input.help.RunPowershellInParallel": "Setting it to true will run powershell scripts in parallel on the target machines."
+  "loc.input.help.RunPowershellInParallel": "Setting it to true will run powershell scripts in parallel on the target machines.",
+  "loc.input.label.SessionVariables": "Session Variables",
+  "loc.input.help.SessionVariables": "Set session variables which would be available for both the scripts. Example. $variable = value, $var1 = \"value, 123\""
 }

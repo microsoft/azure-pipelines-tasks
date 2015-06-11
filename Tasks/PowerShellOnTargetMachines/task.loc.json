@@ -75,6 +75,15 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SessionVariables",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.SessionVariables"
     }
   ],
   "sourceDefinitions": [
