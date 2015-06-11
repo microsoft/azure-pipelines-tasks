@@ -73,13 +73,13 @@
             "groupName":"advanced",
             "helpMarkDown": "Setting it to true will run powershell scripts in parallel on the target machines."
         },
-	  {
+	    {
             "name": "SessionVariables",
             "type": "multiLine",
             "label": "Session Variables",
             "defaultValue": "",
             "required": false,
-	      "groupName":"advanced",
+	        "groupName":"advanced",
             "helpMarkDown": "Set session variables which would be available for both the scripts. Example. $variable = value, $var1 = \"value, 123\""
         }
     ],
