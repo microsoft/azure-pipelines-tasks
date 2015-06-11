@@ -195,6 +195,7 @@ else {
                 tl.command("artifact.upload", data, "Uploading artifact");
             }
             else if (artifactType === "filepath") {
+                targetPath = path.join(targetPath, artifactName);
                 tl.mkdirP(targetPath);
                 tl.cp("-Rf", stagingFolder, targetPath);
 
