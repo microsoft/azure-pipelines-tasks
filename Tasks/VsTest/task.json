@@ -100,7 +100,7 @@
     },
     {
       "name": "pathtoCustomTestAdapters",
-      "type": "string",
+      "type": "filePath",
       "label": "Path to Custom Test Adapters",
       "defaultValue": "",
       "required": false,
