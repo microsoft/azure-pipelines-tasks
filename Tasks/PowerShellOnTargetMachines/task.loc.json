@@ -36,11 +36,23 @@
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
     },
     {
+      "name": "resourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethod",
+      "required": false,
+      "defaultValue": "tags",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      }
+    },
+    {
       "name": "MachineNames",
       "type": "string",
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
+      "visibleRule": "resourceFilteringMethod = machineNames",
       "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {
@@ -49,6 +61,7 @@
       "label": "ms-resource:loc.input.label.Tags",
       "defaultValue": "",
       "required": false,
+      "visibleRule": "resourceFilteringMethod = tags",
       "helpMarkDown": "ms-resource:loc.input.help.Tags"
     },
     {
