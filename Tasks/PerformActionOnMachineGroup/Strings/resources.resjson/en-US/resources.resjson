@@ -6,6 +6,8 @@
   "loc.helpMarkDown": "Perform actions like start, stop, delete on a machine group",
   "loc.description": "Machine Group Actions",
   "loc.instanceNameFormat": "$(Action) machine group ",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.help.ConnectedServiceName": "Azure Subscription under which the Resource Group is deployed and optional for pre-existing machine group.",
   "loc.input.label.MachineGroupName": "Machine Group",
   "loc.input.help.MachineGroupName": "Name of the target machine group for performing the action.",
   "loc.input.label.Action": "Action",
@@ -15,5 +17,5 @@
   "loc.input.label.BlockedFor": "Block For",
   "loc.input.help.BlockedFor": "Block a machine group either for an instance like a particular Build, or for the definition i.e. for all the instances of the definition.",
   "loc.input.label.TimeInHours": "Time in Hours",
-  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value is 0, and that blocks the machines indefinitely."
+  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely."
 }

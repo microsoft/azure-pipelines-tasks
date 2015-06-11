@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 10
     },
     "groups": [
     {
@@ -51,7 +51,7 @@
             "name": "failOnStandardError", 
             "type": "boolean",
             "label": "Fail on Standard Error", 
-            "defaultValue": "true", 
+            "defaultValue": "false", 
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
             "groupName":"advanced"

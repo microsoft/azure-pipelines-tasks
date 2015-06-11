@@ -53,11 +53,11 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.location",
       "options": {
-        "East US": "East US",
-        "West US": "West US",
-        "West Europe": "West Europe",
         "East Asia": "East Asia",
-        "Southeast Asia": "Southeast Asia"
+        "East US": "East US",
+        "Southeast Asia": "Southeast Asia",
+        "West Europe": "West Europe",
+        "West US": "West US"
       },
       "properties": {
         "EditableOptions": "True"
@@ -81,7 +81,7 @@
     },
     {
       "name": "overrideParameters",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.overrideParameters",
       "defaultValue": "",
       "required": false,

@@ -2,25 +2,25 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
-  "name": "ShellScript",
+  "id": "521D1E15-F5FB-4B73-A93B-B2FE88A9A286",
+  "name": "Grunt",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Utility",
+  "category": "Build",
   "visibility": [
     "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 6
+    "Major": 0,
+    "Minor": 5,
+    "Patch": 2
   },
   "demands": [
-    "sh"
+    "grunt"
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -28,22 +28,32 @@
       "isExpanded": false
     }
   ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "scriptPath",
+      "name": "gruntFile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.scriptPath",
-      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.gruntFile",
+      "defaultValue": "gruntfile.js",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+      "helpMarkDown": "ms-resource:loc.input.help.gruntFile"
     },
     {
-      "name": "args",
+      "name": "targets",
       "type": "string",
-      "label": "ms-resource:loc.input.label.args",
+      "label": "ms-resource:loc.input.label.targets",
       "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.targets",
+      "required": false
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.args"
+      "groupName": "advanced"
     },
     {
       "name": "cwd",
@@ -53,25 +63,17 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
-    },
-    {
-      "name": "failOnStandardError",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.failOnStandardError",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
-      "groupName": "advanced"
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "shellscript.js",
+    "Node": {
+      "target": "grunttask.js",
       "argumentFormat": ""
     },
-    "Node": {
-      "target": "shellscript2.js",
-      "argumentFormat": ""
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Grunttask.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
     }
   }
 }

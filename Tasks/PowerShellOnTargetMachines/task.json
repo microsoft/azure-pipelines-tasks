@@ -15,7 +15,7 @@
         "Minor": 0,
         "Patch": 2
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.84.0",
     "groups": [
         {
             "name":"advanced",
@@ -46,7 +46,7 @@
             "label": "PowerShell Script",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path like c:\\BudgetIT\\Web\\Deploy\\Website.ps1"
+            "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\Website.ps1"
         },
         {
             "name": "ScriptArguments",
@@ -62,7 +62,7 @@
             "label": "Initialization Script",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Location of the data script for DSC on the target machines or on a UNC path like c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1"
+            "helpMarkDown": "Location of the data script for DSC on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1"
         },
         {
             "name": "RunPowershellInParallel",
