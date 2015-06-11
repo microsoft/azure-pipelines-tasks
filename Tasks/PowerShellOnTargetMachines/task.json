@@ -37,7 +37,7 @@
             "type":"radio",
             "label":"Select Machine By",
             "required":false,
-            "defaultValue":"tags",
+            "defaultValue":"machineNames",
             "options": {
                 "machineNames":"Machine Names",
                 "tags":"Tags"
