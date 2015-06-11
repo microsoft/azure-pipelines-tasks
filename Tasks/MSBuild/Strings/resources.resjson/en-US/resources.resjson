@@ -18,7 +18,7 @@
   "loc.input.label.logProjectEvents": "Record Project Details",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild Version",
-  "loc.input.help.msbuildVersion": "Optionally specify the version of MSBuild. It defaults to searching for the latest version.",
+  "loc.input.help.msbuildVersion": "If the preferred version cannot be found, the latest version found will be used instead.",
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
   "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildLocation": "Path to MSBuild",

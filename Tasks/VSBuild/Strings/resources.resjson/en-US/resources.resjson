@@ -15,16 +15,9 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.clean": "Clean",
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
-  "loc.input.label.vsLocationMethod": "Visual Studio",
   "loc.input.label.vsVersion": "Visual Studio Version",
-  "loc.input.label.vsLocation": "Visual Studio Location",
-  "loc.input.help.vsLocation": "Optionally supply the path to Visual Studio install location, used to locate the developer command prompt batch file.  It defaults to searching for latest version.",
-  "loc.input.label.msbuildLocationMethod": "MSBuild",
-  "loc.input.label.msbuildVersion": "MSBuild Version",
-  "loc.input.help.msbuildVersion": "Version of MSBuild to run.  Defaults to searching for latest version",
+  "loc.input.help.vsVersion": "If the preferred version cannot be found, the latest version found will be used instead.",
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
   "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
-  "loc.input.label.msbuildLocation": "Path to MSBuild",
-  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild.  It defaults to searching for latest version.",
   "loc.input.label.logProjectEvents": "Record Project Details"
 }
