@@ -1,4 +1,5 @@
 param(
+    [string][Parameter(Mandatory=$false)]$ConnectedServiceName,
     [string][Parameter(Mandatory=$true)]$MachineGroupName,
     [string][Parameter(Mandatory=$true)]$Action,
     [string][Parameter(Mandatory=$false)]$Filters,
@@ -27,7 +28,15 @@ Initialize-DTLServiceHelper
 
 $machineGroup = Get-MachineGroup -machineGroupName $MachineGroupName -filters $Filters
 
-$providerName = $machineGroup.Provider.Name
+# if providerName is null or empty then follow same path as standard environment.
+if($machineGroup.Provider -eq $null)
+{
+    $providerName = "Pre-existing machines"
+}
+else
+{
+	$providerName = $machineGroup.Provider.Name
+}
 Write-Verbose -Verbose "ProviderName = $providerName"
 
 # Loads the required file based on the provider , so that functions in that provider are called.
