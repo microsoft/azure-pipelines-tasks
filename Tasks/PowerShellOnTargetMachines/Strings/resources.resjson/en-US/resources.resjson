@@ -8,7 +8,7 @@
   "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.EnvironmentName": "Machine Group",
-  "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.​",
+  "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.",
   "loc.input.label.MachineNames": "Deploy to Machines",
   "loc.input.help.MachineNames": "Provide a comma separated list of machines for the deployment like Machine1, Machine2. Default is all machines in the Machine Group.",
   "loc.input.label.ScriptPath": "PowerShell Script",
@@ -20,5 +20,5 @@
   "loc.input.label.RunPowershellInParallel": "Run PowerShell in Parallel",
   "loc.input.help.RunPowershellInParallel": "Setting it to true will run powershell scripts in parallel on the target machines.",
   "loc.input.label.SessionVariables": "Session Variables",
-  "loc.input.help.SessionVariables": "Set session variables which would be available for both the scripts. Example. $variable = value, $var1 = \"value, 123\""
+  "loc.input.help.SessionVariables": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\""
 }

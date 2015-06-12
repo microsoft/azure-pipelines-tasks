@@ -30,7 +30,7 @@
             "label": "Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Machine Group for deploying application.?"
+            "helpMarkDown": "Name of the Machine Group for deploying application."
         },
         {
             "name": "MachineNames",
@@ -80,7 +80,7 @@
             "defaultValue": "",
             "required": false,
 	        "groupName":"advanced",
-            "helpMarkDown": "Set session variables which would be available for both the scripts. Example. $variable = value, $var1 = \"value, 123\""
+            "helpMarkDown": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\""
         }
     ],
     "sourceDefinitions": [ 
