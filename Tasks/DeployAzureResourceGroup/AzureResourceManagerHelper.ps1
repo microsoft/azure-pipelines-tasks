@@ -53,6 +53,8 @@ function Create-AzureResourceGroup
                 Write-Host (Get-LocalizedString -Key "Successfully created resource group deployment with name '{0}'" -ArgumentList $resourceGroupName)
             }
 
+            Write-Verbose -Verbose "End of resource group deployment logs"
+
             return $azureResourceGroupDeployment
         }
         else
@@ -411,14 +413,28 @@ function Refresh-SASToken
 
     if ($dscDeployment -eq "true")
     {
+        if([string]::IsNullOrEmpty($moduleUrlParameterName) -eq $true)
+        {
+            Write-Warning (Get-LocalizedString -Key "Parameter name for the modules url is not specified. Cannot generate SAS token. Refer the csm parameters file for the parameter name")
+            return $csmParametersObject
+        }
+
+        if([string]::IsNullOrEmpty($sasTokenParameterName) -eq $true)
+        {
+            Write-Warning (Get-LocalizedString -Key "Parameter name for the SAS token is not specified. Cannot generate SAS token. Refer the csm parameters file for the parameter name")
+            return $csmParametersObject
+        }
+
         if ($csmParametersObject.ContainsKey($sasTokenParameterName) -eq $false)
         {
-            throw (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $sasTokenParameterName)
+            Write-Warning (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $sasTokenParameterName)
+            return $csmParametersObject
         }
 
         if ($csmParametersObject.ContainsKey($moduleUrlParameterName) -eq $false)
         {
-            throw (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $moduleUrlParameterName)
+            Write-Warning (Get-LocalizedString -Key "'{0}' is not present in the csm parameter file. Specify correct parameter name" -ArgumentList $moduleUrlParameterName)
+            return $csmParametersObject
         }
 
         $fullBlobUri = $csmParametersObject[$moduleUrlParameterName]
@@ -523,8 +539,6 @@ function Get-MachineLogs
                 }
             }
         }
-
-        Write-Verbose -Verbose "End of machine group deployment logs"
     }
 }
 
