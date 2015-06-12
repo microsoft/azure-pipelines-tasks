@@ -1,5 +1,6 @@
 param (
     [string]$environmentName,
+    [string]$resourceFilteringMethod,
     [string]$machineNames,
     [string]$tags,
     [string]$scriptPath,
@@ -10,6 +11,7 @@ param (
 
 Write-Verbose "Entering script PowerShellOnTargetMachines.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "tags = $tags" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
@@ -184,7 +186,7 @@ function Get-WellFormedTagsList
 
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-if(-not [string]::IsNullOrWhiteSpace($tags))
+if($resourceFilteringMethod -eq "tags")
 {
     $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $tags
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
