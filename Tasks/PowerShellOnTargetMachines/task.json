@@ -33,12 +33,33 @@
             "helpMarkDown": "Name of the Machine Group for deploying application.​"
         },
         {
+            "name":"ResourceFilteringMethod",
+            "type":"radio",
+            "label":"Select Machine By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+                "machineNames":"Machine Names",
+                "tags":"Tags"
+            }
+        },
+        {
             "name": "MachineNames",
             "type": "string",
             "label": "Deploy to Machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a comma separated list of machines for the deployment like Machine1, Machine2. Default is all machines in the Machine Group."
+            "visibleRule": "ResourceFilteringMethod = machineNames",
+            "helpMarkDown": "Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34. If not specified, all machines in the Machine Group are selected."
+        },
+        {
+            "name": "Tags",
+            "type": "string",
+            "label": "Deploy to Machines (Tag based)",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "ResourceFilteringMethod = tags",
+            "helpMarkDown": "Provide a semi-colon separated list of key:value pairs. Example Role:Web,Test;OS:Win7. If not specified, all machines in the Machine Group are selected."
         },
         {
             "name": "ScriptPath",
