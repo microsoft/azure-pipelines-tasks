@@ -116,11 +116,11 @@
         {
             "name": "vmCreds",
             "type": "boolean",
-            "label": "Virtual Machine Credentials",
+            "label": "Virtual Machine Credentials (Mandatory for Deployment)",
             "required": false,
             "defaultValue": "false",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "These VM resource's credentials are used by some of the deployment and test tasks. The username and password should be same for all the Virtual Machines."
+            "helpMarkDown": "These VM resource's credentials are used by the other deployment and test tasks. The Username and Password should be same as specified in the above template and currently all the Virtual Machines should have the same credentials."
         },
         {
             "name": "vmUserName",
