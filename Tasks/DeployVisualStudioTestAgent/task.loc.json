@@ -92,15 +92,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.agentLocation"
     },
     {
-      "name": "updateTestAgent",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.updateTestAgent",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.updateTestAgent",
-      "groupName": "advanced"
-    },
-    {
       "name": "isDataCollectionOnly",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.isDataCollectionOnly",
