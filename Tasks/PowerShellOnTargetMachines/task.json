@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
     "name": "PowerShellOnTargetMachines",
     "friendlyName": "PowerShell on Target Machines",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "minimumAgentVersion": "1.84.0",
     "groups": [
@@ -30,7 +30,7 @@
             "label": "Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Machine Group for deploying application.​"
+            "helpMarkDown": "Name of the Machine Group for deploying application."
         },
         {
             "name":"ResourceFilteringMethod",
@@ -93,6 +93,15 @@
             "required": false,
             "groupName":"advanced",
             "helpMarkDown": "Setting it to true will run powershell scripts in parallel on the target machines."
+        },
+	    {
+            "name": "SessionVariables",
+            "type": "multiLine",
+            "label": "Session Variables",
+            "defaultValue": "",
+            "required": false,
+	        "groupName":"advanced",
+            "helpMarkDown": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\""
         }
     ],
     "sourceDefinitions": [ 

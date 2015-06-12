@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "minimumAgentVersion": "1.84.0",
   "groups": [
@@ -96,6 +96,15 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SessionVariables",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.SessionVariables"
     }
   ],
   "sourceDefinitions": [
