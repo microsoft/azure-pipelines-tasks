@@ -15,7 +15,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
+<<<<<<< HEAD
     "Patch": 8
+=======
+    "Patch": 7
+>>>>>>> 603dd6b... publish artifacts associate to right location for fileshare
   },
   "demands": [
     "sh"
