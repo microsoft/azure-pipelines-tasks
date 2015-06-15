@@ -195,11 +195,11 @@ else {
                 tl.command("artifact.upload", data, "Uploading artifact");
             }
             else if (artifactType === "filepath") {
-                targetPath = path.join(targetPath, artifactName);
+                var linkPath = path.join(targetPath, artifactName);
                 tl.mkdirP(targetPath);
                 tl.cp("-Rf", stagingFolder, targetPath);
 
-                data["artifactlocation"] = targetPath;
+                data["artifactlocation"] = linkPath;
                 tl.command("artifact.associate", data, "Associating artifact");
             }
         }
