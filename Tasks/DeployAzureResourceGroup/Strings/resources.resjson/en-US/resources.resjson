@@ -17,7 +17,7 @@
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.help.csmParametersFile": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template.",
   "loc.input.label.overrideParameters": "Override Template Parameters",
-  "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterVale</b></i>",
+  "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
   "loc.input.label.dscDeployment": "Generate SAS token",
   "loc.input.help.dscDeployment": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly.",
   "loc.input.label.moduleUrlParameterName": "Azure Blob Parameter",
