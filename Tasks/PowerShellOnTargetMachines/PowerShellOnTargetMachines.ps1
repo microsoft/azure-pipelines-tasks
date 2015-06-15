@@ -6,7 +6,8 @@ param (
     [string]$scriptPath,
     [string]$scriptArguments,
     [string]$initializationScriptPath,
-    [string]$runPowershellInParallel
+    [string]$runPowershellInParallel,
+    [string]$sessionVariables
     )
 
 Write-Verbose "Entering script PowerShellOnTargetMachines.ps1" -Verbose
@@ -18,6 +19,7 @@ Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
+Write-Verbose "sessionVariables = $sessionVariables" -Verbose
 
 . ./PowerShellJob.ps1
 
@@ -201,6 +203,8 @@ Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 
 $resourcesPropertyBag = Get-ResourcesProperties -resources $resources
 
+$parsedSessionVariables = Get-ParsedSessionVariables -inputSessionVariables $sessionVariables
+
 if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
@@ -210,7 +214,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
         $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
         Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString 
+        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $parsedSessionVariables 
         Write-ResponseLogs -operationName $deploymentOperation -fqdn $machine -deploymentResponse $deploymentResponse
         $status = $deploymentResponse.Status
 
@@ -242,7 +246,7 @@ else
         Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
         $resourceProperties.resOperationId = $resOperationId
-        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
+        $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $parsedSessionVariables
         $Jobs.Add($job.Id, $resourceProperties)
     }
     While (Get-Job)

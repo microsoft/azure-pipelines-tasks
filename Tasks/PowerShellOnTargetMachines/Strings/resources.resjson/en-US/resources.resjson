@@ -8,7 +8,7 @@
   "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.EnvironmentName": "Machine Group",
-  "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.​",
+  "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.",
   "loc.input.label.ResourceFilteringMethod": "Select Machine By",
   "loc.input.label.MachineNames": "Deploy to Machines",
   "loc.input.help.MachineNames": "Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34. If not specified, all machines in the Machine Group are selected.",
@@ -21,5 +21,7 @@
   "loc.input.label.InitializationScriptPath": "Initialization Script",
   "loc.input.help.InitializationScriptPath": "Location of the data script for DSC on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
   "loc.input.label.RunPowershellInParallel": "Run PowerShell in Parallel",
-  "loc.input.help.RunPowershellInParallel": "Setting it to true will run powershell scripts in parallel on the target machines."
+  "loc.input.help.RunPowershellInParallel": "Setting it to true will run powershell scripts in parallel on the target machines.",
+  "loc.input.label.SessionVariables": "Session Variables",
+  "loc.input.help.SessionVariables": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\""
 }
