@@ -47,22 +47,12 @@
       }
     },
     {
-      "name": "MachineNames",
+      "name": "MachineFilter",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
+      "label": "ms-resource:loc.input.label.MachineFilter",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "ResourceFilteringMethod = machineNames",
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
-    },
-    {
-      "name": "Tags",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Tags",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "ResourceFilteringMethod = tags",
-      "helpMarkDown": "ms-resource:loc.input.help.Tags"
+      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
     },
     {
       "name": "ScriptPath",

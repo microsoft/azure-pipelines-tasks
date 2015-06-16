@@ -85,12 +85,24 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "MachineNames",
+      "name":"ResourceFilteringMethod",
+      "type":"radio",
+      "label":"Select Machine By",
+      "required":false,
+      "defaultValue":"machineNames",
+      "options": {
+         "machineNames":"Machine Names",
+         "tags":"Tags"
+       },
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "MachineFilter",
       "type": "string",
       "label": "Copy to Machines",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide a comma separated list of machine names like Machine1, Machine2. By default we copy to all machines in the Machine Group.",
+      "helpMarkDown": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web,Test;OS:Win7.\"",
       "visibleRule": "Destination = AzureVMs"
     },
     {
