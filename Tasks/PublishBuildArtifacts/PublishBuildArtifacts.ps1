@@ -55,8 +55,8 @@ elseif ($ArtifactType -ieq "filepath")
 
     Write-Host (Get-LocalizedString -Key 'Copying artifact content to {0}...' -ArgumentList $TargetPath)
     Copy-Item $artifactStagingFolder $TargetPath -Recurse -Force
-
-    Add-BuildArtifactLink $ArtifactName $ArtifactType $TargetPath
+    $linkPath = Join-Path $TargetPath $ArtifactName
+    Add-BuildArtifactLink $ArtifactName $ArtifactType $linkPath
 }
 
 Write-Verbose "Leaving script Publish-BuildArtifacts.ps1"
