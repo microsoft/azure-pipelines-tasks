@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "minimumAgentVersion": "1.84.0",
     "groups": [
@@ -41,12 +41,23 @@
             "helpMarkDown": "Name of the target Machine Group for copying the files to.​"
         },
         {
-            "name": "MachineNames",
+            "name":"ResourceFilteringMethod",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+                "machineNames":"Machine Names",
+                "tags":"Tags"
+            }
+        },
+        {
+            "name": "MachineFilter",
             "type": "string",
             "label": "Copy to Machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a comma separated list of machines like Machine1, Machine2. Default is all machines in the Machine Group."
+            "helpMarkDown": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web,Test;OS:Win7.\""
         },        
         {
             "name": "TargetPath",

@@ -20,7 +20,7 @@
   "loc.input.help.BlobPrefix": "Useful while downloading, as it acts as a filter. Example - you can apppend your build number to all your blobs.",
   "loc.input.label.EnvironmentName": "Target Machine Group",
   "loc.input.help.EnvironmentName": "Name of the target Machine Group where the files will be copied.​",
-  "loc.input.label.ResourceFilteringMethod": "Select Machine By",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
   "loc.input.label.MachineFilter": "Copy to Machines",
   "loc.input.help.MachineFilter": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web,Test;OS:Win7.\"",
   "loc.input.label.TargetPath": "Destination Folder",
