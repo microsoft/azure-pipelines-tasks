@@ -36,7 +36,7 @@ else
     ValidateSourceFile($sourcePath)
     $sourceDirectory = Split-Path -Path $sourcePath -Parent
     $sourceFileName = Split-Path -Path $sourcePath -Leaf
-    robocopy $sourceDirectory $destinationDirectory $sourceFileName /e /NP /Copy:DAT
+    robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /e /NP /Copy:DAT
 }
 
 
