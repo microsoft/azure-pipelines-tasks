@@ -10,7 +10,8 @@ param (
 
 Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
-Write-Verbose "machineNames = $machineNames" -Verbose
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
+Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
