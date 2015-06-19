@@ -23,7 +23,10 @@ param
     $Slot,
 
     [String] [Parameter(Mandatory = $true)]
-    $AllowUpgrade
+    $AllowUpgrade,
+	
+	[String]
+	$DeploymentLabel
 )
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
@@ -179,6 +182,7 @@ Write-Host "CsPkg= $CsPkg"
 Write-Host "CsCfg= $CsCfg"
 Write-Host "Slot= $Slot"
 Write-Host "AllowUpgrade= $AllowUpgrade"
+Write-Host "DeploymentLabel= $DeploymentLabel"
 
 $allowUpgrade = Convert-String $AllowUpgrade Boolean
 
@@ -191,6 +195,11 @@ Write-Host "Find-Files -SearchPattern $CsPkg"
 $servicePackageFile = Find-Files -SearchPattern "$CsPkg"
 Write-Host "servicePackageFile= $servicePackageFile"
 $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
+
+if([string]::IsNullOrEmpty($DeploymentLabel))
+{
+	$DeploymentLabel = $ServiceName
+}
 
 Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue"
 $azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue
@@ -206,22 +215,22 @@ Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorActi
 $azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue
 if (!$azureDeployment)
 {
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions> -Label $DeploymentLabel"
+    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions -Label $DeploymentLabel
 } 
 elseif ($allowUpgrade -eq $true)
 {
     #Use -Upgrade
-    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
-    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions> -Label $DeploymentLabel"
+    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions -Label $DeploymentLabel
 }
 else
 {
     #Remove and then Re-create
     Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force"
     $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions> -Label $DeploymentLabel"
+    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions -Label $DeploymentLabel
 }
 
 
