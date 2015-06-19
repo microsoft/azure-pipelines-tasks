@@ -29,16 +29,21 @@ $isUri = [System.Uri]::IsWellFormedUriString($sourcePath, [System.UriKind]::Abso
 # Download the test agent to desired location if source path is Uri
 if($isUri)
 {
+   Write-Verbose -Message "Downloading test agent from $sourcePath to test machine."
    Invoke-WebRequest $sourcePath -OutFile $destinationPath
 }
 else
 {
-    ValidateSourceFile($sourcePath)
+   / ValidateSourceFile($sourcePath)
     $sourceDirectory = Split-Path -Path $sourcePath -Parent
     $sourceFileName = Split-Path -Path $sourcePath -Leaf
-    robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /e /NP /Copy:DAT
+
+    Write-Verbose -Message "Copying file from $sourcePath to test machine." -f $sourcePath
+    robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30
+    # If robo copy exits with non zero exit code then throw exception.
+    $robocopyExitCode = $LASTEXITCODE 
+    if($robocopyExitCode -eq 0x10)
+    {
+         throw "Robocopy failed to copy fail from $sourceDirectory to $destinationDirectory with a exit code $robocopyExitCode."
+    }
 }
-
-
-
-
