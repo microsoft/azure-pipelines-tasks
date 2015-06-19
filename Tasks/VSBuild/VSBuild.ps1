@@ -1,10 +1,10 @@
 param(
-    [string]$vsLocation, 
+    [string]$vsLocation, # Support for vsLocation has been deprecated.
     [string]$vsVersion,
-    [string]$msbuildLocation,
-    [string]$msbuildVersion,
-    [string]$msbuildArchitecture,
-    [string]$msbuildArgs, 
+    [string]$msBuildLocation, # Support for msBuildLocation has been deprecated.
+    [string]$msBuildVersion, # Support for msBuildVersion has been deprecated.
+    [string]$msBuildArchitecture,
+    [string]$msBuildArgs,
     [string]$solution, 
     [string]$platform,
     [string]$configuration,
@@ -15,10 +15,11 @@ param(
 
 Write-Verbose "Entering script VSBuild.ps1"
 Write-Verbose "vsLocation = $vsLocation"
-Write-Verbose "msbuildLocation = $msbuildLocation"
-Write-Verbose "msbuildVersion = $msbuildVersion"
-Write-Verbose "msbuildArchitecture = $msbuildArchitecture"
-Write-Verbose "msbuildArgs = $msbuildArgs"
+Write-Verbose "vsVersion = $vsVersion"
+Write-Verbose "msBuildLocation = $msBuildLocation"
+Write-Verbose "msBuildVersion = $msBuildVersion"
+Write-Verbose "msBuildArchitecture = $msBuildArchitecture"
+Write-Verbose "msBuildArgs = $msBuildArgs"
 Write-Verbose "solution = $solution"
 Write-Verbose "platform = $platform"
 Write-Verbose "configuration = $configuration"
@@ -44,6 +45,25 @@ Write-Verbose "noTimelineLogger = $noTimelineLogger"
 $cleanBuild = Convert-String $clean Boolean
 Write-Verbose "clean (converted) = $cleanBuild"
 
+# Warn if deprecated parameters were supplied.
+if ($vsLocation)
+{
+    Write-Warning (Get-LocalizedString -Key 'The Visual Studio location parameter has been deprecated. Ignoring value: {0}' -ArgumentList $vsLocation)
+    $vsLocation = $null
+}
+
+if ($msBuildLocation)
+{
+    Write-Warning (Get-LocalizedString -Key 'The MSBuild location parameter has been deprecated. Ignoring value: {0}' -ArgumentList $msBuildLocation)
+    $msBuildLocation = $null
+}
+
+if ($msBuildVersion)
+{
+    Write-Warning (Get-LocalizedString -Key 'The MSBuild version parameter has been deprecated. Ignoring value: {0}' -ArgumentList $msBuildVersion)
+    $msBuildVersion = $null
+}
+
 # check for solution pattern
 if ($solution.Contains("*") -or $solution.Contains("?"))
 {
@@ -63,7 +83,70 @@ if (!$solutionFiles)
     throw (Get-LocalizedString -Key "No solution was found using search pattern '{0}'." -ArgumentList $solution)
 }
 
-$args = $msbuildArgs;
+# Look for a specific version of Visual Studio.
+$vsToolInfo = $null
+if ($vsVersion -ne 'latest' -and "$vsVersion" -ne '')
+{
+    $vsToolInfo = Get-VisualStudioToolInfo -Version $vsVersion
+}
+
+# Look for the latest version of Visual Studio.
+if (!$vsToolInfo)
+{
+    $vsToolInfo = Get-VisualStudioToolInfo -Version ''
+
+    # Warn if not found.
+    if (!$vsToolInfo)
+    {
+        Write-Warning (Get-LocalizedString -Key 'Visual Studio not found.')
+    }
+    # Warn if the user requested a specific version that wasn't found.
+    elseif ($vsVersion -ne 'latest' -and "$vsVersion" -ne '')
+    {
+        Write-Warning (Get-LocalizedString -Key 'Unable to find the preferred Visual Studio version. Defaulting to the latest found version.')
+    }
+}
+
+# Log the VS tool info.
+if ($vsToolInfo)
+{
+    Write-Verbose ('vsToolInfo.Version = {0}' -f $vsToolInfo.Version)
+    Write-Verbose ('vsToolInfo.Path = {0}' -f $vsToolInfo.Path)
+}
+else
+{
+    Write-Verbose 'vsToolInfo = null'
+}
+
+# Determine which MSBuild version to use.
+$msBuildVersion = $null;
+if ($vsToolInfo)
+{
+    switch ($vsToolInfo.Version)
+    {
+        '14.0' { $msBuildVersion = '14.0' }
+        '12.0' { $msBuildVersion = '12.0' }
+        '11.0' { $msBuildVersion = '4.0' }
+        '10.0' { $msBuildVersion = '4.0' }
+        default { throw (Get-LocalizedString -Key "Unexpected Visual Studio version '{0}'." -ArgumentList $vsToolInfo.Version) }
+    }
+}
+
+Write-Verbose "msBuildVersion = $msBuildVersion"
+
+# Find the MSBuild location.
+Write-Verbose "Finding MSBuild location."
+$msBuildLocation = Get-MSBuildLocation -Version $msBuildVersion -Architecture $msBuildArchitecture
+if (!$msBuildLocation)
+{
+    # Not found. Throw.
+    throw (Get-LocalizedString -Key 'MSBuild not found.')
+}
+
+Write-Verbose "msBuildLocation = $msBuildLocation"
+
+# Append additional information to the MSBuild args.
+$args = $msBuildArgs;
 if ($platform)
 {
     Write-Verbose "adding platform: $platform"
@@ -76,46 +159,13 @@ if ($configuration)
     $args = "$args /p:configuration=`"$configuration`""
 }
 
+if ($vsToolInfo)
+{
+    Write-Verbose ('adding VisualStudioVersion: {0}' -f $vsToolInfo.Version)
+    $args = ('{0} /p:VisualStudioVersion="{1}"' -f $args, $vsToolInfo.Version)
+}
+
 Write-Verbose "args = $args"
-
-if (!$vsLocation)
-{
-    Write-Verbose "Finding Visual Studio install location"
-    if($vsVersion -eq "latest" -or $vsVersion -eq $null)
-    {
-        $vsLocation = Get-VisualStudioPath
-    }
-    else 
-    {
-        $vsLocation = Get-VisualStudioPath -Version $vsVersion
-    }
-}
-
-$scriptName = "VsDevCmd.bat"
-$scriptLocation = [System.IO.Path]::Combine($vsLocation, "Common7\Tools", $scriptName)
-Write-Verbose "scriptLocation = $scriptLocation"
-
-if ([System.IO.File]::Exists($scriptLocation))
-{
-    Write-Verbose "Invoking script $scriptLocation with AllowScriptToChangeEnvironment flag"
-    Invoke-BatchScript $scriptLocation -AllowScriptToChangeEnvironment
-}
-else
-{
-    Write-Warning (Get-LocalizedString -Key "Unable to find script {0}" -ArgumentList $scriptLocation)
-}
-
-if(!$msBuildLocation)
-{
-    if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
-    {
-        if($msbuildVersion -eq "latest")
-        {
-            $msbuildVersion = $null
-        }
-        $msBuildLocation = Get-MSBuildLocation -version $msbuildVersion -architecture $msbuildArchitecture
-    }   
-}
 
 if ($cleanBuild)
 {

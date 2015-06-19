@@ -1,4 +1,5 @@
 param(
+    [string]$msbuildLocationMethod,
     [string]$msbuildLocation, 
     [string]$msbuildArguments, 
     [string]$solution, 
@@ -12,6 +13,7 @@ param(
 )
 
 Write-Verbose "Entering script MSBuild.ps1"
+Write-Verbose "msbuildLocationMethod = $msbuildLocationMethod"
 Write-Verbose "msbuildLocation = $msbuildLocation"
 Write-Verbose "msbuildArguments = $msbuildArguments"
 Write-Verbose "solution = $solution"
@@ -20,6 +22,8 @@ Write-Verbose "configuration = $configuration"
 Write-Verbose "clean = $clean"
 Write-Verbose "restoreNugetPackages = $restoreNugetPackages"
 Write-Verbose "logProjectEvents = $logProjectEvents"
+Write-Verbose "msbuildVersion = $msbuildVersion"
+Write-Verbose "msbuildArchitecture = $msbuildArchitecture"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -73,18 +77,57 @@ if ($configuration)
 
 Write-Verbose "args = $args"
 
-if(!$msBuildLocation)
+# Default the msbuildLocationMethod if not specified. The input msbuildLocationMethod
+# was added to the definition after the input msbuildLocation.
+if ($msbuildLocationMethod -ne 'location' -and $msbuildLocationMethod -ne 'version')
 {
-    if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
+    # Infer the msbuildLocationMethod based on the whether msbuildLocation is specified.
+    if ($msbuildLocation)
     {
-        if($msbuildVersion -eq "latest")
+        $msbuildLocationMethod = 'location'
+    }
+    else
+    {
+        $msbuildLocationMethod = 'version'
+    }
+
+    Write-Verbose "Defaulted msbuildLocationMethod to: $msbuildLocationMethod"
+}
+
+# Default to 'version' if the user chose 'location' but didn't specify a location.
+if ($msbuildLocationMethod -eq 'location' -and "$msbuildLocation" -eq '')
+{
+    Write-Verbose 'Location not specified. Using version instead.'
+    $msbuildLocationMethod = 'version'
+}
+
+if ($msbuildLocationMethod -eq 'version')
+{
+    # Look for a specific version of MSBuild.
+    if ($msbuildVersion -ne 'latest' -and "$msbuildVersion" -ne '')
+    {
+        $msbuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
+    }
+
+    # Look for the latest version of MSBuild.
+    if (!$msbuildLocation)
+    {
+        $msbuildLocation = Get-MSBuildLocation -Version '' -Architecture $msbuildArchitecture
+
+        # Throw if not found.
+        if (!$msbuildLocation)
         {
-            # null out $msBuildVersion before passing to cmdlet so it will default to the latest on teh machine.
-            $msBuildVersion = $null
+            throw (Get-LocalizedString -Key 'MSBuild not found.')
         }
-            
-        $msBuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
-    }  
+
+        # Warn if the user requested a specific version that wasn't found.
+        if ($msbuildVersion -ne 'latest' -and "$msbuildVersion" -ne '')
+        {
+            Write-Warning (Get-LocalizedString -Key 'Unable to find the preferred MSBuild version. Defaulting to the latest found version.')
+        }
+    }
+
+    Write-Verbose "msbuildLocation = $msbuildLocation"
 }
 
 if ($cleanBuild)
