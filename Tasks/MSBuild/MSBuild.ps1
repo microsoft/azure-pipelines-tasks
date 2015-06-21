@@ -106,12 +106,14 @@ if ($msbuildLocationMethod -eq 'version')
     # Look for a specific version of MSBuild.
     if ($msbuildVersion -ne 'latest' -and "$msbuildVersion" -ne '')
     {
+        Write-Verbose "Searching for MSBuild version: $msbuildVersion"
         $msbuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
     }
 
     # Look for the latest version of MSBuild.
     if (!$msbuildLocation)
     {
+        Write-Verbose 'Searching for latest MSBuild version.'
         $msbuildLocation = Get-MSBuildLocation -Version '' -Architecture $msbuildArchitecture
 
         # Throw if not found.
