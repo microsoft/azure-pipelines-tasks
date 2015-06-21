@@ -87,12 +87,14 @@ if (!$solutionFiles)
 $vsToolInfo = $null
 if ($vsVersion -ne 'latest' -and "$vsVersion" -ne '')
 {
+    Write-Verbose "Searching for Visual Studio version: $vsVersion"
     $vsToolInfo = Get-VisualStudioToolInfo -Version $vsVersion
 }
 
 # Look for the latest version of Visual Studio.
 if (!$vsToolInfo)
 {
+    Write-Verbose 'Searching for latest Visual Studio version.'
     $vsToolInfo = Get-VisualStudioToolInfo -Version ''
 
     # Warn if not found.
