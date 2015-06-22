@@ -143,7 +143,7 @@ $msBuildLocation = Get-MSBuildLocation -Version $msBuildVersion -Architecture $m
 if (!$msBuildLocation)
 {
     # Not found. Throw.
-    throw (Get-LocalizedString -Key 'MSBuild not found.')
+    throw (Get-LocalizedString -Key 'MSBuild not found: Version = {0}, Architecture = {1}' -ArgumentList $msBuildVersion, $msBuildArchitecture)
 }
 
 Write-Verbose "msBuildLocation = $msBuildLocation"
