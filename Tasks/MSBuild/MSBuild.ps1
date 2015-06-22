@@ -79,7 +79,7 @@ Write-Verbose "args = $args"
 
 # Default the msbuildLocationMethod if not specified. The input msbuildLocationMethod
 # was added to the definition after the input msbuildLocation.
-if ($msbuildLocationMethod -ne 'location' -and $msbuildLocationMethod -ne 'version')
+if ("$msbuildLocationMethod".ToUpperInvariant() -ne 'LOCATION' -and "$msbuildLocationMethod".ToUpperInvariant() -ne 'VERSION')
 {
     # Infer the msbuildLocationMethod based on the whether msbuildLocation is specified.
     if ($msbuildLocation)
@@ -95,19 +95,25 @@ if ($msbuildLocationMethod -ne 'location' -and $msbuildLocationMethod -ne 'versi
 }
 
 # Default to 'version' if the user chose 'location' but didn't specify a location.
-if ($msbuildLocationMethod -eq 'location' -and "$msbuildLocation" -eq '')
+if ("$msbuildLocationMethod".ToUpperInvariant() -eq 'LOCATION' -and !$msbuildLocation)
 {
     Write-Verbose 'Location not specified. Using version instead.'
     $msbuildLocationMethod = 'version'
 }
 
-if ($msbuildLocationMethod -eq 'version')
+if ("$msbuildLocationMethod".ToUpperInvariant() -eq 'VERSION')
 {
     # Look for a specific version of MSBuild.
-    if ($msbuildVersion -ne 'latest' -and "$msbuildVersion" -ne '')
+    if ($msbuildVersion -and "$msbuildVersion".ToUpperInvariant() -ne 'LATEST')
     {
         Write-Verbose "Searching for MSBuild version: $msbuildVersion"
         $msbuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
+
+        # Warn if not found.
+        if (!$msbuildLocation)
+        {
+            Write-Warning (Get-LocalizedString -Key 'Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.' -ArgumentList $msbuildVersion, $msbuildArchitecture)
+        }
     }
 
     # Look for the latest version of MSBuild.
@@ -119,13 +125,7 @@ if ($msbuildLocationMethod -eq 'version')
         # Throw if not found.
         if (!$msbuildLocation)
         {
-            throw (Get-LocalizedString -Key 'MSBuild not found.')
-        }
-
-        # Warn if the user requested a specific version that wasn't found.
-        if ($msbuildVersion -ne 'latest' -and "$msbuildVersion" -ne '')
-        {
-            Write-Warning (Get-LocalizedString -Key 'Unable to find the preferred MSBuild version. Defaulting to the latest found version.')
+            throw (Get-LocalizedString -Key 'MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture.' -ArgumentList $msbuildVersion, $msbuildArchitecture)
         }
     }
 

@@ -85,10 +85,16 @@ if (!$solutionFiles)
 
 # Look for a specific version of Visual Studio.
 $vsToolInfo = $null
-if ($vsVersion -ne 'latest' -and "$vsVersion" -ne '')
+if ($vsVersion -and "$vsVersion".ToUpperInvariant() -ne 'LATEST')
 {
     Write-Verbose "Searching for Visual Studio version: $vsVersion"
     $vsToolInfo = Get-VisualStudioToolInfo -Version $vsVersion
+
+    # Warn if not found.
+    if (!$vsToolInfo)
+    {
+        Write-Warning (Get-LocalizedString -Key 'Visual Studio not found: Version = {0}. Looking for the latest version.' -ArgumentList $vsVersion)
+    }
 }
 
 # Look for the latest version of Visual Studio.
@@ -100,12 +106,7 @@ if (!$vsToolInfo)
     # Warn if not found.
     if (!$vsToolInfo)
     {
-        Write-Warning (Get-LocalizedString -Key 'Visual Studio not found.')
-    }
-    # Warn if the user requested a specific version that wasn't found.
-    elseif ($vsVersion -ne 'latest' -and "$vsVersion" -ne '')
-    {
-        Write-Warning (Get-LocalizedString -Key 'Unable to find the preferred Visual Studio version. Defaulting to the latest found version.')
+        Write-Warning (Get-LocalizedString -Key 'Visual Studio not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.')
     }
 }
 
