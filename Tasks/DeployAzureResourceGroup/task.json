@@ -82,7 +82,7 @@
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters which should be overwritten in the format -parameterName $(parameterValue), where $(parameterValue) is a variable or the actual value of the parameter."
+            "helpMarkDown": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>"
         },
         {
             "name": "dscDeployment",
