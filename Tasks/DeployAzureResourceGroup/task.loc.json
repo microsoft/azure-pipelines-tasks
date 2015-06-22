@@ -43,7 +43,8 @@
       "name": "resourceGroupName",
       "type": "string",
       "label": "ms-resource:loc.input.label.resourceGroupName",
-      "required": true
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
     },
     {
       "name": "location",
