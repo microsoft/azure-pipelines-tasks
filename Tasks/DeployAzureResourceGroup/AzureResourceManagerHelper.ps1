@@ -43,7 +43,7 @@ function Create-AzureResourceGroup
 
                 foreach($error in $deploymentError)
                 {
-                    Write-Verbose -Verbose $error
+                    Write-Host $error
                 }
 
                 Write-Host (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName)

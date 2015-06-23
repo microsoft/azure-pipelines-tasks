@@ -40,7 +40,8 @@
             "name": "resourceGroupName", 
             "type": "string", 
             "label": "Resource Group",
-            "required": true
+            "required": true,
+            "helpMarkDown": "If the resource group already exists it will be updated, else a new one will be created."
         },
         {
             "name": "location",

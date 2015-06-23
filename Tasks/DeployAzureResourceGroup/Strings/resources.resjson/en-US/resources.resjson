@@ -10,6 +10,7 @@
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure subscription under which the Resource Group is deployed.",
   "loc.input.label.resourceGroupName": "Resource Group",
+  "loc.input.help.resourceGroupName": "If the resource group already exists it will be updated, else a new one will be created.",
   "loc.input.label.location": "Location",
   "loc.input.help.location": "Location of the deployment",
   "loc.input.label.csmFile": "Template",
