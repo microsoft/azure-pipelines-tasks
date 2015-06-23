@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "azureps"
@@ -88,12 +88,24 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "MachineNames",
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "MachineFilter",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
+      "label": "ms-resource:loc.input.label.MachineFilter",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames",
+      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter",
       "visibleRule": "Destination = AzureVMs"
     },
     {

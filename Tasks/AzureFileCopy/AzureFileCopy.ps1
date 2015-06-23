@@ -6,7 +6,8 @@ param (
     [string]$containerName,
     [string]$blobPrefix,
     [string]$environmentName,
-    [string]$machineNames,
+    [string]$resourceFilteringMethod,
+    [string]$machineFilter,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
     [string]$copyFilesInParallel
@@ -21,7 +22,8 @@ Write-Verbose "destination = $destination" -Verbose
 Write-Verbose "containerName = $containerName" -Verbose
 Write-Verbose "blobPrefix = $blobPrefix" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
-Write-Verbose "machineNames = $machineNames" -Verbose
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
+Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
@@ -230,6 +232,42 @@ function Get-ResourcesProperties
     return $resourcesPropertyBag
 }
 
+function Get-WellFormedTagsList
+{
+    [CmdletBinding()]
+    Param
+    (
+        [string]$tagsListString
+    )
+
+    if([string]::IsNullOrWhiteSpace($tagsListString))
+    {
+        return $null
+    }
+
+    $tagsArray = $tagsListString.Split(';')
+    $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
+    foreach($tag in $tagsArray)
+    {
+        $tagKeyValue = $tag.Split(':')
+        if($tagKeyValue.Length -ne 2)
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        if([string]::IsNullOrWhiteSpace($tagKeyValue[0]) -or [string]::IsNullOrWhiteSpace($tagKeyValue[1]))
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        $tagTuple = New-Object "System.Tuple[string,string]" ($tagKeyValue[0].Trim(), $tagKeyValue[1].Trim())
+        $tagList.Add($tagTuple) | Out-Null
+    }
+
+    $tagList = [System.Collections.Generic.IEnumerable[Tuple[string,string]]]$tagList
+    return ,$tagList
+}
+
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
 if ($enableDetailedLoggingString -ne "true")
@@ -324,7 +362,15 @@ try
 {
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
+    if($resourceFilteringMethod -eq "tags")
+    {
+        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
+        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
+    }
+    else
+    {
+        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
+    }
 
     $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection
     Write-Verbose "Invoking Azure File Copy Operation on environment: $environmentName with operationId: $envOperationId" -Verbose

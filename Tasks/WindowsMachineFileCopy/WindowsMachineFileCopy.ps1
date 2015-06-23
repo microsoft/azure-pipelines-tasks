@@ -1,6 +1,7 @@
 param (
     [string]$environmentName,
-    [string]$machineNames, 
+    [string]$resourceFilteringMethod,
+    [string]$machineFilter,
     [string]$sourcePath,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
@@ -9,7 +10,8 @@ param (
 
 Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
-Write-Verbose "machineNames = $machineNames" -Verbose
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
+Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
@@ -105,10 +107,53 @@ function Get-ResourcesProperties
 	 return $resourcesPropertyBag
 }
 
+function Get-WellFormedTagsList
+{
+    [CmdletBinding()]
+    Param
+    (
+        [string]$tagsListString
+    )
+
+    if([string]::IsNullOrWhiteSpace($tagsListString))
+    {
+        return $null
+    }
+
+    $tagsArray = $tagsListString.Split(';')
+    $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
+    foreach($tag in $tagsArray)
+    {
+        $tagKeyValue = $tag.Split(':')
+        if($tagKeyValue.Length -ne 2)
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        if([string]::IsNullOrWhiteSpace($tagKeyValue[0]) -or [string]::IsNullOrWhiteSpace($tagKeyValue[1]))
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        $tagTuple = New-Object "System.Tuple[string,string]" ($tagKeyValue[0].Trim(), $tagKeyValue[1].Trim())
+        $tagList.Add($tagTuple) | Out-Null
+    }
+
+    $tagList = [System.Collections.Generic.IEnumerable[Tuple[string,string]]]$tagList
+    return ,$tagList
+}
 
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-$resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection -ErrorAction Stop
+if($resourceFilteringMethod -eq "tags")
+{
+    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
+}
+else
+{
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
+}
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -Connection $connection -ErrorAction Stop
 
