@@ -27,7 +27,7 @@ $b_excludeVersion = Convert-String $excludeVersion Boolean
 $b_noCache = Convert-String $noCache Boolean
 
 # Warn if deprecated parameters were supplied.
-if ($excludeVersion)
+if ($excludeVersion -and "$excludeVersion".ToUpperInvariant() -ne 'FALSE')
 {
     Write-Warning (Get-LocalizedString -Key 'The Exclude Version parameter has been deprecated. Ignoring the value.')
 }
