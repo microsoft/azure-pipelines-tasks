@@ -4,7 +4,7 @@ param(
     [string]$restoreMode = "Restore",
     [string]$excludeVersion, # Support for excludeVersion has been deprecated.
     [string]$noCache,
-    [string]$nuGetArgs,
+    [string]$nuGetRestoreArgs,
     [string]$nuGetPath
 )
 
@@ -62,9 +62,9 @@ if(!$nuGetPath)
     $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
 }
 
-if($nuGetArgs)
+if($nuGetRestoreArgs)
 {
-    $args = ($args + " " + $nuGetArgs);
+    $args = ($args + " " + $nuGetRestoreArgs);
 }
 
 
