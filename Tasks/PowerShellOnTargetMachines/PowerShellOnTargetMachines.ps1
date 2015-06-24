@@ -1,8 +1,7 @@
 param (
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineNames,
-    [string]$tags,
+    [string]$machineFilter,
     [string]$scriptPath,
     [string]$scriptArguments,
     [string]$initializationScriptPath,
@@ -13,8 +12,7 @@ param (
 Write-Verbose "Entering script PowerShellOnTargetMachines.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineNames = $machineNames" -Verbose
-Write-Verbose "tags = $tags" -Verbose
+Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
@@ -190,12 +188,12 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 if($resourceFilteringMethod -eq "tags")
 {
-    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $tags
+    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
 }
 else
 {
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
 }
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $deploymentOperation -Connection $connection
