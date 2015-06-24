@@ -12,14 +12,13 @@ function Create-AzureResourceGroup
         $startTime = Get-Date
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
-        Write-Verbose -Verbose "Creating resource group deployment with name $resourceGroupName"
-
         if (!$csmParametersObject)
         {
             $azureCommand = "New-AzureResourceGroupDeployment"
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
             Write-Host "$finalCommand"
+            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
             Invoke-Expression -Command $finalCommand
         }
         else
@@ -28,13 +27,14 @@ function Create-AzureResourceGroup
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
             Write-Host "$finalCommand"
+            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
             Invoke-Expression -Command $finalCommand
         }
 
         if ($azureResourceGroupDeployment)
         {
+            Write-Verbose -Verbose "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
             Set-Variable -Name azureResourceGroupDeployment -Value $azureResourceGroupDeployment -Scope "Global"
-
             Get-MachineLogs -ResourceGroupName $resourceGroupName
 
             if($deploymentError)
@@ -166,11 +166,19 @@ function Get-MachineConnectionInformation
     
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
+        Write-Verbose -Verbose "[Azure Resource Manager]Getting machines in resource group $resourceGroupName"
         $azureVms = Get-AzureVm -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Write-Verbose -Verbose "[Azure Resource Manager]Got machines in the resource group $resourceGroupName"
         Set-Variable -Name azureVms -Value $azureVms -Scope "Global"
+
+        Write-Verbose -Verbose "[Azure Resource Manager]Getting network interfaces in resource group $resourceGroupName"
         $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Write-Verbose -Verbose "[Azure Resource Manager]Got network interfaces in resource group $resourceGroupName"
         Set-Variable -Name networkInterfaceResources -Value $networkInterfaceResources -Scope "Global"
+
+        Write-Verbose -Verbose "[Azure Resource Manager]Getting public IP Addresses in resource group $resourceGroupName"
         $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Write-Verbose -Verbose "[Azure Resource Manager]Got public IP Addresses in resource group $resourceGroupName"
         Set-Variable -Name publicIPAddressResources -Value $publicIPAddressResources -Scope "Global"
 
         $lbGroup = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Network/loadBalancers"}
@@ -187,11 +195,13 @@ function Get-MachineConnectionInformation
         if($lbGroup.Count -gt 0)
         {
             foreach($lb in $lbGroup)
-        {
-            $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-            Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
+            {
+                Write-Verbose -Verbose "[Azure Resource Manager]Getting load balancer in resource group $resourceGroupName"
+                $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+                Write-Verbose -Verbose "[Azure Resource Manager]Got load balancer in resource group $resourceGroupName"
+                Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
 
-            $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
+                $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
                 $winRmHttpPortMap = Get-FrontEndPorts -BackEndPort "5985" -PortList $winRmHttpPortMap
                 $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap
             }
@@ -496,8 +506,9 @@ function Get-MachineLogs
 
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
+        Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group $resourceGroupName"
         $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
-
+        Write-Verbose -Verbose "[Azure Resource Manager]Got resource group $resourceGroupName"
         Set-Variable -Name azureResourceGroup -Value $azureResourceGroup -Scope "Global"
         
         $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
@@ -505,7 +516,9 @@ function Get-MachineLogs
         foreach($resource in $azureResourceGroupResources)
         {
             $name = $resource.Name
+            Write-Verbose -Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
             $vmInstanceView = Get-AzureVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
+            Write-Verbose -Verbose "[Azure Resource Manager]Got VM $name from resource group $resourceGroupName"
 
             Write-Verbose -Verbose "Machine $name status:"
             foreach($status in $vmInstanceView.Statuses)
@@ -591,11 +604,11 @@ function Create-AzureResourceGroupIfNotExist
     
     if(!$azureResourceGroup)
     {
-        Write-Verbose -Verbose "Creating resource group $resourceGroupName in $location"
+        Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
 
         $response = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
 
-        Write-Host (Get-LocalizedString -Key "Created resource group '{0}'" -ArgumentList $resourceGroupName)
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
     }
 }
 
