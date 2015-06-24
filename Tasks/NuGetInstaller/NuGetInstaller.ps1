@@ -2,7 +2,7 @@ param(
     [string]$solution,
     [ValidateSet("Restore", "Install")]
     [string]$restoreMode = "Restore",
-    [string]$excludeVersion, # Support for excludeVersion has been deprecated.
+    [string]$excludeVersion,
     [string]$noCache,
     [string]$nuGetArgs,
     [string]$nuGetPath
@@ -26,12 +26,6 @@ if(!$solution)
 $b_excludeVersion = Convert-String $excludeVersion Boolean
 $b_noCache = Convert-String $noCache Boolean
 
-# Warn if deprecated parameters were supplied.
-if ($excludeVersion)
-{
-    Write-Warning (Get-LocalizedString -Key 'The Exclude Version parameter has been deprecated. Ignoring the value.')
-}
-
 # check for solution pattern
 if ($solution.Contains("*") -or $solution.Contains("?"))
 {
@@ -52,6 +46,13 @@ if (!$solutionFiles)
 }
 
 $args = " -NonInteractive";
+
+
+if($b_excludeVersion)
+{
+    $args = (" -ExcludeVersion " + $args);
+}
+
 if($b_noCache)
 {
     $args = (" -NoCache " + $args);
