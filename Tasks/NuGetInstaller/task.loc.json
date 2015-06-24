@@ -33,6 +33,14 @@
       "required": true
     },
     {
+      "name": "excludeVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.excludeVersion",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.excludeVersion",
+      "required": "false"
+    },
+    {
       "name": "noCache",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.noCache",
