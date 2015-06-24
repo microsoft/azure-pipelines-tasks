@@ -30,14 +30,6 @@
             "required":true
         },
         {
-            "name": "excludeVersion",
-            "type": "boolean",
-            "label": "Exclude Version",
-            "defaultValue": "false",
-            "helpMarkDown": "Makes NuGet exclude package version from package folder names. Equivilent to the -ExcludeVersion NuGet.exe command line argument",
-            "required":"false"
-        },
-        {
             "name": "noCache",
             "type": "boolean",
             "label": "Disable local cache",
