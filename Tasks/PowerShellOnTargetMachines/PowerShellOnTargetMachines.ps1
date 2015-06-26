@@ -53,32 +53,64 @@ function Get-ResourceWinRmConfig
 
     $winrmPortToUse = ''
     $protocolToUse = ''
-    # check whether https port is defined for resource
-    $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
-    if ([string]::IsNullOrEmpty($winrmHttpsPort))
-    {
-        Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
-        $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
 
-        # if resource does not have any port defined then, use https port by default
-        if ([string]::IsNullOrEmpty($winrmHttpPort))
-        {
-            throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName "http://aka.ms/azuresetup" )
+    $machineGroup = Get-MachineGroup -machineGroupName $MachineGroupName
+
+    if($machineGroup.Provider -nq $null)      #  For standerd environment provider will be null
+    {
+        $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
+
+    	if ([string]::IsNullOrEmpty($winrmHttpsPort))
+   	 {
+               Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
+      	       $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
+
+               if ([string]::IsNullOrEmpty($winrmHttpPort))
+               {
+                   throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName "http://aka.ms/azuresetup" )
+               }
+               else
+               {
+                     # if resource has winrm http port defined
+                     $winrmPortToUse = $winrmHttpPort
+                     $protocolToUse = $useHttpProtocolOption
+               }
         }
         else
         {
-            # if resource has winrm http port defined
-            $winrmPortToUse = $winrmHttpPort
-            $protocolToUse = $useHttpProtocolOption
+              # if resource has winrm https port opened
+              $winrmPortToUse = $winrmHttpsPort
+              $protocolToUse = $useHttpsProtocolOption
         }
-    }
-    else
-    {
-        # if resource has winrm https port opened
-        $winrmPortToUse = $winrmHttpsPort
-        $protocolToUse = $useHttpsProtocolOption
-    }
+   }
+   else
+   {
+        $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
 
+    	if ([string]::IsNullOrEmpty($winrmHttpPort))
+   	 {
+               Write-Verbose "`t Resource: $resourceName does not have any winrm http port defined, checking for winrm https port" -Verbose
+      	       $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
+
+               if ([string]::IsNullOrEmpty($winrmHttpsPort))
+               {
+                   throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName "http://aka.ms/azuresetup" )
+               }
+               else
+               {
+                     # if resource has winrm https port defined
+                     $winrmPortToUse = $winrmHttpsPort
+                     $protocolToUse = $useHttpsProtocolOption
+               }
+        }
+        else
+        {
+              # if resource has winrm http port opened
+              $winrmPortToUse = $winrmHttpPort
+              $protocolToUse = $useHttpProtocolOption
+        }
+   }
+    
     $resourceProperties.protocolOption = $protocolToUse
     $resourceProperties.winrmPort = $winrmPortToUse
 
