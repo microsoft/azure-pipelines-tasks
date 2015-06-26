@@ -54,16 +54,17 @@ function Get-ResourceWinRmConfig
     $winrmPortToUse = ''
     $protocolToUse = ''
 
-    $machineGroup = Get-MachineGroup -machineGroupName $MachineGroupName
+    $environment = Get-Environment -environmentName $environmentName
 
-    if($machineGroup.Provider -nq $null)      #  For standerd environment provider will be null
+    if($environment.Provider -ne $null)      #  For standerd environment provider will be null
     {
         $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
 
-    	if ([string]::IsNullOrEmpty($winrmHttpsPort))
-   	 {
+    
+        if ([string]::IsNullOrEmpty($winrmHttpsPort))
+        {
                Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
-      	       $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
+               $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
 
                if ([string]::IsNullOrEmpty($winrmHttpPort))
                {
@@ -87,10 +88,10 @@ function Get-ResourceWinRmConfig
    {
         $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
 
-    	if ([string]::IsNullOrEmpty($winrmHttpPort))
-   	 {
+        if ([string]::IsNullOrEmpty($winrmHttpPort))
+        {
                Write-Verbose "`t Resource: $resourceName does not have any winrm http port defined, checking for winrm https port" -Verbose
-      	       $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
+               $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
 
                if ([string]::IsNullOrEmpty($winrmHttpsPort))
                {
