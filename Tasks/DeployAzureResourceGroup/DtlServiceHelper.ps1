@@ -104,6 +104,10 @@ function Create-Environment
         $propertyBag.Add($passwordTagKey, $property)
     }
     
+    $winRmProtocol = "Microsoft-Vslabs-MG-WinRMProtocol"
+    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, "HTTPS")
+    $propertyBag.Add($winRmProtocol, $property)
+
     $skipCACheckKey = "Microsoft-Vslabs-MG-SkipCACheck"
     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $skipCACheck)
     $propertyBag.Add($skipCACheckKey, $property)
