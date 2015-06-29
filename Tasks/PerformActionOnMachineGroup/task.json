@@ -3,7 +3,7 @@
     "name": "PerformActionOnMachineGroup",
     "friendlyName": "Machine Group Actions",
     "description": "Machine Group Actions",
-    "helpMarkDown": "Perform actions like start, stop, delete on a machine group",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
     "category": "Deploy",
     "visibility": [
                 "Preview",

@@ -3,7 +3,7 @@
     "name": "Chef",
     "friendlyName": "Chef",
     "description": "Deploy to Chef environments by editing environment attributes",
-    "helpMarkDown": "Deploy to Chef environments by editing environment attributes",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
     "category": "Deploy",
     "visibility": [
                 "Preview",

@@ -3,7 +3,7 @@
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Provision and Deploy an Azure Resource Group",
-    "helpMarkDown": "Provision and Deploy an Azure Resource Group",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
     "category": "Deploy",
     "visibility": [
                 "Preview",
