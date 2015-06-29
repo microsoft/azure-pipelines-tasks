@@ -134,11 +134,11 @@ function Get-Resources
                 }
         
                 #Adding WinRMHttp port property
-                #if([string]::IsNullOrEmpty($winRmHttpPortMap[$resource.Name]) -eq $false)
-                #{
-                #    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $winRmHttpPortMap[$resource.Name])
-                #    $propertyBag.Add("WinRM_Http", $property)
-                #}
+                if([string]::IsNullOrEmpty($winRmHttpPortMap[$resource.Name]) -eq $false)
+                {
+                    $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $winRmHttpPortMap[$resource.Name])
+                    $propertyBag.Add("WinRM_Http", $property)
+                }
 
                 #Adding WinRMHttps port property
                 if([string]::IsNullOrEmpty($winRmHttpsPortMap[$resource.Name]) -eq $false)
@@ -186,8 +186,8 @@ function Get-MachineConnectionInformation
         $fqdnMap = @{}
         Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
         
-        #$winRmHttpPortMap = @{}
-        #Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
+        $winRmHttpPortMap = @{}
+        Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
 
         $winRmHttpsPortMap = @{}
         Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
@@ -202,18 +202,35 @@ function Get-MachineConnectionInformation
                 Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
 
                 $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
-                #$winRmHttpPortMap = Get-FrontEndPorts -BackEndPort "5985" -PortList $winRmHttpPortMap
                 $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap
+                if($winRmHttpsPortMap.Count -ne 0)
+                {
+                    Set-Variable -Name WinRmProtocol -Value "HTTPS" -Scope "Global"
+                }
+                else
+                {
+                    $winRmHttpPortMap = Get-FrontEndPorts -BackEndPort "5985" -PortList $winRmHttpPortMap
+                    if($winRmHttpPortMap.Count -ne 0)
+                    {
+                        Set-Variable -Name WinRmProtocol -Value "HTTP" -Scope "Global"
+                    }
+                }
             }
 
             $fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
-            #$winRmHttpPortMap = GetMachineNameFromId -Map $winRmHttpPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
-            $winRmHttpsPortMap = GetMachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
+            if($WinRmProtocol -eq "HTTP")
+            {
+                $winRmHttpPortMap = GetMachineNameFromId -Map $winRmHttpPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
+            }
+            if($WinRmProtocol -eq "HTTPS")
+            {
+                $winRmHttpsPortMap = GetMachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
+            }
         }
         else
         {
             $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
-            #$winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
+            $winRmHttpPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
             $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
         }
 
