@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Windows Machine File Copy",
-  "loc.helpMarkDown": "Copy files to remote machine(s)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Copy files to remote machine(s)",
   "loc.instanceNameFormat": "Copy files to $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",

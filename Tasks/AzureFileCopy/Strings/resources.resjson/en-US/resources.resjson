@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure File Copy",
-  "loc.helpMarkDown": "Copy files to Azure blob or VM(s)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Copy files to Azure blob or VM(s)",
   "loc.instanceNameFormat": "$(Destination) File Copy",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",

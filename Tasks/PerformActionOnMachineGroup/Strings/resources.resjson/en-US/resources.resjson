@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Machine Group Actions",
-  "loc.helpMarkDown": "Perform actions like start, stop, delete on a machine group",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Machine Group Actions",
   "loc.instanceNameFormat": "$(Action) machine group ",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",

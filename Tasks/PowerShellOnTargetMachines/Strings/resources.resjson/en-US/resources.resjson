@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "PowerShell on Target Machines",
-  "loc.helpMarkDown": "Execute PowerShell scripts on remote machine(s)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Execute PowerShell scripts on remote machine(s)",
   "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",

@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Deploy a docker image to a remote machine",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Deploy a docker image to a remote machine",
   "loc.instanceNameFormat": "Docker Deployment: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker Endpoint",

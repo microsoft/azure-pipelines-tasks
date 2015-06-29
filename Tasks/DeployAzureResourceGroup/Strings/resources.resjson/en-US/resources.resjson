@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure Resource Group Deployment",
-  "loc.helpMarkDown": "Provision and Deploy an Azure Resource Group",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Provision and Deploy an Azure Resource Group",
   "loc.instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "Advanced Deployment Options",
