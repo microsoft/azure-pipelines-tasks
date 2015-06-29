@@ -58,6 +58,7 @@ function Get-ResourceWinRmConfig
 
     if($environment.Provider -ne $null)      #  For standerd environment provider will be null
     {
+        Write-Verbose "`t Environment is not standerd environment. Https port has higher precedence" -Verbose
         $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
 
     
@@ -86,6 +87,7 @@ function Get-ResourceWinRmConfig
    }
    else
    {
+        Write-Verbose "`t Environment is standerd environment. Http port has higher precedence" -Verbose
         $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
 
         if ([string]::IsNullOrEmpty($winrmHttpPort))
