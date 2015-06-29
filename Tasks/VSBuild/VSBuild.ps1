@@ -84,54 +84,60 @@ if (!$solutionFiles)
 }
 
 # Look for a specific version of Visual Studio.
-$vsToolInfo = $null
+$vsLocation = $null
 if ($vsVersion -and "$vsVersion".ToUpperInvariant() -ne 'LATEST')
 {
     Write-Verbose "Searching for Visual Studio version: $vsVersion"
-    $vsToolInfo = Get-VisualStudioToolInfo -Version $vsVersion
+    $vsLocation = Get-VisualStudioToolPath -Version $vsVersion
 
     # Warn if not found.
-    if (!$vsToolInfo)
+    if (!$vsLocation)
     {
         Write-Warning (Get-LocalizedString -Key 'Visual Studio not found: Version = {0}. Looking for the latest version.' -ArgumentList $vsVersion)
     }
 }
 
 # Look for the latest version of Visual Studio.
-if (!$vsToolInfo)
+if (!$vsLocation)
 {
-    Write-Verbose 'Searching for latest Visual Studio version.'
-    $vsToolInfo = Get-VisualStudioToolInfo -Version ''
-
-    # Warn if not found.
-    if (!$vsToolInfo)
+    Write-Verbose 'Searching for the latest Visual Studio version.'
+    [string[]]$vsVersions = '14.0', '12.0', '11.0', '10.0' | where { $_ -ne $vsVersion }
+    foreach ($vsVersion in $vsVersions)
     {
+        # Look for the specific version.
+        Write-Verbose "Searching for Visual Studio version: $vsVersion"
+        $vsLocation = Get-VisualStudioToolPath -Version $vsVersion
+
+        # Break if found.
+        if ($vsLocation)
+        {
+            break;
+        }
+    }
+
+    # Null out the version info and warn if not found.
+    if (!$vsLocation)
+    {
+        $vsVersion = $null
         Write-Warning (Get-LocalizedString -Key 'Visual Studio not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.')
     }
 }
 
-# Log the VS tool info.
-if ($vsToolInfo)
-{
-    Write-Verbose ('vsToolInfo.Version = {0}' -f $vsToolInfo.Version)
-    Write-Verbose ('vsToolInfo.Path = {0}' -f $vsToolInfo.Path)
-}
-else
-{
-    Write-Verbose 'vsToolInfo = null'
-}
+# Log the Visual Studio info.
+Write-Verbose ('vsVersion = {0}' -f $vsVersion)
+Write-Verbose ('vsLocation = {0}' -f $vsLocation)
 
 # Determine which MSBuild version to use.
 $msBuildVersion = $null;
-if ($vsToolInfo)
+if ($vsLocation)
 {
-    switch ($vsToolInfo.Version)
+    switch ($vsVersion)
     {
         '14.0' { $msBuildVersion = '14.0' }
         '12.0' { $msBuildVersion = '12.0' }
         '11.0' { $msBuildVersion = '4.0' }
         '10.0' { $msBuildVersion = '4.0' }
-        default { throw (Get-LocalizedString -Key "Unexpected Visual Studio version '{0}'." -ArgumentList $vsToolInfo.Version) }
+        default { throw (Get-LocalizedString -Key "Unexpected Visual Studio version '{0}'." -ArgumentList $vsVersion) }
     }
 }
 
@@ -162,10 +168,10 @@ if ($configuration)
     $args = "$args /p:configuration=`"$configuration`""
 }
 
-if ($vsToolInfo)
+if ($vsLocation)
 {
-    Write-Verbose ('adding VisualStudioVersion: {0}' -f $vsToolInfo.Version)
-    $args = ('{0} /p:VisualStudioVersion="{1}"' -f $args, $vsToolInfo.Version)
+    Write-Verbose ('adding VisualStudioVersion: {0}' -f $vsVersion)
+    $args = ('{0} /p:VisualStudioVersion="{1}"' -f $args, $vsVersion)
 }
 
 Write-Verbose "args = $args"
