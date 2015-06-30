@@ -88,7 +88,7 @@ $vsLocation = $null
 if ($vsVersion -and "$vsVersion".ToUpperInvariant() -ne 'LATEST')
 {
     Write-Verbose "Searching for Visual Studio version: $vsVersion"
-    $vsLocation = Get-VisualStudioToolPath -Version $vsVersion
+    $vsLocation = Get-VisualStudioPath -Version $vsVersion
 
     # Warn if not found.
     if (!$vsLocation)
@@ -106,7 +106,7 @@ if (!$vsLocation)
     {
         # Look for the specific version.
         Write-Verbose "Searching for Visual Studio version: $vsVersion"
-        $vsLocation = Get-VisualStudioToolPath -Version $vsVersion
+        $vsLocation = Get-VisualStudioPath -Version $vsVersion
 
         # Break if found.
         if ($vsLocation)
