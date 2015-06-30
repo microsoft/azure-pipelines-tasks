@@ -92,7 +92,7 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly."
+            "helpMarkDown": "Generates SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly."
         },
         {
             "name": "moduleUrlParameterName",
@@ -101,7 +101,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Name of the parameter corresponding to the Azure blob.",
+            "helpMarkDown": "Names of the parameter corresponding to the Azure blobs separated by ; in the format <br><b><i>url1;url2;url3</b></i>",
             "visibleRule": "dscDeployment = true"
         },
         {
@@ -111,7 +111,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Name of the SAS token parameter.",
+            "helpMarkDown": "Names of the SAS token parameters separated by ; in the format <br><b><i>token1;token2;token3</b></i>",
             "visibleRule": "dscDeployment = true"
         },
         {
