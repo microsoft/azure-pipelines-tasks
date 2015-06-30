@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "Deploy to Chef environments by editing environment attributes",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "Deploy to Chef environments by editing environment attributes",
   "loc.instanceNameFormat": "Deploy to chef by editing environment attributes of Chef subscription $(ChefServer)",
   "loc.input.label.connectedServiceName": "Chef Connection",
