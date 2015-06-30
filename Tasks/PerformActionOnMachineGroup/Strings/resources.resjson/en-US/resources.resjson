@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Machine Group Actions",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "Machine Group Actions",
   "loc.instanceNameFormat": "$(Action) machine group ",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",

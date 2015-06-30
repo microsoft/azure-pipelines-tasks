@@ -3,7 +3,7 @@
   "name": "AzureFileCopy",
   "friendlyName": "Azure File Copy",
   "description": "Copy files to Azure blob or VM(s)",
-  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/AzureFileCopy/README.md)",
   "category": "Deploy",
   "visibility": [
     "Preview",

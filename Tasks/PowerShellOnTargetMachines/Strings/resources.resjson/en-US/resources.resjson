@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "PowerShell on Target Machines",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
   "loc.description": "Execute PowerShell scripts on remote machine(s)",
   "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",

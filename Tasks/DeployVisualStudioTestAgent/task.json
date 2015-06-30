@@ -3,7 +3,7 @@
     "name": "DeployVisualStudioTestAgent",
     "friendlyName": "Visual Studio Test Agent Deployment",
     "description": "Deploy and configure Test Agent to run tests on a lab machine group",
-    "helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
     "category": "Test",
     "visibility": [
                 "Build"

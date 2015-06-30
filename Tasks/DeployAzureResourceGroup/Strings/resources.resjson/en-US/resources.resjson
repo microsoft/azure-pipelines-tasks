@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure Resource Group Deployment",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Provision and Deploy an Azure Resource Group",
   "loc.instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "Advanced Deployment Options",

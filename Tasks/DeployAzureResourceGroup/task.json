@@ -3,7 +3,7 @@
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Provision and Deploy an Azure Resource Group",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
     "visibility": [
                 "Preview",
