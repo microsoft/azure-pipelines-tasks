@@ -47,12 +47,24 @@
       "groupName": "testMachineGroups"
     },
     {
-      "name": "testMachines",
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "MachineFilter",
       "type": "string",
-      "label": "ms-resource:loc.input.label.testMachines",
+      "label": "ms-resource:loc.input.label.MachineFilter",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.testMachines",
+      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter",
       "groupName": "testMachineGroups"
     },
     {
