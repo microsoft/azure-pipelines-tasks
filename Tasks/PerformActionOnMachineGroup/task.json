@@ -2,7 +2,7 @@
     "id": "434AFC5D-31F0-4E3E-BE20-90AF34B75D7A",
     "name": "PerformActionOnMachineGroup",
     "friendlyName": "Machine Group Actions",
-    "description": "Machine Group Actions",
+    "description": "Perform actions like start, stop, delete on a machine group",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "minimumAgentVersion": "1.83.0",
     "inputs": [ 
