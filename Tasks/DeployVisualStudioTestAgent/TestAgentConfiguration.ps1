@@ -196,14 +196,14 @@ function Set-TestAgentConfiguration
 
     if ($PSBoundParameters.ContainsKey('AgentUserCredential') -and $AgentUserCredential)
     {
-        $configArgs = $configArgs + ("/userName:{0}" -f $AgentUserCredential.UserName)
-        $configArgs = $configArgs + ("/password:{0}" -f $AgentUserCredential.GetNetworkCredential().Password)
+        $configArgs = $configArgs + ("/userName::`"{0}`"" -f $AgentUserCredential.UserName)
+        $configArgs = $configArgs + ("/password::`"{0}`""  -f $AgentUserCredential.GetNetworkCredential().Password)
     }
 
     if ($PSBoundParameters.ContainsKey('MachineUserCredential') -and $MachineUserCredential)
     {
-        $configArgs = $configArgs + ("/adminUserName:{0}" -f $MachineUserCredential.UserName)
-        $configArgs = $configArgs + ("/adminPassword:{0}" -f $MachineUserCredential.GetNetworkCredential().Password)
+        $configArgs = $configArgs + ("/adminUserName::`"{0}`""  -f $MachineUserCredential.UserName)
+        $configArgs = $configArgs + ("/adminPassword::`"{0}`""  -f $MachineUserCredential.GetNetworkCredential().Password)
     }
 
     if ($PSBoundParameters.ContainsKey('EnableAutoLogon'))
@@ -230,7 +230,7 @@ function Set-TestAgentConfiguration
     
     if (-not [string]::IsNullOrWhiteSpace($EnvironmentUrl))
     {
-        $configArgs = $configArgs +  ("/dtlEnvUrl:{0}" -f $EnvironmentUrl)
+        $configArgs = $configArgs +  ("/dtlEnvUrl::`"{0}`""  -f $EnvironmentUrl)
     }
 
     if (-not [string]::IsNullOrWhiteSpace($PersonalAccessToken))
@@ -240,7 +240,7 @@ function Set-TestAgentConfiguration
 
     if (-not [string]::IsNullOrWhiteSpace($MachineName))
     {
-        $configArgs = $configArgs +  ("/dtlMachineName:{0}" -f $MachineName)
+        $configArgs = $configArgs +  ("/dtlMachineName::`"{0}`""  -f $MachineName)
     }
 	if (-not [string]::IsNullOrWhiteSpace($Capabilities))
     {
