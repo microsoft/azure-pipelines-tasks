@@ -15,12 +15,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [
     "msbuild"
   ],
-  "minimumAgentVersion": "1.84.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",

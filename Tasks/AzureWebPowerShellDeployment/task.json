@@ -1,8 +1,8 @@
 ﻿{
   "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
   "name": "AzureWebPowerShellDeployment",
-  "friendlyName": "Azure Web Site Deployment",
-  "description": "Deploy a website to Microsoft Azure",
+  "friendlyName": "Azure Web App Deployment",
+  "description": "Publish a Visual Studio Web project to a Microsoft Azure Web App using Web Deploy",
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
   "category": "Deploy",
   "visibility": [
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 14
+    "Patch": 15
   },
   "demands": [
     "azureps"
@@ -31,14 +31,14 @@
     {
       "name": "WebSiteName",
       "type": "pickList",
-      "label": "Web Site Name",
+      "label": "Web App Name",
       "defaultValue": "",
       "required": true
     },
     {
       "name": "WebSiteLocation",
       "type": "pickList",
-      "label": "Web Site Location",
+      "label": "Web App Location",
       "defaultValue": "South Central US",
       "required": true,
       "helpMarkDown": "Select a region for deployment.",
@@ -72,9 +72,9 @@
     {
       "name": "Package",
       "type": "string",
-      "label": "Package",
+      "label": "Web Deploy Package",
       "defaultValue": "",
-      "helpMarkDown": "Path of package under the default artifact directory.",
+      "helpMarkDown": "Path to the Visual Studio Web Deploy package under the default artifact directory.",
       "required": true
     },
     {

@@ -2,18 +2,18 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Azure Web Site Deployment",
+  "loc.friendlyName": "Azure Web App Deployment",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
-  "loc.description": "Deploy a website to Microsoft Azure",
+  "loc.description": "Publish a Visual Studio Web project to a Microsoft Azure Web App using Web Deploy",
   "loc.instanceNameFormat": "Azure Deployment: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure subscription to target for deployment.",
-  "loc.input.label.WebSiteName": "Web Site Name",
-  "loc.input.label.WebSiteLocation": "Web Site Location",
+  "loc.input.label.WebSiteName": "Web App Name",
+  "loc.input.label.WebSiteLocation": "Web App Location",
   "loc.input.help.WebSiteLocation": "Select a region for deployment.",
   "loc.input.label.Slot": "Slot",
   "loc.input.help.Slot": "Slot",
-  "loc.input.label.Package": "Package",
-  "loc.input.help.Package": "Path of package under the default artifact directory.",
+  "loc.input.label.Package": "Web Deploy Package",
+  "loc.input.help.Package": "Path to the Visual Studio Web Deploy package under the default artifact directory.",
   "loc.input.label.AdditionalArguments": "Additional Arguments"
 }

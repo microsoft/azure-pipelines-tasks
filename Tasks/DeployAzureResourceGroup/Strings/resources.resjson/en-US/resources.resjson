@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure Resource Group Deployment",
-  "loc.helpMarkDown": "Provision and Deploy an Azure Resource Group",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Provision and Deploy an Azure Resource Group",
   "loc.instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "Advanced Deployment Options",
@@ -20,11 +20,11 @@
   "loc.input.label.overrideParameters": "Override Template Parameters",
   "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
   "loc.input.label.dscDeployment": "Generate SAS token",
-  "loc.input.help.dscDeployment": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly.",
+  "loc.input.help.dscDeployment": "Generates SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly.",
   "loc.input.label.moduleUrlParameterName": "Azure Blob Parameter",
-  "loc.input.help.moduleUrlParameterName": "Name of the parameter corresponding to the Azure blob.",
+  "loc.input.help.moduleUrlParameterName": "Names of the parameter corresponding to the Azure blobs separated by ; in the format <br><b><i>url1;url2;url3</b></i>",
   "loc.input.label.sasTokenParameterName": "SAS Token Parameter",
-  "loc.input.help.sasTokenParameterName": "Name of the SAS token parameter.",
+  "loc.input.help.sasTokenParameterName": "Names of the SAS token parameters separated by ; in the format <br><b><i>token1;token2;token3</b></i>",
   "loc.input.label.vmCreds": "Virtual Machine Credentials (Mandatory for Deployment)",
   "loc.input.help.vmCreds": "These VM resource's credentials are used by the other deployment and test tasks. The Username and Password should be same as specified in the above template and currently all the Virtual Machines should have the same credentials.",
   "loc.input.label.vmUserName": "Username",

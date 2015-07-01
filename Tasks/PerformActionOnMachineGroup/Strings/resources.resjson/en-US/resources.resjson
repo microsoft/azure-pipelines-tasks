@@ -3,8 +3,8 @@
 // *******************************************************
 {
   "loc.friendlyName": "Machine Group Actions",
-  "loc.helpMarkDown": "Perform actions like start, stop, delete on a machine group",
-  "loc.description": "Machine Group Actions",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
+  "loc.description": "Perform actions like start, stop, delete on a machine group",
   "loc.instanceNameFormat": "$(Action) machine group ",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure Subscription under which the Resource Group is deployed and optional for pre-existing machine group.",
