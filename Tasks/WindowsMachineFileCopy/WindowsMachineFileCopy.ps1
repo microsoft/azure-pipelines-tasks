@@ -24,6 +24,9 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
+# keep machineNames parameter name unchanged duo to back compatibility
+$machineFilter = $machineNames
+
 # Default + constants #
 $defaultWinRMPort = '5985'
 $defaultSkipCACheckOption = ''	
@@ -147,12 +150,12 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 if($resourceFilteringMethod -eq "tags")
 {
-    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineNames
+    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
 }
 else
 {
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
 }
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -Connection $connection -ErrorAction Stop

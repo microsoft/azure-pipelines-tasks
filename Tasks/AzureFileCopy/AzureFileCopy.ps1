@@ -28,6 +28,9 @@ Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 
+# keep machineNames parameter name unchanged duo to back compatibility
+$machineFilter = $machineNames
+
 # Constants #
 $defaultWinRMPort = '5986'
 $defaultConnectionProtocolOption = ''
@@ -364,12 +367,12 @@ try
 
     if($resourceFilteringMethod -eq "tags")
     {
-        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineNames
+        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
         $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
     }
     else
     {
-        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
+        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
     }
 
     $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection

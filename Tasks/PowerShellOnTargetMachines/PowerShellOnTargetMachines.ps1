@@ -26,6 +26,9 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
+# keep machineNames parameter name unchanged duo to back compatibility
+$machineFilter = $machineNames
+
 # Getting resource tag key name for corresponding tag
 $resourceFQDNKeyName = Get-ResourceFQDNTagKey
 $resourceWinRMHttpPortKeyName = Get-ResourceHttpTagKey
@@ -223,12 +226,12 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 if($resourceFilteringMethod -eq "tags")
 {
-    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineNames
+    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
 }
 else
 {
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
 }
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $deploymentOperation -Connection $connection
