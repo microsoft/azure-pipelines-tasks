@@ -1,7 +1,7 @@
 param(
     [string]$testMachineGroup,
     [string]$resourceFilteringMethod,
-    [string]$machineFilter,
+    [string]$testMachines,
     [string]$runAsProcess,
     [string]$machineUserName,
     [string]$machinePassword,
@@ -17,7 +17,7 @@ $disableScreenSaver = $runAsProcess
 Write-Verbose "Entering script DeployTestAgent.ps1"
 Write-Verbose "testMachineGroup = $testMachineGroup"
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter"
+Write-Verbose "testMachines = $testMachines"
 Write-Verbose "runAsProcess = $runAsProcess"
 Write-Verbose "logonAutomatically = $logonAutomatically"
 Write-Verbose "disableScreenSaver = $disableScreenSaver"
@@ -64,11 +64,11 @@ if ( [string]::IsNullOrEmpty($personalAccessToken))
 Write-Verbose "Calling Invoke-DeployTestAgent"
 if($resourceFilteringMethod -eq "tags")
 {
-    Invoke-DeployTestAgent -TagFilter $machineFilter -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+    Invoke-DeployTestAgent -TagFilter $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
 }
 else
 {
-    Invoke-DeployTestAgent -MachineNames $machineFilter -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+    Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
 }
 
 Write-Verbose "Leaving script DeployTestAgent.ps1"
