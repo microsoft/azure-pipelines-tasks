@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Test Agent Deployment",
-  "loc.helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
   "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group",
   "loc.instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Test Machine Group",

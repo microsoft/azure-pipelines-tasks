@@ -3,7 +3,7 @@
     "name": "PowerShellOnTargetMachines",
     "friendlyName": "PowerShell on Target Machines",
     "description": "Execute PowerShell scripts on remote machine(s)",
-    "helpMarkDown": "Execute PowerShell scripts on remote machine(s)",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
     "category": "Deploy",
     "visibility": [
                 "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "1.84.0",
     "groups": [
