@@ -1,7 +1,7 @@
 param (
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineFilter,
+    [string]$machineNames,
     [string]$sourcePath,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
@@ -11,7 +11,7 @@ param (
 Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter" -Verbose
+Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
@@ -147,12 +147,12 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 if($resourceFilteringMethod -eq "tags")
 {
-    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
+    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineNames
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
 }
 else
 {
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
 }
 
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -Connection $connection -ErrorAction Stop

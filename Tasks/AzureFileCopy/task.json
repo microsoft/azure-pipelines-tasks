@@ -97,7 +97,7 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "MachineFilter",
+      "name": "MachineNames",
       "type": "string",
       "label": "Copy to Machines",
       "defaultValue": "",

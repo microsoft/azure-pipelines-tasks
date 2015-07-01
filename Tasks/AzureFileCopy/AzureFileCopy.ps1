@@ -7,7 +7,7 @@ param (
     [string]$blobPrefix,
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineFilter,
+    [string]$machineNames,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
     [string]$copyFilesInParallel
@@ -23,7 +23,7 @@ Write-Verbose "containerName = $containerName" -Verbose
 Write-Verbose "blobPrefix = $blobPrefix" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter" -Verbose
+Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
@@ -364,12 +364,12 @@ try
 
     if($resourceFilteringMethod -eq "tags")
     {
-        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
+        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineNames
         $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
     }
     else
     {
-        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
+        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
     }
 
     $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection

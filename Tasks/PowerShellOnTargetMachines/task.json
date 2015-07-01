@@ -44,7 +44,7 @@
             }
         },
         {
-            "name": "MachineFilter",
+            "name": "MachineNames",
             "type": "string",
             "label": "Deploy to Machines",
             "defaultValue": "",
