@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "minimumAgentVersion": "1.83.0",
   "inputs": [
@@ -88,6 +88,15 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "WaitTimeInMinutes",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WaitTimeInMinutes",
+      "defaultValue": "30",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.WaitTimeInMinutes",
+      "visibleRule": "Action = Block"
     }
   ],
   "sourceDefinitions": [

@@ -3,8 +3,8 @@
 // *******************************************************
 {
   "loc.friendlyName": "Machine Group Actions",
-  "loc.helpMarkDown": "Perform actions like start, stop, delete on a machine group",
-  "loc.description": "Machine Group Actions",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
+  "loc.description": "Perform actions like start, stop, delete on a machine group",
   "loc.instanceNameFormat": "$(Action) machine group ",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure Subscription under which the Resource Group is deployed and optional for pre-existing machine group.",
@@ -17,5 +17,7 @@
   "loc.input.label.BlockedFor": "Block For",
   "loc.input.help.BlockedFor": "Block a machine group either for an instance like a particular Build, or for the definition i.e. for all the instances of the definition.",
   "loc.input.label.TimeInHours": "Time in Hours",
-  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely."
+  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely.",
+  "loc.input.label.WaitTimeInMinutes": "Wait Time in Minutes (if blocked)",
+  "loc.input.help.WaitTimeInMinutes": "If machine group is already blocked, the number of minutes to wait for the machine group to get unblocked. Default is 30 minutes"
 }

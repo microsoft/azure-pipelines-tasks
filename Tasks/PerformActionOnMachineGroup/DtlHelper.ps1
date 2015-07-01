@@ -10,10 +10,24 @@ function Get-MachineGroup
 {
     param([string]$machineGroupName,
           [string]$filters)
- 
-    Write-Verbose "Getting the machine group $machineGroupName" -Verbose
-    $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -Filters $filters -ErrorAction Stop -Verbose
-    Write-Verbose "Retrieved the machine group"
+
+    if ($Action -eq "Block")
+    {
+        $getEnvironmentCommand = 
+        {
+            $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -Filters $filters -ErrorAction Stop -Verbose
+        }
+        
+        Write-Verbose "Getting the machine group $machineGroupName" -Verbose
+        Invoke-WithRetry -Command $getEnvironmentCommand -RetryDuration $WaitTimeInMinutes -OperationDetail "Get Environment"
+        Write-Verbose "Retrieved the machine group"
+    }
+    else
+    {
+        Write-Verbose "Getting the machine group $machineGroupName" -Verbose
+        $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -Filters $filters -ErrorAction Stop -Verbose
+        Write-Verbose "Retrieved the machine group"
+    }
 
     return $environment
 }
@@ -104,4 +118,47 @@ function Block-MachineGroup
 
     Set-TaskVariable -Variable "DTL_RESERVATION_CONTEXT" -Value $blockedFor
     Write-Verbose "Task variable DTL_RESERVATION_CONTEXT set with the value $blockedFor"
+}
+
+function Invoke-WithRetry {
+    param(    
+    [Parameter(Mandatory)]$Command,
+    [Parameter(Mandatory)]$RetryDuration = 30,
+    [Parameter(Mandatory)]$OperationDetail,
+    $RetryDelay = 30)
+    
+    $ErrorActionPreference = 'Stop'
+    $currentRetry = 0
+    $endTime = [System.DateTime]::UtcNow.AddMinutes($RetryDuration)
+    $success = $false
+
+    do {
+        try
+        {
+            $result = & $Command
+            return $result
+        }
+        catch [System.Exception]
+        {
+            if ($_.Exception.GetType().FullName -eq "Microsoft.VisualStudio.Services.DevTestLabs.Client.DtlReservationAccessException")
+            {
+                $currentTime = [System.DateTime]::UtcNow
+                $currentRetry = $currentRetry + 1
+            
+                if ($currentTime -gt $endTime)
+                {
+                    throw $_
+                } 
+                else 
+                {             
+                    Write-Warning (Get-LocalizedString -Key "Operation {0} failed: {1}. Retrying after {2} second(s)" -ArgumentList $OperationDetail, $_.Exception.Message, $RetryDelay)
+                    Start-Sleep -s $RetryDelay            
+                }
+            }
+            else
+            {
+                throw $_
+            }
+        }
+    } while (!$success);
 }
