@@ -44,7 +44,7 @@
       "name": "testResultsFiles",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testResultsFiles",
-      "defaultValue": "**\\TEST-*.xml",
+      "defaultValue": "**/TEST-*.xml",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
     },
