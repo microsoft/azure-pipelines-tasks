@@ -8,7 +8,9 @@ function Locate-TestVersionAndVsRoot([string] $Version)
         {
             $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
         }
-        $Version = Get-Item $regPath | %{$_.GetSubKeyNames()} | Sort-Object -Descending | Select-Object -First 1
+        $keys = Get-Item $regPath | %{$_.GetSubKeyNames()} 
+        $Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1 
+
         if ([string]::IsNullOrWhiteSpace($Version))
         {
             return $null
@@ -39,6 +41,17 @@ function Locate-TestVersionAndVsRoot([string] $Version)
         throw "Unable to find TestAgent installation path"
     }
     return $installRoot
+}
+
+function Get-SubKeysInFloatFormat($keys)
+{
+    $targetKeys = @()      # New array
+    foreach ($key in $keys) 
+    {
+      $targetKeys += [decimal] $key
+    }
+   
+    return $targetKeys    
 }
 
 function Get-RegistryValueIgnoreError
