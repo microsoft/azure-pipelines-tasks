@@ -26,7 +26,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
-# keep machineNames parameter name unchanged duo to back compatibility
+# keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
 
 # Getting resource tag key name for corresponding tag

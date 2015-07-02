@@ -28,7 +28,7 @@ Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 
-# keep machineNames parameter name unchanged duo to back compatibility
+# keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
 
 # Constants #

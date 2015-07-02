@@ -19,7 +19,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.84.0",
+  "minimumAgentVersion": "1.85.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
