@@ -8,7 +8,9 @@ function Locate-TestVersionAndVsRoot([string] $Version)
         {
             $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
         }
-        $Version = Get-Item $regPath | %{$_.GetSubKeyNames()} | Sort-Object -Descending | Select-Object -First 1
+        $keys = Get-Item $regPath | %{$_.GetSubKeyNames()} 
+        $Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1 
+
         if ([string]::IsNullOrWhiteSpace($Version))
         {
             return $null
@@ -39,6 +41,17 @@ function Locate-TestVersionAndVsRoot([string] $Version)
         throw "Unable to find TestAgent installation path"
     }
     return $installRoot
+}
+
+function Get-SubKeysInFloatFormat($keys)
+{
+    $targetKeys = @()      # New array
+    foreach ($key in $keys) 
+    {
+      $targetKeys += [decimal] $key
+    }
+   
+    return $targetKeys    
 }
 
 function Get-RegistryValueIgnoreError
@@ -196,14 +209,14 @@ function Set-TestAgentConfiguration
 
     if ($PSBoundParameters.ContainsKey('AgentUserCredential') -and $AgentUserCredential)
     {
-        $configArgs = $configArgs + ("/userName:{0}" -f $AgentUserCredential.UserName)
-        $configArgs = $configArgs + ("/password:{0}" -f $AgentUserCredential.GetNetworkCredential().Password)
+        $configArgs = $configArgs + ("/userName:`"{0}`"" -f $AgentUserCredential.UserName)
+        $configArgs = $configArgs + ("/password:`"{0}`""  -f $AgentUserCredential.GetNetworkCredential().Password)
     }
 
     if ($PSBoundParameters.ContainsKey('MachineUserCredential') -and $MachineUserCredential)
     {
-        $configArgs = $configArgs + ("/adminUserName:{0}" -f $MachineUserCredential.UserName)
-        $configArgs = $configArgs + ("/adminPassword:{0}" -f $MachineUserCredential.GetNetworkCredential().Password)
+        $configArgs = $configArgs + ("/adminUserName:`"{0}`""  -f $MachineUserCredential.UserName)
+        $configArgs = $configArgs + ("/adminPassword:`"{0}`""  -f $MachineUserCredential.GetNetworkCredential().Password)
     }
 
     if ($PSBoundParameters.ContainsKey('EnableAutoLogon'))
@@ -230,7 +243,7 @@ function Set-TestAgentConfiguration
     
     if (-not [string]::IsNullOrWhiteSpace($EnvironmentUrl))
     {
-        $configArgs = $configArgs +  ("/dtlEnvUrl:{0}" -f $EnvironmentUrl)
+        $configArgs = $configArgs +  ("/dtlEnvUrl:`"{0}`""  -f $EnvironmentUrl)
     }
 
     if (-not [string]::IsNullOrWhiteSpace($PersonalAccessToken))
@@ -240,7 +253,7 @@ function Set-TestAgentConfiguration
 
     if (-not [string]::IsNullOrWhiteSpace($MachineName))
     {
-        $configArgs = $configArgs +  ("/dtlMachineName:{0}" -f $MachineName)
+        $configArgs = $configArgs +  ("/dtlMachineName:`"{0}`""  -f $MachineName)
     }
 	if (-not [string]::IsNullOrWhiteSpace($Capabilities))
     {
