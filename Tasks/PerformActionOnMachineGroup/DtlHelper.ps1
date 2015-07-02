@@ -9,17 +9,24 @@ function Initialize-DTLServiceHelper
 function Get-MachineGroup
 {
     param([string]$machineGroupName,
-          [string]$filters)
+          [string]$filters)    
 
     if ($Action -eq "Block")
     {
+        $time = $WaitTimeInMinutes -as [INT]
+
+        if(($time -eq $null) -or ($time -lt 0))
+        {
+            Write-Error(Get-LocalizedString -Key "Cannot wait for {0} minutes. Wait Time in minutes should be a positive number of minutes for which the task will wait for the machine group to get unblocked" -ArgumentList $WaitTimeInMinutes)
+        }
+
         $getEnvironmentCommand = 
         {
             $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -Filters $filters -ErrorAction Stop -Verbose
         }
         
         Write-Verbose "Getting the machine group $machineGroupName" -Verbose
-        Invoke-WithRetry -Command $getEnvironmentCommand -RetryDuration $WaitTimeInMinutes -OperationDetail "Get Environment"
+        Invoke-WithRetry -Command $getEnvironmentCommand -RetryDurationInMinutes $WaitTimeInMinutes -OperationDetail "Get Environment"
         Write-Verbose "Retrieved the machine group"
     }
     else
@@ -123,13 +130,13 @@ function Block-MachineGroup
 function Invoke-WithRetry {
     param(    
     [Parameter(Mandatory)]$Command,
-    [Parameter(Mandatory)]$RetryDuration = 30,
+    [Parameter(Mandatory)]$RetryDurationInMinutes = 30,
     [Parameter(Mandatory)]$OperationDetail,
-    $RetryDelay = 30)
+    $RetryDelayInSeconds = 30)
     
     $ErrorActionPreference = 'Stop'
     $currentRetry = 0
-    $endTime = [System.DateTime]::UtcNow.AddMinutes($RetryDuration)
+    $endTime = [System.DateTime]::UtcNow.AddMinutes($RetryDurationInMinutes)
     $success = $false
 
     do {
@@ -151,8 +158,8 @@ function Invoke-WithRetry {
                 } 
                 else 
                 {             
-                    Write-Warning (Get-LocalizedString -Key "Operation {0} failed: {1}. Retrying after {2} second(s)" -ArgumentList $OperationDetail, $_.Exception.Message, $RetryDelay)
-                    Start-Sleep -s $RetryDelay            
+                    Write-Warning (Get-LocalizedString -Key "Operation {0} failed: {1}. Retrying after {2} second(s)" -ArgumentList $OperationDetail, $_.Exception.Message, $RetryDelayInSeconds)
+                    Start-Sleep -s $RetryDelayInSeconds            
                 }
             }
             else
