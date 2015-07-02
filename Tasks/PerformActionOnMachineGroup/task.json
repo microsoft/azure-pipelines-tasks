@@ -7,13 +7,14 @@
     "category": "Deploy",
     "visibility": [
                 "Preview",
-                "Build"
+                "Build",
+                "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "minimumAgentVersion": "1.83.0",
     "inputs": [ 
@@ -69,22 +70,31 @@
            "visibleRule": "Action = Block"
         },
         {
-           "name": "TimeInHours",
-           "type": "pickList",
-           "label": "Time in Hours",
-           "defaultValue": "0",
-           "required": "true",
-           "helpMarkDown": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely.",
-           "options": {
+            "name": "TimeInHours",
+            "type": "pickList",
+            "label": "Time in Hours",
+            "defaultValue": "0",
+            "required": "true",
+            "helpMarkDown": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely.",
+            "options": {
                 "0": "0",
                 "8": "8",
                 "24": "24",
                 "48": "48"
             },
-           "visibleRule": "Action = Block",
-           "properties": {
-                "EditableOptions": "True" 
+            "visibleRule": "Action = Block",
+            "properties": {
+                "EditableOptions": "True"
             }
+        },
+        {
+           "name": "WaitTimeInMinutes",
+           "type": "string",
+           "label": "Wait Time in Minutes (if blocked)",
+           "defaultValue": "30",
+           "required": "false",
+           "helpMarkDown": "If machine group is already blocked, the number of minutes to wait for the machine group to get unblocked. Default is 30 minutes",
+           "visibleRule": "Action = Block"
         }
      ],
     "sourceDefinitions": [ 

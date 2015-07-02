@@ -4,7 +4,8 @@ param(
     [string][Parameter(Mandatory=$true)]$Action,
     [string][Parameter(Mandatory=$false)]$Filters,
     [string][Parameter(Mandatory=$false)]$BlockedFor,
-    [string][Parameter(Mandatory=$false)]$TimeInHours
+    [string][Parameter(Mandatory=$false)]$TimeInHours,
+    [string][Parameter(Mandatory=$false)]$WaitTimeInMinutes
 )
 
 Write-Verbose -Verbose "Beginning action on Machine Group"
@@ -15,6 +16,7 @@ Write-Verbose -Verbose "Action = $Action"
 Write-Verbose -Verbose "Filters = $Filters"
 Write-Verbose -Verbose "BlockedFor = $BlockedFor"
 Write-Verbose -Verbose "TimeInHours = $TimeInHours"
+Write-Verbose -Verbose "WaitTimeInMinutes = $WaitTimeInMinutes"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
