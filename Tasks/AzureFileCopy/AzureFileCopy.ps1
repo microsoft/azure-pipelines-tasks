@@ -7,7 +7,7 @@ param (
     [string]$blobPrefix,
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineFilter,
+    [string]$machineNames,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
     [string]$copyFilesInParallel
@@ -23,10 +23,13 @@ Write-Verbose "containerName = $containerName" -Verbose
 Write-Verbose "blobPrefix = $blobPrefix" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter" -Verbose
+Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
+
+# keep machineNames parameter name unchanged due to back compatibility
+$machineFilter = $machineNames
 
 # Constants #
 $defaultWinRMPort = '5986'

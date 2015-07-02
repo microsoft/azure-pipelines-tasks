@@ -1,7 +1,7 @@
 param (
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineFilter,
+    [string]$machineNames,
     [string]$scriptPath,
     [string]$scriptArguments,
     [string]$initializationScriptPath,
@@ -12,7 +12,7 @@ param (
 Write-Verbose "Entering script PowerShellOnTargetMachines.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter" -Verbose
+Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
 Write-Verbose "scriptArguments = $scriptArguments" -Verbose
 Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
@@ -25,6 +25,9 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+
+# keep machineNames parameter name unchanged due to back compatibility
+$machineFilter = $machineNames
 
 # Getting resource tag key name for corresponding tag
 $resourceFQDNKeyName = Get-ResourceFQDNTagKey

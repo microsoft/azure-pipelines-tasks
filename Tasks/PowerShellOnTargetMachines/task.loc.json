@@ -18,7 +18,7 @@
     "Minor": 0,
     "Patch": 4
   },
-  "minimumAgentVersion": "1.84.0",
+  "minimumAgentVersion": "1.85.0",
   "groups": [
     {
       "name": "advanced",
@@ -47,12 +47,12 @@
       }
     },
     {
-      "name": "MachineFilter",
+      "name": "MachineNames",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineFilter",
+      "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {
       "name": "ScriptPath",

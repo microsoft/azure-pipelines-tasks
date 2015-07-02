@@ -1,7 +1,7 @@
 param (
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineFilter,
+    [string]$machineNames,
     [string]$sourcePath,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
@@ -11,7 +11,7 @@ param (
 Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter" -Verbose
+Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
@@ -23,6 +23,9 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+
+# keep machineNames parameter name unchanged due to back compatibility
+$machineFilter = $machineNames
 
 # Default + constants #
 $defaultWinRMPort = '5985'
