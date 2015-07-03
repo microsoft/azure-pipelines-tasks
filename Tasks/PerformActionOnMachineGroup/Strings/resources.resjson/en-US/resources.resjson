@@ -17,5 +17,7 @@
   "loc.input.label.BlockedFor": "Block For",
   "loc.input.help.BlockedFor": "Block a machine group either for an instance like a particular Build, or for the definition i.e. for all the instances of the definition.",
   "loc.input.label.TimeInHours": "Time in Hours",
-  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely."
+  "loc.input.help.TimeInHours": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely.",
+  "loc.input.label.WaitTimeInMinutes": "Wait Time in Minutes (if blocked)",
+  "loc.input.help.WaitTimeInMinutes": "If machine group is already blocked, the number of minutes to wait for the machine group to get unblocked. Default is 30 minutes"
 }
