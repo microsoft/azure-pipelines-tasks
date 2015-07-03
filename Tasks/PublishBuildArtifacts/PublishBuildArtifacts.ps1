@@ -46,13 +46,13 @@ elseif ($ArtifactType -ieq "filepath")
     {
         Write-Warning (Get-LocalizedString -Key 'The share path cannot start with ''//''. Use ''\\'' instead. Invalid share path: {0}' -ArgumentList $TargetPath)
     }
-    $TargetPath = Join-Path $TargetPath $ArtifactName
+
     if ((Test-Path $TargetPath) -eq 0)
     {
         Write-Host (Get-LocalizedString -Key 'Creating target path {0}...' -ArgumentList $TargetPath)
         MD $TargetPath
     }
-        
+
     Write-Host (Get-LocalizedString -Key 'Copying artifact content to {0}...' -ArgumentList $TargetPath)
     Copy-Item $artifactStagingFolder $TargetPath -Recurse -Force
 
