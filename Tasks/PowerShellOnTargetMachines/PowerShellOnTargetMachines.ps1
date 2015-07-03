@@ -61,18 +61,25 @@ function Get-ResourceWinRmConfig
     $winrmPortToUse = ''
     $protocolToUse = ''
 
+    Write-Verbose "Starting Get-Environment cmdlet call on environment name: $environmentName" -Verbose
     $environment = Get-Environment -environmentName $environmentName -Connection $connection
+    Write-Verbose "Completed Get-Environment cmdlet call on environment name: $environmentName" -Verbose
 
     if($environment.Provider -ne $null)      #  For standerd environment provider will be null
     {
         Write-Verbose "`t Environment is not standerd environment. Https port has higher precedence" -Verbose
-        $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
 
-    
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpsPortKeyName" -Verbose
+        $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpsPortKeyName" -Verbose
+
         if ([string]::IsNullOrEmpty($winrmHttpsPort))
         {
                Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
+
+               Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
                $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
+               Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
 
                if ([string]::IsNullOrEmpty($winrmHttpPort))
                {
@@ -95,12 +102,18 @@ function Get-ResourceWinRmConfig
    else
    {
         Write-Verbose "`t Environment is standerd environment. Http port has higher precedence" -Verbose
+
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
         $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
 
         if ([string]::IsNullOrEmpty($winrmHttpPort))
         {
                Write-Verbose "`t Resource: $resourceName does not have any winrm http port defined, checking for winrm https port" -Verbose
+
+               Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpsPortKeyName" -Verbose
                $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
+               Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpsPortKeyName" -Verbose
 
                if ([string]::IsNullOrEmpty($winrmHttpsPort))
                {
@@ -141,7 +154,9 @@ function Get-SkipCACheckOption
     $skipCACheckKeyName = Get-SkipCACheckTagKey
 
     # get skipCACheck option from environment
+    Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with key: $skipCACheckKeyName" -Verbose
     $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection
+    Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with key: $skipCACheckKeyName" -Verbose
 
     if ($skipCACheckBool -eq "true")
     {
@@ -157,7 +172,11 @@ function Get-ResourceConnectionDetails
 
     $resourceProperties = @{}
     $resourceName = $resource.Name
+
+    Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceFQDNKeyName" -Verbose
     $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName
+    Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceFQDNKeyName" -Verbose
+
     $winrmconfig = Get-ResourceWinRmConfig -resourceName $resourceName
     $resourceProperties.fqdn = $fqdn
     $resourceProperties.winrmPort = $winrmconfig.winrmPort
@@ -227,14 +246,21 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 if($resourceFilteringMethod -eq "tags")
 {
     $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
+
+    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with tag filter: $wellFormedTagsList" -Verbose
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
+    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with tag filter" -Verbose
 }
 else
 {
+    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with machine filter: $machineFilter" -Verbose
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
+    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
 }
 
+Write-Verbose "Starting Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $deploymentOperation" -Verbose
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $deploymentOperation -Connection $connection
+Write-Verbose "Completed Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $deploymentOperation" -Verbose
 Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 
 $resourcesPropertyBag = Get-ResourcesProperties -resources $resources
@@ -248,23 +274,33 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
         $machine = $resourceProperties.fqdn
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
+
+        Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
         $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+        Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
         Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+
         $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $parsedSessionVariables 
         Write-ResponseLogs -operationName $deploymentOperation -fqdn $machine -deploymentResponse $deploymentResponse
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
-        Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-    
+
         # getting operation logs
         $logs = Get-OperationLogs
         Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
+
+        Write-Verbose "Starting Complete-ResourceOperation cmdlet call on resource: $($resource.Name) with resource operationId: $resOperationId" -Verbose
         Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection
+        Write-Verbose "Completed Complete-ResourceOperation cmdlet call on resource: $($resource.Name) with resource operationId: $resOperationId" -Verbose
+
         if ($status -ne "Passed")
         {
-            Write-Verbose "Completed operation: $deploymentOperation with operationId: $envOperationId on environment: $environmentName with status: Failed" -Verbose
+            Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
             Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection
+            Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
+
+            Write-Verbose $deploymentResponse.Error.ToString() -Verbose
             throw $deploymentResponse.Error;
         }
     }
@@ -278,7 +314,10 @@ else
         $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
         $machine = $resourceProperties.fqdn
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
+
+        Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
         $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+        Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
         Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
         $resourceProperties.resOperationId = $resOperationId
@@ -297,26 +336,29 @@ else
                 $status = $output.Status
                 if($status -ne "Passed")
                 {
-                $envOperationStatus = "Failed"
+                    $envOperationStatus = "Failed"
                 }
                 $machineName = $Jobs.Item($job.Id).fqdn
                 $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $machineName -deploymentResponse $output
                 Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
-                Write-Verbose "Complete ResourceOperation for resource operation id: $resOperationId" -Verbose
 
                 # getting operation logs
                 $logs = Get-OperationLogs
                 Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
+
+                Write-Verbose "Starting Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
                 Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
-            } 
+                Write-Verbose "Completed Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
+            }
         }
     }
 }
 
-Write-Verbose "Completed operation: $deploymentOperation with operationId: $envOperationId on environment: $environmentName with status: $envOperationStatus" -Verbose
+Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
 Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection -ErrorAction Stop
+Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
 
 if($envOperationStatus -ne "Passed")
 {
