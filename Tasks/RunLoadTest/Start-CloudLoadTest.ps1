@@ -194,7 +194,7 @@ function UploadTestDrop($testdrop, $src)
     Write-Verbose "Calling AzCopy = $azcopy" -Verbose
 
     $azlog = ("{0}\..\azlog" -f $src)
-    $args = ("/Source:{0} /Dest:{1} /DestSAS:{2} /S /Z:{3}" -f $src, $dest, $sas, $azlog)
+    $args = ("/Source:`"{0}`" /Dest:{1} /DestSAS:{2} /S /Z:`"{3}`"" -f $src, $dest, $sas, $azlog)
     Write-Verbose "AzCopy Args = $args" -Verbose
 
     Invoke-Tool -Path $azcopy -Arguments $args

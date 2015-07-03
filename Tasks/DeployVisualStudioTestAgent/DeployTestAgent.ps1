@@ -1,5 +1,6 @@
 param(
     [string]$testMachineGroup, 
+    [string]$resourceFilteringMethod,
     [string]$testMachines,
     [string]$runAsProcess,
     [string]$machineUserName,
@@ -15,13 +16,13 @@ $disableScreenSaver = $runAsProcess
 
 Write-Verbose "Entering script DeployTestAgent.ps1"
 Write-Verbose "testMachineGroup = $testMachineGroup"
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "testMachines = $testMachines"
 Write-Verbose "runAsProcess = $runAsProcess"
 Write-Verbose "logonAutomatically = $logonAutomatically"
 Write-Verbose "disableScreenSaver = $disableScreenSaver"
 Write-Verbose "updateTestAgent = $updateTestAgent"
 Write-Verbose "isDataCollectionOnly = $isDataCollectionOnly"
-
 
 if ([string]::IsNullOrWhiteSpace($agentLocation))
 {
@@ -43,6 +44,9 @@ Write-Verbose "configureTestAgentScriptLocation = $configureTestAgentScriptLocat
 $checkAgentInstallationScriptLocation = Join-Path -Path $currentDirectory -ChildPath "CheckTestAgentInstallation.ps1"
 Write-Verbose "checkAgentInstallationScriptLocation = $checkAgentInstallationScriptLocation"
 
+$downloadTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPath "DownloadTestAgent.ps1"
+Write-Verbose "downloadTestAgentScriptLocation = $downloadTestAgentScriptLocation"
+
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -61,6 +65,13 @@ if ( [string]::IsNullOrEmpty($personalAccessToken))
 }
 
 Write-Verbose "Calling Invoke-DeployTestAgent"
-Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+if($resourceFilteringMethod -eq "tags")
+{
+    Invoke-DeployTestAgent -TagFilter $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+}
+else
+{
+    Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+}
 
 Write-Verbose "Leaving script DeployTestAgent.ps1"

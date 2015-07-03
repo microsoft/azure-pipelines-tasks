@@ -19,7 +19,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.84.0",
+  "minimumAgentVersion": "1.85.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -27,7 +27,7 @@
       "label": "Azure Subscription",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription is needed for accessing the storage account."
+      "helpMarkDown": "Azure subscription to target for copying the files."
     },
     {
       "name": "SourcePath",
@@ -35,7 +35,7 @@
       "label": "Source",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Absolute path of the source folder or file on the local machine. Example: C:/Build/**/deploy.ps1. The expression should return a single folder or a file."
+      "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file."
     },
     {
       "name": "StorageAccount",
@@ -43,7 +43,7 @@
       "label": "Storage Account",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify a pre-existing storage account. It is also used as an intermediary for copying to Azure VMs"
+      "helpMarkDown": "Specify a pre-existing storage account. It is also used as an intermediary for copying files to Azure VMs"
     },
     {
       "name": "Destination",
@@ -60,10 +60,10 @@
     {
       "name": "ContainerName",
       "type": "string",
-      "label": "ContainerName",
+      "label": "Container Name",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Container name where the files will be uploaded. We will create a container with the given name if it does not exist.",
+      "helpMarkDown": "Name of the Container for uploading the files. Default is to create a container automatically.",
       "visibleRule": "Destination = AzureBlob"
     },
     {
@@ -72,16 +72,16 @@
       "label": "Blob Prefix",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Useful while downloading, as it acts as a filter. Example - you can apppend your build number to all your blobs.",
+      "helpMarkDown": "Useful for filtering files, for example, append build number to all the blobs to download files from that build only.",
       "visibleRule": "Destination = AzureBlob"
     },
     {
       "name": "EnvironmentName",
       "type": "pickList",
-      "label": "Target Machine Group",
+      "label": "Resource Group",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the target Machine Group where the files will be copied.​",
+      "helpMarkDown": "Name of the target Resource Group for copying the files to.​",
       "visibleRule": "Destination = AzureVMs"
     },
     {
@@ -97,7 +97,7 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "MachineFilter",
+      "name": "MachineNames",
       "type": "string",
       "label": "Copy to Machines",
       "defaultValue": "",
@@ -111,7 +111,7 @@
       "label": "Destination Folder",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Local Path on the target machines where the files will be copied. Environment variable can be used. For example, $env:windir\\BudgetIT\\Web.",
+      "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
@@ -120,13 +120,13 @@
       "label": "Clean Target",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Setting it to true will clean up the destination folder before copying the files.",
+      "helpMarkDown": "Setting it to true will clean-up the destination folder before copying the files.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
       "name": "CopyFilesInParallel",
       "type": "boolean",
-      "label": "Copy Files In Parallel",
+      "label": "Copy Files in Parallel",
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "Setting it to true will copy files in parallel to the target machines.",

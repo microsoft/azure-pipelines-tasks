@@ -1,7 +1,7 @@
 param (
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineFilter,
+    [string]$machineNames,
     [string]$sourcePath,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
@@ -11,7 +11,7 @@ param (
 Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter" -Verbose
+Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
@@ -24,9 +24,12 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
+# keep machineNames parameter name unchanged due to back compatibility
+$machineFilter = $machineNames
+
 # Default + constants #
 $defaultWinRMPort = '5985'
-$defaultSkipCACheckOption = ''	
+$defaultSkipCACheckOption = ''
 $defaultHttpProtocolOption = '-UseHttp' # For on-prem BDT only HTTP support enabled , use this as default until https support is not enabled 
 $resourceFQDNKeyName = 'Microsoft-Vslabs-MG-Resource-FQDN'
 $resourceWinRMHttpPortKeyName = 'WinRM_Http'
@@ -55,16 +58,20 @@ function Get-ResourceConnectionDetails
 	
 	$resourceName = $resource.Name
 	
+    Write-Verbose "`t`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceFQDNKeyName" -Verbose
 	$fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
-		
+    Write-Verbose "`t`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceFQDNKeyName" -Verbose
+	
 	Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose	
 		
 	$resourceProperties.fqdn = $fqdn
 	
 	$resourceProperties.httpProtocolOption = $defaultHttpProtocolOption
 	
+	Write-Verbose "`t`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
 	$winrmPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName -ErrorAction Stop
-		
+	Write-Verbose "`t`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
+	
 	if([string]::IsNullOrEmpty($winrmPort))
 	{
 		Write-Verbose "`t`t Resource $resourceName does not have any winrm port defined , use the default - $defaultWinRMPort" -Verbose
@@ -148,14 +155,21 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 if($resourceFilteringMethod -eq "tags")
 {
     $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
+
+    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with tag filter: $wellFormedTagsList" -Verbose
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
+    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with tag filter" -Verbose
 }
 else
 {
+    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with machine filter: $machineFilter" -Verbose
     $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
+    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
 }
 
+Write-Verbose "Starting Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: Copy Files" -Verbose
 $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName "Copy Files" -Connection $connection -ErrorAction Stop
+Write-Verbose "Completed Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: Copy Files" -Verbose
 
 Write-Verbose "envOperationId = $envOperationId" -Verbose
 
@@ -171,7 +185,10 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		
         Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
+		Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $machine and environment operationId: $envOperationId" -Verbose
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
+		Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $machine and environment operationId: $envOperationId" -Verbose
+
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
         $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
@@ -187,8 +204,11 @@ if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 
         if($status -ne "Passed")
         {
+			Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
             Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection -ErrorAction Stop
+			Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
 
+			Write-Verbose $copyResponse.Error.ToString() -Verbose
             throw $copyResponse.Error
         }
     } 
@@ -206,8 +226,10 @@ else
 		
         Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 		
+		Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $machine and environment operationId: $envOperationId" -Verbose
 		$resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $machine -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
-		
+		Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $machine and environment operationId: $envOperationId" -Verbose
+
 		Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 		
 		$resourceProperties.resOperationId = $resOperationId
@@ -246,7 +268,9 @@ else
     }
 }
 
+Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
 Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection -ErrorAction Stop
+Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
 
 if($envOperationStatus -ne "Passed")
 {
