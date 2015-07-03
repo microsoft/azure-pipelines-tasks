@@ -54,7 +54,7 @@ function Get-ResourceWinRmConfig
     $winrmPortToUse = ''
     $protocolToUse = ''
 
-    $environment = Get-Environment -environmentName $environmentName
+    $environment = Get-Environment -environmentName $environmentName -Connection $connection
 
     if($environment.Provider -ne $null)      #  For standerd environment provider will be null
     {
