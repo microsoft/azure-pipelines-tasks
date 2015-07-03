@@ -34,7 +34,7 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
+            "helpMarkDown": "Azure subscription to target for the deployment."
         },
 	{
             "name": "resourceGroupName", 
@@ -67,7 +67,7 @@
             "label": "Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates:http://aka.ms/azuretemplates."
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates see - http://aka.ms/azuretemplates."
         },
         {
             "name": "csmParametersFile",
@@ -88,11 +88,11 @@
         {
             "name": "dscDeployment",
             "type": "boolean",
-            "label": "Generate SAS token",
+            "label": "Refresh SAS token",
             "required": false,
             "defaultValue": "false",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Generates SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly."
+            "helpMarkDown": "Refresh SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly."
         },
         {
             "name": "moduleUrlParameterName",
@@ -117,11 +117,11 @@
         {
             "name": "vmCreds",
             "type": "boolean",
-            "label": "Virtual Machine Credentials (Mandatory for Deployment)",
+            "label": "Virtual Machine Credentials",
             "required": false,
             "defaultValue": "false",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "These VM resource's credentials are used by the other deployment and test tasks. The Username and Password should be same as specified in the above template and currently all the Virtual Machines should have the same credentials."
+            "helpMarkDown": "Provide the VMs Administrator Username and Password as specified in the above template. Needed by other tasks like PowerShell on Target Machines, Azure File Copy etc."
         },
         {
             "name": "vmUserName",
@@ -130,7 +130,8 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advancedDeploymentOptions",
-            "visibleRule": "vmCreds = true"
+            "visibleRule": "vmCreds = true",
+            "helpMarkDown": "Administrator Username of the VMs."
         },
         {
             "name": "vmPassword",
@@ -139,12 +140,13 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advancedDeploymentOptions",
-            "visibleRule": "vmCreds = true"
+            "visibleRule": "vmCreds = true",
+            "helpMarkDown": "Administrator Password of the VMs."
         },
         {
             "name": "skipCACheck",
             "type": "boolean",
-            "label": "SkipCACheck",
+            "label": "Test Certificate",
             "required": false,
             "defaultValue": "true",
             "groupName": "advancedDeploymentOptions",

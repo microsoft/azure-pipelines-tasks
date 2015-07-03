@@ -24,7 +24,7 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Azure Subscription under which the Resource Group is deployed and optional for pre-existing machine group."
+            "helpMarkDown": "Azure Subscription where the Resource Group is deployed. Optional for a pre-existing machine group."
         },
         {
             "name": "MachineGroupName", 
