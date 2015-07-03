@@ -276,7 +276,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
 
         Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
+        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
         Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
         Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
@@ -300,6 +300,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
             Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection
             Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
 
+            Write-Verbose $deploymentResponse.Error.ToString() -Verbose
             throw $deploymentResponse.Error;
         }
     }
@@ -315,7 +316,7 @@ else
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
 
         Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
+        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
         Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
         Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
@@ -356,7 +357,7 @@ else
 }
 
 Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
-Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection
+Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection -ErrorAction Stop
 Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
 
 if($envOperationStatus -ne "Passed")

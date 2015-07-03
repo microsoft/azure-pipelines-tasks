@@ -12,7 +12,9 @@ function DoComplete-ResourceOperation
     $logs = Get-OperationLogs
     Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
 
+    Write-Verbose "Starting Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection -ErrorAction Stop
+    Write-Verbose "Completed Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
 }
 
 function Output-ResponseLogs
