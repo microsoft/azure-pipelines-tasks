@@ -97,7 +97,7 @@ function Initialize-AzureHelper
                 {
                     throw (Get-LocalizedString -Key "There was an error with the Azure credentials used for machine group deployment")
                 }
-                Select-AzureSubscription -SubscriptionName $subscriptionName
+                Select-AzureSubscription -SubscriptionId $subscriptionId
             }
             else
             {
