@@ -132,9 +132,4 @@ $environment = Create-Environment -environmentName $resourceGroupName -environme
 
 $environmentOperationId = Create-EnvironmentOperation -environment $environment
 
-if($deploymentError)
-{
-    Throw (Get-LocalizedString -Key "Deploy Azure Resource Group Task failed. View logs for details")
-}
-
 Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose
