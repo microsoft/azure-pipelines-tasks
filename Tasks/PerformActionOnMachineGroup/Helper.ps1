@@ -52,7 +52,7 @@ function Invoke-OperationHelper
         # Logs the completion of particular machine operation. Updates the status based on the provider response.
         End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $operation.Error.Message
     }
-    
+
     # Logs completion of the machine group operation.
     End-MachineGroupOperation -machineGroupName $machineGroupName -operationName operationName -operationId $operationId -status $machineStatus
     Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
