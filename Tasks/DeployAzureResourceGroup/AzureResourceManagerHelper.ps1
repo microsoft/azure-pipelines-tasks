@@ -17,8 +17,8 @@ function Create-AzureResourceGroup
             $azureCommand = "New-AzureResourceGroupDeployment"
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
-            Write-Host "$finalCommand"
-            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
+            Write-Verbose -Verbose "$finalCommand"
+            Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
             Invoke-Expression -Command $finalCommand
         }
         else
@@ -26,8 +26,8 @@ function Create-AzureResourceGroup
             $azureCommand = "New-AzureResourceGroupDeployment"
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
-            Write-Host "$finalCommand"
-            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
+            Write-Verbose -Verbose "$finalCommand"
+            Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
             Invoke-Expression -Command $finalCommand
         }
 
@@ -43,10 +43,10 @@ function Create-AzureResourceGroup
 
                 foreach($error in $deploymentError)
                 {
-                    Write-Host $error
+                    Write-Error $error -ErrorAction Continue
                 }
 
-                Write-Host (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName)
+                Write-Error (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName) -ErrorAction Continue
             }
             else
             {
