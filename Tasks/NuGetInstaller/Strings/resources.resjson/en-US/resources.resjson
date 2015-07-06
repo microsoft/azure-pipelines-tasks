@@ -9,8 +9,6 @@
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Path to Solution",
   "loc.input.help.solution": "The path to the Visual Studio Solution file",
-  "loc.input.label.excludeVersion": "Exclude Version",
-  "loc.input.help.excludeVersion": "Makes NuGet exclude package version from package folder names. Equivilent to the -ExcludeVersion NuGet.exe command line argument",
   "loc.input.label.noCache": "Disable local cache",
   "loc.input.help.noCache": "Equivalent to the -NoCache NuGet.exe commanline argument",
   "loc.input.label.nuGetRestoreArgs": "NuGet Arguments",
