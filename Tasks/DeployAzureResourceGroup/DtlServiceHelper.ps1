@@ -119,7 +119,9 @@ function Create-Environment
    
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
-    Write-Host (Get-LocalizedString -Key "Registered machine group '{0}'" -ArgumentList $environment)
+    Write-Host (Get-LocalizedString -Key "Registered machine group '{0}'" -ArgumentList $environmentName)
+	
+	Write-Verbose -Verbose "Registered machine group $environment"
 
     return $environment
 }
