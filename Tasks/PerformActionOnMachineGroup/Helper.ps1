@@ -24,12 +24,14 @@ function Invoke-OperationHelper
     Foreach($machine in $machines)
     {
         $operation = Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
+        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machine.Name' completed" -Verbose
 
         # Determines the status of the operation. Marks the status of machine group operation as 'Failed' if any one of the machine operation fails.
         if(! $operation)
         {
             $status = "Failed"
             $machineStatus = "Failed"
+            $passedOperationCount--
             Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed" -ArgumentList $operationName, $machine.Name)
         }
         else
@@ -41,8 +43,12 @@ function Invoke-OperationHelper
                 $passedOperationCount--
                 Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed with error '{2}'" -ArgumentList $operationName, $machine.Name, $operation.Error.Message)
             }
+            else
+            {
+                 Write-Verbose "'$operationName' operation on the machine '$machine.Name' succeeded" -Verbose
+            }
         }
-
+        
         # Logs the completion of particular machine operation. Updates the status based on the provider response.
         End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $operation.Error.Message
     }
