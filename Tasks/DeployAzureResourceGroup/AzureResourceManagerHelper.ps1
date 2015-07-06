@@ -18,7 +18,7 @@ function Create-AzureResourceGroup
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
             Write-Verbose -Verbose "$finalCommand"
-            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
+            Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
             Invoke-Expression -Command $finalCommand
         }
         else
@@ -27,7 +27,7 @@ function Create-AzureResourceGroup
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
             Write-Verbose -Verbose "$finalCommand"
-            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
+            Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
             Invoke-Expression -Command $finalCommand
         }
 
