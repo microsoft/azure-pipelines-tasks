@@ -23,7 +23,6 @@ if(!$solution)
     throw (Get-LocalizedString -Key "Solution parameter must be set")
 }
 
-$b_excludeVersion = Convert-String $excludeVersion Boolean
 $b_noCache = Convert-String $noCache Boolean
 
 # Warn if deprecated parameters were supplied.
