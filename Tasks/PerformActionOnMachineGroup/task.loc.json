@@ -47,9 +47,7 @@
         "Delete": "Delete",
         "Start": "Start",
         "Stop": "Stop",
-        "Restart": "Restart",
-        "Block": "Block",
-        "Unblock": "Unblock"
+        "Restart": "Restart"
       }
     },
     {

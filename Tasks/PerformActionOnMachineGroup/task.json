@@ -44,9 +44,7 @@
                  "Delete": "Delete",
                  "Start": "Start",
                  "Stop": "Stop",
-                 "Restart": "Restart",
-                 "Block": "Block",
-                 "Unblock": "Unblock"
+                 "Restart": "Restart"
                 }
         },
         {
@@ -54,7 +52,7 @@
             "type": "string", 
             "label": "Apply to Machines",
             "required": false,
-            "helpMarkDown": "By default, actions apply to all machines in a machine group. To apply the action to a subset of machines, provide tags or machine names like Role: Web, Role: Test, BudgetIT01. Filters are not applied for block or unblock actions."
+            "helpMarkDown": "By default, actions apply to all machines in a machine group. To apply the action to a subset of machines, provide tags or machine names like Role: Web, Role: Test, BudgetIT01."
         },
         {
            "name": "BlockedFor",
