@@ -35,7 +35,6 @@ function Start-MachineInProvider
 
     Write-Verbose "[Azure Resource Manager]Starting machine $machineName on Azure provider" -Verbose
     Start-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Started machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Stop-MachineInProvider
@@ -45,7 +44,6 @@ function Stop-MachineInProvider
 
     Write-Verbose "[Azure Resource Manager]Stopping machine $machineName on Azure provider" -Verbose
     Stop-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose -Force
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopped machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Restart-MachineInProvider
@@ -55,7 +53,6 @@ function Restart-MachineInProvider
 
     Write-Verbose "[Azure Resource Manager]Restarting machine $machineName on Azure provider" -Verbose
     Restart-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose 
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Restarted machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Initialize-AzureHelper
