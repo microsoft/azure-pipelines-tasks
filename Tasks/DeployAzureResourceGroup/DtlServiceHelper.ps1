@@ -120,7 +120,7 @@ function Create-Environment
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
     Write-Host (Get-LocalizedString -Key "Registered machine group '{0}'" -ArgumentList $environmentName)
-	$url = $environmentDefinition.Url
+	$url = $environment.Url
 	Write-Verbose -Verbose "Registered machine group $environmentName with url $url"
 
     return $environment
