@@ -22,7 +22,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.85.0",
   "groups": [
     {
       "name": "advancedDeploymentOptions",
