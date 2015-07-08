@@ -607,12 +607,46 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
 
-    $session = New-PSSession -ComputerName . -Credential $MachineCredential
+    $session = CreateNewSession
+
     Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SD:01/01/2050 /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath
 
     Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
     Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
 
+}
+
+function CreateNewSession()
+{
+    $winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String
+    $xmldoc = [XML]$winrmconfigDetails    
+    $transports = $xmldoc.GetElementsByTagName("cfg:Transport")
+    $ports = $xmldoc.GetElementsByTagName("cfg:Port")
+   
+    if( $ports -ne $null -and  $transports -ne $null -and $ports.Count -gt 0)
+    {
+        $port = $ports[0].InnerText
+        $transport = $transports[0].InnerText
+    }
+    else
+    {
+        Write-Verbose -Message("Unable to fetch WinRM config details. Using default port for configuration") -Verbose
+        $port = 5985
+        $transport = HTTP          
+    }
+
+    Write-Verbose -Message("Using Port {0} for creating session" -f $port) -Verbose
+        
+    if( $transport -eq "HTTPS")
+    {
+        $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
+        $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL
+    }
+    else
+    {
+        $session = New-PSSession -ComputerName . -Port $port 
+    }
+    return $session
 }
 
 
