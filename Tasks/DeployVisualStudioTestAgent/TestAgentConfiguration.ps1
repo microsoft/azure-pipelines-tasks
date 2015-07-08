@@ -606,17 +606,22 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
+	Try
+	{
+		$session = CreateNewSession -MachineCredential $MachineCredential
+		Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SD:01/01/2050 /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath
 
-    $session = CreateNewSession
-
-    Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SD:01/01/2050 /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath
-
-    Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
-    Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
-
+		Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
+		Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+	}
+    Catch
+    {
+        Write-Verbose -Message ("Unable to start Agent process, will be rebooting the machine to complete the configuration") -Verbose
+    }
+   
 }
 
-function CreateNewSession()
+function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
 {
     $winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String
     $xmldoc = [XML]$winrmconfigDetails    
@@ -640,11 +645,11 @@ function CreateNewSession()
     if( $transport -eq "HTTPS")
     {
         $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
-        $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL
+        $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
     }
     else
     {
-        $session = New-PSSession -ComputerName . -Port $port 
+        $session = New-PSSession -ComputerName . -Port $port -Credential $MachineCredentials
     }
     return $session
 }
