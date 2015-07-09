@@ -102,7 +102,7 @@
       "label": "Copy to Machines",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\"",
+      "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1 as specified in the Machines Hub. Returns machines with either of the tags. The default is all machines in the machine group.",
       "visibleRule": "Destination = AzureVMs"
     },
     {

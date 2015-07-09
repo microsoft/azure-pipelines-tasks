@@ -150,7 +150,7 @@
             "required": false,
             "defaultValue": "true",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Indicates whether the client validates that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
+            "helpMarkDown": "If the option is selected then the genuineness of the certificate will not be validated with the Certification Authority (CA). The option should be used only for dev/test scenarios."
         }
     ],
     "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
