@@ -249,11 +249,6 @@ else
                  $output = Receive-Job -Id $job.Id
                  Remove-Job $Job
                  $status = $output.Status
-
-                 if($status -ne "Passed")
-                 {
-                     $envOperationStatus = "Failed"
-                 }
 				 
 				 $machineName = $Jobs.Item($job.Id).fqdn
 				 $resOperationId = $Jobs.Item($job.Id).resOperationId
@@ -261,6 +256,13 @@ else
                  Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
 				 
                  Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
+
+                 if($status -ne "Passed")
+                 {
+                    $envOperationStatus = "Failed"
+                    $errorMessage = $output.Error.Message
+                    Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $machineName, $errorMessage)
+                 }
 				 
 				 DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
               } 
