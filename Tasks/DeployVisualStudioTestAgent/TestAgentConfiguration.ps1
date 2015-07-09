@@ -196,7 +196,9 @@ function Set-TestAgentConfiguration
         [String] $EnvironmentUrl,
         [String] $MachineName,
         [String] $Capabilities,
-        [System.Management.Automation.PSCredential] $AgentUserCredential
+        [System.Management.Automation.PSCredential] $AgentUserCredential,
+		[int] $WinrmPort,
+		[String] $WinrmTransport
     )
 
     switch ($AsServiceOrProcess)
@@ -265,7 +267,7 @@ function Set-TestAgentConfiguration
     if ($configOut.ExitCode -eq 0 -and $configAsProcess -eq $true)
     {
         Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
-        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential
+        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential -WinrmPort $WinrmPort -WinrmTransport $WinrmTransport
     }
 
     $doReboot = $false
@@ -590,7 +592,7 @@ function EnableTracing
     Write-Verbose -Message ("Logs will now be stored at : {0}" -f $logFilePath) -Verbose
 }
 
-function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.PSCredential] $MachineCredential)
+function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.PSCredential] $MachineCredential, [int] $WinrmPort, [String] $WinrmTransport)
 {
     if(IsDtaExecutionHostRunning)
     {
@@ -608,7 +610,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     $exePath = "'" + $exePath + "'"
 	Try
 	{
-		$session = CreateNewSession -MachineCredential $MachineCredential
+		$session = CreateNewSession -MachineCredential $MachineCredential -WinrmPort $WinrmPort -WinrmTransport $WinrmTransport
 		Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SD:01/01/2050 /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath
 
 		Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
@@ -621,35 +623,18 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
    
 }
 
-function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
-{
-    $winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String
-    $xmldoc = [XML]$winrmconfigDetails    
-    $transports = $xmldoc.GetElementsByTagName("cfg:Transport")
-    $ports = $xmldoc.GetElementsByTagName("cfg:Port")
-   
-    if( $ports -ne $null -and  $transports -ne $null -and $ports.Count -gt 0)
-    {
-        $port = $ports[0].InnerText
-        $transport = $transports[0].InnerText
-    }
-    else
-    {
-        Write-Verbose -Message("Unable to fetch WinRM config details. Using default port for configuration") -Verbose
-        $port = 5985
-        $transport = HTTP          
-    }
-
+function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials, [int] $WinrmPort, [String] $WinrmTransport)
+{   
     Write-Verbose -Message("Using Port {0} for creating session" -f $port) -Verbose
         
-    if( $transport -eq "HTTPS")
-    {
-        $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
-        $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
+    if( $WinrmTransport -eq "HTTPS")
+    {	 
+	   $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
+       $session = New-PSSession -ComputerName . -Port $WinrmPort -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
     }
     else
     {
-        $session = New-PSSession -ComputerName . -Port $port -Credential $MachineCredentials
+        $session = New-PSSession -ComputerName . -Port $WinrmPort -Credential $MachineCredentials
     }
     return $session
 }
@@ -718,18 +703,20 @@ function ConfigureTestAgent
         [String] $PersonalAccessToken,
         [String] $MachineName,
         [String] $Capabilities,
-        [System.Management.Automation.PSCredential] $AgentUserCredential
+        [System.Management.Automation.PSCredential] $AgentUserCredential,
+		[int] $WinrmPort,
+		[String] $WinrmTransport		
     )
 
     EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     if ($AsServiceOrProcess -eq "Service")
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential -WinrmPort $winrmport -WinrmTransport $WinrmTransport
     }
     else
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential -WinrmPort $winrmport -WinrmTransport $WinrmTransport
     }
 
     $retCode = -1
@@ -766,6 +753,6 @@ $ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsService
 
 if ($ret -eq $false)
 {
-    $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
+    $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential -WinrmPort $winrmport -WinrmTransport $WinrmTransport
     return $returnCode;
 }
