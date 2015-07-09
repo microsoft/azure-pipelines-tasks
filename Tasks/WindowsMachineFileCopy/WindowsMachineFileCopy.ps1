@@ -5,7 +5,7 @@ param (
     [string]$sourcePath,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
-    [string]$deployFilesInParallel
+    [string]$copyFilesInParallel
     )
 
 Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
@@ -14,7 +14,7 @@ Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
-Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
+Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
 . ./WindowsMachineFileCopyJob.ps1
@@ -175,7 +175,7 @@ Write-Verbose "envOperationId = $envOperationId" -Verbose
 
 $resourcesPropertyBag = Get-ResourcesProperties -resources $resources
 
-if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
+if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
     {		
