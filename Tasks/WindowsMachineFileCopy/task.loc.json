@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "minimumAgentVersion": "1.85.0",
   "groups": [
@@ -29,7 +29,7 @@
   "inputs": [
     {
       "name": "SourcePath",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.SourcePath",
       "defaultValue": "",
       "required": true,
