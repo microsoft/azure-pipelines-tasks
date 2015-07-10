@@ -260,11 +260,10 @@ function Get-WellFormedTagsList
         return $null
     }
 
-    $tagsArray = $tagsListString.Split(';')
+    $tagsArray = $tagsListString.Split(';', [System.StringSplitOptions]::RemoveEmptyEntries)
     $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
     foreach($tag in $tagsArray)
     {
-        if([string]::IsNullOrWhiteSpace($tag)) {break}
         $tagKeyValue = $tag.Split(':')
         if($tagKeyValue.Length -ne 2)
         {
