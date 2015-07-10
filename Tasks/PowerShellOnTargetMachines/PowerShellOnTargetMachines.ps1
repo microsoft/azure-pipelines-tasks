@@ -342,7 +342,11 @@ else
                 if($status -ne "Passed")
                 {
                     $envOperationStatus = "Failed"
-                    $errorMessage = $output.Error.Message
+                    $errorMessage = ""
+                    if($output.Error -ne $null)
+                    {
+                        $errorMessage = $output.Error.Message
+                    }
                     Write-Output (Get-LocalizedString -Key "Deployment failed on machine '{0}' with following message : '{1}'" -ArgumentList $machineName, $errorMessage)
                 }
                 # getting operation logs
