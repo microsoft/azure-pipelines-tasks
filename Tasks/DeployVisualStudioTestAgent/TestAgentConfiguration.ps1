@@ -181,6 +181,25 @@ function Get-TestAgentConfiguration
     }
 }
 
+ 
+function DeleteDTAAgentExecutionService([String] $ServiceName)
+{
+	if(Get-Service $ServiceName -ErrorAction SilentlyContinue)
+	{
+		$service = (Get-WmiObject Win32_Service -filter "name='$ServiceName'")
+		Write-Verbose -Message("Trying to delete service {0}" -f $ServiceName) -Verbose 
+		if($service)
+		{
+			$service.StopService() 
+			$service.Delete() 
+		}
+	}
+	else
+	{
+		Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose
+	}
+ }
+ 
 function Set-TestAgentConfiguration
 {
     param
@@ -259,6 +278,8 @@ function Set-TestAgentConfiguration
     {
         $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
+	
+	DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService"
     
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
@@ -606,13 +627,56 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
+	Try
+	{
+		$StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01)
+		$FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/'
+	    $date1 = $StartDate.ToString($FormatHack)               
+		
+      	$session = CreateNewSession -MachineCredential $MachineCredential
+		Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST /SD $args[1] /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath,$date1
 
-    $session = New-PSSession -ComputerName . -Credential $MachineCredential
-    Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SD:01/01/2050 /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath
+		Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
+		Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+	}
+    Catch
+    {
+        Write-Verbose -Message ("Unable to start Agent process, will be rebooting the machine to complete the configuration") -Verbose
+    }
+   
+}
 
-    Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
-    Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
+{   
+	$winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String  
+	$xmldoc = [XML]$winrmconfigDetails      
+	$transports = $xmldoc.GetElementsByTagName("cfg:Transport")  
+	$ports = $xmldoc.GetElementsByTagName("cfg:Port")  
 
+	if( $ports -ne $null -and  $transports -ne $null -and $ports.Count -gt 0)  
+	{  
+		$port = $ports[0].InnerText  
+		$transport = $transports[0].InnerText  
+	}  
+	else  
+	{  
+		Write-Verbose -Message("Unable to fetch WinRM config details. Using default port for configuration") -Verbose  
+		$port = 5985  
+		$transport = HTTP            
+	}  
+
+	Write-Verbose -Message("Using Port {0} for creating session" -f $port) -Verbose  
+    
+    if( $transport -eq "HTTPS")
+    {	 
+       $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
+       $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
+    }
+    else
+    {
+        $session = New-PSSession -ComputerName . -Port $port -Credential $MachineCredentials
+    }
+    return $session
 }
 
 
@@ -728,5 +792,6 @@ $ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsService
 if ($ret -eq $false)
 {
     $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
+    Write-Verbose -Message ("Return code for Configure agent {0}" -f $returnCode) -Verbose	
     return $returnCode;
 }
