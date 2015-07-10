@@ -273,7 +273,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
     {
         $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
         $machine = $resourceProperties.fqdn
-        Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $($resource.Name))
+        Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
 
         Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
         $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
@@ -284,7 +284,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         Write-ResponseLogs -operationName $deploymentOperation -fqdn $machine -deploymentResponse $deploymentResponse
         $status = $deploymentResponse.Status
 
-        Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $($resource.Name), $status)
+        Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
         # getting operation logs
         $logs = Get-OperationLogs
@@ -313,7 +313,7 @@ else
     {
         $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
         $machine = $resourceProperties.fqdn
-        Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $($resource.Name))
+        Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $machine)
 
         Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
         $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
@@ -321,7 +321,6 @@ else
         Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
         $resourceProperties.resOperationId = $resOperationId
-        $resourceProperties.resourceName = $resource.Name
         $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $parsedSessionVariables
         $Jobs.Add($job.Id, $resourceProperties)
     }
@@ -335,7 +334,7 @@ else
                 $output = Receive-Job -Id $job.Id
                 Remove-Job $Job
                 $status = $output.Status
-                $machineName = $Jobs.Item($job.Id).resourceName
+                $machineName = $Jobs.Item($job.Id).fqdn
                 $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $machineName -deploymentResponse $output

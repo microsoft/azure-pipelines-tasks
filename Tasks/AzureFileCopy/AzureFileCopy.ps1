@@ -412,7 +412,7 @@ try
             $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
             $machine = $resourceProperties.fqdn
 
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $($resource.Name))
+            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $machine)
 
             Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
@@ -423,7 +423,7 @@ try
             $status = $copyResponse.Status
 
             Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machine -deploymentResponse $copyResponse
-            Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $($resource.Name), $status)
+            Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
             # getting operation logs
             $logs = Get-OperationLogs
@@ -453,7 +453,7 @@ try
             $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
             $machine = $resourceProperties.fqdn
 
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $($resource.Name))
+            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $machine)
 
             Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
@@ -461,7 +461,6 @@ try
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
             $resourceProperties.resOperationId = $resOperationId
-            $resourceProperties.resourceName = $resource.Name
             $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
             $Jobs.Add($job.Id, $resourceProperties)
         }
@@ -477,7 +476,7 @@ try
                     Remove-Job $Job
 
                     $status = $output.Status
-                    $machineName = $Jobs.Item($job.Id).resourceName
+                    $machineName = $Jobs.Item($job.Id).fqdn
                     $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                     Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machineName -deploymentResponse $output
