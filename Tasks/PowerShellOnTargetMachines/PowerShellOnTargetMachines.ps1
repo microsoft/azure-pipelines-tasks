@@ -222,6 +222,7 @@ function Get-WellFormedTagsList
     $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
     foreach($tag in $tagsArray)
     {
+        if([string]::IsNullOrWhiteSpace($tag)) {continue}
         $tagKeyValue = $tag.Split(':')
         if($tagKeyValue.Length -ne 2)
         {

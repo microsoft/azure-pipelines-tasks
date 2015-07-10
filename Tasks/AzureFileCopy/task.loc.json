@@ -34,7 +34,7 @@
     },
     {
       "name": "SourcePath",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.SourcePath",
       "defaultValue": "",
       "required": true,

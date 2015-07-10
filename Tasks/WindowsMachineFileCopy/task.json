@@ -24,9 +24,9 @@
         }
     ],
     "inputs": [
-	{
+        {
             "name": "SourcePath",
-            "type": "string",
+            "type": "filePath",
             "label": "Source",
             "defaultValue": "",
             "required": true,
@@ -94,7 +94,7 @@
      } 
     ], 
     "instanceNameFormat": "Copy files to $(EnvironmentName)",
-	 "execution": {
+    "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
             "argumentFormat": "",
