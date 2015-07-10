@@ -477,16 +477,22 @@ try
                     Remove-Job $Job
 
                     $status = $output.Status
-                    if ($status -ne "Passed")
-                    {
-                        $envOperationStatus = "Failed"
-                    }
-
                     $machineName = $Jobs.Item($job.Id).fqdn
                     $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                     Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machineName -deploymentResponse $output
-                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
+                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
+
+                    if ($status -ne "Passed")
+                    {
+                        $envOperationStatus = "Failed"
+                    $errorMessage = ""
+                    if($output.Error -ne $null)
+                    {
+                        $errorMessage = $output.Error.Message
+                    }
+                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $machineName, $errorMessage)
+                    }
 
                     # getting operation logs
                     $logs = Get-OperationLogs
