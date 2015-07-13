@@ -34,4 +34,4 @@ if($arguments)
 
 Write-Verbose (Get-Location)
 Write-Verbose "Running npm $npm"
-Invoke-Tool -Path $npm.Path -Arguments $npmArgs -WorkingFolder $cwd
+Invoke-Tool -Path $npm.Path -Arguments $npmArgs -WorkingFolder $cwd -WarningPattern "^npm WARN"
