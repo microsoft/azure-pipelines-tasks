@@ -54,6 +54,29 @@ function Get-SubKeysInFloatFormat($keys)
     return $targetKeys    
 }
 
+function DeleteDTAAgentExecutionService([String] $ServiceName) 
+{ 
+	if(Get-Service $ServiceName -ErrorAction SilentlyContinue) 
+	{ 
+		$service = (Get-WmiObject Win32_Service -filter "name='$ServiceName'") 
+		Write-Verbose -Message("Trying to delete service {0}" -f $ServiceName) -Verbose  
+		if($service) 
+		{ 
+			$service.StopService()  
+			$deleteServiceCode = $service.Delete()  
+			if($deleteServiceCode -eq 0)
+			{
+				Write-Verbose -Message ("Deleting service {0} failed with Error code {1}" -f $ServiceName, $deleteServiceCode) -Verbose
+			}
+		} 
+	} 
+	else 
+	{ 
+		Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose 
+	} 
+} 
+
+
 function Get-RegistryValueIgnoreError
 {
     param
@@ -259,6 +282,7 @@ function Set-TestAgentConfiguration
     {
         $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
+	DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService"
     
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
@@ -606,13 +630,62 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
+	Try
+	{
+		$StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01)
+		$FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/'
+		$date1 = $StartDate.ToString($FormatHack)               
+		
+      	$session = CreateNewSession -MachineCredential $MachineCredential
+		Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST /SD $args[1] /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath,$date1
 
-    $session = New-PSSession -ComputerName . -Credential $MachineCredential
-    Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SD:01/01/2050 /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath
+		Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
+		Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+	}
+    Catch [Exception]
+    {
+        Write-Verbose -Message ("Unable to start Agent process, will be rebooting the machine to complete the configuration {0}" -f  $_.Exception.Message) -Verbose
+    }
+}
 
-    Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
-    Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
+{   
+    Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose  
+	 
+	$winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String  
+    $xmldoc = [XML]$winrmconfigDetails      	
+	$ns = new-object Xml.XmlNameSpaceManager $xmldoc.NameTable    
+    $ns.AddNameSpace("cfg","http://schemas.microsoft.com/wbem/wsman/1/config/listener")
+	$ns.AddNameSpace("xsi","http://www.w3.org/2001/XMLSchema-instance")
+	$Listener = $xmldoc.SelectSingleNode("//cfg:Listener",$ns)
+	
+	$transportElement = $Listener.SelectSingleNode("//cfg:Transport",$ns)  
+	$portElement = $Listener.SelectSingleNode("//cfg:Port",$ns)
+	
+	if( $transportElement -ne $null -and  $portElement -ne $null)  
+	{  
+		$port = $portElement.InnerText  
+		$transport = $transportElement.InnerText  
+	}  
+	else  
+	{  
+		Write-Verbose -Message("Unable to fetch WinRM config details. Using default port for configuration") -Verbose  
+		$port = 5985  
+		$transport = HTTP            
+	}  
 
+	Write-Verbose -Message("Using Port {0} for creating session" -f $port) -Verbose  
+    
+    if( $transport -eq "HTTPS")
+    {	 
+       $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
+       $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
+    }
+    else
+    {
+        $session = New-PSSession -ComputerName . -Port $port -Credential $MachineCredentials
+    }
+    return $session
 }
 
 
@@ -714,7 +787,7 @@ function ConfigureTestAgent
         throw ("TestAgent Configuration failed with exit code {0}. Error code : {1}" -f $LASTEXITCODE, $retCode)
     }
 
-    return $ret;
+    return $retCode;
 }
 
 $disableScreenSaver = [Boolean] $disableScreenSaver
