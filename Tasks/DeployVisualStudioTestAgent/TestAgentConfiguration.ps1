@@ -8,8 +8,8 @@ function Locate-TestVersionAndVsRoot([string] $Version)
         {
             $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
         }
-        $keys = Get-Item $regPath | %{$_.GetSubKeyNames()} 
-        $Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1 
+        $keys = Get-Item $regPath | %{$_.GetSubKeyNames()}
+        $Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
 
         if ([string]::IsNullOrWhiteSpace($Version))
         {
@@ -46,35 +46,35 @@ function Locate-TestVersionAndVsRoot([string] $Version)
 function Get-SubKeysInFloatFormat($keys)
 {
     $targetKeys = @()      # New array
-    foreach ($key in $keys) 
+    foreach ($key in $keys)
     {
       $targetKeys += [decimal] $key
     }
-   
-    return $targetKeys    
+
+    return $targetKeys
 }
 
-function DeleteDTAAgentExecutionService([String] $ServiceName) 
-{ 
-	if(Get-Service $ServiceName -ErrorAction SilentlyContinue) 
-	{ 
-		$service = (Get-WmiObject Win32_Service -filter "name='$ServiceName'") 
-		Write-Verbose -Message("Trying to delete service {0}" -f $ServiceName) -Verbose  
-		if($service) 
-		{ 
-			$service.StopService()  
-			$deleteServiceCode = $service.Delete()  
-			if($deleteServiceCode -eq 0)
-			{
-				Write-Verbose -Message ("Deleting service {0} failed with Error code {1}" -f $ServiceName, $deleteServiceCode) -Verbose
-			}
-		} 
-	} 
-	else 
-	{ 
-		Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose 
-	} 
-} 
+function DeleteDTAAgentExecutionService([String] $ServiceName)
+{
+    if(Get-Service $ServiceName -ErrorAction SilentlyContinue)
+    {
+        $service = (Get-WmiObject Win32_Service -filter "name='$ServiceName'")
+        Write-Verbose -Message("Trying to delete service {0}" -f $ServiceName) -Verbose
+        if($service)
+        {
+            $service.StopService()
+            $deleteServiceCode = $service.Delete()
+            if($deleteServiceCode -eq 0)
+            {
+                Write-Verbose -Message ("Deleting service {0} failed with Error code {1}" -f $ServiceName, $deleteServiceCode) -Verbose
+            }
+        }
+    }
+    else
+    {
+        Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose
+    }
+}
 
 
 function Get-RegistryValueIgnoreError
@@ -118,13 +118,13 @@ function Get-TestAgentConfiguration
 {
     param
     (
-        [String] $TestAgentVersion,	
-        [System.Management.Automation.PSCredential] $UserCredential        
+        [String] $TestAgentVersion,
+        [System.Management.Automation.PSCredential] $UserCredential
     )
 
     Write-Verbose -Message ("Getting existing configuration") -Verbose
     $configOut = InvokeTestAgentConfigExe -Arguments @( "List" ) -Version $TestAgentVersion -UserCredential $UserCredential
-    
+
     if (-not $configOut.CommandOutput)
     {
         Write-Verbose -Message ("No output received from TestAgentConfig.exe, returning empty test agent configuration") -Verbose
@@ -198,7 +198,7 @@ function Get-TestAgentConfiguration
         DisableScreenSaver = $disableScreenSaver
         RunningAsProcess = $runningAsProcess
         EnvironmentUrl = $envUrl
-        MachineName = $machineName 
+        MachineName = $machineName
         PersonalAccessTokenUser = $personalAccessTokenUserName
         Capabilities = $capabilities
     }
@@ -227,7 +227,7 @@ function Set-TestAgentConfiguration
         'Service' { $configArgs = @("configureAsService"); $configAsProcess = $false }
         'Process' { $configArgs = @("configureAsProcess"); $configAsProcess = $true }
     }
-    
+
     $configArgs = $configArgs + ("/tfsTeamProjectCollection:{0}" -f $TfsCollection)
 
     if ($PSBoundParameters.ContainsKey('AgentUserCredential') -and $AgentUserCredential)
@@ -252,7 +252,7 @@ function Set-TestAgentConfiguration
         $yesno = GetBoolAsYesNo($EnableAutoLogon)
         $configArgs = $configArgs + ("/enableAutoLogon:{0}" -f $yesno)
     }
-  
+
     if ($PSBoundParameters.ContainsKey('DisableScreenSaver'))
     {
         if (-not $configAsProcess)
@@ -263,7 +263,7 @@ function Set-TestAgentConfiguration
         $yesno = GetBoolAsYesNo($DisableScreenSaver)
         $configArgs = $configArgs + ("/disableScreenSaver:{0}" -f $yesno)
     }
-    
+
     if (-not [string]::IsNullOrWhiteSpace($EnvironmentUrl))
     {
         $configArgs = $configArgs +  ("/dtlEnvUrl:`"{0}`""  -f $EnvironmentUrl)
@@ -271,19 +271,19 @@ function Set-TestAgentConfiguration
 
     if (-not [string]::IsNullOrWhiteSpace($PersonalAccessToken))
     {
-        $configArgs = $configArgs +  ("/personalAccessToken:{0}" -f $PersonalAccessToken)        
+        $configArgs = $configArgs +  ("/personalAccessToken:{0}" -f $PersonalAccessToken)
     }
 
     if (-not [string]::IsNullOrWhiteSpace($MachineName))
     {
         $configArgs = $configArgs +  ("/dtlMachineName:`"{0}`""  -f $MachineName)
     }
-	if (-not [string]::IsNullOrWhiteSpace($Capabilities))
+    if (-not [string]::IsNullOrWhiteSpace($Capabilities))
     {
         $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
-	DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService"
-    
+    DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService"
+
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
     if ($configOut.ExitCode -eq 0 -and $configAsProcess -eq $true)
@@ -307,7 +307,7 @@ function Set-TestAgentConfiguration
             $doReboot = $true
         }
     }
-	
+
     if ($doReboot)
     {
         Write-Verbose "Reboot required post test agent configuration, returning 3010" -Verbose
@@ -355,37 +355,37 @@ function IsDtaExecutionHostRunning
 
 function LoadDependentDlls
 {
-	param
-	(		
-		[string] $TestAgentVersion
-	)
+    param
+    (
+        [string] $TestAgentVersion
+    )
 
-	$vsRoot = Locate-TestVersionAndVsRoot($TestAgentVersion)
-	$assemblylist = 
+    $vsRoot = Locate-TestVersionAndVsRoot($TestAgentVersion)
+    $assemblylist =
             (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Client.dll").ToString(),
             (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Common.dll").ToString(),
             (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.VisualStudio.Services.Common.dll").ToString(),
             (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\Microsoft.VisualStudio.TestService.Common.dll").ToString()
 
-	foreach ($asm in $assemblylist)
-	{
+    foreach ($asm in $assemblylist)
+    {
             [Reflection.Assembly]::LoadFrom($asm)
-	}
+    }
 }
 
 
-function ReadCredentials 
+function ReadCredentials
 {
     param
     (
         [String] $TFSCollectionUrl,
         [String] $TestAgentVersion
     )
-	
+
     LoadDependentDlls($TestAgentVersion) | Out-Null
-    $creds = [Microsoft.VisualStudio.TestService.Common.CredentialStoreHelper]::GetStoredCredential($TFSCollectionUrl)       
-  
-    return $creds                    
+    $creds = [Microsoft.VisualStudio.TestService.Common.CredentialStoreHelper]::GetStoredCredential($TFSCollectionUrl)
+
+    return $creds
 }
 
 function CanSkipTestAgentConfiguration
@@ -410,7 +410,7 @@ function CanSkipTestAgentConfiguration
     Write-Verbose -Message "Finding whether TestAgent configuration is required" -Verbose
     $existingConfiguration = Get-TestAgentConfiguration -TestAgentVersion $TestAgentVersion -UserCredential $MachineUserCredential
 
-    if (-not (IsDtaExecutionHostRunning)) 
+    if (-not (IsDtaExecutionHostRunning))
     {
         Write-Verbose -Message ("TestAgent is not running, Configuration required") -Verbose
         return $false
@@ -425,7 +425,7 @@ function CanSkipTestAgentConfiguration
                 Write-Verbose -Message ("RunningAsService mismatch. Expected : RunningAsProcess, Current : RunningAsService. Reconfiguration required.") -Verbose
                 return $false
             }
-    
+
             if ($PSBoundParameters.ContainsKey('EnableAutoLogon'))
             {
                 if ($EnableAutoLogon -ne $existingConfiguration.EnableAutoLogon)
@@ -479,13 +479,13 @@ function CanSkipTestAgentConfiguration
     {
         if ($AgentUserCredential.UserName -like ".\*" -or ( -not ($AgentUserCredential.UserName.Contains("\")) ) )
         {
-            # for azure machines user name is either like .\username or username   
+            # for azure machines user name is either like .\username or username
             $existingUserName = $existingConfiguration.UserName.split('\')
             $requiredUserName = $AgentUserCredential.UserName.split('\')
-            
+
             if($existingUserName[$existingUserName.Length -1] -ne $requiredUserName[$requiredUserName.Length -1])
             {
-	        Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length -1]) -Verbose
+            Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length -1]) -Verbose
                 return $false
             }
         }
@@ -501,16 +501,16 @@ function CanSkipTestAgentConfiguration
         $creds = ReadCredentials -TFSCollectionUrl $TfsCollection -TestAgentVersion $TestAgentVersion
         if ($creds -eq $null)
         {
-	     Write-Verbose -Message "No personal access token found in the credential store" -Verbose
+         Write-Verbose -Message "No personal access token found in the credential store" -Verbose
              return $false
         }
 
         if($creds.Credentials -eq $null)
         {
-	     Write-Verbose -Message "No credentials found in stored identity" -Verbose
+         Write-Verbose -Message "No credentials found in stored identity" -Verbose
              return $false
         }
-  
+
         $storedString = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($creds.Credentials.SecurePassword))
         if ($storedString -cne $PersonalAccessToken)
         {
@@ -529,12 +529,12 @@ function CanSkipTestAgentConfiguration
             return $false
         }
     }
-	
+
     Write-Verbose -Message ("TestAgent reconfiguration not required.") -Verbose
     return $true
 }
 
-function EnableTracing 
+function EnableTracing
 {
     param
     (
@@ -542,13 +542,13 @@ function EnableTracing
         [String] $TestAgentVersion
     )
 
-    if ($env:processor_architecture -eq "amd64") 
+    if ($env:processor_architecture -eq "amd64")
     {
-        $programFilesPath =  ${env:ProgramFiles(x86)} 
-    } 
-    else 
-    { 
-        $programFilesPath = ${env:ProgramFiles} 
+        $programFilesPath =  ${env:ProgramFiles(x86)}
+    }
+    else
+    {
+        $programFilesPath = ${env:ProgramFiles}
     }
 
     $configFilePath = "$programFilesPath\Microsoft Visual Studio " + $TestAgentVersion + "\Common7\Ide"
@@ -565,8 +565,8 @@ function EnableTracing
     # Get XML Document Object from String
     [xml]$listenerToAdd = '
             <listeners>
-            <add name="autoListener" 
-                type="System.Diagnostics.TextWriterTraceListener" 
+            <add name="autoListener"
+                type="System.Diagnostics.TextWriterTraceListener"
                 initializeData="{0}\{1}.exe.log" />
             </listeners>' -f $logFilePath, $dtaExecutable
 
@@ -578,7 +578,7 @@ function EnableTracing
         $configTarget = $configFile.selectSingleNode("configuration/system.diagnostics/trace/listeners")
         $newTraces = $listenerToAdd.selectSingleNode("listeners/add")
 
-        foreach ($node in $configTarget.selectNodes("add")) 
+        foreach ($node in $configTarget.selectNodes("add"))
         {
             if(($node.type -eq $newTraces.type) -and ($node.initializeData -eq $newTraces.initializeData))
             {
@@ -610,7 +610,7 @@ function EnableTracing
         Write-Verbose -Message ("Creating log directory as it does not exist") -Verbose
         New-Item -Path $logFilePath -ItemType directory
     }
-	
+
     Write-Verbose -Message ("Logs will now be stored at : {0}" -f $logFilePath) -Verbose
 }
 
@@ -630,18 +630,18 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
-	Try
-	{
-		$StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01)
-		$FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/'
-		$date1 = $StartDate.ToString($FormatHack)               
-		
-      	$session = CreateNewSession -MachineCredential $MachineCredential
-		Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST /SD $args[1] /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath,$date1
+    Try
+    {
+        $StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01)
+        $FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/'
+        $date1 = $StartDate.ToString($FormatHack)
 
-		Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
-		Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
-	}
+        $session = CreateNewSession -MachineCredential $MachineCredential
+        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST /SD $args[1] /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath,$date1
+
+        Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
+        Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+    }
     Catch [Exception]
     {
         Write-Verbose -Message ("Unable to start Agent process, will be rebooting the machine to complete the configuration {0}" -f  $_.Exception.Message) -Verbose
@@ -649,35 +649,35 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
 }
 
 function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
-{   
-    Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose  
-	 
-	$winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String  
-    $xmldoc = [XML]$winrmconfigDetails      	
-	$ns = new-object Xml.XmlNameSpaceManager $xmldoc.NameTable    
-    $ns.AddNameSpace("cfg","http://schemas.microsoft.com/wbem/wsman/1/config/listener")
-	$ns.AddNameSpace("xsi","http://www.w3.org/2001/XMLSchema-instance")
-	$Listener = $xmldoc.SelectSingleNode("//cfg:Listener",$ns)
-	
-	$transportElement = $Listener.SelectSingleNode("//cfg:Transport",$ns)  
-	$portElement = $Listener.SelectSingleNode("//cfg:Port",$ns)
-	
-	if( $transportElement -ne $null -and  $portElement -ne $null)  
-	{  
-		$port = $portElement.InnerText  
-		$transport = $transportElement.InnerText  
-	}  
-	else  
-	{  
-		Write-Verbose -Message("Unable to fetch WinRM config details. Using default port for configuration") -Verbose  
-		$port = 5985  
-		$transport = HTTP            
-	}  
+{
+    Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
 
-	Write-Verbose -Message("Using Port {0} for creating session" -f $port) -Verbose  
-    
+    $winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String
+    $xmldoc = [XML]$winrmconfigDetails
+    $ns = new-object Xml.XmlNameSpaceManager $xmldoc.NameTable
+    $ns.AddNameSpace("cfg","http://schemas.microsoft.com/wbem/wsman/1/config/listener")
+    $ns.AddNameSpace("xsi","http://www.w3.org/2001/XMLSchema-instance")
+    $Listener = $xmldoc.SelectSingleNode("//cfg:Listener",$ns)
+
+    $transportElement = $Listener.SelectSingleNode("//cfg:Transport",$ns)
+    $portElement = $Listener.SelectSingleNode("//cfg:Port",$ns)
+
+    if( $transportElement -ne $null -and  $portElement -ne $null)
+    {
+        $port = $portElement.InnerText
+        $transport = $transportElement.InnerText
+    }
+    else
+    {
+        Write-Verbose -Message("Unable to fetch WinRM config details. Using default port for configuration") -Verbose
+        $port = 5985
+        $transport = HTTP
+    }
+
+    Write-Verbose -Message("Using Port {0} for creating session" -f $port) -Verbose
+
     if( $transport -eq "HTTPS")
-    {	 
+    {
        $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
        $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
     }
@@ -730,7 +730,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
                     ExitCode = $p.ExitCode
                     CommandOutput = $stdout
                 }
-					
+
         return $out
     }
 
