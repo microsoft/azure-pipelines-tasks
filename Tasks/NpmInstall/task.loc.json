@@ -17,6 +17,7 @@
   "demands": [
     "npm"
   ],
+  "minimumAgentVersion": "1.86.0",
   "groups": [
     {
       "name": "advanced",
