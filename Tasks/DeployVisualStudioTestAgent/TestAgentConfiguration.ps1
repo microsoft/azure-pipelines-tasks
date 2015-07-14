@@ -650,6 +650,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
 
 function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
 {
+    # TODO : Bug 366007:We should be able to get private WinRM port from DTL 
     Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
 
     $winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String
