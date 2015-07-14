@@ -637,7 +637,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
         $date1 = $StartDate.ToString($FormatHack)
 
         $session = CreateNewSession -MachineCredential $MachineCredential
-        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST /SD $args[1] /SC:ONCE /ST:00:00 ; schtasks.exe /run /TN:DTAConfig } -ArgumentList $exePath,$date1
+        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST  /SC:ONCE /ST:23:59 ; schtasks.exe /run /TN:DTAConfig;  schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
 
         Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
