@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "minimumAgentVersion": "1.85.0",
     "groups": [
@@ -46,7 +46,7 @@
         {
             "name": "MachineNames",
             "type": "string",
-            "label": "Deploy to Machines",
+            "label": "Filter Criteria",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\""
