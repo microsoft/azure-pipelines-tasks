@@ -264,6 +264,7 @@ function Get-WellFormedTagsList
     $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
     foreach($tag in $tagsArray)
     {
+        if([string]::IsNullOrWhiteSpace($tag)) {continue}
         $tagKeyValue = $tag.Split(':')
         if($tagKeyValue.Length -ne 2)
         {
@@ -392,6 +393,11 @@ try
         Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
     }
 
+    if ($resources.Count -eq 0)
+    {
+        throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for copy" -ArgumentList $environmentName)
+    }
+
     Write-Verbose "Starting Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $azureFileCopyOperation" -Verbose
     $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection
     Write-Verbose "Completed Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $deploymentOperation" -Verbose
@@ -476,16 +482,22 @@ try
                     Remove-Job $Job
 
                     $status = $output.Status
-                    if ($status -ne "Passed")
-                    {
-                        $envOperationStatus = "Failed"
-                    }
-
                     $machineName = $Jobs.Item($job.Id).fqdn
                     $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                     Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machineName -deploymentResponse $output
-                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
+                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
+
+                    if ($status -ne "Passed")
+                    {
+                        $envOperationStatus = "Failed"
+                    $errorMessage = ""
+                    if($output.Error -ne $null)
+                    {
+                        $errorMessage = $output.Error.Message
+                    }
+                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $machineName, $errorMessage)
+                    }
 
                     # getting operation logs
                     $logs = Get-OperationLogs

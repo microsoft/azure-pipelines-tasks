@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [
     "azureps"
@@ -31,7 +31,7 @@
     },
     {
       "name": "SourcePath",
-      "type": "string",
+      "type": "filePath",
       "label": "Source",
       "defaultValue": "",
       "required": true,
@@ -99,7 +99,7 @@
     {
       "name": "MachineNames",
       "type": "string",
-      "label": "Copy to Machines",
+      "label": "Filter Criteria",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group.",

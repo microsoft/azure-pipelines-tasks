@@ -5,7 +5,7 @@ param (
     [string]$sourcePath,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
-    [string]$deployFilesInParallel
+    [string]$copyFilesInParallel
     )
 
 Write-Verbose "Entering script WindowsMachineFileCopy.ps1" -Verbose
@@ -14,7 +14,7 @@ Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
-Write-Verbose "deployFilesInParallel = $deployFilesInParallel" -Verbose
+Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
 . ./WindowsMachineFileCopyJob.ps1
@@ -131,6 +131,7 @@ function Get-WellFormedTagsList
     $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
     foreach($tag in $tagsArray)
     {
+        if([string]::IsNullOrWhiteSpace($tag)) {continue}
         $tagKeyValue = $tag.Split(':')
         if($tagKeyValue.Length -ne 2)
         {
@@ -175,7 +176,7 @@ Write-Verbose "envOperationId = $envOperationId" -Verbose
 
 $resourcesPropertyBag = Get-ResourcesProperties -resources $resources
 
-if($deployFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
+if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
     {		
@@ -249,11 +250,6 @@ else
                  $output = Receive-Job -Id $job.Id
                  Remove-Job $Job
                  $status = $output.Status
-
-                 if($status -ne "Passed")
-                 {
-                     $envOperationStatus = "Failed"
-                 }
 				 
 				 $machineName = $Jobs.Item($job.Id).fqdn
 				 $resOperationId = $Jobs.Item($job.Id).resOperationId
@@ -261,6 +257,17 @@ else
                  Output-ResponseLogs -operationName "copy" -fqdn $machineName -deploymentResponse $output
 				 
                  Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
+
+                 if($status -ne "Passed")
+                 {
+                    $envOperationStatus = "Failed"
+                    $errorMessage = ""
+                    if($output.Error -ne $null)
+                    {
+                        $errorMessage = $output.Error.Message
+                    }
+                    Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $machineName, $errorMessage)
+                 }
 				 
 				 DoComplete-ResourceOperation -environmentName $environmentName -envOperationId $envOperationId -resOperationId $resOperationId -connection $connection -deploymentResponse $output
               } 

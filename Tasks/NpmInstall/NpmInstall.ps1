@@ -34,4 +34,7 @@ if($arguments)
 
 Write-Verbose (Get-Location)
 Write-Verbose "Running npm $npm"
-Invoke-Tool -Path $npm.Path -Arguments $npmArgs -WorkingFolder $cwd
+
+# Since npm produce warning message through standerr with prefix "npm WARN", we use -WarningPattern to redirect warning message.
+# We don't have to use -ErrorPattern here, since we trade anything from standerr as error by default.
+Invoke-Tool -Path $npm.Path -Arguments $npmArgs -WorkingFolder $cwd -WarningPattern "^npm WARN"
