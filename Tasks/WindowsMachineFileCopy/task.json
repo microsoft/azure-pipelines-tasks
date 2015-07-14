@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "minimumAgentVersion": "1.85.0",
     "groups": [
@@ -24,7 +24,7 @@
         }
     ],
     "inputs": [
-        {
+	{
             "name": "SourcePath",
             "type": "filePath",
             "label": "Source",
@@ -57,7 +57,7 @@
             "label": "Filter Criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\""
+            "helpMarkDown": "Provide a list of machine IP address or FQDN like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group."
         },        
         {
             "name": "TargetPath",
@@ -94,7 +94,7 @@
      } 
     ], 
     "instanceNameFormat": "Copy files to $(EnvironmentName)",
-    "execution": {
+	 "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
             "argumentFormat": "",

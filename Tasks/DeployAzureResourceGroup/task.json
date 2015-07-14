@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "demands": [
         "azureps"
@@ -150,7 +150,7 @@
             "required": false,
             "defaultValue": "true",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Indicates whether the client validates that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
+            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
         }
     ],
     "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",

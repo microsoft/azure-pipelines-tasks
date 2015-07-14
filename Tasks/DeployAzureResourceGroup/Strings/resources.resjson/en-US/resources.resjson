@@ -32,5 +32,5 @@
   "loc.input.label.vmPassword": "Password",
   "loc.input.help.vmPassword": "Administrator Password of the VMs.",
   "loc.input.label.skipCACheck": "Test Certificate",
-  "loc.input.help.skipCACheck": "Indicates whether the client validates that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
+  "loc.input.help.skipCACheck": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
 }
