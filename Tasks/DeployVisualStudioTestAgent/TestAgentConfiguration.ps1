@@ -292,6 +292,12 @@ function Set-TestAgentConfiguration
         InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential
     }
 
+    if ($configAsProcess -eq $true)
+    {
+        Write-Verbose -Message "Trying to configure power options" -Verbose
+        ConfigurePowerOptions -MachineCredential $MachineUserCredential
+    }
+
     $doReboot = $false
     # 3010 is exit code to indicate a reboot is required
     if ($configOut.ExitCode -eq 3010)
@@ -630,14 +636,13 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
+
     Try
     {
-        $StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01)
-        $FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/'
-        $date1 = $StartDate.ToString($FormatHack)
-
         $session = CreateNewSession -MachineCredential $MachineCredential
-        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST  /SC:ONCE /ST:23:59 ; schtasks.exe /run /TN:DTAConfig;  schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
+
+        Write-Verbose -Message "Running schtasks.exe to launch testagent process in the current session" -Verbose
+        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST /SC:ONCE /ST:23:59 ; schtasks.exe /run /TN:DTAConfig;  schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
 
         Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
@@ -645,6 +650,24 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     Catch [Exception]
     {
         Write-Verbose -Message ("Unable to start Agent process, will be rebooting the machine to complete the configuration {0}" -f  $_.Exception.Message) -Verbose
+    }
+}
+
+function ConfigurePowerOptions([System.Management.Automation.PSCredential] $MachineCredential)
+{
+    Try
+    {
+        $session = CreateNewSession -MachineCredential $MachineCredential
+
+        Write-Verbose -Message "Trying to configure power options so that the testagent session stays active" -Verbose
+        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { powercfg.exe /Change monitor-timeout-dc 0 ; powercfg.exe /Change monitor-timeout-ac 0 }
+
+        Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
+        Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+    }
+    Catch [Exception]
+    {
+        Write-Verbose -Message ("Unable to configure display settings, continuing. Exception : {0}" -f  $_.Exception.Message) -Verbose
     }
 }
 
