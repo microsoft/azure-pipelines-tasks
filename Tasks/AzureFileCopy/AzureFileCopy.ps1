@@ -393,6 +393,11 @@ try
         Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
     }
 
+    if ($resources.Count -eq 0)
+    {
+        throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for copy" -ArgumentList $environmentName)
+    }
+
     Write-Verbose "Starting Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $azureFileCopyOperation" -Verbose
     $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection
     Write-Verbose "Completed Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $deploymentOperation" -Verbose

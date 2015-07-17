@@ -22,7 +22,7 @@
   "loc.input.help.EnvironmentName": "Name of the target Resource Group for copying the files to.​",
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
   "loc.input.label.MachineNames": "Filter Criteria",
-  "loc.input.help.MachineNames": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\"",
+  "loc.input.help.MachineNames": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group.",
   "loc.input.label.TargetPath": "Destination Folder",
   "loc.input.help.TargetPath": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
