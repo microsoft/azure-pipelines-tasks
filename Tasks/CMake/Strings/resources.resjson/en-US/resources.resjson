@@ -5,9 +5,9 @@
   "loc.friendlyName": "CMake",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Build with the CMake cross-platform build system",
-  "loc.instanceNameFormat": "CMake $(args)",
+  "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory when cmake is run.",
-  "loc.input.label.args": "Arguments",
-  "loc.input.help.args": "Arguments passed to cmake"
+  "loc.input.label.cmakeArgs": "Arguments",
+  "loc.input.help.cmakeArgs": "Arguments passed to cmake"
 }

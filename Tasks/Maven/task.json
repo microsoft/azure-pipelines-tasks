@@ -15,10 +15,10 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "Maven $(args)",
+    "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
             "name":"junitTestResults",
