@@ -76,7 +76,6 @@ function DeleteDTAAgentExecutionService([String] $ServiceName)
     }
 }
 
-
 function Get-RegistryValueIgnoreError
 {
     param
@@ -294,7 +293,7 @@ function Set-TestAgentConfiguration
 
     if ($configAsProcess -eq $true)
     {
-        Write-Verbose -Message "Trying to configure power options" -Verbose
+        Write-Verbose -Message "Trying to configure power options so that the testagent session stays active" -Verbose
         ConfigurePowerOptions -MachineCredential $MachineUserCredential
     }
 
@@ -378,7 +377,6 @@ function LoadDependentDlls
             [Reflection.Assembly]::LoadFrom($asm)
     }
 }
-
 
 function ReadCredentials
 {
@@ -491,7 +489,7 @@ function CanSkipTestAgentConfiguration
 
             if($existingUserName[$existingUserName.Length -1] -ne $requiredUserName[$requiredUserName.Length -1])
             {
-            Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length -1]) -Verbose
+                Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length -1]) -Verbose
                 return $false
             }
         }
@@ -640,8 +638,6 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     Try
     {
         $session = CreateNewSession -MachineCredential $MachineCredential
-
-        Write-Verbose -Message "Running schtasks.exe to launch testagent process in the current session" -Verbose
         Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST /SC:ONCE /ST:23:59 ; schtasks.exe /run /TN:DTAConfig;  schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
 
         Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
@@ -657,18 +653,25 @@ function ConfigurePowerOptions([System.Management.Automation.PSCredential] $Mach
 {
     Try
     {
-        $session = CreateNewSession -MachineCredential $MachineCredential
-
-        Write-Verbose -Message "Trying to configure power options so that the testagent session stays active" -Verbose
-        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { powercfg.exe /Change monitor-timeout-dc 0 ; powercfg.exe /Change monitor-timeout-ac 0 }
-
-        Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
-        Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+        $command = "powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0"
+        InvokeCommandViaSession -Command $command -Arguments $null -MachineCredential $MachineCredential
     }
     Catch [Exception]
     {
         Write-Verbose -Message ("Unable to configure display settings, continuing. Exception : {0}" -f  $_.Exception.Message) -Verbose
     }
+}
+
+function InvokeCommandViaSession([string] $Command, [System.Management.Automation.PSCredential] $MachineCredential)
+{
+    $session = CreateNewSession -MachineCredential $MachineCredential
+
+    $scriptBlock = [scriptblock]::Create($Command)
+    Write-Verbose -Message ("Trying to run command : {0}" -f $Command) -Verbose
+    Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock $scriptBlock
+
+    Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
+    Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
 }
 
 function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
@@ -711,7 +714,6 @@ function CreateNewSession( [System.Management.Automation.PSCredential] $MachineC
     }
     return $session
 }
-
 
 function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [System.Management.Automation.PSCredential] $UserCredential)
 {
