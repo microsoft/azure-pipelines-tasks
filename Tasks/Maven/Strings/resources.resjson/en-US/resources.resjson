@@ -5,7 +5,7 @@
   "loc.friendlyName": "Maven",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Build with Apache Maven",
-  "loc.instanceNameFormat": "Maven $(args)",
+  "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.mavenPOMFile": "Maven POM file",

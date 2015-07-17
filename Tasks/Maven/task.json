@@ -18,7 +18,7 @@
         "Patch": 8
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "Maven $(args)",
+    "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
             "name":"junitTestResults",
