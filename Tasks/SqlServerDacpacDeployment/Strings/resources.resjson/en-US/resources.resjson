@@ -1,0 +1,36 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Sql Server Dacpac Deployment",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/SqlServerDacpacDeployment/README.md)",
+  "loc.description": "Deploy Dacpac to SQL Server",
+  "loc.instanceNameFormat": "Deploy SQL DB: $(DacpacFile)",
+  "loc.group.displayName.source": "Source",
+  "loc.group.displayName.target": "Target",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.EnvironmentName": "Machine Group",
+  "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.label.MachineNames": "Deploy to Machines",
+  "loc.input.help.MachineNames": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\"",
+  "loc.input.label.DacpacFile": "DACPAC File",
+  "loc.input.help.DacpacFile": "Location of the dacpac file on the remote machine.",
+  "loc.input.label.TargetMethod": "Specify SQL Using",
+  "loc.input.label.ServerName": "Server Name",
+  "loc.input.help.ServerName": "Name of the SQL Server, along with the instance name and port.",
+  "loc.input.label.DatabaseName": "Database Name",
+  "loc.input.help.DatabaseName": "Name of the Database to create / update using dacpac.",
+  "loc.input.label.SqlUsername": "Sql Username",
+  "loc.input.help.SqlUsername": "SQL username for connecting to SQL Server, empty for Integrated Authentication.",
+  "loc.input.label.SqlPassword": "Sql Password",
+  "loc.input.help.SqlPassword": "SQL password for connecting to SQL Server, empty for Integrated Authentication.",
+  "loc.input.label.ConnectionString": "Connection String",
+  "loc.input.help.ConnectionString": "Connection string to use for connecting to SQL Server.",
+  "loc.input.label.PublishProfile": "Publish Profile",
+  "loc.input.help.PublishProfile": "Path for DAC Publish Profile.",
+  "loc.input.label.AdditionalArguments": "Additional Arguments",
+  "loc.input.help.AdditionalArguments": "Additional Arguments to be used for deploying DACPAC using SQLPackage. For example - /p:AllowDropBlockingAssemblies = true /p:BackupDatabaseBeforeChanges = false",
+  "loc.input.label.RunPowershellInParallel": "Run in Parallel",
+  "loc.input.help.RunPowershellInParallel": "Setting it to true will run dacpac deployment scripts in parallel on the target machines."
+}

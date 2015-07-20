@@ -1,0 +1,185 @@
+{
+    "id": "70A3A82D-4A3C-4A09-8D30-A793739DC94F",
+    "name": "SqlServerDacpacDeployment",
+    "friendlyName": "Sql Server Dacpac Deployment",
+    "description": "Deploy Dacpac to SQL Server",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/SqlServerDacpacDeployment/README.md)",
+    "category": "Deploy",
+    "visibility": [
+        "Preview",
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [
+    ],
+    "minimumAgentVersion": "1.85.0",
+    "groups": [
+        {
+            "name": "source",
+            "displayName": "Source",
+            "isExpanded": true
+        },
+        {
+            "name": "target",
+            "displayName": "Target",
+            "isExpanded": true
+        },
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "EnvironmentName",
+            "type": "pickList",
+            "label": "Machine Group",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "source",
+            "helpMarkDown": "Name of the Machine Group for deploying application."
+        },
+        {
+            "name": "ResourceFilteringMethod",
+            "type": "radio",
+            "label": "Select Machines By",
+            "required": false,
+            "groupName": "source",
+            "defaultValue": "machineNames",
+            "options": {
+                "machineNames": "Machine Names",
+                "tags": "Tags"
+            }
+        },
+        {
+            "name": "MachineNames",
+            "type": "string",
+            "label": "Deploy to Machines",
+            "required": false,
+            "groupName": "source",
+            "defaultValue": "",
+            "helpMarkDown": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\""
+        },
+        {
+            "name": "DacpacFile",
+            "type": "string",
+            "label": "DACPAC File",
+            "required": true,
+            "groupName": "source",
+            "defaultValue": "",
+            "helpMarkDown": "Location of the dacpac file on the remote machine."
+        },
+        {
+            "name": "TargetMethod",
+            "type": "pickList",
+            "label": "Specify SQL Using",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "server",
+            "options": {
+                "server": "Server",
+                "connectionString": "Connection String"
+            }
+        },
+        {
+            "name": "ServerName",
+            "type": "string",
+            "label": "Server Name",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "localhost",
+            "visibleRule": "TargetMethod = server",
+            "helpMarkDown": "Name of the SQL Server, along with the instance name and port."
+        },
+        {
+            "name": "DatabaseName",
+            "type": "string",
+            "label": "Database Name",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "TargetMethod = server",
+            "helpMarkDown": "Name of the Database to create / update using dacpac."
+        },
+        {
+            "name": "SqlUsername",
+            "type": "string",
+            "label": "Sql Username",
+            "required": false,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "TargetMethod = server",
+            "helpMarkDown": "SQL username for connecting to SQL Server, empty for Integrated Authentication."
+        },
+        {
+            "name": "SqlPassword",
+            "type": "string",
+            "label": "Sql Password",
+            "required": false,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "TargetMethod = server",
+            "helpMarkDown": "SQL password for connecting to SQL Server, empty for Integrated Authentication."
+        },
+        {
+            "name": "ConnectionString",
+            "type": "multiLine",
+            "label": "Connection String",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "TargetMethod = connectionString",
+            "helpMarkDown": "Connection string to use for connecting to SQL Server."
+        },
+        {
+            "name": "PublishProfile",
+            "type": "string",
+            "label": "Publish Profile",
+            "required": false,
+            "groupName": "target",
+            "defaultValue": "",
+            "helpMarkDown": "Path for DAC Publish Profile."
+        },
+        {
+            "name": "AdditionalArguments",
+            "type": "string",
+            "label": "Additional Arguments",
+            "required": false,
+            "groupName": "target",
+            "defaultValue": "",
+            "helpMarkDown": "Additional Arguments to be used for deploying DACPAC using SQLPackage. For example - /p:AllowDropBlockingAssemblies = true /p:BackupDatabaseBeforeChanges = false"
+        },
+        {
+            "name": "RunPowershellInParallel",
+            "type": "boolean",
+            "label": "Run in Parallel",
+            "defaultValue": "true",
+            "required": false,
+            "groupName":"advanced",
+            "helpMarkDown": "Setting it to true will run dacpac deployment scripts in parallel on the target machines."
+        }
+    ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "EnvironmentName", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
+    "instanceNameFormat": "Deploy SQL DB: $(DacpacFile)",
+    "execution": {
+        "PowerShell": {
+        "target": "$(currentDirectory)\\DeployToSqlServer.ps1",
+        "argumentFormat": "",
+        "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
