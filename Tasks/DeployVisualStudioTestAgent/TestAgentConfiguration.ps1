@@ -1,4 +1,4 @@
-function Locate-TestVersionAndVsRoot([string] $Version)
+﻿function Locate-TestVersionAndVsRoot([string] $Version)
 {
     if ([string]::IsNullOrWhiteSpace($Version))
     {
@@ -759,7 +759,7 @@ function ConfigureTestAgent
         $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
     }
 
-    $retCode = -1
+    $retCode = $ret
     if ($ret.Count -gt 0)
     {
         $retCode = $ret[$ret.Count - 1]

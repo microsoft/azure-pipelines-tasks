@@ -8,10 +8,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
+  "visibility": [],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
@@ -19,7 +16,7 @@
     "Patch": 4
   },
   "demands": [],
-  "minimumAgentVersion": "1.86.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "testMachineGroups",
