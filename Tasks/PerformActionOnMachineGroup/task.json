@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "minimumAgentVersion": "1.85.0",
     "inputs": [ 
@@ -50,17 +50,29 @@
                 }
         },
         {
-            "name": "Filters", 
-            "type": "string", 
-            "label": "Apply to Machines",
-            "required": false,
-            "helpMarkDown": "By default, actions apply to all machines in a machine group. To apply the action to a subset of machines, provide tags or machine names like Role: Web, Role: Test, BudgetIT01. Filters are not applied for block or unblock actions."
+            "name":"ResourceFilteringMethod",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+            "machineNames":"Machine Names",
+            "tags":"Tags"
+            }
+       }, 
+       {
+           "name": "Filters",
+           "type": "string",
+           "label": "Filter Criteria",
+           "defaultValue": "",
+           "required": false,
+           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions."
         },
         {
            "name": "BlockedFor",
            "type": "pickList",
            "label": "Block For",
-           "defaultValue": "Instance",
+           "defaultValue": "Definition",
            "required": "true",
            "helpMarkDown": "Block a machine group either for an instance like a particular Build, or for the definition i.e. for all the instances of the definition.",
            "options": {
@@ -73,9 +85,9 @@
             "name": "TimeInHours",
             "type": "pickList",
             "label": "Time in Hours",
-            "defaultValue": "0",
+            "defaultValue": "8",
             "required": "true",
-            "helpMarkDown": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely.",
+            "helpMarkDown": "The number of hours that the machines will be blocked for. Value 0 indicates that the machines will be blocked indefinitely.",
             "options": {
                 "0": "0",
                 "8": "8",

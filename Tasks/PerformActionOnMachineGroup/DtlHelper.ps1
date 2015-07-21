@@ -6,11 +6,48 @@ function Initialize-DTLServiceHelper
     Set-Variable -Name connection -Value $connection -Scope "Script"
 }
 
+function Get-MachineGroupWithFilteredResources
+{
+    param([string]$machineGroupName,
+          [string]$filters,
+          [string]$resourceFilteringMethod)
+
+    $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
+
+    if($resourceFilteringMethod -eq "tags")
+    {
+        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $filters
+
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on machine group name: $machineGroupName with tag filter: $wellFormedTagsList" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $machineGroupName -TagFilter $wellFormedTagsList -Connection $connection
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for machine group name: $machineGroupName with tag filter" -Verbose
+    }
+    else
+    {
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on machine group name: $machineGroupName with machine filter: $filters" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $machineGroupName -ResourceFilter $filters -Connection $connection
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for machine group name: $machineGroupName with machine filter" -Verbose
+    }
+
+    $environment.Resources = $resources
+    return $environment  
+}
+
 function Get-MachineGroup
 {
     param([string]$machineGroupName,
-          [string]$filters)    
+          [string]$filters,
+          [string]$resourceFilteringMethod)    
 
+    if ($Action -eq "Unblock")
+    {
+         # Filters are not applicable to the unblock action as unblock is machine level action
+         Write-Verbose "Starting Get-Environment cmdlet call on machine group name: $machineGroupName" -Verbose
+         $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
+         Write-Verbose "Completed Get-Environment cmdlet call for machine group name: $machineGroupName" -Verbose
+         return $environment
+    }
+     
     if ($Action -eq "Block")
     {
         $time = $WaitTimeInMinutes -as [INT]
@@ -22,7 +59,10 @@ function Get-MachineGroup
 
         $getEnvironmentCommand = 
         {
-            $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -Filters $filters -ErrorAction Stop -Verbose
+            # Filters are not applicable to the block action as block is machine level action
+            Write-Verbose "Starting Get-Environment cmdlet call on machine group name: $machineGroupName" -Verbose
+            $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
+            Write-Verbose "Completed Get-Environment cmdlet call for machine group name: $machineGroupName" -Verbose
         }
         
         Write-Verbose "Getting the machine group $machineGroupName" -Verbose
@@ -32,7 +72,8 @@ function Get-MachineGroup
     else
     {
         Write-Verbose "Getting the machine group $machineGroupName" -Verbose
-        $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -Filters $filters -ErrorAction Stop -Verbose
+        $environment = Get-MachineGroupWithFilteredResources -machineGroupName $machineGroupName -filters $filters -resourceFilteringMethod $resourceFilteringMethod
+        
         Write-Verbose "Retrieved the machine group"
     }
 
