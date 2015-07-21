@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "demands" : [
         "java"
@@ -115,10 +115,6 @@
             "target": "$(currentDirectory)\\gradle.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
-        },
-        "JavaScript": {
-            "target": "gradle.js",
-            "argumentFormat": ""
         },
         "Node": {
             "target": "gradle2.js",

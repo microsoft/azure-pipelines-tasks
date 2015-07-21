@@ -15,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "CMake $(cmakeArgs)",
@@ -38,10 +38,10 @@
         }
     ],
     "execution": {
-        "JavaScript": {
-            "target": "cmake.js",
+        "Node": {
+            "target": "cmake2.js",
             "argumentFormat": ""
-        },
+        },        
         "PowerShell": {
             "target": "$(currentDirectory)\\CMake.ps1",
             "argumentFormat": "",
