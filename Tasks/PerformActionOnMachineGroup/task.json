@@ -16,7 +16,7 @@
         "Minor": 0,
         "Patch": 9
     },
-    "minimumAgentVersion": "1.85.0",
+    "minimumAgentVersion": "1.86.0",
     "inputs": [ 
         {
             "name": "ConnectedServiceName",
