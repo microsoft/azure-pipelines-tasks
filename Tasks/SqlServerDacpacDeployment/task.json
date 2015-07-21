@@ -60,7 +60,7 @@
             "helpMarkDown": "Select a subset of machines either by providing machine names or tags."
         },
         {
-            "name": "MachineNames",
+            "name": "MachineFilter",
             "type": "string",
             "label": "Deploy to Machines",
             "required": false,

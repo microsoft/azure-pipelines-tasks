@@ -1,7 +1,7 @@
 ﻿param (
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineNames,
+    [string]$machineFilter,
     [string]$dacpacFile,
     [string]$targetMethod,
     [string]$serverName,
@@ -17,7 +17,7 @@
 Write-Verbose "Entering script DeployToSqlServer.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineNames = $machineNames" -Verbose
+Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "dacpacFile = $dacpacFile" -Verbose
 Write-Verbose "targetMethod = $targetMethod" -Verbose
 Write-Verbose "serverName = $serverName" -Verbose
@@ -36,7 +36,7 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDe
 $sqlPackageArguments = @("/SourceFile:`'$dacpacFile`'")
 $sqlPackageArguments += @("/Action:Publish")
 
-if($serverName)
+if($targetMethod -eq "server")
 {
     $sqlPackageArguments += @("/TargetServerName:`'$serverName`'")
     $sqlPackageArguments += @("/TargetDatabaseName:$databaseName")
@@ -47,7 +47,7 @@ if($serverName)
         $sqlPackageArguments += @("/TargetPassword:$sqlPassword")
     }    
 }
-else
+elseif($targetMethod -eq "connectionString")
 {
     $sqlPackageArguments += @("/TargetConnectionString:$connectionString")
 }
@@ -62,4 +62,11 @@ $sqlPackageOnTargetMachineBlock = Get-Content ./SqlPackageOnTargetMachine.ps1 | 
 
 $scriptArgument = '"' + ($sqlPackageArguments -join " ") + '"'
 
-Invoke-RemoteDeployment -environmentName $environmentName -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $runPowershellInParallel
+if($resourceFilteringMethod -eq "tags")
+{
+    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $runPowershellInParallel
+}
+else
+{
+    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $runPowershellInParallel
+}

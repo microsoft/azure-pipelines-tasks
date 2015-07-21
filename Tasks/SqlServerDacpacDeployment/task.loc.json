@@ -62,13 +62,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod"
     },
     {
-      "name": "MachineNames",
+      "name": "MachineFilter",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
+      "label": "ms-resource:loc.input.label.MachineFilter",
       "required": false,
       "groupName": "source",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
+      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
     },
     {
       "name": "DacpacFile",
