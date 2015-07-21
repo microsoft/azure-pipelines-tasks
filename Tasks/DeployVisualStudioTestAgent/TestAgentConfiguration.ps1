@@ -631,16 +631,9 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
     Try
-    {
-	    $StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01) 
-        $FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/' 
-        $date1 = $StartDate.ToString($FormatHack) 		
-		$sb = 
-		{ 		
-			schtasks.exe /create /TN:DTAConfig /TR:$using:exepath /F /RL:HIGHEST /SD:$using:date1 /SC:ONCE /ST:00:00; Set-Location -Path $using:vsRoot; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /delete /F /TN:DTAConfig
-		}		
-        $session = CreateNewSession -MachineCredential $MachineCredential		
-        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock $sb  -ArgumentList  $exePath, $vsRoot, $date1		
+    {	   		
+		$session = CreateNewSession -MachineCredential $MachineCredential		
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /delete /F /TN:DTAConfig }  -ArgumentList $exePath		
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
