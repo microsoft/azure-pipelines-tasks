@@ -4,6 +4,11 @@
     [string]$goals,
     [string]$publishJUnitResults,   
     [string]$testResultsFiles, 
+    [string]$publishCodeCoverageResults,
+    [string]$codeCoverageTool,
+    [string]$summeryFileLocation,
+    [string]$reportDirectory,
+    [string]$additionalCodeCoverageFiles,
     [string]$jdkVersion,
     [string]$jdkArchitecture
 )
@@ -14,8 +19,14 @@ Write-Verbose "options = $options"
 Write-Verbose "goals = $goals"
 Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
+Write-Verbose "publishCodeCoverageResults = $publishCodeCoverageResults"
+Write-Verbose "codeCoverageTool = $codeCoverageTool"
+Write-Verbose "summeryFileLocation = $summeryFileLocation"
+Write-Verbose "reportDirectory = $reportDirectory"
+Write-Verbose "additionalCodeCoverageFiles = $additionalCodeCoverageFiles"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
+
 
 #Verify Maven POM file is specified
 if(!$mavenPOMFile)
@@ -63,6 +74,17 @@ if($publishJUnitResultsFromAntBuild)
 else
 {
     Write-Verbose "Option to publish JUnit Test results produced by Maven build was not selected and is being skipped."
+}
+
+
+if($publishCodeCoverageResults)
+{
+   # Publish Code Coverage Files
+   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummeryFileLocation $summeryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $additionalCodeCoverageFiles -Context $distributedTaskContext    
+}
+else
+{
+    Write-Verbose "Option to publish CodeCoverage results produced by Maven build was not selected and is being skipped."
 }
 
 

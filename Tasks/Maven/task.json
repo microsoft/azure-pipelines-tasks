@@ -26,6 +26,11 @@
             "isExpanded":true
         },
         {
+            "name": "codeCoverage",
+            "displayName": "Publish CodeCoverage Results",
+            "isExpanded": false
+        },
+        {
             "name":"advanced",
             "displayName":"Advanced",
             "isExpanded":false
@@ -71,7 +76,56 @@
             "required": true,
             "groupName":"junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
-        },     
+        },
+
+        {
+            "name": "publishCodeCoverageResults",
+            "type": "boolean",
+            "label": "Publish to VSO/TFS",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Select this option to publish Code Coverage results produced by the Maven build to VSO/TFS.Code Coverage Summery and code Coverage Files would be published to TFS Server"
+        },
+        {
+            "name": "codeCoverageTool",
+            "type": "pickList",
+            "label": "CodeCoverage Tool",
+            "required": false,
+            "groupName": "codeCoverage",
+            "defaultValue": "JaCoCo",
+            "helpMarkDown": "Select the tool with which summery files have been generated",
+            "options": {
+                "JaCoCo": "JaCoCo"
+            }
+        },
+        {
+            "name": "summeryFileLocation",
+            "type": "string",
+            "label": "CodeCoverage Summery File",
+            "defaultValue": "**/JaCoCo*.xml",
+            "required": true,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Path of code coverage Summery file"
+        },
+        {
+            "name": "reportDirectory",
+            "type": "string",
+            "label": "CodeCoverage report directory",
+            "defaultValue": "$(Build.Repository.LocalPath)\\Site",
+            "required": true,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Path of report directory"
+        },
+        {
+            "name": "additionalCodeCoverageFiles",
+            "type": "string",
+            "label": "Additional CodeCoverage Files",
+            "defaultValue": "*.exec",
+            "required": true,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "regular expression Specifying the additional CodeCoverage Files to be attached to build"
+        },
         {
             "name":"jdkVersion",
             "type":"pickList",
