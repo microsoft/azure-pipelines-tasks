@@ -282,14 +282,14 @@ function Set-TestAgentConfiguration
     {
         $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
-    DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService"
+    DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService" | Out-Null
 
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
     if ($configOut.ExitCode -eq 0 -and $configAsProcess -eq $true)
     {
         Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
-        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential
+        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential | Out-Null
     }
 
     $doReboot = $false
@@ -633,7 +633,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     Try
     {	   		
 		$session = CreateNewSession -MachineCredential $MachineCredential		
-        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /delete /F /TN:DTAConfig }  -ArgumentList $exePath		
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /change /disable /TN:DTAConfig }  -ArgumentList $exePath		
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
