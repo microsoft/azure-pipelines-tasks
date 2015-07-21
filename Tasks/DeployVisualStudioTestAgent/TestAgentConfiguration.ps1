@@ -632,15 +632,17 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     $exePath = "'" + $exePath + "'"
     Try
     {
-        $StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01)
-        $FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/'
-        $date1 = $StartDate.ToString($FormatHack)
-
-        $session = CreateNewSession -MachineCredential $MachineCredential
-        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST /SC:MONTHLY; Set-Location $args[1]; schtasks.exe /run /TN:DTAConfig;  schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath,$vsRoot
-
-        Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
-        Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+	    $StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01) 
+        $FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/' 
+        $date1 = $StartDate.ToString($FormatHack) 		
+		$sb = 
+		{ 		
+			schtasks.exe /create /TN:DTAConfig /TR:$using:exepath /F /RL:HIGHEST /SD:$using:date1 /SC:ONCE /ST:00:00; Set-Location -Path $using:vsRoot; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /delete /F /TN:DTAConfig
+		}		
+        $session = CreateNewSession -MachineCredential $MachineCredential		
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock $sb  -ArgumentList  $exePath, $vsRoot, $date1		
+        Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
+        Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
     Catch [Exception]
     {
@@ -650,32 +652,29 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
 
 function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
 {
-    # TODO : Bug 366007:We should be able to get private WinRM port from DTL 
     Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
-
-    $winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String
-    $xmldoc = [XML]$winrmconfigDetails
-    $ns = new-object Xml.XmlNameSpaceManager $xmldoc.NameTable
-    $ns.AddNameSpace("cfg","http://schemas.microsoft.com/wbem/wsman/1/config/listener")
-    $ns.AddNameSpace("xsi","http://www.w3.org/2001/XMLSchema-instance")
-    $Listener = $xmldoc.SelectSingleNode("//cfg:Listener",$ns)
-
-    $transportElement = $Listener.SelectSingleNode("//cfg:Transport",$ns)
-    $portElement = $Listener.SelectSingleNode("//cfg:Port",$ns)
-
-    if( $transportElement -ne $null -and  $portElement -ne $null)
-    {
-        $port = $portElement.InnerText
-        $transport = $transportElement.InnerText
-    }
-    else
-    {
-        Write-Verbose -Message("Unable to fetch WinRM config details. Using default port for configuration") -Verbose
-        $port = 5985
-        $transport = HTTP
-    }
-
-    Write-Verbose -Message("Using Port {0} for creating session" -f $port) -Verbose
+	$wsmanoutput = Get-WSManInstance –ResourceURI winrm/config/listener –Enumerate
+		
+	if($wsmanoutput -ne $null)
+	{	
+		if($wsmanoutput.Count -gt 1)
+		{
+			$port = $wsmanoutput[0].Port
+			$transport = $wsmanoutput[0].Transport
+		}
+		else
+		{	
+			$port = $wsmanoutput.Port
+			$transport = $wsmanoutput.Transport
+		}
+	}
+	else
+	{
+		$port =  5985
+		$transport = "HTTP"
+	}	
+	
+    Write-Verbose -Message("Using Transport {0} : Port {1}  for creating session" -f $transport,$port) -Verbose
 
     if( $transport -eq "HTTPS")
     {
