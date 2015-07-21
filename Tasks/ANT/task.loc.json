@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "ant"
@@ -105,10 +105,6 @@
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "ant.js",
-      "argumentFormat": ""
-    },
     "Node": {
       "target": "ant2.js",
       "argumentFormat": ""

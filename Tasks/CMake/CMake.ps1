@@ -1,11 +1,11 @@
 ﻿param (
 	[string]$cwd,
-	[string]$args
+	[string]$cmakeArgs
 )
 
 Write-Verbose 'Entering CMake.ps1'
 Write-Verbose "cwd = $cwd"
-Write-Verbose "args = $args"
+Write-Verbose "cmakeArgs = $cmakeArgs"
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -47,7 +47,7 @@ Set-Location $cwd
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
 Write-Verbose "Running CMake..."
-Invoke-Tool -Path $cmake.Path -Arguments $args -WorkingFolder $buildPath
+Invoke-Tool -Path $cmake.Path -Arguments $cmakeArgs -WorkingFolder $cwd
 
 Write-Verbose "Leaving script CMake.ps1"
 

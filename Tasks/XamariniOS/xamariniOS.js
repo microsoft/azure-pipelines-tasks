@@ -40,6 +40,7 @@ if (!nugetPath) {
 // Prepare function for tool execution failure
 var onFailedExecution = function (err) {
     // Error executing
+    console.error(err.message);
     tl.debug('ToolRunner execution failure: ' + err);
     tl.exit(1);
 }
