@@ -8,10 +8,10 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
-  "visibility": [     
-                 "Build",
-                 "Release"
-                ],
+  "visibility": [
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
