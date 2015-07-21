@@ -23,7 +23,6 @@ Write-Verbose "targetMethod = $targetMethod" -Verbose
 Write-Verbose "serverName = $serverName" -Verbose
 Write-Verbose "databaseName = $databaseName" -Verbose
 Write-Verbose "sqlUsername = $sqlUsername" -Verbose
-Write-Verbose "connectionString = $connectionString" -Verbose
 Write-Verbose "publishProfile = $publishProfile" -Verbose
 Write-Verbose "additionalArguments = $additionalArguments" -Verbose
 Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose

@@ -18,7 +18,7 @@
     },
     "demands": [
     ],
-    "minimumAgentVersion": "1.85.0",
+    "minimumAgentVersion": "1.86.0",
     "groups": [
         {
             "name": "source",
@@ -31,9 +31,9 @@
             "isExpanded": true
         },
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -44,7 +44,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "source",
-            "helpMarkDown": "Name of the Machine Group for deploying application."
+            "helpMarkDown": "Name of the Machine Group for deploying the database."
         },
         {
             "name": "ResourceFilteringMethod",
@@ -56,7 +56,8 @@
             "options": {
                 "machineNames": "Machine Names",
                 "tags": "Tags"
-            }
+            },
+            "helpMarkDown": "Select a subset of machines either by providing machine names or tags."
         },
         {
             "name": "MachineNames",
@@ -65,7 +66,7 @@
             "required": false,
             "groupName": "source",
             "defaultValue": "",
-            "helpMarkDown": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\""
+            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
         },
         {
             "name": "DacpacFile",
@@ -74,7 +75,7 @@
             "required": true,
             "groupName": "source",
             "defaultValue": "",
-            "helpMarkDown": "Location of the dacpac file on the remote machine."
+            "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like \\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac"
         },
         {
             "name": "TargetMethod",
@@ -85,8 +86,10 @@
             "defaultValue": "server",
             "options": {
                 "server": "Server",
-                "connectionString": "Connection String"
-            }
+                "connectionString": "Connection String",
+                "publishProfile": "Publish Profile"
+            },
+            "helpMarkDown": "Selection the option to specify the target SQL Server amongst SQL Server and instance details, or connection string or Publish profile file."
         },
         {
             "name": "ServerName",
@@ -96,7 +99,7 @@
             "groupName": "target",
             "defaultValue": "localhost",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "Name of the SQL Server, along with the instance name and port."
+            "helpMarkDown": "SQL Server name like machinename\\SqlInstanceName,1433 or localhost or .\\SQL2012R2"
         },
         {
             "name": "DatabaseName",
@@ -106,27 +109,27 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "Name of the Database to create / update using dacpac."
+            "helpMarkDown": "Name of the SQL Server database."
         },
         {
             "name": "SqlUsername",
             "type": "string",
-            "label": "Sql Username",
+            "label": "SQL Username",
             "required": false,
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "SQL username for connecting to SQL Server, empty for Integrated Authentication."
+            "helpMarkDown": "SQL Server login, the default is to use the machine admin credentials."
         },
         {
             "name": "SqlPassword",
             "type": "string",
-            "label": "Sql Password",
+            "label": "SQL Password",
             "required": false,
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "SQL password for connecting to SQL Server, empty for Integrated Authentication."
+            "helpMarkDown": "SQL Server password, the default is to use the machine admin credentials."
         },
         {
             "name": "ConnectionString",
@@ -136,7 +139,7 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = connectionString",
-            "helpMarkDown": "Connection string to use for connecting to SQL Server."
+            "helpMarkDown": "SQL Server connection string that will be used to connect to the SQL."
         },
         {
             "name": "PublishProfile",
@@ -145,7 +148,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Path for DAC Publish Profile."
+            "helpMarkDown": "Path to the Publish profile file on the target machine."
         },
         {
             "name": "AdditionalArguments",
@@ -154,15 +157,15 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Additional Arguments to be used for deploying DACPAC using SQLPackage. For example - /p:AllowDropBlockingAssemblies = true /p:BackupDatabaseBeforeChanges = false"
+            "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied on the SQL Server like /p:IgnoreAnsiNulls=True /p:IgnoreComments=True"
         },
         {
             "name": "RunPowershellInParallel",
             "type": "boolean",
-            "label": "Run in Parallel",
+            "label": "Deploy in Parallel",
             "defaultValue": "true",
             "required": false,
-            "groupName":"advanced",
+            "groupName": "advanced",
             "helpMarkDown": "Setting it to true will run dacpac deployment scripts in parallel on the target machines."
         }
     ],
@@ -174,7 +177,7 @@
          "authKey": "tfs:DevTestLabs" 
      } 
     ], 
-    "instanceNameFormat": "Deploy SQL DB: $(DacpacFile)",
+    "instanceNameFormat": "Deploy SQL DACPAC: $(DacpacFile)",
     "execution": {
         "PowerShell": {
         "target": "$(currentDirectory)\\DeployToSqlServer.ps1",

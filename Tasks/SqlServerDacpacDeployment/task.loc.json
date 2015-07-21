@@ -20,7 +20,7 @@
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "1.85.0",
+  "minimumAgentVersion": "1.86.0",
   "groups": [
     {
       "name": "source",
@@ -58,7 +58,8 @@
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod"
     },
     {
       "name": "MachineNames",
@@ -87,8 +88,10 @@
       "defaultValue": "server",
       "options": {
         "server": "Server",
-        "connectionString": "Connection String"
-      }
+        "connectionString": "Connection String",
+        "publishProfile": "Publish Profile"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetMethod"
     },
     {
       "name": "ServerName",
