@@ -38,15 +38,14 @@ if(!$gulp)
     }
 }
 
+$arguments = ""
 
 if($targets)
 {
-    $arguments = $targets + " --gulpfile " + $gulpFile + " " + $arguments    
+    $arguments += $targets + " "   
 }
-else
-{
-    $arguments = "--gulpfile " + $gulpFile + " " + $arguments
-}
+
+$arguments += "--gulpfile `"" + $gulpFile + "`" " + $arguments
 
 if($cwd)
 {
