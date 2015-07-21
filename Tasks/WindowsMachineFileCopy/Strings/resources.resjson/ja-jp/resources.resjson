@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Windows コンピューターのファイル コピー",
+  "loc.helpMarkDown": "ファイルをリモート コンピューター (複数可) にコピーします",
+  "loc.description": "ファイルをリモート コンピューター (複数可) にコピーします",
+  "loc.instanceNameFormat": "ファイルのコピー先 $(EnvironmentName)",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.SourcePath": "ソース",
+  "loc.input.help.SourcePath": "ローカル コンピューターまたは UNC 共有にあるソース フォルダーまたはファイルの絶対パス。",
+  "loc.input.label.EnvironmentName": "コンピューター グループ",
+  "loc.input.help.EnvironmentName": "ファイルのコピー先となるターゲット コンピューター グループの名前。",
+  "loc.input.label.MachineNames": "コンピューターへのコピー",
+  "loc.input.help.MachineNames": "「Machine1, Machine2」のような、コンピューター名のコンマ区切りリストを提供します。既定値は、コンピューター グループ内のすべてのコンピューターです。",
+  "loc.input.label.TargetPath": "宛先フォルダー",
+  "loc.input.help.TargetPath": "ソースからのファイルのコピー先となるターゲット コンピューター上のローカル パス。$env:windir\\BudgetIT\\Web のように、環境変更を使用できます。",
+  "loc.input.label.CleanTargetBeforeCopy": "ターゲットの内容消去",
+  "loc.input.help.CleanTargetBeforeCopy": "「true」に設定すると、ファイルをコピーする前に宛先フォルダーの内容を消去します。",
+  "loc.input.label.CopyFilesInParallel": "並列でのファイルのコピー",
+  "loc.input.help.CopyFilesInParallel": "「true」に設定すると、複数のファイルを並列でコンピューターにコピーします。"
+}

@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Подписывание Android",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.description": "Подписывание и назначение APK-файлов Android",
+  "loc.instanceNameFormat": "Подписание и выравнивание файлов APK $(files)",
+  "loc.group.displayName.jarsignerOptions": "Параметры Jarsigner",
+  "loc.group.displayName.zipalignOptions": "Параметры Zipalign",
+  "loc.input.label.files": "APK-файлы",
+  "loc.input.help.files": "Относительный путь от корня репозитория файлов. Можно использовать подстановочные знаки. Пример: **\\bin\\*.apk для всех файлов APK во вложенной папке bin.",
+  "loc.input.label.jarsign": "Подписать APK",
+  "loc.input.label.keystoreFile": "Файл хранилища ключей",
+  "loc.input.help.keystoreFile": "Полный путь к файлу хранилища ключей.",
+  "loc.input.label.keystorePass": "Пароль хранилища ключей",
+  "loc.input.label.keystoreAlias": "Псевдоним",
+  "loc.input.label.keyPass": "Пароль ключа",
+  "loc.input.label.jarsignerArguments": "Аргументы Jarsigner",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Расположение Zipalign",
+  "loc.input.help.zipalignLocation": "Дополнительно укажите путь к файлу zipalign.exe. По умолчанию используется любой файл zipalign.exe, найденный в папке Android SDK."
+}

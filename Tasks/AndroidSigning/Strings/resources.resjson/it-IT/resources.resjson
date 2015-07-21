@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Firma per Android",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.description": "Consente di firmare e allineare i file APK di Android",
+  "loc.instanceNameFormat": "Firma e allineamento dei file APK $(files)",
+  "loc.group.displayName.jarsignerOptions": "Opzioni Jarsigner",
+  "loc.group.displayName.zipalignOptions": "Opzioni Zipalign",
+  "loc.input.label.files": "File APK",
+  "loc.input.help.files": "Percorso relativo dalla radice del repository dei file. È possibile usare i caratteri jolly, ad esempio `**\\bin\\*.apk` per indicare tutti i file APK nella sottocartella bin.",
+  "loc.input.label.jarsign": "Firma APK",
+  "loc.input.label.keystoreFile": "File dell'archivio chiavi",
+  "loc.input.help.keystoreFile": "Percorso completo del file dell'archivio chiavi.",
+  "loc.input.label.keystorePass": "Password dell'archivio chiavi",
+  "loc.input.label.keystoreAlias": "Alias",
+  "loc.input.label.keyPass": "Password chiave",
+  "loc.input.label.jarsignerArguments": "Argomenti Jarsigner",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Percorso Zipalign",
+  "loc.input.help.zipalignLocation": "Consente, facoltativamente, di specificare il percorso del file zipalign.exe. Per impostazione predefinita, verrà usato qualsiasi file zipalign.exe trovato nella cartella di Android SDK."
+}

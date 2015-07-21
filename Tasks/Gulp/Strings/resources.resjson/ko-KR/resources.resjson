@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "Node.js 스트리밍 작업 기반 빌드 시스템",
+  "loc.instanceNameFormat": "gulp $(targets)",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.gulpFile": "Gulp 파일 경로",
+  "loc.input.help.gulpFile": "실행할 gulp 파일 스크립트 파일의 리포지토리 루트로부터의 상대적 경로입니다.",
+  "loc.input.label.targets": "Gulp 작업",
+  "loc.input.help.targets": "선택 사항입니다.  지정하지 않을 경우 기본 작업이 실행됩니다. 공백으로 구분된 실행할 작업 목록. 지정하지 않을 경우 기본 작업이 실행됩니다.",
+  "loc.input.label.arguments": "인수",
+  "loc.input.help.arguments": "추가 인수를 gulp에 전달했습니다. --gulpfile은 위의 gulpFile 입력을 통해 이미 추가되었으므로 필요하지 않습니다.",
+  "loc.input.label.cwd": "작업 디렉터리",
+  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 스크립트가 있는 폴더를 기본값으로 지정합니다."
+}

@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "發行測試結果",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.description": "將測試結果發行到 VSO/TFS",
+  "loc.instanceNameFormat": "發行測試結果 $(testResultsFiles)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.testRunner": "測試結果格式",
+  "loc.input.help.testRunner": "測試結果檔案的格式是由您選擇的測試執行器 (例如 JUnit, VSTest 等等) 所產生。",
+  "loc.input.label.testResultsFiles": "測試結果檔案",
+  "loc.input.help.testResultsFiles": "測試結果檔案路徑。可使用萬用字元。例如，適用於所有名稱以 TEST- 開頭之 xml 檔案的 `**\\*TEST-*.xml` 。",
+  "loc.input.label.mergeTestResults": "合併測試結果",
+  "loc.input.help.mergeTestResults": "若要將所有測試結果檔案合併為位於 TFS/VSO 中的一個測試回合，請核取此選項。若要為每個測試結果檔案建立測試回合，請取消核取此選項。",
+  "loc.input.label.platform": "平台",
+  "loc.input.help.platform": "已執行測試的平台。",
+  "loc.input.label.configuration": "組態",
+  "loc.input.help.configuration": "已執行測試的組態。"
+}

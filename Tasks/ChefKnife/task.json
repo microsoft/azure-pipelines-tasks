@@ -3,22 +3,22 @@
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",
     "description": "Run Scripts with knife commands on your chef workstation",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/ChefKnife/README.md)",
     "category": "Deploy",
     "visibility": [
                 "Preview",
-                "Build",
-                "Release"
+                "Build"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 3
     },
     "demands" : [
         "Chef"
     ],
-    "minimumAgentVersion": "1.82.0",
+    "minimumAgentVersion": "1.83.0",
     "inputs": [
         {
             "name": "ConnectedServiceName",

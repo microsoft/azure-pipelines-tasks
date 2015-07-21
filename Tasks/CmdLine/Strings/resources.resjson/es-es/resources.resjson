@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Línea de comandos",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Ejecute una línea de comando con argumentos",
+  "loc.instanceNameFormat": "Ejecutar $(filename)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.filename": "Herramienta",
+  "loc.input.help.filename": "Nombre de la herramienta que se va a ejecutar. La herramienta debe estar en una ruta de acceso o poder resolverse en una. Opcionalmente, también puede indicar una ruta de acceso completa pero esto depende de si hay alguna en el agente.",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.label.workingFolder": "Carpeta de trabajo",
+  "loc.input.help.workingFolder": "Argumentos pasados a la herramienta",
+  "loc.input.label.failOnStandardError": "Error en Error estándar",
+  "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."
+}

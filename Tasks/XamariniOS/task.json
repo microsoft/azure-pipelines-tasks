@@ -3,6 +3,7 @@
     "name": "XamariniOS",
     "friendlyName": "Xamarin.iOS",
     "description": "Build an iOS app with Xamarin on Mac OS",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613729)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -11,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 4
     },
     "demands": [
         "Xamarin.iOS"

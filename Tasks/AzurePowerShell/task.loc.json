@@ -6,6 +6,7 @@
   "name": "AzurePowerShell",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -15,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 7
   },
   "demands": [
     "azureps"
@@ -28,7 +29,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to configure before running PowerShell"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "ScriptPath",
@@ -36,7 +37,7 @@
       "label": "ms-resource:loc.input.label.ScriptPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory."
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath"
     },
     {
       "name": "ScriptArguments",
@@ -44,10 +45,10 @@
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
     }
   ],
-  "instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",

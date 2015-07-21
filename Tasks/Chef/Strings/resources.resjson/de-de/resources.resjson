@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.helpMarkDown": "Durch Bearbeiten der Umgebungsattribute in Chef-Umgebungen bereitstellen",
+  "loc.description": "Durch Bearbeiten der Umgebungsattribute in Chef-Umgebungen bereitstellen",
+  "loc.instanceNameFormat": "Durch Bearbeiten von Umgebungsattributen von Chef-Abonnement $(ChefServer) an Chef bereitstellen",
+  "loc.input.label.connectedServiceName": "Chef-Verbindung",
+  "loc.input.help.connectedServiceName": "Name des Chef-Abonnements",
+  "loc.input.label.Environment": "Umgebung",
+  "loc.input.help.Environment": "Name der für die Bereitstellung zu verwendenden Chef-Umgebung. Die Attribute dieser Umgebung werden bearbeitet.",
+  "loc.input.label.Attributes": "Umgebungsattribute",
+  "loc.input.help.Attributes": "Geben Sie den Wert der zu aktualisierenden Blattknotenattribute an. Beispiel: {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. Wenn der Blattknoten nicht vorhanden ist, tritt ein Aufgabenfehler auf.",
+  "loc.input.label.chefWaitTime": "Wartezeit",
+  "loc.input.help.chefWaitTime": "Der Zeitraum (in Minuten), für den auf den Abschluss dieser Aufgabe gewartet werden soll. Standardwert: 30 Minuten."
+}

@@ -3,6 +3,9 @@
 // *******************************************************
 {
   "loc.friendlyName": "CocoaPods",
-  "loc.description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install.",
-  "loc.input.label.cwd": "Working Directory"
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install",
+  "loc.instanceNameFormat": "pod install",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory. Defaults to the repo directory."
 }

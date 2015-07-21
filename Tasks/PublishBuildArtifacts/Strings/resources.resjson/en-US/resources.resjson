@@ -3,10 +3,17 @@
 // *******************************************************
 {
   "loc.friendlyName": "Publish Build Artifacts",
-  "loc.description": "Publish Build artifacts to the server or a file share",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "Publish Build artifacts to the server or a file share using minimatch patterns",
+  "loc.instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Copy Root",
+  "loc.input.help.CopyRoot": "Root folder to apply copy patterns to.  Empty is the root of the repo.  Use variables if build steps building outside the repo. Example: $(agent.builddirectory)",
   "loc.input.label.Contents": "Contents",
+  "loc.input.help.Contents": "File or folder paths to include as part of the artifact.  Supports multiple lines or minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.input.label.ArtifactName": "Artifact Name",
+  "loc.input.help.ArtifactName": "The name of the artifact to create.",
   "loc.input.label.ArtifactType": "Artifact Type",
-  "loc.input.label.TargetPath": "Path"
+  "loc.input.help.ArtifactType": "The type of the artifact to create.",
+  "loc.input.label.TargetPath": "Path",
+  "loc.input.help.TargetPath": "The file share to which to copy the files"
 }

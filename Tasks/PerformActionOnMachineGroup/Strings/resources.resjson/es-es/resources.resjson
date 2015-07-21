@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Acciones de grupo de equipos",
+  "loc.helpMarkDown": "Realice acciones como iniciar, detener o eliminar en un grupo de equipos",
+  "loc.description": "Acciones de grupo de equipos",
+  "loc.instanceNameFormat": "$(Action) grupo de equipos ",
+  "loc.input.label.MachineGroupName": "Grupo de equipos",
+  "loc.input.help.MachineGroupName": "Nombre del grupo de equipos de destino en el que se va a realizar la acción.",
+  "loc.input.label.Action": "Acción",
+  "loc.input.help.Action": "Acción que se va a realizar en los equipos de un grupo de equipos.",
+  "loc.input.label.Filters": "Aplicar a equipos",
+  "loc.input.help.Filters": "Las acciones se aplican de forma predeterminada a todos los equipos del grupo de equipos. Para aplicar una acción a un subconjunto de equipos, especifique las etiquetas o los nombres de equipo, como Rol: Web, Rol: Prueba, BudgetIT01. En las acciones de bloqueo y desbloqueo no se usan filtros.",
+  "loc.input.label.BlockedFor": "Bloquear para",
+  "loc.input.help.BlockedFor": "Bloquee un grupo de equipos, ya sea para una instancia (como una compilación concreta) o para la definición (es decir, para todas las instancias de la definición).",
+  "loc.input.label.TimeInHours": "Tiempo en horas",
+  "loc.input.help.TimeInHours": "Número de horas durante las que los equipos van a estar bloqueados. El valor predeterminado es 0, y esto hace que los equipos estén bloqueados indefinidamente."
+}

@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Knife Chef",
+  "loc.helpMarkDown": "Consente di eseguire script con comandi knife sulla workstation Chef",
+  "loc.description": "Consente di eseguire script con comandi knife sulla workstation Chef",
+  "loc.instanceNameFormat": "Script knife Chef: $(ScriptPath)",
+  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Chef",
+  "loc.input.help.ConnectedServiceName": "Sottoscrizione di Chef da configurare prima di eseguire i comandi knife",
+  "loc.input.label.ScriptPath": "Percorso script",
+  "loc.input.help.ScriptPath": "Percorso dello script. Deve essere un percorso completo o relativo rispetto alla directory di lavoro predefinita.",
+  "loc.input.label.ScriptArguments": "Argomenti script",
+  "loc.input.help.ScriptArguments": "Parametri aggiuntivi da passare allo script. Possono essere ordinali o denominati."
+}

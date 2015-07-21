@@ -6,6 +6,7 @@
   "name": "Xcode",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
@@ -14,12 +15,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 10
   },
   "demands": [
     "xcode"
   ],
-  "instanceNameFormat": "Xcode $(actions)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
       "name": "advanced",
@@ -34,7 +35,7 @@
       "label": "ms-resource:loc.input.label.xcWorkspacePath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from repo root where xcworkspace folder exists."
+      "helpMarkDown": "ms-resource:loc.input.help.xcWorkspacePath"
     },
     {
       "name": "scheme",
@@ -42,7 +43,7 @@
       "label": "ms-resource:loc.input.label.scheme",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Scheme name in Xcode.  *Must be a shared scheme* (shared checkbox under managed schemes in Xcode)"
+      "helpMarkDown": "ms-resource:loc.input.help.scheme"
     },
     {
       "name": "actions",
@@ -50,7 +51,7 @@
       "label": "ms-resource:loc.input.label.actions",
       "defaultValue": "build",
       "required": true,
-      "helpMarkDown": "Space delimited list of actions.  Valid options are build, clean, test, analyze, and archive.  For example: `build clean` would do a clean build.  See [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)"
+      "helpMarkDown": "ms-resource:loc.input.help.actions"
     },
     {
       "name": "configuration",
@@ -65,7 +66,7 @@
       "label": "ms-resource:loc.input.label.sdk",
       "defaultValue": "$(SDK)",
       "required": true,
-      "helpMarkDown": "Build an Xcode project or workspace against the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs."
+      "helpMarkDown": "ms-resource:loc.input.help.sdk"
     },
     {
       "name": "outputPattern",
@@ -73,15 +74,11 @@
       "label": "ms-resource:loc.input.label.outputPattern",
       "defaultValue": "output/$(SDK)/$(Configuration)",
       "required": true,
-      "helpMarkDown": "Relative path where build output (binaries) will be placed.",
+      "helpMarkDown": "ms-resource:loc.input.help.outputPattern",
       "groupName": "advanced"
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "xcodebuild.js",
-      "argumentFormat": ""
-    },
     "Node": {
       "target": "xcodebuild2.js",
       "argumentFormat": ""

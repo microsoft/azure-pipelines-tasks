@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Windows 计算机文件复制",
+  "loc.helpMarkDown": "将文件复制到远程计算机",
+  "loc.description": "将文件复制到远程计算机",
+  "loc.instanceNameFormat": "将文件复制到 $(EnvironmentName)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.SourcePath": "源",
+  "loc.input.help.SourcePath": "本地计算机上的源文件夹或文件的绝对路径，或是 UNC 共享。",
+  "loc.input.label.EnvironmentName": "计算机组",
+  "loc.input.help.EnvironmentName": "用于将文件复制到的目标计算机组的名称。​",
+  "loc.input.label.MachineNames": "复制到计算机",
+  "loc.input.help.MachineNames": "提供计算机的逗号分隔列表，如 Machine1, Machine2。默认为计算机组中的所有计算机。",
+  "loc.input.label.TargetPath": "目标文件夹",
+  "loc.input.help.TargetPath": "用于从源复制文件的目标计算机上的本地路径。可以使用环境变量，如 $env:windir\\BudgetIT\\Web。",
+  "loc.input.label.CleanTargetBeforeCopy": "清理目标",
+  "loc.input.help.CleanTargetBeforeCopy": "将它设置为 true 会在复制文件之前清理目标文件夹。",
+  "loc.input.label.CopyFilesInParallel": "并行复制文件",
+  "loc.input.help.CopyFilesInParallel": "将它设置为 true 会将文件并行复制到计算机。"
+}

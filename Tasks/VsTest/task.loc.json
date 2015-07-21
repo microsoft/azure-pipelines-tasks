@@ -6,6 +6,7 @@
   "name": "VSTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
     "Build",
@@ -15,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 16
   },
   "demands": [
     "vstest"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -35,7 +36,7 @@
       "label": "ms-resource:loc.input.label.testAssembly",
       "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
       "required": true,
-      "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj."
+      "helpMarkDown": "ms-resource:loc.input.help.testAssembly"
     },
     {
       "name": "testFiltercriteria",
@@ -43,21 +44,23 @@
       "label": "ms-resource:loc.input.label.testFiltercriteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Filter criteria for the tests."
+      "helpMarkDown": "ms-resource:loc.input.help.testFiltercriteria"
     },
     {
       "name": "platform",
       "type": "string",
       "label": "ms-resource:loc.input.label.platform",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.platform"
     },
     {
       "name": "configuration",
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration"
     },
     {
       "name": "runSettingsFile",
@@ -65,7 +68,7 @@
       "label": "ms-resource:loc.input.label.runSettingsFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to runsettings file on disk or choose file from the repository."
+      "helpMarkDown": "ms-resource:loc.input.help.runSettingsFile"
     },
     {
       "name": "overrideTestrunParameters",
@@ -73,7 +76,7 @@
       "label": "ms-resource:loc.input.label.overrideTestrunParameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideTestrunParameters"
     },
     {
       "name": "codeCoverageEnabled",
@@ -81,18 +84,19 @@
       "label": "ms-resource:loc.input.label.codeCoverageEnabled",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "Whether code coverage needs to be enabled.",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
       "groupName": "advanced"
     },
     {
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vsTestVersion",
-      "defaultValue": "14.0",
+      "defaultValue": "latest",
       "required": false,
-      "helpMarkDown": "The version of VSTest to use.",
+      "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
       "groupName": "advanced",
       "options": {
+        "latest": "Latest",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013"
       }
@@ -103,7 +107,7 @@
       "label": "ms-resource:loc.input.label.pathtoCustomTestAdapters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to custom adapters.",
+      "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
       "groupName": "advanced"
     },
     {
@@ -112,11 +116,11 @@
       "label": "ms-resource:loc.input.label.otherConsoleOptions",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Other console options.",
+      "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
       "groupName": "advanced"
     }
   ],
-  "instanceNameFormat": "Test Assemblies $(testAssembly)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\VSTest.ps1",

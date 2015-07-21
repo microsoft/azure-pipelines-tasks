@@ -19,7 +19,8 @@ Write-Verbose "msbuildArguments = $msbuildArguments"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if (!$project)
@@ -67,7 +68,7 @@ $args = "$args /t:PackageForAndroid"
 if ($outputDir) 
 {
     Write-Verbose "adding OutputPath: $outputDir"
-    $args = "$args /p:OutputPath=$outputDir"
+    $args = "$args /p:OutputPath=""$outputDir"""
 }
 
 if ($jdkVersion -and $jdkVersion -ne "default")

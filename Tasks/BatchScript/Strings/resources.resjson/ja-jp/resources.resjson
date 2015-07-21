@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "バッチ スクリプト",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613733)",
+  "loc.description": "Windows コマンドまたはバッチ スクリプトを実行し、必要に応じて環境を変更できるようにします",
+  "loc.instanceNameFormat": "スクリプト $(filename) の実行",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.filename": "パス",
+  "loc.input.help.filename": "実行するコマンドレットまたはバッチ スクリプトのパス。完全修飾パスか、既定の作業ディレクトリを基準にした相対パスのいずれか。",
+  "loc.input.label.arguments": "引数",
+  "loc.input.help.arguments": "コマンドレットまたはバッチ スクリプトに渡される引数",
+  "loc.input.label.modifyEnvironment": "環境の変更",
+  "loc.input.help.modifyEnvironment": "環境変数の変更が後続タスクに影響するかどうかを決定します。",
+  "loc.input.label.workingFolder": "作業フォルダー",
+  "loc.input.help.workingFolder": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。",
+  "loc.input.label.failOnStandardError": "標準エラーで失敗します",
+  "loc.input.help.failOnStandardError": "true の場合、StandardError ストリームにエラーが書き込まれると、このタスクは失敗します。"
+}

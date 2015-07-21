@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Публикация результатов теста",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.description": "Публикация результатов теста в VSO/TFS",
+  "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.testRunner": "Формат результатов теста",
+  "loc.input.help.testRunner": "Формат файлов результатов тестов, создаваемых выбранным вами средством выполнения тестов, например JUnit, VSTest и т. д.",
+  "loc.input.label.testResultsFiles": "Файлы результатов теста",
+  "loc.input.help.testResultsFiles": "Путь к файлам результатов тестов. Можно использовать подстановочные знаки. Пример: **\\*TEST-*.xml для всех файлов XML, имена которых начинаются с \"TEST-\".",
+  "loc.input.label.mergeTestResults": "Объединение результатов теста",
+  "loc.input.help.mergeTestResults": "Чтобы объединить результаты из всех файлов результатов тестов в один тестовый запуск в TFS/VSO, установите этот флажок. Чтобы создать тестовый запуск для каждого файла результатов теста, снимите этот флажок.",
+  "loc.input.label.platform": "Платформа",
+  "loc.input.help.platform": "Платформа, для которой выполнялись тесты.",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.help.configuration": "Конфигурация, для которой выполнялись тесты."
+}

@@ -1,24 +1,25 @@
 ﻿{
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunVisualStudioTestsusingTestAgent",
-    "friendlyName": "Run Visual Studio Tests using Test Agent",
-    "description": "Run tests distributedly using multiple test agents in a lab machine group.",
+    "friendlyName": "Visual Studio Test using Test Agent",
+    "description": "Run tests distributedly using multiple test agents on a lab machine group",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
     "category": "Test",
     "visibility": [
-                    "Preview",
                     "Build"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
-            "name": "testEnvironment",
+            "name": "testMachineGroups",
             "displayName": "Test Machine Group",
             "isExpanded": true
         },
@@ -26,17 +27,22 @@
             "name": "testSettings",
             "displayName": "Test Settings",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
         {
-            "name": "environment",
+            "name": "testMachineGroup",
             "type": "pickList",
             "label": "Test Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
-            "groupName": "testEnvironment"
+            "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
+            "groupName": "testMachineGroups"
         },
         {
             "name": "dropLocation",
@@ -44,7 +50,7 @@
             "label": "Test Drop Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
             "groupName": "testSettings"
         },
         {
@@ -62,28 +68,30 @@
             "label": "Test Filter criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Filter criteria for the tests.",
+            "helpMarkDown": "Optionally specify the test case filter criteria. For example, 'Owner=james&Priority=1'.",
             "groupName": "testSettings"
         },
         {
-		    "name": "platform", 
-		    "type": "string", 
-		    "label": "Platform", 
-		    "defaultValue":"", 
-		    "required":false,
-			"groupName": "testSettings"
-		},
-		{
-		    "name": "configuration", 
-		    "type": "string", 
-		    "label": "Configuration", 
-		    "defaultValue":"", 
-		    "required":false,
-			"groupName": "testSettings"
-		},
+ 	          "name": "platform", 
+	          "type": "string", 
+	          "label": "Platform", 
+	          "defaultValue":"", 
+	          "required":false,
+              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+	          "groupName": "testSettings"
+	      },
+	      {
+	          "name": "configuration", 
+	          "type": "string", 
+	          "label": "Configuration", 
+	          "defaultValue":"", 
+	          "required":false,
+              "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+	          "groupName": "testSettings"
+	      },
         {
             "name": "runSettingsFile",
-            "type": "string",
+            "type": "filePath",
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
@@ -91,21 +99,12 @@
             "groupName": "testSettings"
         },
         {
-            "name": "codeCoverageEnabled",
-            "type": "boolean",
-            "label": "Code Coverage Enabled",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Whether code coverage needs to be enabled.",
-            "groupName": "testSettings"
-        },
-        {
             "name": "overrideRunParams",
             "type": "string",
-            "label": "Override TestRun Parameters",
+            "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080.",
             "groupName": "testSettings"
         },
         {
@@ -116,17 +115,41 @@
             "required": false,
             "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
             "groupName": "testSettings"
+        },
+        {
+            "name": "codeCoverageEnabled",
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Whether code coverage needs to be enabled.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "autMachineGroup",
+            "type": "pickList",
+            "label": "Application Under Test Machine Group",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+            "groupName": "advanced"
         }
     ],
     "sourceDefinitions": [ 
      { 
-         "target": "environment", 
+         "target": "testMachineGroup", 
          "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
          "selector": "jsonpath:$.value[*].name", 
          "authKey": "tfs:DevTestLabs" 
-     } 
+     },
+     { 
+         "target": "autMachineGroup", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     }
     ], 
-    "instanceNameFormat": "Test assemblies $(sourcefilters)",
+    "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RunDistributedTests.ps1",

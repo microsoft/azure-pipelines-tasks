@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "Consente di distribuire un'immagine Docker in un computer remoto",
+  "loc.description": "Consente di distribuire un'immagine Docker in un computer remoto",
+  "loc.instanceNameFormat": "Distribuzione Docker: $(Repository)",
+  "loc.input.label.DockerEndpoint": "Endpoint Docker",
+  "loc.input.help.DockerEndpoint": "URL della connessione remota del server Docker. L'intervallo remote_api_port valido è [0,65535]",
+  "loc.input.label.Repository": "Repository",
+  "loc.input.help.Repository": "Nome dell'immagine",
+  "loc.input.label.Tag": "Tag",
+  "loc.input.help.Tag": "Tag dell'immagine",
+  "loc.input.label.ContainerName": "Nome contenitore",
+  "loc.input.help.ContainerName": "Nome del contenitore",
+  "loc.input.label.PortBindings": "Binding porte",
+  "loc.input.help.PortBindings": "Consente di specificare le informazioni per il binding delle porte in formato 'portahost:portacontenitore'"
+}

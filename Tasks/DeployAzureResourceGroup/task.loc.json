@@ -3,9 +3,10 @@
 // *******************************************************
 {
   "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-  "name": "DeployAzureResourceGroup",
+  "name": "AzureResourceGroupDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -16,17 +17,17 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 10
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.85.0",
   "groups": [
     {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "name": "advancedDeploymentOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedDeploymentOptions",
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -36,7 +37,14 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
     },
     {
       "name": "location",
@@ -44,23 +52,17 @@
       "label": "ms-resource:loc.input.label.location",
       "defaultValue": "East US",
       "required": true,
-      "helpMarkDown": "Location of the deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.location",
       "options": {
-        "East US": "East US",
-        "West US": "West US",
-        "West Europe": "West Europe",
         "East Asia": "East Asia",
-        "Southeast Asia": "Southeast Asia"
+        "East US": "East US",
+        "Southeast Asia": "Southeast Asia",
+        "West Europe": "West Europe",
+        "West US": "West US"
       },
       "properties": {
         "EditableOptions": "True"
       }
-    },
-    {
-      "name": "resourceGroupName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.resourceGroupName",
-      "required": true
     },
     {
       "name": "csmFile",
@@ -68,7 +70,7 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify the path to the Azure Resource Manager template."
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
     },
     {
       "name": "csmParametersFile",
@@ -76,15 +78,15 @@
       "label": "ms-resource:loc.input.label.csmParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Specify the path for the parameters corresponding to the template."
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile"
     },
     {
       "name": "overrideParameters",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.overrideParameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Specify the template parameters which should be overwritten in the format -name $variable, where $variable is the name of a build definition variable"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters"
     },
     {
       "name": "dscDeployment",
@@ -92,8 +94,8 @@
       "label": "ms-resource:loc.input.label.dscDeployment",
       "required": false,
       "defaultValue": "false",
-      "groupName": "advanced",
-      "helpMarkDown": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly."
+      "groupName": "advancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
     },
     {
       "name": "moduleUrlParameterName",
@@ -101,8 +103,8 @@
       "label": "ms-resource:loc.input.label.moduleUrlParameterName",
       "defaultValue": "",
       "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "Name of the parameter corresponding to the Azure blob.",
+      "groupName": "advancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
       "visibleRule": "dscDeployment = true"
     },
     {
@@ -111,8 +113,8 @@
       "label": "ms-resource:loc.input.label.sasTokenParameterName",
       "defaultValue": "",
       "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "Name of the SAS token parameter.",
+      "groupName": "advancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
       "visibleRule": "dscDeployment = true"
     },
     {
@@ -121,8 +123,8 @@
       "label": "ms-resource:loc.input.label.vmCreds",
       "required": false,
       "defaultValue": "false",
-      "groupName": "advanced",
-      "helpMarkDown": "These VM resource's credentials are used by some of the deployment and test tasks. The username and password should be same for all the Virtual Machines."
+      "groupName": "advancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.vmCreds"
     },
     {
       "name": "vmUserName",
@@ -130,8 +132,9 @@
       "label": "ms-resource:loc.input.label.vmUserName",
       "defaultValue": "",
       "required": false,
-      "groupName": "advanced",
-      "visibleRule": "vmCreds = true"
+      "groupName": "advancedDeploymentOptions",
+      "visibleRule": "vmCreds = true",
+      "helpMarkDown": "ms-resource:loc.input.help.vmUserName"
     },
     {
       "name": "vmPassword",
@@ -139,11 +142,21 @@
       "label": "ms-resource:loc.input.label.vmPassword",
       "defaultValue": "",
       "required": false,
-      "groupName": "advanced",
-      "visibleRule": "vmCreds = true"
+      "groupName": "advancedDeploymentOptions",
+      "visibleRule": "vmCreds = true",
+      "helpMarkDown": "ms-resource:loc.input.help.vmPassword"
+    },
+    {
+      "name": "skipCACheck",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipCACheck",
+      "required": false,
+      "defaultValue": "true",
+      "groupName": "advancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
     }
   ],
-  "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",

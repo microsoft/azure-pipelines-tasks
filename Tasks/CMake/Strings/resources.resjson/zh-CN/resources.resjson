@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.description": "使用 CMake 跨平台生成系统生成",
+  "loc.instanceNameFormat": "CMake $(args)",
+  "loc.input.label.cwd": "工作目录",
+  "loc.input.help.cwd": "cmake 运行时的当前工作目录。",
+  "loc.input.label.args": "参数",
+  "loc.input.help.args": "传递给 cmake 的参数"
+}

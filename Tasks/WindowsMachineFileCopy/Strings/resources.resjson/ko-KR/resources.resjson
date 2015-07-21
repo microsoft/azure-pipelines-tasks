@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Windows 컴퓨터 파일 복사",
+  "loc.helpMarkDown": "파일을 원격 컴퓨터에 복사",
+  "loc.description": "파일을 원격 컴퓨터에 복사",
+  "loc.instanceNameFormat": "파일을 $(EnvironmentName)에 복사",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.SourcePath": "소스",
+  "loc.input.help.SourcePath": "로컬 컴퓨터나 UNC 공유에 있는 소스 폴더 또는 파일의 절대 경로입니다.",
+  "loc.input.label.EnvironmentName": "컴퓨터 그룹",
+  "loc.input.help.EnvironmentName": "파일을 복사해 넣을 대상 컴퓨터 그룹의 이름입니다.",
+  "loc.input.label.MachineNames": "컴퓨터에 복사",
+  "loc.input.help.MachineNames": "Machine1, Machine2와 같이 컴퓨터들을 쉼표로 구분된 목록으로 제공하세요. 기본값은 컴퓨터 그룹에 있는 모든 컴퓨터입니다.",
+  "loc.input.label.TargetPath": "대상 폴더",
+  "loc.input.help.TargetPath": "소스에서 파일을 복사하기 위한 대상 컴퓨터상의 로컬 경로입니다. 환경 변수를 $env:windir\\BudgetIT\\Web처럼 사용할 수 있습니다.",
+  "loc.input.label.CleanTargetBeforeCopy": "클린 대상",
+  "loc.input.help.CleanTargetBeforeCopy": "true로 설정하면 파일을 복사하기 전에 대상 폴더가 삭제됩니다.",
+  "loc.input.label.CopyFilesInParallel": "파일을 동시에 복사",
+  "loc.input.help.CopyFilesInParallel": "true로 설정하면 파일들이 컴퓨터에 동시에 복사됩니다."
+}

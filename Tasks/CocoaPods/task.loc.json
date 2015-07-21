@@ -6,6 +6,7 @@
   "name": "CocoaPods",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "visibility": [
     "Build"
@@ -14,12 +15,12 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "cocoapods"
   ],
-  "instanceNameFormat": "pod install",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "cwd",
@@ -27,7 +28,7 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Current working directory. Defaults to the repo directory."
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
     }
   ],
   "execution": {

@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Test de performances web basé sur le cloud",
+  "loc.helpMarkDown": "Cette tâche peut être utilisée pour déclencher un test de charge basé sur le cloud à l'aide de Visual Studio Online. [En savoir plus](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.description": "Exécuter le test rapide de performances web dans le cloud, avec Visual Studio Online",
+  "loc.instanceNameFormat": "Test rapide de performances web $(testName)",
+  "loc.input.label.connectedServiceName": "Connexion enregistrée",
+  "loc.input.help.connectedServiceName": "Sélectionnez une connexion de service préalablement enregistrée pour communiquer avec le service de test de charge basé sur le cloud. Choisissez 'Gérer' pour enregistrer une nouvelle connexion.",
+  "loc.input.label.websiteUrl": "URL du site web",
+  "loc.input.help.websiteUrl": "Entrer l'URL du site web de votre application au format http://www.your.app/home.html",
+  "loc.input.label.testName": "Nom du test",
+  "loc.input.help.testName": "Nom du test de charge pour le suivi et la corrélation.",
+  "loc.input.label.vuLoad": "Charge utilisateur",
+  "loc.input.help.vuLoad": "Nombre maximal d'utilisateurs virtuels accédant simultanément au site web.",
+  "loc.input.label.runDuration": "Durée d'exécution (s.)",
+  "loc.input.help.runDuration": "Durée d'exécution du test de charge, en secondes.",
+  "loc.input.label.geoLocation": "Emplacement de chargement",
+  "loc.input.help.geoLocation": "Région géographique à partir de laquelle générer la charge. Voir l'aide de la tâche pour plus d'informations."
+}

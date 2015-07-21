@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.description": "PowerShell スクリプトを実行します",
+  "loc.instanceNameFormat": "Powershell: $(scriptName)",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.scriptName": "スクリプトのファイル名",
+  "loc.input.help.scriptName": "実行するスクリプトのパス。完全修飾パスか、または既定の作業ディレクトリからの相対パスとする必要があります。",
+  "loc.input.label.arguments": "引数",
+  "loc.input.help.arguments": "引数が PowerShell スクリプトに渡されます。順序によるパラメーターまたは名前指定されたパラメーターのいずれかです。",
+  "loc.input.label.workingFolder": "作業フォルダー",
+  "loc.input.help.workingFolder": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。"
+}

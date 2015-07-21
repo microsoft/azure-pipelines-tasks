@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "Docker-Image auf einem Remotecomputer bereitstellen",
+  "loc.description": "Docker-Image auf einem Remotecomputer bereitstellen",
+  "loc.instanceNameFormat": "Docker-Bereitstellung: $(Repository)",
+  "loc.input.label.DockerEndpoint": "Docker-Endpunkt",
+  "loc.input.help.DockerEndpoint": "Remoteverbindungs-URL von Docker-Server. Der gültige remote_api_port-Bereich ist [0,65535].",
+  "loc.input.label.Repository": "Repository",
+  "loc.input.help.Repository": "Name des Image",
+  "loc.input.label.Tag": "Tag",
+  "loc.input.help.Tag": "Bildtag",
+  "loc.input.label.ContainerName": "Containername",
+  "loc.input.help.ContainerName": "Name des Containers",
+  "loc.input.label.PortBindings": "Portbindungen",
+  "loc.input.help.PortBindings": "Geben Sie die Portbindungsinformationen im Format \"hostport:containerport\" an."
+}

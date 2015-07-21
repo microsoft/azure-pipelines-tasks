@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "Развертывание образа Docker на удаленном компьютере",
+  "loc.description": "Развертывание образа Docker на удаленном компьютере",
+  "loc.instanceNameFormat": "Развертывание Docker: $(Repository)",
+  "loc.input.label.DockerEndpoint": "Конечная точка Docker",
+  "loc.input.help.DockerEndpoint": "URL-адрес удаленного подключения к серверу Docker. Допустимый диапазон remote_api_port — [0,65535]",
+  "loc.input.label.Repository": "Репозиторий",
+  "loc.input.help.Repository": "Имя образа",
+  "loc.input.label.Tag": "Тег",
+  "loc.input.help.Tag": "Тег образа",
+  "loc.input.label.ContainerName": "Имя контейнера",
+  "loc.input.help.ContainerName": "Имя контейнера",
+  "loc.input.label.PortBindings": "Привязки порта",
+  "loc.input.help.PortBindings": "Предоставьте информацию о привязке портов в формате \"порт_хоста:порт_контейнера\""
+}

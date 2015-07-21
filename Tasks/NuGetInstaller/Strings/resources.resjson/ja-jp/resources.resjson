@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "NuGet インストーラー",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.description": "不足している NuGet パッケージをインストールおよび更新します",
+  "loc.instanceNameFormat": "NuGet の復元 $(solution)",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.solution": "ソリューションへの引数",
+  "loc.input.help.solution": "Visual Studio のソリューション ファイルへのパス",
+  "loc.input.label.excludeVersion": "バージョンの除外",
+  "loc.input.help.excludeVersion": "NuGet でパッケージのフォルダー名からパッケージのバージョンを除外します。-ExcludeVersion NuGet.exe コマンド ライン引数と同等です。",
+  "loc.input.label.noCache": "ローカル キャッシュの無効化",
+  "loc.input.help.noCache": "-NoCache NuGet.exe コマンドライン引数と同等です。",
+  "loc.input.label.nuGetRestoreArgs": "NuGet の引数",
+  "loc.input.help.nuGetRestoreArgs": "NuGet.exe restore に渡す追加の引数。",
+  "loc.input.label.nuGetPath": "NuGet.exe へのパス",
+  "loc.input.help.nuGetPath": "(省略可能) NuGet.exe へのパスを指定します。"
+}

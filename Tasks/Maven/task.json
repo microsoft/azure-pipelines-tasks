@@ -3,6 +3,7 @@
     "name": "Maven",
     "friendlyName": "Maven",
     "description": "Build with Apache Maven",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -14,9 +15,10 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 9
     },
-    "instanceNameFormat": "Maven $(args)",
+    "minimumAgentVersion": "1.83.0",
+    "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
             "name":"junitTestResults",
@@ -51,7 +53,7 @@
             "label": "Goal(s)", 
             "defaultValue": "package", 
             "required": false 
-        },    
+        },        
         {
             "name":"publishJUnitResults",
             "type":"boolean",

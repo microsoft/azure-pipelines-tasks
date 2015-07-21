@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "コンピューター グループ アクション",
+  "loc.helpMarkDown": "コンピューター グループで、開始、停止、削除などのアクションを実行します",
+  "loc.description": "コンピューター グループ アクション",
+  "loc.instanceNameFormat": "$(アクション) コンピューター グループ",
+  "loc.input.label.MachineGroupName": "コンピューター グループ",
+  "loc.input.help.MachineGroupName": "アクションを実行するターゲット コンピューター グループの名前。",
+  "loc.input.label.Action": "アクション",
+  "loc.input.help.Action": "コンピューターまたはコンピューター グループで実行されるアクション",
+  "loc.input.label.Filters": "適用するコンピューター",
+  "loc.input.help.Filters": "既定では、アクションはコンピューター グループ内のすべてのコンピューターに適用されます。コンピューターのサブセットにアクションを適用するには、Role: Web、Role: Test、BudgetIT01 のようにタグまたはコンピューター名を指定します。ブロック アクションやアンブロック アクションに対してフィルターは適用されません。",
+  "loc.input.label.BlockedFor": "ブロック対象",
+  "loc.input.help.BlockedFor": "特定のビルドなど 1 つのインスタンスについて、または定義について (つまり定義内のすべてのインスタンスについて)、コンピューター グループをブロックします。",
+  "loc.input.label.TimeInHours": "時間数",
+  "loc.input.help.TimeInHours": "コンピューターがブロックされる時間数。既定値は 0 で、コンピューターを無期限にブロックします。"
+}

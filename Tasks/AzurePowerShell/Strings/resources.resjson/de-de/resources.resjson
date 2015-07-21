@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.description": "PowerShell-Skript innerhalb einer Azure-Umgebung ausführen",
+  "loc.instanceNameFormat": "Azure PowerShell-Skript: $(ScriptPath)",
+  "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
+  "loc.input.help.ConnectedServiceName": "Vor der Ausführung von PowerShell zu konfigurierendes Azure-Abonnement",
+  "loc.input.label.ScriptPath": "Skriptpfad",
+  "loc.input.help.ScriptPath": "Pfad des Skripts. Muss der vollständig qualifizierte Pfad oder ein Pfad relativ zum Standardarbeitsverzeichnis sein.",
+  "loc.input.label.ScriptArguments": "Skriptargumente",
+  "loc.input.help.ScriptArguments": "Zusätzliche Argumente, die an PowerShell übergeben werden sollen. Entweder Ordnungszahl- oder benannte Parameter."
+}

@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Testergebnisse veröffentlichen",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.description": "Testergebnisse in VSO/TFS veröffentlichen",
+  "loc.instanceNameFormat": "Testergebnisse $(testResultsFiles) veröffentlichen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.testRunner": "Testergebnisformat",
+  "loc.input.help.testRunner": "Format der Testergebnisdateien, die vom gewählten Test Runner generiert werden, z. B. JUnit, VSTest usw.",
+  "loc.input.label.testResultsFiles": "Testergebnisdateien",
+  "loc.input.help.testResultsFiles": "Pfad der Testergebnisdateien. Platzhalter können verwendet werden. Beispiel: \"**/*TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
+  "loc.input.label.mergeTestResults": "Testergebnisse zusammenführen",
+  "loc.input.help.mergeTestResults": "Aktivieren Sie diese Option, um Ergebnisse aus allen Testergebnisdateien zu einem Testlauf in TFS/VSO zusammenzuführen. Deaktivieren Sie die Option, um für jede Testergebnisdatei einen eigenen Testlauf zu erstellen.",
+  "loc.input.label.platform": "Plattform",
+  "loc.input.help.platform": "Plattform, für die die Tests ausgeführt wurden",
+  "loc.input.label.configuration": "Konfiguration",
+  "loc.input.help.configuration": "Konfiguration, für die die Tests ausgeführt wurden"
+}

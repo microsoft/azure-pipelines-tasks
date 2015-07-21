@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "셸 스크립트",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "bash를 사용하여 셸 스크립트 실행",
+  "loc.instanceNameFormat": "셸 스크립트 $(scriptPath)",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.scriptPath": "스크립트 경로",
+  "loc.input.help.scriptPath": "실행할 셸 스크립트 파일의 리포지토리 루트로부터의 상대적 경로입니다.",
+  "loc.input.label.args": "인수",
+  "loc.input.help.args": "인수를 셸 스크립트에 전달했습니다.",
+  "loc.input.label.cwd": "작업 디렉터리",
+  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 스크립트가 있는 폴더를 기본값으로 지정합니다.",
+  "loc.input.label.failOnStandardError": "표준 오류 시 실패",
+  "loc.input.help.failOnStandardError": "true일 경우 StandardError 스트림에 오류가 작성되면 이 작업은 실패하게 됩니다."
+}

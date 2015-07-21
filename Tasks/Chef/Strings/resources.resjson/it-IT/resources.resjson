@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.helpMarkDown": "Consente di distribuire in ambienti Chef modificando gli attributi dell'ambiente",
+  "loc.description": "Consente di distribuire in ambienti Chef modificando gli attributi dell'ambiente",
+  "loc.instanceNameFormat": "Consente di distribuire in Chef modificando gli attributi di ambiente della sottoscrizione di Chef $(ChefServer)",
+  "loc.input.label.connectedServiceName": "Connessione a Chef",
+  "loc.input.help.connectedServiceName": "Nome della sottoscrizione di Chef",
+  "loc.input.label.Environment": "Ambiente",
+  "loc.input.help.Environment": "Nome dell'ambiente Chef da usare per la distribuzione. Gli attributi di tale ambiente verranno modificati.",
+  "loc.input.label.Attributes": "Attributi dell'ambiente",
+  "loc.input.help.Attributes": "Consente di specificare il valore degli attributi del nodo foglia da aggiornare, ad esempio {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. L'attività non riesce se il nodo foglia non esiste.",
+  "loc.input.label.chefWaitTime": "Tempo di attesa",
+  "loc.input.help.chefWaitTime": "Tempo da attendere in minuti prima che l'attività venga completata. Valore predefinito: 30 minuti"
+}

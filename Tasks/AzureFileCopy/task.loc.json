@@ -1,0 +1,155 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
+  "name": "AzureFileCopy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 6
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.85.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "SourcePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourcePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
+    },
+    {
+      "name": "StorageAccount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
+    },
+    {
+      "name": "Destination",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Destination",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "AzureBlob": "Azure Blob",
+        "AzureVMs": "Azure VMs"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Destination"
+    },
+    {
+      "name": "ContainerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ContainerName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerName",
+      "visibleRule": "Destination = AzureBlob"
+    },
+    {
+      "name": "BlobPrefix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.BlobPrefix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.BlobPrefix",
+      "visibleRule": "Destination = AzureBlob"
+    },
+    {
+      "name": "EnvironmentName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.EnvironmentName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineNames",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "CleanTargetBeforeCopy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "CopyFilesInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CopyFilesInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel",
+      "visibleRule": "Destination = AzureVMs"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "EnvironmentName",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\AzureFileCopy.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

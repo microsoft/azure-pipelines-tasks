@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.description": "Сборка с помощью MSBuild",
+  "loc.instanceNameFormat": "Сборка решения $(solution)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.solution": "Решение",
+  "loc.input.help.solution": "Относительный путь от корня репозитория запускаемых решений. Можно использовать подстановочные знаки. Пример: **\\*.sln для всех файлов SLN во всех вложенных папках.",
+  "loc.input.label.platform": "Платформа",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.label.msbuildArguments": "Аргументы MSBuild",
+  "loc.input.help.msbuildArguments": "Дополнительные аргументы, передаваемые в MSBuild.",
+  "loc.input.label.clean": "Очистить",
+  "loc.input.label.restoreNugetPackages": "Восстановить пакеты NuGet",
+  "loc.input.label.logProjectEvents": "Записать сведения о проекте",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Версия MSBuild",
+  "loc.input.help.msbuildVersion": "При необходимости укажите версию MSBuild. По умолчанию ищется последняя версия.",
+  "loc.input.label.msbuildArchitecture": "Архитектура MSBuild",
+  "loc.input.help.msbuildArchitecture": "При необходимости укажите архитектуру используемого средства MSBuild (x86, x64).",
+  "loc.input.label.msbuildLocation": "Путь к MSBuild",
+  "loc.input.help.msbuildLocation": "При необходимости укажите путь к MSBuild."
+}

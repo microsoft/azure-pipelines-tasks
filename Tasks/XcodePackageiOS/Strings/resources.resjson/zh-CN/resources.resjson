@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Xcode 包 iOS",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "从 Xcode 版本输出生成 .ipa 文件",
+  "loc.instanceNameFormat": "Xcode 包 $(appName)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.appName": ".app 的名称",
+  "loc.input.help.appName": ".app 的名称，有时与 .ipa 不同",
+  "loc.input.label.ipaName": ".ipa 的名称",
+  "loc.input.help.ipaName": ".ipa 的名称，有时与 .app 不同",
+  "loc.input.label.provisioningProfile": "设置配置文件名称",
+  "loc.input.help.provisioningProfile": "要在签名时使用的设置配置文件的名称。",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "使用指定 SDK。运行 **xcodebuild -showsdks** 可查看 SDK 的有效列表。",
+  "loc.input.label.appPath": ".app 的路径",
+  "loc.input.help.appPath": "生成 .app 文件的相对路径",
+  "loc.input.label.ipaPath": "place .ipa 的路径",
+  "loc.input.help.ipaPath": "放置 .ipa 的相对路径。如果目录不存在，则会创建它。"
+}

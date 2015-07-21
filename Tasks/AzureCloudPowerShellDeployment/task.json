@@ -3,6 +3,7 @@
   "name": "AzureCloudPowerShellDeployment",
   "friendlyName": "Azure Cloud Service Deployment",
   "description": "Deploy an Azure Cloud Service",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "category": "Deploy",
   "visibility": [
                 "Build",
@@ -12,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 13
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -85,15 +86,15 @@
   "sourceDefinitions": [
     {
         "target": "StorageAccount",
-        "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/storageservices",
+        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
         "selector": "xpath://ServiceName",
-        "authKey": "{$ConnectedServiceName}"
+        "authKey": "$(ConnectedServiceName)"
     },
 	{
         "target": "ServiceName",
-        "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/hostedservices",
+        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/hostedservices",
         "selector": "xpath://ServiceName",
-        "authKey": "{$ConnectedServiceName}"
+        "authKey": "$(ConnectedServiceName)"
 	}
   ],
   "instanceNameFormat": "Azure Deployment: $(CsPkg)",

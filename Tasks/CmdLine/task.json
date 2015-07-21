@@ -3,6 +3,7 @@
     "name": "CmdLine",
     "friendlyName": "Command Line",
     "description": "Run a command line with arguments",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613735)",
     "category": "Utility",
     "visibility": [
                   "Build",
@@ -12,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 12
     },
     "groups": [
     {
@@ -28,7 +29,7 @@
             "label": "Tool", 
             "defaultValue": "", 
             "required": true,
-            "helpMarkDown": "Tool name to run.  Tool should be in path or resolvable via which.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent."
+            "helpMarkDown": "Tool name to run.  Tool should be found in your path.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent.<br/> Note: You can use **$(agent.builddirectory)**\\\\... if you want the path relative to repo."
         },
         { 
             "name": "arguments", 
@@ -47,28 +48,10 @@
             "groupName":"advanced"
         },
         { 
-            "name": "errorPattern", 
-            "type": "string", 
-            "label": "Error Pattern", 
-            "defaultValue": "", 
-            "required": false,
-            "helpMarkDown": "Optional regex to interpret output as an error.",
-            "groupName":"advanced"
-        },
-        {
-            "name": "warningPattern",
-            "type": "string",
-            "label": "Warning Pattern",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optional regex to interpret output as a warning.",
-            "groupName": "advanced"
-        },
-        { 
             "name": "failOnStandardError", 
             "type": "boolean",
             "label": "Fail on Standard Error", 
-            "defaultValue": "true", 
+            "defaultValue": "false", 
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
             "groupName":"advanced"
@@ -80,13 +63,7 @@
             "target": "$(filename)",
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
-            "errorPattern": "$(errorPattern)",
-            "warningPattern": "$(warningPattern)",
             "failOnStandardError": "$(failOnStandardError)"
-        },
-        "JavaScript": {
-            "target": "cmdLine.js",
-            "argumentFormat": ""
         },
         "Node": {
             "target": "cmdLine2.js",

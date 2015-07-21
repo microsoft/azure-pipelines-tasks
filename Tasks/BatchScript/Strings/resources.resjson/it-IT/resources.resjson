@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Script batch",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613733)",
+  "loc.description": "Consente di eseguire uno script cmd o bat di Windows e facoltativamente consente di modificare l'ambiente",
+  "loc.instanceNameFormat": "Esegui script $(filename)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.filename": "Percorso",
+  "loc.input.help.filename": "Percorso dello script cmd o bat da eseguire. Deve essere un percorso completo o relativo rispetto alla directory di lavoro predefinita.",
+  "loc.input.label.arguments": "Argomenti",
+  "loc.input.help.arguments": "Argomenti passati allo script cmd o bat",
+  "loc.input.label.modifyEnvironment": "Modifica ambiente",
+  "loc.input.help.modifyEnvironment": "Determina se le modifiche apportate alle variabili di ambiente influiranno sulle attività successive.",
+  "loc.input.label.workingFolder": "Cartella di lavoro",
+  "loc.input.help.workingFolder": "Directory di lavoro corrente durante l'esecuzione dello script. Per impostazione predefinita, corrisponde alla cartella in cui si trova lo script.",
+  "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard",
+  "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError."
+}

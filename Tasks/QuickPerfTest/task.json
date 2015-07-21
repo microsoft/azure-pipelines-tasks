@@ -2,29 +2,33 @@
   "id": "9648625C-1523-4EB5-B015-DFE7C685840C",
   "name": "QuickPerfTest",
   "friendlyName": "Cloud-based Web Performance Test",
-  "description": "Quickly find perf regressions to your website under load. Powered by VS Online.",
+  "description": "Runs the quick web performance test in cloud, with Visual Studio Online",
+  "helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=613203).",
   "category": "Test",
   "visibility": [
-                  "Preview",
-                  "Build"
+                  "Build",
+                  "Release"
                 ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
-    "msbuild"
+    "msbuild",
+    "azureps"
   ],
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "Advanced",
-      "isExpanded": false
-    }
-  ],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "Registered connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select a previously registered service connection to talk to the Cloud-based Load Test service. Choose 'Manage' to register a new connection."
+    },
     {
       "name": "websiteUrl",
       "type": "string",
@@ -58,7 +62,7 @@
     {
       "name": "runDuration",
       "type": "pickList",
-      "label": "Run Duration",
+      "label": "Run Duration (sec)",
       "required": true,
       "helpMarkDown": "Load test run duration in seconds.",
       "defaultValue": "60",
@@ -73,10 +77,9 @@
     {
       "name": "geoLocation",
       "type": "pickList",
-      "label": "Geo Location",
+      "label": "Load Location",
       "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "Geographical region from where the load will be generated.",
+      "helpMarkDown": "Geographical region to generate the load from. See task help for more details.",
       "defaultValue": "Default",
       "options": {
         "Default":"Default",
@@ -96,34 +99,9 @@
         "Australia East": "Australia East (New South Wales)",
         "Australia Southeast": "Australia Southeast (Victoria)"
       }
-    },
-    {
-      "name": "Username",
-      "type": "string",
-      "label": "Alternate credential username",
-      "defaultValue": "$(System.Auth.UserName)",
-      "groupName":"advanced",
-      "required": true
-    },
-    {
-      "name": "Password",
-      "type": "string",
-      "label": "Alternate credential password",
-      "defaultValue": "$(System.Auth.Password)",
-      "groupName":"advanced",
-      "required": true
-    },
-    {
-      "name": "CltAccountUrl",
-      "type": "string",
-      "label": "VSO Account URL",
-      "defaultValue": "$(System.TeamFoundationServerUri)",
-      "groupName": "advanced",
-      "required": false,
-      "helpMarkDown": "Visual Studio Online Account's CLT URL."
     }
   ],
-  "instanceNameFormat": "Quick Perf Test $(testName)",
+  "instanceNameFormat": "Quick Web Performance Test $(testName)",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\Invoke-QuickPerfTest.ps1",

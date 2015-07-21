@@ -5,12 +5,14 @@ param(
     [string] $symbolsProduct,
     [string] $symbolsVersion,
     [string] $symbolsMaximumWaitTime,
-    [string] $symbolsFolder
+    [string] $symbolsFolder,
+    [string] $symbolsArtifactName
 )
 
 Write-Verbose "Entering script PublishSymbols.ps1"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 # If symbols path is not set, we only index sources
@@ -82,7 +84,7 @@ foreach ($pdbFile in $pdbFiles)
     Write-Verbose "pdbFile= $pdbFile"
 }
 $fileCount = $pdbFiles.Count
-Write-Host "Found $fileCount files to index..."
+Write-Host (Get-LocalizedString -Key "Found {0} files to index..." -ArgumentList $fileCount)
 
 Write-Host "Invoke-IndexSources -RepositoryEndpoint <repositoryEndpoint> -SourceFolder $sourceFolder -PdbFiles <pdbFiles>"
 Invoke-IndexSources -RepositoryEndpoint $repositoryEndpoint -SourceFolder $sourceFolder -PdbFiles $pdbFiles
@@ -94,8 +96,8 @@ if ($symbolsPath)
     $semaphoreMessage = "Machine: $env:ComputerName, BuildUri: $env:Build_BuildUri, BuildNumber: $env:Build_BuildNumber, RepositoryName: $env:Build_Repository_Name, RepositoryUri: $env:Build_Repository_Uri, Team Project: $env:System_TeamProject, CollectionUri: $env:System_TeamFoundationCollectionUri at $utcNow UTC"
     Write-Verbose "semaphoreMessage= $semaphoreMessage"
 
-    Write-Host "Invoke-PublishSymbols -PdbFiles <pdbFiles> -Share $symbolsPath -Product $symbolsProduct -Version $symbolsVersion -MaximumWaitTime $maxWaitTime -MaximumSemaphoreAge $maxSemaphoreAge"
-    Invoke-PublishSymbols -PdbFiles $pdbFiles -Share $symbolsPath -Product $symbolsProduct -Version $symbolsVersion -MaximumWaitTime $maxWaitTime -MaximumSemaphoreAge $maxSemaphoreAge -SemaphoreMessage $semaphoreMessage
+    Write-Host "Invoke-PublishSymbols -PdbFiles <pdbFiles> -Share $symbolsPath -Product $symbolsProduct -Version $symbolsVersion -MaximumWaitTime $maxWaitTime -MaximumSemaphoreAge $maxSemaphoreAge -ArtifactName $symbolsArtifactName"
+    Invoke-PublishSymbols -PdbFiles $pdbFiles -Share $symbolsPath -Product $symbolsProduct -Version $symbolsVersion -MaximumWaitTime $maxWaitTime -MaximumSemaphoreAge $maxSemaphoreAge -SemaphoreMessage $semaphoreMessage -ArtifactName $symbolsArtifactName
 }
 else
 {

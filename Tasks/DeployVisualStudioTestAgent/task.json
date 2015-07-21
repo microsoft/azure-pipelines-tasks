@@ -1,0 +1,140 @@
+﻿{
+    "id": "52A38A6A-1517-41D7-96CC-73EE0C60D2B6",
+    "name": "DeployVisualStudioTestAgent",
+    "friendlyName": "Visual Studio Test Agent Deployment",
+    "description": "Deploy and configure Test Agent to run tests on a lab machine group",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
+    "category": "Test",
+    "visibility": [
+                "Build"
+                  ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 7
+    },
+    "demands": [
+
+    ],
+    "minimumAgentVersion": "1.85.0",
+    "groups":  [
+        {
+            "name": "testMachineGroups",
+            "displayName": "Test Machine Group",
+            "isExpanded": true
+        },
+        {
+            "name": "agentConfiguration",
+            "displayName": "Agent Configuration",
+            "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "testMachineGroup",
+            "type": "pickList",
+            "label": "Test Machine Group",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
+            "groupName": "testMachineGroups"
+        },
+        {
+            "name":"ResourceFilteringMethod",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+                "machineNames":"Machine Names",
+                "tags":"Tags"
+            },
+            "groupName": "testMachineGroups"
+        },
+        {
+            "name": "testMachines",
+            "type": "string",
+            "label": "Filter Criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
+            "groupName": "testMachineGroups"
+        },
+        {
+            "name": "machineUserName",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Username with which test agent needs to run.",
+            "groupName": "agentConfiguration"
+        },
+        {
+            "name": "machinePassword",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Password for the username given above.",
+            "groupName": "agentConfiguration"
+        },
+        {
+            "name": "runAsProcess",
+            "type": "boolean",
+            "label": "Interactive Process",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Denotes if test agent needs to run as an interactive process, needed for Coded UI Tests.",
+            "groupName": "agentConfiguration"
+        },
+        {
+            "name": "agentLocation",
+            "type": "string",
+            "label": "Test Agent Location",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkId=536423"
+        },
+        {
+            "name": "updateTestAgent",
+            "type": "boolean",
+            "label": "Update Test Agent",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Optionally specify if test agent needs to be updated.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "isDataCollectionOnly",
+            "type": "boolean",
+            "label": "Enable Data Collection Only",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+            "groupName": "advanced"
+        }
+    ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "testMachineGroup",
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
+     } 
+    ],
+    "instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\DeployTestAgent.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

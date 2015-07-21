@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.description": "使用 MSBuild 生成",
+  "loc.instanceNameFormat": "生成解决方案 $(solution)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.solution": "解决方案",
+  "loc.input.help.solution": "相对于要运行的解决方案的存储库根的路径。可以使用通配符。例如，\"**\\*.sln\" 表示所有子文件夹中的所有 sln 文件。",
+  "loc.input.label.platform": "平台",
+  "loc.input.label.configuration": "配置",
+  "loc.input.label.msbuildArguments": "MSBuild 参数",
+  "loc.input.help.msbuildArguments": "传递给 MSBuild 的其他参数。",
+  "loc.input.label.clean": "清理",
+  "loc.input.label.restoreNugetPackages": "还原 NuGet 包",
+  "loc.input.label.logProjectEvents": "记录项目详情",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild 版本",
+  "loc.input.help.msbuildVersion": "可以选择指定 MSBuild 的版本。默认为搜索最新版本。",
+  "loc.input.label.msbuildArchitecture": "MSBuild 体系结构",
+  "loc.input.help.msbuildArchitecture": "可以选择提供 MSBuild 的体系结构(x86、x64)进行运行。",
+  "loc.input.label.msbuildLocation": "MSBuild 的路径",
+  "loc.input.help.msbuildLocation": "可以选择提供 MSBuild 的路径。"
+}

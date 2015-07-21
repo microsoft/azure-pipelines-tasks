@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Chef Knife",
+  "loc.helpMarkDown": "Выполнение сценариев с помощью команд Knife на рабочей станции Chef",
+  "loc.description": "Выполнение скриптов с помощью команд Knife на рабочей станции Chef",
+  "loc.instanceNameFormat": "Сценарий Knife Chef: $(ScriptPath)",
+  "loc.input.label.ConnectedServiceName": "Подписка Chef",
+  "loc.input.help.ConnectedServiceName": "Подписка Chef, которую нужно настроить перед выполнением команд knife",
+  "loc.input.label.ScriptPath": "Путь к скрипту",
+  "loc.input.help.ScriptPath": "Путь к сценарию. Это должен быть полный путь или путь относительно рабочего каталога по умолчанию.",
+  "loc.input.label.ScriptArguments": "Аргументы скрипта",
+  "loc.input.help.ScriptArguments": "Дополнительные параметры для передачи в сценарий. Могут быть как порядковыми, так и именованными."
+}

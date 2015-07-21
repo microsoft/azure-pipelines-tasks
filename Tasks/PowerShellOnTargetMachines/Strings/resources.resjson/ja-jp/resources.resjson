@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "ターゲット コンピューターでの PowerShell",
+  "loc.helpMarkDown": "リモート コンピューター (複数可) で PowerShell スクリプトを実行します",
+  "loc.description": "リモート コンピューター (複数可) で PowerShell スクリプトを実行します",
+  "loc.instanceNameFormat": "$(EnvironmentName) での PowerShell の実行",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.EnvironmentName": "コンピューター グループ",
+  "loc.input.help.EnvironmentName": "アプリケーションをデプロイするコンピューター グループの名前。",
+  "loc.input.label.MachineNames": "コンピューターに展開",
+  "loc.input.help.MachineNames": "展開のために「Machine1, Machine2」のようなコンピューターのコンマ区切りリストを提供します。既定値は、コンピューター グループ内のすべてのコンピューターです。",
+  "loc.input.label.ScriptPath": "PowerShell スクリプト",
+  "loc.input.help.ScriptPath": "ターゲット コンピューター上、または c:\\BudgetIT\\Web\\Deploy\\Website.ps1 のような UNC パス上での、PowerShell スクリプトの場所",
+  "loc.input.label.ScriptArguments": "スクリプトの引数",
+  "loc.input.help.ScriptArguments": "PowerShell スクリプトの引数。順序によるパラメーターまたは「-testParam test」のような名前指定によるパラメーターとすることができます。",
+  "loc.input.label.InitializationScriptPath": "初期化スクリプト",
+  "loc.input.help.InitializationScriptPath": "ターゲット コンピューター上、または UNC パス上での DSC のデータ スクリプトの場所 (c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1 など)",
+  "loc.input.label.RunPowershellInParallel": "PowerShell の並列実行",
+  "loc.input.help.RunPowershellInParallel": "true に設定すると、複数の powershell スクリプトをターゲット コンピューター上で並列に実行します。"
+}

@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.description": "Запуск скрипта PowerShell",
+  "loc.instanceNameFormat": "Powershell: $(scriptName)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.scriptName": "Имя файла скрипта",
+  "loc.input.help.scriptName": "Путь к выполняемому сценарию. Это должен быть полный путь или путь относительно рабочего каталога по умолчанию.",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.help.arguments": "Аргументы, передаваемые в сценарий PowerShell. Параметры могут быть порядковыми или именованными.",
+  "loc.input.label.workingFolder": "Рабочая папка",
+  "loc.input.help.workingFolder": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий."
+}

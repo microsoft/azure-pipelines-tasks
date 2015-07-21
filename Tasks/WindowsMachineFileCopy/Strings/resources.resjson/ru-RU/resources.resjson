@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Копирование файлов на компьютер Windows",
+  "loc.helpMarkDown": "Копировать файлы на удаленные компьютеры",
+  "loc.description": "Копировать файлы на удаленные компьютеры",
+  "loc.instanceNameFormat": "Копировать файлы в $(EnvironmentName)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.SourcePath": "Источник",
+  "loc.input.help.SourcePath": "Абсолютный путь к исходной папке или файлу на локальном компьютере либо общий ресурс UNC.",
+  "loc.input.label.EnvironmentName": "Группа машин",
+  "loc.input.help.EnvironmentName": "Имя целевой группы машин для копирования файлов.​",
+  "loc.input.label.MachineNames": "Копировать на машины",
+  "loc.input.help.MachineNames": "Укажите разделенный запятыми список машин, например Машина1, Машина2. По умолчанию используются все машины в группе машин.",
+  "loc.input.label.TargetPath": "Папка назначения",
+  "loc.input.help.TargetPath": "Локальный путь на целевых машинах, куда копируются файлы из источника. Можно использовать переменную среды, например $env:windir\\BudgetIT\\Web.",
+  "loc.input.label.CleanTargetBeforeCopy": "Очистить целевую папку",
+  "loc.input.help.CleanTargetBeforeCopy": "Если задать значение true, перед копированием файлов папка назначения будет очищена.",
+  "loc.input.label.CopyFilesInParallel": "Копировать файлы параллельно",
+  "loc.input.help.CopyFilesInParallel": "Если задать значение true, файлы будут копироваться на компьютеры параллельно."
+}

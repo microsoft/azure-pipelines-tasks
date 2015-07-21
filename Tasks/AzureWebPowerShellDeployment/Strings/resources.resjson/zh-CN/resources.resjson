@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Azure 网站部署",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.description": "将网站部署到 Microsoft Azure",
+  "loc.instanceNameFormat": "Azure 部署: $(WebSiteName)",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
+  "loc.input.help.ConnectedServiceName": "要作为部署目标的 Azure 订阅。",
+  "loc.input.label.WebSiteLocation": "网站位置",
+  "loc.input.help.WebSiteLocation": "为部署选择区域。",
+  "loc.input.label.WebSiteName": "网站名称",
+  "loc.input.label.Package": "包",
+  "loc.input.help.Package": "默认项目目录下包的路径。",
+  "loc.input.label.AdditionalArguments": "其他参数"
+}

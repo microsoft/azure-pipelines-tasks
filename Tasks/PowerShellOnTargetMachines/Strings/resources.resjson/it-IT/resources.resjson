@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "PowerShell in computer di destinazione",
+  "loc.helpMarkDown": "Consente di eseguire script PowerShell nei computer remoti",
+  "loc.description": "Consente di eseguire script PowerShell nei computer remoti",
+  "loc.instanceNameFormat": "Esegui PowerShell in $(EnvironmentName)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.EnvironmentName": "Gruppo di computer",
+  "loc.input.help.EnvironmentName": "Nome del gruppo di computer per la distribuzione dell'applicazione.",
+  "loc.input.label.MachineNames": "Distribuisci in computer",
+  "loc.input.help.MachineNames": "Consente di specificare un elenco di computer delimitati da virgole per la distribuzione, come Computer1, Computer2. Per impostazione predefinita, sono inclusi tutti i computer del gruppo di computer.",
+  "loc.input.label.ScriptPath": "Script PowerShell",
+  "loc.input.help.ScriptPath": "Percorso dello script PowerShell nei computer di destinazione oppure in un percorso UNC come c:\\BudgetIT\\Web\\Distribuzione\\SitoWeb.ps1",
+  "loc.input.label.ScriptArguments": "Argomenti script",
+  "loc.input.help.ScriptArguments": "Argomenti per lo script PowerShell. Possono essere parametri ordinali o denominati come -testParam test",
+  "loc.input.label.InitializationScriptPath": "Script di inizializzazione",
+  "loc.input.help.InitializationScriptPath": "Percorso dello script di dati per DSC nei computer di destinazione oppure in un percorso UNC come c:\\BudgetIT\\Web\\Distribuzione\\ConfigurazioneSitoWeb.ps1",
+  "loc.input.label.RunPowershellInParallel": "Esegui PowerShell in parallelo",
+  "loc.input.help.RunPowershellInParallel": "Se è impostato su true, gli script PowerShell verranno eseguiti in parallelo nei computer di destinazione."
+}

@@ -3,12 +3,19 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xcode Build",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Build an Xcode workspace on Mac OS",
+  "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.xcWorkspacePath": "Workspace Path",
+  "loc.input.help.xcWorkspacePath": "Relative path from repo root where xcworkspace folder exists.",
   "loc.input.label.scheme": "Scheme",
+  "loc.input.help.scheme": "Scheme name in Xcode.  *Must be a shared scheme* (shared checkbox under managed schemes in Xcode)",
   "loc.input.label.actions": "Actions",
+  "loc.input.help.actions": "Space delimited list of actions.  Valid options are build, clean, test, analyze, and archive.  For example: `build clean` would do a clean build.  See [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)",
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.sdk": "SDK",
-  "loc.input.label.outputPattern": "Output"
+  "loc.input.help.sdk": "Build an Xcode project or workspace against the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs.",
+  "loc.input.label.outputPattern": "Output",
+  "loc.input.help.outputPattern": "Relative path where build output (binaries) will be placed."
 }

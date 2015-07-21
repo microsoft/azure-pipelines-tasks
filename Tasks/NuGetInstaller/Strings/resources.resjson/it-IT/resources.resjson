@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Programma di installazione NuGet",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.description": "Consente di installare e aggiornare i pacchetti NuGet mancanti",
+  "loc.instanceNameFormat": "NuGet restore $(solution)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.solution": "Percorso della soluzione",
+  "loc.input.help.solution": "Percorso del file di soluzione di Visual Studio.",
+  "loc.input.label.excludeVersion": "Escludi versione",
+  "loc.input.help.excludeVersion": "Fa in modo che NuGet escluda la versione del pacchetto dai nomi delle cartelle del pacchetto. Equivale all'argomento -ExcludeVersion della riga di comando di NuGet.exe",
+  "loc.input.label.noCache": "Disabilita cache locale",
+  "loc.input.help.noCache": "Equivale all'argomento -NoCache della riga di comando di NuGet.exe",
+  "loc.input.label.nuGetRestoreArgs": "Argomenti NuGet",
+  "loc.input.help.nuGetRestoreArgs": "Argomenti aggiuntivi passati a NuGet.exe restore.",
+  "loc.input.label.nuGetPath": "Percorso di NuGet.exe",
+  "loc.input.help.nuGetPath": "Consente, facoltativamente, di specificare il percorso di NuGet.exe."
+}

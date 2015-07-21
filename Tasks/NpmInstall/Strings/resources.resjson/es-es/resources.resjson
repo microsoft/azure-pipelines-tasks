@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "instalación de npm",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Instalar paquetes npm",
+  "loc.instanceNameFormat": "$(arguments) de instalación de npm",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Argumentos adicionales pasados a la instalación de npm.",
+  "loc.input.label.cwd": "Directorio de trabajo",
+  "loc.input.help.cwd": "Directorio de trabajo actual donde se ejecuta la instalación npm. Se establece de forma predeterminada en la raíz del repositorio."
+}

@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Android-Signatur",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.description": "Android-APK-Dateien signieren und ausrichten",
+  "loc.instanceNameFormat": "APK-Dateien $(files) werden signiert und ausgerichtet",
+  "loc.group.displayName.jarsignerOptions": "Jarsigner-Optionen",
+  "loc.group.displayName.zipalignOptions": "Zipalign-Optionen",
+  "loc.input.label.files": "APK-Dateien",
+  "loc.input.help.files": "Relativer Pfad vom Repositorystamm der Dateien. Platzhalter können verwendet werden. Beispiel: \"**\\bin\\*.apk\" für alle APK-Dateien im Unterordner \"bin\".",
+  "loc.input.label.jarsign": "APK signieren",
+  "loc.input.label.keystoreFile": "Keystore-Datei",
+  "loc.input.help.keystoreFile": "Vollständiger Pfad zur KeyStore-Datei.",
+  "loc.input.label.keystorePass": "Keystore-Kennwort",
+  "loc.input.label.keystoreAlias": "Alias",
+  "loc.input.label.keyPass": "Schlüsselkennwort",
+  "loc.input.label.jarsignerArguments": "Jarsigner-Argumente",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Zipalign-Speicherort",
+  "loc.input.help.zipalignLocation": "Geben Sie optional den Pfad zu zipalign.exe an. Standardmäßig wird die im Android SDK-Ordner gefundene zipalign.exe verwendet."
+}

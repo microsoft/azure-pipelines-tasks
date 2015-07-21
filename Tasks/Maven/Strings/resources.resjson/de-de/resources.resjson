@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Maven",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.description": "Mit Apache Maven erstellen",
+  "loc.instanceNameFormat": "Maven $(args)",
+  "loc.group.displayName.junitTestResults": "JUnit-Testergebnisse",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.mavenPOMFile": "Maven-POM-Datei",
+  "loc.input.help.mavenPOMFile": "Relativer Pfad vom Repositorystamm zur Maven-POM-Datei.",
+  "loc.input.label.options": "Optionen",
+  "loc.input.label.goals": "Ziel(e)",
+  "loc.input.label.publishJUnitResults": "In VSO/TFS veröffentlichen",
+  "loc.input.help.publishJUnitResults": "Wählen Sie diese Option, um vom Maven-Build erzeugte JUnit-Testergebnisse in VSO/TFS zu veröffentlichen. Jede Testergebnisdatei, die mit \"Testergebnisdateien\" übereinstimmt, wird als Testlauf in VSO/TFS veröffentlicht.",
+  "loc.input.label.testResultsFiles": "Testergebnisdateien",
+  "loc.input.help.testResultsFiles": "Pfad der Testergebnisdateien. Platzhalter können verwendet werden. Beispiel: \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
+  "loc.input.label.jdkVersion": "JDK-Version",
+  "loc.input.help.jdkVersion": "Versucht, den Pfad zur ausgewählten JDK-Version zu ermitteln und JAVA_HOME entsprechend festzulegen.",
+  "loc.input.label.jdkArchitecture": "JDK-Architektur",
+  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64)."
+}

@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Copia de archivo en equipo Windows",
+  "loc.helpMarkDown": "Copiar archivos en equipo(s) remoto(s)",
+  "loc.description": "Copiar archivos en equipo(s) remoto(s)",
+  "loc.instanceNameFormat": "Copiar archivos en $(EnvironmentName)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.SourcePath": "Origen",
+  "loc.input.help.SourcePath": "Ruta de acceso absoluta del archivo o carpeta de origen en el equipo local, o un recurso compartido UNC.",
+  "loc.input.label.EnvironmentName": "Grupo de equipos",
+  "loc.input.help.EnvironmentName": "Nombre del grupo de equipos de destino en el que copiar los archivos.​",
+  "loc.input.label.MachineNames": "Copiar en equipos",
+  "loc.input.help.MachineNames": "Proporcione una lista separada por comas de equipos, como Equipo1, Equipo2. El valor predeterminado todos los equipos del grupo de equipos.",
+  "loc.input.label.TargetPath": "Carpeta de destino",
+  "loc.input.help.TargetPath": "Ruta de acceso local en los equipos de destino donde copiar los archivos desde el origen. Se puede usar una variable de entorno como $env:windir\\BudgetIT\\Web.",
+  "loc.input.label.CleanTargetBeforeCopy": "Limpiar destino",
+  "loc.input.help.CleanTargetBeforeCopy": "Si se establece en true, se limpiará la carpeta de destino antes de copiar los archivos.",
+  "loc.input.label.CopyFilesInParallel": "Copiar archivos en paralelo",
+  "loc.input.help.CopyFilesInParallel": "Si se establece en true, los archivos se copiarán en paralelo en los equipos."
+}

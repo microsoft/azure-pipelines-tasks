@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Shell 指令碼",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "使用 bash 執行 Shell 指令碼",
+  "loc.instanceNameFormat": "Shell 指令碼 $(scriptPath)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.scriptPath": "指令碼路徑",
+  "loc.input.help.scriptPath": "要執行的 Shell 指令碼之儲存機制根的相對路徑。",
+  "loc.input.label.args": "引數",
+  "loc.input.help.args": "傳遞至 Shell 指令碼的引數",
+  "loc.input.label.cwd": "工作目錄",
+  "loc.input.help.cwd": "執行指令碼時的目前工作目錄。預設為指令碼所在的資料夾。",
+  "loc.input.label.failOnStandardError": "發生標準錯誤的失敗",
+  "loc.input.help.failOnStandardError": "如果為 true，則任何錯誤寫入至 StandardError 資料流時，此工作會失敗。"
+}

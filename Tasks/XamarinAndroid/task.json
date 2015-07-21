@@ -3,6 +3,7 @@
     "name": "XamarinAndroid",
     "friendlyName": "Xamarin.Android",
     "description": "Build an Android app with Xamarin",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613728)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -11,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 6
     },
     "demands": [
         "AndroidSDK",
@@ -19,6 +20,7 @@
         "MSBuild",
         "Xamarin.Android"
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups":  [
         {
             "name": "msbuildOptions", 

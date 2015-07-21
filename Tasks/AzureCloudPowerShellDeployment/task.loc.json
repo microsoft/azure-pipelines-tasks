@@ -6,6 +6,7 @@
   "name": "AzureCloudPowerShellDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -15,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 13
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -28,7 +29,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to target for deployment."
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "StorageAccount",
@@ -36,7 +37,7 @@
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Storage Account must exist prior to deployment."
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
     },
     {
       "name": "ServiceName",
@@ -51,7 +52,7 @@
       "label": "ms-resource:loc.input.label.ServiceLocation",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
+      "helpMarkDown": "ms-resource:loc.input.help.ServiceLocation"
     },
     {
       "name": "CsPkg",
@@ -59,7 +60,7 @@
       "label": "ms-resource:loc.input.label.CsPkg",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Path of CsPkg under the default artifact directory."
+      "helpMarkDown": "ms-resource:loc.input.help.CsPkg"
     },
     {
       "name": "CsCfg",
@@ -67,7 +68,7 @@
       "label": "ms-resource:loc.input.label.CsCfg",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Path of CsCfg under the default artifact directory."
+      "helpMarkDown": "ms-resource:loc.input.help.CsCfg"
     },
     {
       "name": "Slot",
@@ -75,7 +76,7 @@
       "label": "ms-resource:loc.input.label.Slot",
       "defaultValue": "Production",
       "required": true,
-      "helpMarkDown": "**Production** or **Staging**"
+      "helpMarkDown": "ms-resource:loc.input.help.Slot"
     },
     {
       "name": "AllowUpgrade",
@@ -88,18 +89,18 @@
   "sourceDefinitions": [
     {
       "target": "StorageAccount",
-      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/storageservices",
+      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
       "selector": "xpath://ServiceName",
-      "authKey": "{$ConnectedServiceName}"
+      "authKey": "$(ConnectedServiceName)"
     },
     {
       "target": "ServiceName",
-      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/hostedservices",
+      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/hostedservices",
       "selector": "xpath://ServiceName",
-      "authKey": "{$ConnectedServiceName}"
+      "authKey": "$(ConnectedServiceName)"
     }
   ],
-  "instanceNameFormat": "Azure Deployment: $(CsPkg)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\Publish-AzureCloudDeployment.ps1",

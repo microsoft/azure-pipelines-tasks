@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "基于生成系统的 Node.js 流任务",
+  "loc.instanceNameFormat": "gulp $(targets)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.gulpFile": "Gulp 文件路径",
+  "loc.input.help.gulpFile": "相对于要运行的 gulp 文件脚本文件的存储库根的路径。",
+  "loc.input.label.targets": "Gulp 任务",
+  "loc.input.help.targets": "可选。如果未指定，则默认任务会运行。要运行的任务的空格分隔列表。如果未指定，则默认任务会运行。",
+  "loc.input.label.arguments": "参数",
+  "loc.input.help.arguments": "传递给 gulp 的其他参数。无需 --gulpfile，因为已通过上面的 gulpFile 输入添加。",
+  "loc.input.label.cwd": "工作目录",
+  "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。"
+}

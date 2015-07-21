@@ -3,16 +3,21 @@
 // *******************************************************
 {
   "loc.friendlyName": "Android Signing",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Sign and align Android APK files",
+  "loc.instanceNameFormat": "Signing and aligning APK file(s) $(files)",
   "loc.group.displayName.jarsignerOptions": "Jarsigner Options",
   "loc.group.displayName.zipalignOptions": "Zipalign Options",
   "loc.input.label.files": "APK Files",
+  "loc.input.help.files": "Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\bin\\*.apk` for all APK files in bin subfolder.",
   "loc.input.label.jarsign": "Sign the APK",
   "loc.input.label.keystoreFile": "Keystore File",
+  "loc.input.help.keystoreFile": "Full path to the keystore file.",
   "loc.input.label.keystorePass": "Keystore Password",
   "loc.input.label.keystoreAlias": "Alias",
   "loc.input.label.keyPass": "Key Password",
   "loc.input.label.jarsignerArguments": "Jarsigner Arguments",
   "loc.input.label.zipalign": "Zipalign",
-  "loc.input.label.zipalignLocation": "Zipalign Location"
+  "loc.input.label.zipalignLocation": "Zipalign Location",
+  "loc.input.help.zipalignLocation": "Optionally supply the path to zipalign.exe.  It defaults to use any zipalign.exe found in Android SDK folder."
 }

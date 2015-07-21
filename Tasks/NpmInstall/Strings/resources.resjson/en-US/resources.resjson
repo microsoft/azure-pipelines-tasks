@@ -3,8 +3,12 @@
 // *******************************************************
 {
   "loc.friendlyName": "npm install",
-  "loc.description": "install npm packages",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Install npm packages",
+  "loc.instanceNameFormat": "npm install $(arguments)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.arguments": "Arguments",
-  "loc.input.label.cwd": "Working Directory"
+  "loc.input.help.arguments": "Additional arguments passed to npm install.",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory where npm install is run.  Defaults to the root of the repo."
 }

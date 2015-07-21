@@ -6,35 +6,39 @@
   "name": "QuickPerfTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Preview",
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
-    "msbuild"
+    "msbuild",
+    "azureps"
   ],
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
-    }
-  ],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
     {
       "name": "websiteUrl",
       "type": "string",
       "label": "ms-resource:loc.input.label.websiteUrl",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Enter your application website url as http://www.your.app/home.html"
+      "helpMarkDown": "ms-resource:loc.input.help.websiteUrl"
     },
     {
       "name": "testName",
@@ -42,14 +46,14 @@
       "label": "ms-resource:loc.input.label.testName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name the load test for tracking and correlation."
+      "helpMarkDown": "ms-resource:loc.input.help.testName"
     },
     {
       "name": "vuLoad",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vuLoad",
       "required": true,
-      "helpMarkDown": "Maximum virtual users concurrently accessing the website.",
+      "helpMarkDown": "ms-resource:loc.input.help.vuLoad",
       "defaultValue": "25",
       "options": {
         "25": "25",
@@ -63,7 +67,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.runDuration",
       "required": true,
-      "helpMarkDown": "Load test run duration in seconds.",
+      "helpMarkDown": "ms-resource:loc.input.help.runDuration",
       "defaultValue": "60",
       "options": {
         "60": "60",
@@ -78,8 +82,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.geoLocation",
       "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "Geographical region from where the load will be generated.",
+      "helpMarkDown": "ms-resource:loc.input.help.geoLocation",
       "defaultValue": "Default",
       "options": {
         "Default": "Default",
@@ -99,34 +102,9 @@
         "Australia East": "Australia East (New South Wales)",
         "Australia Southeast": "Australia Southeast (Victoria)"
       }
-    },
-    {
-      "name": "Username",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Username",
-      "defaultValue": "$(System.Auth.UserName)",
-      "groupName": "advanced",
-      "required": true
-    },
-    {
-      "name": "Password",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Password",
-      "defaultValue": "$(System.Auth.Password)",
-      "groupName": "advanced",
-      "required": true
-    },
-    {
-      "name": "CltAccountUrl",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.CltAccountUrl",
-      "defaultValue": "$(System.TeamFoundationServerUri)",
-      "groupName": "advanced",
-      "required": false,
-      "helpMarkDown": "Visual Studio Online Account's CLT URL."
     }
   ],
-  "instanceNameFormat": "Quick Perf Test $(testName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\Invoke-QuickPerfTest.ps1",

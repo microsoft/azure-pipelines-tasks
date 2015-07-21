@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "命令列",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "使用引數執行命令列",
+  "loc.instanceNameFormat": "執行 $(filename)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.filename": "工具",
+  "loc.input.help.filename": "要執行的工具名稱。 工具必須在路徑中或可透其解析。 可選擇性地提供完整路徑但其需存在於代理程式上。",
+  "loc.input.label.arguments": "引數",
+  "loc.input.label.workingFolder": "工作資料夾",
+  "loc.input.help.workingFolder": "傳遞至工具的引數",
+  "loc.input.label.failOnStandardError": "發生標準錯誤的失敗",
+  "loc.input.help.failOnStandardError": "如果為 true，則任何錯誤寫入至 StandardError 資料流時，此工作會失敗。"
+}

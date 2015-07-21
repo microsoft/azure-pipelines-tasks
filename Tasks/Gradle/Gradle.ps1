@@ -16,8 +16,10 @@ Write-Verbose "tasks = $tasks"
 Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 # Verify wrapperScript is set and is not a container
 if(!$wrapperScript -or !(Test-Path -Path $wrapperScript -PathType Leaf)) 
@@ -31,9 +33,6 @@ if(!$cwd)
     $wrapperScriptItem = Get-Item -Path $wrapperScript
     $cwd = $wrapperScriptItem.Directory.FullName
 }
-
-Write-Verbose "Setting working directory to $cwd"
-Push-Location $cwd
 
 if($jdkVersion -and $jdkVersion -ne "default")
 {
@@ -50,9 +49,7 @@ if($jdkVersion -and $jdkVersion -ne "default")
 
 $arguments = "$options $tasks"
 Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
-Invoke-BatchScript -Path $wrapperScript -Arguments $arguments
-
-Pop-Location
+Invoke-BatchScript -Path $wrapperScript -Arguments $arguments -WorkingFolder $cwd
 
 # Publish test results files
 $publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean

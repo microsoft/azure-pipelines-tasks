@@ -6,6 +6,7 @@
   "name": "Gulp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
@@ -13,12 +14,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 3
+    "Minor": 5,
+    "Patch": 2
   },
   "demands": [
     "gulp"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -26,7 +28,7 @@
       "isExpanded": false
     }
   ],
-  "instanceNameFormat": "gulp $(targets)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "gulpFile",
@@ -34,14 +36,14 @@
       "label": "ms-resource:loc.input.label.gulpFile",
       "defaultValue": "gulpfile.js",
       "required": true,
-      "helpMarkDown": "Relative path from repo root of the gulp file script file to run."
+      "helpMarkDown": "ms-resource:loc.input.help.gulpFile"
     },
     {
       "name": "targets",
       "type": "string",
       "label": "ms-resource:loc.input.label.targets",
       "defaultValue": "",
-      "helpMarkDown": "Optional.  default task will get run if not specified. Space delimited list of tasks to run.  If not specified, the default task will run.",
+      "helpMarkDown": "ms-resource:loc.input.help.targets",
       "required": false
     },
     {
@@ -49,7 +51,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
-      "helpMarkDown": "Additional arguments passed to gulp.  --gulpfile is not needed since already added via gulpFile input above.",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "required": false,
       "groupName": "advanced"
     },
@@ -59,7 +61,7 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
     }
   ],

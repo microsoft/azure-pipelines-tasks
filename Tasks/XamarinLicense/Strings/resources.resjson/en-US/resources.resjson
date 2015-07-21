@@ -3,11 +3,15 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xamarin License",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613739)",
   "loc.description": "Activate or deactivate Xamarin licenses",
+  "loc.instanceNameFormat": "$(action) Xamarin license",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.action": "Action",
   "loc.input.label.email": "Email",
+  "loc.input.help.email": "Xamarin account email address.",
   "loc.input.label.password": "Password",
+  "loc.input.help.password": "Xamarin account password.",
   "loc.input.label.activateAndroid": "Activate Xamarin.Android",
   "loc.input.label.timeout": "Timeout in Seconds"
 }

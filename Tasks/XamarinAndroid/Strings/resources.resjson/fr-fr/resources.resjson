@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.description": "Générer une application Android avec Xamarin",
+  "loc.instanceNameFormat": "Générer le projet Xamarin.Android $(project)",
+  "loc.group.displayName.msbuildOptions": "Options MSBuild",
+  "loc.group.displayName.jdkOptions": "Options de JDK",
+  "loc.input.label.project": "Projet",
+  "loc.input.help.project": "Chemin d'accès relatif depuis la racine du référentiel aux projets Xamarin.Android à générer. Les caractères génériques sont autorisés. Par exemple, '**\\*.csproj' pour tous les fichiers csproj de tous les sous-dossiers. Le projet doit avoir une cible PackageForAndroid.",
+  "loc.input.label.target": "Cible",
+  "loc.input.help.target": "Générez ces cibles dans ce projet. Utilisez un point-virgule pour séparer plusieurs cibles.",
+  "loc.input.label.outputDir": "Répertoire de sortie",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.label.msbuildLocation": "Emplacement de MSBuild",
+  "loc.input.help.msbuildLocation": "Indiquez éventuellement le chemin d'accès à MSBuild. Il s'agit généralement de rechercher la dernière version.",
+  "loc.input.label.msbuildArguments": "Arguments MSBuild",
+  "loc.input.help.msbuildArguments": "Arguments supplémentaires passés à MSBuild.",
+  "loc.input.label.jdkVersion": "Version de JDK",
+  "loc.input.help.jdkVersion": "Utilisez la version du JDK sélectionné pendant la génération.",
+  "loc.input.label.jdkArchitecture": "Architecture de JDK",
+  "loc.input.help.jdkArchitecture": "Indiquez éventuellement l'architecture (x86, x64) du JDK."
+}

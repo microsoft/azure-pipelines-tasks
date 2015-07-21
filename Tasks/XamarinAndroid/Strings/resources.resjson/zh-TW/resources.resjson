@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.description": "使用 Xamarin 建置 Android 應用程式",
+  "loc.instanceNameFormat": "建置 Xamarin.Android 專案 $(project)",
+  "loc.group.displayName.msbuildOptions": "MSBuild 選項",
+  "loc.group.displayName.jdkOptions": "JDK 選項",
+  "loc.input.label.project": "專案",
+  "loc.input.help.project": "建置的 Xamarin.Android 專案的儲存機制根的相對路徑。可使用萬用字元。例如，適用於所有子資料夾之全部 csproj 檔案的 `**\\*.csproj`。專案必須包含 PackageForAndroid 目標。",
+  "loc.input.label.target": "目標",
+  "loc.input.help.target": "在此專案中建置這些目標。請使用分號以區隔多個目標。",
+  "loc.input.label.outputDir": "輸出目錄",
+  "loc.input.label.configuration": "組態",
+  "loc.input.label.msbuildLocation": "MSBuild 位置",
+  "loc.input.help.msbuildLocation": "選擇性地提供 MSBuild 的路徑。其預設為搜尋最新版本。",
+  "loc.input.label.msbuildArguments": "MSBuild 引數",
+  "loc.input.help.msbuildArguments": "傳遞至 MSBuild 的額外引數。",
+  "loc.input.label.jdkVersion": "JDK 版本",
+  "loc.input.help.jdkVersion": "建置期間使用選取的 JDK 版本。",
+  "loc.input.label.jdkArchitecture": "JDK 架構",
+  "loc.input.help.jdkArchitecture": "選擇性地提供 JDK 的架構 (x86、x64)。"
+}

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Azure 웹 사이트 배포",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.description": "Microsoft Azure에 웹 사이트 배포",
+  "loc.instanceNameFormat": "Azure 배포: $(WebSiteName)",
+  "loc.input.label.ConnectedServiceName": "Azure 구독",
+  "loc.input.help.ConnectedServiceName": "배포를 위한 대상으로 지정할 Azure 구독입니다.",
+  "loc.input.label.WebSiteLocation": "웹 사이트 위치",
+  "loc.input.help.WebSiteLocation": "배포할 지역을 선택하세요.",
+  "loc.input.label.WebSiteName": "웹 사이트 이름",
+  "loc.input.label.Package": "패키지",
+  "loc.input.help.Package": "기본 아티팩트 디렉터리의 패키지 경로입니다.",
+  "loc.input.label.AdditionalArguments": "추가 인수"
+}

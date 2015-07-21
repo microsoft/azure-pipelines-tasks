@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "클라우드 기반 웹 성능 테스트",
+  "loc.helpMarkDown": "이 작업을 사용하여 Visual Studio Online을 사용하는 클라우드 기반 부하 테스트를 트리거할 수 있습니다. [자세한 정보](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.description": "Visual Studio Online을 사용하여 클라우드에서 빠른 웹 성능 테스트를 실행합니다.",
+  "loc.instanceNameFormat": "빠른 웹 성능 테스트 $(testName)",
+  "loc.input.label.connectedServiceName": "등록된 연결",
+  "loc.input.help.connectedServiceName": "클라우드 기반 부하 테스트 서비스에 말할 이전에 등록한 서비스 연결을 선택하세요. 새 연결을 등록하려면 '관리'를 선택하세요.",
+  "loc.input.label.websiteUrl": "웹 사이트 URL",
+  "loc.input.help.websiteUrl": "응용 프로그램 웹 사이트 url을 http://www.your.app/home.html로 입력합니다.",
+  "loc.input.label.testName": "테스트 이름",
+  "loc.input.help.testName": "추적 및 상관 관계를 위한 부하 테스트의 이름을 지정합니다.",
+  "loc.input.label.vuLoad": "사용자 부하",
+  "loc.input.help.vuLoad": "웹 사이트에 동시에 액세스하는 최대 가상 사용자입니다.",
+  "loc.input.label.runDuration": "실행 지속 시간(초)",
+  "loc.input.help.runDuration": "부하 테스트 실행 지속 시간(초)입니다.",
+  "loc.input.label.geoLocation": "로드 위치",
+  "loc.input.help.geoLocation": "부하를 생성하는 지역입니다. 자세한 내용은 작업 도움말을 참조하세요."
+}

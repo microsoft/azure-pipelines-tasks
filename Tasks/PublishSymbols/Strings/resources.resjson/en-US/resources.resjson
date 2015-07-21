@@ -3,13 +3,24 @@
 // *******************************************************
 {
   "loc.friendlyName": "Index Sources & Publish Symbols",
+  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](http://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Index your source code and publish symbols to a file share",
+  "loc.instanceNameFormat": "Publish symbols path: $(SymbolsPath)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.SymbolsPath": "Path to publish symbols",
+  "loc.input.help.SymbolsPath": "Specify the path to the symbol store share.  If this value is not set, source indexing will occur but symbols will not be published.",
   "loc.input.label.SearchPattern": "Search Pattern",
+  "loc.input.help.SearchPattern": "The pattern used to discover the pdb files to publish.",
   "loc.input.label.SourceFolder": "Path to source folder",
+  "loc.input.help.SourceFolder": "The path to the source folder that is searched for symbol files.  The default is $(Build.SourcesDirectory)",
   "loc.input.label.SymbolsFolder": "Path to symbols folder",
+  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is the configured source folder.",
   "loc.input.label.SymbolsMaximumWaitTime": "Max Wait Time (min)",
+  "loc.input.help.SymbolsMaximumWaitTime": "The number of minutes to wait before failing the step",
   "loc.input.label.SymbolsProduct": "Product",
-  "loc.input.label.SymbolsVersion": "Version"
+  "loc.input.help.SymbolsProduct": "Specify the product parameter to symstore.exe.  The default is $(Build.DefinitionName)",
+  "loc.input.label.SymbolsVersion": "Version",
+  "loc.input.help.SymbolsVersion": "Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)",
+  "loc.input.label.SymbolsArtifactName": "Artifact Name",
+  "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)"
 }

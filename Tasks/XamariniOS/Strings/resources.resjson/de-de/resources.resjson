@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.description": "iOS-App mit Xamarin auf Mac OS erstellen",
+  "loc.instanceNameFormat": "Xamarin.iOS-Lösung $(solution) erstellen",
+  "loc.input.label.solution": "Lösung",
+  "loc.input.help.solution": "Relativer Pfad vom Repositorystamm der zu erstellenden Xamarin.iOS-Lösung.",
+  "loc.input.label.configuration": "Konfiguration",
+  "loc.input.help.configuration": "Standardkonfigurationen sind Ad-Hoc, AppStore, Debug und Release.",
+  "loc.input.label.mdtoolLocation": "Pfad zu mdtool überschreiben",
+  "loc.input.help.mdtoolLocation": "Geben Sie optional den Pfad zu mdtool an, dem Buildtool von Xamarin Studio. Wenn keine Angabe erfolgt, wird der Standardpfad verwendet: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
+  "loc.input.label.forSimulator": "Für iOS-Simulator erstellen",
+  "loc.input.help.forSimulator": "Erstellt optional für den iOS-Simulator anstatt für physische iOS-Geräte."
+}

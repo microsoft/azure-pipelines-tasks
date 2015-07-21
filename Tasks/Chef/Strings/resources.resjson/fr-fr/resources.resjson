@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.helpMarkDown": "Déployer dans des environnements Chef en modifiant les attributs d'environnement",
+  "loc.description": "Déployer dans des environnements Chef en modifiant les attributs d'environnement",
+  "loc.instanceNameFormat": "Déployer dans un environnement chef en modifiant les attributs d'environnement de l'abonnement Chef $(ChefServer)",
+  "loc.input.label.connectedServiceName": "Connexion Chef",
+  "loc.input.help.connectedServiceName": "Nom de l'abonnement Chef",
+  "loc.input.label.Environment": "Environnement",
+  "loc.input.help.Environment": "Nom de l'environnement Chef à utiliser pour le déploiement. Les attributs de cet environnement seront modifiés.",
+  "loc.input.label.Attributes": "Attributs d'environnement",
+  "loc.input.help.Attributes": "Spécifiez la valeur du ou des attributs du nœud terminal à mettre à jour. Exemple : {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. La tâche échoue si le nœud terminal n'existe pas.",
+  "loc.input.label.chefWaitTime": "Durée d'attente",
+  "loc.input.help.chefWaitTime": "Durée d'attente (en minutes) avant la fin de la tâche. Valeur par défaut : 30 minutes"
+}

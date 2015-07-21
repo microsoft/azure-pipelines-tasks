@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.description": "Compile una aplicación de Android con Xamarin",
+  "loc.instanceNameFormat": "Compilar proyecto Xamarin.Android $(project)",
+  "loc.group.displayName.msbuildOptions": "Opciones de MSBuild",
+  "loc.group.displayName.jdkOptions": "Opciones de JDK",
+  "loc.input.label.project": "Proyecto",
+  "loc.input.help.project": "Ruta de acceso relativa de la raíz del repositorio de los proyectos Xamarin.Android que se van a compilar. Puede usar caracteres comodín. Por ejemplo, \"**\\*.csproj\" para todos los archivos csproj en todas las subcarpetas. El proyecto debe tener un destino PackageForAndroid.",
+  "loc.input.label.target": "Destino",
+  "loc.input.help.target": "Compile estos destinos en este proyecto. Use puntos y comas para separar distintos destinos.",
+  "loc.input.label.outputDir": "Directorio de salida",
+  "loc.input.label.configuration": "Configuración",
+  "loc.input.label.msbuildLocation": "Ubicación de MSBuild",
+  "loc.input.help.msbuildLocation": "Proporcione opcionalmente la ruta de acceso a MSBuild. Se establece de forma predeterminada para buscar la última versión.",
+  "loc.input.label.msbuildArguments": "Argumentos de MSBuild",
+  "loc.input.help.msbuildArguments": "Argumentos adicionales pasados a MSBuild.",
+  "loc.input.label.jdkVersion": "Versión de JDK",
+  "loc.input.help.jdkVersion": "Use la versión de JDK seleccionada durante la compilación.",
+  "loc.input.label.jdkArchitecture": "Arquitectura JDK",
+  "loc.input.help.jdkArchitecture": "Indique opcionalmente la arquitectura (x86, x64) de JDK."
+}

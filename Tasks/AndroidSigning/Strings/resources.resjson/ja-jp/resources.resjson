@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Android の署名",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.description": "署名し、Android APK ファイルを配置します",
+  "loc.instanceNameFormat": "APK ファイル $(files) の署名と配置",
+  "loc.group.displayName.jarsignerOptions": "Jarsigner オプション",
+  "loc.group.displayName.zipalignOptions": "Zipalign オプション",
+  "loc.input.label.files": "APK ファイル",
+  "loc.input.help.files": "リポジトリのルートを基準としたファイルの相対パス。ワイルドカードを使用できます。たとえば、bin サブフォルダーにあるすべての APK ファイルの場合は `**\\bin\\*.apk` です。",
+  "loc.input.label.jarsign": "APK の署名",
+  "loc.input.label.keystoreFile": "Keystore ファイル",
+  "loc.input.help.keystoreFile": "キーストア ファイルの完全パス。",
+  "loc.input.label.keystorePass": "Keystore パスワード",
+  "loc.input.label.keystoreAlias": "エイリアス",
+  "loc.input.label.keyPass": "キー パスワード",
+  "loc.input.label.jarsignerArguments": "Jarsigner の引数",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Zipalign の場所",
+  "loc.input.help.zipalignLocation": "(省略可能) zipalign.exe へのパスを指定します。指定しない場合は、Android SDK フォルダーにある任意の zipalign.exe を使用します。"
+}

@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "Implementar una imagen de Docker en un equipo remoto",
+  "loc.description": "Implemente una imagen de Docker en una máquina remota",
+  "loc.instanceNameFormat": "Implementación de Docker: $(Repository)",
+  "loc.input.label.DockerEndpoint": "Extremo de Docker",
+  "loc.input.help.DockerEndpoint": "Dirección URL de conexión remota de servidor Docker. El rango de puertos API remotos es [0,65535]",
+  "loc.input.label.Repository": "Repositorio",
+  "loc.input.help.Repository": "Nombre de la imagen",
+  "loc.input.label.Tag": "Etiqueta",
+  "loc.input.help.Tag": "Etiqueta de imagen",
+  "loc.input.label.ContainerName": "Nombre del contenedor",
+  "loc.input.help.ContainerName": "Nombre del contenedor",
+  "loc.input.label.PortBindings": "Enlaces de puertos",
+  "loc.input.help.PortBindings": "Proporcione información de enlace de puerto con el formato \"puertoHost:puertoContenedor\""
+}

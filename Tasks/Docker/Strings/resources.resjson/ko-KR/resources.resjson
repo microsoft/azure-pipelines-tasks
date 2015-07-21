@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "원격 컴퓨터에 Docker 이미지 배포",
+  "loc.description": "원격 컴퓨터에 Docker 이미지 배포",
+  "loc.instanceNameFormat": "Docker 배포: $(Repository)",
+  "loc.input.label.DockerEndpoint": "Docker 끝점",
+  "loc.input.help.DockerEndpoint": "Docker 서버 원격 연결 url입니다. 올바른 remote_api_port 범위는 [0,65535]입니다.",
+  "loc.input.label.Repository": "리포지토리",
+  "loc.input.help.Repository": "이미지 이름",
+  "loc.input.label.Tag": "태그",
+  "loc.input.help.Tag": "이미지 태그",
+  "loc.input.label.ContainerName": "컨테이너 이름",
+  "loc.input.help.ContainerName": "컨테이너의 이름",
+  "loc.input.label.PortBindings": "포트 바인딩",
+  "loc.input.help.PortBindings": "포트 바인딩 정보를 'hostport:containerport' 형식으로 제공하세요."
+}

@@ -3,8 +3,13 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure PowerShell",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Run a PowerShell script within an Azure environment",
+  "loc.instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.help.ConnectedServiceName": "Azure subscription to configure before running PowerShell",
   "loc.input.label.ScriptPath": "Script Path",
-  "loc.input.label.ScriptArguments": "Script Arguments"
+  "loc.input.help.ScriptPath": "Path of the script. Should be fully qualified path or relative to the default working directory.",
+  "loc.input.label.ScriptArguments": "Script Arguments",
+  "loc.input.help.ScriptArguments": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
 }

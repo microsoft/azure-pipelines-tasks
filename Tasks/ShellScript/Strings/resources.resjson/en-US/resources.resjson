@@ -3,9 +3,16 @@
 // *******************************************************
 {
   "loc.friendlyName": "Shell Script",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613738)",
   "loc.description": "Run a shell script using bash",
+  "loc.instanceNameFormat": "Shell Script $(scriptPath)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.scriptPath": "Script Path",
+  "loc.input.help.scriptPath": "Relative path from repo root of the shell script file to run.",
   "loc.input.label.args": "Arguments",
-  "loc.input.label.cwd": "Working Directory"
+  "loc.input.help.args": "Arguments passed to the shell script",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
 }

@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Xcode パッケージ iOS",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "Xcode ビルド出力から .ipa ファイルを生成します",
+  "loc.instanceNameFormat": "Xcode パッケージ $(appName)",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.appName": ".app の名前",
+  "loc.input.help.appName": ".app の名前。これは .ipa とは異なることがあります。",
+  "loc.input.label.ipaName": ".ipa の名前",
+  "loc.input.help.ipaName": "jpa の名前。これは .app とは異なることがあります",
+  "loc.input.label.provisioningProfile": "プロファイル名のプロビジョニング",
+  "loc.input.help.provisioningProfile": "署名の際に使用するプロビジョニング プロファイルの名前。",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "指定された SDK を使用します。SDK の有効なリストを表示するには、**xcodebuild -showsdks** を実行します。",
+  "loc.input.label.appPath": ".app へのパス",
+  "loc.input.help.appPath": "ビルド .app ファイルへの相対パス",
+  "loc.input.label.ipaPath": ".ipa を配置するためのパス",
+  "loc.input.help.ipaPath": "jpa が置かれる場所の相対パス。ディレクトリが存在しない場合には、それが作成されます。"
+}

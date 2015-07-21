@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Copia dei file del computer Windows",
+  "loc.helpMarkDown": "Consente di copiare file nei computer remoti",
+  "loc.description": "Consente di copiare file nei computer remoti",
+  "loc.instanceNameFormat": "Copia file in $(EnvironmentName)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.SourcePath": "Origine",
+  "loc.input.help.SourcePath": "Percorso assoluto della cartella o del file di origine nel computer locale oppure condivisione UNC.",
+  "loc.input.label.EnvironmentName": "Gruppo di computer",
+  "loc.input.help.EnvironmentName": "Nome del gruppo di computer di destinazione in cui copiare i file.",
+  "loc.input.label.MachineNames": "Copia in computer",
+  "loc.input.help.MachineNames": "Consente di specificare un elenco di computer delimitati da virgole, come Computer1, Computer2. Per impostazione predefinita, sono inclusi tutti i computer del gruppo di computer.",
+  "loc.input.label.TargetPath": "Cartella di destinazione",
+  "loc.input.help.TargetPath": "Percorso locale nei computer di destinazione per la copia dei file dall'origine. È possibile usare una variabile di ambiente come $env:windir\\BudgetIT\\Web.",
+  "loc.input.label.CleanTargetBeforeCopy": "Pulisci destinazione",
+  "loc.input.help.CleanTargetBeforeCopy": "Se è impostato su true, la cartella di destinazione verrà pulita prima della copia dei file.",
+  "loc.input.label.CopyFilesInParallel": "Copia file in parallelo",
+  "loc.input.help.CopyFilesInParallel": "Se è impostato su true, i file verranno copiati in parallelo nei computer."
+}

@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.description": "在 Azure 环境中运行 PowerShell 脚本",
+  "loc.instanceNameFormat": "Azure PowerShell 脚本: $(ScriptPath)",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
+  "loc.input.help.ConnectedServiceName": "要在运行 PowerShell 之前配置的 Azure 订阅",
+  "loc.input.label.ScriptPath": "脚本路径",
+  "loc.input.help.ScriptPath": "脚本的路径。应是完全限定的路径或相对于默认工作目录。",
+  "loc.input.label.ScriptArguments": "脚本参数",
+  "loc.input.help.ScriptArguments": "要传递给 PowerShell 的其他参数。可以是序号或命名参数。"
+}

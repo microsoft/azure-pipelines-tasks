@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Публикация артефактов сборки",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "Публикация артефактов сборки на сервере или в общей папке с использованием шаблонов minimatch",
+  "loc.instanceNameFormat": "Опубликовать артефакт: $(ArtifactName)",
+  "loc.input.label.CopyRoot": "Копировать корень",
+  "loc.input.help.CopyRoot": "Корневая папка, к которой применяются шаблоны копирования. Если значение не задано, то используется корень репозитория. Используйте переменные, если сборка выполняется за пределами репозитория. Пример: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Содержимое",
+  "loc.input.help.Contents": "Пути к файлам или папкам, включаемые как часть артефакта. Поддерживаются несколько строк или шаблоны minimatch. [Подробнее](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.ArtifactName": "Имя артефакта",
+  "loc.input.help.ArtifactName": "Имя создаваемого артефакта.",
+  "loc.input.label.ArtifactType": "Тип артефакта",
+  "loc.input.help.ArtifactType": "Тип создаваемого артефакта.",
+  "loc.input.label.TargetPath": "Путь",
+  "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы"
+}

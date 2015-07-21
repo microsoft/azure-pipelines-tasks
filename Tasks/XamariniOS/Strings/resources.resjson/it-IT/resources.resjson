@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.description": "Consente di compilare un'app iOS con Xamarin su Mac OS",
+  "loc.instanceNameFormat": "Compila la soluzione Xamarin.iOS $(solution)",
+  "loc.input.label.solution": "Soluzione",
+  "loc.input.help.solution": "Percorso relativo dalla radice del repository della soluzione Xamarin.iOS da compilare.",
+  "loc.input.label.configuration": "Configurazione",
+  "loc.input.help.configuration": "Le configurazioni standard sono Ad-Hoc, AppStore, Debug, Release.",
+  "loc.input.label.mdtoolLocation": "Percorso di override per mdtool",
+  "loc.input.help.mdtoolLocation": "Consente, facoltativamente, di specificare il percorso di mdtool, lo strumento di compilazione di Xamarin Studio. Se non viene specificato, verrà usato il percorso predefinito: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
+  "loc.input.label.forSimulator": "Compila per simulatore iOS",
+  "loc.input.help.forSimulator": "Consente, facoltativamente, di eseguire la compilazione per il simulatore iOS, anziché per i dispositivi iOS fisici."
+}

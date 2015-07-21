@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "CocoaPods",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.description": "CocoaPods 是 Swift 及 Objective-C Cocoa 專案的相依性管理員。 執行 POD 安裝",
+  "loc.instanceNameFormat": "pod 安裝",
+  "loc.input.label.cwd": "工作目錄",
+  "loc.input.help.cwd": "目前工作目錄。預設為儲存機制目錄。"
+}

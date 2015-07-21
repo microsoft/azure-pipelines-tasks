@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.description": "Consente di compilare con MSBuild",
+  "loc.instanceNameFormat": "Compila la soluzione $(solution)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.solution": "Soluzione",
+  "loc.input.help.solution": "Percorso relativo dalla radice del repository delle soluzioni da eseguire. È possibile usare i caratteri jolly, ad esempio `**\\*.sln` per indicare tutti i file sln in tutte le sottocartelle.",
+  "loc.input.label.platform": "Piattaforma",
+  "loc.input.label.configuration": "Configurazione",
+  "loc.input.label.msbuildArguments": "Argomenti MSBuild",
+  "loc.input.help.msbuildArguments": "Argomenti aggiuntivi passati a MSBuild.",
+  "loc.input.label.clean": "Pulisci",
+  "loc.input.label.restoreNugetPackages": "Ripristina pacchetti NuGet",
+  "loc.input.label.logProjectEvents": "Registra dettagli progetto",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Versione MSBuild",
+  "loc.input.help.msbuildVersion": "Consente, facoltativamente, di specificare la versione di MSBuild. Per impostazione predefinita, verrà cercata la versione più recente.",
+  "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
+  "loc.input.help.msbuildArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di MSBuild da eseguire.",
+  "loc.input.label.msbuildLocation": "Percorso di MSBuild",
+  "loc.input.help.msbuildLocation": "Consente, facoltativamente, di specificare il percorso di MSBuild."
+}

@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.description": "Consente di eseguire uno script Powershell",
+  "loc.instanceNameFormat": "Powershell: $(scriptName)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.scriptName": "Nome file dello script",
+  "loc.input.help.scriptName": "Percorso dello script da eseguire. Deve essere un percorso completo o relativo rispetto alla directory di lavoro predefinita.",
+  "loc.input.label.arguments": "Argomenti",
+  "loc.input.help.arguments": "Argomenti passati allo script PowerShell. Parametri ordinali o denominati",
+  "loc.input.label.workingFolder": "Cartella di lavoro",
+  "loc.input.help.workingFolder": "Directory di lavoro corrente durante l'esecuzione dello script. Per impostazione predefinita, corrisponde alla cartella in cui si trova lo script."
+}

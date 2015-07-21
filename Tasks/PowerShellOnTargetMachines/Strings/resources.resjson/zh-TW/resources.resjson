@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "目標電腦上的 PowerShell",
+  "loc.helpMarkDown": "在遠端電腦上執行 PowerShell 指令碼。",
+  "loc.description": "在遠端電腦上執行 PowerShell 指令碼。",
+  "loc.instanceNameFormat": "在 $(EnvironmentName) 執行 PowerShell",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.EnvironmentName": "電腦群組",
+  "loc.input.help.EnvironmentName": "部屬應用程式的電腦群組名稱。",
+  "loc.input.label.MachineNames": "部署至電腦",
+  "loc.input.help.MachineNames": "提供電腦的逗號分隔清單給部屬，例如 Machine1、Machine2。預設為電腦群組中的所有電腦。",
+  "loc.input.label.ScriptPath": "PowerShell 指令碼",
+  "loc.input.help.ScriptPath": "目標電腦或 UNC 路徑 (例如 c:\\BudgetIT\\Web\\Deploy\\Website.ps1) 上的 PowerShell 指令碼位置",
+  "loc.input.label.ScriptArguments": "指令碼引數",
+  "loc.input.help.ScriptArguments": "PowerShell 指令碼的引數。其可以是序號參數或具名參數，例如: testParam test",
+  "loc.input.label.InitializationScriptPath": "初始化指令碼",
+  "loc.input.help.InitializationScriptPath": "目標電腦或 UNC 路徑 (例如 c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1) 上的 DSC 資料指令碼位置",
+  "loc.input.label.RunPowershellInParallel": "平行執行 PowerShell",
+  "loc.input.help.RunPowershellInParallel": "若將其設定為 Ture，將在目標電腦中平行執行 PowerShell 指令碼。"
+}

@@ -6,6 +6,7 @@
   "name": "AzureWebPowerShellDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -15,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 15
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -28,33 +29,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to target for deployment."
-    },
-    {
-      "name": "WebSiteLocation",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebSiteLocation",
-      "defaultValue": "South Central US",
-      "required": true,
-      "helpMarkDown": "Select a region for deployment.",
-      "options": {
-        "South Central US": "South Central US",
-        "North Europe": "North Europe",
-        "West Europe": "West Europe",
-        "North Central US": "North Central US",
-        "West US": "West US",
-        "East Asia": "East Asia",
-        "East US": "East US",
-        "Southeast Asia": "Southeast Asia",
-        "East US2": "East US2",
-        "Japan West": "Japan West",
-        "Japan East": "Japan East",
-        "Central US": "Central US",
-        "Brazil South": "Brazil South"
-      },
-      "properties": {
-        "EditableOptions": "True"
-      }
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "WebSiteName",
@@ -64,11 +39,45 @@
       "required": true
     },
     {
+      "name": "WebSiteLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebSiteLocation",
+      "defaultValue": "South Central US",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
+      "options": {
+        "Brazil South": "Brazil South",
+        "Central US": "Central US",
+        "East Asia": "East Asia",
+        "East US": "East US",
+        "East US2": "East US2",
+        "Japan East": "Japan East",
+        "Japan West": "Japan West",
+        "North Central US": "North Central US",
+        "North Europe": "North Europe",
+        "South Central US": "South Central US",
+        "Southeast Asia": "Southeast Asia",
+        "West Europe": "West Europe",
+        "West US": "West US"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "Slot",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Slot",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Slot"
+    },
+    {
       "name": "Package",
       "type": "string",
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "",
-      "helpMarkDown": "Path of package under the default artifact directory.",
+      "helpMarkDown": "ms-resource:loc.input.help.Package",
       "required": true
     },
     {
@@ -82,12 +91,12 @@
   "sourceDefinitions": [
     {
       "target": "WebSiteName",
-      "endpoint": "https://management.core.windows.net/{$ConnectedServiceName}/services/webspaces/{$WebSiteLocation}Webspace/sites",
+      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/webspaces/$(WebSiteLocation)Webspace/sites",
       "selector": "xpath://Site/Name",
-      "authKey": "{$ConnectedServiceName}"
+      "authKey": "$(ConnectedServiceName)"
     }
   ],
-  "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",

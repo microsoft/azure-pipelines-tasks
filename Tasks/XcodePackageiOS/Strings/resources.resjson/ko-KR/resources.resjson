@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Xcode 패키지 iOS",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "Xcode 빌드 출력에서 .ipa 파일 생성",
+  "loc.instanceNameFormat": "Xcode 패키지 $(appName)",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.appName": ".app 이름",
+  "loc.input.help.appName": "경우에 따라 .ipa와 다른 .app의 이름",
+  "loc.input.label.ipaName": ".ipa 이름",
+  "loc.input.help.ipaName": "경우에 따라 .app와 다른 .ipa의 이름",
+  "loc.input.label.provisioningProfile": "프로필 이름 프로비전",
+  "loc.input.help.provisioningProfile": "서명할 때 사용할 프로비전 프로필의 이름입니다.",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "지정된 SDK를 사용하세요. **xcodebuild -showsdks**를 실행하여 올바른 SDK 목록을 표시합니다.",
+  "loc.input.label.appPath": ".app 경로",
+  "loc.input.help.appPath": "빌드된 .app 파일의 상대적 경로",
+  "loc.input.label.ipaPath": ".ipa를 배치할 경로",
+  "loc.input.help.ipaPath": ".ipa가 위치하게 되는 상대적 경로입니다. 존재하지 않을 경우 디렉터리가 만들어집니다."
+}

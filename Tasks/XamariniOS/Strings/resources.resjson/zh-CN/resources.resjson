@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.description": "在 Mac OS 上使用 Xamarin 生成 iOS 应用",
+  "loc.instanceNameFormat": "生成 Xamarin.iOS 解决方案 $(solution)",
+  "loc.input.label.solution": "解决方案",
+  "loc.input.help.solution": "相对于要生成的 Xamarin.iOS 解决方案的存储库根的路径。",
+  "loc.input.label.configuration": "配置",
+  "loc.input.help.configuration": "标准配置是 Ad-Hoc、AppStore、Debug、Release。",
+  "loc.input.label.mdtoolLocation": "替代 mdtool 的路径",
+  "loc.input.help.mdtoolLocation": "可以选择提供 mdtool (Xamarin Studio 生成工具)的路径。为空时，将使用默认路径: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
+  "loc.input.label.forSimulator": "为 iOS 模拟器生成",
+  "loc.input.help.forSimulator": "可以选择针对 iOS 模拟器(而不是物理 iOS 设备)进行生成。"
+}

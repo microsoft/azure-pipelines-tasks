@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "npm install",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "NPM-Pakete installieren",
+  "loc.instanceNameFormat": "npm install $(arguments)",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.help.arguments": "Zusätzliche Argumente, die an \"npm install\" übergeben werden.",
+  "loc.input.label.cwd": "Arbeitsverzeichnis",
+  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Ausführung von \"npm install\". Standardmäßig der Repositorystamm."
+}

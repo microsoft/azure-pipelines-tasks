@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Publier les artefacts de build",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "Publier les artefacts de build sur le serveur ou un partage de fichiers à l'aide de modèles minimatch",
+  "loc.instanceNameFormat": "Publier l'artefact : $(ArtifactName)",
+  "loc.input.label.CopyRoot": "Copier la racine",
+  "loc.input.help.CopyRoot": "Dossier racine auquel appliquer les modèles de copie. L'absence de valeur indique la racine du référentiel. Utilisez des variables si les étapes de la build sont générées en dehors du référentiel. Par exemple, $(agent.builddirectory)",
+  "loc.input.label.Contents": "Contenu",
+  "loc.input.help.Contents": "Chemins d'accès des fichiers ou dossiers à inclure dans le cadre de l'artefact. Prend en charge plusieurs lignes ou modèles minimatch. [Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.ArtifactName": "Nom de l'artefact",
+  "loc.input.help.ArtifactName": "Nom de l'artefact à créer.",
+  "loc.input.label.ArtifactType": "Type d'artefact",
+  "loc.input.help.ArtifactType": "Type de l'artefact à créer.",
+  "loc.input.label.TargetPath": "Chemin d'accès",
+  "loc.input.help.TargetPath": "Partage de fichiers dans lequel copier les fichiers"
+}

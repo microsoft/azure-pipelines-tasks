@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Indicizza origini e pubblica simboli",
+  "loc.helpMarkDown": "Consente di indicizzare il codice sorgente e di pubblicare i simboli in una condivisione file.<br/>[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.description": "Consente di indicizza il codice sorgente e di pubblicare i simboli in una condivisione file",
+  "loc.instanceNameFormat": "Percorso di pubblicazione simboli: $(SymbolsPath)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.SymbolsPath": "Percorso per la pubblicazione dei simboli",
+  "loc.input.help.SymbolsPath": "Consente di specificare il percorso della condivisione dell'archivio simboli. Se questo valore è impostato, l'indicizzazione delle origini verrà eseguita ma i simboli non verranno pubblicati.",
+  "loc.input.label.SearchPattern": "Criteri di ricerca",
+  "loc.input.help.SearchPattern": "Criterio usato per individuare i file PDB da pubblicare.",
+  "loc.input.label.SourceFolder": "Percorso della cartella di origine",
+  "loc.input.help.SourceFolder": "Percorso della cartella di origine in cui vengono cercati i file di simboli. L'impostazione predefinita è $(Build.SourcesDirectory)",
+  "loc.input.label.SymbolsFolder": "Percorso della cartella dei simboli",
+  "loc.input.help.SymbolsFolder": "Percorso della cartella in cui vengono cercati i file di simboli. L'impostazione predefinita è la cartella di origine configurata.",
+  "loc.input.label.SymbolsMaximumWaitTime": "Tempo massimo di attesa (min)",
+  "loc.input.help.SymbolsMaximumWaitTime": "Numero di minuti da attendere prima che l'istruzione venga considerata in errore",
+  "loc.input.label.SymbolsProduct": "Prodotto",
+  "loc.input.help.SymbolsProduct": "Consente di specificare il parametro del prodotto per symstore.exe. L'impostazione predefinita è $(Build.DefinitionName)",
+  "loc.input.label.SymbolsVersion": "Versione",
+  "loc.input.help.SymbolsVersion": "Consente di specificare il parametro della versione per symstore.exe. L'impostazione predefinita è $(Build.BuildNumber)",
+  "loc.input.label.SymbolsArtifactName": "Artifact Name",
+  "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)"
+}

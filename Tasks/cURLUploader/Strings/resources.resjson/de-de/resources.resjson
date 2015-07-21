@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "cURL-Dateiupload",
+  "loc.description": "Verwendet cURL zum Hochladen von Dateien mit unterstützten Protokollen (FTP, FTPS, SFTP, HTTP usw.)",
+  "loc.instanceNameFormat": "$(files) mit cURL hochladen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.files": "Dateien",
+  "loc.input.help.files": "Hochzuladende Dateien. Platzhalter können verwendet werden. Beispiel: \"**\\*.zip\" für alle ZIP-Dateien in allen Unterordnern.",
+  "loc.input.label.username": "Benutzername",
+  "loc.input.help.username": "Geben Sie den Benutzernamen für die Serverauthentifizierung an.",
+  "loc.input.label.password": "Kennwort",
+  "loc.input.help.password": "Geben Sie das Kennwort für die Serverauthentifizierung an. Dass Kennwort muss auf eine geheime Variable verweisen, die auf der Registerkarte für Variablen definiert ist.",
+  "loc.input.label.url": "URL",
+  "loc.input.help.url": "Geben Sie die URL an, zu der die Dateien hochgeladen werden. Das Verzeichnis muss mit einem nachgestellten Schrägstrich enden. Mögliche Protokolle: DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET und TFTP.",
+  "loc.input.label.options": "Optionale Argumente",
+  "loc.input.help.options": "Zusätzliche Argumente, die an cURL übergeben werden.",
+  "loc.input.label.redirectStderr": "Standardfehler an Standardausgabe umleiten",
+  "loc.input.help.redirectStderr": "Fügen Sie \"--stderr -\" zu cURL hinzu. Standardmäßig schreibt cURL die Statusleiste in stderr, und beim Build wird dies als Fehlerausgabe verwendet. Dieses Verhalten wird unterdrückt."
+}

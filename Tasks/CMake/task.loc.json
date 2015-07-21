@@ -6,6 +6,7 @@
   "name": "CMake",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
@@ -17,9 +18,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 9
   },
-  "instanceNameFormat": "CMake $(args)",
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "cwd",
@@ -27,20 +29,20 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "build",
       "required": false,
-      "helpMarkDown": "Current working directory when cmake is run."
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
     },
     {
-      "name": "args",
+      "name": "cmakeArgs",
       "type": "string",
-      "label": "ms-resource:loc.input.label.args",
+      "label": "ms-resource:loc.input.label.cmakeArgs",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Arguments passed to cmake"
+      "helpMarkDown": "ms-resource:loc.input.help.cmakeArgs"
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "cmake.js",
+    "Node": {
+      "target": "cmake2.js",
       "argumentFormat": ""
     },
     "PowerShell": {

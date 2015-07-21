@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Shellskript",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "Shellskript mithilfe von Bash ausführen",
+  "loc.instanceNameFormat": "Shellskript $(scriptPath)",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.scriptPath": "Skriptpfad",
+  "loc.input.help.scriptPath": "Relativer Pfad vom Repositorystamm der auszuführenden Shellskriptdatei.",
+  "loc.input.label.args": "Argumente",
+  "loc.input.help.args": "An das Shellskript übergebene Argumente",
+  "loc.input.label.cwd": "Arbeitsverzeichnis",
+  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist.",
+  "loc.input.label.failOnStandardError": "Fehler bei Standardfehler",
+  "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden."  
+}

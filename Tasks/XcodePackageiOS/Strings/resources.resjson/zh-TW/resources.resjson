@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Xcode 套件 iOS",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "從 Xcode 組建輸出產生 .ipa 檔案",
+  "loc.instanceNameFormat": "Xcode 套件 $(appName)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.appName": ".app 的名稱",
+  "loc.input.help.appName": ".app 的名稱，其有時會與 .ipa 不同",
+  "loc.input.label.ipaName": ".ipa 的名稱",
+  "loc.input.help.ipaName": ".ipa 的名稱，其有時會與 .app 不同",
+  "loc.input.label.provisioningProfile": "正在佈建設定檔名稱",
+  "loc.input.help.provisioningProfile": "簽署時使用的佈建檔案名稱。",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "使用指定的 SDK。請執行 **xcodebuild -showsdks**  以檢視可用的 SDK 清單。",
+  "loc.input.label.appPath": ".app 的路徑",
+  "loc.input.help.appPath": "建置 .app 檔案的相對路徑",
+  "loc.input.label.ipaPath": "放置 .ipa 的路徑",
+  "loc.input.help.ipaPath": "將放置 .ipa 的相對路徑。如果目錄不存在，將加以建立。"
+}

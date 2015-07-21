@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "CocoaPods",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.description": "CocoaPods ist der Abhängigkeits-Manager für Swift- und Objective-C-Cocoa-Projekte. Führt eine Pod-Installation aus.",
+  "loc.instanceNameFormat": "pod install",
+  "loc.input.label.cwd": "Arbeitsverzeichnis",
+  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis. Standardmäßig das Repositoryverzeichnis."
+}

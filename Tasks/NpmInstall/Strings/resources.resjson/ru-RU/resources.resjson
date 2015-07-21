@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "установка npm",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Установка пакетов npm",
+  "loc.instanceNameFormat": "установка npm $(arguments)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.help.arguments": "Дополнительные аргументы, передаваемые установке npm.",
+  "loc.input.label.cwd": "Рабочий каталог",
+  "loc.input.help.cwd": "Текущий рабочий каталог, в котором выполняется установка npm. По умолчанию используется корень репозитория."
+}

@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Сценарий оболочки",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "Запуск сценария оболочки с помощью Bash",
+  "loc.instanceNameFormat": "Сценарий оболочки $(scriptPath)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.scriptPath": "Путь к скрипту",
+  "loc.input.help.scriptPath": "Относительный путь от корня репозитория к выполняемому файлу сценария оболочки.",
+  "loc.input.label.args": "Аргументы",
+  "loc.input.help.args": "Аргументы, передаваемые в сценарий оболочки",
+  "loc.input.label.cwd": "Рабочий каталог",
+  "loc.input.help.cwd": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий.",
+  "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой",
+  "loc.input.help.failOnStandardError": "Если имеет значение true, задача завершится сбоем при записи любых ошибок в поток StandardError."
+}

@@ -6,6 +6,7 @@
   "name": "XamariniOS",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
@@ -14,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "Xamarin.iOS"
@@ -26,7 +27,7 @@
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from repo root of the Xamarin.iOS solution to build."
+      "helpMarkDown": "ms-resource:loc.input.help.solution"
     },
     {
       "name": "configuration",
@@ -34,7 +35,7 @@
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "Release",
       "required": true,
-      "helpMarkDown": "Standard configurations are Ad-Hoc, AppStore, Debug, Release."
+      "helpMarkDown": "ms-resource:loc.input.help.configuration"
     },
     {
       "name": "mdtoolLocation",
@@ -42,7 +43,7 @@
       "label": "ms-resource:loc.input.label.mdtoolLocation",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally supply the path to mdtool, the Xamarin Studio build tool. When empty, the default path will be used: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool"
+      "helpMarkDown": "ms-resource:loc.input.help.mdtoolLocation"
     },
     {
       "name": "forSimulator",
@@ -50,10 +51,10 @@
       "label": "ms-resource:loc.input.label.forSimulator",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Optionally builds for the iOS Simulator instead of physical iOS devices."
+      "helpMarkDown": "ms-resource:loc.input.help.forSimulator"
     }
   ],
-  "instanceNameFormat": "Build Xamarin.iOS solution $(solution)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
       "target": "xamariniOS.js",

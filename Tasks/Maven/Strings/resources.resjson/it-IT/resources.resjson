@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Maven",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.description": "Consente di compilare con Apache Ant",
+  "loc.instanceNameFormat": "Maven $(args)",
+  "loc.group.displayName.junitTestResults": "Risultati test JUnit",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.mavenPOMFile": "File POM di Maven",
+  "loc.input.help.mavenPOMFile": "Percorso relativo dalla radice del repository al valore di `File POM di Maven`.",
+  "loc.input.label.options": "Opzioni",
+  "loc.input.label.goals": "Obiettivo/i",
+  "loc.input.label.publishJUnitResults": "Pubblica in VSO/TFS",
+  "loc.input.help.publishJUnitResults": "Selezionare questa opzione per pubblicare i risultati del test JUnit prodotti dalla compilazione Maven in VSO/TFS. Ogni file dei risultati del test corrispondente al valore di `File dei risultati del test` verrà pubblicato come esecuzione dei test in VSO/TFS.",
+  "loc.input.label.testResultsFiles": "File dei risultati del test",
+  "loc.input.help.testResultsFiles": "Percorso dei file dei risultati del test. È possibile usare i caratteri jolly, ad esempio `**/TEST-*.xml` per individuare tutti i file XML il cui nome inizia con TEST-.",
+  "loc.input.label.jdkVersion": "Versione JDK",
+  "loc.input.help.jdkVersion": "Prova a individuare il percorso della versione selezionata di JDK e imposta JAVA_HOME di conseguenza.",
+  "loc.input.label.jdkArchitecture": "Architettura JDK",
+  "loc.input.help.jdkArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di JDK."
+}

@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Distribuzione del servizio cloud di Azure",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.description": "Consente di distribuire un servizio cloud di Azure",
+  "loc.instanceNameFormat": "Distribuzione Azure: $(CsPkg)",
+  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
+  "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure usata come destinazione della distribuzione.",
+  "loc.input.label.StorageAccount": "Account di archiviazione",
+  "loc.input.help.StorageAccount": "L'account di archiviazione deve esistere prima della distribuzione.",
+  "loc.input.label.ServiceName": "Nome del servizio",
+  "loc.input.label.ServiceLocation": "Percorso servizio",
+  "loc.input.help.ServiceLocation": "Le opzioni possibili sono **Stati Uniti orientali**, **Stati Uniti orientali 2**, **Stati Uniti centrali**, **Stati Uniti centro-meridionali**, **Stati Uniti occidentali**, **Europa settentrionale**, **Europa occidentale** e altre.",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.help.CsPkg": "Percorso di CsPkg nella directory predefinita dell'elemento.",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.help.CsCfg": "Percorso di CsCfg nella directory predefinita dell'elemento.",
+  "loc.input.label.Slot": "Ambiente (slot)",
+  "loc.input.help.Slot": "**Produzione** o **Gestione temporanea**",
+  "loc.input.label.AllowUpgrade": "Consenti aggiornamento"
+}

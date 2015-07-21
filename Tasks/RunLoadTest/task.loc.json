@@ -6,35 +6,47 @@
   "name": "CloudLoadTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Preview",
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
-    "msbuild"
+    "msbuild",
+    "azureps"
   ],
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
-    }
-  ],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "TestSettings",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.TestSettings",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TestSettings"
+    },
     {
       "name": "TestDrop",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.TestDrop",
-      "defaultValue": "$(Build.SourcesDirectory)\\loadtest",
+      "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from build source directory on the agent under which the load test solution output is placed."
+      "helpMarkDown": "ms-resource:loc.input.help.TestDrop"
     },
     {
       "name": "LoadTest",
@@ -42,50 +54,17 @@
       "label": "ms-resource:loc.input.label.LoadTest",
       "defaultValue": "loadtest1.loadtest",
       "required": true,
-      "helpMarkDown": "Relative path to the load test filename under the test drop folder defined above."
-    },
-    {
-      "name": "TestSettings",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.TestSettings",
-      "defaultValue": "local.testsettings",
-      "required": true,
-      "helpMarkDown": "Relative path to the test settings filename under the test drop folder defined above."
+      "helpMarkDown": "ms-resource:loc.input.help.LoadTest"
     },
     {
       "name": "ThresholdLimit",
       "type": "string",
       "label": "ms-resource:loc.input.label.ThresholdLimit",
       "required": false,
-      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsucessful."
-    },
-    {
-      "name": "VsoAccountUrl",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.VsoAccountUrl",
-      "defaultValue": "$(System.TeamFoundationServerUri)",
-      "groupName": "advanced",
-      "required": true,
-      "helpMarkDown": "Visual Studio Online Account URL."
-    },
-    {
-      "name": "Username",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Username",
-      "defaultValue": "$(System.Auth.UserName)",
-      "groupName": "advanced",
-      "required": true
-    },
-    {
-      "name": "Password",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Password",
-      "defaultValue": "$(System.Auth.Password)",
-      "groupName": "advanced",
-      "required": true
+      "helpMarkDown": "ms-resource:loc.input.help.ThresholdLimit"
     }
   ],
-  "instanceNameFormat": "Cloud Load Test $(LoadTest)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\Start-CloudLoadTest.ps1",

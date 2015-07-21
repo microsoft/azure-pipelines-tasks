@@ -6,6 +6,7 @@
   "name": "AndroidBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
@@ -14,12 +15,18 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 6
   },
   "demands": [
     "AndroidSDK"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
+    {
+      "name": "avdOptions",
+      "displayName": "ms-resource:loc.group.displayName.avdOptions",
+      "isExpanded": true
+    },
     {
       "name": "emulatorOptions",
       "displayName": "ms-resource:loc.group.displayName.emulatorOptions",
@@ -49,21 +56,32 @@
       "required": false
     },
     {
-      "name": "startEmulator",
+      "name": "avdName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.avdName",
+      "defaultValue": "AndroidBuildEmulator",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.avdName",
+      "groupName": "avdOptions"
+    },
+    {
+      "name": "createAvd",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.startEmulator",
-      "defaultValue": "False",
+      "label": "ms-resource:loc.input.label.createAvd",
+      "defaultValue": "AndroidBuildEmulator",
       "required": false,
-      "groupName": "emulatorOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.createAvd",
+      "groupName": "avdOptions"
     },
     {
       "name": "emulatorTarget",
       "type": "string",
       "label": "ms-resource:loc.input.label.emulatorTarget",
       "defaultValue": "android-19",
-      "required": false,
-      "visibleRule": "startEmulator = true",
-      "groupName": "emulatorOptions"
+      "required": true,
+      "visibleRule": "createAvd = true",
+      "helpMarkDown": "ms-resource:loc.input.help.emulatorTarget",
+      "groupName": "avdOptions"
     },
     {
       "name": "emulatorDevice",
@@ -71,11 +89,89 @@
       "label": "ms-resource:loc.input.label.emulatorDevice",
       "defaultValue": "Nexus 5",
       "required": false,
+      "visibleRule": "createAvd = true",
+      "helpMarkDown": "ms-resource:loc.input.help.emulatorDevice",
+      "groupName": "avdOptions"
+    },
+    {
+      "name": "avdAbi",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.avdAbi",
+      "defaultValue": "default/armeabi-v7a",
+      "required": true,
+      "visibleRule": "createAvd = true",
+      "helpMarkDown": "ms-resource:loc.input.help.avdAbi",
+      "groupName": "avdOptions"
+    },
+    {
+      "name": "avdForce",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.avdForce",
+      "defaultValue": false,
+      "required": false,
+      "visibleRule": "createAvd = true",
+      "groupName": "avdOptions"
+    },
+    {
+      "name": "avdOptionalArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.avdOptionalArgs",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "createAvd = true",
+      "helpMarkDown": "ms-resource:loc.input.help.avdOptionalArgs",
+      "groupName": "avdOptions"
+    },
+    {
+      "name": "startEmulator",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.startEmulator",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.startEmulator",
+      "groupName": "emulatorOptions"
+    },
+    {
+      "name": "emulatorTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.emulatorTimeout",
+      "defaultValue": "300",
+      "required": true,
+      "visibleRule": "startEmulator = true",
+      "helpMarkDown": "ms-resource:loc.input.help.emulatorTimeout",
+      "groupName": "emulatorOptions"
+    },
+    {
+      "name": "emulatorHeadless",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.emulatorHeadless",
+      "defaultValue": false,
+      "required": false,
+      "visibleRule": "startEmulator = true",
+      "helpMarkDown": "ms-resource:loc.input.help.emulatorHeadless",
+      "groupName": "emulatorOptions"
+    },
+    {
+      "name": "emulatorOptionalArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.emulatorOptionalArgs",
+      "defaultValue": "-no-snapshot-load -no-snapshot-save",
+      "required": false,
+      "visibleRule": "startEmulator = true",
+      "helpMarkDown": "ms-resource:loc.input.help.emulatorOptionalArgs",
+      "groupName": "emulatorOptions"
+    },
+    {
+      "name": "deleteAvd",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.deleteAvd",
+      "defaultValue": false,
+      "required": false,
       "visibleRule": "startEmulator = true",
       "groupName": "emulatorOptions"
     }
   ],
-  "instanceNameFormat": "Android Build $(gradleProj)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\AndroidBuild.ps1",

@@ -3,73 +3,169 @@
     "name": "AndroidBuild",
     "friendlyName": "Android Build",
     "description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613716)",
     "category": "Build",
     "visibility": [
                 "Build"
-                  ],   
+                ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 6
     },
     "demands" : [
 	    "AndroidSDK"
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups":  [
         {
-            "name": "emulatorOptions", 
+            "name": "avdOptions",
+            "displayName":"Android Virtual Device (AVD) Options",
+            "isExpanded":true
+        },
+        {
+            "name": "emulatorOptions",
             "displayName":"Emulator Options",
             "isExpanded":true
         }
     ],
     "inputs": [
-        { 
-            "name": "gradleWrapper", 
-            "type": "filePath", 
-            "label": "Location of Gradle Wrapper", 
-            "defaultValue":"", 
-            "required":false
-        },
-        { 
-            "name": "gradleProj", 
+        {
+            "name": "gradleWrapper",
             "type": "filePath",
-            "label": "Project Directory", 
-            "defaultValue":"", 
-            "required":false 
-        },
-        { 
-            "name": "gradleArguments", 
-            "type": "string", 
-            "label": "Arguments", 
-            "defaultValue":"", 
+            "label": "Location of Gradle Wrapper",
+            "defaultValue":"",
             "required":false
         },
-        { 
-            "name": "startEmulator", 
-            "type": "boolean", 
-            "label": "Start Android Emulator", 
-            "defaultValue":"False", 
-            "required":false,
-            "groupName":"emulatorOptions" 
+        {
+            "name": "gradleProj",
+            "type": "filePath",
+            "label": "Project Directory",
+            "defaultValue":"",
+            "required":false
         },
-        { 
-            "name": "emulatorTarget", 
-            "type": "string", 
-            "label": "Emulator Target SDK", 
-            "defaultValue":"android-19", 
-            "required":false, 
-            "visibleRule": "startEmulator = true", 
-            "groupName":"emulatorOptions" 
+        {
+            "name": "gradleArguments",
+            "type": "string",
+            "label": "Gradle Arguments",
+            "defaultValue":"",
+            "required":false
         },
-        { 
-            "name": "emulatorDevice", 
-            "type": "string", 
-            "label": "Emulator Device", 
-            "defaultValue":"Nexus 5", 
+        {
+            "name": "avdName",
+            "type": "string",
+            "label": "Name",
+            "defaultValue":"AndroidBuildEmulator",
+            "required":true,
+            "helpMarkDown":"Name of the Android Virtual Device (AVD) to be started or created.",
+            "groupName":"avdOptions"
+        },
+        {
+            "name": "createAvd",
+            "type": "boolean",
+            "label": "Create AVD",
+            "defaultValue":"AndroidBuildEmulator",
             "required":false,
-            "visibleRule": "startEmulator = true", 
-            "groupName":"emulatorOptions" 
+            "helpMarkDown":"Create the named Android Virtual Device (AVD).",
+            "groupName":"avdOptions"
+        },
+        {
+            "name": "emulatorTarget",
+            "type": "string",
+            "label": "AVD Target SDK",
+            "defaultValue":"android-19",
+            "required":true,
+            "visibleRule": "createAvd = true",
+            "helpMarkDown": "Target ID of the new Android Virtual Device (AVD).",
+            "groupName":"avdOptions"
+        },
+        {
+            "name": "emulatorDevice",
+            "type": "string",
+            "label": "AVD Device",
+            "defaultValue":"Nexus 5",
+            "required":false,
+            "visibleRule": "createAvd = true",
+            "helpMarkDown": "The optional device definition to use. Can be a device index or id.",
+            "groupName":"avdOptions"
+        },
+        {
+            "name": "avdAbi",
+            "type": "string",
+            "label": "AVD ABI",
+            "defaultValue":"default/armeabi-v7a",
+            "required":true,
+            "visibleRule": "createAvd = true",
+            "helpMarkDown": "The ABI to use for the Android Virtual Device (AVD).",
+            "groupName":"avdOptions"
+        },
+        {
+            "name": "avdForce",
+            "type": "boolean",
+            "label": "Overwrite Existing AVD",
+            "defaultValue": false,
+            "required": false,
+            "visibleRule": "createAvd = true",
+            "groupName":"avdOptions"
+        },
+        {
+            "name": "avdOptionalArgs",
+            "type": "string",
+            "label": "Create AVD Optional Arguments",
+            "defaultValue":"",
+            "required":false,
+            "visibleRule": "createAvd = true",
+            "helpMarkDown": "Additional arguments passed to 'android create avd'.",
+            "groupName":"avdOptions"
+        },
+        {
+            "name": "startEmulator",
+            "type": "boolean",
+            "label": "Start and Stop Android Emulator",
+            "defaultValue":false,
+            "required":false,
+            "helpMarkDown": "Start Android emulator and stop emulator after this task finishes.",
+            "groupName":"emulatorOptions"
+        },
+        {
+            "name": "emulatorTimeout",
+            "type": "string",
+            "label": "Timeout in Seconds",
+            "defaultValue":"300",
+            "required":true,
+            "visibleRule": "startEmulator = true",
+            "helpMarkDown": "How long build will wait for the emulator to start.",
+            "groupName":"emulatorOptions"
+        },
+        {
+            "name": "emulatorHeadless",
+            "type": "boolean",
+            "label": "Headless Display",
+            "defaultValue":false,
+            "required":false,
+            "visibleRule": "startEmulator = true",
+            "helpMarkDown": "Use '-no-skin -no-audio -no-window' when start the emulator.",
+            "groupName":"emulatorOptions"
+        },
+        {
+            "name": "emulatorOptionalArgs",
+            "type": "string",
+            "label": "Emulator Optional Arguments",
+            "defaultValue":"-no-snapshot-load -no-snapshot-save",
+            "required":false,
+            "visibleRule": "startEmulator = true",
+            "helpMarkDown": "Additional arguments passed to Android 'tools\\emulator'.",
+            "groupName":"emulatorOptions"
+        },
+        {
+            "name": "deleteAvd",
+            "type": "boolean",
+            "label": "Delete AVD",
+            "defaultValue":false,
+            "required":false,
+            "visibleRule": "startEmulator = true",
+            "groupName":"emulatorOptions"
         }
     ],
     "instanceNameFormat": "Android Build $(gradleProj)",

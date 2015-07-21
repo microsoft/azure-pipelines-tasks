@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Implementación de sitios web de Azure",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.description": "Implemente un sitio web en Microsoft Azure",
+  "loc.instanceNameFormat": "Implementación de Azure: $(WebSiteName)",
+  "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
+  "loc.input.help.ConnectedServiceName": "Suscripción de Azure en el destino para la implementación.",
+  "loc.input.label.WebSiteLocation": "Ubicación del sitio web",
+  "loc.input.help.WebSiteLocation": "Seleccione una región para la implementación.",
+  "loc.input.label.WebSiteName": "Nombre del sitio web",
+  "loc.input.label.Package": "Paquete",
+  "loc.input.help.Package": "Ruta de acceso del paquete en el directorio de artefacto predeterminado.",
+  "loc.input.label.AdditionalArguments": "Argumentos adicionales"
+}

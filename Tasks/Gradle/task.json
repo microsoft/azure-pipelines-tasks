@@ -3,6 +3,7 @@
     "name": "Gradle",
     "friendlyName": "Gradle",
     "description": "Build using a Gradle wrapper script",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -11,11 +12,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 7
     },
     "demands" : [
         "java"
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"junitTestResults",
@@ -113,10 +115,6 @@
             "target": "$(currentDirectory)\\gradle.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
-        },
-        "JavaScript": {
-            "target": "gradle.js",
-            "argumentFormat": ""
         },
         "Node": {
             "target": "gradle2.js",

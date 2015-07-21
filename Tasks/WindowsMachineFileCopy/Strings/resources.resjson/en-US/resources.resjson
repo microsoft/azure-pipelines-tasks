@@ -1,0 +1,23 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Windows Machine File Copy",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
+  "loc.description": "Copy files to remote machine(s)",
+  "loc.instanceNameFormat": "Copy files to $(EnvironmentName)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.SourcePath": "Source",
+  "loc.input.help.SourcePath": "Absolute path of the source folder or file on the local machine, or a UNC Share.",
+  "loc.input.label.EnvironmentName": "Machine Group",
+  "loc.input.help.EnvironmentName": "Name of the target Machine Group for copying the files to.​",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.label.MachineNames": "Filter Criteria",
+  "loc.input.help.MachineNames": "Provide a list of machine IP address or FQDN like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group.",
+  "loc.input.label.TargetPath": "Destination Folder",
+  "loc.input.help.TargetPath": "Local Path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
+  "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
+  "loc.input.help.CleanTargetBeforeCopy": "Setting it to true will clean the destination folder before copying the files.",
+  "loc.input.label.CopyFilesInParallel": "Copy Files in Parallel",
+  "loc.input.help.CopyFilesInParallel": "Setting it to true will copy files in parallel to the machines."
+}

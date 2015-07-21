@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "npm 安裝",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "安裝 npm 套件",
+  "loc.instanceNameFormat": "npm 安裝 $(arguments)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.arguments": "引數",
+  "loc.input.help.arguments": "傳遞至 npm install 的額外引數。",
+  "loc.input.label.cwd": "工作目錄",
+  "loc.input.help.cwd": "執行 npm 安裝的目前工作目錄。預設為儲存機制根。"
+}

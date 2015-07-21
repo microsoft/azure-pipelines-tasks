@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.description": "執行 PowerShell 指令碼",
+  "loc.instanceNameFormat": "Powershell: $(scriptName)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.scriptName": "指令碼檔名",
+  "loc.input.help.scriptName": "執行指令碼的路徑。必須是完整路徑或預設工作目錄的相對路徑。",
+  "loc.input.label.arguments": "引數",
+  "loc.input.help.arguments": "傳遞引數至 PowerShell 指令碼。可以是序號參數或具名參數",
+  "loc.input.label.workingFolder": "工作資料夾",
+  "loc.input.help.workingFolder": "執行指令碼時的目前工作目錄。預設為指令碼所在的資料夾。"
+}

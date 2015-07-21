@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Caricamento file con cURL",
+  "loc.description": "Usare cURL per caricare file con i protocolli (FTP, FTPS, SFTP, HTTP e altri ancora).",
+  "loc.instanceNameFormat": "Carica $(files) con cURL",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.files": "File",
+  "loc.input.help.files": "File da caricare. È possibile usare i caratteri jolly, ad esempio `**\\*.zip` per indicare tutti i file ZIP in tutte le sottocartelle.",
+  "loc.input.label.username": "Nome utente",
+  "loc.input.help.username": "Consente di specificare il nome utente da usare per l'autenticazione server.",
+  "loc.input.label.password": "Password",
+  "loc.input.help.password": "Consente di specificare la password da usare per l'autenticazione server. La password deve fare riferimento a una variabile segreta definita nella scheda delle variabili.",
+  "loc.input.label.url": "URL",
+  "loc.input.help.url": "Consente di specificare l'URL in cui verranno caricati i file. La directory deve terminare con barra finale. I protocolli possibili includono: DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET e TFTP.",
+  "loc.input.label.options": "Argomenti facoltativi",
+  "loc.input.help.options": "Argomenti aggiuntivi che verranno passati a cURL.",
+  "loc.input.label.redirectStderr": "Reindirizza errore standard a output standard",
+  "loc.input.help.redirectStderr": "Consente di aggiungere '--stderr -' a cURL. Per impostazione predefinita, cURL scrive l'indicatore di stato in stderr e questo verrà considerato dalla compilazione come output di errore. Questo comportamento verrà eliminato."
+}

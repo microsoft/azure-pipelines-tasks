@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.description": "PowerShell 스크립트 실행",
+  "loc.instanceNameFormat": "Powershell: $(scriptName)",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.scriptName": "스크립트 파일 이름",
+  "loc.input.help.scriptName": "실행할 스크립트의 경로입니다. 정규화된 경로이거나 기본 작업 디렉터리에 대한 상대 경로여야 합니다.",
+  "loc.input.label.arguments": "인수",
+  "loc.input.help.arguments": "인수를 PowerShell 스크립트에 전달했습니다. 서수 매개 변수나 명명된 매개 변수 중 하나입니다.",
+  "loc.input.label.workingFolder": "작업 폴더",
+  "loc.input.help.workingFolder": "스크립트 실행 시 현재 작업 디렉터리입니다. 스크립트가 있는 폴더를 기본값으로 지정합니다."
+}

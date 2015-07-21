@@ -3,6 +3,7 @@
     "name": "MSBuild",
     "friendlyName": "MSBuild",
     "description": "Build with MSBuild",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -11,12 +12,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 13
     },
     "demands" : [
         "msbuild"
     ],
-    "minimumAgentVersion": "1.82.0",
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"advanced",
@@ -95,8 +96,8 @@
             "label":"MSBuild Version",
             "required":false,
             "groupName":"advanced",
-            "defaultValue":"latest",
-            "helpMarkDown": "Optionally specify the version of MSBuild. It defaults to searching for the latest version.",
+            "defaultValue":"14.0",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
             "visibleRule": "msbuildLocationMethod = version",
             "options": {
                 "latest":"Latest",

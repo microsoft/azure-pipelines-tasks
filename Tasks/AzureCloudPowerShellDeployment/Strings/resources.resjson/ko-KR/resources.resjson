@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Azure 클라우드 서비스 배포",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.description": "Azure 클라우드 서비스 배포",
+  "loc.instanceNameFormat": "Azure 배포: $(CsPkg)",
+  "loc.input.label.ConnectedServiceName": "Azure 구독",
+  "loc.input.help.ConnectedServiceName": "배포를 위한 대상으로 지정할 Azure 구독입니다.",
+  "loc.input.label.StorageAccount": "저장소 계정",
+  "loc.input.help.StorageAccount": "배포하려면 먼저 저장소 계정이 있어야 합니다.",
+  "loc.input.label.ServiceName": "서비스 이름",
+  "loc.input.label.ServiceLocation": "서비스 위치",
+  "loc.input.help.ServiceLocation": "**미국 동부**, **미국 동부 2**, **미국 중부**, **미국 중남부**, **미국 서부**, **북유럽**, **서유럽** 등의 옵션을 사용할 수 있습니다.",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.help.CsPkg": "기본 아티팩트 디렉터리의 CsPkg 경로입니다.",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.help.CsCfg": "기본 아티팩트 디렉터리의 CsCfg 경로입니다.",
+  "loc.input.label.Slot": "환경(슬롯)",
+  "loc.input.help.Slot": "**프로덕션** 또는 **스테이징**",
+  "loc.input.label.AllowUpgrade": "업그레이드 허용"
+}

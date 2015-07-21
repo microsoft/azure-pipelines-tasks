@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Android 签名",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.description": "签名并排列 Android APK 文件",
+  "loc.instanceNameFormat": "签名并排列 APK 文件 $(files)",
+  "loc.group.displayName.jarsignerOptions": "Jarsigner 选项",
+  "loc.group.displayName.zipalignOptions": "Zipalign 选项",
+  "loc.input.label.files": "APK 文件",
+  "loc.input.help.files": "相对于文件的存储库根的路径。可以使用通配符。例如，\"**\\bin\\*.apk\" 表示 bin 子文件夹中的所有 APK 文件。",
+  "loc.input.label.jarsign": "为 APK 签名",
+  "loc.input.label.keystoreFile": "Keystore 文件",
+  "loc.input.help.keystoreFile": "keystore 文件的完整路径。",
+  "loc.input.label.keystorePass": "Keystore 密码",
+  "loc.input.label.keystoreAlias": "别名",
+  "loc.input.label.keyPass": "密钥密码",
+  "loc.input.label.jarsignerArguments": "Jarsigner 参数",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Zipalign 位置",
+  "loc.input.help.zipalignLocation": "可以选择提供 zipalign.exe 的路径。它默认为使用在 Android SDK 文件夹中找到的任何 zipalign.exe。"
+}

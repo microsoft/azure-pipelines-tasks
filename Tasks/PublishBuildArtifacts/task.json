@@ -2,19 +2,21 @@
   "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
   "name": "PublishBuildArtifacts",
   "friendlyName": "Publish Build Artifacts",
-  "description": "Publish Build artifacts to the server or a file share",
+  "description": "Publish Build artifacts to the server or a file share using minimatch patterns",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
   "category": "Build",
   "visibility": [
     "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 1,
-    "Patch": 71
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 4
   },
   "demands": [
   ],
+    "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "CopyRoot",
@@ -22,7 +24,7 @@
       "label": "Copy Root",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Root folder to apply copy patterns to.  Empty is the root of the repo."
+      "helpMarkDown": "Root folder to apply copy patterns to.  Empty is the root of the repo.  Use variables if build steps building outside the repo. Example: $(agent.builddirectory)"
     },  
     {
       "name": "Contents",
@@ -30,7 +32,7 @@
       "label": "Contents",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "File or folder paths to include as part of the artifact."
+      "helpMarkDown": "File or folder paths to include as part of the artifact.  Supports multiple lines or minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=613725)"
     },
     {
       "name": "ArtifactName",
@@ -46,7 +48,7 @@
       "label": "Artifact Type",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of the artifact to create.",
+      "helpMarkDown": "The type of the artifact to create.",
       "options": {
         "Container": "Server",
         "FilePath": "File share"
@@ -56,7 +58,7 @@
       "name": "TargetPath",
       "type": "string",
       "label": "Path",
-      "defaultValue": "",
+      "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
       "required": false,
       "helpMarkDown": "The file share to which to copy the files",
       "visibleRule": "ArtifactType = FilePath"

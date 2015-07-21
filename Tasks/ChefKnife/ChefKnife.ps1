@@ -11,16 +11,18 @@ param
     $ScriptArguments
 )
 
-Write-Host "Entering script ChefKnife.ps1"
+Write-Verbose "Entering script ChefKnife.ps1" -Verbose
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef"
 
 #ENSURE: We pass arguments verbatim on the command line to the custom script
-Write-Host "ScriptArguments= " $ScriptArguments
-Write-Host "ScriptPath= " $ScriptPath
+Write-Verbose "ScriptArguments = $ScriptArguments" -Verbose
+Write-Verbose "ScriptPath= $ScriptPath"  -Verbose
 
 $scriptCommand = "& `"$ScriptPath`" $scriptArguments"
-Write-Host "scriptCommand=" $scriptCommand
+Write-Verbose "scriptCommand= $scriptCommand"  -Verbose
 
 try
 {
@@ -41,4 +43,4 @@ finally
     }
 }
 
-Write-Host "Leaving script ChefKnife.ps1"
+Write-Verbose "Leaving script ChefKnife.ps1" -Verbose

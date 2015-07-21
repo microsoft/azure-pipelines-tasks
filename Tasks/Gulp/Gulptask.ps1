@@ -5,7 +5,8 @@ param(
     [string]$cwd
 )
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 # try to find gulp in the path
@@ -14,7 +15,7 @@ $gulp = Get-Command -Name gulp -ErrorAction Ignore
 if(!$gulp)
 {
     Write-Verbose "try to find gulp in the node_modules in the sources directory"
-    $buildSourcesDirectory = Get-Variable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+    $buildSourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
     $nodeBinPath = Join-Path -Path $buildSourcesDirectory -ChildPath 'node_modules\.bin'
 
     if(Test-Path -Path $nodeBinPath -PathType Container)

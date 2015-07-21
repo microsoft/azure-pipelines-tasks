@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.description": "Générer avec le système de génération multiplateforme CMake",
+  "loc.instanceNameFormat": "CMake $(args)",
+  "loc.input.label.cwd": "Répertoire de travail",
+  "loc.input.help.cwd": "Répertoire de travail actuel pendant l'exécution de cmake.",
+  "loc.input.label.args": "Arguments",
+  "loc.input.help.args": "Arguments passés à cmake"
+}

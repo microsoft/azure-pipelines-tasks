@@ -6,6 +6,7 @@
   "name": "XamarinLicense",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build"
@@ -14,9 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -42,7 +44,7 @@
       "label": "ms-resource:loc.input.label.email",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Xamarin account email address."
+      "helpMarkDown": "ms-resource:loc.input.help.email"
     },
     {
       "name": "password",
@@ -50,7 +52,7 @@
       "label": "ms-resource:loc.input.label.password",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Xamarin account password."
+      "helpMarkDown": "ms-resource:loc.input.help.password"
     },
     {
       "name": "activateAndroid",
@@ -69,7 +71,7 @@
       "required": false
     }
   ],
-  "instanceNameFormat": "$(action) Xamarin license",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\XamarinLicense.ps1",

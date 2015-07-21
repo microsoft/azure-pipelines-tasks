@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "npm 安装",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "安装 npm 包",
+  "loc.instanceNameFormat": "npm install $(arguments)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.arguments": "参数",
+  "loc.input.help.arguments": "传递给 npm install 的其他参数。",
+  "loc.input.label.cwd": "工作目录",
+  "loc.input.help.cwd": "在其中运行 npm install 的当前工作目录。默认为存储库的根。"
+}

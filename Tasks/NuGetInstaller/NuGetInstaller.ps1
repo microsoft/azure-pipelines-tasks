@@ -2,9 +2,9 @@ param(
     [string]$solution,
     [ValidateSet("Restore", "Install")]
     [string]$restoreMode = "Restore",
-    [string]$excludeVersion,
+    [string]$excludeVersion, # Support for excludeVersion has been deprecated.
     [string]$noCache,
-    [string]$nuGetArgs,
+    [string]$nuGetRestoreArgs,
     [string]$nuGetPath
 )
 
@@ -15,15 +15,22 @@ foreach($key in $PSBoundParameters.Keys)
     Write-Verbose ($key + ' = ' + $PSBoundParameters[$key])
 }
 
-import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if(!$solution)
 {
-    throw "solution parameter must be set"
+    throw (Get-LocalizedString -Key "Solution parameter must be set")
 }
 
 $b_excludeVersion = Convert-String $excludeVersion Boolean
 $b_noCache = Convert-String $noCache Boolean
+
+# Warn if deprecated parameters were supplied.
+if ($excludeVersion -and "$excludeVersion".ToUpperInvariant() -ne 'FALSE')
+{
+    Write-Warning (Get-LocalizedString -Key 'The Exclude Version parameter has been deprecated. Ignoring the value.')
+}
 
 # check for solution pattern
 if ($solution.Contains("*") -or $solution.Contains("?"))
@@ -41,17 +48,10 @@ else
 
 if (!$solutionFiles)
 {
-    throw "No solution with search pattern '$solution' was found."
+    throw (Get-LocalizedString -Key "No solution was found using search pattern '{0}'." -ArgumentList $solution)
 }
 
 $args = " -NonInteractive";
-
-
-if($b_excludeVersion)
-{
-    $args = (" -ExcludeVersion " + $args);
-}
-
 if($b_noCache)
 {
     $args = (" -NoCache " + $args);
@@ -62,15 +62,15 @@ if(!$nuGetPath)
     $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
 }
 
-if($nuGetArgs)
+if($nuGetRestoreArgs)
 {
-    $args = ($args + " " + $nuGetArgs);
+    $args = ($args + " " + $nuGetRestoreArgs);
 }
 
 
 if (-not $nugetPath)
 {
-    throw "Unable to locate nuget.exe"
+    throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
 }
 
 foreach($sf in $solutionFiles)

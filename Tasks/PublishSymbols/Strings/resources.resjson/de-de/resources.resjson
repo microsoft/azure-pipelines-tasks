@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Quellen indizieren und Symbole veröffentlichen",
+  "loc.helpMarkDown": "Quellcode indizieren und Symbole in Dateifreigabe veröffentlichen<br/>[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.description": "Quellcode indizieren und Symbole auf einer Dateifreigabe veröffentlichen",
+  "loc.instanceNameFormat": "Pfad für Symbolveröffentlichung: $(SymbolsPath)",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.SymbolsPath": "Pfad zum Veröffentlichen von Symbolen",
+  "loc.input.help.SymbolsPath": "Geben Sie den Pfad zur Symbolspeicherfreigabe an. Wenn dieser Wert nicht festgelegt wird, findet zwar eine Quellindizierung statt, aber es werden keine Symbole veröffentlicht.",
+  "loc.input.label.SearchPattern": "Suchmuster",
+  "loc.input.help.SearchPattern": "Das Muster, das zum Ermitteln der zu veröffentlichenden PDB-Dateien verwendet wird.",
+  "loc.input.label.SourceFolder": "Pfad zum Quellordner",
+  "loc.input.help.SourceFolder": "Der Pfad zu dem Quellorder, der nach Symboldateien durchsucht wird. Der Standardwert ist $(Build.SourcesDirectory).",
+  "loc.input.label.SymbolsFolder": "Pfad zum Symbolordner",
+  "loc.input.help.SymbolsFolder": "Der Pfad zu dem Ordner, der nach Symboldateien durchsucht wird. Der Standardwert ist der konfigurierte Quellordner.",
+  "loc.input.label.SymbolsMaximumWaitTime": "Max. Wartezeit (Min.)",
+  "loc.input.help.SymbolsMaximumWaitTime": "Die Anzahl der Minuten, die gewartet werden soll, bevor ein Schrittfehler eintritt",
+  "loc.input.label.SymbolsProduct": "Produkt",
+  "loc.input.help.SymbolsProduct": "Geben Sie den Produktparameter für symstore.exe an. Der Standardwert ist $(Build.DefinitionName).",
+  "loc.input.label.SymbolsVersion": "Version",
+  "loc.input.help.SymbolsVersion": "Geben Sie den Versionsparameter für symstore.exe an. Der Standardwert ist $(Build.BuildNumber).",
+  "loc.input.label.SymbolsArtifactName": "Artifact Name",
+  "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)"
+}

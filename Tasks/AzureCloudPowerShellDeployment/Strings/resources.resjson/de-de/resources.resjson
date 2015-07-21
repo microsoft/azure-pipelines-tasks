@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Bereitstellung des Azure-Cloud-Diensts",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.description": "Azure-Cloud-Dienst bereitstellen",
+  "loc.instanceNameFormat": "Azure-Bereitstellung: $(CsPkg)",
+  "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
+  "loc.input.help.ConnectedServiceName": "Azure-Zielabonnement für Bereitstellung",
+  "loc.input.label.StorageAccount": "Speicherkonto",
+  "loc.input.help.StorageAccount": "Das Speicherkonto muss vor der Bereitstellung vorhanden sein.",
+  "loc.input.label.ServiceName": "Dienstname",
+  "loc.input.label.ServiceLocation": "Dienstspeicherort",
+  "loc.input.help.ServiceLocation": "Mögliche Optionen sind **Osten USA**, **Osten US 2**, **USA Mitte**, **USA (Mitte/Süden)**, **Westen USA**, **Nordeuropa**, **Westeuropa** u. a.",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.help.CsPkg": "Pfad von CsPkg unter dem Artefaktstandardverzeichnis.",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.help.CsCfg": "Pfad von CsCfg unter dem Artefaktstandardverzeichnis.",
+  "loc.input.label.Slot": "Umgebung (Platz)",
+  "loc.input.help.Slot": "**Produktion** oder **Staging**",
+  "loc.input.label.AllowUpgrade": "Upgrade zulassen"
+}

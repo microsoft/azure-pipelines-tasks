@@ -3,12 +3,20 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xcode Package iOS",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613731)",
   "loc.description": "Generate an .ipa file from Xcode build output",
+  "loc.instanceNameFormat": "Xcode Package $(appName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.appName": "Name of .app",
+  "loc.input.help.appName": "Name of the .app, which is sometimes different from the .ipa",
   "loc.input.label.ipaName": "Name of .ipa",
+  "loc.input.help.ipaName": "Name of the .ipa, which is sometimes different from the .app",
   "loc.input.label.provisioningProfile": "Provisioning Profile Name",
+  "loc.input.help.provisioningProfile": "Name of the provisioning profile to use when signing.",
   "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "Use the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs.",
   "loc.input.label.appPath": "Path to .app",
-  "loc.input.label.ipaPath": "Path to place .ipa"
+  "loc.input.help.appPath": "Relative path to the built .app file",
+  "loc.input.label.ipaPath": "Path to place .ipa",
+  "loc.input.help.ipaPath": "Relative path where the .ipa will be placed. The directory will be created if it doesn't exist."
 }

@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Android 簽署",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.description": "簽署並對齊 Android APK 檔案",
+  "loc.instanceNameFormat": "簽署並對齊 APK 檔 $(files)",
+  "loc.group.displayName.jarsignerOptions": "Jarsigner 選項",
+  "loc.group.displayName.zipalignOptions": "Zipalign 選項",
+  "loc.input.label.files": "APK 檔案",
+  "loc.input.help.files": "來自檔案儲存機制根的相對路徑。可使用萬用字元。例如，適用 bin 子資料夾中所有 APK 檔的 `**\\bin\\*.apk`。",
+  "loc.input.label.jarsign": "簽署 APK",
+  "loc.input.label.keystoreFile": "Keystore 檔案",
+  "loc.input.help.keystoreFile": "KeyStore 檔的完整路徑。",
+  "loc.input.label.keystorePass": "Keystore 密碼",
+  "loc.input.label.keystoreAlias": "別名",
+  "loc.input.label.keyPass": "金鑰密碼",
+  "loc.input.label.jarsignerArguments": "Jarsigner 引數",
+  "loc.input.label.zipalign": "Zipalign",
+  "loc.input.label.zipalignLocation": "Zipalign 位置",
+  "loc.input.help.zipalignLocation": "選擇性提供 zipalign.exe 的路徑。預設為使用任何在 Android SDK 資料夾中找到的 zipalign.exe。"
+}

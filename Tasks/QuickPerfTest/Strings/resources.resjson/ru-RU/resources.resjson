@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Облачный тест веб-производительности",
+  "loc.helpMarkDown": "Эту задачу можно использовать для активации облачного нагрузочного теста с помощью Visual Studio Online. [Подробнее](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.description": "Выполнение быстрого веб-теста производительности в облаке с помощью Visual Studio Online",
+  "loc.instanceNameFormat": "Быстрый веб-тест производительности $(testName)",
+  "loc.input.label.connectedServiceName": "Зарегистрированное подключение",
+  "loc.input.help.connectedServiceName": "Выберите ранее зарегистрированное подключение службы для взаимодействия со службой облачного нагрузочного тестирования. Чтобы зарегистрировать новое подключение, нажмите \"Управление\".",
+  "loc.input.label.websiteUrl": "URL-адрес веб-сайта",
+  "loc.input.help.websiteUrl": "Введите URL-адрес веб-сайта приложения в следующем виде: http://www.your.app/home.html",
+  "loc.input.label.testName": "Имя теста",
+  "loc.input.help.testName": "Присвойте нагрузочному тесту имя для отслеживания и сопоставления.",
+  "loc.input.label.vuLoad": "Пользовательская нагрузка",
+  "loc.input.help.vuLoad": "Максимальное число виртуальных пользователей, получающих доступ к веб-сайту одновременно.",
+  "loc.input.label.runDuration": "Длительность выполнения (сек)",
+  "loc.input.help.runDuration": "Длительность выполнения нагрузочного теста в секундах.",
+  "loc.input.label.geoLocation": "Местоположение нагрузки",
+  "loc.input.help.geoLocation": "Географический регион, из которого создается нагрузка. Подробнее см. в справке по задаче."
+}

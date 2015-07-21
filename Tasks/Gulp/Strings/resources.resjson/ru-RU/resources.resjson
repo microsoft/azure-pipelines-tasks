@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "Задача потоковой передачи Node.js на основе системы сборки",
+  "loc.instanceNameFormat": "Gulp $(targets)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.gulpFile": "Путь к файлу Gulp",
+  "loc.input.help.gulpFile": "Относительный путь от корня репозитория к файлу сценария Gulp, который подлежит выполнению.",
+  "loc.input.label.targets": "Задачи Gulp",
+  "loc.input.help.targets": "Необязательный разделенный пробелами список выполняемых задач. Если он не указан, выполняется задача по умолчанию.",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.help.arguments": "Дополнительные аргументы, передаваемые в Gulp. Аргумент --gulpfile не требуется, так как он уже добавлен с помощью входного файла gulpFile выше.",
+  "loc.input.label.cwd": "Рабочий каталог",
+  "loc.input.help.cwd": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий."
+}

@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Gradle",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.description": "Gradle 래퍼 스크립트를 사용하여 빌드",
+  "loc.instanceNameFormat": "gradlew $(tasks)",
+  "loc.group.displayName.junitTestResults": "JUnit 테스트 결과",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.wrapperScript": "Gradle 래퍼",
+  "loc.input.help.wrapperScript": "`Gradle 래퍼 스크립트`의 리포지토리 루트로부터의 상대적 경로입니다.",
+  "loc.input.label.options": "옵션",
+  "loc.input.label.tasks": "작업",
+  "loc.input.label.cwd": "작업 디렉터리",
+  "loc.input.help.cwd": "Gradle 빌드를 실행할 작업 디렉터리입니다. 기본값은 리포지토리 루트입니다.",
+  "loc.input.label.publishJUnitResults": "VSO/TFS에 게시",
+  "loc.input.help.publishJUnitResults": "Gradle 빌드에서 생성된 JUnit 테스트 결과를 VSO/TFS에 게시하려면 이 옵션을 선택하세요. `테스트 결과 파일`과 일치하는 각 테스트 결과 파일이 VSO/TFS에서 테스트 실행으로 게시됩니다.",
+  "loc.input.label.testResultsFiles": "테스트 결과 파일",
+  "loc.input.help.testResultsFiles": "테스트 결과 파일 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어, 이름이 TEST-로 시작하는 모든 파일을 표시하기 위해 `**/TEST-*.xml`을 사용할 수 있습니다.",
+  "loc.input.label.jdkVersion": "JDK 버전",
+  "loc.input.help.jdkVersion": "선택한 JDK 버전의 경로에 대한 검색을 시도하고 그에 따라 JAVA_HOME을 설정하게 됩니다.",
+  "loc.input.label.jdkArchitecture": "JDK 아키텍처",
+  "loc.input.help.jdkArchitecture": "원하는 경우 JDK의 아키텍처(x86, x64)를 제공하세요."
+}

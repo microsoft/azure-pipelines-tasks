@@ -3,14 +3,21 @@
 // *******************************************************
 {
   "loc.friendlyName": "Ant",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613718)",
   "loc.description": "Build with Apache Ant",
+  "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.antBuildFile": "Ant build file",
+  "loc.input.help.antBuildFile": "Relative path from the repository root to the `Ant build file`.",
   "loc.input.label.options": "Options",
   "loc.input.label.targets": "Target(s)",
   "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
+  "loc.input.help.publishJUnitResults": "Select this option to publish JUnit Test results produced by the Ant build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS.",
   "loc.input.label.testResultsFiles": "Test Results Files",
+  "loc.input.help.testResultsFiles": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
   "loc.input.label.jdkVersion": "JDK Version",
-  "loc.input.label.jdkArchitecture": "JDK Architecture"
+  "loc.input.help.jdkVersion": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+  "loc.input.label.jdkArchitecture": "JDK Architecture",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK."
 }

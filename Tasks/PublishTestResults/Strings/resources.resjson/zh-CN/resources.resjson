@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "发布测试结果",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.description": "将测试结果发布到 VSO/TFS",
+  "loc.instanceNameFormat": "发布测试结果 $(testResultsFiles)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.testRunner": "测试结果格式",
+  "loc.input.help.testRunner": "所选测试运行程序(例如 JUnit、VSTest 等)生成的测试结果文件的格式。",
+  "loc.input.label.testResultsFiles": "测试结果文件",
+  "loc.input.help.testResultsFiles": "测试结果文件路径。可以使用通配符。例如，\"**\\*TEST-*.xml\" 表示名称以 TEST- 开头的所有 xml 文件。",
+  "loc.input.label.mergeTestResults": "合并测试结果",
+  "loc.input.help.mergeTestResults": "要在 TFS/VSO 中将来自所有测试结果文件的结果合并为一个测试运行，请选中此选项。要为每个测试结果文件创建一个测试运行，请取消选中此选项。",
+  "loc.input.label.platform": "平台",
+  "loc.input.help.platform": "对其运行了测试的平台。",
+  "loc.input.label.configuration": "配置",
+  "loc.input.help.configuration": "对其运行了测试的配置。"
+}

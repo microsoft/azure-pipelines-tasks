@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "iOS pacchetto Xcode",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "Consente di generare un file con estensione ipa dall'output della compilazione Xcode",
+  "loc.instanceNameFormat": "Pacchetto Xcode $(appName)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.appName": "Nome del file con estensione app",
+  "loc.input.help.appName": "Nome del file con estensione app, che è talvolta diverso da quello con estensione ipa",
+  "loc.input.label.ipaName": "Nome del file con estensione ipa",
+  "loc.input.help.ipaName": "Nome del file con estensione ipa, che è talvolta diverso da quello con estensione app",
+  "loc.input.label.provisioningProfile": "Nome profilo di provisioning",
+  "loc.input.help.provisioningProfile": "Nome del profilo di provisioning da usare per la firma.",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "Consente di usare l'SDK specificato. Eseguire **xcodebuild -showsdks** per visualizzare l'elenco di SDK validi.",
+  "loc.input.label.appPath": "Percorso del file con estensione app",
+  "loc.input.help.appPath": "Percorso relativo del file con estensione app compilato",
+  "loc.input.label.ipaPath": "Percorso in cui inserire il file con estensione ipa",
+  "loc.input.help.ipaPath": "Percorso relativo in cui verrà inserito il file con estensione ipa. Se non esiste, la directory verrà creata."
+}

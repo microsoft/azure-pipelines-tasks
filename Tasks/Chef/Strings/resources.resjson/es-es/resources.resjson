@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.helpMarkDown": "Implementar en entornos de Chef editando los atributos de entorno",
+  "loc.description": "Realice implementaciones en entornos Chef mediante la edición de los atributos del entorno",
+  "loc.instanceNameFormat": "Implementar en Chef editando los atributos de entorno de la suscripción de Chef $(ChefServer)",
+  "loc.input.label.connectedServiceName": "Conexión Chef",
+  "loc.input.help.connectedServiceName": "Nombre de la suscripción de Chef",
+  "loc.input.label.Environment": "Entorno",
+  "loc.input.help.Environment": "Nombre del entorno de Chef que se va a usar para la implementación. Los atributos de ese entorno se modificarán.",
+  "loc.input.label.Attributes": "Atributos del entorno",
+  "loc.input.help.Attributes": "Especifique el valor de los atributos del nodo hoja que se van a actualizar. Ejemplo: {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. La tarea no se realizará si el nodo hoja no existe.",
+  "loc.input.label.chefWaitTime": "Tiempo de espera",
+  "loc.input.help.chefWaitTime": "Tiempo (en minutos) de espera para que esta tarea se complete. Valor predeterminado: 30 minutos"
+}

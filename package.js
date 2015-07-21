@@ -35,15 +35,22 @@ var validate = function(folderName, task) {
 		defer.reject(createError(vn + ': friendlyName is a required string <= 40 chars'));
 	}
 
+	if (!task.instanceNameFormat) {
+		defer.reject(createError(vn + ': instanceNameFormat is required'));	
+	}
+
 	// resolve if not already rejected
 	defer.resolve();
 	return defer.promise;
 };
 
 var LOC_FRIENDLYNAME = 'loc.friendlyName';
+var LOC_HELPMARKDOWN = 'loc.helpMarkDown';
 var LOC_DESCRIPTION = 'loc.description';
+var LOC_INSTFORMAT = 'loc.instanceNameFormat';
 var LOC_GROUPDISPLAYNAME = 'loc.group.displayName.';
 var LOC_INPUTLABEL = 'loc.input.label.';
+var LOC_INPUTHELP = 'loc.input.help.';
 
 var createStrings = function(task, pkgPath, srcPath) {
 	var defer = Q.defer();
@@ -59,9 +66,15 @@ var createStrings = function(task, pkgPath, srcPath) {
 	var strings = {};
 	strings[LOC_FRIENDLYNAME] = task.friendlyName;
 	task['friendlyName'] = 'ms-resource:' + LOC_FRIENDLYNAME;
+	
+	strings[LOC_HELPMARKDOWN] = task.helpMarkDown;
+	task['helpMarkDown'] = 'ms-resource:' + LOC_HELPMARKDOWN;
 
 	strings[LOC_DESCRIPTION] = task.description;
 	task['description'] = 'ms-resource:' + LOC_DESCRIPTION;
+
+	strings[LOC_INSTFORMAT] = task.instanceNameFormat;
+	task['instanceNameFormat'] = 'ms-resource:' + LOC_INSTFORMAT;
 
 	if (task.groups) {
 		task.groups.forEach(function(group) {
@@ -76,9 +89,15 @@ var createStrings = function(task, pkgPath, srcPath) {
 	if (task.inputs) {
 		task.inputs.forEach(function(input) {
 			if (input.name) {
-				var key = LOC_INPUTLABEL + input.name;
-				strings[key] = input.label;
-				input.label = 'ms-resource:' + key;
+				var labelKey = LOC_INPUTLABEL + input.name;
+				strings[labelKey] = input.label;
+				input.label = 'ms-resource:' + labelKey; 
+
+				if (input.helpMarkDown) {
+					var helpKey = LOC_INPUTHELP + input.name;
+					strings[helpKey] = input.helpMarkDown;
+					input.helpMarkDown = 'ms-resource:' + helpKey;				
+				}				
 			}
 		});
 	}	
@@ -136,13 +155,13 @@ function packageTask(pkgPath){
 	        var folderName = path.basename(dirName);
 	        var jsonContents = taskJson.contents.toString();
 	        var task = {};
-	        //throw new gutil.PluginError('PackageTask', folderName + ' test');
+
 	        try {
 	        	task = JSON.parse(jsonContents);
 	        }
 	        catch (err) {
 	        	done(createError(folderName + ' parse error: ' + err.message));
-	        	return
+	        	return;
 	        }
 
 	        var tgtPath;
@@ -155,6 +174,7 @@ function packageTask(pkgPath){
 	        	shell.mkdir('-p', tgtPath);
 	        	shell.cp('-R', path.join(dirName, '*'), tgtPath);
 	        	shell.rm(path.join(tgtPath, '*.csproj'));
+	        	shell.rm(path.join(tgtPath, '*.md'));
 	        	return;        	
 	        })
 	        .then(function() {

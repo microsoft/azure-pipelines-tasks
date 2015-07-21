@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.description": "PowerShell-Skript ausführen",
+  "loc.instanceNameFormat": "PowerShell: $(scriptName)",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.scriptName": "Skriptdateiname",
+  "loc.input.help.scriptName": "Pfad des auszuführenden Skripts. Muss der vollständig qualifizierte Pfad oder ein Pfad relativ zum Standardarbeitsverzeichnis sein.",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.help.arguments": "An das PowerShell-Skript übergebene Argumente. Entweder Ordnungszahl- oder benannte Parameter.",
+  "loc.input.label.workingFolder": "Arbeitsordner",
+  "loc.input.help.workingFolder": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist."
+}

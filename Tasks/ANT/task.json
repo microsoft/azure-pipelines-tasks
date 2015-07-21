@@ -3,6 +3,7 @@
     "name": "Ant",
     "friendlyName": "Ant",
     "description": "Build with Apache Ant",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613718)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -11,11 +12,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 9
     },
     "demands" : [
         "ant"
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"junitTestResults",
@@ -99,10 +101,6 @@
         }
     ],
     "execution": {
-        "JavaScript": {
-            "target": "ant.js",
-            "argumentFormat": ""
-        },
         "Node": {
             "target": "ant2.js",
             "argumentFormat": ""

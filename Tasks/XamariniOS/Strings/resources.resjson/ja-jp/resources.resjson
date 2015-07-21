@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.description": "Xamarin を使用して Mac OS 上で iOS アプリをビルドします",
+  "loc.instanceNameFormat": "Xamarin.iOS ソリューションのビルド $(solution)",
+  "loc.input.label.solution": "ソリューション",
+  "loc.input.help.solution": "リポジトリ ルートを基準に指定した、ビルドする Xamarin.iOS ソリューションの相対パス。",
+  "loc.input.label.configuration": "構成",
+  "loc.input.help.configuration": "標準構成は、Ad-Hoc、AppStore、Debug、Release です。",
+  "loc.input.label.mdtoolLocation": "mdtool へのパスのオーバーライド",
+  "loc.input.help.mdtoolLocation": "オプションで、Xamarin Studio ビルド ツールである mdtool へのパスを指定します。指定がない場合、既定のパス /Applications/Xamarin Studio.app/Contents/MacOS/mdtool が使用されます。",
+  "loc.input.label.forSimulator": "iOS シミュレーターのビルド",
+  "loc.input.help.forSimulator": "オプションで、物理 iOS デバイスではなく iOS シミュレーター用にビルドします。"
+}

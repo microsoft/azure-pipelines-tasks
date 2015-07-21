@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.description": "Générer une application iOS avec Xamarin sur Mac OS",
+  "loc.instanceNameFormat": "Générer la solution Xamarin.iOS $(solution)",
+  "loc.input.label.solution": "Solution",
+  "loc.input.help.solution": "Chemin d'accès relatif depuis la racine du référentiel à la solution Xamarin.iOS à générer.",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.help.configuration": "Les configurations standard sont Ad-Hoc, AppStore, Debug, Release.",
+  "loc.input.label.mdtoolLocation": "Remplacer le chemin d'accès de mdtool",
+  "loc.input.help.mdtoolLocation": "Indiquez éventuellement le chemin d'accès à mdtool, l'outil de génération de Xamarin Studio. Si non spécifié, le chemin d'accès par défaut est utilisé : /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
+  "loc.input.label.forSimulator": "Build pour iOS Simulator",
+  "loc.input.help.forSimulator": "Effectue éventuellement une génération pour le simulateur iOS au lieu des appareils iOS physiques."
+}

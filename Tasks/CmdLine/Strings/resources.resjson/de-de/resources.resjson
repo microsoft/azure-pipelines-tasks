@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Befehlszeile",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Befehlszeile mit Argumenten ausführen",
+  "loc.instanceNameFormat": "$(filename) ausführen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.filename": "Tool",
+  "loc.input.help.filename": "Name des auszuführenden Tools. Das Tool muss sich im Pfad befinden oder über diesen aufgelöst werden können. Optional kann ein vollständig qualifizierter Pfad angegeben werden, dieser muss jedoch auf dem Agent vorhanden sein.",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.label.workingFolder": "Arbeitsordner",
+  "loc.input.help.workingFolder": "An das Tool übergebene Argumente",
+  "loc.input.label.failOnStandardError": "Fehler bei Standardfehler",
+  "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden."
+}

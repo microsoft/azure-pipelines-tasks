@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Azure クラウド サービスの展開",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.description": "Azure クラウド サービスの展開",
+  "loc.instanceNameFormat": "Azure 展開: $(CsPkg)",
+  "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
+  "loc.input.help.ConnectedServiceName": "展開対象への Azure のサブスクリプション。",
+  "loc.input.label.StorageAccount": "ストレージ アカウント",
+  "loc.input.help.StorageAccount": "展開する前にストレージ アカウントが存在する必要があります。",
+  "loc.input.label.ServiceName": "サービス名",
+  "loc.input.label.ServiceLocation": "サービスの場所",
+  "loc.input.help.ServiceLocation": "使用可能なオプションは、**米国南部**、**米国南部 2**、**米国中央部**、**米国中南部**、**米国西部**、**北欧**、**西欧** などです。",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.help.CsPkg": "成果物の既定のディレクトリにある CsPkg のパス。",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.help.CsCfg": "成果物の既定のディレクトリにある CsCfg のパス。",
+  "loc.input.label.Slot": "環境 (スロット)",
+  "loc.input.help.Slot": "**運用環境** または **ステージング**",
+  "loc.input.label.AllowUpgrade": "アップグレードを許可"
+}

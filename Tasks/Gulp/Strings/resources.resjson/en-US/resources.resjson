@@ -3,10 +3,16 @@
 // *******************************************************
 {
   "loc.friendlyName": "Gulp",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "Node.js streaming task based build system",
+  "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.gulpFile": "Gulp File Path",
+  "loc.input.help.gulpFile": "Relative path from repo root of the gulp file script file to run.",
   "loc.input.label.targets": "Gulp Task(s)",
+  "loc.input.help.targets": "Optional.  default task will get run if not specified. Space delimited list of tasks to run.  If not specified, the default task will run.",
   "loc.input.label.arguments": "Arguments",
-  "loc.input.label.cwd": "Working Directory"
+  "loc.input.help.arguments": "Additional arguments passed to gulp.  --gulpfile is not needed since already added via gulpFile input above.",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located."
 }

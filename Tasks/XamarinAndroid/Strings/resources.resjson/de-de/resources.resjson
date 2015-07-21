@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.description": "Android-App mit Xamarin erstellen",
+  "loc.instanceNameFormat": "Xamarin.Android-Projekt $(project) erstellen",
+  "loc.group.displayName.msbuildOptions": "MSBuild-Optionen",
+  "loc.group.displayName.jdkOptions": "JDK-Optionen",
+  "loc.input.label.project": "Projekt",
+  "loc.input.help.project": "Relativer Pfad vom Repositorystamm von zu erstellenden Xamarin.Android-Projekten. Platzhalter können verwendet werden. Beispiel: \"**\\*.csproj\" für alle CSPROJ-Dateien in allen Unterordnern. Das Projekt muss ein PackageForAndroid-Ziel haben.",
+  "loc.input.label.target": "Ziel",
+  "loc.input.help.target": "Erstellt diese Ziele in diesem Projekt. Trennen Sie mehrere Ziele mit einem Semikolon.",
+  "loc.input.label.outputDir": "Ausgabeverzeichnis",
+  "loc.input.label.configuration": "Konfiguration",
+  "loc.input.label.msbuildLocation": "MSBuild-Speicherort",
+  "loc.input.help.msbuildLocation": "Geben Sie optional den Pfad zu MSBuild an. Standardmäßig wird nach der aktuellen Version gesucht.",
+  "loc.input.label.msbuildArguments": "MSBuild-Argumente",
+  "loc.input.help.msbuildArguments": "Zusätzliche Argumente, die an MSBuild übergeben werden.",
+  "loc.input.label.jdkVersion": "JDK-Version",
+  "loc.input.help.jdkVersion": "Verwendet während des Buildvorgangs die ausgewählte JDK-Version.",
+  "loc.input.label.jdkArchitecture": "JDK-Architektur",
+  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64)."
+}

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Лицензия Xamarin",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.description": "Активация или деактивация лицензий Xamarin",
+  "loc.instanceNameFormat": "Лицензия Xamarin - $(action)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.action": "Действие",
+  "loc.input.label.email": "Электронная почта",
+  "loc.input.help.email": "Адрес электронной почты учетной записи Xamarin.",
+  "loc.input.label.password": "Пароль",
+  "loc.input.help.password": "Пароль учетной записи Xamarin.",
+  "loc.input.label.activateAndroid": "Активировать Xamarin.Android",
+  "loc.input.label.timeout": "Время ожидания в секундах"
+}

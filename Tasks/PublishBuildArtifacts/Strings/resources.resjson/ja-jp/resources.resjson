@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "ビルド成果物の発行",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "minimatch パターンを使用して、ビルド成果物をサーバーまたはファイル共有に発行します",
+  "loc.instanceNameFormat": "成果物の公開: $(ArtifactName)",
+  "loc.input.label.CopyRoot": "コピー元",
+  "loc.input.help.CopyRoot": "コピー パターンを適用するルート フォルダー。何も指定しない場合、リポジトリのルートとなります。ビルド手順がリポジトリの外部でビルドを行う場合には、変数を使用します。例: $(agent.builddirectory)",
+  "loc.input.label.Contents": "コンテンツ",
+  "loc.input.help.Contents": "成果物の一部として含めるファイルやフォルダーのパス。複数行や minimatch パターンをサポートしています。[詳細情報](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.ArtifactName": "成果物の名前",
+  "loc.input.help.ArtifactName": "作成する成果物の名前。",
+  "loc.input.label.ArtifactType": "成果物の種類",
+  "loc.input.help.ArtifactType": "作成する成果物の種類。",
+  "loc.input.label.TargetPath": "パス",
+  "loc.input.help.TargetPath": "ファイルのコピー先となるファイル共有"
+}

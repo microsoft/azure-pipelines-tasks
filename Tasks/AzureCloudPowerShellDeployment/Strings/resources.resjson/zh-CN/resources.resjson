@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Azure 云服务部署",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.description": "部署 Azure 云服务",
+  "loc.instanceNameFormat": "Azure 部署: $(CsPkg)",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
+  "loc.input.help.ConnectedServiceName": "要作为部署目标的 Azure 订阅。",
+  "loc.input.label.StorageAccount": "存储帐户",
+  "loc.input.help.StorageAccount": "存储帐户必须在部署之前便存在。",
+  "loc.input.label.ServiceName": "服务名称",
+  "loc.input.label.ServiceLocation": "服务位置",
+  "loc.input.help.ServiceLocation": "可能的选项有 **East US**、**East US 2**、**Central US**、**South Central US**、**West US**、**North Europe**、**West Europe** 和其他选项。",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.help.CsPkg": "默认项目目录下 CsPkg 的路径。",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.help.CsCfg": "默认项目目录下 CsCfg 的路径。",
+  "loc.input.label.Slot": "环境(槽)",
+  "loc.input.help.Slot": "**Production** 或 **Staging**",
+  "loc.input.label.AllowUpgrade": "允许升级"
+}

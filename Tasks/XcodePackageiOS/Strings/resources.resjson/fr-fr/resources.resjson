@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Package Xcode iOS",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "Générer un fichier .ipa à partir de la sortie de génération Xcode",
+  "loc.instanceNameFormat": "Package Xcode $(appName)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.appName": "Nom du fichier .app",
+  "loc.input.help.appName": "Nom du fichier .app, qui est parfois différent de celui du fichier .ipa",
+  "loc.input.label.ipaName": "Nom du fichier .ipa",
+  "loc.input.help.ipaName": "Nom du fichier .ipa, qui est parfois différent de celui du fichier .app",
+  "loc.input.label.provisioningProfile": "Nom du profil d'approvisionnement",
+  "loc.input.help.provisioningProfile": "Nom du profil de configuration à utiliser à la signature.",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "Utilisez le SDK spécifié. Exécutez **xcodebuild -showsdks** pour afficher la liste valide des SDK.",
+  "loc.input.label.appPath": "Chemin d'accès du fichier .app",
+  "loc.input.help.appPath": "Chemin d'accès relatif au fichier .app généré",
+  "loc.input.label.ipaPath": "Chemin d'accès ou placer le fichier .ipa",
+  "loc.input.help.ipaPath": "Chemin d'accès relatif dans lequel le fichier .ipa sera placé. Le répertoire est créé s'il n'existe pas."
+}

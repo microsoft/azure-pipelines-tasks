@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "发布生成项目",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "使用最小匹配模式将生成项目发布到服务器或文件共享",
+  "loc.instanceNameFormat": "发布项目: $(ArtifactName)",
+  "loc.input.label.CopyRoot": "复制根",
+  "loc.input.help.CopyRoot": "要应用复制模式的根文件夹。为空表示存储库的根。如果生成步骤在存储库外部生成，请使用变量。示例: $(agent.builddirectory)",
+  "loc.input.label.Contents": "内容",
+  "loc.input.help.Contents": "要包含在项目中的文件或文件夹路径。支持多行或最小匹配模式。[详细信息](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.ArtifactName": "项目名称",
+  "loc.input.help.ArtifactName": "要创建的项目的名称。",
+  "loc.input.label.ArtifactType": "项目类型",
+  "loc.input.help.ArtifactType": "要创建的项目的类型。",
+  "loc.input.label.TargetPath": "路径",
+  "loc.input.help.TargetPath": "要将文件复制到的文件共享"
+}

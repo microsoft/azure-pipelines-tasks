@@ -3,6 +3,7 @@
   "name": "VSTest",
   "friendlyName": "Visual Studio Test",
   "description": "Run tests with Visual Studio test runner",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613743)",
   "category": "Test",
   "visibility": [
                 "Build",
@@ -12,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 16
   },
   "demands": [
     "vstest"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -47,14 +48,16 @@
       "type": "string", 
       "label": "Platform", 
       "defaultValue":"", 
-      "required":false
+      "required":false,
+      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here."
     },
     {
       "name": "configuration", 
       "type": "string", 
       "label": "Configuration", 
       "defaultValue":"", 
-      "required":false 
+      "required":false, 
+      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here."
     },
     {
       "name": "runSettingsFile",
@@ -85,11 +88,12 @@
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "VSTest version",
-      "defaultValue": "14.0",
+      "defaultValue": "latest",
       "required": false,
       "helpMarkDown": "The version of VSTest to use.",
       "groupName":"advanced",
       "options": {
+                "latest":  "Latest",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013"
             }

@@ -6,17 +6,19 @@
   "name": "PublishBuildArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 1,
-    "Patch": 71
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 4
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "CopyRoot",
@@ -24,7 +26,7 @@
       "label": "ms-resource:loc.input.label.CopyRoot",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Root folder to apply copy patterns to.  Empty is the root of the repo."
+      "helpMarkDown": "ms-resource:loc.input.help.CopyRoot"
     },
     {
       "name": "Contents",
@@ -32,7 +34,7 @@
       "label": "ms-resource:loc.input.label.Contents",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "File or folder paths to include as part of the artifact."
+      "helpMarkDown": "ms-resource:loc.input.help.Contents"
     },
     {
       "name": "ArtifactName",
@@ -40,7 +42,7 @@
       "label": "ms-resource:loc.input.label.ArtifactName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of the artifact to create."
+      "helpMarkDown": "ms-resource:loc.input.help.ArtifactName"
     },
     {
       "name": "ArtifactType",
@@ -48,7 +50,7 @@
       "label": "ms-resource:loc.input.label.ArtifactType",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of the artifact to create.",
+      "helpMarkDown": "ms-resource:loc.input.help.ArtifactType",
       "options": {
         "Container": "Server",
         "FilePath": "File share"
@@ -58,13 +60,13 @@
       "name": "TargetPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.TargetPath",
-      "defaultValue": "",
+      "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
       "required": false,
-      "helpMarkDown": "The file share to which to copy the files",
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
       "visibleRule": "ArtifactType = FilePath"
     }
   ],
-  "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\PublishBuildArtifacts.ps1",

@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Gulp",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "Node.js 串流工作建置系統",
+  "loc.instanceNameFormat": "gulp $(targets)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.gulpFile": "Gulp 檔案路徑",
+  "loc.input.help.gulpFile": "要執行的 gulp 檔指令檔儲存機制根相對路徑。",
+  "loc.input.label.targets": "Gulp 工作",
+  "loc.input.help.targets": "選擇性。若未指定則會執行預設工作。要執行的以空格分隔的工作清單。若未指定則會執行預設工作。",
+  "loc.input.label.arguments": "引數",
+  "loc.input.help.arguments": "傳遞至 gulp 的額外引數。  --不需要 gulpfile 因為已透過上述 gulpFile 輸入加入。",
+  "loc.input.label.cwd": "工作目錄",
+  "loc.input.help.cwd": "執行指令碼時的目前工作目錄。預設為指令碼所在的資料夾。"
+}

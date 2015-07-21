@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Pubblica elementi di compilazione",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "Consente di pubblicare elementi di compilazione nel server o in una condivisione file usando criteri di corrispondenza minima",
+  "loc.instanceNameFormat": "Pubblica elemento: $(ArtifactName)",
+  "loc.input.label.CopyRoot": "Copia radice",
+  "loc.input.help.CopyRoot": "Cartella radice a cui applicare i criteri di copia. Se non viene specificata, corrisponde alla radice del repository. Usare le variabili se le istruzioni di compilazione vengono compilate all'esterno del repository. Esempio: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Contenuti",
+  "loc.input.help.Contents": "Percorsi di file o cartella da includere nell'elemento. Sono supportati criteri su più righe o di corrispondenza minima. [Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.ArtifactName": "Nome dell'elemento",
+  "loc.input.help.ArtifactName": "Nome dell'elemento da creare.",
+  "loc.input.label.ArtifactType": "Tipo di elemento",
+  "loc.input.help.ArtifactType": "Tipo dell'elemento da creare.",
+  "loc.input.label.TargetPath": "Percorso",
+  "loc.input.help.TargetPath": "Condivisione file in cui copiare i file"
+}

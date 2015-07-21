@@ -23,14 +23,17 @@ function Invoke-OperationHelper
 
     Foreach($machine in $machines)
     {
+        $machineName = $machine.Name
         $operation = Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
+        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
 
         # Determines the status of the operation. Marks the status of machine group operation as 'Failed' if any one of the machine operation fails.
         if(! $operation)
         {
             $status = "Failed"
             $machineStatus = "Failed"
-            Write-Warning("Operation $operation on machine $machine.Name failed.")
+            $passedOperationCount--
+            Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed" -ArgumentList $operationName, $machine.Name)
         }
         else
         {
@@ -39,14 +42,18 @@ function Invoke-OperationHelper
             {
                 $machineStatus = "Failed"
                 $passedOperationCount--
-                Write-Warning("Operation $operationName on machine $machine.Name failed with error $operation.Error")
+                Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed with error '{2}'" -ArgumentList $operationName, $machine.Name, $operation.Error.Message)
+            }
+            else
+            {
+                 Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
             }
         }
-
+        
         # Logs the completion of particular machine operation. Updates the status based on the provider response.
-        End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $operation.Error
+        End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $operation.Error.Message
     }
-    
+
     # Logs completion of the machine group operation.
     End-MachineGroupOperation -machineGroupName $machineGroupName -operationName operationName -operationId $operationId -status $machineStatus
     Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
@@ -115,7 +122,7 @@ function Invoke-OperationOnProvider
          }
  
          default {
-              Write-Error("Tried to invoke an invalid operation: $operationName.")
+              throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
          }
     }
     return $operation
@@ -130,6 +137,6 @@ function Throw-ExceptionIfOperationFailesOnAllMachine
 
   if(($passedOperationCount -ne $null) -and ($passedOperationCount -eq 0))
   {
-        Write-Error("Operation $operationName failed on the machines in $machineGroupName")
+        throw ( Get-LocalizedString -Key "Operation '{0}' failed on the machines in '{1}'" -ArgumentList $operationName, $machineGroupName )
   }
 }

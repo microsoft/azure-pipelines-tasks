@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Compilazione Xcode",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.description": "Consente di compilare un'area di lavoro Xcode su Mac OS",
+  "loc.instanceNameFormat": "Xcode $(actions)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.xcWorkspacePath": "Percorso area di lavoro",
+  "loc.input.help.xcWorkspacePath": "Percorso relativo dalla radice del repository in cui si trova la cartella xcworkspace.",
+  "loc.input.label.scheme": "Schema",
+  "loc.input.help.scheme": "Nome dello schema in Xcode. *Deve essere uno schema condiviso* (casella di controllo shared negli schemi gestiti in Xcode)",
+  "loc.input.label.actions": "Azioni",
+  "loc.input.help.actions": "Elenco di azioni delimitate da spazi. Le opzioni valide sono build, clean, test, analyze e archive. Ad esempio, specificando `build clean` verrà eseguita una build pulita. Vedere [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)",
+  "loc.input.label.configuration": "Configurazione",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "Consente di compilare un'area di lavoro o un progetto Xcode con l'SDK specificato. Eseguire **xcodebuild -showsdks** per visualizzare l'elenco di SDK validi.",
+  "loc.input.label.outputPattern": "Output",
+  "loc.input.help.outputPattern": "Percorso relativo in cui verrà inserito l'output di compilazione (file binari)."
+}

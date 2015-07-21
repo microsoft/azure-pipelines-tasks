@@ -3,14 +3,19 @@
 // *******************************************************
 {
   "loc.friendlyName": "Cloud-based Web Performance Test",
-  "loc.description": "Quickly find perf regressions to your website under load. Powered by VS Online.",
-  "loc.group.displayName.advanced": "Advanced",
+  "loc.helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.description": "Runs the quick web performance test in cloud, with Visual Studio Online",
+  "loc.instanceNameFormat": "Quick Web Performance Test $(testName)",
+  "loc.input.label.connectedServiceName": "Registered connection",
+  "loc.input.help.connectedServiceName": "Select a previously registered service connection to talk to the Cloud-based Load Test service. Choose 'Manage' to register a new connection.",
   "loc.input.label.websiteUrl": "Website Url",
+  "loc.input.help.websiteUrl": "Enter your application website url as http://www.your.app/home.html",
   "loc.input.label.testName": "Test Name",
+  "loc.input.help.testName": "Name the load test for tracking and correlation.",
   "loc.input.label.vuLoad": "User Load",
-  "loc.input.label.runDuration": "Run Duration",
-  "loc.input.label.geoLocation": "Geo Location",
-  "loc.input.label.Username": "Alternate credential username",
-  "loc.input.label.Password": "Alternate credential password",
-  "loc.input.label.CltAccountUrl": "VSO Account URL"
+  "loc.input.help.vuLoad": "Maximum virtual users concurrently accessing the website.",
+  "loc.input.label.runDuration": "Run Duration (sec)",
+  "loc.input.help.runDuration": "Load test run duration in seconds.",
+  "loc.input.label.geoLocation": "Load Location",
+  "loc.input.help.geoLocation": "Geographical region to generate the load from. See task help for more details."
 }

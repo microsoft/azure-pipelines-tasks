@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "Docker イメージをリモート コンピューターに展開します",
+  "loc.description": "Docker イメージをリモート コンピューターに展開します",
+  "loc.instanceNameFormat": "Docker の展開: $(Repository)",
+  "loc.input.label.DockerEndpoint": "Docker エンドポイント",
+  "loc.input.help.DockerEndpoint": "Docker サーバーのリモート接続 URL。有効な remote_api_port の範囲は [0,65535] です。",
+  "loc.input.label.Repository": "リポジトリ",
+  "loc.input.help.Repository": "イメージの名前",
+  "loc.input.label.Tag": "タグ",
+  "loc.input.help.Tag": "イメージ タグ",
+  "loc.input.label.ContainerName": "コンテナー名",
+  "loc.input.help.ContainerName": "コンテナーの名前",
+  "loc.input.label.PortBindings": "ポート バインド",
+  "loc.input.help.PortBindings": "'hostport:containerport' の形式でポートのバインド情報を提供します"
+}

@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "雲端 Web 效能測試",
+  "loc.helpMarkDown": "此工作可用於觸發使用 Visual Studio Online 的 雲端式負載測試。[詳細資訊](http://go.microsoft.com/fwlink/?linkid=613203)。",
+  "loc.description": "在雲端執行快速 Web 效能測試，搭配 Visual Studio Online",
+  "loc.instanceNameFormat": "快速 Web 效能測試 $(testName)",
+  "loc.input.label.connectedServiceName": "已註冊的連接",
+  "loc.input.help.connectedServiceName": "選取先前註冊的服務連接，以和雲端式負載測試服務溝通。請選擇 'Manage'，以註冊新的連接。",
+  "loc.input.label.websiteUrl": "網站 URL",
+  "loc.input.help.websiteUrl": "請以下列格式輸入您應用程式的網站 URL : http://www.your.app/home.html",
+  "loc.input.label.testName": "測試名稱",
+  "loc.input.help.testName": "請命名追蹤及關聯性的負載測試。",
+  "loc.input.label.vuLoad": "使用者負載",
+  "loc.input.help.vuLoad": "同時存取此網路的虛擬使用者人數上限。",
+  "loc.input.label.runDuration": "執行持續期間 (秒)",
+  "loc.input.help.runDuration": "負載測試回合持續期限 (以秒為單位)。",
+  "loc.input.label.geoLocation": "載入位置",
+  "loc.input.help.geoLocation": "產生負載的地理區域。請參閱工作說明以取得詳細資料。"
+}

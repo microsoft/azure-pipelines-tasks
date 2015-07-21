@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "PowerShell sur des ordinateurs cibles",
+  "loc.helpMarkDown": "Exécuter des scripts PowerShell sur des ordinateurs distants",
+  "loc.description": "Exécuter des scripts PowerShell sur des ordinateurs distants",
+  "loc.instanceNameFormat": "Exécuter PowerShell sur $(EnvironmentName)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.EnvironmentName": "Groupe d'ordinateurs",
+  "loc.input.help.EnvironmentName": "Nom du groupe d'ordinateurs pour le déploiement de l'application.​",
+  "loc.input.label.MachineNames": "Déployer sur les ordinateurs",
+  "loc.input.help.MachineNames": "Indiquez une liste d'ordinateurs séparés par des virgules pour le déploiement, par exemple, Ordinateur1, Ordinateur2. Il s'agit généralement de tous les ordinateurs du groupe d'ordinateurs.",
+  "loc.input.label.ScriptPath": "Script PowerShell",
+  "loc.input.help.ScriptPath": "Emplacement du script PowerShell sur les ordinateurs cibles ou dans un chemin d'accès UNC tel que c:\\BudgetIT\\Web\\Deploy\\Website.ps1",
+  "loc.input.label.ScriptArguments": "Arguments de script",
+  "loc.input.help.ScriptArguments": "Arguments pour le script PowerShell. Peuvent être des paramètres ordinaux ou nommés tels que -testParam test",
+  "loc.input.label.InitializationScriptPath": "Script d'initialisation",
+  "loc.input.help.InitializationScriptPath": "Emplacement du script de données pour DSC sur des ordinateurs cibles ou dans un chemin d'accès UNC tel que c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
+  "loc.input.label.RunPowershellInParallel": "Exécuter PowerShell en parallèle",
+  "loc.input.help.RunPowershellInParallel": "Si cette valeur est true, les scripts powershell sont exécutés en parallèle sur les ordinateurs cibles."
+}

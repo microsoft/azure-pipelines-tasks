@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.description": "使用 Xamarin 生成 Android 应用",
+  "loc.instanceNameFormat": "生成 Xamarin.Android 项目 $(project)",
+  "loc.group.displayName.msbuildOptions": "MSBuild 选项",
+  "loc.group.displayName.jdkOptions": "JDK 选项",
+  "loc.input.label.project": "项目",
+  "loc.input.help.project": "相对于要生成的 Xamarin.Android 项目的存储库根的路径。可以使用通配符。例如，\"**\\*.csproj\" 表示所有子文件夹中的所有 csproj 文件。项目必须有一个 PackageForAndroid 目标。",
+  "loc.input.label.target": "目标",
+  "loc.input.help.target": "在此项目中生成这些目标。使用分号分隔多个目标。",
+  "loc.input.label.outputDir": "输出目录",
+  "loc.input.label.configuration": "配置",
+  "loc.input.label.msbuildLocation": "MSBuild 位置",
+  "loc.input.help.msbuildLocation": "可以选择提供 MSBuild 的路径。默认为搜索最新版本。",
+  "loc.input.label.msbuildArguments": "MSBuild 参数",
+  "loc.input.help.msbuildArguments": "传递给 MSBuild 的其他参数。",
+  "loc.input.label.jdkVersion": "JDK 版本",
+  "loc.input.help.jdkVersion": "在生成过程中使用所选 JDK 版本。",
+  "loc.input.label.jdkArchitecture": "JDK 体系结构",
+  "loc.input.help.jdkArchitecture": "可以选择提供 JDK 的体系结构(x86、x64)。"
+}

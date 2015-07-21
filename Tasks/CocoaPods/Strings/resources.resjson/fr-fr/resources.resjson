@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "CocoaPods",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.description": "CocoaPods est le gestionnaire de dépendances des projets Swift et Objective-C/Cocoa. Exécute l'installation de pod",
+  "loc.instanceNameFormat": "installation de pod",
+  "loc.input.label.cwd": "Répertoire de travail",
+  "loc.input.help.cwd": "Répertoire de travail actuel. Il s'agit généralement du répertoire du référentiel."
+}

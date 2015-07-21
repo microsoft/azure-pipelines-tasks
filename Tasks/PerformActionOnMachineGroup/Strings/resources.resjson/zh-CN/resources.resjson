@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "计算机组操作",
+  "loc.helpMarkDown": "对计算机组执行操作(如启动、停止、删除)",
+  "loc.description": "计算机组操作",
+  "loc.instanceNameFormat": "$(Action) 计算机组 ",
+  "loc.input.label.MachineGroupName": "计算机组",
+  "loc.input.help.MachineGroupName": "用于执行操作的目标计算机组的名称。",
+  "loc.input.label.Action": "操作",
+  "loc.input.help.Action": "要对计算机或计算机组执行的操作。",
+  "loc.input.label.Filters": "应用于计算机",
+  "loc.input.help.Filters": "默认情况下，操作应用于计算机组中的所有计算机。要将操作应用于计算机的子集，请提供标记或计算机名(如角色: Web、角色: 测试、BudgetIT01)。筛选器不适用于阻止或取消阻止操作。",
+  "loc.input.label.BlockedFor": "针对以下对象进行阻止",
+  "loc.input.help.BlockedFor": "针对实例(如特定生成)或针对定义(即定义的所有实例)阻止计算机组。",
+  "loc.input.label.TimeInHours": "时间(以小时为单位)",
+  "loc.input.help.TimeInHours": "将阻止计算机的小时数。默认值为 0，这会无限期阻止计算机。"
+}

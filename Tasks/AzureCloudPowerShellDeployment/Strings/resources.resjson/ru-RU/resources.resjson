@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Развертывание облачной службы Azure",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.description": "Развертывание облачной службы Azure",
+  "loc.instanceNameFormat": "Развертывание Azure: $(CsPkg)",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure",
+  "loc.input.help.ConnectedServiceName": "Целевая подписка Azure для развертывания.",
+  "loc.input.label.StorageAccount": "Учетная запись хранения",
+  "loc.input.help.StorageAccount": "Учетная запись хранения должна существовать до развертывания.",
+  "loc.input.label.ServiceName": "Имя службы",
+  "loc.input.label.ServiceLocation": "Расположение службы",
+  "loc.input.help.ServiceLocation": "Возможные варианты: **Восток США**, **Восток США 2**, **Центральная часть США**, **Южно-Центральная часть США**, **Запад США**, **Северная Европа**, **Западная Европа** и другие.",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.help.CsPkg": "Путь к CsPkg в каталоге артефактов по умолчанию.",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.help.CsCfg": "Путь к CsCfg в каталоге артефактов по умолчанию.",
+  "loc.input.label.Slot": "Среда (слот)",
+  "loc.input.help.Slot": "**Рабочая среда** или **Промежуточное хранение**",
+  "loc.input.label.AllowUpgrade": "Разрешить обновление"
+}

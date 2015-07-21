@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "目标计算机上的 PowerShell",
+  "loc.helpMarkDown": "在远程计算机上执行 PowerShell 脚本",
+  "loc.description": "在远程计算机上执行 PowerShell 脚本",
+  "loc.instanceNameFormat": "在 $(EnvironmentName) 上运行 PowerShell",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.EnvironmentName": "计算机组",
+  "loc.input.help.EnvironmentName": "用于部署应用程序的计算机组的名称。​",
+  "loc.input.label.MachineNames": "部署到计算机",
+  "loc.input.help.MachineNames": "为部署提供计算机的逗号分隔列表，如 Machine1, Machine2。默认为计算机组中的所有计算机。",
+  "loc.input.label.ScriptPath": "PowerShell 脚本",
+  "loc.input.help.ScriptPath": "目标计算机上或 UNC 路径上 PowerShell 脚本的位置，如 c:\\BudgetIT\\Web\\Deploy\\Website.ps1",
+  "loc.input.label.ScriptArguments": "脚本参数",
+  "loc.input.help.ScriptArguments": "用于 PowerShell 脚本的参数。可以是序号或命名参数(如 -testParam test)",
+  "loc.input.label.InitializationScriptPath": "初始化脚本",
+  "loc.input.help.InitializationScriptPath": "目标计算机上或 UNC 路径上用于 DSC 的数据脚本的位置，如 c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
+  "loc.input.label.RunPowershellInParallel": "并行运行 PowerShell",
+  "loc.input.help.RunPowershellInParallel": "将它设置为 true 会在目标计算机上并行运行 powershell 脚本。"
+}

@@ -1,0 +1,21 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "cURL Upload Files",
+  "loc.description": "Use cURL to upload files with supported protocols. (FTP, FTPS, SFTP, HTTP, and more)",
+  "loc.instanceNameFormat": "Upload $(files) with cURL",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.files": "Files",
+  "loc.input.help.files": "File(s) to be uploaded.  Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders.",
+  "loc.input.label.username": "Username",
+  "loc.input.help.username": "Specify the username to use for server authentication.",
+  "loc.input.label.password": "Password",
+  "loc.input.help.password": "Specify the password to use for server authentication.  Password should reference a secret variable defined on the variable tab.",
+  "loc.input.label.url": "URL",
+  "loc.input.help.url": "Specify the URL where the file(s) will be uploaded to.  Directory should end with a trailing slash.  Possible protocols include DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET and TFTP.",
+  "loc.input.label.options": "Optional Arguments",
+  "loc.input.help.options": "Additional arguments that will be passed to cURL.",
+  "loc.input.label.redirectStderr": "Redirect Standard Error to Standard Out",
+  "loc.input.help.redirectStderr": "Add '--stderr -' to cURL.  By default cURL writes progress bar to stderr, and build will pick it up as error output. Suppressing this behavior."
+}

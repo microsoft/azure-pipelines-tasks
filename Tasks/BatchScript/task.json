@@ -3,6 +3,7 @@
     "name": "BatchScript",
     "friendlyName": "Batch Script",
     "description": "Run a windows cmd or bat script and optionally allow it to change the environment",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613733)",
     "category": "Utility",
     "visibility": [
                   "Build",
@@ -12,11 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 9
     },
     "demands": [
         "Cmd"
     ],
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"advanced",
@@ -57,14 +59,25 @@
             "required":false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
             "groupName":"advanced"
+        },
+        { 
+            "name": "failOnStandardError", 
+            "type": "boolean",
+            "label": "Fail on Standard Error", 
+            "defaultValue": "false", 
+            "required": false,
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "groupName":"advanced"
         }
     ],
     "instanceNameFormat": "Run script $(filename)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\BatchScript.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+        "Process": {
+            "target": "$(filename)",
+            "argumentFormat": "$(arguments)",
+            "workingDirectory": "$(workingFolder)",
+            "modifyEnvironment": "$(modifyEnvironment)",
+            "failOnStandardError": "$(failOnStandardError)"
         }
     }
 }

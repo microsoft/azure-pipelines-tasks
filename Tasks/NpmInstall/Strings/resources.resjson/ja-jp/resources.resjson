@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "npm のインストール",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "npm パッケージのインストール",
+  "loc.instanceNameFormat": "npm のインストール $(arguments)",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.arguments": "引数",
+  "loc.input.help.arguments": "npm のインストールに渡す追加の引数。",
+  "loc.input.label.cwd": "作業ディレクトリ",
+  "loc.input.help.cwd": "npm のインストールが実行する現行の作業ディレクトリ。指定しない場合はレポジトリのルートになります。"
+}

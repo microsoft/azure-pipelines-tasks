@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Knife de Chef",
+  "loc.helpMarkDown": "Ejecutar scripts con comandos knife en la estación de trabajo de Chef",
+  "loc.description": "Ejecute scripts con comandos Knife en la estación de trabajo Chef",
+  "loc.instanceNameFormat": "Script knife de Chef: $(ScriptPath)",
+  "loc.input.label.ConnectedServiceName": "Suscripción a Chef",
+  "loc.input.help.ConnectedServiceName": "Suscripción de Chef que se va a configurar antes de ejecutar comandos knife",
+  "loc.input.label.ScriptPath": "Ruta de acceso del script",
+  "loc.input.help.ScriptPath": "Ruta de acceso del script. Debe ser una ruta de acceso completa o relativa al directorio de trabajo predeterminado.",
+  "loc.input.label.ScriptArguments": "Argumentos del script",
+  "loc.input.help.ScriptArguments": "Parámetros adicionales que se van a pasar al script. Pueden ser parámetros ordinales o con nombre."
+}

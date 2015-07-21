@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.description": "Realice compilaciones con MSBuild",
+  "loc.instanceNameFormat": "Compilar solución $(solution)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.solution": "Solución",
+  "loc.input.help.solution": "Ruta de acceso relativa de la raíz del repositorio de las soluciones que se van a ejecutar. Puede usar caracteres comodín. Por ejemplo, \"**\\*.sln\" para todos los archivos sln en todas las subcarpetas.",
+  "loc.input.label.platform": "Plataforma",
+  "loc.input.label.configuration": "Configuración",
+  "loc.input.label.msbuildArguments": "Argumentos de MSBuild",
+  "loc.input.help.msbuildArguments": "Argumentos adicionales pasados a MSBuild.",
+  "loc.input.label.clean": "Limpiar",
+  "loc.input.label.restoreNugetPackages": "Restaurar paquetes NuGet",
+  "loc.input.label.logProjectEvents": "Registrar detalles del proyecto",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "Versión de MSBuild",
+  "loc.input.help.msbuildVersion": "Indique opcionalmente la versión de MSBuild. Está establecido de forma predeterminada para buscar la versión más reciente.",
+  "loc.input.label.msbuildArchitecture": "Arquitectura MSBuild",
+  "loc.input.help.msbuildArchitecture": "Indique opcionalmente la arquitectura (x86, x64) de MSBuild que se va a ejecutar.",
+  "loc.input.label.msbuildLocation": "Ruta de acceso de MSBuild",
+  "loc.input.help.msbuildLocation": "Indique opcionalmente la ruta de acceso a MSBuild."
+}

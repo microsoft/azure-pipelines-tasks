@@ -3,20 +3,21 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Build",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
+  "loc.instanceNameFormat": "Build solution $(solution)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",
+  "loc.input.help.solution": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders.",
   "loc.input.label.msbuildArgs": "MSBuild Arguments",
+  "loc.input.help.msbuildArgs": "Additional arguments passed to MSBuild.",
   "loc.input.label.platform": "Platform",
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.clean": "Clean",
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
-  "loc.input.label.vsLocationMethod": "Visual Studio",
   "loc.input.label.vsVersion": "Visual Studio Version",
-  "loc.input.label.vsLocation": "Visual Studio Location",
-  "loc.input.label.msbuildLocationMethod": "MSBuild",
-  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.vsVersion": "If the preferred version cannot be found, the latest version found will be used instead.",
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
-  "loc.input.label.msbuildLocation": "Path to MSBuild",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.logProjectEvents": "Record Project Details"
 }

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Déploiement d'un site web Azure",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.description": "Déployer un site web sur Microsoft Azure",
+  "loc.instanceNameFormat": "Déploiement Azure : $(WebSiteName)",
+  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
+  "loc.input.help.ConnectedServiceName": "Abonnement Azure à cibler pour le déploiement.",
+  "loc.input.label.WebSiteLocation": "Emplacement du site web",
+  "loc.input.help.WebSiteLocation": "Sélectionnez une région pour le déploiement.",
+  "loc.input.label.WebSiteName": "Nom du site web",
+  "loc.input.label.Package": "Package",
+  "loc.input.help.Package": "Chemin d'accès au package dans le répertoire de l'artefact par défaut.",
+  "loc.input.label.AdditionalArguments": "Arguments supplémentaires"
+}

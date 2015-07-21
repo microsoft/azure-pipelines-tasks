@@ -3,15 +3,23 @@
 // *******************************************************
 {
   "loc.friendlyName": "Xamarin.Android",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613728)",
   "loc.description": "Build an Android app with Xamarin",
+  "loc.instanceNameFormat": "Build Xamarin.Android Project $(project)",
   "loc.group.displayName.msbuildOptions": "MSBuild Options",
   "loc.group.displayName.jdkOptions": "JDK Options",
   "loc.input.label.project": "Project",
+  "loc.input.help.project": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**\\*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target.",
   "loc.input.label.target": "Target",
+  "loc.input.help.target": "Build these targets in this project. Use a semicolon to separate multiple targets.",
   "loc.input.label.outputDir": "Output Directory",
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.msbuildLocation": "MSBuild Location",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild.  It defaults to searching for latest version.",
   "loc.input.label.msbuildArguments": "MSBuild Arguments",
+  "loc.input.help.msbuildArguments": "Additional arguments passed to MSBuild.",
   "loc.input.label.jdkVersion": "JDK Version",
-  "loc.input.label.jdkArchitecture": "JDK Architecture"
+  "loc.input.help.jdkVersion": "Use the selected JDK version during build.",
+  "loc.input.label.jdkArchitecture": "JDK Architecture",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK."
 }

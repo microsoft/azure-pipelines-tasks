@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Publicar los artefactos de la compilación",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "Publicar artefactos de compilación en el servidor o en un recurso compartido de archivos usando patrones de minimatch",
+  "loc.instanceNameFormat": "Publicar artefacto: $(ArtifactName)",
+  "loc.input.label.CopyRoot": "Copiar la raíz",
+  "loc.input.help.CopyRoot": "Carpeta raíz a la que se van a aplicar patrones de copia. Si se deja vacío, se establece en la raíz del repositorio. Use variables si los pasos de compilación se producen fuera del repositorio. Ejemplo: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Contenido",
+  "loc.input.help.Contents": "Rutas de acceso de archivo o carpeta que se va a incluir como parte del artefacto. Admite varias líneas o patrones de minimatch. [Más información](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.ArtifactName": "Nombre del artefacto",
+  "loc.input.help.ArtifactName": "Nombre del artefacto que se va a crear.",
+  "loc.input.label.ArtifactType": "Tipo de artefacto",
+  "loc.input.help.ArtifactType": "Tipo del artefacto que se va a crear.",
+  "loc.input.label.TargetPath": "Ruta de acceso",
+  "loc.input.help.TargetPath": "Recurso compartido de archivos en el que copiar los archivos"
+}

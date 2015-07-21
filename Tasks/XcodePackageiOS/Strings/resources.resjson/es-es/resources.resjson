@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Paquete de Xcode de iOS",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "Genere un archivo .ipa a partir de los resultados de la compilación de Xcode",
+  "loc.instanceNameFormat": "Paquete XCode $(appName)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.appName": "Nombre de .app",
+  "loc.input.help.appName": "Nombre de .app, que a veces es distinto de .ipa",
+  "loc.input.label.ipaName": "Nombre de .ipa",
+  "loc.input.help.ipaName": "Nombre de .ipa, que a veces es distinto de .app",
+  "loc.input.label.provisioningProfile": "Nombre del perfil de aprovisionamiento",
+  "loc.input.help.provisioningProfile": "Nombre del perfil de aprovisionamiento que se va a usar al firmar.",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "Use el SDK especificado. Ejecute **xcodebuild -showsdks** para ver la lista de SDK válidos.",
+  "loc.input.label.appPath": "Ruta de acceso de .app",
+  "loc.input.help.appPath": "Ruta de acceso relativa al archivo .app compilado",
+  "loc.input.label.ipaPath": "Ruta de acceso para colocar .ipa",
+  "loc.input.help.ipaPath": "Ruta de acceso relativa en la que se va a colocar el archivo .ipa. Este directorio se creará si no existe."
+}

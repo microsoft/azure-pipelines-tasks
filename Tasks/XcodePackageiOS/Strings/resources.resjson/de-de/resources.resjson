@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Xcode-Paket (iOS)",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "IPA-Datei aus Xcode-Buildausgabe generieren",
+  "loc.instanceNameFormat": "Xcode-Paket $(appName)",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.appName": "Name von \".app\"",
+  "loc.input.help.appName": "Name der APP-Datei, manchmal verschieden von der IPA-Datei",
+  "loc.input.label.ipaName": "Name von \".ipa\"",
+  "loc.input.help.ipaName": "Name der IPA-Datei, manchmal verschieden von der APP-Datei",
+  "loc.input.label.provisioningProfile": "Profilname wird bereitgestellt",
+  "loc.input.help.provisioningProfile": "Name des beim Signieren zu verwendenden bereitstellenden Profils",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "Verwendet das angegebene SDK. Führen Sie **xcodebuild -showsdks** aus, um die Liste gültiger SDKs anzuzeigen.",
+  "loc.input.label.appPath": "Pfad zu \".app\"",
+  "loc.input.help.appPath": "Relativer Pfad zur erstellten APP-Datei",
+  "loc.input.label.ipaPath": "Pfad zur Platzierung von \".ipa\"",
+  "loc.input.help.ipaPath": "Relativer Pfad, in dem die IPA-Datei abgelegt wird. Wenn das Verzeichnis nicht vorhanden ist, wird es erstellt."
+}

@@ -1,4 +1,5 @@
 param(
+    [string]$msbuildLocationMethod,
     [string]$msbuildLocation, 
     [string]$msbuildArguments, 
     [string]$solution, 
@@ -12,6 +13,7 @@ param(
 )
 
 Write-Verbose "Entering script MSBuild.ps1"
+Write-Verbose "msbuildLocationMethod = $msbuildLocationMethod"
 Write-Verbose "msbuildLocation = $msbuildLocation"
 Write-Verbose "msbuildArguments = $msbuildArguments"
 Write-Verbose "solution = $solution"
@@ -20,13 +22,16 @@ Write-Verbose "configuration = $configuration"
 Write-Verbose "clean = $clean"
 Write-Verbose "restoreNugetPackages = $restoreNugetPackages"
 Write-Verbose "logProjectEvents = $logProjectEvents"
+Write-Verbose "msbuildVersion = $msbuildVersion"
+Write-Verbose "msbuildArchitecture = $msbuildArchitecture"
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if (!$solution)
 {
-    throw "solution parameter not set on script"
+    throw (Get-LocalizedString -Key "Solution parameter not set on script")
 }
 
 $nugetRestore = Convert-String $restoreNugetPackages Boolean
@@ -54,7 +59,7 @@ else
 
 if (!$solutionFiles)
 {
-    throw "No solution with search pattern '$solution' was found."
+    throw (Get-LocalizedString -Key "No solution was found using search pattern '{0}'." -ArgumentList $solution)
 }
 
 $args = $msbuildArguments;
@@ -72,18 +77,59 @@ if ($configuration)
 
 Write-Verbose "args = $args"
 
-if(!$msBuildLocation)
+# Default the msbuildLocationMethod if not specified. The input msbuildLocationMethod
+# was added to the definition after the input msbuildLocation.
+if ("$msbuildLocationMethod".ToUpperInvariant() -ne 'LOCATION' -and "$msbuildLocationMethod".ToUpperInvariant() -ne 'VERSION')
 {
-    if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
+    # Infer the msbuildLocationMethod based on the whether msbuildLocation is specified.
+    if ($msbuildLocation)
     {
-        if($msbuildVersion -eq "latest")
+        $msbuildLocationMethod = 'location'
+    }
+    else
+    {
+        $msbuildLocationMethod = 'version'
+    }
+
+    Write-Verbose "Defaulted msbuildLocationMethod to: $msbuildLocationMethod"
+}
+
+# Default to 'version' if the user chose 'location' but didn't specify a location.
+if ("$msbuildLocationMethod".ToUpperInvariant() -eq 'LOCATION' -and !$msbuildLocation)
+{
+    Write-Verbose 'Location not specified. Using version instead.'
+    $msbuildLocationMethod = 'version'
+}
+
+if ("$msbuildLocationMethod".ToUpperInvariant() -eq 'VERSION')
+{
+    # Look for a specific version of MSBuild.
+    if ($msbuildVersion -and "$msbuildVersion".ToUpperInvariant() -ne 'LATEST')
+    {
+        Write-Verbose "Searching for MSBuild version: $msbuildVersion"
+        $msbuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
+
+        # Warn if not found.
+        if (!$msbuildLocation)
         {
-            # null out $msBuildVersion before passing to cmdlet so it will default to the latest on teh machine.
-            $msBuildVersion = $null
+            Write-Warning (Get-LocalizedString -Key 'Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.' -ArgumentList $msbuildVersion, $msbuildArchitecture)
         }
-            
-        $msBuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
-    }  
+    }
+
+    # Look for the latest version of MSBuild.
+    if (!$msbuildLocation)
+    {
+        Write-Verbose 'Searching for latest MSBuild version.'
+        $msbuildLocation = Get-MSBuildLocation -Version '' -Architecture $msbuildArchitecture
+
+        # Throw if not found.
+        if (!$msbuildLocation)
+        {
+            throw (Get-LocalizedString -Key 'MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture.' -ArgumentList $msbuildVersion, $msbuildArchitecture)
+        }
+    }
+
+    Write-Verbose "msbuildLocation = $msbuildLocation"
 }
 
 if ($cleanBuild)
@@ -97,7 +143,7 @@ if ($cleanBuild)
 $nugetPath = Get-ToolPath -Name 'NuGet.exe'
 if (-not $nugetPath -and $nugetRestore)
 {
-    Write-Warning "Unable to locate nuget.exe. Package restore will not be performed for the solutions"
+    Write-Warning (Get-LocalizedString -Key "Unable to locate {0}. Package restore will not be performed for the solutions" -ArgumentList 'nuget.exe')
 }
 
 foreach ($sf in $solutionFiles)

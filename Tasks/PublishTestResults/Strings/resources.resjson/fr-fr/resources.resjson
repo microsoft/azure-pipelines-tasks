@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Publier les résultats des tests",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.description": "Publier les résultats des tests sur VSO/TFS",
+  "loc.instanceNameFormat": "Publier les résultats de test $(testResultsFiles)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.testRunner": "Format des résultats des tests",
+  "loc.input.help.testRunner": "Format des fichiers de résultats de test générés par le Test Runner de votre choix, par ex., JUnit, VSTest, etc.",
+  "loc.input.label.testResultsFiles": "Fichiers des résultats des tests",
+  "loc.input.help.testResultsFiles": "Chemin d'accès aux fichiers de résultats de test. Les caractères génériques sont autorisés. Par exemple, '**\\*TEST-*.xml' pour tous les fichiers xml dont le nom commence par TEST-.",
+  "loc.input.label.mergeTestResults": "Fusionner les résultats des tests",
+  "loc.input.help.mergeTestResults": "Pour fusionner les résultats de tous les fichiers de résultats de test en une série de tests dans TFS/VSO, activez cette option. Pour créer une série de tests pour chaque fichier de résultats de test, désactivez cette option.",
+  "loc.input.label.platform": "Plateforme",
+  "loc.input.help.platform": "Plateforme pour laquelle les tests ont été exécutés.",
+  "loc.input.label.configuration": "Configuration",
+  "loc.input.help.configuration": "Configuration pour laquelle les tests ont été exécutés."
+}

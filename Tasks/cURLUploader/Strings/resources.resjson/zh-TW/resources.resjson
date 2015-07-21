@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "cURL 上傳檔案",
+  "loc.description": "使用 cURL 搭配支援的通訊協定來上傳檔案。(FTP、FTPS、SFTP、HTTP 等等)",
+  "loc.instanceNameFormat": "使用 cURL 上傳 $(files) ",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.files": "檔案",
+  "loc.input.help.files": "要上傳的檔案。可使用萬用字元。例如，適用於所有子資料夾中所有 ZIP 檔的 `**\\*.zip`。",
+  "loc.input.label.username": "使用者名稱",
+  "loc.input.help.username": "指定伺服器驗證所使用的使用者名稱。",
+  "loc.input.label.password": "密碼",
+  "loc.input.help.password": "指定伺服器驗證所使用的密碼。密碼應參考變數索引標籤上所定義的密碼變數。",
+  "loc.input.label.url": "URL",
+  "loc.input.help.url": "指定將要上傳檔案的 URL。目錄後面必須加正斜線結尾。可能的通訊協定包括 DICT、FILE、FTP、FTPS、GOPHER、HTTP、HTTPS、IMAP、IMAPS、LDAP、LDAPS、POP3、POP3S、RTMP、RTSP、SCP、SFTP、SMTP、SMTPS、TELNET 以及 TFTP。",
+  "loc.input.label.options": "選擇性引數",
+  "loc.input.help.options": "即將傳遞至 cURL 的額外引數。",
+  "loc.input.label.redirectStderr": "將標準錯誤重新導向至標準輸出",
+  "loc.input.help.redirectStderr": "將 '--stderr -' 加入 cURL。根據預設 cURL 會將進度列寫入 stderr，而組建將會將之視為錯誤輸出。隱藏這個行為。"
+}

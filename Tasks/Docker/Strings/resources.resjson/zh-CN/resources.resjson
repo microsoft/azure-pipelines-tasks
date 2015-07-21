@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "泊坞窗",
+  "loc.helpMarkDown": "将泊坞窗图像部署到远程计算机",
+  "loc.description": "将泊坞窗图像部署到远程计算机",
+  "loc.instanceNameFormat": "泊坞窗部署: $(Repository)",
+  "loc.input.label.DockerEndpoint": "泊坞窗终结点",
+  "loc.input.help.DockerEndpoint": "泊坞窗服务器远程连接 url。有效 remote_api_port 范围是 [0,65535]",
+  "loc.input.label.Repository": "存储库",
+  "loc.input.help.Repository": "图像的名称",
+  "loc.input.label.Tag": "标记",
+  "loc.input.help.Tag": "图像标记",
+  "loc.input.label.ContainerName": "容器名称",
+  "loc.input.help.ContainerName": "容器的名称",
+  "loc.input.label.PortBindings": "端口绑定",
+  "loc.input.help.PortBindings": "采用格式 \"hostport:containerport\" 提供端口绑定信息"
+}

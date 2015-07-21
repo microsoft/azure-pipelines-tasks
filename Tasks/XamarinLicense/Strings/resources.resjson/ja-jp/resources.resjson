@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin ライセンス",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.description": "Xamarin ライセンスをアクティブ化または非アクティブ化します",
+  "loc.instanceNameFormat": "$(action) Xamarin ライセンス",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.action": "アクション",
+  "loc.input.label.email": "電子メール",
+  "loc.input.help.email": "Xamarin アカウントの電子メール アドレス。",
+  "loc.input.label.password": "パスワード",
+  "loc.input.help.password": "Xamarin アカウントのパスワード。",
+  "loc.input.label.activateAndroid": "Xamarin.Android のアクティブ化",
+  "loc.input.label.timeout": "タイムアウト (秒)"
+}

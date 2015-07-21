@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Script por lotes",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613733)",
+  "loc.description": "Ejecute un cmd o script .bat de Windows y, opcionalmente, permítale cambiar el entorno",
+  "loc.instanceNameFormat": "Ejecutar script $(filename)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.filename": "Ruta de acceso",
+  "loc.input.help.filename": "Ruta de acceso del script cmd o bat que se va a ejecutar. Debe ser una ruta de acceso completa o relativa al directorio de trabajo predeterminado.",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Argumentos pasados al script cmd o bat",
+  "loc.input.label.modifyEnvironment": "Modificar entorno",
+  "loc.input.help.modifyEnvironment": "Determina si las modificaciones de variable de entorno afectarán a tareas posteriores.",
+  "loc.input.label.workingFolder": "Carpeta de trabajo",
+  "loc.input.help.workingFolder": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script.",
+  "loc.input.label.failOnStandardError": "Error en Error estándar",
+  "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."
+}

@@ -3,13 +3,15 @@
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
     "description": "Installs and updates missing NuGet packages",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 12
     },
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name":"advanced",
@@ -26,14 +28,6 @@
             "defaultValue":"**\\*.sln",
             "helpMarkDown": "The path to the Visual Studio Solution file",
             "required":true
-        },
-        {
-            "name": "excludeVersion",
-            "type": "boolean",
-            "label": "Exclude Version",
-            "defaultValue": "false",
-            "helpMarkDown": "Makes NuGet exclude package version from package folder names. Equivilent to the -ExcludeVersion NuGet.exe command line argument",
-            "required":"false"
         },
         {
             "name": "noCache",
@@ -66,7 +60,7 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\NuGetInstaller.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": ""
         }
     }
 }

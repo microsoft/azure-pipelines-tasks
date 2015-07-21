@@ -6,6 +6,7 @@
   "name": "PowerShell",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -15,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [
     "DotNetFramework"
@@ -34,7 +35,7 @@
       "label": "ms-resource:loc.input.label.scriptName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Path of the script to execute. Should be fully qualified path or relative to the default working directory."
+      "helpMarkDown": "ms-resource:loc.input.help.scriptName"
     },
     {
       "name": "arguments",
@@ -42,7 +43,7 @@
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters"
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
       "name": "workingFolder",
@@ -50,11 +51,11 @@
       "label": "ms-resource:loc.input.label.workingFolder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+      "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
       "groupName": "advanced"
     }
   ],
-  "instanceNameFormat": "Powershell: $(scriptName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShellExe": {
       "target": "$(scriptName)",

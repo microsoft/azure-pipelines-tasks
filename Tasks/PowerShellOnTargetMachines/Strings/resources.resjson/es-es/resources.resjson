@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "PowerShell en equipos de destino",
+  "loc.helpMarkDown": "Ejecutar scripts de PowerShell en equipo(s) remoto(s)",
+  "loc.description": "Ejecutar scripts de PowerShell en equipo(s) remoto(s)",
+  "loc.instanceNameFormat": "Ejecutar PowerShell en $(EnvironmentName)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.EnvironmentName": "Grupo de equipos",
+  "loc.input.help.EnvironmentName": "Nombre del grupo de equipos para implementar la aplicación.​",
+  "loc.input.label.MachineNames": "Implementar en equipos",
+  "loc.input.help.MachineNames": "Proporcione una lista separada por comas de los equipos para la implementación, como Equipo1, Equipo2. El valor predeterminado son todos los equipos del grupo de equipos.",
+  "loc.input.label.ScriptPath": "Script de PowerShell",
+  "loc.input.help.ScriptPath": "Ubicación del script de PowerShell en los equipos de destino, o bien una ruta de acceso UNC como c:\\BudgetIT\\Web\\Deploy\\Website.ps1",
+  "loc.input.label.ScriptArguments": "Argumentos de script",
+  "loc.input.help.ScriptArguments": "Argumentos para el script de PowerShell. Pueden ser parámetros ordinales o parámetros con nombre como -testParam test",
+  "loc.input.label.InitializationScriptPath": "Script de inicialización",
+  "loc.input.help.InitializationScriptPath": "Ubicación del script de datos para DSC en los equipos de destino, o bien una ruta de acceso UNC como c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
+  "loc.input.label.RunPowershellInParallel": "Ejecutar PowerShell en paralelo",
+  "loc.input.help.RunPowershellInParallel": "Si se establece en true, se ejecutarán scripts de Powershell en paralelo en los equipos de destino."
+}

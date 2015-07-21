@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Chef Knife",
+  "loc.helpMarkDown": "Skripte mit Knife-Befehlen auf Ihrer Chef-Arbeitsstation ausführen",
+  "loc.description": "Skripte mit Knife-Befehlen auf Ihrer Chef-Arbeitsstation ausführen",
+  "loc.instanceNameFormat": "Chef Knife-Skript: $(ScriptPath)",
+  "loc.input.label.ConnectedServiceName": "Chef-Abonnements",
+  "loc.input.help.ConnectedServiceName": "Vor der Ausführung von Knife-Befehlen zu konfigurierendes Chef-Abonnement",
+  "loc.input.label.ScriptPath": "Skriptpfad",
+  "loc.input.help.ScriptPath": "Pfad des Skripts. Muss der vollständig qualifizierte Pfad oder ein Pfad relativ zum Standardarbeitsverzeichnis sein.",
+  "loc.input.label.ScriptArguments": "Skriptargumente",
+  "loc.input.help.ScriptArguments": "Zusätzliche Argumente, die an Skript übergeben werden sollen. Entweder Ordnungszahl- oder benannte Parameter."
+}

@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Buildartefakte veröffentlichen",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "Buildartefakte unter Verwendung von Minimatchmustern auf dem Server oder einer Dateifreigabe veröffentlichen",
+  "loc.instanceNameFormat": "Artefakt veröffentlichen: $(ArtifactName)",
+  "loc.input.label.CopyRoot": "Stamm kopieren",
+  "loc.input.help.CopyRoot": "Stammordner, auf den Kopiermuster angewendet werden sollen. Wenn keine Angabe erfolgt, wird der Repositorystamm verwendet. Verwenden Sie Variablen für Buildschritte außerhalb des Repository. Beispiel: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Inhalt",
+  "loc.input.help.Contents": "Als Teil des Artefakts einzuschließende Datei- oder Ordnerpfade. Unterstützt mehrere Zeilen oder Minimatchmuster. [Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.ArtifactName": "Artefaktname",
+  "loc.input.help.ArtifactName": "Der Name des zu erstellenden Artefakts.",
+  "loc.input.label.ArtifactType": "Artefakttyp",
+  "loc.input.help.ArtifactType": "Der Typ des zu erstellenden Artefakts.",
+  "loc.input.label.TargetPath": "Pfad",
+  "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Dateien kopiert werden sollen"
+}

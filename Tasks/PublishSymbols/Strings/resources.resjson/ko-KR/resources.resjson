@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "소스 인덱싱 및 기호 게시 ",
+  "loc.helpMarkDown": "소스 코드를 인덱싱하고 파일 공유에 기호 게시<br/>[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.description": "소스 코드를 인덱싱하고 파일 공유에 기호 게시",
+  "loc.instanceNameFormat": "기호 경로 게시: $(SymbolsPath)",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.SymbolsPath": "기호를 게시할 경로",
+  "loc.input.help.SymbolsPath": "기호 저장소 공유의 경로를 지정하세요. 이 값을 설정하지 않으면 소스 인덱싱이 발생하지만 기호는 게시되지 않습니다.",
+  "loc.input.label.SearchPattern": "검색 패턴",
+  "loc.input.help.SearchPattern": "게시할 pdb 파일을 검색하는 데 사용된 패턴입니다.",
+  "loc.input.label.SourceFolder": "소스 폴더 경로",
+  "loc.input.help.SourceFolder": "기호 파일을 검색할 소스 폴더의 경로입니다. 기본값은 $(Build.SourcesDirectory)입니다.",
+  "loc.input.label.SymbolsFolder": "기호 폴더 경로",
+  "loc.input.help.SymbolsFolder": "기호 파일을 검색할 폴더의 경로입니다. 기본값은 구성된 소스 폴더입니다.",
+  "loc.input.label.SymbolsMaximumWaitTime": "최대 대기 시간(분)",
+  "loc.input.help.SymbolsMaximumWaitTime": "단계에 실패하기 전까지 대기하는 시간(분)",
+  "loc.input.label.SymbolsProduct": "제품",
+  "loc.input.help.SymbolsProduct": "제품 매개 변수를 symstore.exe로 지정하세요. 기본값은 $(Build.DefinitionName)입니다.",
+  "loc.input.label.SymbolsVersion": "버전",
+  "loc.input.help.SymbolsVersion": "버전 매개 변수를 symstore.exe로 지정하세요. 기본값은 $(Build.BuildNumber)입니다.",
+  "loc.input.label.SymbolsArtifactName": "Artifact Name",
+  "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)"
+}

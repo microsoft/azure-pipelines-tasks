@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.helpMarkDown": "환경 특성을 편집하여 Chef 환경에 배포",
+  "loc.description": "환경 특성을 편집하여 Chef 환경에 배포",
+  "loc.instanceNameFormat": "Chef 구독 $(ChefServer)의 환경 특성을 편집하여 chef에 배포",
+  "loc.input.label.connectedServiceName": "Chef 연결",
+  "loc.input.help.connectedServiceName": "Chef 구독의 이름",
+  "loc.input.label.Environment": "환경",
+  "loc.input.help.Environment": "배포에 사용할 Chef 환경의 이름입니다. 해당 환경의 특성은 편집됩니다.",
+  "loc.input.label.Attributes": "환경 특성",
+  "loc.input.help.Attributes": "업데이트할 리프 노드 특성을 지정하세요. 예. {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. 리프 노드가 존재하지 않을 경우 작업이 실패합니다.",
+  "loc.input.label.chefWaitTime": "대기 시간",
+  "loc.input.help.chefWaitTime": "이 작업을 완료할 때까지 대기하는 시간(분)입니다. 기본값: 30분"
+}

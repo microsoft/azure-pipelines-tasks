@@ -6,6 +6,7 @@
   "name": "Chef",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -16,13 +17,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 4
   },
   "demands": [
     "Chef",
     "KnifeReporting"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
       "name": "connectedServiceName",
@@ -30,7 +31,7 @@
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the Chef subscription"
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
       "name": "Environment",
@@ -38,7 +39,7 @@
       "label": "ms-resource:loc.input.label.Environment",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the Chef Environment to be used for Deployment. The attributes of that environment will be edited."
+      "helpMarkDown": "ms-resource:loc.input.help.Environment"
     },
     {
       "name": "Attributes",
@@ -46,7 +47,7 @@
       "label": "ms-resource:loc.input.label.Attributes",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify the value of the leaf node attribute(s) to be updated. Example. {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. Task fails if the leaf node does not exist."
+      "helpMarkDown": "ms-resource:loc.input.help.Attributes"
     },
     {
       "name": "chefWaitTime",
@@ -54,10 +55,10 @@
       "label": "ms-resource:loc.input.label.chefWaitTime",
       "defaultValue": "30",
       "required": true,
-      "helpMarkDown": "The amount of time (in minutes) to wait for this task to complete. Default value: 30 minutes"
+      "helpMarkDown": "ms-resource:loc.input.help.chefWaitTime"
     }
   ],
-  "instanceNameFormat": "Deploy to chef by editing environment attributes of Chef subscription $(ChefServer)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\Chef.ps1",

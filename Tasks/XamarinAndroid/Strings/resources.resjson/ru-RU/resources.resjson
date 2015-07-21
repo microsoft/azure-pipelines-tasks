@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Xamarin.Android",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.description": "Сборка приложения Android с помощью Xamarin",
+  "loc.instanceNameFormat": "Сборка проекта Xamarin.Android $(project)",
+  "loc.group.displayName.msbuildOptions": "Параметры MSBuild",
+  "loc.group.displayName.jdkOptions": "Параметры JDK",
+  "loc.input.label.project": "Проект",
+  "loc.input.help.project": "Относительный путь от корня репозитория к проектам Xamarin.Android, сборку которых нужно выполнить. Можно использовать подстановочные знаки. Пример: \"**\\*.csproj\" для всех файлов CSPROJ во всех вложенных папках. Проект должен иметь цель PackageForAndroid.",
+  "loc.input.label.target": "Целевой объект",
+  "loc.input.help.target": "Выполнить сборку этих целевых объектов в этом проекте. Несколько целевых объектов указываются через точку с запятой.",
+  "loc.input.label.outputDir": "Выходной каталог",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.label.msbuildLocation": "Расположение MSBuild",
+  "loc.input.help.msbuildLocation": "При необходимости укажите путь к MSBuild. По умолчанию ищется последняя версия.",
+  "loc.input.label.msbuildArguments": "Аргументы MSBuild",
+  "loc.input.help.msbuildArguments": "Дополнительные аргументы, передаваемые в MSBuild.",
+  "loc.input.label.jdkVersion": "Версия JDK",
+  "loc.input.help.jdkVersion": "Используйте при сборке выбранную версию JDK.",
+  "loc.input.label.jdkArchitecture": "Архитектура JDK",
+  "loc.input.help.jdkArchitecture": "Дополнительно укажите архитектуру JDK (x86, x64)."
+}

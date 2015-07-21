@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Cloudbasierter Webleistungstest",
+  "loc.helpMarkDown": "Diese Aufgabe kann verwendet werden, um einen cloudbasierten Auslastungstest unter Verwendung von Visual Studio Online auszulösen. [Weitere Informationen](http://go.microsoft.com/fwlink/?linkid=613203)",
+  "loc.description": "Führt den schnellen Webleistungstext in der Cloud mit Visual Studio Online aus",
+  "loc.instanceNameFormat": "Schneller Webleistungstest $(testName)",
+  "loc.input.label.connectedServiceName": "Registrierte Verbindung",
+  "loc.input.help.connectedServiceName": "Wählen Sie eine zuvor registrierte Dienstverbindung aus, um mit dem Dienst \"Cloudbasierter Auslastungstest\" zu kommunizieren. Wählen Sie \"Verwalten\", um eine neue Verbindung zu registrieren.",
+  "loc.input.label.websiteUrl": "Website-URL",
+  "loc.input.help.websiteUrl": "Geben Sie die URL der Anwendungswebsite im Format http://www.your.app/home.html ein.",
+  "loc.input.label.testName": "Testname",
+  "loc.input.help.testName": "Name des Auslastungstests für Nachverfolgung und Korrelation",
+  "loc.input.label.vuLoad": "Benutzerauslastung",
+  "loc.input.help.vuLoad": "Maximale Anzahl virtueller Benutzer, die gleichzeitig auf die Website zugreifen können.",
+  "loc.input.label.runDuration": "Testlaufdauer (s)",
+  "loc.input.help.runDuration": "Dauer des Auslastungstestlaufs in Sekunden.",
+  "loc.input.label.geoLocation": "Position laden",
+  "loc.input.help.geoLocation": "Geografische Region, aus der die Auslastung generiert werden soll. Weitere Einzelheiten finden Sie in der Aufgabenhilfe."
+}

@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Indexar orígenes y publicar símbolos",
+  "loc.helpMarkDown": "Indexe su código fuente y publique símbolos en un recurso compartido de archivos<br/>[Más información](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.description": "Indexe el código fuente y publique los símbolos en un recurso compartido de archivos",
+  "loc.instanceNameFormat": "Publicar ruta de acceso de símbolos: $(SymbolsPath)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.SymbolsPath": "Ruta de acceso para publicar símbolos",
+  "loc.input.help.SymbolsPath": "Especifique la ruta de acceso al recurso compartido del almacén de símbolos. Si este valor no se establece, la indexación de orígenes tendrá lugar, pero no se publicarán símbolos.",
+  "loc.input.label.SearchPattern": "Patrón de búsqueda",
+  "loc.input.help.SearchPattern": "Patrón usado para detectar los archivos pdb que se van a publicar.",
+  "loc.input.label.SourceFolder": "Ruta de acceso de la carpeta de origen",
+  "loc.input.help.SourceFolder": "Ruta de acceso a la carpeta de origen en la que se buscan los archivos de símbolos. El valor predeterminado es $(Build.SourcesDirectory)",
+  "loc.input.label.SymbolsFolder": "Ruta de acceso a la carpeta de los símbolos",
+  "loc.input.help.SymbolsFolder": "Ruta de acceso a la carpeta en la que se buscan los archivos de símbolos. El valor predeterminado es la carpeta de origen configurada.",
+  "loc.input.label.SymbolsMaximumWaitTime": "Tiempo de espera máximo (en minutos)",
+  "loc.input.help.SymbolsMaximumWaitTime": "Número de minutos de espera antes de generar un error en el paso",
+  "loc.input.label.SymbolsProduct": "Producto",
+  "loc.input.help.SymbolsProduct": "Especifique el parámetro de producto en symstore.exe. El valor predeterminado es $(Build.DefinitionName)",
+  "loc.input.label.SymbolsVersion": "Versión",
+  "loc.input.help.SymbolsVersion": "Especifique el parámetro de versión en symstore.exe. El valor predeterminado es $(Build.BuildNumber)",
+  "loc.input.label.SymbolsArtifactName": "Artifact Name",
+  "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)"
+}

@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Shell 脚本",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "使用 bash 运行 shell 脚本",
+  "loc.instanceNameFormat": "Shell 脚本 $(scriptPath)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.scriptPath": "脚本路径",
+  "loc.input.help.scriptPath": "相对于要运行的 shell 脚本文件的存储库根的路径。",
+  "loc.input.label.args": "参数",
+  "loc.input.help.args": "传递给 shell 脚本的参数",
+  "loc.input.label.cwd": "工作目录",
+  "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。",
+  "loc.input.label.failOnStandardError": "因标准错误失败",
+  "loc.input.help.failOnStandardError": "如果这是 true，则在向 StandardError 流写入任何错误时，此任务都会失败。"
+}

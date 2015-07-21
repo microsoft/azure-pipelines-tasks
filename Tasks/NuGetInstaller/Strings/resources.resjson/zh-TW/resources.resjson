@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "NuGet 安裝程式",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.description": "安裝及更新缺少的 NuGet 套件",
+  "loc.instanceNameFormat": "NuGet 還原 $(solution)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.solution": "方案的路徑",
+  "loc.input.help.solution": "Visual Studio 方案檔案的路徑",
+  "loc.input.label.excludeVersion": "排除版本",
+  "loc.input.help.excludeVersion": "讓 NuGet 從封裝資料夾名稱排除封裝版本。相當於 -ExcludeVersion NuGet.exe 命令列引數",
+  "loc.input.label.noCache": "停用本機快取",
+  "loc.input.help.noCache": "相當於 -NoCache NuGet.exe 命令列引數",
+  "loc.input.label.nuGetRestoreArgs": "NuGet 引數",
+  "loc.input.help.nuGetRestoreArgs": "傳遞至 NuGet.exe 還原的其他引數。",
+  "loc.input.label.nuGetPath": "NuGet.exe 的路徑",
+  "loc.input.help.nuGetPath": "選擇性地提供到 NuGet.exe 的路徑"
+}

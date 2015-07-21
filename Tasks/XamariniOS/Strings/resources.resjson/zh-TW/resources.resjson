@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.description": "在 Mac OS 上使用 Xamarin 建置 iOS 應用程式",
+  "loc.instanceNameFormat": "建置 Xamarin.iOS 方案 $(solution)",
+  "loc.input.label.solution": "方案",
+  "loc.input.help.solution": "建置的 Xamarin.iOS 方案之儲存機制根的相對路徑。",
+  "loc.input.label.configuration": "組態",
+  "loc.input.help.configuration": "標準組態為 Ad-Hoc、AppStore、Debug、Release。",
+  "loc.input.label.mdtoolLocation": "覆寫 mdtool 的路徑",
+  "loc.input.help.mdtoolLocation": "選擇性地提供 mdtool 或 Xamarin Studio 建置工具的路徑。若其為空白，將使用預設路徑: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
+  "loc.input.label.forSimulator": "iOS 模擬器的組建",
+  "loc.input.help.forSimulator": "選擇性地針對 iOS 模擬器建置，而不是實體 iOS 裝置。"
+}

@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Copie des fichiers de l'ordinateur Windows",
+  "loc.helpMarkDown": "Copier les fichiers sur les ordinateurs distants",
+  "loc.description": "Copier les fichiers sur les ordinateurs distants",
+  "loc.instanceNameFormat": "Copier les fichiers sur $(EnvironmentName)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.SourcePath": "Source",
+  "loc.input.help.SourcePath": "Chemin d'accès absolu au dossier ou fichier source sur l'ordinateur local, ou partage UNC.",
+  "loc.input.label.EnvironmentName": "Groupe d'ordinateurs",
+  "loc.input.help.EnvironmentName": "Nom du groupe d'ordinateurs cible sur lequel copier les fichiers.​",
+  "loc.input.label.MachineNames": "Copier sur les ordinateurs",
+  "loc.input.help.MachineNames": "Indiquez une liste d'ordinateurs séparés par des virgules, par exemple, Ordinateur1, Ordinateur2. Il s'agit généralement de tous les ordinateurs du groupe d'ordinateurs.",
+  "loc.input.label.TargetPath": "Dossier de destination",
+  "loc.input.help.TargetPath": "Chemin d'accès local sur les ordinateurs cibles pour la copie des fichiers à partir de la source. Une variable d'environnement peut être utilisée, par ex., $env:windir\\BudgetIT\\Web.",
+  "loc.input.label.CleanTargetBeforeCopy": "Nettoyer la cible",
+  "loc.input.help.CleanTargetBeforeCopy": "Si la valeur est true, le dossier de destination est nettoyé avant la copie des fichiers.",
+  "loc.input.label.CopyFilesInParallel": "Copier les fichiers en parallèle",
+  "loc.input.help.CopyFilesInParallel": "Si la valeur est true, les fichiers sont copiés en parallèle sur les ordinateurs."
+}

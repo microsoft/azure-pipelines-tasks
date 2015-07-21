@@ -3,6 +3,7 @@
     "name":"PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",
     "description": "Index your source code and publish symbols to a file share",
+    "helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](http://go.microsoft.com/fwlink/?LinkID=613722)",
     "category": "Build",
     "visibility": [
                     "Build"
@@ -11,9 +12,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 4
     },
-    "minimumAgentVersion": "1.82.0",
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name": "advanced",
@@ -82,6 +83,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "SymbolsArtifactName",
+            "type": "string",
+            "label": "Artifact Name",
+            "defaultValue": "Symbols_$(BuildConfiguration)",
+            "required": false,
+            "helpMarkDown": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)",
             "groupName": "advanced"
         }
     ],

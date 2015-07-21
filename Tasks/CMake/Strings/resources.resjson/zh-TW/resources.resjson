@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "CMake",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.description": "使用 CMake 跨平台建置系統建置",
+  "loc.instanceNameFormat": "CMake $(args)",
+  "loc.input.label.cwd": "工作目錄",
+  "loc.input.help.cwd": "執行 cmake 時的目前工作目錄。",
+  "loc.input.label.args": "引數",
+  "loc.input.help.args": "傳遞至 cmake 的引數"
+}

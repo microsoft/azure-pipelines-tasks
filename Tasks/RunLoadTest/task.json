@@ -1,37 +1,49 @@
 ﻿{
   "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
   "name": "CloudLoadTest",
-  "friendlyName": "Cloud-based Load Test with VSO",
-  "description": "Runs the load test in cloud; Powered by VS Online.",
+  "friendlyName": "Cloud-based Load Test",
+  "description": "Runs the load test in cloud, with Visual Studio Online",
+  "helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
   "category": "Test",
   "visibility": [
-    "Preview",
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
-    "msbuild"
+    "msbuild",
+    "azureps"
   ],
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "Advanced",
-      "isExpanded": false
-    }
-  ],
+  "minimumAgentVersion": "1.83.0",
   "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "Registered connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select a previously registered service connection to talk to the Cloud-based Load Test service. Choose 'Manage' to register a new connection."
+    },
+    {
+      "name": "TestSettings",
+      "type": "filePath",
+      "label": "Test settings file",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root for the test settings file to use for the load test."
+    },
     {
       "name": "TestDrop",
       "type": "filePath",
       "label": "Load test files folder",
-      "defaultValue": "$(Build.SourcesDirectory)\\loadtest",
+      "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Relative path from build source directory on the agent under which the load test solution output is placed."
+      "helpMarkDown": "Relative path from repo root where the load test solution build output will be available."
     },
     {
       "name": "LoadTest",
@@ -39,47 +51,14 @@
       "label": "Load test file",
       "defaultValue": "loadtest1.loadtest",
       "required": true,
-      "helpMarkDown": "Relative path to the load test filename under the test drop folder defined above."
-    },
-    {
-      "name": "TestSettings",
-      "type": "string",
-      "label": "Test settings file",
-      "defaultValue": "local.testsettings",
-      "required": true,
-      "helpMarkDown": "Relative path to the test settings filename under the test drop folder defined above."
+      "helpMarkDown": "The load test filename to be used under the load test folder specified above."
     },
     {
       "name": "ThresholdLimit",
       "type": "string",
-      "label": "Number of permissible threshold violations",      
+      "label": "Number of permissible threshold violations",
       "required": false,
       "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsucessful."
-    },
-    {
-      "name": "VsoAccountUrl",
-      "type": "string",
-      "label": "VSO account uri",
-      "defaultValue": "$(System.TeamFoundationServerUri)",
-      "groupName":"advanced",
-      "required": true,
-      "helpMarkDown": "Visual Studio Online Account URL."
-    },
-    {
-      "name": "Username",
-      "type": "string",
-      "label": "Alternate credential username",
-      "defaultValue": "$(System.Auth.UserName)",
-      "groupName":"advanced",
-      "required": true
-    },
-    {
-      "name": "Password",
-      "type": "string",
-      "label": "Alternate credential password",
-      "defaultValue": "$(System.Auth.Password)",
-      "groupName":"advanced",
-      "required": true
     }
   ],
   "instanceNameFormat": "Cloud Load Test $(LoadTest)",

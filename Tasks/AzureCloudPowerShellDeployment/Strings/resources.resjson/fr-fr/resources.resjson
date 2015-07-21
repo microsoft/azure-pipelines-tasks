@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Déploiement d'un service cloud Azure",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.description": "Déployer un service cloud Azure",
+  "loc.instanceNameFormat": "Déploiement Azure : $(CsPkg)",
+  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
+  "loc.input.help.ConnectedServiceName": "Abonnement Azure à cibler pour le déploiement.",
+  "loc.input.label.StorageAccount": "Compte de stockage",
+  "loc.input.help.StorageAccount": "Un compte de stockage est nécessaire pour le déploiement.",
+  "loc.input.label.ServiceName": "Nom du service",
+  "loc.input.label.ServiceLocation": "Emplacement du service",
+  "loc.input.help.ServiceLocation": "Les options possibles sont **Est des États-Unis**, **Est des États-Unis 2**, **Centre des États-Unis**, **Sud du centre des États-Unis**, **Ouest des États-Unis**, **Europe du Nord**, **Europe de l'Ouest**, etc.",
+  "loc.input.label.CsPkg": "CsPkg",
+  "loc.input.help.CsPkg": "Chemin d'accès à CsPkg dans le répertoire de l'artefact par défaut.",
+  "loc.input.label.CsCfg": "CsCfg",
+  "loc.input.help.CsCfg": "Chemin d'accès à CsCfg dans le répertoire de l'artefact par défaut.",
+  "loc.input.label.Slot": "Environnement (emplacement)",
+  "loc.input.help.Slot": "**Production** ou **Intermédiaire**",
+  "loc.input.label.AllowUpgrade": "Autoriser la mise à niveau"
+}

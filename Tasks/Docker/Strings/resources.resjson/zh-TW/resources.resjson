@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "將 Docker 映像部署到遠端電腦",
+  "loc.description": "將 Docker 映像部署到遠端電腦",
+  "loc.instanceNameFormat": "Docker 部署: $(Repository)",
+  "loc.input.label.DockerEndpoint": "Docker 端點",
+  "loc.input.help.DockerEndpoint": "Docker 伺服器遠端連接 URL。有效 remote_api_port 範圍為 [0,65535]",
+  "loc.input.label.Repository": "儲存機制",
+  "loc.input.help.Repository": "影像名稱",
+  "loc.input.label.Tag": "標記",
+  "loc.input.help.Tag": "影像標記",
+  "loc.input.label.ContainerName": "容器名稱",
+  "loc.input.help.ContainerName": "容器名稱",
+  "loc.input.label.PortBindings": "連接埠繫結",
+  "loc.input.help.PortBindings": "以下列格式提供通訊埠繫結資訊: 'hostport:containerport'"
+}

@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "NuGet 安装程序",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.description": "安装和更新丢失的 NuGet 包",
+  "loc.instanceNameFormat": "NuGet restore $(solution)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.solution": "解决方案的路径",
+  "loc.input.help.solution": "Visual Studio 解决方案文件的路径",
+  "loc.input.label.excludeVersion": "排除版本",
+  "loc.input.help.excludeVersion": "使 NuGet 从包文件夹名中排除包版本。等效于 -ExcludeVersion NuGet.exe 命令行参数",
+  "loc.input.label.noCache": "禁用本地缓存",
+  "loc.input.help.noCache": "等效于 -NoCache NuGet.exe 命令行参数",
+  "loc.input.label.nuGetRestoreArgs": "NuGet 参数",
+  "loc.input.help.nuGetRestoreArgs": "传递给 NuGet.exe restore 的其他参数。",
+  "loc.input.label.nuGetPath": "NuGet.exe 的路径",
+  "loc.input.help.nuGetPath": "可以选择提供 NuGet.exe 的路径"
+}

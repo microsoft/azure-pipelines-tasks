@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Batchskript",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613733)",
+  "loc.description": "Windows-CMD- oder BAT-Skript ausführen und optional zulassen, dass es die Umgebung ändert",
+  "loc.instanceNameFormat": "Skript $(filename) ausführen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.filename": "Pfad",
+  "loc.input.help.filename": "Pfad des auszuführenden cmd- oder bat-Skripts. Muss der vollständig qualifizierte Pfad oder ein Pfad relativ zum Standardarbeitsverzeichnis sein.",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.help.arguments": "An das cmd- oder bat-Skript übergebene Argumente",
+  "loc.input.label.modifyEnvironment": "Umgebung ändern",
+  "loc.input.help.modifyEnvironment": "Bestimmt, ob sich Änderungen an Umgebungsvariablen auf nachfolgende Aufgaben auswirken.",
+  "loc.input.label.workingFolder": "Arbeitsordner",
+  "loc.input.help.workingFolder": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist.",
+  "loc.input.label.failOnStandardError": "Fehler bei Standardfehler",
+  "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden."
+}

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin 授權",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.description": "啟動或停用 Xamarin 授權",
+  "loc.instanceNameFormat": "$(action) Xamarin 授權",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.action": "動作",
+  "loc.input.label.email": "電子郵件",
+  "loc.input.help.email": "Xamarin 帳戶電子郵件地址。",
+  "loc.input.label.password": "密碼",
+  "loc.input.help.password": "Xamarin 帳戶密碼。",
+  "loc.input.label.activateAndroid": "啟用 Xamarin.Android",
+  "loc.input.label.timeout": "逾時 (以秒為單位)"
+}

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Chef",
+  "loc.helpMarkDown": "通过编辑环境属性部署到 Chef 环境",
+  "loc.description": "通过编辑环境属性部署到 Chef 环境",
+  "loc.instanceNameFormat": "通过编辑 Chef 订阅 $(ChefServer) 的环境属性来部署到 chef",
+  "loc.input.label.connectedServiceName": "Chef 连接",
+  "loc.input.help.connectedServiceName": "Chef 订阅的名称",
+  "loc.input.label.Environment": "环境",
+  "loc.input.help.Environment": "要用于部署的 Chef 环境的名称。将编辑该环境的属性。",
+  "loc.input.label.Attributes": "环境属性",
+  "loc.input.help.Attributes": "指定要更新的叶节点属性的值。示例。{\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}。如果叶节点不存在，则任务会失败。",
+  "loc.input.label.chefWaitTime": "等待时间",
+  "loc.input.help.chefWaitTime": "等待此任务完成的时间量(以分钟为单位)。默认值: 30 分钟"
+}

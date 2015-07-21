@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "CocoaPods",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.description": "CocoaPods は、Swift プロジェクトと Objective-C Cocoa プロジェクトの依存関係マネージャーです。pod install を実行します",
+  "loc.instanceNameFormat": "pod install",
+  "loc.input.label.cwd": "作業ディレクトリ",
+  "loc.input.help.cwd": "現行の作業ディレクトリです。指定されない場合はリポジトリのディレクトリになります。"
+}

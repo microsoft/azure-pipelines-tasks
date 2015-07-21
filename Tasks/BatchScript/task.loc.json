@@ -6,6 +6,7 @@
   "name": "BatchScript",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -15,11 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 9
   },
   "demands": [
     "Cmd"
   ],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -34,7 +36,7 @@
       "label": "ms-resource:loc.input.label.filename",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Path of the cmd or bat script to execute. Should be fully qualified path or relative to the default working directory."
+      "helpMarkDown": "ms-resource:loc.input.help.filename"
     },
     {
       "name": "arguments",
@@ -42,7 +44,7 @@
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Arguments passed to the cmd or bat script"
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
       "name": "modifyEnvironment",
@@ -50,7 +52,7 @@
       "label": "ms-resource:loc.input.label.modifyEnvironment",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "Determines whether environment variable modifications will affect subsequent tasks."
+      "helpMarkDown": "ms-resource:loc.input.help.modifyEnvironment"
     },
     {
       "name": "workingFolder",
@@ -58,16 +60,27 @@
       "label": "ms-resource:loc.input.label.workingFolder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+      "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
       "groupName": "advanced"
     }
   ],
-  "instanceNameFormat": "Run script $(filename)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\BatchScript.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "Process": {
+      "target": "$(filename)",
+      "argumentFormat": "$(arguments)",
+      "workingDirectory": "$(workingFolder)",
+      "modifyEnvironment": "$(modifyEnvironment)",
+      "failOnStandardError": "$(failOnStandardError)"
     }
   }
 }

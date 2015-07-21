@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "installation de npm",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Installer des packages npm",
+  "loc.instanceNameFormat": "Installation de npm $(arguments)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments supplémentaires passés à l'installation de npm.",
+  "loc.input.label.cwd": "Répertoire de travail",
+  "loc.input.help.cwd": "Répertoire de travail actuel dans lequel l'installation de npm est exécutée. Il s'agit généralement de la racine du référentiel."
+}

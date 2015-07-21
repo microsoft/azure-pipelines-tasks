@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "コマンド ライン",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "引数を持つコマンド ラインを実行します",
+  "loc.instanceNameFormat": "実行 $(filename)",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.filename": "ツール",
+  "loc.input.help.filename": "実行するツールの名前。ツールはパスが通っているか、which で解決可能である必要があります。完全修飾パスを指定することができますが (省略可能)、これはエージェントに存在するかどうかに依存します。",
+  "loc.input.label.arguments": "引数",
+  "loc.input.label.workingFolder": "作業フォルダー",
+  "loc.input.help.workingFolder": "ツールに渡される引数",
+  "loc.input.label.failOnStandardError": "標準エラーで失敗します",
+  "loc.input.help.failOnStandardError": "true の場合、StandardError ストリームにエラーが書き込まれると、このタスクは失敗します。"
+}

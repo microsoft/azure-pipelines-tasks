@@ -3,6 +3,7 @@
     "name": "PowerShell",
     "friendlyName": "PowerShell",
     "description": "Run a PowerShell script",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613736)",
     "category": "Utility",
     "visibility": [
                   "Build",
@@ -12,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [
         "DotNetFramework"

@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Docker",
+  "loc.helpMarkDown": "Déployer une image Docker sur un ordinateur distant",
+  "loc.description": "Déployer une image Docker sur un ordinateur distant",
+  "loc.instanceNameFormat": "Déploiement de Docker : $(Repository)",
+  "loc.input.label.DockerEndpoint": "Point de terminaison Docker",
+  "loc.input.help.DockerEndpoint": "URL de connexion à distance du serveur Docker. La plage remote_api_port valide est [0,65535]",
+  "loc.input.label.Repository": "Référentiel",
+  "loc.input.help.Repository": "Nom de l'image",
+  "loc.input.label.Tag": "Balise",
+  "loc.input.help.Tag": "Balise d'image",
+  "loc.input.label.ContainerName": "Nom du conteneur",
+  "loc.input.help.ContainerName": "Nom du conteneur",
+  "loc.input.label.PortBindings": "Liaisons de ports",
+  "loc.input.help.PortBindings": "Indiquer les informations de liaison de port au format 'hostport:containerport'"
+}

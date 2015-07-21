@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "發行組建成品",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "使用小型符合模式，將組建成品發行到伺服器或檔案共用",
+  "loc.instanceNameFormat": "發行成品: $(ArtifactName)",
+  "loc.input.label.CopyRoot": "複製根",
+  "loc.input.help.CopyRoot": "要用來套用複製模式的根資料夾。儲存機制的根為空白。如果建置步驟建立於儲存機制之外，將使用變數。例如: $(agent.builddirectory)",
+  "loc.input.label.Contents": "內容",
+  "loc.input.help.Contents": "檔案或資料夾路徑包含為成品的一部分。支援多行或小型符合模式。[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.ArtifactName": "成品名稱",
+  "loc.input.help.ArtifactName": "建立之成品的名稱。",
+  "loc.input.label.ArtifactType": "成品類型",
+  "loc.input.help.ArtifactType": "建立之成品的類型。",
+  "loc.input.label.TargetPath": "路徑",
+  "loc.input.help.TargetPath": "用於複製檔案的檔案共用"
+}

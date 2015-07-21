@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "ソースの索引付けおよびシンボルの発行",
+  "loc.helpMarkDown": "ソース コードに索引をつけ、シンボルをファイル共有に発行します<br/>[詳細](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.description": "ソース コードに索引をつけ、シンボルをファイル共有に発行します",
+  "loc.instanceNameFormat": "シンボル発行のパス: $(SymbolsPath)",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.SymbolsPath": "シンボルを発行するためのパス",
+  "loc.input.help.SymbolsPath": "シンボル ストア共有へのパスを指定します。この値が設定されない場合、ソースの索引付けは生じますが、シンボルは発行されません。",
+  "loc.input.label.SearchPattern": "検索パターン",
+  "loc.input.help.SearchPattern": "発行する PDB ファイルの検出に使用されたパターン。",
+  "loc.input.label.SourceFolder": "ソース フォルダーへのパス",
+  "loc.input.help.SourceFolder": "シンボル ファイルが検索されたソース フォルダーへのパス。既定値は $(Build.SourcesDirectory) です。",
+  "loc.input.label.SymbolsFolder": "シンボル フォルダーへのパス",
+  "loc.input.help.SymbolsFolder": "シンボル ファイルが検索されたフォルダーへのパス。既定値は構成されたソース フォルダーです。",
+  "loc.input.label.SymbolsMaximumWaitTime": "最大待機時間 (分)",
+  "loc.input.help.SymbolsMaximumWaitTime": "この手順を失敗とする前に待機する分数",
+  "loc.input.label.SymbolsProduct": "製品",
+  "loc.input.help.SymbolsProduct": "symstore.exe への製品パラメーターを指定します。既定値は $(Build.DefinitionName) です。",
+  "loc.input.label.SymbolsVersion": "バージョン",
+  "loc.input.help.SymbolsVersion": "symstore.exe へのバージョン パラメーターを指定します。既定値は $(Build.BuildNumber) です。",
+  "loc.input.label.SymbolsArtifactName": "Artifact Name",
+  "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)"
+}

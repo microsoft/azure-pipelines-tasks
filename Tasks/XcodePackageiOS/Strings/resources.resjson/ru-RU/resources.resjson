@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Пакет Xcode для iOS",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.description": "Создание IPA-файла из выходных данных сборки Xcode",
+  "loc.instanceNameFormat": "Пакет Xcode $(appName)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.appName": "Имя APP-файла",
+  "loc.input.help.appName": "Имя файла APP, которое иногда отличается от имени файла IPA",
+  "loc.input.label.ipaName": "Имя IPA-файла",
+  "loc.input.help.ipaName": "Имя файла IPA, которое иногда отличается от имени файла APP",
+  "loc.input.label.provisioningProfile": "Идет подготовка имени профиля",
+  "loc.input.help.provisioningProfile": "Имя профиля подготовки, используемого при подписании.",
+  "loc.input.label.sdk": "SDK",
+  "loc.input.help.sdk": "Укажите используемый пакет SDK. Чтобы просмотреть список допустимых пакетов SDK, выполните команду **xcodebuild -showsdks**.",
+  "loc.input.label.appPath": "Путь к APP-файлу",
+  "loc.input.help.appPath": "Относительный путь к собранному файлу APP",
+  "loc.input.label.ipaPath": "Путь для размещения IPA-файла",
+  "loc.input.help.ipaPath": "Относительный путь к месту размещения файла IPA. Если этот каталог не существует, он будет создан."
+}

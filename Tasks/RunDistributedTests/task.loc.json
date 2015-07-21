@@ -6,39 +6,45 @@
   "name": "RunVisualStudioTestsusingTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Preview",
     "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [],
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
-      "name": "testEnvironment",
-      "displayName": "ms-resource:loc.group.displayName.testEnvironment",
+      "name": "testMachineGroups",
+      "displayName": "ms-resource:loc.group.displayName.testMachineGroups",
       "isExpanded": true
     },
     {
       "name": "testSettings",
       "displayName": "ms-resource:loc.group.displayName.testSettings",
       "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
     }
   ],
   "inputs": [
     {
-      "name": "environment",
+      "name": "testMachineGroup",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.environment",
+      "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The name of the Test Machine Group on which tests need to be run.",
-      "groupName": "testEnvironment"
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
+      "groupName": "testMachineGroups"
     },
     {
       "name": "dropLocation",
@@ -46,7 +52,7 @@
       "label": "ms-resource:loc.input.label.dropLocation",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+      "helpMarkDown": "ms-resource:loc.input.help.dropLocation",
       "groupName": "testSettings"
     },
     {
@@ -55,7 +61,7 @@
       "label": "ms-resource:loc.input.label.sourcefilters",
       "defaultValue": "**\\*test*.dll",
       "required": true,
-      "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, '**\\*test*.dll;' for all dlls containing 'test' in their name.",
+      "helpMarkDown": "ms-resource:loc.input.help.sourcefilters",
       "groupName": "testSettings"
     },
     {
@@ -64,7 +70,7 @@
       "label": "ms-resource:loc.input.label.testFilterCriteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Filter criteria for the tests.",
+      "helpMarkDown": "ms-resource:loc.input.help.testFilterCriteria",
       "groupName": "testSettings"
     },
     {
@@ -73,6 +79,7 @@
       "label": "ms-resource:loc.input.label.platform",
       "defaultValue": "",
       "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.platform",
       "groupName": "testSettings"
     },
     {
@@ -81,24 +88,16 @@
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "",
       "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration",
       "groupName": "testSettings"
     },
     {
       "name": "runSettingsFile",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.runSettingsFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to runsettings file to use with the tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder.",
-      "groupName": "testSettings"
-    },
-    {
-      "name": "codeCoverageEnabled",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Whether code coverage needs to be enabled.",
+      "helpMarkDown": "ms-resource:loc.input.help.runSettingsFile",
       "groupName": "testSettings"
     },
     {
@@ -107,7 +106,7 @@
       "label": "ms-resource:loc.input.label.overrideRunParams",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideRunParams",
       "groupName": "testSettings"
     },
     {
@@ -116,19 +115,43 @@
       "label": "ms-resource:loc.input.label.testConfigurations",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
+      "helpMarkDown": "ms-resource:loc.input.help.testConfigurations",
       "groupName": "testSettings"
+    },
+    {
+      "name": "codeCoverageEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
+      "groupName": "advanced"
+    },
+    {
+      "name": "autMachineGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.autMachineGroup",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.autMachineGroup",
+      "groupName": "advanced"
     }
   ],
   "sourceDefinitions": [
     {
-      "target": "environment",
+      "target": "testMachineGroup",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    },
+    {
+      "target": "autMachineGroup",
       "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
       "selector": "jsonpath:$.value[*].name",
       "authKey": "tfs:DevTestLabs"
     }
   ],
-  "instanceNameFormat": "Test assemblies $(sourcefilters)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\RunDistributedTests.ps1",

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Bereitstellung der Azure-Website",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.description": "Eine Website bei Microsoft Azure bereitstellen",
+  "loc.instanceNameFormat": "Azure-Bereitstellung: $(WebSiteName)",
+  "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
+  "loc.input.help.ConnectedServiceName": "Azure-Zielabonnement für Bereitstellung",
+  "loc.input.label.WebSiteLocation": "Websitespeicherort",
+  "loc.input.help.WebSiteLocation": "Wählen Sie eine Region für die Bereitstellung aus.",
+  "loc.input.label.WebSiteName": "Websitename",
+  "loc.input.label.Package": "Paket",
+  "loc.input.help.Package": "Pfad des Pakets unter dem Artefaktstandardverzeichnis.",
+  "loc.input.label.AdditionalArguments": "Zusätzliche Argumente"
+}

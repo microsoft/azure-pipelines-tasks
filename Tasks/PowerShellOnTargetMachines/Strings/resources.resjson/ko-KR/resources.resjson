@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "대상 컴퓨터의 PowerShell",
+  "loc.helpMarkDown": "원격 컴퓨터에서 PowerShell 스크립트 실행",
+  "loc.description": "원격 컴퓨터에서 PowerShell 스크립트 실행",
+  "loc.instanceNameFormat": "$(EnvironmentName)에서 PowerShell 실행",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.EnvironmentName": "컴퓨터 그룹",
+  "loc.input.help.EnvironmentName": "응용 프로그램 배포를 위한 컴퓨터 그룹의 이름입니다.",
+  "loc.input.label.MachineNames": "컴퓨터에 배포",
+  "loc.input.help.MachineNames": "Machine1, Machine2와 같이 배포에 사용할 컴퓨터들을 쉼표로 구분된 목록으로 제공하세요. 기본값은 컴퓨터 그룹에 있는 모든 컴퓨터입니다.",
+  "loc.input.label.ScriptPath": "PowerShell 스크립트",
+  "loc.input.help.ScriptPath": "대상 컴퓨터나 c:\\BudgetIT\\Web\\Deploy\\Website.ps1과 같은 UNC 경로 상의 PowerShell 스크립트의 위치",
+  "loc.input.label.ScriptArguments": "스크립트 인수",
+  "loc.input.help.ScriptArguments": "PowerShell 스크립트에 대한 인수입니다. -testParam 테스트 같은 서수 매개 변수나 명명된 매개 변수일 수 있습니다.",
+  "loc.input.label.InitializationScriptPath": "초기화 스크립트",
+  "loc.input.help.InitializationScriptPath": "대상 컴퓨터나 c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1과 같은 UNC 경로 상의 DSC용 데이터 스크립트의 위치",
+  "loc.input.label.RunPowershellInParallel": "PowerShell을 병렬로 실행",
+  "loc.input.help.RunPowershellInParallel": "true로 설정하면 powershell 스크립트들이 대상 컴퓨터에서 동시에 실행됩니다."
+}

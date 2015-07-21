@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "PowerShell auf Zielcomputern",
+  "loc.helpMarkDown": "PowerShell-Skripte auf Remotecomputern ausführen",
+  "loc.description": "PowerShell-Skripte auf Remotecomputern ausführen",
+  "loc.instanceNameFormat": "PowerShell in $(EnvironmentName) ausführen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.EnvironmentName": "Computergruppe",
+  "loc.input.help.EnvironmentName": "Name der Computergruppe für die Bereitstellung der Anwendung",
+  "loc.input.label.MachineNames": "Auf Computern bereitstellen",
+  "loc.input.help.MachineNames": "Geben Sie eine mit Kommata getrennte Liste von Computern für die Bereitstellung an, z. B. Computer1, Computer2. Standardmäßig werden alle Computer in der Computergruppe ausgewählt.",
+  "loc.input.label.ScriptPath": "PowerShell-Skript",
+  "loc.input.help.ScriptPath": "Speicherort des PowerShell-Skripts auf den Zielcomputern oder in einem UNC-Pfad wie c:\\BudgetIT\\Web\\Deploy\\Website.ps1",
+  "loc.input.label.ScriptArguments": "Skriptargumente",
+  "loc.input.help.ScriptArguments": "Argumente für das PowerShell-Skript. Entweder Ordnungszahlparameter oder benannte Parameter wie \"-testParam test\"",
+  "loc.input.label.InitializationScriptPath": "Initialisierungsskript",
+  "loc.input.help.InitializationScriptPath": "Speicherort des Datenskripts für DSC auf den Zielcomputern oder in einem UNC-Pfad wie c:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
+  "loc.input.label.RunPowershellInParallel": "PowerShell parallel ausführen",
+  "loc.input.help.RunPowershellInParallel": "Wenn diese Option auf \"True\" festgelegt wird, werden PowerShell-Skripte parallel auf den Zielcomputern ausgeführt."
+}

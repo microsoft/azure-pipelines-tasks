@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.description": "Consente di eseguire uno script Powershell in un ambiente Azure",
+  "loc.instanceNameFormat": "Script Azure PowerShell: $(ScriptPath)",
+  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
+  "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure da configurare prima di eseguire PowerShell",
+  "loc.input.label.ScriptPath": "Percorso script",
+  "loc.input.help.ScriptPath": "Percorso dello script. Deve essere un percorso completo o relativo rispetto alla directory di lavoro predefinita.",
+  "loc.input.label.ScriptArguments": "Argomenti script",
+  "loc.input.help.ScriptArguments": "Parametri aggiuntivi da passare a PowerShell. Possono essere ordinali o denominati."
+}

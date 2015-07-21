@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "MSBuild",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.description": "Führt Buildvorgänge mit MSBuild aus.",
+  "loc.instanceNameFormat": "Lösung $(solution) erstellen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.solution": "Lösung",
+  "loc.input.help.solution": "Relativer Pfad vom Repositorystamm der auszuführenden Lösungen. Platzhalter können verwendet werden. Beispiel: \"**\\*.sln\" für alle SLN-Dateien in allen Unterordnern.",
+  "loc.input.label.platform": "Plattform",
+  "loc.input.label.configuration": "Konfiguration",
+  "loc.input.label.msbuildArguments": "MSBuild-Argumente",
+  "loc.input.help.msbuildArguments": "Zusätzliche Argumente, die an MSBuild übergeben werden.",
+  "loc.input.label.clean": "Bereinigen",
+  "loc.input.label.restoreNugetPackages": "NuGet-Pakete wiederherstellen",
+  "loc.input.label.logProjectEvents": "Projektdetails aufzeichnen",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild-Version",
+  "loc.input.help.msbuildVersion": "Geben Sie optional die MSBuild-Version an. Standardmäßig wird nach der aktuellen Version gesucht.",
+  "loc.input.label.msbuildArchitecture": "MSBuild-Architektur",
+  "loc.input.help.msbuildArchitecture": "Geben Sie optional die auszuführende MSBuild-Architektur an (x86, x64).",
+  "loc.input.label.msbuildLocation": "Pfad zu MSBuild",
+  "loc.input.help.msbuildLocation": "Geben Sie optional den Pfad zu MSBuild an."
+}

@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "PowerShell",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.description": "Ejecute un script de PowerShell",
+  "loc.instanceNameFormat": "Powershell: $(scriptName)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.scriptName": "Nombre de archivo del script",
+  "loc.input.help.scriptName": "Ruta de acceso del script que se va a ejecutar. Debe ser una ruta de acceso completa o relativa al directorio de trabajo predeterminado.",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Argumentos pasados al script de PowerShell. Pueden ser parámetros ordinales o parámetros con nombre",
+  "loc.input.label.workingFolder": "Carpeta de trabajo",
+  "loc.input.help.workingFolder": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script."
+}

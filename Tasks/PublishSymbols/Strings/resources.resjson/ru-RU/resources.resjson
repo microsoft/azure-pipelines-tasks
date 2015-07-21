@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Индексация исходного кода и публикация символов",
+  "loc.helpMarkDown": "Проиндексируйте исходный код и опубликуйте символы в общей папке.<br/>[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.description": "Индексация исходного кода и публикация символов в общем файловом ресурсе",
+  "loc.instanceNameFormat": "Путь публикации символов: $(SymbolsPath)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.SymbolsPath": "Путь для публикации символов",
+  "loc.input.help.SymbolsPath": "Укажите путь к общей папке хранилища символов. Если значение не задано, индексация исходного кода произойдет, но символы не будут опубликованы.",
+  "loc.input.label.SearchPattern": "Шаблон поиска",
+  "loc.input.help.SearchPattern": "Шаблон, используемый для обнаружения файлов PDB для публикации.",
+  "loc.input.label.SourceFolder": "Путь к папке исходного кода",
+  "loc.input.help.SourceFolder": "Путь к исходной папке, в которой ищутся файлы символов. Значение по умолчанию — $(Build.SourcesDirectory)",
+  "loc.input.label.SymbolsFolder": "Путь к папке символов",
+  "loc.input.help.SymbolsFolder": "Путь к папке, в которой ищутся файлы символов. По умолчанию используется настроенная исходная папка.",
+  "loc.input.label.SymbolsMaximumWaitTime": "Максимальное время ожидания (в минутах)",
+  "loc.input.help.SymbolsMaximumWaitTime": "Количество минут, по истечении которого происходит сбой этапа",
+  "loc.input.label.SymbolsProduct": "Продукт",
+  "loc.input.help.SymbolsProduct": "Укажите параметр продукта для symstore.exe. Значение по умолчанию — $(Build.DefinitionName)",
+  "loc.input.label.SymbolsVersion": "Версия",
+  "loc.input.help.SymbolsVersion": "Укажите параметр версии для symstore.exe. Значение по умолчанию — $(Build.BuildNumber)",
+  "loc.input.label.SymbolsArtifactName": "Artifact Name",
+  "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)"
+}

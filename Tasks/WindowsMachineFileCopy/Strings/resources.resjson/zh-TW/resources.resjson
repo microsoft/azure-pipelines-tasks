@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Windows 電腦檔案複製",
+  "loc.helpMarkDown": "複製檔案到遠端電腦",
+  "loc.description": "複製檔案到遠端電腦",
+  "loc.instanceNameFormat": "複製檔案到 $(EnvironmentName)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.SourcePath": "來源",
+  "loc.input.help.SourcePath": "來源資料夾或本機電腦上檔案的絕對路徑，或是 UNC 共用。",
+  "loc.input.label.EnvironmentName": "電腦群組",
+  "loc.input.help.EnvironmentName": "複製檔案的目標電腦群組名稱。​",
+  "loc.input.label.MachineNames": "複製到電腦",
+  "loc.input.help.MachineNames": "提供電腦的逗號分隔清單，例如 Machine1、Machine2。預設為電腦群組中的所有電腦。",
+  "loc.input.label.TargetPath": "目的資料夾",
+  "loc.input.help.TargetPath": "從來源複製檔案之目標電腦上的本機路徑。可使用環境變數，例如: $env:windir\\BudgetIT\\Web。",
+  "loc.input.label.CleanTargetBeforeCopy": "清除目標",
+  "loc.input.help.CleanTargetBeforeCopy": "若將其設定為 Ture，則在複製檔案前將清除目的資料夾。",
+  "loc.input.label.CopyFilesInParallel": "平行複製檔案",
+  "loc.input.help.CopyFilesInParallel": "若將其設定為 Ture，將平行複製檔案到電腦。"
+}

@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Script de commandes",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613733)",
+  "loc.description": "Exécuter un script cmd ou bat Windows, et lui permettre éventuellement de changer l'environnement",
+  "loc.instanceNameFormat": "Exécuter le script $(filename)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.filename": "Chemin d'accès",
+  "loc.input.help.filename": "Chemin d'accès au script cmd ou bat à exécuter. Doit être un chemin d'accès complet ou relatif au répertoire de travail par défaut.",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments passés au script cmd ou bat",
+  "loc.input.label.modifyEnvironment": "Modifier l'environnement",
+  "loc.input.help.modifyEnvironment": "Détermine si les modifications des variables d'environnement ont un impact sur les tâches suivantes.",
+  "loc.input.label.workingFolder": "Dossier de travail",
+  "loc.input.help.workingFolder": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script.",
+  "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
+  "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError."
+}

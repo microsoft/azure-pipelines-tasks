@@ -3,6 +3,7 @@
     "name": "XcodePackageiOS",
     "friendlyName": "Xcode Package iOS",
     "description": "Generate an .ipa file from Xcode build output",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613731)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -11,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 6
     },
     "instanceNameFormat": "Xcode Package $(appName)",
     "demands" : [
@@ -77,10 +78,6 @@
         }
     ],
     "execution": {
-        "Bash": {
-            "target": "GenerateIpa.sh",
-            "argumentFormat": ""
-        },
         "Node": {
             "target": "xcodepkgios.js",
             "argumentFormat": ""

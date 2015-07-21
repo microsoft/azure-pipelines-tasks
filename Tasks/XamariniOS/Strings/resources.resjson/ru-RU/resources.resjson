@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin.iOS",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.description": "Сборка приложения iOS с помощью Xamarin на Mac OS",
+  "loc.instanceNameFormat": "Сборка решения Xamarin.iOS $(solution)",
+  "loc.input.label.solution": "Решение",
+  "loc.input.help.solution": "Относительный путь от корня репозитория к решению Xamarin.iOS, сборку которого нужно выполнить.",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.help.configuration": "Стандартные конфигурации: Ad-Hoc, AppStore, Debug, Release.",
+  "loc.input.label.mdtoolLocation": "Переопределить путь к mdtool",
+  "loc.input.help.mdtoolLocation": "При необходимости укажите путь к mdtool, средству сборки Xamarin Studio. Если значение не задано, используется путь по умолчанию: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
+  "loc.input.label.forSimulator": "Сборка для симулятора iOS",
+  "loc.input.help.forSimulator": "При необходимости сборка выполняется для эмулятора iOS, а не для физических устройств iOS."
+}

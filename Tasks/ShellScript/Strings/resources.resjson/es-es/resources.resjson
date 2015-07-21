@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Script de Shell",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "Ejecute un script de Shell con la terminal",
+  "loc.instanceNameFormat": "Script de shell $(scriptPath)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.scriptPath": "Ruta de acceso del script",
+  "loc.input.help.scriptPath": "Ruta de acceso relativa de la raíz del repositorio del archivo de script de shell que se va a ejecutar.",
+  "loc.input.label.args": "Argumentos",
+  "loc.input.help.args": "Argumentos pasados al script de shell",
+  "loc.input.label.cwd": "Directorio de trabajo",
+  "loc.input.help.cwd": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script.",
+  "loc.input.label.failOnStandardError": "Error en Error estándar",
+  "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."  
+}

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin 라이선스",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.description": "Xamarin 라이선스 활성화 또는 비활성화",
+  "loc.instanceNameFormat": "Xamarin 라이선스 $(action)",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.action": "작업",
+  "loc.input.label.email": "메일",
+  "loc.input.help.email": "Xamarin 계정 메일 주소.",
+  "loc.input.label.password": "암호",
+  "loc.input.help.password": "Xamarin 계정 암호.",
+  "loc.input.label.activateAndroid": "Xamarin.Android 활성화",
+  "loc.input.label.timeout": "시간 제한(초)"
+}

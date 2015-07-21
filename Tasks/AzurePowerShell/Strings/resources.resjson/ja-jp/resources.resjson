@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure PowerShell",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.description": "Azure 環境内で PowerShell スクリプトを実行します",
+  "loc.instanceNameFormat": "Azure PowerShell スクリプト: $(ScriptPath)",
+  "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
+  "loc.input.help.ConnectedServiceName": "PowerShell を実行する前に構成する Azure サブスクリプション",
+  "loc.input.label.ScriptPath": "スクリプト パス",
+  "loc.input.help.ScriptPath": "スクリプトのパス。完全修飾パスか、既定の作業ディレクトリを基準とした相対パスのいずれか。",
+  "loc.input.label.ScriptArguments": "スクリプトの引数",
+  "loc.input.help.ScriptArguments": "PowerShell に渡す追加のパラメーター。順序によるパラメーターまたは名前指定されたパラメーターのいずれかです。"
+}
