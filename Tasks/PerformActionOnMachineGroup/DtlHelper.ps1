@@ -41,7 +41,7 @@ function Get-MachineGroup
 
     if ($Action -eq "Unblock")
     {
-         # Filters are not applicable to the unblock action as unblock is machine level action
+         # Filters are not applicable to the unblock action as unblock is machine group level action
          Write-Verbose "Starting Get-Environment cmdlet call on machine group name: $machineGroupName" -Verbose
          $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
          Write-Verbose "Completed Get-Environment cmdlet call for machine group name: $machineGroupName" -Verbose
@@ -59,7 +59,7 @@ function Get-MachineGroup
 
         $getEnvironmentCommand = 
         {
-            # Filters are not applicable to the block action as block is machine level action
+            # Filters are not applicable to the block action as block is machine group level action
             Write-Verbose "Starting Get-Environment cmdlet call on machine group name: $machineGroupName" -Verbose
             $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
             Write-Verbose "Completed Get-Environment cmdlet call for machine group name: $machineGroupName" -Verbose
