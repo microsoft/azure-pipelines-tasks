@@ -638,7 +638,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     Try
     {	   		
         $session = CreateNewSession -MachineCredential $MachineCredential		
-        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY ; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY ; schtasks.exe /run /TN:DTAConfig ; Sleep 5 ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
