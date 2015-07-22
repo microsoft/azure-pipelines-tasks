@@ -11,7 +11,7 @@
     [string]$connectionString,
     [string]$publishProfile,
     [string]$additionalArguments,
-    [string]$runPowershellInParallel    
+    [string]$deployInParallel    
     )
 
 Write-Verbose "Entering script DeployToSqlServer.ps1" -Verbose
@@ -25,7 +25,7 @@ Write-Verbose "databaseName = $databaseName" -Verbose
 Write-Verbose "sqlUsername = $sqlUsername" -Verbose
 Write-Verbose "publishProfile = $publishProfile" -Verbose
 Write-Verbose "additionalArguments = $additionalArguments" -Verbose
-Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
+Write-Verbose "deployInParallel = $deployInParallel" -Verbose
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -64,9 +64,9 @@ $scriptArgument = '"' + ($sqlPackageArguments -join " ") + '"'
 
 if($resourceFilteringMethod -eq "tags")
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $runPowershellInParallel
+    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $deployInParallel
 }
 else
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $runPowershellInParallel
+    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $deployInParallel
 }

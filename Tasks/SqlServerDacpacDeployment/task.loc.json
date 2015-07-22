@@ -154,7 +154,7 @@
     },
     {
       "name": "AdditionalArguments",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "required": false,
       "groupName": "target",
@@ -162,13 +162,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
-      "name": "RunPowershellInParallel",
+      "name": "DeployInParallel",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.RunPowershellInParallel",
+      "label": "ms-resource:loc.input.label.DeployInParallel",
       "defaultValue": "true",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel"
+      "helpMarkDown": "ms-resource:loc.input.help.DeployInParallel"
     }
   ],
   "sourceDefinitions": [

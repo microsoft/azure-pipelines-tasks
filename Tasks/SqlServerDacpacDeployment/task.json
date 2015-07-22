@@ -152,7 +152,7 @@
         },
         {
             "name": "AdditionalArguments",
-            "type": "string",
+            "type": "multiLine",
             "label": "Additional Arguments",
             "required": false,
             "groupName": "target",
@@ -160,7 +160,7 @@
             "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied on the SQL Server like /p:IgnoreAnsiNulls=True /p:IgnoreComments=True"
         },
         {
-            "name": "RunPowershellInParallel",
+            "name": "DeployInParallel",
             "type": "boolean",
             "label": "Deploy in Parallel",
             "defaultValue": "true",
