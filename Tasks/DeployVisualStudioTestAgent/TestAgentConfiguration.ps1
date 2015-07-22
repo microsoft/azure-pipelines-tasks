@@ -292,6 +292,12 @@ function Set-TestAgentConfiguration
         InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential | Out-Null
     }
 
+    if ($configAsProcess -eq $true)  
+    {  
+        Write-Verbose -Message "Trying to configure power options so that the testagent session stays active" -Verbose  
+        ConfigurePowerOptions -MachineCredential $MachineUserCredential
+    }
+
     $doReboot = $false
     # 3010 is exit code to indicate a reboot is required
     if ($configOut.ExitCode -eq 3010)
@@ -483,9 +489,9 @@ function CanSkipTestAgentConfiguration
             $existingUserName = $existingConfiguration.UserName.split('\')
             $requiredUserName = $AgentUserCredential.UserName.split('\')
 
-            if($existingUserName[$existingUserName.Length -1] -ne $requiredUserName[$requiredUserName.Length -1])
+            if ($existingUserName[$existingUserName.Length -1] -ne $requiredUserName[$requiredUserName.Length -1])
             {
-            Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length -1]) -Verbose
+                Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length-1]) -Verbose
                 return $false
             }
         }
@@ -630,10 +636,11 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
+
     Try
     {	   		
-		$session = CreateNewSession -MachineCredential $MachineCredential		
-        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /change /disable /TN:DTAConfig }  -ArgumentList $exePath		
+        $session = CreateNewSession -MachineCredential $MachineCredential		
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
@@ -643,36 +650,51 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
 }
 
+function ConfigurePowerOptions([System.Management.Automation.PSCredential] $MachineCredential)  
+{
+    Try
+    {  
+        $session = CreateNewSession -MachineCredential $MachineCredential
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0 }
+        Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
+        Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
+    }
+    Catch [Exception]
+    {
+        Write-Verbose -Message ("Unable to configure display settings, continuing. Exception : {0}" -f  $_.Exception.Message) -Verbose
+    }
+}
+
 function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
 {
     Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
-	$wsmanoutput = Get-WSManInstance –ResourceURI winrm/config/listener –Enumerate
-		
-	if($wsmanoutput -ne $null)
-	{	
-		if($wsmanoutput.Count -gt 1)
-		{
-			$port = $wsmanoutput[0].Port
-			$transport = $wsmanoutput[0].Transport
-		}
-		else
-		{	
-			$port = $wsmanoutput.Port
-			$transport = $wsmanoutput.Transport
-		}
-	}
-	else
-	{
-		$port =  5985
-		$transport = "HTTP"
-	}	
+    $wsmanoutput = Get-WSManInstance –ResourceURI winrm/config/listener –Enumerate
+
+    if($wsmanoutput -ne $null)
+    {	
+        if($wsmanoutput.Count -gt 1)
+        {
+            $port = $wsmanoutput[0].Port
+            $transport = $wsmanoutput[0].Transport
+        }
+        else
+        {	
+            $port = $wsmanoutput.Port
+            $transport = $wsmanoutput.Transport
+        }
+    }
+    else
+    {
+        $port =  5985
+        $transport = "HTTP"
+    }	
 	
     Write-Verbose -Message("Using Transport {0} : Port {1}  for creating session" -f $transport,$port) -Verbose
 
     if( $transport -eq "HTTPS")
     {
-       $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
-       $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
+        $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
+        $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
     }
     else
     {
