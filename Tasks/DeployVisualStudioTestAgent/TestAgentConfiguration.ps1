@@ -76,7 +76,6 @@ function DeleteDTAAgentExecutionService([String] $ServiceName)
     }
 }
 
-
 function Get-RegistryValueIgnoreError
 {
     param
@@ -292,9 +291,9 @@ function Set-TestAgentConfiguration
         InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential | Out-Null
     }
 
-    if ($configAsProcess -eq $true)  
+    if ($configAsProcess -eq $true)
     {  
-        Write-Verbose -Message "Trying to configure power options so that the testagent session stays active" -Verbose  
+        Write-Verbose -Message "Trying to configure power options so that the console session stays active" -Verbose
         ConfigurePowerOptions -MachineCredential $MachineUserCredential
     }
 
@@ -378,7 +377,6 @@ function LoadDependentDlls
             [Reflection.Assembly]::LoadFrom($asm)
     }
 }
-
 
 function ReadCredentials
 {
@@ -640,7 +638,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     Try
     {	   		
         $session = CreateNewSession -MachineCredential $MachineCredential		
-        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY ; schtasks.exe /run /TN:DTAConfig ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
@@ -655,17 +653,18 @@ function ConfigurePowerOptions([System.Management.Automation.PSCredential] $Mach
     Try
     {  
         $session = CreateNewSession -MachineCredential $MachineCredential
+        Write-Verbose -Message ("Executing command : {0} " -f "powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0") -Verbose
         Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0 }
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
     Catch [Exception]
     {
-        Write-Verbose -Message ("Unable to configure display settings, continuing. Exception : {0}" -f  $_.Exception.Message) -Verbose
+        Write-Verbose -Message ("Unable to configure display settings, the session may get inactive due to display settings, continuing. Exception : {0}" -f  $_.Exception.Message) -Verbose
     }
 }
 
-function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
+function CreateNewSession([System.Management.Automation.PSCredential] $MachineCredentials)
 {
     Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
     $wsmanoutput = Get-WSManInstance –ResourceURI winrm/config/listener –Enumerate
