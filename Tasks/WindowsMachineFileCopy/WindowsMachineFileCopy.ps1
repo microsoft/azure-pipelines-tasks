@@ -36,6 +36,14 @@ $resourceWinRMHttpPortKeyName = 'WinRM_Http'
 $doSkipCACheckOption = '-SkipCACheck'
 $envOperationStatus = 'Passed'
 
+function ThrowError
+{
+	param([string]$errorMessage)
+	
+        $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md"
+        $helpMessage = (Get-LocalizedString -Key "For more info please refer to '{0}'" -ArgumentList $readmelink)
+        throw "$errorMessage $helpMessage"
+}
 
 function Get-ResourceCredentials
 {
@@ -210,7 +218,8 @@ if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 			Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
 
 			Write-Verbose $copyResponse.Error.ToString() -Verbose
-            throw $copyResponse.Error
+            $errorMessage =  $copyResponse.Error.Message
+            ThrowError -errorMessage $errorMessage
         }
     } 
 }
@@ -281,7 +290,8 @@ Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environmen
 
 if($envOperationStatus -ne "Passed")
 {
-    throw (Get-LocalizedString -Key 'Copy to one or more machines failed')
+    $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
+    ThrowError -errorMessage $errorMessage
 }
 
 Write-Verbose "Leaving script WindowsMachineFileCopy.ps1" -Verbose
