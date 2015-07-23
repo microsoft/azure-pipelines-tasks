@@ -60,6 +60,15 @@ $resourceWinRMHttpPortKeyName = Get-ResourceHttpTagKey
 $resourceWinRMHttpsPortKeyName = Get-ResourceHttpsTagKey
 $skipCACheckKeyName = Get-SkipCACheckTagKey
 
+function ThrowError
+{
+	param([string]$errorMessage)
+	
+        $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/AzureFileCopy/README.md"
+        $helpMessage = (Get-LocalizedString -Key "For more info please refer to '{0}'" -ArgumentList $readmelink)
+        throw "$errorMessage $helpMessage"
+}
+
 function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
@@ -357,7 +366,8 @@ finally
         }
 
         $error = $uploadResponse.Error
-        throw (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+        $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+        ThrowError -errorMessage $errorMessage
     }
     elseif ($uploadResponse.Status -eq "Succeeded")
     {
@@ -446,7 +456,8 @@ try
                 Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
 
                 Write-Verbose $copyResponse.Error.ToString() -Verbose
-                throw $copyResponse.Error
+                $errorMessage =  $copyResponse.Error.Message
+                ThrowError -errorMessage $errorMessage
             }
         }
     }
@@ -517,7 +528,8 @@ try
 
     if ($envOperationStatus -ne "Passed")
     {
-        throw (Get-LocalizedString -Key 'Copy to one or more machines failed')
+        $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
+        ThrowError -errorMessage $errorMessage
     }
     else
     {

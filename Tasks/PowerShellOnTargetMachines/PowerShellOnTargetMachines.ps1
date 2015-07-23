@@ -52,6 +52,15 @@ if ($enableDetailedLoggingString -ne "true")
     $enableDetailedLoggingString = "false"
 }
 
+function ThrowError
+{
+	param([string]$errorMessage)
+	
+        $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md"
+        $helpMessage = (Get-LocalizedString -Key "For more info please refer to '{0}'" -ArgumentList $readmelink)
+        throw "$errorMessage $helpMessage"
+}
+
 function Get-ResourceWinRmConfig
 {
     param([string]$resourceName)
@@ -307,7 +316,8 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
             Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
 
             Write-Verbose $deploymentResponse.Error.ToString() -Verbose
-            throw $deploymentResponse.Error;
+            $errorMessage =  $deploymentResponse.Error.Message
+            ThrowError -errorMessage $errorMessage
         }
     }
 }
@@ -373,7 +383,8 @@ Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environmen
 
 if($envOperationStatus -ne "Passed")
 {
-    throw (Get-LocalizedString -Key 'Deployment on one or more machines failed')
+    $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
+    ThrowError -errorMessage $errorMessage
 }
 
 Write-Verbose "Leaving script PowerShellOnTargetMachines.ps1" -Verbose
