@@ -1,0 +1,29 @@
+﻿{
+    "id": "730D8DE1-7A4F-424C-9542-FE7CC02604EB",
+    "name": "SonarQubePostTest",
+    "friendlyName": "SonarQube for MSBuild - End Analysis",
+    "description": "Finish the analysis and upload the results to SonarQube",
+    "helpMarkDown": "[More Information](https://github.com/SonarSource/sonar-msbuild-runner)",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 16
+    },
+    "demands": [
+        "java"
+    ],  
+    "instanceNameFormat": "Upload analysis results to SonarQube",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\SonarQubePostTest.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+    
+}

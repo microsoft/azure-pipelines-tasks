@@ -1,0 +1,127 @@
+﻿{
+    "id": "EAE5B2CC-AC5E-4CBA-B022-A06621F9C01F",
+    "name": "SonarQubePreBuild",
+    "friendlyName": "SonarQube for MSBuild - Begin Analysis",
+    "description": "Fetch the Quality Profile from SonarQube to configure the analysis",
+    "helpMarkDown": "[More Information](https://github.com/SonarSource/sonar-msbuild-runner)",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 16
+    },
+    "demands": [
+        "msbuild",
+        "java"
+    ],
+    "groups": [
+        {
+            "name": "serverSettings",
+            "displayName": "SonarQube Server Settings",
+            "isExpanded": true
+        },
+        {
+            "name": "project",
+            "displayName": "SonarQube Project Properties",
+            "isExpanded": true
+        },
+        {
+            "name": "dbSettings",
+            "displayName": "Database Settings (not required for SonarQube 5.2+)",
+            "isExpanded": false
+        },
+          {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "projectKey",
+            "type": "string",
+            "label": "Project Key",
+            "required": true,
+            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey",
+            "groupName": "project"
+        },
+        {
+            "name": "projectName",
+            "type": "string",
+            "label": "Project Name",
+            "required": true,
+            "helpMarkDown": "The SonarQube project name, i.e. sonar.ProjectName",
+            "groupName": "project"
+        },
+        {
+            "name": "projectVersion",
+            "type": "string",
+            "label": "Project Version",
+            "defaultValue": "1.0",
+            "required": true,
+            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion",
+            "groupName": "project"
+        },
+        {
+            "name": "connectedServiceName",
+            "type": "connectedService:Generic",
+            "label": "SonarQube Endpoint",
+            "required": true,
+            "helpMarkDown": "The SonarQube Server Endpoint",
+            "groupName": "serverSettings"
+        },
+        {
+            "name": "dbUrl",
+            "type": "string",
+            "label": "Db Connection String",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The database connection setting, e.g. jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
+            "groupName": "dbSettings"
+        },
+        {
+            "name": "dbUsername",
+            "type": "string",
+            "label": "Db UserName",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The username for the database user",
+            "groupName": "dbSettings"
+        },
+        {
+            "name": "dbPassword",
+            "type": "string",
+            "label": "Db User Password",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The password for the database user",
+            "groupName": "dbSettings"
+        },
+         {
+            "name": "cmdLineArgs",
+            "type": "string",
+            "label": "Sonar-Runner arguments",
+            "required": false,
+            "helpMarkDown": "Pass additional arguments using the format: /d:propertyName=propertyValue",
+            "groupName": "advanced"
+        },
+        {
+            "name": "configFile",
+            "type": "filePath",
+            "defaultValue": "",
+            "label": "Config File",
+            "required": false,
+            "helpMarkDown": "Path to a configuration file with SonarQube properties",
+            "groupName": "advanced"
+        }
+    ],
+    "instanceNameFormat": "Fetch analysis settings from SonarQube",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
