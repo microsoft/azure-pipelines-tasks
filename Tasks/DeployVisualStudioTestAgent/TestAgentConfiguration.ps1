@@ -294,7 +294,7 @@ function Set-TestAgentConfiguration
     if ($configAsProcess -eq $true)
     {  
         Write-Verbose -Message "Trying to configure power options so that the console session stays active" -Verbose
-        ConfigurePowerOptions -MachineCredential $MachineUserCredential
+        ConfigurePowerOptions -MachineCredential $MachineUserCredential | Out-Null
     }
 
     $doReboot = $false
@@ -636,9 +636,9 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     $exePath = "'" + $exePath + "'"
 
     Try
-    {	   		
-        $session = CreateNewSession -MachineCredential $MachineCredential		
-        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY ; schtasks.exe /run /TN:DTAConfig ; Sleep 5 ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
+    {
+        $session = CreateNewSession -MachineCredential $MachineCredential
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY ; schtasks.exe /run /TN:DTAConfig ; Sleep 10 ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
@@ -651,7 +651,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
 function ConfigurePowerOptions([System.Management.Automation.PSCredential] $MachineCredential)  
 {
     Try
-    {  
+    {
         $session = CreateNewSession -MachineCredential $MachineCredential
         Write-Verbose -Message ("Executing command : {0} " -f "powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0") -Verbose
         Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0 }
