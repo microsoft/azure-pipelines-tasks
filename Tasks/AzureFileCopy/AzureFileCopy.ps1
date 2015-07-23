@@ -353,7 +353,8 @@ catch
 
     Write-Verbose $_.Exception.ToString() -Verbose
     $error = $_.Exception.Message
-    throw (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+    $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+    ThrowError -errorMessage $errorMessage
 }
 finally
 {
