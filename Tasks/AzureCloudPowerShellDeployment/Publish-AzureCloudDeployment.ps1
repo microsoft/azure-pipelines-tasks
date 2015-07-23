@@ -185,7 +185,7 @@ Write-Host "CsPkg= $CsPkg"
 Write-Host "CsCfg= $CsCfg"
 Write-Host "Slot= $Slot"
 Write-Host "DeploymentLabel= $DeploymentLabel"
-Write-Host "AppendDateTimeToLabel= $AAppendDateTimeToLabel"
+Write-Host "AppendDateTimeToLabel= $AppendDateTimeToLabel"
 Write-Host "AllowUpgrade= $AllowUpgrade"
 
 $allowUpgrade = Convert-String $AllowUpgrade Boolean
@@ -214,7 +214,7 @@ $label = $DeploymentLabel
 
 $appendDateTime = Convert-String $AppendDateTimeToLabel Boolean
 
-if($label -and $appendDateTime)
+if ($label -and $appendDateTime)
 {
 	$label += " "
 	$label += Get-Date
@@ -224,7 +224,7 @@ Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorActi
 $azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue
 if (!$azureDeployment)
 {
-	if($label)
+	if ($label)
 	{
 		Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
 		$azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
@@ -238,7 +238,7 @@ if (!$azureDeployment)
 elseif ($allowUpgrade -eq $true)
 {
     #Use -Upgrade
-	if($label)
+	if ($label)
 	{
 		Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
 		$azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
@@ -254,7 +254,7 @@ else
     #Remove and then Re-create
     Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force"
     $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force
-	if($label)
+	if ($label)
 	{
 		Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
 		$azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
