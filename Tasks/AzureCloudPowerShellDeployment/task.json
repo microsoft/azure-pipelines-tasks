@@ -76,10 +76,10 @@
       "helpMarkDown": "**Production** or **Staging**"
     },
     {
-      "name": "Label",
+      "name": "DeploymentLabel",
       "type": "string",
       "label": "Deployment Label",
-      "defaultValue": "Azure Deployment",
+      "defaultValue": "$(Build.BuildNumber)",
       "required": false,
       "helpMarkDown": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used."
     },
@@ -87,8 +87,9 @@
       "name": "AppendDateTimeToLabel",
       "type": "boolean",
       "label": "Append current date and time",
-      "defaultValue": "true",
-      "required": false
+      "defaultValue": "false",
+      "required": false,
+	  "helpMarkDown": "Appends current date and time to deployment label"
     },
     {
       "name": "AllowUpgrade",

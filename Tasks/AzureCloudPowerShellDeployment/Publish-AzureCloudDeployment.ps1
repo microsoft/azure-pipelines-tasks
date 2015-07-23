@@ -214,17 +214,10 @@ $label = $DeploymentLabel
 
 $appendDateTime = Convert-String $AppendDateTimeToLabel Boolean
 
-if($label)
+if($label -and $appendDateTime)
 {
-	if($appendDateTime)
-	{
-		$label += " "
-		$label += Get-Date
-	}
-}
-else
-{
-	$label = $ENV:BUILD_BUILDNUMBER
+	$label += " "
+	$label += Get-Date
 }
 
 Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue"
