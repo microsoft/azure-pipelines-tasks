@@ -33,6 +33,8 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDeployment"
 
+$ErrorActionPreference = 'Stop'
+
 $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
 
 $sqlPackageOnTargetMachineBlock = Get-Content $sqlDeploymentScriptPath | Out-String
