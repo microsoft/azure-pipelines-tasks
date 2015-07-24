@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [
     "azureps"
@@ -77,6 +77,22 @@
       "defaultValue": "Production",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Slot"
+    },
+    {
+      "name": "DeploymentLabel",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DeploymentLabel",
+      "defaultValue": "$(Build.BuildNumber)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentLabel"
+    },
+    {
+      "name": "AppendDateTimeToLabel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AppendDateTimeToLabel",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AppendDateTimeToLabel"
     },
     {
       "name": "AllowUpgrade",
