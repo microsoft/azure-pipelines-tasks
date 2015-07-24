@@ -40,7 +40,21 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 
 		if(-not ($exitCode -eq 0 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641))
 		{
-			throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
+            $testAgentFileExists = Test-Path "$env:SystemDrive\TestAgent\testagent.txt"
+            if($testAgentFileExists)
+            {
+			    # delete the file which indicated that test agent installation failed.
+			    remove-item "$env:SystemDrive\TestAgent\testagent.txt" | Out-Null
+                # we have retried once .Now fail with appropriate message
+              	throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
+            }
+            else
+            {
+                #creating testagent file to indicate testagent installation failed.
+             	New-Item -Path "$env:SystemDrive\TestAgent\testagent.txt" -type File | Out-Null
+                Write-Verbose -Message ("Installation of Test Agent failed with Error code {0}. Retrying once by rebooting machine" -f $exitCode.ToString()) -Verbose
+                return 3010;
+            }
 		}
 
 		if($exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641)
