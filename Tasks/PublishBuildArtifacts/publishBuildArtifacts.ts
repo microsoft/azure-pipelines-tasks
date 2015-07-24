@@ -192,14 +192,14 @@ else {
             if (artifactType === "container") {
                 data["containerfolder"] = artifactName;
                 data["localpath"] = stagingFolder;
-                tl.command("artifact.upload", data, "Uploading artifact");
+                tl.writeCommand("artifact.upload", data, "Uploading artifact");
             }
             else if (artifactType === "filepath") {
                 tl.mkdirP(targetPath);
                 tl.cp("-Rf", stagingFolder, targetPath);
 
                 data["artifactlocation"] = targetPath;
-                tl.command("artifact.associate", data, "Associating artifact");
+                tl.writeCommand("artifact.associate", data, "Associating artifact");
             }
         }
         catch (err) {
