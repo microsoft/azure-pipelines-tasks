@@ -10,7 +10,8 @@ param(
     [string]$configuration,
     [string]$clean,
     [string]$restoreNugetPackages,
-    [string]$logProjectEvents
+    [string]$logProjectEvents,
+    [string]$nugetSources
 )
 
 Write-Verbose "Entering script VSBuild.ps1"
@@ -26,6 +27,7 @@ Write-Verbose "configuration = $configuration"
 Write-Verbose "clean = $clean"
 Write-Verbose "restoreNugetPackages = $restoreNugetPackages"
 Write-Verbose "logProjectEvents = $logProjectEvents"
+Write-Verbose "nugetSources = $nugetSources"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -200,8 +202,16 @@ foreach ($sf in $solutionFiles)
         $pkgConfig = Find-Files -SearchPattern "$slnFolder\**\packages.config"
         if ($pkgConfig)
         {
-            Write-Verbose "Running nuget package restore for $slnFolder"
-            Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" -NonInteractive" -WorkingFolder $slnFolder
+			if ([string]::IsNullOrEmpty($nugetSources)) 
+			{
+				Write-Verbose "Running nuget package restore for $slnFolder"
+				Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" -NonInteractive" -WorkingFolder $slnFolder
+			}
+			else 
+			{
+				Write-Verbose "Running nuget package restore for $slnFolder using $nugetSources"
+				Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" -NonInteractive -Source `"$nugetSources`"" -WorkingFolder $slnFolder
+			}
         }
         else
         {
