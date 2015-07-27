@@ -105,6 +105,15 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "advanced"
+        },
+        {
+            "name": "nugetSources",
+            "type": "string",
+            "label": "NuGet Sources",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply a list of packages sources separated by semicolons to use for the restore of NuGet packages. If empty default package sources will be used.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Build solution $(solution)",
