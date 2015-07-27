@@ -5,7 +5,8 @@ param(
     [string]$excludeVersion, # Support for excludeVersion has been deprecated.
     [string]$noCache,
     [string]$nuGetRestoreArgs,
-    [string]$nuGetPath
+    [string]$nuGetPath,
+    [string]$nuGetSources
 )
 
 Write-Verbose "Entering script $MyInvocation.MyCommand.Name"
@@ -60,6 +61,11 @@ if($b_noCache)
 if(!$nuGetPath)
 {
     $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
+}
+
+if (![string]::IsNullOrEmpty($nuGetSources))
+{
+    $args = (" -Source `"$nuGetSources`" " + $args);
 }
 
 if($nuGetRestoreArgs)
