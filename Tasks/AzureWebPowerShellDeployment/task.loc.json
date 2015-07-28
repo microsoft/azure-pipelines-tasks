@@ -82,7 +82,7 @@
     },
     {
       "name": "AdditionalArguments",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "defaultValue": "",
       "required": false
