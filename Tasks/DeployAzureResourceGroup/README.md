@@ -11,6 +11,15 @@ This task is used to deploy Resource Groups in Azure using the [Azure Resource M
 - **Resource Group, Location:** The name of the Resource Group and its location. If this is an existing Resource Group then the task will update the Resource Group with the Resources specified in the Azure template. If no Resource Group with the name exists in the Subscription then a new one will be created.
 - **Template and its Parameters:** The templates and the templates parameters file are the Azure templates available at [GitHub](https://github.com/Azure/azure-quickstart-templates) or in the [Azure gallery](https://azure.microsoft.com/en-in/documentation/articles/powershell-azure-resource-manager/). To get started immediately use [this](http://aka.ms/sampletemplate) template that is available on GitHub. These files can be either checked in the Version Control of they can be part of the build itself. If the files are part of the Build, use the pre-defined [system variables](https://msdn.microsoft.com/Library/vs/alm/Build/scripts/variables) provided by the Build to specify their location. The variables to use are `$(Build.Repository.LocalPath)`, if the templates are checked-in but are not built, or `$(Agent.BuildDirectory)`, if the templates are built as part of the solution. Be sure to specify the full path like `$(Build.Repository.LocalPath)\Azure Templates\AzureRGDeploy.json`. Wildcards like `**\\*.json` or `**\*.param.json` are also supported and there needs to be only file that matches the search pattern at the location. If more than one file matches the search pattern then the task will error out.
 
+	NOTE: Follow the Azure Naming guidelines while specifying parameters, few important one mentioned in below table  
+	
+	| Kind                 | Length | Casing           | Valid Chars                                                                           | Globally Unique |
+	|----------------------|--------|------------------|---------------------------------------------------------------------------------------|-----------------|
+	| Storage Account      | 3-24   | lowercase        | alphanumeric                                                                          | Yes             |
+	| Azure Resource Group | 2-64   | case-insensitive | alphanumeric periods, underscores, hyphens and parenthesis and cannot end in a period | No              |
+	| Azure KeyVault       | 3-24   | case-insensitive | alphanumeric                                                                          | Yes             |
+	| Azure DNS Name       | 3-64       | lowercase        | alphanumeric                                                                          | Yes             |
+
 - **Override Template Parameters:** The Override template parameters is used to override the parameters, like `–storageAccountName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)`.  
 - **Advanced Deployment Options:** This section can be confusing if one does not understand the rationale behind the options. The following information will help in understanding the parameters and the proper use of them:
 
