@@ -66,6 +66,7 @@ Add the Azure subscription to use in the Build tasks by opening the Account Admi
 
 Fill in the required details from the Azure account, and select credentials for authentication as certificates are not supported by Azure Resource Manager. **The credentials have to be a work account because Microsoft accounts like [joe@live.com]() or [joe@hotmail.com]() are not supported.**     
 
+*NOTE: Currently the Azure Resource Group Deployment Task will not work for the accounts having two factor authentication enabled, support will come soon.* 
 
 ##### Build Agent
 A build agent has to be deployed on a machine to build the code and to run the tasks. The build agent is xcopy deployable, and does not need any installation. The agent can be deployed on machines behind the Firewall and also on Azure VMs. The build agent uses the HTTPS protocol to communicate with VSO and can work across proxies and firewalls. VSO also provides Hosted build agents that can be used to build code and to deploy the application. The Hosted build agents are made available on-demand and run on Azure.
