@@ -10,19 +10,28 @@
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 9
   },
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.86.0",
   "inputs": [
     {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
       "name": "MachineGroupName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.MachineGroupName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.MachineGroupName"
@@ -44,9 +53,21 @@
       }
     },
     {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      }
+    },
+    {
       "name": "Filters",
       "type": "string",
       "label": "ms-resource:loc.input.label.Filters",
+      "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.Filters"
     },
@@ -54,7 +75,7 @@
       "name": "BlockedFor",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.BlockedFor",
-      "defaultValue": "Instance",
+      "defaultValue": "Definition",
       "required": "true",
       "helpMarkDown": "ms-resource:loc.input.help.BlockedFor",
       "options": {
@@ -67,7 +88,7 @@
       "name": "TimeInHours",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TimeInHours",
-      "defaultValue": "0",
+      "defaultValue": "8",
       "required": "true",
       "helpMarkDown": "ms-resource:loc.input.help.TimeInHours",
       "options": {
@@ -80,6 +101,23 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "WaitTimeInMinutes",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WaitTimeInMinutes",
+      "defaultValue": "30",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.WaitTimeInMinutes",
+      "visibleRule": "Action = Block"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "MachineGroupName",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

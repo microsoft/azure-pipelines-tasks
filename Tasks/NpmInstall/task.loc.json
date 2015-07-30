@@ -12,11 +12,12 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "npm"
   ],
+  "minimumAgentVersion": "1.86.0",
   "groups": [
     {
       "name": "advanced",

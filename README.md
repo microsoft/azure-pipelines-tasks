@@ -1,3 +1,5 @@
+VSO: ![VSO] (https://mseng.visualstudio.com/DefaultCollection/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/1474/badge)
+
 # VSO DevOps Tasks
 <br/>
 ![Tasks](/taskbanner.png?raw=true "Tasks")
@@ -17,7 +19,9 @@ This provides open examples on how we write tasks which will help you write othe
 
 ## How to Use Tasks
 
-### Visual Studio Build: [How To Use](https://msdn.microsoft.com/Library/vs/alm/Build/vs/define-build)
+### Visual Studio Build: [How To](https://msdn.microsoft.com/Library/vs/alm/Build/vs/define-build)
+
+### Build and Deploy ASP.NET5 Web App [How To](https://msdn.microsoft.com/Library/vs/alm/Build/azure/deploy-aspnet5)
 
 ### Publish Build Artifacts
 
@@ -32,9 +36,11 @@ $(agent.builddirectory)/out/pkg?(2|1).zip
 ```
 [more examples](https://realguess.net/tags/minimatch/)
 
-### Azure Website Deployment: [How To Use](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
-### Azure PowerShell: [How To Use](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
-### Xcode Build: [How To Use](http://youtu.be/OxmBuqtgHuM)
+### Azure Website Deployment: [How To](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
+
+### Azure PowerShell: [How To](https://msdn.microsoft.com/en-us/Library/vs/alm/Build/azure/index)
+
+### Xcode Build: [How To](http://youtu.be/OxmBuqtgHuM)
 
 ## Writing Tasks
 

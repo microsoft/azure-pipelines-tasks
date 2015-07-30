@@ -12,6 +12,6 @@
   "loc.input.help.modifyEnvironment": "确定环境变量修改是否会影响后续任务。",
   "loc.input.label.workingFolder": "工作文件夹",
   "loc.input.help.workingFolder": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。",
-  "loc.input.label.failOnStandardError": "Fail on Standard Error",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
+  "loc.input.label.failOnStandardError": "因标准错误失败",
+  "loc.input.help.failOnStandardError": "如果这是 true，则在向 StandardError 流写入任何错误时，此任务都会失败。"
 }

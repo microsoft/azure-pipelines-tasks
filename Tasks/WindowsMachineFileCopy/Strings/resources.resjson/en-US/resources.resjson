@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Windows Machine File Copy",
-  "loc.helpMarkDown": "Copy files to remote machine(s)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "Copy files to remote machine(s)",
   "loc.instanceNameFormat": "Copy files to $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",
@@ -11,8 +11,9 @@
   "loc.input.help.SourcePath": "Absolute path of the source folder or file on the local machine, or a UNC Share.",
   "loc.input.label.EnvironmentName": "Machine Group",
   "loc.input.help.EnvironmentName": "Name of the target Machine Group for copying the files to.​",
-  "loc.input.label.MachineNames": "Copy to Machines",
-  "loc.input.help.MachineNames": "Provide a comma separated list of machines like Machine1, Machine2. Default is all machines in the Machine Group.",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.label.MachineNames": "Filter Criteria",
+  "loc.input.help.MachineNames": "Provide a list of machine IP address or FQDN like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group.",
   "loc.input.label.TargetPath": "Destination Folder",
   "loc.input.help.TargetPath": "Local Path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",

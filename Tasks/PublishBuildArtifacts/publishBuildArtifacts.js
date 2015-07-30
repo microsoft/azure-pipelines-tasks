@@ -7,6 +7,9 @@ function getCommonLocalPath(files) {
     if (!files || files.length === 0) {
         return "";
     }
+    else if (files.length === 1) {
+        return path.dirname(files[0]);
+    }
     else {
         var root = files[0];
         for (var index = 1; index < files.length; index++) {
@@ -97,6 +100,12 @@ else {
             tl.debug('Matching ' + pattern);
             var realPattern = path.join(findRoot, pattern);
             tl.debug('Actual pattern: ' + realPattern);
+            // in debug mode, output some match candidates
+            tl.debug('Listing a few potential candidates...');
+            for (var i = 0; i < 10 && i < allFiles.length; i++) {
+                tl.debug('  ' + allFiles[i]);
+            }
+            // let minimatch do the actual filtering
             var matches = tl.match(allFiles, realPattern, { matchBase: true });
             tl.debug('Matched ' + matches.length + ' files');
             for (var j = 0; j < matches.length; j++) {

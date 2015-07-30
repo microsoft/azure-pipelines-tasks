@@ -5,8 +5,8 @@ function Create-Provider
 
     Write-Verbose "Registering provider $providerName" -Verbose
     $provider = Register-Provider -Name $providerName -Type $providerType -Connection $connection -ErrorAction Stop
-
-    Write-Verbose "Registered provider $provider" -Verbose
+    $url = $provider.Url
+    Write-Verbose "Registered provider $providerName with url $url" -Verbose
 
     return $provider
 }
@@ -26,8 +26,8 @@ function Create-ProviderData
 
     #TODO Figure out authentication mechanism and store it
     $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
-
-    Write-Verbose "Registered provider data $providerData" -Verbose
+	$url = $providerData.Url
+    Write-Verbose "Registered provider data $providerDataName with url $url" -Verbose
 
     return $providerData
 }
@@ -50,8 +50,8 @@ function Create-EnvironmentDefinition
     }
     
     $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
-
-    Write-Verbose "Registered machine group definition $environmentDefinition" -Verbose
+	$url = $environmentDefinition.Url
+    Write-Verbose "Registered machine group definition $environmentDefinitionName with url $url" -Verbose
 
     return $environmentDefinition   
 }
@@ -104,6 +104,13 @@ function Create-Environment
         $propertyBag.Add($passwordTagKey, $property)
     }
     
+    if([string]::IsNullOrEmpty($WinRmProtocol) -eq $false)
+    {
+        $winRmProtocolKey = "Microsoft-Vslabs-MG-WinRMProtocol"
+        $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $WinRmProtocol)
+        $propertyBag.Add($winRmProtocolKey, $property)
+    }
+
     $skipCACheckKey = "Microsoft-Vslabs-MG-SkipCACheck"
     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $skipCACheck)
     $propertyBag.Add($skipCACheckKey, $property)
@@ -112,7 +119,9 @@ function Create-Environment
    
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
-    Write-Host (Get-LocalizedString -Key "Registered machine group '{0}'" -ArgumentList $environment)
+    Write-Host (Get-LocalizedString -Key "Registered machine group '{0}'" -ArgumentList $environmentName)
+	$url = $environment.Url
+	Write-Verbose -Verbose "Registered machine group $environmentName with url $url"
 
     return $environment
 }

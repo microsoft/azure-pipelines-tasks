@@ -2,9 +2,9 @@ function Delete-MachineGroupFromProvider
 {
     param([string]$machineGroupName)
 
-    Write-Verbose "Deleting resource group $machineGroupName from Azure provider" -Verbose
+    Write-Verbose "[Azure Resource Manager]Deleting resource group $machineGroupName from Azure provider" -Verbose
     Remove-AzureResourceGroup -ResourceGroupName $machineGroupName -Force -ErrorAction Stop -Verbose
-    Write-Host (Get-LocalizedString -Key "Deleted resource group '{0}' from Azure provider" -ArgumentList $machineGroupName)
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}' from Azure provider" -ArgumentList $machineGroupName)
 }
 
 function Delete-MachineFromProvider
@@ -13,17 +13,17 @@ function Delete-MachineFromProvider
           [string]$machineName)
     
     $errorVariable=@()
-    Write-Verbose "Deleting machine $machineName from Azure provider" -Verbose
+    Write-Verbose "[Azure Resource Manager]Deleting machine $machineName from Azure provider" -Verbose
     $removeResponse = Remove-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -Force -ErrorAction SilentlyContinue -ErrorVariable  errorVariable -Verbose
 
     if($errorVariable.Count -eq 0)
     {
-         Write-Host (Get-LocalizedString -Key "Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
+         Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
          return "Succedded"
     }
     else
     {
-         Write-Warning(Get-LocalizedString -Key "Deletion of machine '{0}' failed in Azure with error '{1}'" -ArgumentList $machineName, $errorVariable)
+         Write-Warning(Get-LocalizedString -Key "[Azure Resource Manager]Deletion of machine '{0}' failed in Azure with error '{1}'" -ArgumentList $machineName, $errorVariable)
          return "Failed"
     }
 }
@@ -33,9 +33,8 @@ function Start-MachineInProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Verbose "Starting machine $machineName on Azure provider" -Verbose
+    Write-Verbose "[Azure Resource Manager]Starting machine $machineName on Azure provider" -Verbose
     Start-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose
-    Write-Host (Get-LocalizedString -Key "Started machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Stop-MachineInProvider
@@ -43,9 +42,8 @@ function Stop-MachineInProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Verbose "Stopping machine $machineName on Azure provider" -Verbose
+    Write-Verbose "[Azure Resource Manager]Stopping machine $machineName on Azure provider" -Verbose
     Stop-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose -Force
-    Write-Host (Get-LocalizedString -Key "Stopped machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Restart-MachineInProvider
@@ -53,9 +51,8 @@ function Restart-MachineInProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Verbose "Restarting machine $machineName on Azure provider" -Verbose
+    Write-Verbose "[Azure Resource Manager]Restarting machine $machineName on Azure provider" -Verbose
     Restart-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose 
-    Write-Host (Get-LocalizedString -Key "Restarted machine '{0}' from Azure provider" -ArgumentList $machineName)
 }
 
 function Initialize-AzureHelper
@@ -86,17 +83,18 @@ function Initialize-AzureHelper
                 $password = $serviceEndpoint.Authorization.Parameters.Password
                 $subscriptionName = $serviceEndpoint.Data.SubscriptionName
 
-                Write-Verbose "SubscriptionName : $subscriptionName" -Verbose
-                Write-Verbose "Username : $username" -Verbose
-
                 $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
                 $psCredential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+                
+                Write-Verbose "[Azure Resource Manager]Adding azure account with SubscriptionName : $subscriptionName and UserName : $userName" -Verbose
                 $azureAccount = Add-AzureAccount -Credential $psCredential
+                Write-Verbose "[Azure Resource Manager]Added azure account" -Verbose
+                
                 if(!$azureAccount)
                 {
                     throw (Get-LocalizedString -Key "There was an error with the Azure credentials used for machine group deployment")
                 }
-                Select-AzureSubscription -SubscriptionName $subscriptionName
+                Select-AzureSubscription -SubscriptionId $subscriptionId
             }
             else
             {

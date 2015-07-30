@@ -10,6 +10,6 @@
   "loc.input.help.args": "Argomenti passati allo script della shell",
   "loc.input.label.cwd": "Directory di lavoro",
   "loc.input.help.cwd": "Directory di lavoro corrente durante l'esecuzione dello script. Per impostazione predefinita, corrisponde alla cartella in cui si trova lo script.",
-  "loc.input.label.failOnStandardError": "Fail on Standard Error",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
+  "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard",
+  "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError."
 }

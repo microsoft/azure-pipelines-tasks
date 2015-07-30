@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 9
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -32,17 +32,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.cwd"
     },
     {
-      "name": "args",
+      "name": "cmakeArgs",
       "type": "string",
-      "label": "ms-resource:loc.input.label.args",
+      "label": "ms-resource:loc.input.label.cmakeArgs",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.args"
+      "helpMarkDown": "ms-resource:loc.input.help.cmakeArgs"
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "cmake.js",
+    "Node": {
+      "target": "cmake2.js",
       "argumentFormat": ""
     },
     "PowerShell": {

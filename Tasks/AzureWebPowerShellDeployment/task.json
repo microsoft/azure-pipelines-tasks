@@ -1,19 +1,19 @@
 ﻿{
   "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
   "name": "AzureWebPowerShellDeployment",
-  "friendlyName": "Azure Web Site Deployment",
-  "description": "Deploy a website to Microsoft Azure",
+  "friendlyName": "Azure Web App Deployment",
+  "description": "Publish a Visual Studio Web project to a Microsoft Azure Web App using Web Deploy",
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
   "category": "Deploy",
   "visibility": [
                 "Build",
                 "Release"
-                ],  
+                ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 15
   },
   "demands": [
     "azureps"
@@ -29,44 +29,52 @@
       "helpMarkDown": "Azure subscription to target for deployment."
     },
     {
-      "name": "WebSiteLocation",
-      "type": "pickList",
-      "label": "Web Site Location",
-      "defaultValue": "South Central US",
-      "required": true,
-      "helpMarkDown": "Select a region for deployment.",
-      "options": {
-        "South Central US": "South Central US",
-        "North Europe": "North Europe",
-        "West Europe": "West Europe",
-        "North Central US": "North Central US",
-        "West US": "West US",
-        "East Asia": "East Asia",
-        "East US": "East US",
-        "Southeast Asia": "Southeast Asia",
-        "East US2": "East US2",
-        "Japan West": "Japan West",
-        "Japan East": "Japan East",
-        "Central US": "Central US",
-        "Brazil South": "Brazil South"
-      },
-      "properties": {
-		"EditableOptions": "True"
-	  }
-	},
-    {
       "name": "WebSiteName",
       "type": "pickList",
-      "label": "Web Site Name",
+      "label": "Web App Name",
       "defaultValue": "",
       "required": true
     },
     {
+      "name": "WebSiteLocation",
+      "type": "pickList",
+      "label": "Web App Location",
+      "defaultValue": "South Central US",
+      "required": true,
+      "helpMarkDown": "Select a region for deployment.",
+      "options": {
+        "Brazil South": "Brazil South",
+        "Central US": "Central US",
+        "East Asia": "East Asia",
+        "East US": "East US",
+        "East US2": "East US2",
+        "Japan East": "Japan East",
+        "Japan West": "Japan West",
+        "North Central US": "North Central US",
+        "North Europe": "North Europe",
+        "South Central US": "South Central US",
+        "Southeast Asia": "Southeast Asia",
+        "West Europe": "West Europe",
+        "West US": "West US"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "Slot",
+      "type": "string",
+      "label": "Slot",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Slot"
+    },
+    {
       "name": "Package",
       "type": "string",
-      "label": "Package",
+      "label": "Web Deploy Package",
       "defaultValue": "",
-      "helpMarkDown": "Path of package under the default artifact directory.",
+      "helpMarkDown": "Path to the Visual Studio Web Deploy package under the default artifact directory.",
       "required": true
     },
     {

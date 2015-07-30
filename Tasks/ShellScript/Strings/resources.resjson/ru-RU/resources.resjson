@@ -10,6 +10,6 @@
   "loc.input.help.args": "Аргументы, передаваемые в сценарий оболочки",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий.",
-  "loc.input.label.failOnStandardError": "Fail on Standard Error",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
+  "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой",
+  "loc.input.help.failOnStandardError": "Если имеет значение true, задача завершится сбоем при записи любых ошибок в поток StandardError."
 }

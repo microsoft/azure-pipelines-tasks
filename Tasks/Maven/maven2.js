@@ -1,6 +1,6 @@
 var tl = require('vso-task-lib');
 
-var mvntool = tl.which('mvn', false);
+var mvntool = tl.which('mvn', true);
 
 var mvnv = new tl.ToolRunner(mvntool);
 mvnv.arg('-version');
@@ -66,6 +66,7 @@ mvnv.exec()
   tl.exit(code);
 })
 .fail(function(err) {
+  console.error(err.message);
   publishTestResults(publishJUnitResults, testResultsFiles);
   tl.debug('taskRunner fail');
   tl.exit(1);

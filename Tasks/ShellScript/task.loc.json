@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 9
   },
   "demands": [
     "sh"
@@ -53,13 +53,18 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "shellscript.js",
-      "argumentFormat": ""
-    },
     "Node": {
       "target": "shellscript2.js",
       "argumentFormat": ""

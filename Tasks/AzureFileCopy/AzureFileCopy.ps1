@@ -6,6 +6,7 @@ param (
     [string]$containerName,
     [string]$blobPrefix,
     [string]$environmentName,
+    [string]$resourceFilteringMethod,
     [string]$machineNames,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
@@ -21,10 +22,14 @@ Write-Verbose "destination = $destination" -Verbose
 Write-Verbose "containerName = $containerName" -Verbose
 Write-Verbose "blobPrefix = $blobPrefix" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
+
+# keep machineNames parameter name unchanged due to back compatibility
+$machineFilter = $machineNames
 
 # Constants #
 $defaultWinRMPort = '5986'
@@ -40,6 +45,8 @@ $doNotSkipCACheckOption = ''
 $azureFileCopyOperation = 'AzureFileCopy'
 $ErrorActionPreference = 'Stop'
 
+$ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
+
 . ./AzureFileCopyJob.ps1
 
 # Import all the dlls and modules which have cmdlets we need
@@ -52,6 +59,76 @@ $resourceFQDNKeyName = Get-ResourceFQDNTagKey
 $resourceWinRMHttpPortKeyName = Get-ResourceHttpTagKey
 $resourceWinRMHttpsPortKeyName = Get-ResourceHttpsTagKey
 $skipCACheckKeyName = Get-SkipCACheckTagKey
+
+function ThrowError
+{
+	param([string]$errorMessage)
+	
+        $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/AzureFileCopy/README.md"
+        $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
+        throw "$errorMessage $helpMessage"
+}
+
+function Get-AzureStorageAccountResourceGroupName
+{
+    param([string]$storageAccountName)
+
+    Write-Verbose "(ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+    $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
+    Write-Verbose "(ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+
+    $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
+    if ([string]::IsNullOrEmpty($azureResourceGroupName) -eq $true)
+    {
+        Write-Verbose "(ARM)Storage sccount: $storageAccountName not found" -Verbose
+        Throw (Get-LocalizedString -Key "Storage acccout: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
+    }
+
+    return $azureStorageAccountResourceDetails.ResourceGroupName
+}
+
+function Get-AzureStorageKeyFromARM
+{
+    param([string]$storageAccountName)
+
+    # get azure storage account resource group name
+    $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
+
+    Write-Verbose "(ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+    $storageKeyDetails = Get-AzureStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
+    $storageKey = $storageKeyDetails.Key1
+    Write-Verbose "(ARM)Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+
+    return $storageKey
+}
+
+function Get-AzureStorageKeyFromRDFE
+{
+    param([string]$storageAccountName)
+
+    Write-Verbose "(RDFE)Retrieving storage key for the storage account: $storageAccount" -Verbose
+    $storageKeyDetails = Get-AzureStorageKey -StorageAccountName $storageAccountName
+    $storageKey = $storageKeyDetails.Primary
+    Write-Verbose "(RDFE)Retrieved storage key successfully for the storage account: $storageAccount" -Verbose
+
+    return $storageKey
+}
+
+function Validate-AzurePowershellVersion
+{
+    Write-Verbose "Validating minimum required azure powershell version" -Verbose
+
+    $currentVersion =  Get-AzureCmdletsVersion
+    $minimumAzureVersion = New-Object System.Version(0, 9, 0)
+    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+    
+    if(!$versionCompatible)
+    {
+        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
+    }
+
+    Write-Verbose -Verbose "Validated the required azure powershell version"
+}
 
 function Remove-AzureContainer
 {
@@ -84,18 +161,27 @@ function Get-ResourceConnectionDetails
     $resourceProperties = @{}
     $resourceName = $resource.Name
 
+    Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceFQDNKeyName" -Verbose
     $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName
+    Write-Verbose "`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceFQDNKeyName" -Verbose
     Write-Verbose "`t Resource fqdn - $fqdn" -Verbose
 
     $winrmPortToUse = ''
     $protocolToUse = ''
+
     # check whether https port is defined for resource
+    Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpsPortKeyName" -Verbose
     $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
+    Write-Verbose "`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpsPortKeyName" -Verbose
+
     if ([string]::IsNullOrEmpty($winrmHttpsPort))
     {
         Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
 
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
         $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
+
         # if resource does not have any port defined then, use https port by default
         if ([string]::IsNullOrEmpty($winrmHttpPort))
         {
@@ -135,7 +221,10 @@ function Get-SkipCACheckOption
     $skipCACheckOption = $doSkipCACheckOption
 
     # get skipCACheck option from environment
+    Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with key: $skipCACheckKeyName" -Verbose
     $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection
+    Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with key: $skipCACheckKeyName" -Verbose
+
     if ($skipCACheckBool -eq "false")
     {
         $skipCACheckOption = $doNotSkipCACheckOption
@@ -167,15 +256,74 @@ function Get-ResourcesProperties
     return $resourcesPropertyBag
 }
 
+function Get-WellFormedTagsList
+{
+    [CmdletBinding()]
+    Param
+    (
+        [string]$tagsListString
+    )
+
+    if([string]::IsNullOrWhiteSpace($tagsListString))
+    {
+        return $null
+    }
+
+    $tagsArray = $tagsListString.Split(';')
+    $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
+    foreach($tag in $tagsArray)
+    {
+        if([string]::IsNullOrWhiteSpace($tag)) {continue}
+        $tagKeyValue = $tag.Split(':')
+        if($tagKeyValue.Length -ne 2)
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        if([string]::IsNullOrWhiteSpace($tagKeyValue[0]) -or [string]::IsNullOrWhiteSpace($tagKeyValue[1]))
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        $tagTuple = New-Object "System.Tuple[string,string]" ($tagKeyValue[0].Trim(), $tagKeyValue[1].Trim())
+        $tagList.Add($tagTuple) | Out-Null
+    }
+
+    $tagList = [System.Collections.Generic.IEnumerable[Tuple[string,string]]]$tagList
+    return ,$tagList
+}
+
+# enabling detailed logging only when system.debug is true
+$enableDetailedLoggingString = $env:system_debug
+if ($enableDetailedLoggingString -ne "true")
+{
+    $enableDetailedLoggingString = "false"
+}
+
 # azcopy location on automation agent
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
-# getting storage account key
-Write-Verbose "Retrieving storage key for the storage account: $storageAccount" -Verbose
-$storageKeyDetails = Get-AzureStorageKey -StorageAccountName $storageAccount
-$storageKey = $storageKeyDetails.Primary
-Write-Verbose "Retrieved storage key successfully for the storage account: $storageAccount" -Verbose
+# try to get storage key from RDFE, if not exists will try from ARM endpoint
+try
+{
+    Switch-AzureMode AzureServiceManagement
+
+    # getting storage key from RDFE
+    $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
+}
+catch [Hyak.Common.CloudException]
+{
+    Write-Verbose "(RDFE)$_.Exception.Message.ToString()" -Verbose
+
+    # checking azure powershell version to make calls to ARM endpoint
+    Validate-AzurePowershellVersion
+
+    Switch-AzureMode AzureResourceManager
+
+    # getting storage account key from ARM endpoint
+    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
+}
 
 # creating storage context to be used while creating container, sas token, deleting container
 $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
@@ -205,7 +353,8 @@ catch
 
     Write-Verbose $_.Exception.ToString() -Verbose
     $error = $_.Exception.Message
-    throw (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+    $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+    ThrowError -errorMessage $errorMessage
 }
 finally
 {
@@ -218,7 +367,8 @@ finally
         }
 
         $error = $uploadResponse.Error
-        throw (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+        $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+        ThrowError -errorMessage $errorMessage
     }
     elseif ($uploadResponse.Status -eq "Succeeded")
     {
@@ -239,10 +389,30 @@ try
 {
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineNames -Connection $connection
+    if($resourceFilteringMethod -eq "tags")
+    {
+        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
 
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with tag filter: $wellFormedTagsList" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with tag filter" -Verbose
+    }
+    else
+    {
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with machine filter: $machineFilter" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
+    }
+
+    if ($resources.Count -eq 0)
+    {
+        throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for copy" -ArgumentList $environmentName)
+    }
+
+    Write-Verbose "Starting Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $azureFileCopyOperation" -Verbose
     $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection
-    Write-Verbose "Invoking Azure File Copy Operation on environment: $environmentName with operationId: $envOperationId" -Verbose
+    Write-Verbose "Completed Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $deploymentOperation" -Verbose
+    Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
 
     $resourcesPropertyBag = Get-ResourcesProperties -resources $resources -connection $connection
 
@@ -261,26 +431,34 @@ try
 
             Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $machine)
 
+            Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
+            Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
-            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
+            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
             $status = $copyResponse.Status
 
             Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machine -deploymentResponse $copyResponse
             Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
 
-            Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-            $logs = Get-ResourceOperationLogs -deploymentResponse $copyResponse
+            # getting operation logs
+            $logs = Get-OperationLogs
+            Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
+
+            Write-Verbose "Completed Complete-ResourceOperation cmdlet call on resource: $($resource.Name) with resource operationId: $resOperationId" -Verbose
             Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection
+            Write-Verbose "Completed Complete-ResourceOperation cmdlet call on resource: $($resource.Name) with resource operationId: $resOperationId" -Verbose
 
             if ($status -ne "Passed")
             {
-                Write-Verbose "Completed operation: $azureFileCopyOperation with operationId: $envOperationId on environment: $environmentName with status: Failed" -Verbose
+                Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
                 Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection
-                
+                Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
+
                 Write-Verbose $copyResponse.Error.ToString() -Verbose
-                throw $copyResponse.Error
+                $errorMessage =  $copyResponse.Error.Message
+                ThrowError -errorMessage $errorMessage
             }
         }
     }
@@ -295,11 +473,13 @@ try
 
             Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $machine)
 
+            Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
             $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
+            Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
             Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
 
             $resourceProperties.resOperationId = $resOperationId
-            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
+            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
             $Jobs.Add($job.Id, $resourceProperties)
         }
 
@@ -314,31 +494,43 @@ try
                     Remove-Job $Job
 
                     $status = $output.Status
-                    if ($status -ne "Passed")
-                    {
-                        $envOperationStatus = "Failed"
-                    }
-
                     $machineName = $Jobs.Item($job.Id).fqdn
                     $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                     Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machineName -deploymentResponse $output
-                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
+                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
 
-                    Write-Verbose "Complete ResourceOperation for resource: $($resource.Name)" -Verbose
-                    $logs = Get-ResourceOperationLogs -deploymentResponse $output
+                    if ($status -ne "Passed")
+                    {
+                        $envOperationStatus = "Failed"
+                    $errorMessage = ""
+                    if($output.Error -ne $null)
+                    {
+                        $errorMessage = $output.Error.Message
+                    }
+                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $machineName, $errorMessage)
+                    }
+
+                    # getting operation logs
+                    $logs = Get-OperationLogs
+                    Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
+
+                    Write-Verbose "Starting Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
                     Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
+                    Write-Verbose "Completed Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
                 }
             }
         }
     }
 
-    Write-Verbose "Completed operation: $azureFileCopyOperation with operationId: $envOperationId on environment: $environmentName with status: $envOperationStatus" -Verbose
-    Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection
+     Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
+     Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection
+     Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
 
     if ($envOperationStatus -ne "Passed")
     {
-        throw (Get-LocalizedString -Key 'Copy to one or more machines failed')
+        $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
+        ThrowError -errorMessage $errorMessage
     }
     else
     {

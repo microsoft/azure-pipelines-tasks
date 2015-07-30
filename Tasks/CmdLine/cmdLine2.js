@@ -11,16 +11,15 @@ if (cwd) {
 	tl.cd(cwd);
 }
 
-var failInput = tl.getInput('failOnStandardError');
-var failOnStdErr = (failInput == 'true');
+var failOnStdErr = tl.getInput('failOnStandardError') == 'true';
 
-//tr.exec({failOnStdErr: failOnStdErr})
-tr.exec()
+tr.exec({ failOnStdErr: failOnStdErr })
 .then(function(code) {
 	console.log('code is: ' + code);
 	tl.exit(code);
 })
 .fail(function(err) {
+	console.error(err.message);
 	tl.debug('taskRunner fail');
 	tl.exit(1);
 })
