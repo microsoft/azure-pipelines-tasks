@@ -8,6 +8,8 @@
   "loc.input.label.WebSiteLocation": "Emplacement du site web",
   "loc.input.help.WebSiteLocation": "Sélectionnez une région pour le déploiement.",
   "loc.input.label.WebSiteName": "Nom du site web",
+  "loc.input.label.Slot": "Slot",
+  "loc.input.help.Slot": "Slot",
   "loc.input.label.Package": "Package",
   "loc.input.help.Package": "Chemin d'accès au package dans le répertoire de l'artefact par défaut.",
   "loc.input.label.AdditionalArguments": "Arguments supplémentaires"

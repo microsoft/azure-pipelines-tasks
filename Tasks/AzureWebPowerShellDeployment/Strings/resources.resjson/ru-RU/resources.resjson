@@ -8,6 +8,8 @@
   "loc.input.label.WebSiteLocation": "Расположение веб-сайта",
   "loc.input.help.WebSiteLocation": "Выберите регион для развертывания.",
   "loc.input.label.WebSiteName": "Имя веб-сайта",
+  "loc.input.label.Slot": "Slot",
+  "loc.input.help.Slot": "Slot",
   "loc.input.label.Package": "Пакет",
   "loc.input.help.Package": "Путь к пакету в каталоге артефактов по умолчанию.",
   "loc.input.label.AdditionalArguments": "Дополнительные аргументы"
