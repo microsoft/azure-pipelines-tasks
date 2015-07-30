@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 18
     },
     "demands": [
         "msbuild",
@@ -21,12 +21,12 @@
     "groups": [
         {
             "name": "serverSettings",
-            "displayName": "SonarQube Server Settings",
+            "displayName": "SonarQube Server",
             "isExpanded": true
         },
         {
             "name": "project",
-            "displayName": "SonarQube Project Properties",
+            "displayName": "SonarQube Project Settings",
             "isExpanded": true
         },
         {
@@ -71,7 +71,7 @@
             "type": "connectedService:Generic",
             "label": "SonarQube Endpoint",
             "required": true,
-            "helpMarkDown": "The SonarQube Server Endpoint",
+            "helpMarkDown": "The SonarQube server generic endpoint",
             "groupName": "serverSettings"
         },
         {
@@ -79,7 +79,7 @@
             "type": "string",
             "label": "Db Connection String",
             "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. The database connection setting, e.g. jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The database connection setting, i.e. sonar.jdbc.url. For example jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
             "groupName": "dbSettings"
         },
         {
@@ -87,7 +87,7 @@
             "type": "string",
             "label": "Db UserName",
             "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. The username for the database user",
+            "helpMarkDown": "SonarQube server 5.1 and lower only The username for the database user, i.e. sonar.jdbc.username.",
             "groupName": "dbSettings"
         },
         {
@@ -95,28 +95,28 @@
             "type": "string",
             "label": "Db User Password",
             "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. The password for the database user",
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The password for the database user, i.e. sonar.jdbc.password",
             "groupName": "dbSettings"
         },
          {
             "name": "cmdLineArgs",
             "type": "string",
-            "label": "Sonar-Runner arguments",
+            "label": "Additional Settings",
             "required": false,
-            "helpMarkDown": "Pass additional arguments using the format: /d:propertyName=propertyValue",
+            "helpMarkDown": "Pass in settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://docs.sonarqube.org/)",
             "groupName": "advanced"
         },
         {
             "name": "configFile",
             "type": "filePath",
             "defaultValue": "",
-            "label": "Config File",
+            "label": "Settings File",
             "required": false,
-            "helpMarkDown": "Path to a configuration file with SonarQube properties",
+            "helpMarkDown": "You can also specify settings via a configuration file. A template is available [here](https://github.com/SonarSource/sonar-msbuild-runner/blob/master/SonarQube.Bootstrapper/SonarQube.Analysis.xml)",
             "groupName": "advanced"
         }
     ],
-    "instanceNameFormat": "Fetch analysis settings from SonarQube",
+    "instanceNameFormat": "Fetch the Quality Profile from SonarQube",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",

@@ -15,9 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 18
   },
   "demands": [
+    "msbuild",
     "java"
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

@@ -5,5 +5,5 @@
   "loc.friendlyName": "SonarQube for MSBuild - End Analysis",
   "loc.helpMarkDown": "[More Information](https://github.com/SonarSource/sonar-msbuild-runner)",
   "loc.description": "Finish the analysis and upload the results to SonarQube",
-  "loc.instanceNameFormat": "Upload analysis results to SonarQube"
+  "loc.instanceNameFormat": "Finish the analysis and upload the results to SonarQube"
 }

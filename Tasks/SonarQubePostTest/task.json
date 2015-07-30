@@ -12,12 +12,13 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 18
     },
     "demands": [
+        "msbuild",
         "java"
     ],  
-    "instanceNameFormat": "Upload analysis results to SonarQube",
+    "instanceNameFormat": "Finish the analysis and upload the results to SonarQube",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\SonarQubePostTest.ps1",
