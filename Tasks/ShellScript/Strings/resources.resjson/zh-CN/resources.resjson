@@ -9,5 +9,7 @@
   "loc.input.label.args": "参数",
   "loc.input.help.args": "传递给 shell 脚本的参数",
   "loc.input.label.cwd": "工作目录",
-  "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。"
+  "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
 }

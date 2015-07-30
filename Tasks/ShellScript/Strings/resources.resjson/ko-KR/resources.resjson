@@ -9,5 +9,7 @@
   "loc.input.label.args": "인수",
   "loc.input.help.args": "인수를 셸 스크립트에 전달했습니다.",
   "loc.input.label.cwd": "작업 디렉터리",
-  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 스크립트가 있는 폴더를 기본값으로 지정합니다."
+  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 스크립트가 있는 폴더를 기본값으로 지정합니다.",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
 }

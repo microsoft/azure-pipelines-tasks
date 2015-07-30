@@ -11,5 +11,7 @@
   "loc.input.label.modifyEnvironment": "Modificar entorno",
   "loc.input.help.modifyEnvironment": "Determina si las modificaciones de variable de entorno afectarán a tareas posteriores.",
   "loc.input.label.workingFolder": "Carpeta de trabajo",
-  "loc.input.help.workingFolder": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script."
+  "loc.input.help.workingFolder": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script.",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
 }

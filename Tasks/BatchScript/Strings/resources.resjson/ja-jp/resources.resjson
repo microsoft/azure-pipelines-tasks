@@ -11,5 +11,7 @@
   "loc.input.label.modifyEnvironment": "環境の変更",
   "loc.input.help.modifyEnvironment": "環境変数の変更が後続タスクに影響するかどうかを決定します。",
   "loc.input.label.workingFolder": "作業フォルダー",
-  "loc.input.help.workingFolder": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。"
+  "loc.input.help.workingFolder": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
 }
