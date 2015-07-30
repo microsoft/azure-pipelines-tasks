@@ -14,7 +14,6 @@ function CreateCommandLineArgs
           [string]$aditionalArguments,
           [string]$configFile)
 	
-    
 
     $sb = New-Object -TypeName "System.Text.StringBuilder"; 
 
@@ -41,7 +40,7 @@ function CreateCommandLineArgs
 
     if (![String]::IsNullOrWhiteSpace($dbUrl))
     {
-        [void]$sb.Append(" /d:sonar.jdbc.url=""$dbUrl")
+        [void]$sb.Append(" /d:sonar.jdbc.url=""$dbUrl""")
     }
 
     if (![String]::IsNullOrWhiteSpace($dbUsername))
@@ -71,9 +70,6 @@ function CreateCommandLineArgs
 
     return $sb.ToString();
 }
-
-
-
 
 # Set a variable in a property bag that is accessible by all steps
 # To retrieve the variable use $val = Get-Variable $distributedTaskContext "varName"
@@ -106,7 +102,6 @@ function GetEndpointData
 
     return $serviceEndpoint
 }
-
 
 
 ################# Helpers ######################
