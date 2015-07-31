@@ -3,7 +3,7 @@
     "name": "SonarQubePostTest",
     "friendlyName": "SonarQube for MSBuild - End Analysis",
     "description": "Finish the analysis and upload the results to SonarQube",
-    "helpMarkDown": "[More Information](https://github.com/SonarSource/sonar-msbuild-runner)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
         "msbuild",

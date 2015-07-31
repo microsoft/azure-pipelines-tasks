@@ -3,7 +3,7 @@
     "name": "SonarQubePreBuild",
     "friendlyName": "SonarQube for MSBuild - Begin Analysis",
     "description": "Fetch the Quality Profile from SonarQube to configure the analysis",
-    "helpMarkDown": "[More Information](https://github.com/SonarSource/sonar-msbuild-runner)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
         "msbuild",
@@ -112,7 +112,7 @@
             "defaultValue": "",
             "label": "Settings File",
             "required": false,
-            "helpMarkDown": "You can also specify settings via a configuration file. A template is available [here](https://github.com/SonarSource/sonar-msbuild-runner/blob/master/SonarQube.Bootstrapper/SonarQube.Analysis.xml)",
+            "helpMarkDown": "You can also specify settings via a configuration file. A template is available [here](http://go.microsoft.com/fwlink/?LinkID=620062)",
             "groupName": "advanced"
         }
     ],

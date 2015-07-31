@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "SonarQube for MSBuild - Begin Analysis",
-  "loc.helpMarkDown": "[More Information](https://github.com/SonarSource/sonar-msbuild-runner)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Fetch the Quality Profile from SonarQube to configure the analysis",
   "loc.instanceNameFormat": "Fetch the Quality Profile from SonarQube",
   "loc.group.displayName.serverSettings": "SonarQube Server",
@@ -27,5 +27,5 @@
   "loc.input.label.cmdLineArgs": "Additional Settings",
   "loc.input.help.cmdLineArgs": "Pass in settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://docs.sonarqube.org/)",
   "loc.input.label.configFile": "Settings File",
-  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](https://github.com/SonarSource/sonar-msbuild-runner/blob/master/SonarQube.Bootstrapper/SonarQube.Analysis.xml)"
+  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](http://go.microsoft.com/fwlink/?LinkID=620062)"
 }
