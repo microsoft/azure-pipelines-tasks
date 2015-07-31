@@ -9,14 +9,13 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Build",
-    "Release"
+    "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",

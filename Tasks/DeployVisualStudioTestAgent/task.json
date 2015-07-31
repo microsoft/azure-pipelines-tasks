@@ -6,14 +6,13 @@
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
     "category": "Test",
     "visibility": [     
-                  "Build",
-                  "Release"
+                  "Build"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [
 
