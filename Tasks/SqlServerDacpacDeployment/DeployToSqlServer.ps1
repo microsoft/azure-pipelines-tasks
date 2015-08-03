@@ -33,40 +33,21 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDeployment"
 
-$sqlPackageArguments = @("/SourceFile:`'$dacpacFile`'")
-$sqlPackageArguments += @("/Action:Publish")
+$ErrorActionPreference = 'Stop'
 
-if($targetMethod -eq "server")
-{
-    $sqlPackageArguments += @("/TargetServerName:`'$serverName`'")
-    $sqlPackageArguments += @("/TargetDatabaseName:$databaseName")
+$sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
 
-    if($sqlUsername)
-    {
-        $sqlPackageArguments += @("/TargetUser:$sqlUsername")
-        $sqlPackageArguments += @("/TargetPassword:$sqlPassword")
-    }    
-}
-elseif($targetMethod -eq "connectionString")
-{
-    $sqlPackageArguments += @("/TargetConnectionString:$connectionString")
-}
+$sqlPackageOnTargetMachineBlock = Get-Content $sqlDeploymentScriptPath | Out-String
 
-if($publishProfile)
-{
-    $sqlPackageArguments += @("/Profile:$publishProfile")
-}
-$sqlPackageArguments += @("$additionalArguments")
+$sqlPackageArguments = Get-SqlPackageCommandArguments -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
 
-$sqlPackageOnTargetMachineBlock = Get-Content ./SqlPackageOnTargetMachine.ps1 | Out-String
-
-$scriptArgument = '"' + ($sqlPackageArguments -join " ") + '"'
+$scriptArguments = "-sqlPackageArguments $sqlPackageArguments -sqlPassword $sqlPassword -targetConnectionString $connectionString"
 
 if($resourceFilteringMethod -eq "tags")
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $deployInParallel
+    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
 }
 else
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArgument -runPowershellInParallel $deployInParallel
+    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
 }
