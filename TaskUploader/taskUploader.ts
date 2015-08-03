@@ -92,7 +92,7 @@ function _sendFile(verb: string, requestUrl: string, content: any, headers: any,
 }
 
 interface ICredentials {
-	username: string;
+    username: string;
     password: string;
     action: string;
 }
