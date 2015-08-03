@@ -1,0 +1,30 @@
+﻿{
+    "id": "730D8DE1-7A4F-424C-9542-FE7CC02604EB",
+    "name": "SonarQubePostTest",
+    "friendlyName": "SonarQube for MSBuild - End Analysis",
+    "description": "Finish the analysis and upload the results to SonarQube",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 19
+    },
+    "demands": [
+        "msbuild",
+        "java"
+    ],  
+    "instanceNameFormat": "Finish the analysis and upload the results to SonarQube",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\SonarQubePostTest.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+    
+}

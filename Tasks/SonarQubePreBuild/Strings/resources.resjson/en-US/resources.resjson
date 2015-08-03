@@ -1,0 +1,31 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "SonarQube for MSBuild - Begin Analysis",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.description": "Fetch the Quality Profile from SonarQube to configure the analysis",
+  "loc.instanceNameFormat": "Fetch the Quality Profile from SonarQube",
+  "loc.group.displayName.serverSettings": "SonarQube Server",
+  "loc.group.displayName.project": "SonarQube Project Settings",
+  "loc.group.displayName.dbSettings": "Database Settings (not required for SonarQube 5.2+)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.projectKey": "Project Key",
+  "loc.input.help.projectKey": "The SonarQube project unique key, i.e. sonar.projectKey",
+  "loc.input.label.projectName": "Project Name",
+  "loc.input.help.projectName": "The SonarQube project name, i.e. sonar.ProjectName",
+  "loc.input.label.projectVersion": "Project Version",
+  "loc.input.help.projectVersion": "The SonarQube project version, i.e. sonar.projectVersion",
+  "loc.input.label.connectedServiceName": "SonarQube Endpoint",
+  "loc.input.help.connectedServiceName": "The SonarQube server generic endpoint",
+  "loc.input.label.dbUrl": "Db Connection String",
+  "loc.input.help.dbUrl": "SonarQube server 5.1 and lower only. The database connection setting, i.e. sonar.jdbc.url. For example jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
+  "loc.input.label.dbUsername": "Db UserName",
+  "loc.input.help.dbUsername": "SonarQube server 5.1 and lower only The username for the database user, i.e. sonar.jdbc.username.",
+  "loc.input.label.dbPassword": "Db User Password",
+  "loc.input.help.dbPassword": "SonarQube server 5.1 and lower only. The password for the database user, i.e. sonar.jdbc.password",
+  "loc.input.label.cmdLineArgs": "Additional Settings",
+  "loc.input.help.cmdLineArgs": "Pass in settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://docs.sonarqube.org/)",
+  "loc.input.label.configFile": "Settings File",
+  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](http://go.microsoft.com/fwlink/?LinkID=620062)"
+}

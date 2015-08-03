@@ -22,6 +22,12 @@ param
     [String] [Parameter(Mandatory = $true)]  #default to Production
     $Slot,
 
+    [String] [Parameter(Mandatory = $false)]
+    $DeploymentLabel,
+
+    [String] [Parameter(Mandatory = $true)]
+    $AppendDateTimeToLabel,
+
     [String] [Parameter(Mandatory = $true)]
     $AllowUpgrade
 )
@@ -178,6 +184,8 @@ Write-Host "StorageAccount= $StorageAccount"
 Write-Host "CsPkg= $CsPkg"
 Write-Host "CsCfg= $CsCfg"
 Write-Host "Slot= $Slot"
+Write-Host "DeploymentLabel= $DeploymentLabel"
+Write-Host "AppendDateTimeToLabel= $AppendDateTimeToLabel"
 Write-Host "AllowUpgrade= $AllowUpgrade"
 
 $allowUpgrade = Convert-String $AllowUpgrade Boolean
@@ -202,27 +210,60 @@ if (!$azureService)
 
 $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $CsCfg
 
+$label = $DeploymentLabel
+
+$appendDateTime = Convert-String $AppendDateTimeToLabel Boolean
+
+if ($label -and $appendDateTime)
+{
+	$label += " "
+	$label += Get-Date
+}
+
 Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue"
 $azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue
 if (!$azureDeployment)
 {
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+	if ($label)
+	{
+		Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+		$azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
+	}
+	else
+	{
+		Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+		$azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+	}
 } 
 elseif ($allowUpgrade -eq $true)
 {
     #Use -Upgrade
-    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
-    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+	if ($label)
+	{
+		Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+		$azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
+	}
+	else
+	{
+		Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+		$azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+	}
 }
 else
 {
     #Remove and then Re-create
     Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force"
     $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force
-    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
-    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+	if ($label)
+	{
+		Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+		$azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
+	}
+	else
+	{
+		Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+		$azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
+	}
 }
-
 
 Write-Verbose "Leaving script Publish-AzureCloudDeployment.ps1"

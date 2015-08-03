@@ -8,6 +8,8 @@
   "loc.input.label.WebSiteLocation": "網站位置",
   "loc.input.help.WebSiteLocation": "選取用於部署的區域。",
   "loc.input.label.WebSiteName": "網站名稱",
+  "loc.input.label.Slot": "Slot",
+  "loc.input.help.Slot": "Slot",
   "loc.input.label.Package": "套件",
   "loc.input.help.Package": "預設成品目錄之下的封裝路徑。",
   "loc.input.label.AdditionalArguments": "其他引數"

@@ -1,0 +1,167 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
+  "name": "SqlAzureDacpacDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.86.0",
+  "groups": [
+    {
+      "name": "source",
+      "displayName": "ms-resource:loc.group.displayName.source",
+      "isExpanded": true
+    },
+    {
+      "name": "target",
+      "displayName": "ms-resource:loc.group.displayName.target",
+      "isExpanded": true
+    },
+    {
+      "name": "firewall",
+      "displayName": "ms-resource:loc.group.displayName.firewall",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "DacpacFile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DacpacFile",
+      "required": true,
+      "groupName": "source",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.DacpacFile"
+    },
+    {
+      "name": "ServerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServerName",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerName"
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DatabaseName",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlUsername",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlPassword",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "PublishProfile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PublishProfile",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.PublishProfile"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "IpDetectionMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.IpDetectionMethod",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "range",
+      "options": {
+        "range": "IP Address Range",
+        "auto": "Auto detect"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.IpDetectionMethod"
+    },
+    {
+      "name": "StartIpAddress",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartIpAddress",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = range",
+      "helpMarkDown": "ms-resource:loc.input.help.StartIpAddress"
+    },
+    {
+      "name": "EndIpAddress",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.EndIpAddress",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = range",
+      "helpMarkDown": "ms-resource:loc.input.help.EndIpAddress"
+    },
+    {
+      "name": "DeleteFirewallRule",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeleteFirewallRule",
+      "required": false,
+      "groupName": "firewall",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.DeleteFirewallRule"
+    }
+  ],
+  "sourceDefinitions": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
