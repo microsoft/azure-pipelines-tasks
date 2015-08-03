@@ -93,7 +93,8 @@ function _sendFile(verb: string, requestUrl: string, content: any, headers: any,
 
 interface ICredentials {
 	username: string;
-	password: string;
+    password: string;
+    action: string;
 }
 
 var accountUrl: string = process.argv[2];
@@ -114,11 +115,17 @@ if (!taskId) {
 }
 
 var credsPromise: Q.Promise<ICredentials> = Q.nfcall(read, { prompt: 'username: ' }).then((username: string) => {
-	return Q.nfcall(read, { prompt: 'password: ', silent: true }).then((password: string) => {
-		return {
-			username: username[0],
-			password: password[0]
-		}
+    return Q.nfcall(read, { prompt: 'password: ', silent: true }).then((password: string) => {
+        return Q.nfcall(read, { prompt: 'action: ' }).then((action: string) => {
+            if (action.toUpperCase() != "PUT" || action.toUpperCase() != "DELETE") {
+                action = "PUT";
+            }
+            return {
+                username: username[0],
+                password: password[0],
+                action: action[0]
+            }
+        });
 	});
 });
 
@@ -136,7 +143,7 @@ credsPromise.then((creds: ICredentials) => {
     var archive = archiver('zip');
     archive.directory(taskFolder, false);
 
-    _sendFile("PUT", taskUrl, archive, headers,(err: any, res: any, contents: any) => {
+    _sendFile(creds.action, taskUrl, archive, headers, (err: any, res: any, contents: any) => {
         console.log(res);
         console.log(contents);
         if (err) {
