@@ -133,7 +133,7 @@ var credsPromise: Q.Promise<ICredentials> = Q.nfcall(read, { prompt: 'username: 
                 action: action[0]
             }
         });
-	});
+    });
 });
 
 var taskUrl = url.resolve(accountUrl, "_apis/distributedtask/tasks/" + taskId);
