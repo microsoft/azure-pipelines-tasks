@@ -117,14 +117,9 @@ if (!taskId) {
 var credsPromise: Q.Promise<ICredentials> = Q.nfcall(read, { prompt: 'username: ' }).then((username: string) => {
     return Q.nfcall(read, { prompt: 'password: ', silent: true }).then((password: string) => {
         return Q.nfcall(read, { prompt: 'action: ' }).then((action: string) => {
-            if (action[0]) {
-                action[0] = action[0].toUpperCase();
-                if (action[0] != 'PUT' && action[0] != 'DELETE') {
-                    throw new Error("The value " + action[0] + " is not a valid action.");
-                }
-            }
-            else {
-                action[0] = 'PUT';
+            action[0] = (action[0] || 'PUT').toUpperCase();
+            if (action[0] != 'PUT' && action[0] != 'DELETE') {
+                throw new Error("The value " + action[0] + " is not a valid action.");
             }
 
             return {
