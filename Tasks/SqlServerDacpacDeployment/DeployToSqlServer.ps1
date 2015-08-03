@@ -45,9 +45,9 @@ $scriptArguments = "-sqlPackageArguments $sqlPackageArguments -sqlPassword $sqlP
 
 if($resourceFilteringMethod -eq "tags")
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
+    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
 }
 else
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlock $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
+    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
 }
