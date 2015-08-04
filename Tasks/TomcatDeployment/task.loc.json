@@ -1,0 +1,87 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "5B0836F4-4E4A-409E-B932-0AC01B011AA3",
+  "name": "TomcatDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "curl"
+  ],
+  "inputs": [
+    {
+      "name": "TomcatUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TomcatUrl",
+      "defaultValue": "http://localhost:8080",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TomcatUrl"
+    },
+    {
+      "name": "Username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Username",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Username"
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Password",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Password"
+    },
+    {
+      "name": "Warfile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Warfile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Warfile"
+    },
+    {
+      "name": "Context",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Context",
+      "defaultValue": "/",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Context"
+    },
+    {
+      "name": "ServerVersion",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ServerVersion",
+      "defaultValue": "7OrAbove",
+      "required": true,
+      "options": {
+        "6.x": "6.x",
+        "7OrAbove": "7 or above"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ServerVersion"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\TomcatDeployment.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
