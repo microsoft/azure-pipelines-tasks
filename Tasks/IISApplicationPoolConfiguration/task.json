@@ -1,11 +1,12 @@
 {
   "id": "A76ECEB5-37E7-496E-A496-A69473ECB860",
   "name": "IisApplicationConfiguration",
-  "friendlyName": "IIS Applcation pool configuration",
+  "friendlyName": "IIS Application Pool Configuration",
   "description": "Configure IIS Application pool on machine",
-  "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
+  "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/IISApplicationPoolConfiguration/README.md)",
   "category": "Deploy",
   "visibility": [
+    "Preview",
     "Build",
     "Release"
   ],
@@ -13,9 +14,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 0
   },
-  "minimumAgentVersion": "1.85.0",
+  "minimumAgentVersion": "1.86.0",
   "groups": [
     {
       "name": "applicationPool",
@@ -35,7 +36,7 @@
       "label": "Machine Group",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the Machine Group for deploying application."
+      "helpMarkDown": "Name of the Machine Group for configuring IIS application pool."
     },
     {
       "name": "ResourceFilteringMethod",
@@ -69,13 +70,13 @@
       "name": "DotNetVersion",
       "type": "pickList",
       "label": ".NET Version",
-      "defaultValue": "version4",
+      "defaultValue": ".NET CLR Version v4.0.30319",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "Version of the .NET Framework that is loaded by this application pool. If the applications that you want to assign to this application pool do not contain managed code, select the No Managed Code option from the list.",
       "options": {
-        ".NET CLR Version v4.0.30319": ".NET CLR Version v4.0.30319",
-        ".NET CLR Version v2.0.50727": ".NET CLR Version v2.0.50727",
+        "v4.0": ".NET CLR Version v4.0.30319",
+        "v2.0": ".NET CLR Version v2.0.50727",
         "No Managed Code": "No Managed Code"
       }
     },
@@ -83,7 +84,7 @@
       "name": "PipeLineMode",
       "type": "pickList",
       "label": "Managed Pipeline Mode",
-      "defaultValue": "integrated",
+      "defaultValue": "Integrated",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "Managed pipeline mode specified how IIS processes requests for managed content.",
@@ -96,7 +97,7 @@
       "name": "Identity",
       "type": "pickList",
       "label": "Identity",
-      "defaultValue": "localService",
+      "defaultValue": "LocalService",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "Configure the account under which an application pool's worker process runs. You can select one of the predefined security accounts or configure a custom account.",
@@ -105,7 +106,7 @@
         "LocalService": "LocalService",
         "LocalSystem": "LocalSystem",
         "NetworkService": "NetworkService",
-        "SpecificUser": "SpecificUser"
+        "SpecificUser": "Custom Account"
       }
     },
     {
@@ -127,22 +128,23 @@
       "visibleRule": "Identity = SpecificUser"
     },
     {
-      "name": "ConfigureAppPoolInParallel",
-      "type": "boolean",
-      "label": "Configure App Pools in Parallel",
-      "defaultValue": "true",
-      "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "Setting it to true will configure IIS application pool in parallel on the target machines."
-    },
-    {
       "name": "AdditionalArguments",
       "type": "string",
-      "label": "Additional appcmd.exe arguments needed to set application pool properties Eg: queueLength:1000 /startMode:AlwaysRunning /enable32BitAppOnWin64:True",
+      "label": "Additional appcmd.exe arguments",
+      "helpMarkDown": "Additional appcmd.exe arguments needed to set application pool properties Eg: queueLength:1000 /startMode:AlwaysRunning /enable32BitAppOnWin64:True",
       "defaultValue": "",
       "required": false,
       "groupName": "advanced"
 
+    },
+    {
+      "name": "ConfigureAppPoolInParallel",
+      "type": "boolean",
+      "label": "Deploy in Parallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Setting it to true will configure IIS application pool in parallel on the target machines."
     }
   ],
   "sourceDefinitions": [

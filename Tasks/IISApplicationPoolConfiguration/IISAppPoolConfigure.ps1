@@ -35,13 +35,12 @@ $applicationPoolName = $applicationPoolName.Trim()
 $username = $username.Trim()
 $password =$password.Trim()
 $additionalArguments = $additionalArguments.Trim()
-#Extra handling beacuse of Bug 390666:Invoke-RemoteDeployment Method fails if the script arguments contain double quotes
 $additionalArguments = $additionalArguments.Replace("`"","'")
 
 $iisAppPoolConfigBlock = Get-Content ./IisAppPoolConfigOnTargetMachine.ps1 | Out-String
 $ScriptArguments =  "-applicationPoolName `"$applicationPoolName`" -dotNetVersion `"$dotNetVersion`" -pipeLineMode $pipeLineMode -identity $identity -username `"$username`" -password `"$password`" -additionalArguments `"$additionalArguments`""
 
-Write-Host (Get-LocalizedString -Key "Starting configuring IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)
+Write-Output (Get-LocalizedString -Key "Starting configuring IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)
 if($resourceFilteringMethod -eq "tags")
 {
     Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlock $iisAppPoolConfigBlock -scriptArguments $ScriptArguments -runPowershellInParallel $deployInParallel
@@ -50,4 +49,4 @@ else
 {
     Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlock $iisAppPoolConfigBlock -scriptArguments $ScriptArguments  -runPowershellInParallel $deployInParallel
 }
-Write-Host (Get-LocalizedString -Key "Successfully configured IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)
+Write-Output (Get-LocalizedString -Key "Successfully configured IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)

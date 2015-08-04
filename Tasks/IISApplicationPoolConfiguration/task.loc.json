@@ -9,6 +9,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
+    "Preview",
     "Build",
     "Release"
   ],
@@ -16,9 +17,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 0
   },
-  "minimumAgentVersion": "1.85.0",
+  "minimumAgentVersion": "1.86.0",
   "groups": [
     {
       "name": "applicationPool",
@@ -72,13 +73,13 @@
       "name": "DotNetVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.DotNetVersion",
-      "defaultValue": "version4",
+      "defaultValue": ".NET CLR Version v4.0.30319",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.DotNetVersion",
       "options": {
-        ".NET CLR Version v4.0.30319": ".NET CLR Version v4.0.30319",
-        ".NET CLR Version v2.0.50727": ".NET CLR Version v2.0.50727",
+        "v4.0": ".NET CLR Version v4.0.30319",
+        "v2.0": ".NET CLR Version v2.0.50727",
         "No Managed Code": "No Managed Code"
       }
     },
@@ -86,7 +87,7 @@
       "name": "PipeLineMode",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.PipeLineMode",
-      "defaultValue": "integrated",
+      "defaultValue": "Integrated",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.PipeLineMode",
@@ -99,7 +100,7 @@
       "name": "Identity",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.Identity",
-      "defaultValue": "localService",
+      "defaultValue": "LocalService",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.Identity",
@@ -108,7 +109,7 @@
         "LocalService": "LocalService",
         "LocalSystem": "LocalSystem",
         "NetworkService": "NetworkService",
-        "SpecificUser": "SpecificUser"
+        "SpecificUser": "Custom Account"
       }
     },
     {
@@ -130,6 +131,15 @@
       "visibleRule": "Identity = SpecificUser"
     },
     {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced"
+    },
+    {
       "name": "ConfigureAppPoolInParallel",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ConfigureAppPoolInParallel",
@@ -137,14 +147,6 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.ConfigureAppPoolInParallel"
-    },
-    {
-      "name": "AdditionalArguments",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AdditionalArguments",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advanced"
     }
   ],
   "sourceDefinitions": [
