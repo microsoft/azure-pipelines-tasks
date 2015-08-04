@@ -285,43 +285,47 @@ function Set-TestAgentConfiguration
 
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
-    if ($configOut.ExitCode -eq 0 -and $configAsProcess -eq $true)
-    {
-        Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
-        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential | Out-Null
-    }
-
-    if ($configAsProcess -eq $true)
-    {  
-        Write-Verbose -Message "Trying to configure power options so that the console session stays active" -Verbose
-        ConfigurePowerOptions -MachineCredential $MachineUserCredential | Out-Null
-    }
-
-    $doReboot = $false
-    # 3010 is exit code to indicate a reboot is required
-    if ($configOut.ExitCode -eq 3010)
-    {
-        Write-Verbose -Message "Marking the machine for reboot as exit code 3010 received" -Verbose
-        $doReboot = $true
-    }
-    elseif ($configOut.ExitCode -eq 0)
-    {
-        if (-not (IsDtaExecutionHostRunning))
-        {
-            Write-Verbose -Message "Marking the machine for reboot as exit code 0 received and TestAgent is not running" -Verbose
-            $doReboot = $true
-        }
-    }
-
-    if ($doReboot)
-    {
-        Write-Verbose "Reboot required post test agent configuration, returning 3010" -Verbose
-        return 3010; # 3010 is exit code will indicate a reboot is required
-    }
-    else
+    if ($configOut.ExitCode -ne 0 -and $configOut.ExitCode -ne 3010)
     {
         return $configOut.ExitCode
     }
+
+    if ($configAsProcess -eq $false)
+    {
+        if ($configOut.ExitCode -eq 3010)
+        {
+            return 3010
+        }
+        return $configOut.ExitCode
+    }
+
+    if (IsDtaExecutionHostRunning)
+    {
+        Write-Verbose -Message "Killing the existing instances" -Verbose
+        Stop-Process -processname "DTAExecutionHost"
+    }
+
+    Write-Verbose -Message "Trying to configure power options so that the console session stays active" -Verbose
+    ConfigurePowerOptions -MachineCredential $MachineUserCredential | Out-Null
+
+    Write-Verbose -Message "Trying to see if no active desktop session is present" -Verbose
+    $isSessionActive = IsAnySessionActive | Out-Null
+    if (-not ($isSessionActive))
+    {
+        Write-Verbose -Message "No session was found as active, marking the machine for reboot" -Verbose
+        return 3010
+    }
+
+    Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
+    InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential | Out-Null
+
+    if (-not (IsDtaExecutionHostRunning))
+    {
+        Write-Verbose -Message "DTAExecutionHost could not be launched interactively, marking the machine for reboot" -Verbose
+        return 3010
+    }
+
+    return 0
 }
 
 function GetConfigValue([string] $line)
@@ -618,14 +622,104 @@ function EnableTracing
     Write-Verbose -Message ("Logs will now be stored at : {0}" -f $logFilePath) -Verbose
 }
 
-function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.PSCredential] $MachineCredential)
+function IsAnySessionActive()
 {
-    if(IsDtaExecutionHostRunning)
+    $wtssig = @'
+    namespace mystruct
     {
-        Write-Verbose -Message "Killing any existing instances" -Verbose
-        Stop-Process -processname "DTAExecutionHost"
+        using System;
+        using System.Runtime.InteropServices;
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WTS_SESSION_INFO
+        {
+            public Int32 SessionID;
+
+            [MarshalAs(UnmanagedType.LPStr)]
+            public String pWinStationName;
+
+            public WTS_CONNECTSTATE_CLASS State;
+        }
+
+        public enum WTS_CONNECTSTATE_CLASS
+        {
+            WTSActive,
+            WTSConnected,
+            WTSConnectQuery,
+            WTSShadow,
+            WTSDisconnected,
+            WTSIdle,
+            WTSListen,
+            WTSReset,
+            WTSDown,
+            WTSInit
+        }
+    }
+'@
+
+    $wtsenumsig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern int WTSEnumerateSessions(
+            System.IntPtr hServer,
+            int Reserved,
+            int Version,
+            ref System.IntPtr ppSessionInfo,
+            ref int pCount);
+'@
+
+    $wtsopensig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern IntPtr WTSOpenServer(string pServerName);
+'@
+
+    $wtsSendMessagesig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern bool WTSSendMessage(
+            IntPtr hServer,
+            [MarshalAs(UnmanagedType.I4)] int SessionId,
+            String pTitle,
+            [MarshalAs(UnmanagedType.U4)] int TitleLength,
+            String pMessage,
+            [MarshalAs(UnmanagedType.U4)] int MessageLength,
+            [MarshalAs(UnmanagedType.U4)] int Style,
+            [MarshalAs(UnmanagedType.U4)] int Timeout,
+            [MarshalAs(UnmanagedType.U4)] out int pResponse,
+            bool bWait);
+'@
+
+    add-type  $wtssig
+    $wtsenum = add-type -MemberDefinition $wtsenumsig -Name PSWTSEnumerateSessions -Namespace GetLoggedOnUsers -PassThru
+    $wtsOpen = add-type -MemberDefinition $wtsopensig -name PSWTSOpenServer -Namespace GetLoggedOnUsers -PassThru
+    $wtsmessage = Add-Type -MemberDefinition $wtsSendMessagesig -name PSWTSSendMessage -Namespace GetLoggedOnUsers -PassThru
+
+    [long]$count = 0
+    [long]$ppSessionInfo = 0
+
+    $server = $wtsOpen::WTSOpenServer("localhost")
+    [long]$retval = $wtsenum::WTSEnumerateSessions($server, 0, 1, [ref]$ppSessionInfo,[ref]$count)
+    $datasize = [system.runtime.interopservices.marshal]::SizeOf([System.Type][mystruct.WTS_SESSION_INFO])
+
+    [bool]$activeSession = $false
+
+    if ($retval -ne 0)
+    {
+        for ($i = 0; $i -lt $count; $i++)
+        {
+            $element = [system.runtime.interopservices.marshal]::PtrToStructure($ppSessionInfo + ($datasize* $i), [System.type][mystruct.WTS_SESSION_INFO])
+            Write-Verbose -Message("{0} : {1}" -f $element.pWinStationName, $element.State.ToString()) -Verbose
+            if ($element.State.ToString().Equals("WTSActive"))
+            {
+                $activeSession = $true
+            }
+        }
     }
 
+    return $activeSession
+}
+
+
+function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.PSCredential] $MachineCredential)
+{
     $ExeName = "DTAExecutionHost.exe"
     $vsRoot = Locate-TestVersionAndVsRoot($Version)
     if ([string]::IsNullOrWhiteSpace($vsRoot))
