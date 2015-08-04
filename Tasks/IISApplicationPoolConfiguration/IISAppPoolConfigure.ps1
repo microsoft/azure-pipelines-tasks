@@ -43,10 +43,10 @@ $ScriptArguments =  "-applicationPoolName `"$applicationPoolName`" -dotNetVersio
 Write-Output (Get-LocalizedString -Key "Starting configuring IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)
 if($resourceFilteringMethod -eq "tags")
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlockContent $iisAppPoolConfigBlock -scriptArguments $ScriptArguments -runPowershellInParallel $deployInParallel
+    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlock $iisAppPoolConfigBlock -scriptArguments $ScriptArguments -runPowershellInParallel $configureAppPoolInParallel
 }
 else
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlockContent $iisAppPoolConfigBlock -scriptArguments $ScriptArguments  -runPowershellInParallel $deployInParallel
+    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlock $iisAppPoolConfigBlock -scriptArguments $ScriptArguments  -runPowershellInParallel $configureAppPoolInParallel
 }
 Write-Output (Get-LocalizedString -Key "Successfully configured IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)
