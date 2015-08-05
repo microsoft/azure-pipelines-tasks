@@ -281,6 +281,7 @@ function Set-TestAgentConfiguration
     {
         $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
+
     DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService" | Out-Null
 
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
@@ -292,10 +293,6 @@ function Set-TestAgentConfiguration
 
     if ($configAsProcess -eq $false)
     {
-        if ($configOut.ExitCode -eq 3010)
-        {
-            return 3010
-        }
         return $configOut.ExitCode
     }
 
@@ -309,23 +306,122 @@ function Set-TestAgentConfiguration
     ConfigurePowerOptions -MachineCredential $MachineUserCredential | Out-Null
 
     Write-Verbose -Message "Trying to see if no active desktop session is present" -Verbose
-    $isSessionActive = IsAnySessionActive | Out-Null
+    $isSessionActive = IsAnySessionActive
     if (-not ($isSessionActive))
     {
-        Write-Verbose -Message "No session was found as active, marking the machine for reboot" -Verbose
+        Write-Verbose -Message("Value returned {0}" -f $isSessionActive) -Verbose
+        Write-Verbose -Message "No desktop session was found active, marking the machine for reboot" -Verbose
         return 3010
     }
 
-    Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
-    InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential | Out-Null
+    if ($configOut.ExitCode -eq 0)
+    {
+        Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
+        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential | Out-Null
+    }
 
     if (-not (IsDtaExecutionHostRunning))
     {
-        Write-Verbose -Message "DTAExecutionHost could not be launched interactively, marking the machine for reboot" -Verbose
+        Write-Verbose -Message "DTAExecutionHost was not running interactively, marking the machine for reboot" -Verbose
         return 3010
     }
 
     return 0
+}
+
+function IsAnySessionActive()
+{
+    $wtssig = @'
+    namespace mystruct
+    {
+        using System;
+        using System.Runtime.InteropServices;
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WTS_SESSION_INFO
+        {
+            public Int32 SessionID;
+
+            [MarshalAs(UnmanagedType.LPStr)]
+            public String pWinStationName;
+
+            public WTS_CONNECTSTATE_CLASS State;
+        }
+
+        public enum WTS_CONNECTSTATE_CLASS
+        {
+            WTSActive,
+            WTSConnected,
+            WTSConnectQuery,
+            WTSShadow,
+            WTSDisconnected,
+            WTSIdle,
+            WTSListen,
+            WTSReset,
+            WTSDown,
+            WTSInit
+        }
+    }
+'@
+
+    $wtsenumsig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern int WTSEnumerateSessions(
+            System.IntPtr hServer,
+            int Reserved,
+            int Version,
+            ref System.IntPtr ppSessionInfo,
+            ref int pCount);
+'@
+
+    $wtsopensig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern IntPtr WTSOpenServer(string pServerName);
+'@
+
+    $wtsSendMessagesig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern bool WTSSendMessage(
+            IntPtr hServer,
+            [MarshalAs(UnmanagedType.I4)] int SessionId,
+            String pTitle,
+            [MarshalAs(UnmanagedType.U4)] int TitleLength,
+            String pMessage,
+            [MarshalAs(UnmanagedType.U4)] int MessageLength,
+            [MarshalAs(UnmanagedType.U4)] int Style,
+            [MarshalAs(UnmanagedType.U4)] int Timeout,
+            [MarshalAs(UnmanagedType.U4)] out int pResponse,
+            bool bWait);
+'@
+
+    add-type  $wtssig
+    $wtsenum = add-type -MemberDefinition $wtsenumsig -Name PSWTSEnumerateSessions -Namespace GetLoggedOnUsers -PassThru
+    $wtsOpen = add-type -MemberDefinition $wtsopensig -name PSWTSOpenServer -Namespace GetLoggedOnUsers -PassThru
+    $wtsmessage = Add-Type -MemberDefinition $wtsSendMessagesig -name PSWTSSendMessage -Namespace GetLoggedOnUsers -PassThru
+
+    [long]$count = 0
+    [long]$ppSessionInfo = 0
+
+    $server = $wtsOpen::WTSOpenServer("localhost")
+    [long]$retval = $wtsenum::WTSEnumerateSessions($server, 0, 1, [ref]$ppSessionInfo,[ref]$count)
+    $datasize = [system.runtime.interopservices.marshal]::SizeOf([System.Type][mystruct.WTS_SESSION_INFO])
+
+    [bool]$activeSession = $false
+
+    if ($retval -ne 0)
+    {
+        for ($i = 0; $i -lt $count; $i++)
+        {
+            $element = [system.runtime.interopservices.marshal]::PtrToStructure($ppSessionInfo + ($datasize* $i), [System.type][mystruct.WTS_SESSION_INFO])
+            Write-Verbose -Message("{0} : {1}" -f $element.pWinStationName, $element.State.ToString()) -Verbose
+            if ($element.State.ToString().Equals("WTSActive"))
+            {
+                $activeSession = $true
+            }
+        }
+    }
+
+    return $activeSession
 }
 
 function GetConfigValue([string] $line)
@@ -621,102 +717,6 @@ function EnableTracing
 
     Write-Verbose -Message ("Logs will now be stored at : {0}" -f $logFilePath) -Verbose
 }
-
-function IsAnySessionActive()
-{
-    $wtssig = @'
-    namespace mystruct
-    {
-        using System;
-        using System.Runtime.InteropServices;
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct WTS_SESSION_INFO
-        {
-            public Int32 SessionID;
-
-            [MarshalAs(UnmanagedType.LPStr)]
-            public String pWinStationName;
-
-            public WTS_CONNECTSTATE_CLASS State;
-        }
-
-        public enum WTS_CONNECTSTATE_CLASS
-        {
-            WTSActive,
-            WTSConnected,
-            WTSConnectQuery,
-            WTSShadow,
-            WTSDisconnected,
-            WTSIdle,
-            WTSListen,
-            WTSReset,
-            WTSDown,
-            WTSInit
-        }
-    }
-'@
-
-    $wtsenumsig = @'
-        [DllImport("wtsapi32.dll", SetLastError = true)]
-        public static extern int WTSEnumerateSessions(
-            System.IntPtr hServer,
-            int Reserved,
-            int Version,
-            ref System.IntPtr ppSessionInfo,
-            ref int pCount);
-'@
-
-    $wtsopensig = @'
-        [DllImport("wtsapi32.dll", SetLastError = true)]
-        public static extern IntPtr WTSOpenServer(string pServerName);
-'@
-
-    $wtsSendMessagesig = @'
-        [DllImport("wtsapi32.dll", SetLastError = true)]
-        public static extern bool WTSSendMessage(
-            IntPtr hServer,
-            [MarshalAs(UnmanagedType.I4)] int SessionId,
-            String pTitle,
-            [MarshalAs(UnmanagedType.U4)] int TitleLength,
-            String pMessage,
-            [MarshalAs(UnmanagedType.U4)] int MessageLength,
-            [MarshalAs(UnmanagedType.U4)] int Style,
-            [MarshalAs(UnmanagedType.U4)] int Timeout,
-            [MarshalAs(UnmanagedType.U4)] out int pResponse,
-            bool bWait);
-'@
-
-    add-type  $wtssig
-    $wtsenum = add-type -MemberDefinition $wtsenumsig -Name PSWTSEnumerateSessions -Namespace GetLoggedOnUsers -PassThru
-    $wtsOpen = add-type -MemberDefinition $wtsopensig -name PSWTSOpenServer -Namespace GetLoggedOnUsers -PassThru
-    $wtsmessage = Add-Type -MemberDefinition $wtsSendMessagesig -name PSWTSSendMessage -Namespace GetLoggedOnUsers -PassThru
-
-    [long]$count = 0
-    [long]$ppSessionInfo = 0
-
-    $server = $wtsOpen::WTSOpenServer("localhost")
-    [long]$retval = $wtsenum::WTSEnumerateSessions($server, 0, 1, [ref]$ppSessionInfo,[ref]$count)
-    $datasize = [system.runtime.interopservices.marshal]::SizeOf([System.Type][mystruct.WTS_SESSION_INFO])
-
-    [bool]$activeSession = $false
-
-    if ($retval -ne 0)
-    {
-        for ($i = 0; $i -lt $count; $i++)
-        {
-            $element = [system.runtime.interopservices.marshal]::PtrToStructure($ppSessionInfo + ($datasize* $i), [System.type][mystruct.WTS_SESSION_INFO])
-            Write-Verbose -Message("{0} : {1}" -f $element.pWinStationName, $element.State.ToString()) -Verbose
-            if ($element.State.ToString().Equals("WTSActive"))
-            {
-                $activeSession = $true
-            }
-        }
-    }
-
-    return $activeSession
-}
-
 
 function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.PSCredential] $MachineCredential)
 {
