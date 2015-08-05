@@ -298,7 +298,7 @@ function Set-TestAgentConfiguration
 
     if (IsDtaExecutionHostRunning)
     {
-        Write-Verbose -Message "Killing the existing instances" -Verbose
+        Write-Verbose -Message "Stopping already running instances of DTAExecutionHost" -Verbose
         Stop-Process -processname "DTAExecutionHost"
     }
 
