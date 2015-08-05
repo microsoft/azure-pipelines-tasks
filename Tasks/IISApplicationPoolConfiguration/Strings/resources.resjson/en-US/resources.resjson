@@ -11,7 +11,7 @@
   "loc.input.label.EnvironmentName": "Machine Group",
   "loc.input.help.EnvironmentName": "Name of the Machine Group for configuring IIS application pool.",
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
-  "loc.input.label.MachineNames": "Deploy to Machines",
+  "loc.input.label.MachineNames": "Filter Criteria",
   "loc.input.help.MachineNames": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
   "loc.input.label.ApplicationPoolName": "Name",
   "loc.input.help.ApplicationPoolName": "Name of the IIS application pool you want to create/update.",

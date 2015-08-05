@@ -38,14 +38,14 @@ function Locate-AppCmd()
 
    Write-Verbose "Getting InstallPath property of IIS on machine $env:COMPUTERNAME " -Verbose
    $iisInstallPathProperties =  Get-ItemProperty $iisRegKey -Name "InstallPath";
-  
+
    if ($iisInstallPathProperties -eq $null)
    {
        Write-Verbose "Failed to get InstallPath property of IIS on machine $env:COMPUTERNAME " -Verbose
        return $null, 0
    }
 
-   Write-Verbose "Getting InstallPath of IIS on machine $env:COMPUTERNAME " -Verbose 
+   Write-Verbose "Getting InstallPath of IIS on machine $env:COMPUTERNAME " -Verbose
    $iisPath = $iisInstallPathProperties.InstallPath
 
    if ($iisPath -eq $null)
@@ -55,7 +55,7 @@ function Locate-AppCmd()
    }
 
    Write-Verbose "Successfully got InstallPath of IIS on machine $env:COMPUTERNAME. Install path : $iisPath " -Verbose
-   Write-Verbose "Getting installed version of IIS on machine $env:COMPUTERNAME " -Verbose 
+   Write-Verbose "Getting installed version of IIS on machine $env:COMPUTERNAME " -Verbose
 
    $iisMajorVersionProperties =  Get-ItemProperty $iisRegKey -Name "MajorVersion";
 
@@ -83,7 +83,7 @@ function Get-AppCmdLocation
    if($appCmdPath -eq $null)
    {
      $error = "Unable to find the location of appCmd.exe from registry on machine $env:COMPUTERNAME."
-     ThrowError -errorMessage $error     
+     ThrowError -errorMessage $error
    }
 
    if($iisVersion -le 6.0)
@@ -128,7 +128,6 @@ function DoesAppPoolExist()
 
 function SetIdentity()
 {
-
    Write-Verbose "Setting identity of application pool: $applicationPoolName as $identity on machine $env:COMPUTERNAME" -Verbose
    if($identity -eq "SpecificUser")
    {
@@ -195,7 +194,6 @@ function UpdateAppPool()
 $appCmdLocation = Get-AppCmdLocation
 
 $appcmd = [System.IO.Path]::Combine($appCmdLocation, "appcmd.exe")
-
 
 $poolExist = DoesAppPoolExist
 

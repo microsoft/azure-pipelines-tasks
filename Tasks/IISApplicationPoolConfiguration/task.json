@@ -52,7 +52,7 @@
     {
       "name": "MachineNames",
       "type": "string",
-      "label": "Deploy to Machines",
+      "label": "Filter Criteria",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
