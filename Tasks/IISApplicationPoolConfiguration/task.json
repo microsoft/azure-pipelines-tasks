@@ -3,7 +3,7 @@
   "name": "IisApplicationConfiguration",
   "friendlyName": "IIS Application Pool Configuration",
   "description": "Configure IIS Application pool on machine",
-  "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/IISApplicationPoolConfiguration/README.md)",
+  "helpMarkDown": "[More Information](http://aka.ms/apppoolconfigtaskhelp)",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -16,7 +16,7 @@
     "Minor": 0,
     "Patch": 0
   },
-  "minimumAgentVersion": "1.86.0",
+  "minimumAgentVersion": "1.87.0",
   "groups": [
     {
       "name": "applicationPool",
@@ -129,7 +129,7 @@
     },
     {
       "name": "AdditionalArguments",
-      "type": "string",
+      "type": "multiLine",
       "label": "Additional appcmd.exe arguments",
       "helpMarkDown": "Additional appcmd.exe arguments needed to set application pool properties Eg: queueLength:1000 /startMode:AlwaysRunning /enable32BitAppOnWin64:True",
       "defaultValue": "",

@@ -13,14 +13,15 @@ Write-Verbose "applicationPoolName = $applicationPoolName" -Verbose
 Write-Verbose "dotNetVersion = $dotNetVersion" -Verbose
 Write-Verbose "pipeLineMode = $pipeLineMode" -Verbose
 Write-Verbose "identity = $identity" -Verbose
+Write-Verbose "username = $username" -Verbose
 Write-Verbose "additionalArguments = $additionalArguments" -Verbose
 
 function ThrowError
 {
-	param([string]$errorMessage)
-	
-        $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/IISApplicationPoolConfiguration/README.md"
-        $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
+    param([string]$errorMessage)
+
+        $readmelink = "http://aka.ms/apppoolconfigtaskhelp"
+        $helpMessage = "For more info please refer to $readmelink"
         throw "$errorMessage $helpMessage"
 }
 
@@ -77,28 +78,21 @@ function Locate-AppCmd()
 
 function Get-AppCmdLocation
 {
-   try
+   $appCmdPath, $iisVersion = Locate-AppCmd
+
+   if($appCmdPath -eq $null)
    {
-       $appCmdPath, $iisVersion = Locate-AppCmd
-
-       if($appCmdPath -eq $null)
-       {
-        $error = "Unable to find the location of AppCmd.exe from registry on machine $env:COMPUTERNAME"
-        ThrowError -errorMessage $errorMessage     
-       }
-
-       if($iisVersion -le 6.0)
-       {
-         $error = "Version of IIS is less than 7.0 on machine $env:COMPUTERNAME. Minimum version of IIS required is 7.0"
-         ThrowError -errorMessage $errorMessage
-       }
-
-       return $appCmdPath;
+     $error = "Unable to find the location of appCmd.exe from registry on machine $env:COMPUTERNAME"
+     ThrowError -errorMessage $error     
    }
-   catch [System.Exception]
+
+   if($iisVersion -le 6.0)
    {
-       throw  "Unable to find the location of appcmd.exe from registry on machine $env:COMPUTERNAME"
+     $error = "Version of IIS is less than 7.0 on machine $env:COMPUTERNAME. Minimum version of IIS required is 7.0"
+     ThrowError -errorMessage $error
    }
+
+   return $appCmdPath;
 }
 
 function executeCommand([string] $command)

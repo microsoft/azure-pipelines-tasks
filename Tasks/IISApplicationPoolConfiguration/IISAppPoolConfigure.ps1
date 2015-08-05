@@ -20,6 +20,7 @@ Write-Verbose "applicationPoolName = $applicationPoolName" -Verbose
 Write-Verbose "dotNetVersion = $dotNetVersion" -Verbose
 Write-Verbose "pipeLineMode = $pipeLineMode" -Verbose
 Write-Verbose "identity = $identity" -Verbose
+Write-Verbose "username = $username" -Verbose
 Write-Verbose "additionalArguments = $additionalArguments" -Verbose
 Write-Verbose "configureAppPoolInParallel = $configureAppPoolInParallel" -Verbose
 
@@ -33,7 +34,7 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDe
 #Triming Application pool name, username , password and additional arguments
 $applicationPoolName = $applicationPoolName.Trim()
 $username = $username.Trim()
-$password =$password.Trim()
+$password = $password.Trim()
 $additionalArguments = $additionalArguments.Trim()
 $additionalArguments = $additionalArguments.Replace("`"","'")
 
