@@ -82,13 +82,13 @@ function Get-AppCmdLocation
 
    if($appCmdPath -eq $null)
    {
-     $error = "Unable to find the location of appCmd.exe from registry on machine $env:COMPUTERNAME"
+     $error = "Unable to find the location of appCmd.exe from registry on machine $env:COMPUTERNAME."
      ThrowError -errorMessage $error     
    }
 
    if($iisVersion -le 6.0)
    {
-     $error = "Version of IIS is less than 7.0 on machine $env:COMPUTERNAME. Minimum version of IIS required is 7.0"
+     $error = "Version of IIS is less than 7.0 on machine $env:COMPUTERNAME. Minimum version of IIS required is 7.0."
      ThrowError -errorMessage $error
    }
 

@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "IIS Application Pool Configuration",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/IISApplicationPoolConfiguration/README.md)",
+  "loc.helpMarkDown": "[More Information](http://aka.ms/apppoolconfigtaskhelp)",
   "loc.description": "Configure IIS Application pool on machine",
   "loc.instanceNameFormat": "Configure IIS Application pool:  $(ApplicationPoolName)",
   "loc.group.displayName.applicationPool": "Application Pool",

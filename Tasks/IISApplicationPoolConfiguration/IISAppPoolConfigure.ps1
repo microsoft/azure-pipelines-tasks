@@ -38,7 +38,7 @@ $password = $password.Trim()
 $additionalArguments = $additionalArguments.Trim()
 $additionalArguments = $additionalArguments.Replace("`"","'")
 
-$iisAppPoolConfigBlock = Get-Content ./IisAppPoolConfigOnTargetMachine.ps1 | Out-String
+$iisAppPoolConfigBlock = Get-Content ./IISAppPoolConfigOnTargetMachine.ps1 | Out-String
 $ScriptArguments =  "-applicationPoolName `"$applicationPoolName`" -dotNetVersion `"$dotNetVersion`" -pipeLineMode $pipeLineMode -identity $identity -username `"$username`" -password `"$password`" -additionalArguments `"$additionalArguments`""
 
 Write-Output (Get-LocalizedString -Key "Starting configuring IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)

@@ -132,7 +132,7 @@
     },
     {
       "name": "AdditionalArguments",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
       "defaultValue": "",
