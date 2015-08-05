@@ -1,0 +1,24 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "IIS Web Application Deployment",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WebAppDeployment/README.md)",
+  "loc.description": "Deploy Web Application using MSDeploy to IIS Web Site",
+  "loc.instanceNameFormat": "Deploy IIS App: $(WebSiteName)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.EnvironmentName": "Machine Group",
+  "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying the database.",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.help.ResourceFilteringMethod": "Select a subset of machines either by providing machine names or tags.",
+  "loc.input.label.MachineFilter": "Deploy to Machines",
+  "loc.input.help.MachineFilter": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
+  "loc.input.label.WebDeployPackage": "Web Deploy Package",
+  "loc.input.help.WebDeployPackage": "Location of the MSDeploy zip file on the target machines or on a UNC path like \\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip",
+  "loc.input.label.WebDeployParamFile": "Web Deploy Parameters File",
+  "loc.input.help.WebDeployParamFile": "Parameters file to override any specific configuration settings",
+  "loc.input.label.OverRideParams": "Override Parameters",
+  "loc.input.help.OverRideParams": "Any specific parameters to be overridden in parameters file",
+  "loc.input.label.DeployInParallel": "Deploy in Parallel",
+  "loc.input.help.DeployInParallel": "Setting it to true will run web app deployment scripts in parallel on the target machines."
+}
