@@ -1,13 +1,15 @@
 ﻿param (
-    [string]$webDeployPackage,
-    [string]$webDeployParamFile,
-    [string]$overRideParams
+    [string]$WebDeployPackage,
+    [string]$WebDeployParamFile,
+    [string]$OverRideParams,
+    [string]$MethodToInvoke
     )
 
 Write-Verbose "Entering script MsDeployOnTargetMachines.ps1" -Verbose
-Write-Verbose "webDeployPackage = $webDeployPackage" -Verbose
-Write-Verbose "webDeployParamFile = $webDeployParamFile" -Verbose
-Write-Verbose "overRideParams = $overRideParams" -Verbose
+Write-Verbose "WebDeployPackage = $WebDeployPackage" -Verbose
+Write-Verbose "WebDeployParamFile = $WebDeployParamFile" -Verbose
+Write-Verbose "OverRideParams = $OverRideParams" -Verbose
+Write-Verbose "MethodToInvoke = $MethodToInvoke" -Verbose
 
 function ThrowError
 {
@@ -20,10 +22,15 @@ function ThrowError
 
 function Get-MsDeployLocation
 {
+    param(
+    [Parameter(Mandatory=$true)]
+    [string]$regKeyPath
+    )
+
     $msDeployNotFoundError = "Can not find MsDeploy.exe location. Verify MsDeploy.exe is installed on $env:ComputeName and try operation again."
     try
     {
-        $path = (Get-ChildItem "HKLM:\SOFTWARE\Microsoft\IIS Extensions\MSDeploy" | Select -Last 1).GetValue("InstallPath")
+        $path = (Get-ChildItem -Path $regKeyPath | Select -Last 1).GetValue("InstallPath")
 
         if(-not(Test-Path $path))
         {
@@ -35,29 +42,46 @@ function Get-MsDeployLocation
         ThrowError -errorMessage $msDeployNotFoundError
     }
 
-    return $path
+    return (Join-Path $path msDeploy.exe)
 }
 
-$webDeployPackage = $webDeployPackage.Trim()
-$webDeployParamFile = $webDeployParamFile.Trim()
-$overRideParams = $overRideParams.Trim()
-
-$msDeployLocation = Get-MsDeployLocation
-$msDeployExe = Join-Path $msDeployLocation msDeploy.exe
-$msDeployCmdArgs = ""
-
-if(-not [string]::IsNullOrEmpty($webDeployParamFile) -and $webDeployParamFile -ne "`"`"")
-{    
-    $msDeployCmdArgs = [string]::Format(' -setParamFile={0}', $webDeployParamFile)
-}
-
-if(-not [string]::IsNullOrEmpty($overRideParams) -and $overRideParams -ne "`"`"")
+function Get-MsDeployCmdArgs
 {
-    $msDeployCmdArgs = [string]::Format("{0} -setParam:{1}", $msDeployCmdArgs, $overRideParams)
+    param(
+    [Parameter(Mandatory=$true)]
+    [string]$webDeployPackage,    
+    [string]$webDeployParamFile,    
+    [string]$overRideParams
+    )
+    
+    $webDeployPackage = $webDeployPackage.Trim()
+    $webDeployParamFile = $webDeployParamFile.Trim()
+    $overRideParams = $overRideParams.Trim()
+    
+    $msDeployCmdArgs = [string]::Empty
+    if(-not [string]::IsNullOrEmpty($webDeployParamFile) -and $webDeployParamFile -ne "`"`"")
+    {    
+        $msDeployCmdArgs = [string]::Format(' -setParamFile={0}', $webDeployParamFile)
+    }
+
+    if(-not [string]::IsNullOrEmpty($overRideParams) -and $overRideParams -ne "`"`"")
+    {
+        $msDeployCmdArgs = [string]::Format("{0} -setParam:{1}", $msDeployCmdArgs, $overRideParams)
+    }
+    
+    $msDeployCmdArgs = [string]::Format(' -verb:sync -source:package={0} {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000', $webDeployPackage, $msDeployCmdArgs)
+    return $msDeployCmdArgs
 }
 
-$msDeployCmdArgs = [string]::Format(' -verb:sync -source:package={0} {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000', $webDeployPackage, $msDeployCmdArgs)
+function Deploy-WebSite
+{
+    $msDeployInstallPathRegKey = "HKLM:\SOFTWARE\Microsoft\IIS Extensions\MSDeploy"
+    $msDeployExePath = Get-MsDeployLocation -regKeyPath $msDeployInstallPathRegKey
+    $msDeployCmdArgs = Get-MsDeployCmdArgs -webDeployPackage $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRideParams $OverRideParams
 
-$msDeployCmd = "`"$msDeployExe`" $msDeployCmdArgs"
-Write-Verbose "Executing MSDeploy Command: $msDeployCmd" -Verbose
-cmd.exe /c "`"$msDeployCmd`""
+    $msDeployCmd = "`"$msDeployExePath`" $msDeployCmdArgs"
+    Write-Verbose "Executing MSDeploy Command: $msDeployCmd" -Verbose
+    cmd.exe /c "`"$msDeployCmd`""
+}
+
+Invoke-Expression $MethodToInvoke -Verbose
