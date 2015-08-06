@@ -38,7 +38,7 @@ $additionalArguments = $additionalArguments.Trim()
 $additionalArguments = $additionalArguments.Replace("`"","'")
 
 $iisAppPoolConfigBlock = Get-Content ./IISAppPoolConfigOnTargetMachine.ps1 | Out-String
-$ScriptArguments =  "-applicationPoolName `"$applicationPoolName`" -dotNetVersion `"$dotNetVersion`" -pipeLineMode $pipeLineMode -identity $identity -username `"$username`" -password `"$password`" -additionalArguments `"$additionalArguments`" -MethodToInvoke `"Configure-IISApplicationPool -Verbose`""
+$ScriptArguments =  "-applicationPoolName `"$applicationPoolName`" -dotNetVersion `"$dotNetVersion`" -pipeLineMode $pipeLineMode -identity $identity -username `"$username`" -password `"$password`" -additionalArguments `"$additionalArguments`" -MethodToInvoke Configure-IISApplicationPool"
 
 Write-Output (Get-LocalizedString -Key "Starting configuration of IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)
 if($resourceFilteringMethod -eq "tags")
