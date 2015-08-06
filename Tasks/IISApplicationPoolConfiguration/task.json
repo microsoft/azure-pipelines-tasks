@@ -1,0 +1,166 @@
+{
+  "id": "A76ECEB5-37E7-496E-A496-A69473ECB860",
+  "name": "IisApplicationPoolConfiguration",
+  "friendlyName": "IIS Application Pool Configuration",
+  "description": "Configure IIS Application pool on machine",
+  "helpMarkDown": "[More Information](http://aka.ms/apppoolconfigtaskhelp)",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.87.0",
+  "groups": [
+    {
+      "name": "applicationPool",
+      "displayName": "Application Pool",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "EnvironmentName",
+      "type": "pickList",
+      "label": "Machine Group",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Name of the Machine Group for configuring IIS application pool."
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "Select Machines By",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      }
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "Filter Criteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
+    },
+    {
+      "name": "ApplicationPoolName",
+      "type": "string",
+      "label": "Name",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "Name of the IIS application pool you want to create/update."
+    },
+    {
+      "name": "DotNetVersion",
+      "type": "pickList",
+      "label": ".NET Version",
+      "defaultValue": ".NET CLR Version v4.0.30319",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "Version of the .NET Framework that is loaded by this application pool. If the applications that you want to assign to this application pool do not contain managed code, select the No Managed Code option from the list.",
+      "options": {
+        "v4.0": ".NET CLR Version v4.0.30319",
+        "v2.0": ".NET CLR Version v2.0.50727",
+        "No Managed Code": "No Managed Code"
+      }
+    },
+    {
+      "name": "PipeLineMode",
+      "type": "pickList",
+      "label": "Managed Pipeline Mode",
+      "defaultValue": "Integrated",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "Managed pipeline mode specified how IIS processes requests for managed content.",
+      "options": {
+        "Integrated": "Integrated",
+        "Classic": "Classic"
+      }
+    },
+    {
+      "name": "Identity",
+      "type": "pickList",
+      "label": "Identity",
+      "defaultValue": "ApplicationPoolIdentity",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "Configure the account under which an application pool's worker process runs. You can select one of the predefined security accounts or configure a custom account.",
+      "options": {
+        "ApplicationPoolIdentity": "ApplicationPoolIdentity",
+        "LocalService": "LocalService",
+        "LocalSystem": "LocalSystem",
+        "NetworkService": "NetworkService",
+        "SpecificUser": "Custom Account"
+      }
+    },
+    {
+      "name": "Username",
+      "type": "string",
+      "label": "Username",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "applicationPool",
+      "visibleRule": "Identity = SpecificUser"
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "label": "Password",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "applicationPool",
+      "visibleRule": "Identity = SpecificUser"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "Additional appcmd.exe arguments",
+      "helpMarkDown": "Additional appcmd.exe arguments needed to set application pool properties Eg: queueLength:1000 /startMode:AlwaysRunning /enable32BitAppOnWin64:True",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced"
+
+    },
+    {
+      "name": "ConfigureAppPoolInParallel",
+      "type": "boolean",
+      "label": "Deploy in Parallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Setting it to true will configure IIS application pool in parallel on the target machines."
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "EnvironmentName",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    }
+  ],
+  "instanceNameFormat": "Configure IIS Application pool:  $(ApplicationPoolName)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\IISAppPoolConfigure.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
