@@ -1,6 +1,6 @@
 {
   "id": "A76ECEB5-37E7-496E-A496-A69473ECB860",
-  "name": "IisApplicationConfiguration",
+  "name": "IisApplicationPoolConfiguration",
   "friendlyName": "IIS Application Pool Configuration",
   "description": "Configure IIS Application pool on machine",
   "helpMarkDown": "[More Information](http://aka.ms/apppoolconfigtaskhelp)",

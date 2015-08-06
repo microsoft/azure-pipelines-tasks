@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "id": "A76ECEB5-37E7-496E-A496-A69473ECB860",
-  "name": "IisApplicationConfiguration",
+  "name": "IisApplicationPoolConfiguration",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
