@@ -97,7 +97,7 @@
       "name": "Identity",
       "type": "pickList",
       "label": "Identity",
-      "defaultValue": "LocalService",
+      "defaultValue": "ApplicationPoolIdentity",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "Configure the account under which an application pool's worker process runs. You can select one of the predefined security accounts or configure a custom account.",

@@ -34,7 +34,6 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDe
 #Triming Application pool name, username , password and additional arguments
 $applicationPoolName = $applicationPoolName.Trim()
 $username = $username.Trim()
-$password = $password.Trim()
 $additionalArguments = $additionalArguments.Trim()
 $additionalArguments = $additionalArguments.Replace("`"","'")
 

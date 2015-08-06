@@ -117,12 +117,12 @@ function DoesAppPoolExist()
 
    if($pool -eq $null)
    {
-   Write-Verbose "Application pool with name $applicationPoolName does not exist" -Verbose
-   return $false;
+     Write-Verbose "Application pool with name $applicationPoolName does not exist" -Verbose
+     return $false;
    }
    else{
-   Write-Verbose "Found application pool with name $applicationPoolName" -Verbose
-   return $true;
+     Write-Verbose "Found application pool with name $applicationPoolName" -Verbose
+     return $true;
    }
 }
 
@@ -197,10 +197,10 @@ $appcmd = [System.IO.Path]::Combine($appCmdLocation, "appcmd.exe")
 
 $poolExist = DoesAppPoolExist
 
-if($poolExist)
+if( $poolExist )
 {
-UpdateAppPool
+    UpdateAppPool
 }
 else{
-CreateAppPool
+    CreateAppPool
 }

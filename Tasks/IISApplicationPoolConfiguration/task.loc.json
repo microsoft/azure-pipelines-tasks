@@ -100,7 +100,7 @@
       "name": "Identity",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.Identity",
-      "defaultValue": "LocalService",
+      "defaultValue": "ApplicationPoolIdentity",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.Identity",
