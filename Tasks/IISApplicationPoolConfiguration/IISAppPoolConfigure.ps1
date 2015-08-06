@@ -40,7 +40,7 @@ $additionalArguments = $additionalArguments.Replace("`"","'")
 $iisAppPoolConfigBlock = Get-Content ./IISAppPoolConfigOnTargetMachine.ps1 | Out-String
 $ScriptArguments =  "-applicationPoolName `"$applicationPoolName`" -dotNetVersion `"$dotNetVersion`" -pipeLineMode $pipeLineMode -identity $identity -username `"$username`" -password `"$password`" -additionalArguments `"$additionalArguments`""
 
-Write-Output (Get-LocalizedString -Key "Starting configuring IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)
+Write-Output (Get-LocalizedString -Key "Starting configuration of IIS application pool with name : {0}" -ArgumentList  $applicationPoolName)
 if($resourceFilteringMethod -eq "tags")
 {
     Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlockContent $iisAppPoolConfigBlock -scriptArguments $ScriptArguments -runPowershellInParallel $configureAppPoolInParallel
