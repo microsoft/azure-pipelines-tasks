@@ -46,7 +46,7 @@ catch
 
 if(-not $context.StartsWith("/"))
 {
-    $errorMessage = (Get-LocalizedString -Key "Provided context name '{0}' is invalid. Context name should start with /." -ArgumentList $context)
+    $errorMessage = (Get-LocalizedString -Key "Provided context name '{0}' is invalid. Context name should start with '/'." -ArgumentList $context)
     ThrowError -errorMessage $errorMessage
 }
 
