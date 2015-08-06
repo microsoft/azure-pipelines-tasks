@@ -1,0 +1,21 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Tomcat Deployment",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/TomcatDeployment/README.md)",
+  "loc.description": "Deploy application (war file) to a tomcat server.",
+  "loc.instanceNameFormat": "Deploy application (war file) to a tomcat server",
+  "loc.input.label.TomcatUrl": "Tomcat Server URL",
+  "loc.input.help.TomcatUrl": "Specify the Tomcat server url which should contain the procotol, host and port details. Example- https://test.azure.cloudapp.net:8080",
+  "loc.input.label.Username": "Tomcat Manager Username",
+  "loc.input.help.Username": "Specify the user name to connect to the Tomcat manager. Tomcat manager should be running on the server.",
+  "loc.input.label.Password": "Password",
+  "loc.input.help.Password": "Specify the password to connect to the Tomcat manager. Tomcat manager should be running on the server.",
+  "loc.input.label.Warfile": "WAR File",
+  "loc.input.help.Warfile": "Absolute path of the war file present on the agent machine, or a UNC Share. Example- C:\\Agent\\Binaries\\Demo.war Or $(warFilePath).",
+  "loc.input.label.Context": "Application Context",
+  "loc.input.help.Context": "Specify the application context path. Example- /Production",
+  "loc.input.label.ServerVersion": "Tomcat Server Version",
+  "loc.input.help.ServerVersion": "Specify tomcat server version."
+}
