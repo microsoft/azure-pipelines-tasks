@@ -5,7 +5,7 @@
     [string]$webDeployPackage,
     [string]$webDeployParamFile,
     [string]$overRideParams,
-    [string]$deployInParallel    
+    [string]$deployInParallel
     )
 
 $ErrorActionPreference = 'Stop'

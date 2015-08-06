@@ -32,7 +32,7 @@ function Get-MsDeployLocation
     {
         $path = (Get-ChildItem -Path $regKeyPath | Select -Last 1).GetValue("InstallPath")
 
-        if(-not(Test-Path $path))
+        if( -not (Test-Path $path))
         {
             ThrowError -errorMessage $msDeployNotFoundError 
         }
@@ -49,8 +49,8 @@ function Get-MsDeployCmdArgs
 {
     param(
     [Parameter(Mandatory=$true)]
-    [string]$webDeployPackage,    
-    [string]$webDeployParamFile,    
+    [string]$webDeployPackage,
+    [string]$webDeployParamFile,
     [string]$overRideParams
     )
     
