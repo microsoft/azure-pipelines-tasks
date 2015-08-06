@@ -5,7 +5,7 @@
     [string]$identity,
     [string]$username,
     [string]$password,
-    [string]$additionalArguments
+    [string]$additionalArguments,    
     )
 
 Write-Verbose "Entering script IisAppPoolConfigOnTargetMachine.ps1" -Verbose
@@ -192,15 +192,23 @@ function UpdateAppPool()
 }
 
 $appCmdLocation = Get-AppCmdLocation
-
-$appcmd = [System.IO.Path]::Combine($appCmdLocation, "appcmd.exe")
-
-$poolExist = DoesAppPoolExist
-
-if( $poolExist )
 {
-    UpdateAppPool
+
+   $appCmdLocation = Get-AppCmdLocation
+
+   $appcmd = [System.IO.Path]::Combine($appCmdLocation, "appcmd.exe")
+
+   $poolExist = DoesAppPoolExist
+
+   if( $poolExist )
+   {
+       UpdateAppPool
+   }
+   else
+   {
+       CreateAppPool
+   }
 }
-else{
-    CreateAppPool
-}
+
+Invoke-Expression $MethodToInvoke -Verbose
+
