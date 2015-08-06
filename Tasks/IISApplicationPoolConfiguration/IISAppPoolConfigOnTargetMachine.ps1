@@ -6,6 +6,7 @@
     [string]$username,
     [string]$password,
     [string]$additionalArguments,    
+    [string]$MethodToInvoke
     )
 
 Write-Verbose "Entering script IisAppPoolConfigOnTargetMachine.ps1" -Verbose
@@ -191,7 +192,7 @@ function UpdateAppPool()
    Write-Verbose "Successfully updated application pool: $applicationPoolName on machine $env:COMPUTERNAME" -Verbose
 }
 
-$appCmdLocation = Get-AppCmdLocation
+function Configure-IISApplicationPool
 {
 
    $appCmdLocation = Get-AppCmdLocation
