@@ -18,11 +18,11 @@ Deploy your Java Web application with Tomcat 6,7 or 8. The Tomcat task uses HTTP
 ###Task Parameters
 |  Parameter Name                       |  Description                                                                                                                                                                      |
 |---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|  Tomcat Server URL                    | <ul><li> The URL for the Tomcat Server e.g. http://localhost:8080</li><li>We append "/manager" to your Server URL to talk to the Tomcat manager.</li></ul>                        |
-|  Tomcat Manager Username And Password | <ul><li>These should match the credentials set in conf/tomcat-users.xml when you configured Tomcat.</li><li>The user should have "manager-script" role set.</li></ul>             |
+|  Tomcat Server URL                    | The URL for the Tomcat Server e.g. http://localhost:8080<br>We append "/manager" to your Server URL to talk to the Tomcat manager.                        |
+|  Tomcat Manager Username And Password | These should match the credentials set in conf/tomcat-users.xml when you configured Tomcat.<br>The user should have "manager-script" role set.             |
 |  Application Context                  | Specifies where the application should sit on the Tomcat server once deployed e.g. /Test                                                                                          |
-|  WAR File                             | <ul><li>The absolute path to the WAR file.</li><li>Use Build Variables to fill in the path of the agent e.g. $(Agent.BuildDirectory)\$(Build.Repository.Name)\Demo.war</li></ul>  |
-|  Tomcat Server Version                | <ul><li>Choose the appropriate Tomcat Server Version.</li><li>We support: Tomcat 6.x, 7.x and 8.x</li></ul>                                                                       |
+|  WAR File                             | The absolute path to the WAR file.<br>Use <a href="https://msdn.microsoft.com/en-us/Library/vs/alm/Build/scripts/variables">(Build Variables)</a> to fill in the path of the agent e.g. $(Agent.BuildDirectory)\$(Build.Repository.Name)\Demo.war  |
+|  Tomcat Server Version                | Choose the appropriate Tomcat Server Version.<br>We support: Tomcat 6.x, 7.x and 8.x.                                                                       |
 
 ###Known Issues
 * If context path contains special characters which tomcat does not support, deployment will fail, task logs also prompt so, but task will pass.
