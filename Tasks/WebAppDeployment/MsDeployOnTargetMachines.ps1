@@ -84,4 +84,4 @@ function Deploy-WebSite
     cmd.exe /c "`"$msDeployCmd`""
 }
 
-Invoke-Expression $MethodToInvoke -Verbose
+Invoke-Expression $MethodToInvoke

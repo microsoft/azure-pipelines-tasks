@@ -28,7 +28,7 @@ $webDeployPackage = $webDeployPackage.Trim('"', ' ')
 $webDeployParamFile = $webDeployParamFile.Trim('"', ' ')
 
 $msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
-$scriptArgs = [string]::Format(' -WebDeployPackage "{0}" -WebDeployParamFile "{1}" -OverRideParams {2} -MethodToInvoke "Deploy-WebSite -Verbose"', $webDeployPackage, $webDeployParamFile, $overRideParams)
+$scriptArgs = [string]::Format(' -WebDeployPackage "{0}" -WebDeployParamFile "{1}" -OverRideParams {2} -MethodToInvoke Deploy-WebSite', $webDeployPackage, $webDeployParamFile, $overRideParams)
 Write-Verbose "MsDeployOnTargetMachines Script Arguments : $scriptArgs" -Verbose
 
 Write-Output ( Get-LocalizedString -Key "Starting deployment of IIS Web Deploy Package : {0}" -ArgumentList $webDeployPackage)
