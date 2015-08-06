@@ -80,8 +80,8 @@ function Deploy-WebSite
     $msDeployCmdArgs = Get-MsDeployCmdArgs -webDeployPackage $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRideParams $OverRideParams
 
     $msDeployCmd = "`"$msDeployExePath`" $msDeployCmdArgs"
-    Write-Verbose "Executing MSDeploy Command: $msDeployCmd" -Verbose
+    Write-Verbose "Executing MSDeploy Command: $msDeployCmd"
     cmd.exe /c "`"$msDeployCmd`""
 }
 
-Invoke-Expression $MethodToInvoke -Verbose
+Invoke-Expression $MethodToInvoke
