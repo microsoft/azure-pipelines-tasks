@@ -4,16 +4,19 @@ param(
     [string]$password,
 	[string]$warfile,
     [string]$context,
-    [string]$ServerVersion
+    [string]$serverVersion
 )
 
-Write-Verbose "Entering script ManageTomcatDeployments.ps1" -Verbose
+Write-Verbose "Entering script TomcatDeployment.ps1" -Verbose
 Write-Verbose "tomcatUrl = $tomcatUrl" -Verbose
 Write-Verbose "username = $username" -Verbose
-Write-Verbose "password = $password" -Verbose
 Write-Verbose "warfile = $warfile" -Verbose
 Write-Verbose "context = $context" -Verbose
-Write-Verbose "ServerVersion = $ServerVersion" -Verbose
+Write-Verbose "serverVersion = $serverVersion" -Verbose
+
+# Removing extra spaces 
+$tomcatUrl = $tomcatUrl.Trim()
+$context = $context.Trim()
 
 # Import the Task dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -43,7 +46,7 @@ catch
 
 if(-not $context.StartsWith("/"))
 {
-    $errorMessage = (Get-LocalizedString -Key "Provided context name {0} is invalid. Context name should start with /." -ArgumentList $context)
+    $errorMessage = (Get-LocalizedString -Key "Provided context name '{0}' is invalid. Context name should start with /." -ArgumentList $context)
     ThrowError -errorMessage $errorMessage
 }
 
@@ -53,7 +56,7 @@ if($context -eq "/")
 	$context = "$context" + "$fileName"
 }
 
-if($ServerVersion -eq "6.x")
+if($serverVersion -eq "6.x")
 {
     $url =  "$tomcatUrl" + "/manager/deploy" + "?path=" + "$context" + "&update=true"
 }
@@ -62,8 +65,24 @@ else
     $url =  "$tomcatUrl" + "/manager/text/deploy" + "?path=" + "$context" + "&update=true"
 }
 
-$args = "--stderr - --fail -u `"$username`"" + ":" + "`"$password`" -T $warfile `"$url`""
+# enabling detailed logging only when system.debug is true
+$enableDetailedLoggingString = $env:system_debug
+if ($enableDetailedLoggingString -ne "true")
+{
+    $enableDetailedLoggingString = "false"
+}
 
+Write-Verbose "Final URL : '$url'" -Verbose
+
+$args = "--stderr - -i --fail -u `"$username`"" + ":" + "`"$password`" -T $warfile `"$url`""
+
+# enabling detailed logging
+if($env:system_debug -eq "true")
+{
+     $args = "$args" + " -v"
+}
+
+Write-Output (Get-LocalizedString -Key "Starting deployment on tomcat server '{0}'" -ArgumentList $tomcatUrl)
 Write-Verbose "Running curl..." -Verbose
-Invoke-Tool -Path $curlPath -Arguments $args 
-Write-Verbose "Leaving script ManageTomcatDeployments.ps1" -Verbose
+Invoke-Tool -Path $curlPath -Arguments $args
+Write-Verbose "Leaving script TomcatDeployment.ps1" -Verbose

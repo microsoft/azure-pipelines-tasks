@@ -26,12 +26,12 @@
             "label": "Tomcat Server URL",
             "defaultValue": "http://localhost:8080",
             "required": true,
-            "helpMarkDown": "Specify the Tomcat server url which should contain the procotol, host and port details. Example https://test.azure.cloudapp.net:8080"
+            "helpMarkDown": "Specify the Tomcat server url which should contain the procotol, host and port details. Example- https://test.azure.cloudapp.net:8080"
         },		
         {
             "name": "Username",
             "type": "string",
-            "label": "Tomcat manager Username",
+            "label": "Tomcat Manager Username",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Specify the user name to connect to the Tomcat manager. Tomcat manager should be running on the server."
@@ -50,7 +50,7 @@
             "label": "WAR File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Absolute path of the war file present on the local machine (agent), or a UNC Share. Example- C:\\Agent\\Binaries\\Demo.war Or $(warFilePath)."
+            "helpMarkDown": "Absolute path of the war file present on the agent machine, or a UNC Share. Example- C:\\Agent\\Binaries\\Demo.war Or $(warFilePath)."
         },
         {
             "name": "Context",
