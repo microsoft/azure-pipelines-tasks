@@ -13,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "demands": [
     "vstest"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.87.0",
   "groups": [
     {
       "name": "advanced",
@@ -88,7 +88,7 @@
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "VSTest version",
-      "defaultValue": "latest",
+      "defaultValue": "14.0",
       "required": false,
       "helpMarkDown": "The version of VSTest to use.",
       "groupName":"advanced",

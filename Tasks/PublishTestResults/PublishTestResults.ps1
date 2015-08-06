@@ -39,12 +39,13 @@ else
 
 if (!$matchingTestResultsFiles)
 {
-    throw (Get-LocalizedString -Key "No test result files were found using search pattern '{0}'." -ArgumentList $testResultsFiles)
+    Write-Warning (Get-LocalizedString -Key "No test result files were found using search pattern '{0}'." -ArgumentList $testResultsFiles)
 }
-
-$mergeResults = Convert-String $mergeTestResults Boolean
-
-Write-Verbose "Calling Publish-TestResults"
-Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+else
+{
+    $mergeResults = Convert-String $mergeTestResults Boolean
+    Write-Verbose "Calling Publish-TestResults"
+    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+}
 
 Write-Verbose "Leaving script PublishTestResults.ps1"
