@@ -15,7 +15,7 @@ function ThrowError
 {
     param([string]$errorMessage)
 
-        $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/IISWebAppDeployment/README.md"
+        $readmelink = "http://aka.ms/iiswebappdeployreadme"
         $helpMessage = [string]::Format("For more info please refer to {0}", $readmelink)
         throw "$errorMessage $helpMessage"
 }
