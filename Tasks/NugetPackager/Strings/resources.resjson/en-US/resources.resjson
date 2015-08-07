@@ -1,0 +1,18 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "NuGet Packager and Uploader",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.description": "Installs and updates missing NuGet packages",
+  "loc.instanceNameFormat": "NuGet restore $(solution)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.nuspecFile": "Path to nuspec file",
+  "loc.input.help.nuspecFile": "The path to the nuspec file",
+  "loc.input.label.nugetServer": "NuGet Server Url",
+  "loc.input.help.nugetServer": "Additional arguments passed to NuGet.exe restore.",
+  "loc.input.label.nugetServerKey": "NuGet Server API Key",
+  "loc.input.help.nugetServerKey": "Additional arguments passed to NuGet.exe restore.",
+  "loc.input.label.nuGetPath": "Path to NuGet.exe",
+  "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
+}
