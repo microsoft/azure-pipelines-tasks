@@ -138,13 +138,24 @@ credsPromise.then((creds: ICredentials) => {
 
     _sendFile("PUT", taskUrl, archive, headers,(err: any, res: any, contents: any) => {
         console.log(res);
-        console.log(contents);
+        
         if (err) {
             console.error(err);
+            console.log('Upload Failed: Error');
         }
+
+        console.log(contents);
+        
+        if (res.statusCode === 201) {
+            console.log('Upload Succeeded, task created');
+        }
+        
+        console.error("Status Code:" + res.statusCode);
+        console.log("Upload Failed: See contents, above, for details");
     });
     
     archive.finalize();
 }).fail((reason) => {
     console.error(reason);
+    console.log('Upload Failed');    
 });
