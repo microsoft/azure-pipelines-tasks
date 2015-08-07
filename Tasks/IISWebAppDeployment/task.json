@@ -3,7 +3,7 @@
     "name": "IISWebAppDeployment",
     "friendlyName": "IIS Web Application Deployment",
     "description": "Deploy Web Application using MSDeploy to IIS Web Site",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WebAppDeployment/README.md)",
+    "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Preview",
