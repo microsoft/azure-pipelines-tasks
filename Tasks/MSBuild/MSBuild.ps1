@@ -132,14 +132,6 @@ if ("$msbuildLocationMethod".ToUpperInvariant() -eq 'VERSION')
     Write-Verbose "msbuildLocation = $msbuildLocation"
 }
 
-if ($cleanBuild)
-{
-    foreach ($sf in $solutionFiles)  
-    {
-        Invoke-MSBuild $sf -Targets Clean -LogFile "$sf-clean.log" -ToolLocation $msBuildLocation -CommandLineArgs $args -NoTimelineLogger:$noTimelineLogger
-    }
-}
-
 $nugetPath = Get-ToolPath -Name 'NuGet.exe'
 if (-not $nugetPath -and $nugetRestore)
 {
@@ -163,6 +155,11 @@ foreach ($sf in $solutionFiles)
         {
             Write-Verbose "No nuget package configuration files found for $sf"
         }
+    }
+
+    if ($cleanBuild)
+    {
+        Invoke-MSBuild $sf -Targets Clean -LogFile "$sf-clean.log" -ToolLocation $msBuildLocation -CommandLineArgs $args -NoTimelineLogger:$noTimelineLogger
     }
 
     Invoke-MSBuild $sf -LogFile "$sf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args  -NoTimelineLogger:$noTimelineLogger
