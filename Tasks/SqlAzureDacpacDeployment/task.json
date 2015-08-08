@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 0
+		"Patch": 1
 	},
 	"demands": [
 		"azureps"
@@ -114,12 +114,8 @@
 			"type": "pickList",
 			"label": "Specify firewall rules using",
 			"required": true,
-			"groupName": "firewall",
-			"defaultValue": "range",
-			"options": {
-				"range": "IP Address Range",
-				"auto": "Auto detect"
-			},			
+            "groupName": "firewall",
+            "defaultValue": "IPAddressRange",
 			"helpMarkDown": "Provide the IP Address range of the Automation Agent machine pool or select to auto-detect the IP Address of the Automation Agent, where this tasks runs"
 		},
 		{
@@ -129,7 +125,7 @@
 			"required": true,
 			"groupName": "firewall",
 			"defaultValue": "",
-			"visibleRule": "IpDetectionMethod = range",
+			"visibleRule": "IpDetectionMethod = IPAddressRange",
 			"helpMarkDown": "The starting IP Address of the Automation Agent machine pool"
 		},
 		{
@@ -139,7 +135,7 @@
 			"required": true,
 			"groupName": "firewall",
 			"defaultValue": "",
-			"visibleRule": "IpDetectionMethod = range",
+			"visibleRule": "IpDetectionMethod = IPAddressRange",
 			"helpMarkDown": "The last IP Address of the Automation Agent machine pool"
 		},
 		{
@@ -151,8 +147,15 @@
 			"defaultValue": "true",
 			"helpMarkDown": "If selected, deletes the IP Address exception in the Azure SQL DB Firewall after the task ends"
 		}
-	],
-	"sourceDefinitions": [],
+	],	
+    "sourceDefinitions": [ 
+     { 
+         "target": "IpDetectionMethod", 
+         "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods", 
+         "selector": "jsonpath:$.value[*]", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
 	"instanceNameFormat": "Deploy Azure SQL DACPAC: $(DacpacFile)",
 	"execution": {
 		"PowerShell": {
