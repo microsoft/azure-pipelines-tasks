@@ -41,7 +41,7 @@ $sqlPackageOnTargetMachineBlock = Get-Content $sqlDeploymentScriptPath | Out-Str
 
 $sqlPackageArguments = Get-SqlPackageCommandArguments -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
 
-$scriptArguments = "-sqlPackageArguments $sqlPackageArguments -sqlPassword $sqlPassword -targetConnectionString $connectionString"
+$scriptArguments = "-sqlPackageArguments $sqlPackageArguments"
 
 if($resourceFilteringMethod -eq "tags")
 {
