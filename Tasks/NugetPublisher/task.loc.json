@@ -1,0 +1,68 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "333b11bd-d341-40d9-afcf-b32d5ce6f24b",
+  "name": "NuGetPackager",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 17
+  },
+  "minimumAgentVersion": "1.83.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "nuspecFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.nuspecFile",
+      "defaultValue": "def.nuspec",
+      "helpMarkDown": "ms-resource:loc.input.help.nuspecFile",
+      "required": true
+    },
+    {
+      "name": "nugetServer",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nugetServer",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nugetServer"
+    },
+    {
+      "name": "nugetServerKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nugetServerKey",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nugetServerKey"
+    },
+    {
+      "name": "nuGetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nuGetPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\NuGetPackager.ps1",
+      "argumentFormat": "",
+      "workingDirectory": ""
+    }
+  }
+}

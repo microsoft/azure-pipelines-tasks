@@ -1,7 +1,6 @@
 param(
-    [string]$nuspecFile,
-    [string]$nugetServer,
-    [string]$nugetServerKey,
+    [string]$searchPattern,
+    [string]$outputdir,
     [string]$nuGetPath
 )
 
@@ -64,44 +63,39 @@ $NewVersion = $VersionData[0]
 Write-Verbose "Version: $NewVersion"
 
 Write-Verbose "Checking Nuspec file exists"
-if(!$nuspecFile)
+if(!$searchPattern)
 {
     throw (Get-LocalizedString -Key "Solution parameter must be set")
 }
 
-Write-Verbose "Checking server url set"
-if (!$nugetServer)
+ Write-Verbose "Find-Files -SearchPattern $searchPattern"
+ $solutionFilesToPack = Find-Files -SearchPattern $searchPattern
+
+foreach ($nuspecFile in $solutionFilesToPack)
 {
-    throw "Server must be set"
-}
-
-Write-Verbose "Checking server key set"
-if (!$nugetServerKey)
-{
-    throw "Server Key must be set"
-}
-
-#Setup Nuget
-Write-Verbose "Creating Nuget Arguments"
-$argsPack = "pack $nuspecFile -version $NewVersion ";
-$argsUpload = "push *.nupkg -s $nugetServer $nugetServerKey"
-
-
-if(!$nuGetPath)
-{
-    $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
-}
-
-if (-not $nuGetPath)
-{
-    throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
-}
-
-if($nuGetPath)
-{
-    $slnFolder = $(Get-ItemProperty -Path $nuspecFile -Name 'DirectoryName').DirectoryName      
+    #Setup Nuget
+    Write-Verbose "Creating Nuget Arguments:"
+    $argsPack = "pack $nuspecFile -version $NewVersion ";    
+    Write-Verbose "ARGS: $argsPack"
+    
+    if(!$nuGetPath)
+    {
+        $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
+    }
+    
+    if (-not $nuGetPath)
+    {
+        throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
+    }
+    
+    if (!$outputdir)
+    {    
+        $slnFolder = $(Get-ItemProperty -Path $nuspecFile -Name 'DirectoryName').DirectoryName
+    }
+    else
+    {
+        $slnFolder = $outputdir
+    }     
     Write-Verbose "Invoking nuget with $argsPack on $slnFolder"
     Invoke-Tool -Path $nugetPath -Arguments "$argsPack" -WorkingFolder $slnFolder
-    Write-Verbose "Invoking nuget with $argsUpload on $slnFolder"    
-    Invoke-Tool -Path $nugetPath -Arguments "$argsUpload" -WorkingFolder $slnFolder
 }
