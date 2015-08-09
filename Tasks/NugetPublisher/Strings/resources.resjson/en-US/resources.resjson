@@ -2,17 +2,15 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "NuGet Packager and Uploader",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
-  "loc.description": "Installs and updates missing NuGet packages",
-  "loc.instanceNameFormat": "NuGet restore $(solution)",
+  "loc.friendlyName": "NuGet Publisher",
+  "loc.helpMarkDown": " ",
+  "loc.description": "Uploads nupkg files to a nuget server",
+  "loc.instanceNameFormat": "NuGet Publisher $(solution)",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.nuspecFile": "Path to nuspec file",
-  "loc.input.help.nuspecFile": "The path to the nuspec file",
-  "loc.input.label.nugetServer": "NuGet Server Url",
-  "loc.input.help.nugetServer": "Additional arguments passed to NuGet.exe restore.",
-  "loc.input.label.nugetServerKey": "NuGet Server API Key",
-  "loc.input.help.nugetServerKey": "Additional arguments passed to NuGet.exe restore.",
+  "loc.input.label.searchPattern": "Path/Pattern to nupkg",
+  "loc.input.help.searchPattern": "The pattern to match or path to nupkg files to be uploaded",
+  "loc.input.label.connectedServiceName": "Nuget Server Endpoint",
+  "loc.input.help.connectedServiceName": "The nuget server generic endpoint, set the key 'Password/Token Key' field to your nuget api key",
   "loc.input.label.nuGetPath": "Path to NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
 }

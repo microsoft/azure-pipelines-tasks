@@ -1,8 +1,9 @@
 param(
     [string]$searchPattern,
+    [string]$connectedServiceName,
     [string]$nuGetPath
 )
-$packageFile "Entering script $MyInvocation.MyCommand.Name"
+Write-Verbose $packageFile "Entering script $MyInvocation.MyCommand.Name"
 Write-Verbose "Parameter Values"
 foreach($key in $PSBoundParameters.Keys)
 {
@@ -13,6 +14,16 @@ Write-Verbose "Importing modules"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
     
+
+#Setup Nuget
+Write-Verbose "Creating Nuget Arguments"
+
+$serviceEndpoint = GetEndpointData $connectedServiceName
+
+Write-Verbose -Verbose "serverUrl = $($serviceEndpoint.Url)"
+Write-Verbose -Verbose "serverApiKey = $($serviceEndpoint.Authorization.Parameters.AccessToken)"
+$nugetServer = $($serviceEndpoint.Url)
+$nugetServerKey = $($serviceEndpoint.Authorization.Parameters.AccessToken)
 
 Write-Verbose "Checking server url set"
 if (!$nugetServer)
@@ -26,12 +37,7 @@ if (!$nugetServerKey)
     throw "Server Key must be set"
 }
 
-#Setup Nuget
-Write-Verbose "Creating Nuget Arguments"
-
-$nugetServer = 
-$nugetServerKey = 
-
+Write-Verbose "Check/Set nuget path"
 if(!$nuGetPath)
 {
     $nuGetPath = Get-ToolPath -Name 'NuGet.exe';

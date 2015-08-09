@@ -62,20 +62,20 @@ switch($VersionData.Count)
 $NewVersion = $VersionData[0]
 Write-Verbose "Version: $NewVersion"
 
-Write-Verbose "Checking Nuspec file exists"
+Write-Verbose "Checking pattern is specified"
 if(!$searchPattern)
 {
-    throw (Get-LocalizedString -Key "Solution parameter must be set")
+    throw (Get-LocalizedString -Key "Search Pattern parameter must be set")
 }
 
  Write-Verbose "Find-Files -SearchPattern $searchPattern"
- $solutionFilesToPack = Find-Files -SearchPattern $searchPattern
+ $foundFiles = Find-Files -SearchPattern $searchPattern
 
-foreach ($nuspecFile in $solutionFilesToPack)
+foreach ($fileToPackage in $foundFiles)
 {
     #Setup Nuget
     Write-Verbose "Creating Nuget Arguments:"
-    $argsPack = "pack $nuspecFile -version $NewVersion ";    
+    $argsPack = "pack $fileToPackage -version $NewVersion ";    
     Write-Verbose "ARGS: $argsPack"
     
     if(!$nuGetPath)
@@ -90,7 +90,7 @@ foreach ($nuspecFile in $solutionFilesToPack)
     
     if (!$outputdir)
     {    
-        $slnFolder = $(Get-ItemProperty -Path $nuspecFile -Name 'DirectoryName').DirectoryName
+        $slnFolder = $(Get-ItemProperty -Path $fileToPackage -Name 'DirectoryName').DirectoryName
     }
     else
     {

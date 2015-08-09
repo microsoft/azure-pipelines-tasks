@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 18
+        "Patch": 23
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -22,10 +22,10 @@
     "instanceNameFormat": "NuGet Packager $(solution)",
     "inputs": [
         {
-            "name": "nuspecFile",
+            "name": "searchPattern",
             "type": "filePath",
-            "label": "Path to nuspec file",
-            "defaultValue":"**\\*(.csproj|.nuspec)",
+            "label": "Path/Pattern to nuspec files",
+            "defaultValue":"**\\*.(csproj|nuspec)",
             "helpMarkDown": "Pattern to match for nuspec and csproj files to pack",
             "required":true
         },
@@ -35,7 +35,7 @@
             "label": "Package Folder",
             "defaultValue":"",
             "helpMarkDown": "Folder where packages will be created, if empty will be created in the directory of csproj or nuspec file",
-            "required":true
+            "required":false
         },
         {
             "name": "nuGetPath",
