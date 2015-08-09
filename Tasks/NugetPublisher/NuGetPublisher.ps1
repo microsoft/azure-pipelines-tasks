@@ -18,7 +18,7 @@ function GetEndpointData
     return $serviceEndpoint
 }
 
-Write-Verbose $packageFile "Entering script $MyInvocation.MyCommand.Name"
+Write-Verbose "Entering script $MyInvocation.MyCommand.Name"
 Write-Verbose "Parameter Values"
 foreach($key in $PSBoundParameters.Keys)
 {
@@ -36,9 +36,9 @@ Write-Verbose "Creating Nuget Arguments"
 $serviceEndpoint = GetEndpointData $connectedServiceName
 
 Write-Verbose -Verbose "serverUrl = $($serviceEndpoint.Url)"
-Write-Verbose -Verbose "serverApiKey = $($serviceEndpoint.Authorization.Parameters.AccessToken)"
+Write-Verbose -Verbose "serverApiKey = $($serviceEndpoint.Authorization.Parameters.Password)"
 $nugetServer = $($serviceEndpoint.Url)
-$nugetServerKey = $($serviceEndpoint.Authorization.Parameters.AccessToken)
+$nugetServerKey = $($serviceEndpoint.Authorization.Parameters.Password)
 
 Write-Verbose "Checking server url set"
 if (!$nugetServer)
