@@ -3,6 +3,21 @@ param(
     [string]$connectedServiceName,
     [string]$nuGetPath
 )
+
+function GetEndpointData
+{
+	param([string][ValidateNotNullOrEmpty()]$connectedServiceName)
+
+	$serviceEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+
+	if (!$serviceEndpoint)
+	{
+		throw "A Connected Service with name '$ConnectedServiceName' could not be found.  Ensure that this Connected Service was successfully provisioned using the services tab in the Admin UI."
+	}
+
+    return $serviceEndpoint
+}
+
 Write-Verbose $packageFile "Entering script $MyInvocation.MyCommand.Name"
 Write-Verbose "Parameter Values"
 foreach($key in $PSBoundParameters.Keys)

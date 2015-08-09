@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 22
+        "Patch": 23
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -25,7 +25,7 @@
             "name": "searchPattern",
             "type": "filePath",
             "label": "Path/Pattern to nupkg",
-            "defaultValue":"*\\*.nupkg",
+            "defaultValue":"**\\*.nupkg",
             "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded",
             "required":true
         },
