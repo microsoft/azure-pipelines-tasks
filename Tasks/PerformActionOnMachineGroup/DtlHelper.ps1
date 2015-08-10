@@ -6,14 +6,76 @@ function Initialize-DTLServiceHelper
     Set-Variable -Name connection -Value $connection -Scope "Script"
 }
 
+function Get-MachineGroupWithFilteredResources
+{
+    param([string]$machineGroupName,
+          [string]$filters,
+          [string]$resourceFilteringMethod)
+
+    $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
+
+    if($resourceFilteringMethod -eq "tags")
+    {
+        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $filters
+
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on machine group name: $machineGroupName with tag filter: $wellFormedTagsList" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $machineGroupName -TagFilter $wellFormedTagsList -Connection $connection
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for machine group name: $machineGroupName with tag filter" -Verbose
+    }
+    else
+    {
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on machine group name: $machineGroupName with machine filter: $filters" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $machineGroupName -ResourceFilter $filters -Connection $connection
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for machine group name: $machineGroupName with machine filter" -Verbose
+    }
+
+    $environment.Resources = $resources
+    return $environment  
+}
+
 function Get-MachineGroup
 {
     param([string]$machineGroupName,
-          [string]$filters)
- 
-    Write-Verbose "Getting the machine group $machineGroupName" -Verbose
-    $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -Filters $filters -ErrorAction Stop -Verbose
-    Write-Verbose "Retrieved the machine group"
+          [string]$filters,
+          [string]$resourceFilteringMethod)    
+
+    if ($Action -eq "Unblock")
+    {
+         # Filters are not applicable to the unblock action as unblock is machine group level action
+         Write-Verbose "Starting Get-Environment cmdlet call on machine group name: $machineGroupName" -Verbose
+         $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
+         Write-Verbose "Completed Get-Environment cmdlet call for machine group name: $machineGroupName" -Verbose
+         return $environment
+    }
+     
+    if ($Action -eq "Block")
+    {
+        $time = $WaitTimeInMinutes -as [INT]
+
+        if(($time -eq $null) -or ($time -lt 0))
+        {
+            Write-Error(Get-LocalizedString -Key "Cannot wait for {0} minutes. Wait Time in minutes should be a positive number of minutes for which the task will wait for the machine group to get unblocked" -ArgumentList $WaitTimeInMinutes)
+        }
+
+        $getEnvironmentCommand = 
+        {
+            # Filters are not applicable to the block action as block is machine group level action
+            Write-Verbose "Starting Get-Environment cmdlet call on machine group name: $machineGroupName" -Verbose
+            $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
+            Write-Verbose "Completed Get-Environment cmdlet call for machine group name: $machineGroupName" -Verbose
+        }
+        
+        Write-Verbose "Getting the machine group $machineGroupName" -Verbose
+        Invoke-WithRetry -Command $getEnvironmentCommand -RetryDurationInMinutes $WaitTimeInMinutes -OperationDetail "Get Environment"
+        Write-Verbose "Retrieved the machine group"
+    }
+    else
+    {
+        Write-Verbose "Getting the machine group $machineGroupName" -Verbose
+        $environment = Get-MachineGroupWithFilteredResources -machineGroupName $machineGroupName -filters $filters -resourceFilteringMethod $resourceFilteringMethod
+        
+        Write-Verbose "Retrieved the machine group"
+    }
 
     return $environment
 }
@@ -104,4 +166,47 @@ function Block-MachineGroup
 
     Set-TaskVariable -Variable "DTL_RESERVATION_CONTEXT" -Value $blockedFor
     Write-Verbose "Task variable DTL_RESERVATION_CONTEXT set with the value $blockedFor"
+}
+
+function Invoke-WithRetry {
+    param(    
+    [Parameter(Mandatory)]$Command,
+    [Parameter(Mandatory)]$RetryDurationInMinutes = 30,
+    [Parameter(Mandatory)]$OperationDetail,
+    $RetryDelayInSeconds = 30)
+    
+    $ErrorActionPreference = 'Stop'
+    $currentRetry = 0
+    $endTime = [System.DateTime]::UtcNow.AddMinutes($RetryDurationInMinutes)
+    $success = $false
+
+    do {
+        try
+        {
+            $result = & $Command
+            return $result
+        }
+        catch [System.Exception]
+        {
+            if ($_.Exception.GetType().FullName -eq "Microsoft.VisualStudio.Services.DevTestLabs.Client.DtlReservationAccessException")
+            {
+                $currentTime = [System.DateTime]::UtcNow
+                $currentRetry = $currentRetry + 1
+            
+                if ($currentTime -gt $endTime)
+                {
+                    throw $_
+                } 
+                else 
+                {             
+                    Write-Warning (Get-LocalizedString -Key "Operation {0} failed: {1}. Retrying after {2} second(s)" -ArgumentList $OperationDetail, $_.Exception.Message, $RetryDelayInSeconds)
+                    Start-Sleep -s $RetryDelayInSeconds            
+                }
+            }
+            else
+            {
+                throw $_
+            }
+        }
+    } while (!$success);
 }

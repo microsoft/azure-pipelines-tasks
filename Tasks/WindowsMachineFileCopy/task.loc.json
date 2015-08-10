@@ -16,9 +16,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 7
   },
-  "minimumAgentVersion": "1.84.0",
+  "minimumAgentVersion": "1.85.0",
   "groups": [
     {
       "name": "advanced",
@@ -29,7 +29,7 @@
   "inputs": [
     {
       "name": "SourcePath",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.SourcePath",
       "defaultValue": "",
       "required": true,
@@ -42,6 +42,17 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      }
     },
     {
       "name": "MachineNames",

@@ -3,21 +3,22 @@
     "name": "DeployVisualStudioTestAgent",
     "friendlyName": "Visual Studio Test Agent Deployment",
     "description": "Deploy and configure Test Agent to run tests on a lab machine group",
-    "helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
     "category": "Test",
-    "visibility": [
-                "Build"
+    "visibility": [     
+                  "Build",
+                  "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 9
     },
     "demands": [
 
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.85.0",
     "groups":  [
         {
             "name": "testMachineGroups",
@@ -44,14 +45,26 @@
             "required": true,
             "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
             "groupName": "testMachineGroups"
-        },       
+        },
+        {
+            "name":"ResourceFilteringMethod",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+                "machineNames":"Machine Names",
+                "tags":"Tags"
+            },
+            "groupName": "testMachineGroups"
+        },
         {
             "name": "testMachines",
             "type": "string",
-            "label": "Deploy to machines",
+            "label": "Filter Criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally specify comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'.",
+            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
             "groupName": "testMachineGroups"
         },
         {

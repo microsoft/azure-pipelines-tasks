@@ -8,6 +8,8 @@
   "loc.input.label.WebSiteLocation": "Percorso sito Web",
   "loc.input.help.WebSiteLocation": "Selezionare un'area per la distribuzione.",
   "loc.input.label.WebSiteName": "Nome del sito Web",
+  "loc.input.label.Slot": "Slot",
+  "loc.input.help.Slot": "Slot",
   "loc.input.label.Package": "Pacchetto",
   "loc.input.help.Package": "Percorso del pacchetto nella directory predefinita dell'elemento.",
   "loc.input.label.AdditionalArguments": "Argomenti aggiuntivi"

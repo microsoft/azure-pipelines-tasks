@@ -66,6 +66,7 @@ mvnv.exec()
   tl.exit(code);
 })
 .fail(function(err) {
+  console.error(err.message);
   publishTestResults(publishJUnitResults, testResultsFiles);
   tl.debug('taskRunner fail');
   tl.exit(1);

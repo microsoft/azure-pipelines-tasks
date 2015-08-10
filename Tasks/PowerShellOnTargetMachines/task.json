@@ -3,7 +3,7 @@
     "name": "PowerShellOnTargetMachines",
     "friendlyName": "PowerShell on Target Machines",
     "description": "Execute PowerShell scripts on remote machine(s)",
-    "helpMarkDown": "Execute PowerShell scripts on remote machine(s)",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
     "category": "Deploy",
     "visibility": [
                 "Build",
@@ -13,9 +13,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 8
     },
-    "minimumAgentVersion": "1.84.0",
+    "minimumAgentVersion": "1.85.0",
     "groups": [
         {
             "name":"advanced",
@@ -35,7 +35,7 @@
         {
             "name":"ResourceFilteringMethod",
             "type":"radio",
-            "label":"Select Machine By",
+            "label":"Select Machines By",
             "required":false,
             "defaultValue":"machineNames",
             "options": {
@@ -46,20 +46,10 @@
         {
             "name": "MachineNames",
             "type": "string",
-            "label": "Deploy to Machines",
+            "label": "Filter Criteria",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "ResourceFilteringMethod = machineNames",
-            "helpMarkDown": "Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34. If not specified, all machines in the Machine Group are selected."
-        },
-        {
-            "name": "Tags",
-            "type": "string",
-            "label": "Deploy to Machines (Tag based)",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "ResourceFilteringMethod = tags",
-            "helpMarkDown": "Provide a semi-colon separated list of key:value pairs. Example Role:Web,Test;OS:Win7. If not specified, all machines in the Machine Group are selected."
+            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
         },
         {
             "name": "ScriptPath",

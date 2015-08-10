@@ -35,6 +35,7 @@ xcv.exec()
 	tl.exit(code);
 })
 .fail(function(err) {
+	console.error(err.message);
 	tl.debug('taskRunner fail');
 	tl.exit(1);
 })

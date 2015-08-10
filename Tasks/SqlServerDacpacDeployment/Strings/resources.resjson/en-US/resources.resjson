@@ -1,0 +1,38 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Sql Server Dacpac Deployment",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/SqlServerDacpacDeployment/README.md)",
+  "loc.description": "Deploy Dacpac to SQL Server",
+  "loc.instanceNameFormat": "Deploy SQL DACPAC: $(DacpacFile)",
+  "loc.group.displayName.source": "Source",
+  "loc.group.displayName.target": "Target",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.EnvironmentName": "Machine Group",
+  "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying the database.",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.help.ResourceFilteringMethod": "Select a subset of machines either by providing machine names or tags.",
+  "loc.input.label.MachineFilter": "Deploy to Machines",
+  "loc.input.help.MachineFilter": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
+  "loc.input.label.DacpacFile": "DACPAC File",
+  "loc.input.help.DacpacFile": "Location of the DACPAC file on the target machines or on a UNC path like \\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac",
+  "loc.input.label.TargetMethod": "Specify SQL Using",
+  "loc.input.help.TargetMethod": "Selection the option to specify the target SQL Server amongst SQL Server and instance details, or connection string or Publish profile file.",
+  "loc.input.label.ServerName": "Server Name",
+  "loc.input.help.ServerName": "SQL Server name like machinename\\SqlInstanceName,1433 or localhost or .\\SQL2012R2",
+  "loc.input.label.DatabaseName": "Database Name",
+  "loc.input.help.DatabaseName": "Name of the SQL Server database.",
+  "loc.input.label.SqlUsername": "SQL Username",
+  "loc.input.help.SqlUsername": "SQL Server login, the default is to use the machine admin credentials.",
+  "loc.input.label.SqlPassword": "SQL Password",
+  "loc.input.help.SqlPassword": "SQL Server password, the default is to use the machine admin credentials.",
+  "loc.input.label.ConnectionString": "Connection String",
+  "loc.input.help.ConnectionString": "SQL Server connection string that will be used to connect to the SQL.",
+  "loc.input.label.PublishProfile": "Publish Profile",
+  "loc.input.help.PublishProfile": "Path to the Publish profile file on the target machine.",
+  "loc.input.label.AdditionalArguments": "Additional Arguments",
+  "loc.input.help.AdditionalArguments": "Additional SqlPackage.exe arguments that will be applied on the SQL Server like /p:IgnoreAnsiNulls=True /p:IgnoreComments=True",
+  "loc.input.label.DeployInParallel": "Deploy in Parallel",
+  "loc.input.help.DeployInParallel": "Setting it to true will run dacpac deployment scripts in parallel on the target machines."
+}

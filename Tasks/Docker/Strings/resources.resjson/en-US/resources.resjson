@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Deploy a docker image to a remote machine",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Deploy a docker image to a remote machine",
   "loc.instanceNameFormat": "Docker Deployment: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker Endpoint",

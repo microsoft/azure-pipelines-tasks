@@ -42,9 +42,9 @@
       "name": "testResultsFiles",
       "type": "filePath",
       "label": "Test Results Files",
-      "defaultValue": "**\\TEST-*.xml",
+      "defaultValue": "**/TEST-*.xml",
       "required": true,
-      "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**\\*TEST-*.xml` for all xml files whose name starts with TEST-."
+      "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
     },  
     {
       "name": "mergeTestResults",

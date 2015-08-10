@@ -1,0 +1,167 @@
+{
+	"id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
+	"name": "SqlAzureDacpacDeployment",
+	"friendlyName": "Azure SQL DB Deployment",
+	"description": "Deploy Azure SQL DB",
+	"helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/SqlAzureDacpacDeployment/README.md)",
+	"category": "Deploy",
+	"visibility": [
+		"Preview",
+		"Build",
+		"Release"
+	],
+	"author": "Microsoft Corporation",
+	"version": {
+		"Major": 1,
+		"Minor": 0,
+		"Patch": 1
+	},
+	"demands": [
+		"azureps"
+	],
+	"minimumAgentVersion": "1.87.0",
+	"groups": [
+		{
+			"name": "source",
+			"displayName": "Source",
+			"isExpanded": true
+		},
+		{
+			"name": "target",
+			"displayName": "Target",
+			"isExpanded": true
+		},
+		{
+			"name": "firewall",
+			"displayName": "Firewall",
+			"isExpanded": false
+		}
+	],
+	"inputs": [
+		{
+			"name": "ConnectedServiceName",
+			"type": "connectedService:Azure",
+			"label": "Azure Subscription",
+			"defaultValue": "",
+			"required": true,
+			"helpMarkDown": "Azure subscription, where the Azure SQL DB is to be deployed to"
+		},
+		{
+			"name": "DacpacFile",
+			"type": "string",
+			"label": "DACPAC File",
+			"required": true,
+			"groupName": "source",
+			"defaultValue": "",
+			"helpMarkDown": "Location of the DACPAC file on the automation agent or on a UNC path like \\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined variables like $(Build.StagingDirectory) can be also used"
+		},
+		{
+			"name": "ServerName",
+			"type": "string",
+			"label": "Server Name",
+			"required": true,
+			"groupName": "target",
+			"defaultValue": "",
+			"helpMarkDown": "Windows Azure SQL Database connection string like FabrikamSQL.database.windows.net"
+		},
+		{
+			"name": "DatabaseName",
+			"type": "string",
+			"label": "Database Name",
+			"required": true,
+			"groupName": "target",
+			"defaultValue": "",
+			"helpMarkDown": "Name of the SQL Server Database"
+		},
+		{
+			"name": "SqlUsername",
+			"type": "string",
+			"label": "SQL Username",
+			"required": false,
+			"groupName": "target",
+			"defaultValue": "",
+			"helpMarkDown": "SQL login for the "
+		},
+		{
+			"name": "SqlPassword",
+			"type": "string",
+			"label": "SQL Password",
+			"required": false,
+			"groupName": "target",
+			"defaultValue": "",
+			"helpMarkDown": "SQL password for the SQL DB"
+		},
+		{
+			"name": "PublishProfile",
+			"type": "string",
+			"label": "Publish Profile",
+			"required": false,
+			"groupName": "target",
+			"defaultValue": "",
+			"helpMarkDown": "Path to the Publish profile file on the target machine"
+		},
+		{
+			"name": "AdditionalArguments",
+			"type": "string",
+			"label": "Additional Arguments",
+			"required": false,
+			"groupName": "target",
+			"defaultValue": "",
+			"helpMarkDown": "Additional SqlPackage.exe arguments that will be applied on the SQL Server like /p:IgnoreAnsiNulls=True /p:IgnoreComments=True​"
+		},
+		{
+			"name": "IpDetectionMethod",
+			"type": "pickList",
+			"label": "Specify firewall rules using",
+			"required": true,
+            "groupName": "firewall",
+            "defaultValue": "IPAddressRange",
+			"helpMarkDown": "Provide the IP Address range of the Automation Agent machine pool or select to auto-detect the IP Address of the Automation Agent, where this tasks runs"
+		},
+		{
+			"name": "StartIpAddress",
+			"type": "string",
+			"label": "Start IP Address",
+			"required": true,
+			"groupName": "firewall",
+			"defaultValue": "",
+			"visibleRule": "IpDetectionMethod = IPAddressRange",
+			"helpMarkDown": "The starting IP Address of the Automation Agent machine pool"
+		},
+		{
+			"name": "EndIpAddress",
+			"type": "string",
+			"label": "End IP Address",
+			"required": true,
+			"groupName": "firewall",
+			"defaultValue": "",
+			"visibleRule": "IpDetectionMethod = IPAddressRange",
+			"helpMarkDown": "The last IP Address of the Automation Agent machine pool"
+		},
+		{
+			"name": "DeleteFirewallRule",
+			"type": "boolean",
+			"label": "Delete rule after task ends",
+			"required": false,
+			"groupName": "firewall",
+			"defaultValue": "true",
+			"helpMarkDown": "If selected, deletes the IP Address exception in the Azure SQL DB Firewall after the task ends"
+		}
+	],	
+    "sourceDefinitions": [ 
+     { 
+         "target": "IpDetectionMethod", 
+         "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods", 
+         "selector": "jsonpath:$.value[*]", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
+	"instanceNameFormat": "Deploy Azure SQL DACPAC: $(DacpacFile)",
+	"execution": {
+		"PowerShell": {
+			"target": "$(currentDirectory)\\DeploySqlAzure.ps1",
+			"argumentFormat": "",
+			"workingDirectory": "$(currentDirectory)"
+		}
+	}
+}

@@ -23,7 +23,7 @@ if(jdkVersion != 'default') {
   var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
   var specifiedJavaHome = tl.getVariable(envName);
   if (!specifiedJavaHome) {
-    tl.error('Failed to find specified JDK version.  Please make sure environment varialbe ' + envName + ' exists and is set to a valid JDK.');
+    tl.error('Failed to find specified JDK version.  Please make sure environment variable ' + envName + ' exists and is set to a valid JDK.');
     tl.exit(1);    
    }
 
@@ -68,6 +68,7 @@ antv.exec()
 })
 .fail(function(err) {
   publishTestResults(publishJUnitResults, testResultsFiles);
+  console.error(err.message);
   tl.debug('taskRunner fail');
   tl.exit(1);
 })

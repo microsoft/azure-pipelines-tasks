@@ -8,6 +8,8 @@
   "loc.input.label.WebSiteLocation": "웹 사이트 위치",
   "loc.input.help.WebSiteLocation": "배포할 지역을 선택하세요.",
   "loc.input.label.WebSiteName": "웹 사이트 이름",
+  "loc.input.label.Slot": "Slot",
+  "loc.input.help.Slot": "Slot",
   "loc.input.label.Package": "패키지",
   "loc.input.help.Package": "기본 아티팩트 디렉터리의 패키지 경로입니다.",
   "loc.input.label.AdditionalArguments": "추가 인수"

@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Test Agent Deployment",
-  "loc.helpMarkDown": "Deploy and configure Test Agent to run tests on a lab machine group",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
   "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group",
   "loc.instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Test Machine Group",
@@ -11,8 +11,9 @@
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.testMachineGroup": "Test Machine Group",
   "loc.input.help.testMachineGroup": "Name of the Test Machine Group on which tests need to be run.",
-  "loc.input.label.testMachines": "Deploy to machines",
-  "loc.input.help.testMachines": "Optionally specify comma separated list of machines where test agent needs to be deployed. For example: 'Machine1,Machine2,Machine3'.",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.label.testMachines": "Filter Criteria",
+  "loc.input.help.testMachines": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
   "loc.input.label.machineUserName": "Username",
   "loc.input.help.machineUserName": "Username with which test agent needs to run.",
   "loc.input.label.machinePassword": "Password",

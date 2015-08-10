@@ -174,6 +174,7 @@ function packageTask(pkgPath){
 	        	shell.mkdir('-p', tgtPath);
 	        	shell.cp('-R', path.join(dirName, '*'), tgtPath);
 	        	shell.rm(path.join(tgtPath, '*.csproj'));
+	        	shell.rm(path.join(tgtPath, '*.md'));
 	        	return;        	
 	        })
 	        .then(function() {

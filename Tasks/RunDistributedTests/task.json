@@ -3,16 +3,17 @@
     "name": "RunVisualStudioTestsusingTestAgent",
     "friendlyName": "Visual Studio Test using Test Agent",
     "description": "Run tests distributedly using multiple test agents on a lab machine group",
-    "helpMarkDown": "Run tests distributedly using multiple test agents on a lab machine group",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
     "category": "Test",
-    "visibility": [
-                    "Build"
+    "visibility": [     
+                  "Build",
+                  "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 4
     },
     "demands": [
     ],

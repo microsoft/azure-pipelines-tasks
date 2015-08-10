@@ -17,12 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 8
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.84.0",
+  "minimumAgentVersion": "1.85.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -34,7 +34,7 @@
     },
     {
       "name": "SourcePath",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.SourcePath",
       "defaultValue": "",
       "required": true,
@@ -85,6 +85,18 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
       "visibleRule": "Destination = AzureVMs"
     },
     {

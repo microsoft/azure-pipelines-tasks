@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 13
     },
     "demands": [
         "msbuild",
@@ -72,68 +72,17 @@
             "required": false
         },
         {
-            "name": "vsLocationMethod",
-            "type": "radio",
-            "label": "Visual Studio",
-            "required": false,
-            "defaultValue": "version",
-            "groupName": "advanced",
-            "options": {
-                "version": "Version",
-                "location": "Specify Location"
-            }
-        },
-        {
             "name": "vsVersion",
             "type": "pickList",
             "label": "Visual Studio Version",
             "required": false,
-            "groupName": "advanced",
-            "defaultValue": "latest",
-            "visibleRule": "vsLocationMethod = version",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
+            "defaultValue": "14.0",
             "options": {
                 "latest":"Latest",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013",
                 "11.0": "Visual Studio 2012"
-            }
-        },
-        {
-            "name": "vsLocation",
-            "type": "string",
-            "label": "Visual Studio Location",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to Visual Studio install location, used to locate the developer command prompt batch file.  It defaults to searching for latest version.",
-            "groupName": "advanced",
-            "visibleRule": "vsLocationMethod = location"
-        },
-        {
-            "name": "msbuildLocationMethod",
-            "type": "radio",
-            "label": "MSBuild",
-            "required": false,
-            "defaultValue": "version",
-            "groupName": "advanced",
-            "options": {
-                "version": "Version",
-                "location": "Specify Location"
-            }
-        },
-        {
-            "name": "msbuildVersion",
-            "type": "pickList",
-            "label": "MSBuild Version",
-            "defaultValue": "latest",
-            "required": false,
-            "groupName": "advanced",
-            "visibleRule": "msbuildLocationMethod = version",
-            "helpMarkDown": "Version of MSBuild to run.  Defaults to searching for latest version",
-            "options": {
-                "latest": "Latest",
-                "14.0": "MSBuild 14.0",
-                "12.0": "MSBuild 12.0",
-                "4.0": "MSBuild 4.0"
             }
         },
         {
@@ -144,21 +93,10 @@
             "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
             "groupName": "advanced",
-            "visibleRule": "msbuildLocationMethod = version",
             "options": {
                 "x86": "MSBuild x86",
                 "x64": "MSBuild x64"
             }
-        },
-        {
-            "name": "msbuildLocation",
-            "type": "string",
-            "label": "Path to MSBuild",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to MSBuild.  It defaults to searching for latest version.",
-            "visibleRule": "msbuildLocationMethod = location",
-            "groupName": "advanced"
         },
         {
             "name": "logProjectEvents",

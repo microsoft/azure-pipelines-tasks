@@ -1,0 +1,108 @@
+{
+    "id": "89A3A82D-4B3E-4A09-8D40-A793849DC94F",
+    "name": "IISWebAppDeployment",
+    "friendlyName": "IIS Web Application Deployment",
+    "description": "Deploy Web Application using MSDeploy to IIS Web Site",
+    "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
+    "category": "Deploy",
+    "visibility": [
+        "Preview",
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [
+    ],
+    "minimumAgentVersion": "1.87.0",
+    "groups": [
+		{
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "EnvironmentName",
+            "type": "pickList",
+            "label": "Machine Group",
+            "defaultValue": "",
+            "required": true,            
+            "helpMarkDown": "Name of the Machine Group for deploying the database."
+        },
+        {
+            "name": "ResourceFilteringMethod",
+            "type": "radio",
+            "label": "Select Machines By",
+            "required": false,            
+            "defaultValue": "machineNames",
+            "options": {
+                "machineNames": "Machine Names",
+                "tags": "Tags"
+            },
+            "helpMarkDown": "Select a subset of machines either by providing machine names or tags."
+        },
+        {
+            "name": "MachineFilter",
+            "type": "string",
+            "label": "Deploy to Machines",
+            "required": false,            
+            "defaultValue": "",
+            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
+        },
+        {
+            "name": "WebDeployPackage",
+            "type": "string",
+            "label": "Web Deploy Package",
+            "required": true,            
+            "defaultValue": "",
+            "helpMarkDown": "Location of the MSDeploy zip file on the target machines or on a UNC path like \\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip"
+        },
+        {
+            "name": "WebDeployParamFile",
+            "type": "string",
+            "label": "Web Deploy Parameters File",
+            "required": false,            
+            "defaultValue": "",			
+            "helpMarkDown": "Parameters file to override any specific configuration settings"
+        },
+        {
+            "name": "OverRideParams",
+            "type": "string",
+            "label": "Override Parameters",
+            "required": false,            
+            "defaultValue": "",			
+            "helpMarkDown": "Any specific parameters to be overridden in parameters file"
+        },
+        {
+            "name": "DeployInParallel",
+            "type": "boolean",
+            "label": "Deploy in Parallel",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Setting it to true will run web app deployment scripts in parallel on the target machines."
+        }
+    ],	
+    "sourceDefinitions": [ 
+     { 
+         "target": "EnvironmentName", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     } 
+    ], 
+    "instanceNameFormat": "Deploy IIS App: $(WebSiteName)",
+    "execution": {
+        "PowerShell": {
+        "target": "$(currentDirectory)\\DeployIISWebApp.ps1",
+        "argumentFormat": "",
+        "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

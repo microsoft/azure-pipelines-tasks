@@ -15,10 +15,10 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 9
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "CMake $(args)",
+    "instanceNameFormat": "CMake $(cmakeArgs)",
     "inputs": [
         { 
             "name": "cwd", 
@@ -29,7 +29,7 @@
             "helpMarkDown": "Current working directory when cmake is run."  
         },
         { 
-            "name": "args", 
+            "name": "cmakeArgs", 
             "type": "string", 
             "label": "Arguments", 
             "defaultValue":"", 
@@ -38,10 +38,10 @@
         }
     ],
     "execution": {
-        "JavaScript": {
-            "target": "cmake.js",
+        "Node": {
+            "target": "cmake2.js",
             "argumentFormat": ""
-        },
+        },        
         "PowerShell": {
             "target": "$(currentDirectory)\\CMake.ps1",
             "argumentFormat": "",

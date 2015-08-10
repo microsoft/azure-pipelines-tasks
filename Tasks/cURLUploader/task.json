@@ -3,6 +3,7 @@
     "name": "cURLUploader",
     "friendlyName": "cURL Upload Files",
     "description": "Use cURL to upload files with supported protocols. (FTP, FTPS, SFTP, HTTP, and more)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {

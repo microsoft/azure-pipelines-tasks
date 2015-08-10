@@ -40,6 +40,7 @@ if (!nugetPath) {
 // Prepare function for tool execution failure
 var onFailedExecution = function (err) {
     // Error executing
+    console.error(err.message);
     tl.debug('ToolRunner execution failure: ' + err);
     tl.exit(1);
 }
@@ -55,7 +56,7 @@ nugetRunner.exec()
     var mdtoolRunner = new tl.ToolRunner(mdtoolPath);
     mdtoolRunner.arg('--verbose');
     mdtoolRunner.arg('build');
-    mdtoolRunner.arg('--configuration:\'' + configuration + '|' + device + '\'');
+    mdtoolRunner.arg('--configuration:\'' + configuration + '|' + device + '\'', true);
     mdtoolRunner.arg(solutionPath);
 
     // Execute build

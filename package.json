@@ -1,6 +1,6 @@
 {
   "name": "Agent.Tasks",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Tasks for VSO Build.vNext build system",
   "main": "gulpfile.js",
   "directories": {
@@ -37,7 +37,7 @@
     "shelljs": "^0.3.0",
     "through2": "^0.6.3",
     "validator": "^3.33.0",
-    "vso-task-lib": "^0.2.0"
+    "vso-task-lib": "^0.4.0"
   },
   "dependencies": {
     "archiver": "^0.14.3",

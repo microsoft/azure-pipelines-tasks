@@ -3,7 +3,7 @@
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Provision and Deploy an Azure Resource Group",
-    "helpMarkDown": "Provision and Deploy an Azure Resource Group",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
     "visibility": [
                 "Preview",
@@ -14,12 +14,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 10
     },
     "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.85.0",
     "groups": [
         {
             "name": "advancedDeploymentOptions",
@@ -34,13 +34,14 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription under which the Resource Group is deployed."
+            "helpMarkDown": "Azure subscription to target for the deployment."
         },
 	{
             "name": "resourceGroupName", 
             "type": "string", 
             "label": "Resource Group",
-            "required": true
+            "required": true,
+            "helpMarkDown": "If the resource group already exists it will be updated, else a new one will be created."
         },
         {
             "name": "location",
@@ -66,7 +67,7 @@
             "label": "Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates:http://aka.ms/azuretemplates."
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates see - http://aka.ms/azuretemplates."
         },
         {
             "name": "csmParametersFile",
@@ -87,11 +88,11 @@
         {
             "name": "dscDeployment",
             "type": "boolean",
-            "label": "Generate SAS token",
+            "label": "Refresh SAS token",
             "required": false,
             "defaultValue": "false",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Generates SAS token for the Azure blob that is used in the template. Useful if the SAS token expires quickly."
+            "helpMarkDown": "Refresh SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly."
         },
         {
             "name": "moduleUrlParameterName",
@@ -100,7 +101,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Name of the parameter corresponding to the Azure blob.",
+            "helpMarkDown": "Names of the parameter corresponding to the Azure blobs separated by ; in the format <br><b><i>url1;url2;url3</b></i>",
             "visibleRule": "dscDeployment = true"
         },
         {
@@ -110,17 +111,17 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Name of the SAS token parameter.",
+            "helpMarkDown": "Names of the SAS token parameters separated by ; in the format <br><b><i>token1;token2;token3</b></i>",
             "visibleRule": "dscDeployment = true"
         },
         {
             "name": "vmCreds",
             "type": "boolean",
-            "label": "Virtual Machine Credentials (Mandatory for Deployment)",
+            "label": "Virtual Machine Credentials",
             "required": false,
             "defaultValue": "false",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "These VM resource's credentials are used by the other deployment and test tasks. The Username and Password should be same as specified in the above template and currently all the Virtual Machines should have the same credentials."
+            "helpMarkDown": "Provide the VMs Administrator Username and Password as specified in the above template. Needed by other tasks like PowerShell on Target Machines, Azure File Copy etc."
         },
         {
             "name": "vmUserName",
@@ -129,7 +130,8 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advancedDeploymentOptions",
-            "visibleRule": "vmCreds = true"
+            "visibleRule": "vmCreds = true",
+            "helpMarkDown": "Administrator Username of the VMs."
         },
         {
             "name": "vmPassword",
@@ -138,16 +140,17 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advancedDeploymentOptions",
-            "visibleRule": "vmCreds = true"
+            "visibleRule": "vmCreds = true",
+            "helpMarkDown": "Administrator Password of the VMs."
         },
         {
             "name": "skipCACheck",
             "type": "boolean",
-            "label": "SkipCACheck",
+            "label": "Test Certificate",
             "required": false,
             "defaultValue": "true",
             "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Indicates whether the client validates that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
+            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
         }
     ],
     "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",

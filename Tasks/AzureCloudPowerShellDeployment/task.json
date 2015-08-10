@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [
     "azureps"
@@ -74,6 +74,22 @@
       "defaultValue": "Production",
       "required": true,
       "helpMarkDown": "**Production** or **Staging**"
+    },
+    {
+      "name": "DeploymentLabel",
+      "type": "string",
+      "label": "Deployment Label",
+      "defaultValue": "$(Build.BuildNumber)",
+      "required": false,
+      "helpMarkDown": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used."
+    },
+    {
+      "name": "AppendDateTimeToLabel",
+      "type": "boolean",
+      "label": "Append current date and time",
+      "defaultValue": "false",
+      "required": false,
+	  "helpMarkDown": "Appends current date and time to deployment label"
     },
     {
       "name": "AllowUpgrade",

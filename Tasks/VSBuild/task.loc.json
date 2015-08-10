@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 13
   },
   "demands": [
     "msbuild",
@@ -75,68 +75,17 @@
       "required": false
     },
     {
-      "name": "vsLocationMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.vsLocationMethod",
-      "required": false,
-      "defaultValue": "version",
-      "groupName": "advanced",
-      "options": {
-        "version": "Version",
-        "location": "Specify Location"
-      }
-    },
-    {
       "name": "vsVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vsVersion",
       "required": false,
-      "groupName": "advanced",
-      "defaultValue": "latest",
-      "visibleRule": "vsLocationMethod = version",
+      "helpMarkDown": "ms-resource:loc.input.help.vsVersion",
+      "defaultValue": "14.0",
       "options": {
         "latest": "Latest",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013",
         "11.0": "Visual Studio 2012"
-      }
-    },
-    {
-      "name": "vsLocation",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vsLocation",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.vsLocation",
-      "groupName": "advanced",
-      "visibleRule": "vsLocationMethod = location"
-    },
-    {
-      "name": "msbuildLocationMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.msbuildLocationMethod",
-      "required": false,
-      "defaultValue": "version",
-      "groupName": "advanced",
-      "options": {
-        "version": "Version",
-        "location": "Specify Location"
-      }
-    },
-    {
-      "name": "msbuildVersion",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.msbuildVersion",
-      "defaultValue": "latest",
-      "required": false,
-      "groupName": "advanced",
-      "visibleRule": "msbuildLocationMethod = version",
-      "helpMarkDown": "ms-resource:loc.input.help.msbuildVersion",
-      "options": {
-        "latest": "Latest",
-        "14.0": "MSBuild 14.0",
-        "12.0": "MSBuild 12.0",
-        "4.0": "MSBuild 4.0"
       }
     },
     {
@@ -147,21 +96,10 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.msbuildArchitecture",
       "groupName": "advanced",
-      "visibleRule": "msbuildLocationMethod = version",
       "options": {
         "x86": "MSBuild x86",
         "x64": "MSBuild x64"
       }
-    },
-    {
-      "name": "msbuildLocation",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.msbuildLocation",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.msbuildLocation",
-      "visibleRule": "msbuildLocationMethod = location",
-      "groupName": "advanced"
     },
     {
       "name": "logProjectEvents",

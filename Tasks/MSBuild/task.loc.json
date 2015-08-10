@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 13
   },
   "demands": [
     "msbuild"
@@ -99,7 +99,7 @@
       "label": "ms-resource:loc.input.label.msbuildVersion",
       "required": false,
       "groupName": "advanced",
-      "defaultValue": "latest",
+      "defaultValue": "14.0",
       "helpMarkDown": "ms-resource:loc.input.help.msbuildVersion",
       "visibleRule": "msbuildLocationMethod = version",
       "options": {

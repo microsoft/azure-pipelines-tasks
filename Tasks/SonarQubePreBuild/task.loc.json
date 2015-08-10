@@ -1,0 +1,130 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "EAE5B2CC-AC5E-4CBA-B022-A06621F9C01F",
+  "name": "SonarQubePreBuild",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 19
+  },
+  "demands": [
+    "msbuild",
+    "java"
+  ],
+  "groups": [
+    {
+      "name": "serverSettings",
+      "displayName": "ms-resource:loc.group.displayName.serverSettings",
+      "isExpanded": true
+    },
+    {
+      "name": "project",
+      "displayName": "ms-resource:loc.group.displayName.project",
+      "isExpanded": true
+    },
+    {
+      "name": "dbSettings",
+      "displayName": "ms-resource:loc.group.displayName.dbSettings",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "projectKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.projectKey",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.projectKey",
+      "groupName": "project"
+    },
+    {
+      "name": "projectName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.projectName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.projectName",
+      "groupName": "project"
+    },
+    {
+      "name": "projectVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.projectVersion",
+      "defaultValue": "1.0",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.projectVersion",
+      "groupName": "project"
+    },
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName",
+      "groupName": "serverSettings"
+    },
+    {
+      "name": "dbUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dbUrl",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dbUrl",
+      "groupName": "dbSettings"
+    },
+    {
+      "name": "dbUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dbUsername",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dbUsername",
+      "groupName": "dbSettings"
+    },
+    {
+      "name": "dbPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dbPassword",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dbPassword",
+      "groupName": "dbSettings"
+    },
+    {
+      "name": "cmdLineArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.cmdLineArgs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cmdLineArgs",
+      "groupName": "advanced"
+    },
+    {
+      "name": "configFile",
+      "type": "filePath",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.configFile",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.configFile",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

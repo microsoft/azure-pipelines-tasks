@@ -15,10 +15,10 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 10
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "Maven $(args)",
+    "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
             "name":"junitTestResults",
@@ -102,10 +102,6 @@
         }
     ],
     "execution": {
-        "JavaScript": {
-            "target": "maven.js",
-            "argumentFormat": ""
-        },
         "Node": {
             "target": "maven2.js",
             "argumentFormat": ""

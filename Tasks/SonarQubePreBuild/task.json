@@ -1,0 +1,127 @@
+﻿{
+    "id": "EAE5B2CC-AC5E-4CBA-B022-A06621F9C01F",
+    "name": "SonarQubePreBuild",
+    "friendlyName": "SonarQube for MSBuild - Begin Analysis",
+    "description": "Fetch the Quality Profile from SonarQube to configure the analysis",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 19
+    },
+    "demands": [
+        "msbuild",
+        "java"
+    ],
+    "groups": [
+        {
+            "name": "serverSettings",
+            "displayName": "SonarQube Server",
+            "isExpanded": true
+        },
+        {
+            "name": "project",
+            "displayName": "SonarQube Project Settings",
+            "isExpanded": true
+        },
+        {
+            "name": "dbSettings",
+            "displayName": "Database Settings (not required for SonarQube 5.2+)",
+            "isExpanded": false
+        },
+          {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "projectKey",
+            "type": "string",
+            "label": "Project Key",
+            "required": true,
+            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey",
+            "groupName": "project"
+        },
+        {
+            "name": "projectName",
+            "type": "string",
+            "label": "Project Name",
+            "required": true,
+            "helpMarkDown": "The SonarQube project name, i.e. sonar.ProjectName",
+            "groupName": "project"
+        },
+        {
+            "name": "projectVersion",
+            "type": "string",
+            "label": "Project Version",
+            "defaultValue": "1.0",
+            "required": true,
+            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion",
+            "groupName": "project"
+        },
+        {
+            "name": "connectedServiceName",
+            "type": "connectedService:Generic",
+            "label": "SonarQube Endpoint",
+            "required": true,
+            "helpMarkDown": "The SonarQube server generic endpoint",
+            "groupName": "serverSettings"
+        },
+        {
+            "name": "dbUrl",
+            "type": "string",
+            "label": "Db Connection String",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The database connection setting, i.e. sonar.jdbc.url. For example jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
+            "groupName": "dbSettings"
+        },
+        {
+            "name": "dbUsername",
+            "type": "string",
+            "label": "Db UserName",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only The username for the database user, i.e. sonar.jdbc.username.",
+            "groupName": "dbSettings"
+        },
+        {
+            "name": "dbPassword",
+            "type": "string",
+            "label": "Db User Password",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The password for the database user, i.e. sonar.jdbc.password",
+            "groupName": "dbSettings"
+        },
+         {
+            "name": "cmdLineArgs",
+            "type": "string",
+            "label": "Additional Settings",
+            "required": false,
+            "helpMarkDown": "Pass in settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://docs.sonarqube.org/)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "configFile",
+            "type": "filePath",
+            "defaultValue": "",
+            "label": "Settings File",
+            "required": false,
+            "helpMarkDown": "You can also specify settings via a configuration file. A template is available [here](http://go.microsoft.com/fwlink/?LinkID=620062)",
+            "groupName": "advanced"
+        }
+    ],
+    "instanceNameFormat": "Fetch the Quality Profile from SonarQube",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

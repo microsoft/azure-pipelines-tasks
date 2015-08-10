@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 12
     },
     "groups": [
     {
@@ -29,7 +29,7 @@
             "label": "Tool", 
             "defaultValue": "", 
             "required": true,
-            "helpMarkDown": "Tool name to run.  Tool should be in path or resolvable via which.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent."
+            "helpMarkDown": "Tool name to run.  Tool should be found in your path.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent.<br/> Note: You can use **$(agent.builddirectory)**\\\\... if you want the path relative to repo."
         },
         { 
             "name": "arguments", 
@@ -64,10 +64,6 @@
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
             "failOnStandardError": "$(failOnStandardError)"
-        },
-        "JavaScript": {
-            "target": "cmdLine.js",
-            "argumentFormat": ""
         },
         "Node": {
             "target": "cmdLine2.js",

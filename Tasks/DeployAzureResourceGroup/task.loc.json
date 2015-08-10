@@ -17,12 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 10
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.85.0",
   "groups": [
     {
       "name": "advancedDeploymentOptions",
@@ -43,7 +43,8 @@
       "name": "resourceGroupName",
       "type": "string",
       "label": "ms-resource:loc.input.label.resourceGroupName",
-      "required": true
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
     },
     {
       "name": "location",
@@ -132,7 +133,8 @@
       "defaultValue": "",
       "required": false,
       "groupName": "advancedDeploymentOptions",
-      "visibleRule": "vmCreds = true"
+      "visibleRule": "vmCreds = true",
+      "helpMarkDown": "ms-resource:loc.input.help.vmUserName"
     },
     {
       "name": "vmPassword",
@@ -141,7 +143,8 @@
       "defaultValue": "",
       "required": false,
       "groupName": "advancedDeploymentOptions",
-      "visibleRule": "vmCreds = true"
+      "visibleRule": "vmCreds = true",
+      "helpMarkDown": "ms-resource:loc.input.help.vmPassword"
     },
     {
       "name": "skipCACheck",

@@ -3,7 +3,7 @@
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",
     "description": "Run Scripts with knife commands on your chef workstation",
-    "helpMarkDown": "Run Scripts with knife commands on your chef workstation",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/ChefKnife/README.md)",
     "category": "Deploy",
     "visibility": [
                 "Preview",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands" : [
         "Chef"

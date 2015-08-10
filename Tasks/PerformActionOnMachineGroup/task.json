@@ -2,20 +2,21 @@
     "id": "434AFC5D-31F0-4E3E-BE20-90AF34B75D7A",
     "name": "PerformActionOnMachineGroup",
     "friendlyName": "Machine Group Actions",
-    "description": "Machine Group Actions",
-    "helpMarkDown": "Perform actions like start, stop, delete on a machine group",
+    "description": "Perform actions like start, stop, delete on a machine group",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
     "category": "Deploy",
     "visibility": [
                 "Preview",
-                "Build"
+                "Build",
+                "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 9
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.86.0",
     "inputs": [ 
         {
             "name": "ConnectedServiceName",
@@ -23,7 +24,7 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Azure Subscription under which the Resource Group is deployed and optional for pre-existing machine group."
+            "helpMarkDown": "Azure Subscription where the Resource Group is deployed. Optional for a pre-existing machine group."
         },
         {
             "name": "MachineGroupName", 
@@ -49,17 +50,29 @@
                 }
         },
         {
-            "name": "Filters", 
-            "type": "string", 
-            "label": "Apply to Machines",
-            "required": false,
-            "helpMarkDown": "By default, actions apply to all machines in a machine group. To apply the action to a subset of machines, provide tags or machine names like Role: Web, Role: Test, BudgetIT01. Filters are not applied for block or unblock actions."
+            "name":"ResourceFilteringMethod",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+            "machineNames":"Machine Names",
+            "tags":"Tags"
+            }
+       }, 
+       {
+           "name": "Filters",
+           "type": "string",
+           "label": "Filter Criteria",
+           "defaultValue": "",
+           "required": false,
+           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions."
         },
         {
            "name": "BlockedFor",
            "type": "pickList",
            "label": "Block For",
-           "defaultValue": "Instance",
+           "defaultValue": "Definition",
            "required": "true",
            "helpMarkDown": "Block a machine group either for an instance like a particular Build, or for the definition i.e. for all the instances of the definition.",
            "options": {
@@ -69,22 +82,31 @@
            "visibleRule": "Action = Block"
         },
         {
-           "name": "TimeInHours",
-           "type": "pickList",
-           "label": "Time in Hours",
-           "defaultValue": "0",
-           "required": "true",
-           "helpMarkDown": "The number of hours that the machines will be blocked for. Default value 0 indicates that the machines will be blocked indefinitely.",
-           "options": {
+            "name": "TimeInHours",
+            "type": "pickList",
+            "label": "Time in Hours",
+            "defaultValue": "8",
+            "required": "true",
+            "helpMarkDown": "The number of hours that the machines will be blocked for. Value 0 indicates that the machines will be blocked indefinitely.",
+            "options": {
                 "0": "0",
                 "8": "8",
                 "24": "24",
                 "48": "48"
             },
-           "visibleRule": "Action = Block",
-           "properties": {
-                "EditableOptions": "True" 
+            "visibleRule": "Action = Block",
+            "properties": {
+                "EditableOptions": "True"
             }
+        },
+        {
+           "name": "WaitTimeInMinutes",
+           "type": "string",
+           "label": "Wait Time in Minutes (if blocked)",
+           "defaultValue": "30",
+           "required": "false",
+           "helpMarkDown": "If machine group is already blocked, the number of minutes to wait for the machine group to get unblocked. Default is 30 minutes",
+           "visibleRule": "Action = Block"
         }
      ],
     "sourceDefinitions": [ 

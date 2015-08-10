@@ -1,4 +1,5 @@
 param(
+    [string]$msbuildLocationMethod,
     [string]$msbuildLocation, 
     [string]$msbuildArguments, 
     [string]$solution, 
@@ -12,6 +13,7 @@ param(
 )
 
 Write-Verbose "Entering script MSBuild.ps1"
+Write-Verbose "msbuildLocationMethod = $msbuildLocationMethod"
 Write-Verbose "msbuildLocation = $msbuildLocation"
 Write-Verbose "msbuildArguments = $msbuildArguments"
 Write-Verbose "solution = $solution"
@@ -20,6 +22,8 @@ Write-Verbose "configuration = $configuration"
 Write-Verbose "clean = $clean"
 Write-Verbose "restoreNugetPackages = $restoreNugetPackages"
 Write-Verbose "logProjectEvents = $logProjectEvents"
+Write-Verbose "msbuildVersion = $msbuildVersion"
+Write-Verbose "msbuildArchitecture = $msbuildArchitecture"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -73,26 +77,59 @@ if ($configuration)
 
 Write-Verbose "args = $args"
 
-if(!$msBuildLocation)
+# Default the msbuildLocationMethod if not specified. The input msbuildLocationMethod
+# was added to the definition after the input msbuildLocation.
+if ("$msbuildLocationMethod".ToUpperInvariant() -ne 'LOCATION' -and "$msbuildLocationMethod".ToUpperInvariant() -ne 'VERSION')
 {
-    if(Get-Command -Name "Get-MSBuildLocation" -ErrorAction SilentlyContinue)
+    # Infer the msbuildLocationMethod based on the whether msbuildLocation is specified.
+    if ($msbuildLocation)
     {
-        if($msbuildVersion -eq "latest")
-        {
-            # null out $msBuildVersion before passing to cmdlet so it will default to the latest on teh machine.
-            $msBuildVersion = $null
-        }
-            
-        $msBuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
-    }  
+        $msbuildLocationMethod = 'location'
+    }
+    else
+    {
+        $msbuildLocationMethod = 'version'
+    }
+
+    Write-Verbose "Defaulted msbuildLocationMethod to: $msbuildLocationMethod"
 }
 
-if ($cleanBuild)
+# Default to 'version' if the user chose 'location' but didn't specify a location.
+if ("$msbuildLocationMethod".ToUpperInvariant() -eq 'LOCATION' -and !$msbuildLocation)
 {
-    foreach ($sf in $solutionFiles)  
+    Write-Verbose 'Location not specified. Using version instead.'
+    $msbuildLocationMethod = 'version'
+}
+
+if ("$msbuildLocationMethod".ToUpperInvariant() -eq 'VERSION')
+{
+    # Look for a specific version of MSBuild.
+    if ($msbuildVersion -and "$msbuildVersion".ToUpperInvariant() -ne 'LATEST')
     {
-        Invoke-MSBuild $sf -Targets Clean -LogFile "$sf-clean.log" -ToolLocation $msBuildLocation -CommandLineArgs $args -NoTimelineLogger:$noTimelineLogger
+        Write-Verbose "Searching for MSBuild version: $msbuildVersion"
+        $msbuildLocation = Get-MSBuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
+
+        # Warn if not found.
+        if (!$msbuildLocation)
+        {
+            Write-Warning (Get-LocalizedString -Key 'Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.' -ArgumentList $msbuildVersion, $msbuildArchitecture)
+        }
     }
+
+    # Look for the latest version of MSBuild.
+    if (!$msbuildLocation)
+    {
+        Write-Verbose 'Searching for latest MSBuild version.'
+        $msbuildLocation = Get-MSBuildLocation -Version '' -Architecture $msbuildArchitecture
+
+        # Throw if not found.
+        if (!$msbuildLocation)
+        {
+            throw (Get-LocalizedString -Key 'MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture.' -ArgumentList $msbuildVersion, $msbuildArchitecture)
+        }
+    }
+
+    Write-Verbose "msbuildLocation = $msbuildLocation"
 }
 
 $nugetPath = Get-ToolPath -Name 'NuGet.exe'
@@ -118,6 +155,11 @@ foreach ($sf in $solutionFiles)
         {
             Write-Verbose "No nuget package configuration files found for $sf"
         }
+    }
+
+    if ($cleanBuild)
+    {
+        Invoke-MSBuild $sf -Targets Clean -LogFile "$sf-clean.log" -ToolLocation $msBuildLocation -CommandLineArgs $args -NoTimelineLogger:$noTimelineLogger
     }
 
     Invoke-MSBuild $sf -LogFile "$sf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args  -NoTimelineLogger:$noTimelineLogger

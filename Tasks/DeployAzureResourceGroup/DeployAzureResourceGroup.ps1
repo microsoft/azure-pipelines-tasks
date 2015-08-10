@@ -7,8 +7,8 @@ param(
     [string]$csmParametersFile,
     [string]$overrideParameters,
     [string]$dscDeployment,
-    [string]$moduleUrlParameterName,
-    [string]$sasTokenParameterName,
+    [string]$moduleUrlParameterNames,
+    [string]$sasTokenParameterNames,
     [string]$vmCreds,
     [string]$vmUserName,
     [string]$vmPassword,
@@ -27,8 +27,8 @@ Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
 Write-Verbose -Verbose "environmentName = $resourceGroupName"
 Write-Verbose -Verbose "location = $location"
 Write-Verbose -Verbose "overrideParameters = $overrideParameters"
-Write-Verbose -Verbose "moduleUrlParameterName = $moduleUrlParameterName"
-Write-Verbose -Verbose "sasTokenParamterName = $sasTokenParameterName"
+Write-Verbose -Verbose "moduleUrlParameterNames = $moduleUrlParameterNames"
+Write-Verbose -Verbose "sasTokenParamterNames = $sasTokenParameterNames"
 Write-Verbose -Verbose "WinRM Listeners = $winrmListeners"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
@@ -65,7 +65,7 @@ if(Test-Path -Path $csmParametersFile -PathType Leaf)
 Check-EnvironmentNameAvailability -environmentName $resourceGroupName
 
 $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
-$parametersObject = Refresh-SASToken -moduleUrlParameterName $moduleUrlParameterName -sasTokenParameterName $sasTokenParameterName -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
+$parametersObject = Refresh-SASToken -moduleUrlParameterNames $moduleUrlParameterNames -sasTokenParameterNames $sasTokenParameterNames -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
 
 Switch-AzureMode AzureResourceManager
 
@@ -131,10 +131,5 @@ $environmentResources = Get-Resources -resourceGroupName $resourceGroupName
 $environment = Create-Environment -environmentName $resourceGroupName -environmentType "Azure CSM V2" -environmentStatus $resourceGroupDeployment.ProvisioningState -providerName $provider.Name -providerDataNames $providerDataNames -environmentDefinitionName $environmentDefinition.Name -resources $environmentResources
 
 $environmentOperationId = Create-EnvironmentOperation -environment $environment
-
-if($deploymentError)
-{
-    Throw (Get-LocalizedString -Key "Deploy Azure Resource Group Task failed. View logs for details")
-}
 
 Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose

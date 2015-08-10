@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 13
     },
     "demands" : [
         "msbuild"
@@ -96,8 +96,8 @@
             "label":"MSBuild Version",
             "required":false,
             "groupName":"advanced",
-            "defaultValue":"latest",
-            "helpMarkDown": "Optionally specify the version of MSBuild. It defaults to searching for the latest version.",
+            "defaultValue":"14.0",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
             "visibleRule": "msbuildLocationMethod = version",
             "options": {
                 "latest":"Latest",

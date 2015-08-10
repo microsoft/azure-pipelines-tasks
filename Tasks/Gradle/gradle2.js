@@ -69,6 +69,7 @@ gb.exec()
 })
 .fail(function(err) {
     publishTestResults(publishJUnitResults, testResultsFiles);
+    console.error(err.message);
     tl.debug('taskRunner fail');
     tl.exit(1);
 })

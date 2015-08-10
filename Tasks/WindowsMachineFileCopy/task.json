@@ -3,7 +3,7 @@
     "name": "WindowsMachineFileCopy",
     "friendlyName": "Windows Machine File Copy",
     "description": "Copy files to remote machine(s)",
-    "helpMarkDown": "Copy files to remote machine(s)",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
     "category": "Deploy",
     "visibility": [
                 "Build",
@@ -13,9 +13,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 7
     },
-    "minimumAgentVersion": "1.84.0",
+    "minimumAgentVersion": "1.85.0",
     "groups": [
         {
             "name":"advanced",
@@ -26,7 +26,7 @@
     "inputs": [
 	{
             "name": "SourcePath",
-            "type": "string",
+            "type": "filePath",
             "label": "Source",
             "defaultValue": "",
             "required": true,
@@ -41,12 +41,23 @@
             "helpMarkDown": "Name of the target Machine Group for copying the files to.​"
         },
         {
+            "name":"ResourceFilteringMethod",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+                "machineNames":"Machine Names",
+                "tags":"Tags"
+            }
+        },
+        {
             "name": "MachineNames",
             "type": "string",
-            "label": "Copy to Machines",
+            "label": "Filter Criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a comma separated list of machines like Machine1, Machine2. Default is all machines in the Machine Group."
+            "helpMarkDown": "Provide a list of machine IP address or FQDN like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group."
         },        
         {
             "name": "TargetPath",

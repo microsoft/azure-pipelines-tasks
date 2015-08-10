@@ -16,9 +16,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 8
   },
-  "minimumAgentVersion": "1.84.0",
+  "minimumAgentVersion": "1.85.0",
   "groups": [
     {
       "name": "advanced",
@@ -52,17 +52,7 @@
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "ResourceFilteringMethod = machineNames",
       "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
-    },
-    {
-      "name": "Tags",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Tags",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "ResourceFilteringMethod = tags",
-      "helpMarkDown": "ms-resource:loc.input.help.Tags"
     },
     {
       "name": "ScriptPath",
