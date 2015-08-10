@@ -17,12 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.86.0",
+  "minimumAgentVersion": "1.87.0",
   "groups": [
     {
       "name": "source",
@@ -118,11 +118,7 @@
       "label": "ms-resource:loc.input.label.IpDetectionMethod",
       "required": true,
       "groupName": "firewall",
-      "defaultValue": "range",
-      "options": {
-        "range": "IP Address Range",
-        "auto": "Auto detect"
-      },
+      "defaultValue": "IPAddressRange",
       "helpMarkDown": "ms-resource:loc.input.help.IpDetectionMethod"
     },
     {
@@ -132,7 +128,7 @@
       "required": true,
       "groupName": "firewall",
       "defaultValue": "",
-      "visibleRule": "IpDetectionMethod = range",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
       "helpMarkDown": "ms-resource:loc.input.help.StartIpAddress"
     },
     {
@@ -142,7 +138,7 @@
       "required": true,
       "groupName": "firewall",
       "defaultValue": "",
-      "visibleRule": "IpDetectionMethod = range",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
       "helpMarkDown": "ms-resource:loc.input.help.EndIpAddress"
     },
     {
@@ -155,7 +151,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.DeleteFirewallRule"
     }
   ],
-  "sourceDefinitions": [],
+  "sourceDefinitions": [
+    {
+      "target": "IpDetectionMethod",
+      "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods",
+      "selector": "jsonpath:$.value[*]",
+      "authKey": "tfs:DevTestLabs"
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {

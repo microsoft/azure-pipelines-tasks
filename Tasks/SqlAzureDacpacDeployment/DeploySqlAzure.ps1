@@ -51,12 +51,12 @@ Write-Verbose "Server friendly name is $serverFriendlyName" -Verbose
 $firewallConfigured = $false
 $firewallRuleName = ""
         
-if($IpDetectionMethod -eq "range"){
+if($IpDetectionMethod -eq "IPAddressRange"){
     $startIp = $StartIpAddress
     $endIp = $EndIpAddress
 }
 
-if($IpDetectionMethod -eq "auto"){
+if($IpDetectionMethod -eq "AutoDetect"){
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
     $startIp = Get-ExternalIpAddress -Connection $connection
     $endIp = $startIp
