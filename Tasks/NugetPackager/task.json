@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 48
+        "Patch": 51
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -31,7 +31,7 @@
         },
         {
             "name": "versionByBuild",
-            "type": "bool",
+            "type": "boolean",
             "label": "Use Build number to version package",
             "defaultValue":"false",
             "helpMarkDown": "Will use the build number to version you package. Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'",
