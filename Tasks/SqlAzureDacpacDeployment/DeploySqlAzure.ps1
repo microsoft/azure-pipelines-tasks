@@ -56,7 +56,7 @@ if($IpDetectionMethod -eq "IPAddressRange"){
     $endIp = $EndIpAddress
 }
 
-if($IpDetectionMethod -eq "Auto Detect"){
+if($IpDetectionMethod -eq "AutoDetect"){
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
     $startIp = Get-ExternalIpAddress -Connection $connection
     $endIp = $startIp

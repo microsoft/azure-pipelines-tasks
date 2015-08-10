@@ -19,7 +19,10 @@
     "Minor": 0,
     "Patch": 1
   },
-  "minimumAgentVersion": "1.86.0",
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.87.0",
   "groups": [
     {
       "name": "source",
