@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 51
+        "Patch": 54
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -44,6 +44,24 @@
             "defaultValue":"",
             "helpMarkDown": "Folder where packages will be created, if empty will be created in the directory of csproj or nuspec file",
             "required":false
+        },
+        {
+            "name": "configurationToPack",
+            "type": "string",
+            "label": "Configuration to Package",
+            "defaultValue":"Release",
+            "helpMarkDown": "When using a csproj file this specifies the configuration to package",
+            "required":false,
+            "groupName": "advanced"
+        },
+        {
+            "name": "nuGetAdditionalArgs",
+            "type": "string",
+            "label": "NuGet Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to NuGet.exe pack ",
+            "groupName": "advanced"
         },
         {
             "name": "nuGetPath",

@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 35
+    "Patch": 36
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -38,6 +38,15 @@
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "nuGetAdditionalArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nuGetAdditionalArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetAdditionalArgs",
+      "groupName": "advanced"
     },
     {
       "name": "nuGetPath",

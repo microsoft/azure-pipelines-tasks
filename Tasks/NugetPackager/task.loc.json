@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 51
+    "Patch": 54
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -47,6 +47,24 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.outputdir",
       "required": false
+    },
+    {
+      "name": "configurationToPack",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configurationToPack",
+      "defaultValue": "Release",
+      "helpMarkDown": "ms-resource:loc.input.help.configurationToPack",
+      "required": false,
+      "groupName": "advanced"
+    },
+    {
+      "name": "nuGetAdditionalArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nuGetAdditionalArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetAdditionalArgs",
+      "groupName": "advanced"
     },
     {
       "name": "nuGetPath",

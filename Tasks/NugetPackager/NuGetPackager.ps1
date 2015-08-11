@@ -2,6 +2,8 @@ param(
     [string]$searchPattern,
     [string]$outputdir,
     [string]$versionByBuild,
+    [string]$configurationToPack,
+    [string]$nuGetAdditionalArgs,
     [string]$nuGetPath
 )
 
@@ -103,13 +105,17 @@ foreach ($fileToPackage in $foundFiles)
     $slnFolder = $(Get-ItemProperty -Path $fileToPackage -Name 'DirectoryName').DirectoryName
     #Setup Nuget
     Write-Host "Creating Nuget Arguments:"
-    $argsPack = "pack $fileToPackage -OutputDirectory $outputdir";
+    $argsPack = "pack $fileToPackage -OutputDirectory $outputdir -Properties Configuration=$configurationToPack";
     
     if ($b_versionByBuild)
     {
         $argsPack = ($argsPack + " -version $NewVersion")
+    }
+    if($nuGetAdditionalArgs)
+    {
+        $argsPack = ($argsPack + " " + $nuGetAdditionalArgs);
     }    
-    
+     
     Write-Host "--ARGS: $argsPack"
     
     if(!$nuGetPath)

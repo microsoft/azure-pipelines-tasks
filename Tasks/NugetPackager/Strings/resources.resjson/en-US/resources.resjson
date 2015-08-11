@@ -13,6 +13,10 @@
   "loc.input.help.versionByBuild": "Will use the build number to version you package. Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'",
   "loc.input.label.outputdir": "Package Folder",
   "loc.input.help.outputdir": "Folder where packages will be created, if empty will be created in the directory of csproj or nuspec file",
+  "loc.input.label.configurationToPack": "Configuration to Package",
+  "loc.input.help.configurationToPack": "When using a csproj file this specifies the configuration to package",
+  "loc.input.label.nuGetAdditionalArgs": "NuGet Arguments",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack ",
   "loc.input.label.nuGetPath": "Path to NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
 }

@@ -1,6 +1,7 @@
 param(
     [string]$searchPattern,
     [string]$connectedServiceName,
+    [string]$nuGetAdditionalArgs,
     [string]$nuGetPath
 )
 
@@ -86,7 +87,11 @@ foreach ($packageFile in $packagesToPush)
 
 foreach ($packageFile in $packagesToPush)
 {
-    Write-Host "Invoking nuget with $argsUpload on $packageFile"    
     $argsUpload = "push $packageFile -s $nugetServer $nugetServerKey"
+    if($nuGetAdditionalArgs)
+    {
+        $argsUpload = ($argsUpload + " " + $nuGetAdditionalArgs);
+    } 
+    Write-Host "Invoking nuget with $argsUpload on $packageFile"  
     Invoke-Tool -Path $nugetPath -Arguments "$argsUpload" 
 }

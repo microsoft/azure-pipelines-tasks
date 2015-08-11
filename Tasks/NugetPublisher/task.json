@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 35
+        "Patch": 36
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -35,6 +35,15 @@
             "label": "Nuget Server Endpoint",
             "required": true,
             "helpMarkDown": "The nuget server generic endpoint, set the key 'Password/Token Key' field to your nuget api key"
+        },
+        {
+            "name": "nuGetAdditionalArgs",
+            "type": "string",
+            "label": "NuGet Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to NuGet.exe pack ",
+            "groupName": "advanced"
         },
         {
             "name": "nuGetPath",
