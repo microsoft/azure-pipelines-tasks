@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "AC4EE482-65DA-4485-A532-7B085873E532",
     "name": "Maven",
     "friendlyName": "Maven",
@@ -9,26 +9,32 @@
                 "Build"
                   ],    
     "author": "Microsoft Corporation",
-    "demands" : [
+    "demands": [
         "maven"
     ],
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
-            "name":"junitTestResults",
-            "displayName":"JUnit Test Results",
-            "isExpanded":true
+            "name": "junitTestResults",
+            "displayName": "JUnit Test Results",
+            "isExpanded": true
+        },
+
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         },
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "SQAnalysis",
+            "displayName": "SonarQube Analysis",
+            "isExpanded": true
         }
     ],
     "inputs": [
@@ -55,13 +61,13 @@
             "required": false 
         },        
         {
-            "name":"publishJUnitResults",
-            "type":"boolean",
-            "label":"Publish to VSO/TFS",
-            "required":true,
-            "defaultValue":"true",
-            "groupName":"junitTestResults",
-            "helpMarkDown":"Select this option to publish JUnit Test results produced by the Maven build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
+            "name": "publishJUnitResults",
+            "type": "boolean",
+            "label": "Publish to VSO/TFS",
+            "required": true,
+            "defaultValue": "true",
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Select this option to publish JUnit Test results produced by the Maven build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
         }, 
         {
             "name": "testResultsFiles",
@@ -69,9 +75,9 @@
             "label": "Test Results Files",
             "defaultValue": "**/TEST-*.xml",
             "required": true,
-            "groupName":"junitTestResults",
+            "groupName": "junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
-        },
+        },     
         {
             "name":"javaHomeSelection",
             "type":"radio",
@@ -95,13 +101,13 @@
             "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
             "visibleRule":"javaHomeSelection = JDKVersion",
             "options": {
-                "default":"default",
-                "1.8":"JDK 8",
-                "1.7":"JDK 7",
-                "1.6":"JDK 6"
+                "default": "default",
+                "1.8": "JDK 8",
+                "1.7": "JDK 7",
+                "1.6": "JDK 6"
             }
-        },     
-        {
+        },
+        { 
             "name":"jdkUserInputPath",
             "type":"string",
             "label":"JDK Path",
@@ -115,14 +121,69 @@
             "name": "jdkArchitecture", 
             "type": "pickList", 
             "label": "JDK Architecture", 
-            "defaultValue":"x86", 
-            "required":false,
+            "defaultValue": "x86",
+            "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
-            "groupName":"advanced",
-            "options":{
-                "x86":"x86",
-                "x64":"x64"
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
             }
+        },
+        {
+            "name": "sqAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run SonarQube Analysis",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "SQAnalysis",
+            "helpMarkDown": "Run a [SonarQube](http://www.sonarqube.org/) analysis after executing the current goals. 'install' or 'package' goals should be executed first."
+        },
+        {
+            "name": "sqConnectedServiceName",
+            "type": "connectedService:Generic",
+            "label": "SonarQube Endpoint",
+            "required": true,
+            "helpMarkDown": "The SonarQube server generic endpoint",
+            "groupName": "SQAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqDbDetailsRequired",
+            "type": "boolean",
+            "label": "The SonarQube Server version is lower that 5.2",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "SQAnalysis",
+            "helpMarkDown": "If using a SonarQube server 5.1 or lower you need to specify the database connection details.",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqDbUrl",
+            "type": "string",
+            "label": "Db Connection String",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The database connection setting, i.e. sonar.jdbc.url. For example jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
+            "groupName": "SQAnalysis",
+            "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+            "name": "sqDbUsername",
+            "type": "string",
+            "label": "Db UserName",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only The username for the database user, i.e. sonar.jdbc.username.",
+            "groupName": "SQAnalysis",
+            "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+            "name": "sqDbPassword",
+            "type": "string",
+            "label": "Db User Password",
+            "required": false,
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The password for the database user, i.e. sonar.jdbc.password",
+            "groupName": "SQAnalysis",
+            "visibleRule": "sqDbDetailsRequired = true"
         }
     ],
     "execution": {
