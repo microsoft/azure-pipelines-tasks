@@ -92,8 +92,9 @@ function _sendFile(verb: string, requestUrl: string, content: any, headers: any,
 }
 
 interface ICredentials {
-	username: string;
-	password: string;
+    username: string;
+    password: string;
+    method: string;
 }
 
 var accountUrl: string = process.argv[2];
@@ -114,12 +115,22 @@ if (!taskId) {
 }
 
 var credsPromise: Q.Promise<ICredentials> = Q.nfcall(read, { prompt: 'username: ' }).then((username: string) => {
-	return Q.nfcall(read, { prompt: 'password: ', silent: true }).then((password: string) => {
-		return {
-			username: username[0],
-			password: password[0]
-		}
-	});
+    return Q.nfcall(read, { prompt: 'password: ', silent: true }).then((password: string) => {
+        return Q.nfcall(read, { prompt: 'method (PUT or DELETE): ' }).then((method: string) => {
+            method[0] = (method[0] || 'PUT').toUpperCase();
+            if (method[0] != 'PUT' && method[0] != 'DELETE') {
+                throw `${method[0]} is not a valid method.\n`;
+            }
+
+            console.log(`\nPerforming ${method[0]} on ${taskDefinition.name} task...\n`);
+
+            return {
+                username: username[0],
+                password: password[0],
+                method: method[0]
+            }
+        });
+    });
 });
 
 var taskUrl = url.resolve(accountUrl, "_apis/distributedtask/tasks/" + taskId);
@@ -136,7 +147,7 @@ credsPromise.then((creds: ICredentials) => {
     var archive = archiver('zip');
     archive.directory(taskFolder, false);
 
-    _sendFile("PUT", taskUrl, archive, headers,(err: any, res: any, contents: any) => {
+    _sendFile(creds.method, taskUrl, archive, headers, (err: any, res: any, contents: any) => {
         console.log(res);
         console.log(contents);
         if (err) {
