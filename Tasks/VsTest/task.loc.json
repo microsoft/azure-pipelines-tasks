@@ -16,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "demands": [
     "vstest"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.87.0",
   "groups": [
     {
       "name": "advanced",
@@ -91,7 +91,7 @@
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vsTestVersion",
-      "defaultValue": "latest",
+      "defaultValue": "14.0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
       "groupName": "advanced",

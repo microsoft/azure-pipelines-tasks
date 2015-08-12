@@ -13,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "demands": [
     "vstest"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.87.0",
   "groups": [
     {
       "name": "advanced",
@@ -41,7 +41,7 @@
       "label": "Test Filter criteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Filter criteria for the tests."
+      "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: Priority=1|Name=MyTestMethod"
     },
     {
       "name": "platform", 
@@ -65,7 +65,7 @@
       "label": "Run Settings File",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to runsettings file on disk or choose file from the repository."
+      "helpMarkDown": "Path to runsettings file to use with the tests. Use $(Build.SourcesDirectory) to access the Project folder."
     },
     {
       "name": "overrideTestrunParameters",
@@ -81,14 +81,14 @@
       "label": "Code Coverage Enabled",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "Whether code coverage needs to be enabled.",
+      "helpMarkDown": "Collect code coverage information from the Test run.",
       "groupName":"advanced"
     },    
     {
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "VSTest version",
-      "defaultValue": "latest",
+      "defaultValue": "14.0",
       "required": false,
       "helpMarkDown": "The version of VSTest to use.",
       "groupName":"advanced",
@@ -104,7 +104,7 @@
       "label": "Path to Custom Test Adapters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to custom adapters.",
+      "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
       "groupName":"advanced"
     },
     {
@@ -113,7 +113,7 @@
       "label": "Other console options",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Other console options.",
+      "helpMarkDown": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
       "groupName": "advanced"
     }
   ],

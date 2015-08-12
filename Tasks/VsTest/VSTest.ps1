@@ -29,7 +29,8 @@ if ($testAssembly.Contains("*") -or $testAssembly.Contains("?"))
 {
     Write-Verbose "Pattern found in solution parameter. Calling Find-Files."
     Write-Verbose "Calling Find-Files with pattern: $testAssembly"
-    $testAssemblyFiles = Find-Files -SearchPattern $testAssembly
+    $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+    $testAssemblyFiles = Find-Files -SearchPattern $testAssembly -RootFolder $sourcesDirectory
     Write-Verbose "Found files: $testAssemblyFiles"
 }
 else
@@ -55,7 +56,7 @@ if($testAssemblyFiles)
     $workingDirectory = $artifactsDirectory
     $testResultsDirectory = $workingDirectory + "\" + "TestResults"
     
-    Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory
+    Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
 
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
