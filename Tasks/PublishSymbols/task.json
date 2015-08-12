@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -36,18 +36,8 @@
             "type": "string",
             "label": "Search Pattern",
             "defaultValue": "**\\bin\\**\\*.pdb",
-            "required": false,
-            "helpMarkDown": "The pattern used to discover the pdb files to publish.",
-            "groupName": "advanced"
-        },
-        {
-            "name": "SourceFolder",
-            "type": "filePath",
-            "label": "Path to source folder",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "The path to the source folder that is searched for symbol files.  The default is $(Build.SourcesDirectory)",
-            "groupName": "advanced"
+            "required": true,
+            "helpMarkDown": "The pattern used to discover the pdb files to publish."
         },
         {
             "name": "SymbolsFolder",
@@ -55,7 +45,15 @@
             "label": "Path to symbols folder",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder.",
+            "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder."
+        },
+        {
+            "name": "SourceFolder",
+            "type": "filePath",
+            "label": "Path to source folder",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The path to the source control mapping folder. This option should only be used if the source code being indexed is from a different repository. Otherwise defaults to $(Build.SourcesDirectory)",
             "groupName": "advanced"
         },
         {
