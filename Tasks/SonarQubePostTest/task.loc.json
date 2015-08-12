@@ -1,0 +1,32 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "730D8DE1-7A4F-424C-9542-FE7CC02604EB",
+  "name": "SonarQubePostTest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 19
+  },
+  "demands": [
+    "msbuild",
+    "java"
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\SonarQubePostTest.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

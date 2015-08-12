@@ -105,6 +105,12 @@ gulp.task('package', ['zip'], function(done) {
 		return;
 	}
 
+	var nuget3Path = shell.which('nuget3');
+	if (!nuget3Path) {
+		done(new gutil.PluginError('PackageTask', 'nuget3.exe needs to be in the path.  could not find.'));
+		return;
+	}
+
 	var options = minimist(process.argv.slice(2), {});
 	var version = options.version;
 	if (!version) {
@@ -150,7 +156,7 @@ gulp.task('package', ['zip'], function(done) {
 			// publish only if version and source supplied - used by CI server that does official publish
 			if (server) {
 				var pkgLocation = path.join(_pkgRoot, pkgName + '.' + version + '.nupkg');
-				var cmdline = '"' + nugetPath + '" push ' + pkgLocation + ' -Source ' + server;
+				var cmdline = '"' + nuget3Path + '" push ' + pkgLocation + ' -Source ' + server;
 				return QExec(cmdline);				
 			}
 			else {

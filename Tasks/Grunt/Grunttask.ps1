@@ -38,14 +38,11 @@ if(!$grunt)
     }
 }
 
+$arguments = "--gruntfile `"" + $gruntFile + "`" " + $arguments
 
 if($targets)
 {
-    $arguments = $targets + " --gruntfile " + $gruntFile + " " + $arguments    
-}
-else
-{
-    $arguments = "--gruntFile " + $gruntFile + " " + $arguments
+    $arguments = $targets + " " + $arguments  
 }
 
 if($cwd)

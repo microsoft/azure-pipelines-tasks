@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 2
+        "Patch": 3
     },
     "demands" : [
         "grunt"
@@ -40,7 +40,7 @@
             "type": "string",
             "label": "Grunt Task(s)",
             "defaultValue":"",
-            "helpMarkDown": "Optional.  default task will get run if not specified. Space delimited list of tasks to run.  If not specified, the default task will run.",
+            "helpMarkDown": "Optional.  Space delimited list of tasks to run.  If not specified, the default task will run.",
             "required":false
         },
         {

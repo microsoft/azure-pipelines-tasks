@@ -1,4 +1,4 @@
-function Locate-TestVersionAndVsRoot([string] $Version)
+﻿function Locate-TestVersionAndVsRoot([string] $Version)
 {
     if ([string]::IsNullOrWhiteSpace($Version))
     {
@@ -75,7 +75,6 @@ function DeleteDTAAgentExecutionService([String] $ServiceName)
         Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose
     }
 }
-
 
 function Get-RegistryValueIgnoreError
 {
@@ -282,41 +281,147 @@ function Set-TestAgentConfiguration
     {
         $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
-    DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService"
+
+    DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService" | Out-Null
 
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
-    if ($configOut.ExitCode -eq 0 -and $configAsProcess -eq $true)
-    {
-        Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
-        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential
-    }
-
-    $doReboot = $false
-    # 3010 is exit code to indicate a reboot is required
-    if ($configOut.ExitCode -eq 3010)
-    {
-        Write-Verbose -Message "Marking the machine for reboot as exit code 3010 received" -Verbose
-        $doReboot = $true
-    }
-    elseif ($configOut.ExitCode -eq 0)
-    {
-        if (-not (IsDtaExecutionHostRunning))
-        {
-            Write-Verbose -Message "Marking the machine for reboot as exit code 0 received and TestAgent is not running" -Verbose
-            $doReboot = $true
-        }
-    }
-
-    if ($doReboot)
-    {
-        Write-Verbose "Reboot required post test agent configuration, returning 3010" -Verbose
-        return 3010; # 3010 is exit code will indicate a reboot is required
-    }
-    else
+    if ($configOut.ExitCode -ne 0 -and $configOut.ExitCode -ne 3010)
     {
         return $configOut.ExitCode
     }
+
+    if ($configAsProcess -eq $false)
+    {
+        return $configOut.ExitCode
+    }
+
+    if (IsDtaExecutionHostRunning)
+    {
+        Write-Verbose -Message "Stopping already running instances of DTAExecutionHost" -Verbose
+        Stop-Process -processname "DTAExecutionHost"
+    }
+
+    Write-Verbose -Message "Trying to configure power options so that the console session stays active" -Verbose
+    ConfigurePowerOptions -MachineCredential $MachineUserCredential | Out-Null
+
+    Write-Verbose -Message "Trying to see if no active desktop session is present" -Verbose
+    $isSessionActive = IsAnySessionActive
+    if (-not ($isSessionActive))
+    {
+        Write-Verbose -Message("Value returned {0}" -f $isSessionActive) -Verbose
+        Write-Verbose -Message "No desktop session was found active, marking the machine for reboot" -Verbose
+        return 3010
+    }
+
+    if ($configOut.ExitCode -eq 0)
+    {
+        Write-Verbose -Message "Trying to start TestAgent process interactively" -Verbose
+        InvokeDTAExecHostExe -Version $TestAgentVersion -MachineCredential $MachineUserCredential | Out-Null
+    }
+
+    if (-not (IsDtaExecutionHostRunning))
+    {
+        Write-Verbose -Message "DTAExecutionHost was not running interactively, marking the machine for reboot" -Verbose
+        return 3010
+    }
+
+    return 0
+}
+
+function IsAnySessionActive()
+{
+    $wtssig = @'
+    namespace mystruct
+    {
+        using System;
+        using System.Runtime.InteropServices;
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WTS_SESSION_INFO
+        {
+            public Int32 SessionID;
+
+            [MarshalAs(UnmanagedType.LPStr)]
+            public String pWinStationName;
+
+            public WTS_CONNECTSTATE_CLASS State;
+        }
+
+        public enum WTS_CONNECTSTATE_CLASS
+        {
+            WTSActive,
+            WTSConnected,
+            WTSConnectQuery,
+            WTSShadow,
+            WTSDisconnected,
+            WTSIdle,
+            WTSListen,
+            WTSReset,
+            WTSDown,
+            WTSInit
+        }
+    }
+'@
+
+    $wtsenumsig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern int WTSEnumerateSessions(
+            System.IntPtr hServer,
+            int Reserved,
+            int Version,
+            ref System.IntPtr ppSessionInfo,
+            ref int pCount);
+'@
+
+    $wtsopensig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern IntPtr WTSOpenServer(string pServerName);
+'@
+
+    $wtsSendMessagesig = @'
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        public static extern bool WTSSendMessage(
+            IntPtr hServer,
+            [MarshalAs(UnmanagedType.I4)] int SessionId,
+            String pTitle,
+            [MarshalAs(UnmanagedType.U4)] int TitleLength,
+            String pMessage,
+            [MarshalAs(UnmanagedType.U4)] int MessageLength,
+            [MarshalAs(UnmanagedType.U4)] int Style,
+            [MarshalAs(UnmanagedType.U4)] int Timeout,
+            [MarshalAs(UnmanagedType.U4)] out int pResponse,
+            bool bWait);
+'@
+
+    add-type  $wtssig
+    $wtsenum = add-type -MemberDefinition $wtsenumsig -Name PSWTSEnumerateSessions -Namespace GetLoggedOnUsers -PassThru
+    $wtsOpen = add-type -MemberDefinition $wtsopensig -name PSWTSOpenServer -Namespace GetLoggedOnUsers -PassThru
+    $wtsmessage = Add-Type -MemberDefinition $wtsSendMessagesig -name PSWTSSendMessage -Namespace GetLoggedOnUsers -PassThru
+
+    [long]$count = 0
+    [long]$ppSessionInfo = 0
+
+    $server = $wtsOpen::WTSOpenServer("localhost")
+    [long]$retval = $wtsenum::WTSEnumerateSessions($server, 0, 1, [ref]$ppSessionInfo,[ref]$count)
+    $datasize = [system.runtime.interopservices.marshal]::SizeOf([System.Type][mystruct.WTS_SESSION_INFO])
+
+    [bool]$activeSession = $false
+
+    if ($retval -ne 0)
+    {
+        for ($i = 0; $i -lt $count; $i++)
+        {
+            $element = [system.runtime.interopservices.marshal]::PtrToStructure($ppSessionInfo + ($datasize* $i), [System.type][mystruct.WTS_SESSION_INFO])
+            Write-Verbose -Message("{0} : {1}" -f $element.pWinStationName, $element.State.ToString()) -Verbose
+            if ($element.State.ToString().Equals("WTSActive"))
+            {
+                $activeSession = $true
+            }
+        }
+    }
+
+    return $activeSession
 }
 
 function GetConfigValue([string] $line)
@@ -372,7 +477,6 @@ function LoadDependentDlls
             [Reflection.Assembly]::LoadFrom($asm)
     }
 }
-
 
 function ReadCredentials
 {
@@ -483,9 +587,9 @@ function CanSkipTestAgentConfiguration
             $existingUserName = $existingConfiguration.UserName.split('\')
             $requiredUserName = $AgentUserCredential.UserName.split('\')
 
-            if($existingUserName[$existingUserName.Length -1] -ne $requiredUserName[$requiredUserName.Length -1])
+            if ($existingUserName[$existingUserName.Length -1] -ne $requiredUserName[$requiredUserName.Length -1])
             {
-            Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length -1]) -Verbose
+                Write-Verbose -Message ("UserName mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $existingUserName[$existingUserName.Length -1], $requiredUserName[$requiredUserName.Length-1]) -Verbose
                 return $false
             }
         }
@@ -616,12 +720,6 @@ function EnableTracing
 
 function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.PSCredential] $MachineCredential)
 {
-    if(IsDtaExecutionHostRunning)
-    {
-        Write-Verbose -Message "Killing any existing instances" -Verbose
-        Stop-Process -processname "DTAExecutionHost"
-    }
-
     $ExeName = "DTAExecutionHost.exe"
     $vsRoot = Locate-TestVersionAndVsRoot($Version)
     if ([string]::IsNullOrWhiteSpace($vsRoot))
@@ -630,17 +728,13 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
+
     Try
     {
-        $StartDate = New-Object -TypeName DateTime -ArgumentList:(2050,01,01)
-        $FormatHack = ($([System.Globalization.DateTimeFormatInfo]::CurrentInfo.ShortDatePattern) -replace 'M+/', 'MM/') -replace 'd+/', 'dd/'
-        $date1 = $StartDate.ToString($FormatHack)
-
         $session = CreateNewSession -MachineCredential $MachineCredential
-        Invoke-Command -Session $session -ErrorAction Continue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args[0] /F /RL:HIGHEST  /SC:ONCE /ST:23:59 ; schtasks.exe /run /TN:DTAConfig;  schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
-
-        Write-Verbose ("Error : {0} " -f ($err | out-string)) -Verbose
-        Write-Verbose ("Output : {0} " -f ($out | out-string)) -Verbose
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY ; schtasks.exe /run /TN:DTAConfig ; Sleep 10 ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
+        Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
+        Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
     }
     Catch [Exception]
     {
@@ -648,39 +742,52 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     }
 }
 
-function CreateNewSession( [System.Management.Automation.PSCredential] $MachineCredentials)
+function ConfigurePowerOptions([System.Management.Automation.PSCredential] $MachineCredential)  
 {
-    # TODO : Bug 366007:We should be able to get private WinRM port from DTL 
-    Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
-
-    $winrmconfigDetails = Winrm e  winrm/config/listener -format:pretty |Out-String
-    $xmldoc = [XML]$winrmconfigDetails
-    $ns = new-object Xml.XmlNameSpaceManager $xmldoc.NameTable
-    $ns.AddNameSpace("cfg","http://schemas.microsoft.com/wbem/wsman/1/config/listener")
-    $ns.AddNameSpace("xsi","http://www.w3.org/2001/XMLSchema-instance")
-    $Listener = $xmldoc.SelectSingleNode("//cfg:Listener",$ns)
-
-    $transportElement = $Listener.SelectSingleNode("//cfg:Transport",$ns)
-    $portElement = $Listener.SelectSingleNode("//cfg:Port",$ns)
-
-    if( $transportElement -ne $null -and  $portElement -ne $null)
+    Try
     {
-        $port = $portElement.InnerText
-        $transport = $transportElement.InnerText
+        $session = CreateNewSession -MachineCredential $MachineCredential
+        Write-Verbose -Message ("Executing command : {0} " -f "powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0") -Verbose
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0 }
+        Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
+        Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
+    }
+    Catch [Exception]
+    {
+        Write-Verbose -Message ("Unable to configure display settings, the session may get inactive due to display settings, continuing. Exception : {0}" -f  $_.Exception.Message) -Verbose
+    }
+}
+
+function CreateNewSession([System.Management.Automation.PSCredential] $MachineCredentials)
+{
+    Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
+    $wsmanoutput = Get-WSManInstance –ResourceURI winrm/config/listener –Enumerate
+
+    if($wsmanoutput -ne $null)
+    {	
+        if($wsmanoutput.Count -gt 1)
+        {
+            $port = $wsmanoutput[0].Port
+            $transport = $wsmanoutput[0].Transport
+        }
+        else
+        {	
+            $port = $wsmanoutput.Port
+            $transport = $wsmanoutput.Transport
+        }
     }
     else
     {
-        Write-Verbose -Message("Unable to fetch WinRM config details. Using default port for configuration") -Verbose
-        $port = 5985
-        $transport = HTTP
-    }
-
-    Write-Verbose -Message("Using Port {0} for creating session" -f $port) -Verbose
+        $port =  5985
+        $transport = "HTTP"
+    }	
+	
+    Write-Verbose -Message("Using Transport {0} : Port {1}  for creating session" -f $transport,$port) -Verbose
 
     if( $transport -eq "HTTPS")
     {
-       $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
-       $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
+        $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
+        $session = New-PSSession -ComputerName . -Port $port -SessionOption $sessionOption -UseSSL -Credential $MachineCredentials
     }
     else
     {
@@ -767,7 +874,7 @@ function ConfigureTestAgent
         $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
     }
 
-    $retCode = -1
+    $retCode = $ret
     if ($ret.Count -gt 0)
     {
         $retCode = $ret[$ret.Count - 1]

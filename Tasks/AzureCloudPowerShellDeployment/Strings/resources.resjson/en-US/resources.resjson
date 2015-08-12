@@ -19,5 +19,9 @@
   "loc.input.help.CsCfg": "Path of CsCfg under the default artifact directory.",
   "loc.input.label.Slot": "Environment (Slot)",
   "loc.input.help.Slot": "**Production** or **Staging**",
+  "loc.input.label.DeploymentLabel": "Deployment Label",
+  "loc.input.help.DeploymentLabel": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used.",
+  "loc.input.label.AppendDateTimeToLabel": "Append current date and time",
+  "loc.input.help.AppendDateTimeToLabel": "Appends current date and time to deployment label",
   "loc.input.label.AllowUpgrade": "Allow Upgrade"
 }

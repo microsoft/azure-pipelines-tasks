@@ -12,7 +12,7 @@
   "loc.input.label.noCache": "Disable local cache",
   "loc.input.help.noCache": "Equivalent to the -NoCache NuGet.exe commanline argument",
   "loc.input.label.nuGetRestoreArgs": "NuGet Arguments",
-  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore.",
+  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Path to NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
 }

@@ -6,6 +6,7 @@
   "name": "cURLUploader",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
@@ -85,6 +86,5 @@
       "target": "cURLUploader.js",
       "argumentFormat": ""
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

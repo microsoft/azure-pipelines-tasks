@@ -1,0 +1,84 @@
+{
+    "id": "5B0836F4-4E4A-409E-B932-0AC01B011AA3",
+    "name": "TomcatDeployment",
+    "friendlyName": "Tomcat Deployment",
+    "description": "Deploy application (war file) to a tomcat server.",
+	"helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/TomcatDeployment/README.md)",
+    "category": "Deploy",
+	"visibility": [
+        "Preview",
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0 
+    },
+    "demands": [
+        "curl"
+    ],
+    "inputs": [
+        {
+            "name": "TomcatUrl",
+            "type": "string",
+            "label": "Tomcat Server URL",
+            "defaultValue": "http://localhost:8080",
+            "required": true,
+            "helpMarkDown": "Specify the Tomcat server url which should contain the procotol, host and port details. Example- https://test.azure.cloudapp.net:8080"
+        },		
+        {
+            "name": "Username",
+            "type": "string",
+            "label": "Tomcat Manager Username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify the user name to connect to the Tomcat manager. Tomcat manager should be running on the server."
+        },
+        {
+            "name": "Password",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": true,
+			"helpMarkDown": "Specify the password to connect to the Tomcat manager. Tomcat manager should be running on the server."
+        },
+        {
+            "name": "Warfile",
+            "type": "filePath",
+            "label": "WAR File",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Absolute path of the war file present on the agent machine, or a UNC Share. Example- C:\\Agent\\Binaries\\Demo.war Or $(warFilePath)."
+        },
+        {
+            "name": "Context",
+            "type": "string",
+            "label": "Application Context",
+            "defaultValue": "/",
+            "required": true,
+            "helpMarkDown": "Specify the application context path. Example- /Production"
+        },
+        {
+            "name": "ServerVersion",
+            "type": "radio",
+            "label": "Tomcat Server Version",
+            "defaultValue": "7OrAbove",
+            "required": true,
+			"options": {
+			     "6.x": "6.x",
+				 "7OrAbove" : "7 or above"
+			},
+            "helpMarkDown": "Specify tomcat server version."
+        }
+    ],
+    "instanceNameFormat": "Deploy application (war file) to a tomcat server",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\TomcatDeployment.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

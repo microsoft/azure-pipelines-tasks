@@ -2,6 +2,7 @@ param(
     [string][Parameter(Mandatory=$false)]$ConnectedServiceName,
     [string][Parameter(Mandatory=$true)]$MachineGroupName,
     [string][Parameter(Mandatory=$true)]$Action,
+    [string][Parameter(Mandatory=$false)]$ResourceFilteringMethod,
     [string][Parameter(Mandatory=$false)]$Filters,
     [string][Parameter(Mandatory=$false)]$BlockedFor,
     [string][Parameter(Mandatory=$false)]$TimeInHours,
@@ -17,6 +18,7 @@ Write-Verbose -Verbose "Filters = $Filters"
 Write-Verbose -Verbose "BlockedFor = $BlockedFor"
 Write-Verbose -Verbose "TimeInHours = $TimeInHours"
 Write-Verbose -Verbose "WaitTimeInMinutes = $WaitTimeInMinutes"
+Write-Verbose -Verbose "ResourceFilteringMethod = $ResourceFilteringMethod"
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
@@ -28,7 +30,7 @@ $ErrorActionPreference = "Stop"
 . ./Helper.ps1
 Initialize-DTLServiceHelper
 
-$machineGroup = Get-MachineGroup -machineGroupName $MachineGroupName -filters $Filters
+$machineGroup = Get-MachineGroup -machineGroupName $MachineGroupName -filters $Filters -resourceFilteringMethod $ResourceFilteringMethod
 
 # if providerName is null or empty then follow same path as standard environment.
 if($machineGroup.Provider -eq $null)

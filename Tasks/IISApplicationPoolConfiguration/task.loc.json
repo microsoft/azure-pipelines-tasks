@@ -1,0 +1,168 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "A76ECEB5-37E7-496E-A496-A69473ECB860",
+  "name": "IisApplicationPoolConfiguration",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.87.0",
+  "groups": [
+    {
+      "name": "applicationPool",
+      "displayName": "ms-resource:loc.group.displayName.applicationPool",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "EnvironmentName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.EnvironmentName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      }
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineNames",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
+    },
+    {
+      "name": "ApplicationPoolName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ApplicationPoolName",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationPoolName"
+    },
+    {
+      "name": "DotNetVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DotNetVersion",
+      "defaultValue": ".NET CLR Version v4.0.30319",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "ms-resource:loc.input.help.DotNetVersion",
+      "options": {
+        "v4.0": ".NET CLR Version v4.0.30319",
+        "v2.0": ".NET CLR Version v2.0.50727",
+        "No Managed Code": "No Managed Code"
+      }
+    },
+    {
+      "name": "PipeLineMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.PipeLineMode",
+      "defaultValue": "Integrated",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "ms-resource:loc.input.help.PipeLineMode",
+      "options": {
+        "Integrated": "Integrated",
+        "Classic": "Classic"
+      }
+    },
+    {
+      "name": "Identity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Identity",
+      "defaultValue": "ApplicationPoolIdentity",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "ms-resource:loc.input.help.Identity",
+      "options": {
+        "ApplicationPoolIdentity": "ApplicationPoolIdentity",
+        "LocalService": "LocalService",
+        "LocalSystem": "LocalSystem",
+        "NetworkService": "NetworkService",
+        "SpecificUser": "Custom Account"
+      }
+    },
+    {
+      "name": "Username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Username",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "applicationPool",
+      "visibleRule": "Identity = SpecificUser"
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Password",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "applicationPool",
+      "visibleRule": "Identity = SpecificUser"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced"
+    },
+    {
+      "name": "ConfigureAppPoolInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ConfigureAppPoolInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.ConfigureAppPoolInParallel"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "EnvironmentName",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\IISAppPoolConfigure.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

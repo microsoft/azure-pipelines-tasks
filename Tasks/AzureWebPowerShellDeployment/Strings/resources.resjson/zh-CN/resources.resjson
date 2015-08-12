@@ -8,6 +8,8 @@
   "loc.input.label.WebSiteLocation": "网站位置",
   "loc.input.help.WebSiteLocation": "为部署选择区域。",
   "loc.input.label.WebSiteName": "网站名称",
+  "loc.input.label.Slot": "Slot",
+  "loc.input.help.Slot": "Slot",
   "loc.input.label.Package": "包",
   "loc.input.help.Package": "默认项目目录下包的路径。",
   "loc.input.label.AdditionalArguments": "其他参数"

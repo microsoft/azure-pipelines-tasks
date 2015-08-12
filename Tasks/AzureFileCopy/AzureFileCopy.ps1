@@ -60,18 +60,27 @@ $resourceWinRMHttpPortKeyName = Get-ResourceHttpTagKey
 $resourceWinRMHttpsPortKeyName = Get-ResourceHttpsTagKey
 $skipCACheckKeyName = Get-SkipCACheckTagKey
 
+function ThrowError
+{
+    param([string]$errorMessage)
+
+    $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/AzureFileCopy/README.md"
+    $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
+    throw "$errorMessage $helpMessage"
+}
+
 function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
 
-    Write-Verbose "(ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+    Write-Verbose "[Azure Call](ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
     $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
-    Write-Verbose "(ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+    Write-Verbose "[Azure Call](ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
 
     $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
     if ([string]::IsNullOrEmpty($azureResourceGroupName) -eq $true)
     {
-        Write-Verbose "(ARM)Storage sccount: $storageAccountName not found" -Verbose
+        Write-Verbose "(ARM)Storage account: $storageAccountName not found" -Verbose
         Throw (Get-LocalizedString -Key "Storage acccout: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
     }
 
@@ -85,10 +94,10 @@ function Get-AzureStorageKeyFromARM
     # get azure storage account resource group name
     $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
-    Write-Verbose "(ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+    Write-Verbose "[Azure Call](ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
     $storageKeyDetails = Get-AzureStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
     $storageKey = $storageKeyDetails.Key1
-    Write-Verbose "(ARM)Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+    Write-Verbose "[Azure Call](ARM)Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
 
     return $storageKey
 }
@@ -97,10 +106,10 @@ function Get-AzureStorageKeyFromRDFE
 {
     param([string]$storageAccountName)
 
-    Write-Verbose "(RDFE)Retrieving storage key for the storage account: $storageAccount" -Verbose
+    Write-Verbose "[Azure Call](RDFE)Retrieving storage key for the storage account: $storageAccount" -Verbose
     $storageKeyDetails = Get-AzureStorageKey -StorageAccountName $storageAccountName
     $storageKey = $storageKeyDetails.Primary
-    Write-Verbose "(RDFE)Retrieved storage key successfully for the storage account: $storageAccount" -Verbose
+    Write-Verbose "[Azure Call](RDFE)Retrieved storage key successfully for the storage account: $storageAccount" -Verbose
 
     return $storageKey
 }
@@ -127,8 +136,9 @@ function Remove-AzureContainer
           [Microsoft.WindowsAzure.Commands.Common.Storage.AzureStorageContext]$storageContext,
           [string]$storageAccount)
 
-    Write-Verbose "Deleting container: $containerName in storage account: $storageAccount" -Verbose
+    Write-Verbose "[Azure Call]Deleting container: $containerName in storage account: $storageAccount" -Verbose
     Remove-AzureStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
+    Write-Verbose "[Azure Call]Deleted container: $containerName in storage account: $storageAccount" -Verbose
 }
 
 function Get-ResourceCredentials
@@ -323,9 +333,9 @@ $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -S
 if ([string]::IsNullOrEmpty($containerName))
 {
     $containerName = [guid]::NewGuid().ToString();
-    Write-Verbose "Creating container: $containerName in storage account: $storageAccount" -Verbose
+    Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccount" -Verbose
     $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container
-    Write-Verbose "Created container: $containerName successfully in storage account: $storageAccount" -Verbose
+    Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccount" -Verbose
 }
 
 # uploading files to container
@@ -344,7 +354,8 @@ catch
 
     Write-Verbose $_.Exception.ToString() -Verbose
     $error = $_.Exception.Message
-    throw (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+    $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+    ThrowError -errorMessage $errorMessage
 }
 finally
 {
@@ -357,7 +368,8 @@ finally
         }
 
         $error = $uploadResponse.Error
-        throw (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+        $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+        ThrowError -errorMessage $errorMessage
     }
     elseif ($uploadResponse.Status -eq "Succeeded")
     {
@@ -406,9 +418,9 @@ try
     $resourcesPropertyBag = Get-ResourcesProperties -resources $resources -connection $connection
 
     # create container sas token with full permissions
-    Write-Verbose "Generating SasToken for container: $containerName in storage: $storageAccount with expiry time: $defaultSasTokenTimeOutInHours hours" -Verbose
+    Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccount with expiry time: $defaultSasTokenTimeOutInHours hours" -Verbose
     $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours) -Context $storageContext -Permission rwdl
-    Write-Verbose "Generated SasToken: $containerSasToken successfully for container: $containerName in storage: $storageAccount" -Verbose
+    Write-Verbose "[Azure Call]Generated SasToken: $containerSasToken successfully for container: $containerName in storage: $storageAccount" -Verbose
 
     # copies files sequentially
     if ($copyFilesInParallel -eq "false" -or ( $resources.Count -eq 1 ))
@@ -446,7 +458,8 @@ try
                 Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
 
                 Write-Verbose $copyResponse.Error.ToString() -Verbose
-                throw $copyResponse.Error
+                $errorMessage =  $copyResponse.Error.Message
+                ThrowError -errorMessage $errorMessage
             }
         }
     }
@@ -517,7 +530,8 @@ try
 
     if ($envOperationStatus -ne "Passed")
     {
-        throw (Get-LocalizedString -Key 'Copy to one or more machines failed')
+        $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
+        ThrowError -errorMessage $errorMessage
     }
     else
     {

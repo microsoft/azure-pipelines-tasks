@@ -5,14 +5,15 @@
     "description": "Deploy and configure Test Agent to run tests on a lab machine group",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
     "category": "Test",
-    "visibility": [
-                "Build"
+    "visibility": [     
+                  "Build",
+                  "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 9
     },
     "demands": [
 
