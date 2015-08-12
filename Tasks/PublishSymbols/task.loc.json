@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -39,9 +39,16 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.SearchPattern",
       "defaultValue": "**\\bin\\**\\*.pdb",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
+    },
+    {
+      "name": "SymbolsFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsFolder",
+      "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SearchPattern",
-      "groupName": "advanced"
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder"
     },
     {
       "name": "SourceFolder",
@@ -50,15 +57,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.SourceFolder",
-      "groupName": "advanced"
-    },
-    {
-      "name": "SymbolsFolder",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.SymbolsFolder",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder",
       "groupName": "advanced"
     },
     {
