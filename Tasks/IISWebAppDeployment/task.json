@@ -6,9 +6,7 @@
     "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
-        "Preview",
-        "Build",
-        "Release"
+        "Preview"
     ],
     "author": "Microsoft Corporation",
     "version": {
@@ -20,7 +18,7 @@
     ],
     "minimumAgentVersion": "1.87.0",
     "groups": [
-		{
+        {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
@@ -68,7 +66,7 @@
             "type": "string",
             "label": "Web Deploy Parameters File",
             "required": false,            
-            "defaultValue": "",			
+            "defaultValue": "",
             "helpMarkDown": "Parameters file to override any specific configuration settings"
         },
         {
@@ -76,7 +74,7 @@
             "type": "string",
             "label": "Override Parameters",
             "required": false,            
-            "defaultValue": "",			
+            "defaultValue": "",
             "helpMarkDown": "Any specific parameters to be overridden in parameters file"
         },
         {

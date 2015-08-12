@@ -6,9 +6,7 @@
   "helpMarkDown": "[More Information](http://aka.ms/apppoolconfigtaskhelp)",
   "category": "Deploy",
   "visibility": [
-    "Preview",
-    "Build",
-    "Release"
+    "Preview"
   ],
   "author": "Microsoft Corporation",
   "version": {

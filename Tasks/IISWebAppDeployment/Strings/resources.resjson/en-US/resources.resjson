@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "IIS Web Application Deployment",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WebAppDeployment/README.md)",
+  "loc.helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Deploy Web Application using MSDeploy to IIS Web Site",
   "loc.instanceNameFormat": "Deploy IIS App: $(WebSiteName)",
   "loc.group.displayName.advanced": "Advanced",
