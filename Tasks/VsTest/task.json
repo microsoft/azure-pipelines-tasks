@@ -41,6 +41,7 @@
       "label": "Test Filter criteria",
       "defaultValue": "",
       "required": false,
+      "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: Priority=1|Name=MyTestMethod"
     },
     {
       "name": "platform", 
