@@ -32,7 +32,7 @@
             "label": "Solution", 
             "defaultValue":"**\\*.sln", 
             "required":true,
-            "helpMarkDown": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."  
+            "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project(s) to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
         },
         { 
             "name": "platform", 
