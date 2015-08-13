@@ -29,10 +29,10 @@
         { 
             "name": "solution", 
             "type": "filePath", 
-            "label": "Solution", 
+            "label": "Project", 
             "defaultValue":"**\\*.sln", 
             "required":true,
-            "helpMarkDown": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."  
+            "helpMarkDown": "Relative path from repo root of the project(s) or solution(s) to run.  Wildcards can be used.  For example, `**\\*.csproj` for all csproj files in all sub folders."  
         },
         { 
             "name": "platform", 
