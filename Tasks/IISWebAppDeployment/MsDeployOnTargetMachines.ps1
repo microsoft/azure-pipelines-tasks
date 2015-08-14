@@ -170,39 +170,47 @@ function Does-WebSiteExists
     param([string] $siteName)
 
     $appCmdPath = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
-    $appCmdArgs = [string]::Format(' list site /name:{0}',$siteName)
+    $appCmdArgs = [string]::Format(' list site /name:"{0}"',$siteName)
     $command = "`"$appCmdPath`" $appCmdArgs"
-    Write-Verbose "Checking WebSite Exists. Running Command : $command"
+    Write-Verbose "Checking webSite exists. Running Command : $command"
     
     $webSite = cmd.exe /c "`"$command`""
     
     if($webSite -ne $null)
     {
+        Write-Verbose "WebSite already exists" -Verbose
         return $true
     }
     
+    Write-Verbose "WebSite does not exist" -Verbose
     return $false
 }
 
-function Is-HttpsChangedToHttp
+function Does-BindingExists
 {
     param(
         [string]$siteName,
-        [string]$protocal
+        [string]$protocal,
+        [string]$ipAddress,
+        [string]$port,
+        [string]$hostname
     )
 
+    
     $appCmdPath = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
-    $appCmdArgs = [string]::Format(' list site /name:{0}',$siteName)
+    $appCmdArgs = [string]::Format(' list site /name:"{0}" /bindings:{1}/{2}:{3}:{4}',$siteName, $protocal, $ipAddress, $port, $hostname)
     $command = "`"$appCmdPath`" $appCmdArgs"
-    Write-Verbose "Checking Protocal changed from Https to Http. Running Command : $command"
-        
-    $result = cmd.exe /c "`"$command`""
-
-    if($protocal -eq "http" -and $result.Contains("https"))
+    Write-Verbose "Checking binding exists for website $siteName. Running Command : $command" -Verbose
+    
+    $webSite = cmd.exe /c "`"$command`""
+    
+    if($webSite -ne $null)
     {
+        Write-Verbose "Binding already exists for website $siteName" -Verbose
         return $true
     }
-
+    
+    Write-Verbose "Binding does not exists for website $siteName" -Verbose
     return $false
 }
 
@@ -210,8 +218,7 @@ function Set-SslFlags
 {
     param(
         [string]$siteName,
-        [string]$sni,
-        [string]$sslFlag
+        [string]$sni
     )
 
     if($sni -eq "false" -or (IsInputNullOrEmpty -str $sni))
@@ -221,36 +228,21 @@ function Set-SslFlags
     }
 
     $appCmdPath = Get-AppCmdLocation -regKeyPath $AppCmdRegKey 
-    $appCmdArgs = [string]::Format(' set config {0} /section:access -sslFlags:"{1}" /commit:AppHost',$siteName, $sslFlag)
+    $appCmdArgs = [string]::Format(' set config {0} /section:access -sslFlags:"Ssl" /commit:AppHost',$siteName, $sslFlag)
     $command = "`"$appCmdPath`" $appCmdArgs"       
     
     Write-Verbose "Setting Ssl Flags. Running Command : $command"    
     Run-Command -command $command
 }
 
-function Is-Port-Or-Cert-Changed
+function Add-SslCert
 {
     param(
         [string]$port,
-        [string]$certhash,
-        $result
+        [string]$certhash
     )
 
-    $isPortChanged = ($result.Get(4).Contains([string]::Format("0.0.0.0:{0}", $port)) -eq $false)
-    $isCertChanged = ($result.Get(5).Contains([string]::Format("{0}", $certhash)) -eq $false)
-    return ($isPortChanged -or $isCertChanged)
-
-}
-
-function Add-Or-Remove-SslCert
-{
-    param(
-        [string]$port,
-        [string]$certhash,
-        [string]$action
-    )
-
-    if((IsInputNullOrEmpty -str $certhash) -and $action -eq "add")
+    if(IsInputNullOrEmpty -str $certhash)
     {
         Write-Verbose "CertHash is empty .. returning" -Verbose
         return
@@ -260,22 +252,17 @@ function Add-Or-Remove-SslCert
     Write-Verbose "Checking SslCert binding already Present. Running Command : $command" -Verbose
     $result = cmd.exe /c "`"$command`""
 
-    if( (Is-Port-Or-Cert-Changed -port $port -certhash $certhash -result $result) -and $action -eq "add")
+    $isItSamePort = $result.Get(4).Contains([string]::Format("0.0.0.0:{0}", $port))
+    $isItSameCert = $result.Get(5).Contains([string]::Format("{0}", $certhash))
+
+    if($isItSamePort -and $isItSameCert)
     {
-        Write-Verbose "SSL Cert binding already present.. returning" -Verbose
+        Write-Verbose "SSL cert binding already present.. returning" -Verbose
         return
     }
 
-    if($action -eq "add")
-    {
-        $command = [string]::Format("netsh http add sslcert ipport=0.0.0.0:{0} certhash={1} appid={{{2}}}", $port, $certhash, [System.Guid]::NewGuid().toString())
-        Write-Verbose "Setting SslCert for Web Site. Running Command: $command" -Verbose
-    }
-    else
-    {
-        $command = [string]::Format("netsh http delete sslcert ipport=0.0.0.0:{0}", $port)
-        Write-Verbose "Removing SslCert for Web Site. Running Command: $command" -Verbose
-    }    
+    $command = [string]::Format("netsh http add sslcert ipport=0.0.0.0:{0} certhash={1} appid={{{2}}}", $port, $certhash, [System.Guid]::NewGuid().toString())
+    Write-Verbose "Setting SslCert for Web Site. Running Command: $command" -Verbose           
     
     Run-Command -command $command
 }
@@ -355,9 +342,11 @@ function Update-WebSite
         $ipAddress = "*"
     }
 
-    if($addBinding -eq "true")
+    $isBindingExists = Does-BindingExists -siteName $siteName -protocal $protocal -ipAddress $ipAddress -port $port -hostname $hostname
+
+    if($addBinding -eq "true" -and $isBindingExists -eq $false)
     {
-        $appCmdArgs = [string]::Format("{0} /bindings:{1}/{2}:{3}:{4}", $appCmdArgs, $protocal, $ipAddress, $port, $hostname)    
+        $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocal, $ipAddress, $port, $hostname)   
     }    
 
     if(-not (IsInputNullOrEmpty -str $additionalArgs))
@@ -394,17 +383,11 @@ function Create-Or-Update-WebSite
     if( -not $doesWebSiteExists)
     {
         Create-WebSite -siteName $siteName -physicalPath $physicalPath        
-    }
-    elseif(Is-HttpsChangedToHttp -siteName $siteName -protocal $protocal)
-    {
-        Set-SslFlags -siteName $WebSiteName -sni "true" -sslFlag "None"
-        Add-Or-Remove-SslCert -port $Port -certhash $SslCertThumbPrint -action "delete"
-    }
+    }    
 
     Update-WebSite -siteName $siteName -appPoolName $appPoolName -physicalPath $physicalPath -authType $authType -userName $userName -password $password `
     -addBinding $addBinding -protocal $protocal -ipAddress $ipAddress -port $port -hostname $hostname -additionalArgs $additionalArgs
 }
-
 
 function Execute-Main
 {
@@ -415,8 +398,11 @@ function Execute-Main
         Create-Or-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
          -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocal $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -additionalArgs $AppCmdArgs
 
-        Add-Or-Remove-SslCert -port $Port -certhash $SslCertThumbPrint -action "add"
-        Set-SslFlags -siteName $WebSiteName -sni $ServerNameIndication -sslFlag "Ssl"
+        if($Protocol -eq "https")
+        {
+            Add-SslCert -port $Port -certhash $SslCertThumbPrint
+            Set-SslFlags -siteName $WebSiteName -sni $ServerNameIndication    
+        }        
     }
 
     Deploy-WebSite -webDeployPkg $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRiderParams $OverRideParams

@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
     ],
@@ -22,7 +22,7 @@
     "groups": [
         {
             "name": "website",
-            "displayName": "Web Site",
+            "displayName": "Create Web Site",
             "isExpanded": true
         },
         {
@@ -96,7 +96,7 @@
         {
             "name": "AppPoolName",
             "type": "string",
-            "label": "Application Pool",
+            "label": "Existing AppPool Name",
             "required": false,
             "groupName": "website",
             "defaultValue": "",            
@@ -150,7 +150,7 @@
             "label": "Add Binding",
             "required": false,
             "groupName": "website",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "helpMarkDown": "Choose to specify port binding information"
         },
         {
@@ -244,7 +244,7 @@
          "authKey": "tfs:DevTestLabs" 
      } 
     ], 
-    "instanceNameFormat": "Deploy IIS App: $(WebSiteName)",
+    "instanceNameFormat": "Deploy IIS App: $(WebDeployPackage)",
     "execution": {
         "PowerShell": {
         "target": "$(currentDirectory)\\DeployIISWebApp.ps1",
