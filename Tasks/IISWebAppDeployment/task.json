@@ -13,14 +13,19 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 0
+        "Minor": 2,
+        "Patch": 1
     },
     "demands": [
     ],
     "minimumAgentVersion": "1.87.0",
     "groups": [
-		{
+        {
+            "name": "website",
+            "displayName": "Web Site",
+            "isExpanded": true
+        },
+        {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
@@ -32,7 +37,7 @@
             "type": "pickList",
             "label": "Machine Group",
             "defaultValue": "",
-            "required": true,            
+            "required": true,
             "helpMarkDown": "Name of the Machine Group for deploying the database."
         },
         {
@@ -68,7 +73,7 @@
             "type": "string",
             "label": "Web Deploy Parameters File",
             "required": false,            
-            "defaultValue": "",			
+            "defaultValue": "",
             "helpMarkDown": "Parameters file to override any specific configuration settings"
         },
         {
@@ -76,8 +81,150 @@
             "type": "string",
             "label": "Override Parameters",
             "required": false,            
-            "defaultValue": "",			
+            "defaultValue": "",
             "helpMarkDown": "Any specific parameters to be overridden in parameters file"
+        },
+        {
+            "name": "WebSiteName",
+            "type": "string",
+            "label": "Site Name",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",            
+            "helpMarkDown": "Web Site Name to be deployed"
+        },
+        {
+            "name": "AppPoolName",
+            "type": "string",
+            "label": "Application Pool",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",            
+            "helpMarkDown": "Application Pool for the web site"
+        },
+        {
+            "name": "WebSitePhysicalPath",
+            "type": "string",
+            "label": "Physical Path",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+            "helpMarkDown": "Physical path of the web site"
+        },
+        {
+            "name": "WebSitePhysicalPathAuth",
+            "type": "pickList",
+            "label": "Physical Path Authentication",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "Application User(Pass-through)",
+            "options": {
+                "WebSiteUserPassThrough": "Application User(Pass-through)",
+                "WebSiteWindowsAuth": "Windows Authentication"
+            },
+            "helpMarkDown": "Authentication mechanism for accessing the physical path of web site"
+        },
+        {
+            "name": "WebSiteAuthUserName",
+            "type": "string",
+            "label": "User Name",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
+            "helpMarkDown": "User name for accessing web site physical path"
+        },
+        {
+            "name": "WebSiteAuthUserPassword",
+            "type": "string",
+            "label": "Password",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
+            "helpMarkDown": "Password for accessing web site physical path"
+        },
+        {
+            "name": "AddBinding",
+            "type": "boolean",
+            "label": "Add Binding",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "false",
+            "helpMarkDown": "Choose to specify port binding information"
+        },
+        {
+            "name": "Protocol",
+            "type": "pickList",
+            "label": "Protocol",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "http",
+            "options": {
+                "https": "https",
+                "http": "http"
+            },
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "Protocol for web site"
+        },
+        {
+            "name": "IPAddress",
+            "type": "string",
+            "label": "IP Address",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "All Unassigned",
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "IP Address information for binding"
+        },
+        {
+            "name": "Port",
+            "type": "string",
+            "label": "Port",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "80",
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "Port information for binding"
+        },
+        {
+            "name": "HostName",
+            "type": "string",
+            "label": "Host Name",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "Port information for binding"
+        },
+        {
+            "name": "ServerNameIndication",
+            "type": "boolean",
+            "label": "Server Name Indication Required",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "false",
+            "visibleRule": "Protocol = https",
+            "helpMarkDown": "Server Name Indication Required"
+        },
+        {
+            "name": "SSLCertThumbPrint",
+            "type": "string",
+            "label": "SSL Certificate Thumb Print",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "Protocol = https",
+            "helpMarkDown": "Web Site SSL Certificate Thumb Print"
+        },
+        {
+            "name": "AppCmdArgs",
+            "type": "string",
+            "label": "Additional Appcmd.exe Arguments",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",
+            "helpMarkDown": "Additional arguments for Appcmd.exe command line"
         },
         {
             "name": "DeployInParallel",
@@ -88,7 +235,7 @@
             "groupName": "advanced",
             "helpMarkDown": "Setting it to true will run web app deployment scripts in parallel on the target machines."
         }
-    ],	
+    ],
     "sourceDefinitions": [ 
      { 
          "target": "EnvironmentName", 
