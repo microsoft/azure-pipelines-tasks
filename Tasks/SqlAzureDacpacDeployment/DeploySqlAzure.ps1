@@ -93,7 +93,11 @@ Try{
     
     Write-Verbose "Executing SQLPackage.exe"  -Verbose
     
+    $ErrorActionPreference = 'Continue'
+
     Invoke-Expression -Command $SqlPackageCommand
+
+    $ErrorActionPreference = 'Stop'
     
     # ---------------Execute SQLPackage.exe end------------------------------------ 
 }
