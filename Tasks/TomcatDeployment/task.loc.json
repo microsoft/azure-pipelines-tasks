@@ -9,9 +9,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
-    "Build",
-    "Release"
+    "Preview"
   ],
   "author": "Microsoft Corporation",
   "version": {
