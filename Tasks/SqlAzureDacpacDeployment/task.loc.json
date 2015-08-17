@@ -20,7 +20,8 @@
     "Patch": 1
   },
   "demands": [
-    "azureps"
+    "azureps",
+    "sqlpackage"
   ],
   "minimumAgentVersion": "1.87.0",
   "groups": [
