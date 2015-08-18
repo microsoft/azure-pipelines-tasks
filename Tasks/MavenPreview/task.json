@@ -18,7 +18,7 @@
         "Minor": 0,
         "Patch": 0
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.88.0",
     "instanceNameFormat": "MavenCC $(mavenPOMFile)",
     "groups": [
         {
