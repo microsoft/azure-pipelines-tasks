@@ -2,7 +2,7 @@
     "id":"71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
     "name":"VSBuild",
     "friendlyName": "Visual Studio Build",
-    "description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
+    "description": "Build with MSBuild and set the Visual Studio version property",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
     "category": "Build",
     "visibility": [
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [
         "msbuild",

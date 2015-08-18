@@ -4,7 +4,7 @@
 {
   "loc.friendlyName": "Visual Studio Build",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property",
   "loc.instanceNameFormat": "Build solution $(solution)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",
