@@ -53,12 +53,12 @@
       }
     },
     {
-      "name": "MachineNames",
+      "name": "MachineFilter",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
+      "label": "ms-resource:loc.input.label.MachineFilter",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
+      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
     },
     {
       "name": "ApplicationPoolName",

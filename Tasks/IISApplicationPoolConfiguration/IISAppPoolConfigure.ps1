@@ -1,7 +1,7 @@
 param (
     [string]$environmentName,
     [string]$resourceFilteringMethod,
-    [string]$machineNames,
+    [string]$machineFilter,
     [string]$applicationPoolName,
     [string]$dotNetVersion,
     [string]$pipeLineMode,
@@ -15,7 +15,7 @@ param (
 Write-Verbose "Entering script IISAppPoolConfigure.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineNames = $machineNames" -Verbose
+Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "applicationPoolName = $applicationPoolName" -Verbose
 Write-Verbose "dotNetVersion = $dotNetVersion" -Verbose
 Write-Verbose "pipeLineMode = $pipeLineMode" -Verbose
