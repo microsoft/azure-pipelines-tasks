@@ -20,7 +20,7 @@
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "1.87.0",
+  "minimumAgentVersion": "1.88.0",
   "groups": [
     {
       "name": "advanced",

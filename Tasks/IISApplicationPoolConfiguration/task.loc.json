@@ -19,7 +19,7 @@
     "Minor": 0,
     "Patch": 0
   },
-  "minimumAgentVersion": "1.87.0",
+  "minimumAgentVersion": "1.88.0",
   "groups": [
     {
       "name": "applicationPool",
