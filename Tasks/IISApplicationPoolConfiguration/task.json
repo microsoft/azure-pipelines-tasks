@@ -50,7 +50,7 @@
       }
     },
     {
-      "name": "MachineNames",
+      "name": "MachineFilter",
       "type": "string",
       "label": "Filter Criteria",
       "defaultValue": "",
