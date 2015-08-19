@@ -97,6 +97,31 @@ function Initialize-AzureHelper
                 }
                 Select-AzureSubscription -SubscriptionId $subscriptionId
             }
+            elseif ($serviceEndpoint.Authorization.Scheme -eq 'ServicePrincipal')
+            {
+	            $servicePrincipalId = $serviceEndpoint.Authorization.Parameters.ServicePrincipalId
+	            $servicePrincipalKey = $serviceEndpoint.Authorization.Parameters.ServicePrincipalKey
+	            $tenantId = $serviceEndpoint.Authorization.Parameters.TenantId
+
+	            Write-Host "tenantId= $tenantId"
+
+	            $securePassword = ConvertTo-SecureString $servicePrincipalKey -AsPlainText -Force
+	            $psCredential = New-Object System.Management.Automation.PSCredential ($servicePrincipalId, $securePassword)
+
+	            Write-Host "Add-AzureAccount -ServicePrincipal -Tenant `$tenantId -Credential `$psCredential"
+	            $azureAccount = Add-AzureAccount -ServicePrincipal -Tenant $tenantId -Credential $psCredential
+	            if (!$azureAccount)
+	            {
+		            throw (Get-LocalizedString -Key "There was an error with the service principal used for deployment")
+	            }
+
+	            $azureSubscriptionId = $serviceEndpoint.Data.SubscriptionId
+	            $azureSubscriptionName = $serviceEndpoint.Data.SubscriptionName
+	            Write-Host "azureSubscriptionId= $azureSubscriptionId"
+	            Write-Host "azureSubscriptionName= $azureSubscriptionName"
+				
+	            Select-AzureSubscription -SubscriptionId $subscriptionId
+            }
             else
             {
                 throw (Get-LocalizedString -Key "Unsupported authorization scheme for azure endpoint = '{0}'" -ArgumentList $serviceEndpoint.Authorization.Scheme)
