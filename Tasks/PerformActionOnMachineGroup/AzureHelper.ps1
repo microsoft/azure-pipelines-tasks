@@ -66,9 +66,9 @@ function Initialize-AzureHelper
     if($machineGroup.ProviderData.Count -gt 0)
     {
         $providerDataName = $machineGroup.ProviderData[0].Name
-        $providerName = $machineGroup.ProviderData[0].Provider.Name
+        $providerName = $machineGroup.Provider.Name
         Write-Verbose "Getting providerData : $providerDataName" -Verbose
-        $providerData = Get-ProviderData -ProviderDataName $providerDataName -Connection $connection -ProviderName -$providerName
+        $providerData = Get-ProviderData -ProviderDataName $providerDataName -Connection $connection -ProviderName $providerName
         $subscriptionId = $providerData.Properties.GetProperty("SubscriptionId")     
         
         if( ![string]::IsNullOrEmpty($subscriptionId) )
