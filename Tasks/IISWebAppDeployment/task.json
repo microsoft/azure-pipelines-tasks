@@ -5,9 +5,7 @@
     "description": "Deploy Web Application using MSDeploy to IIS Web Site",
     "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
     "category": "Deploy",
-    "visibility": [
-        "Preview"
-    ],
+    "visibility": [],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
