@@ -1,7 +1,7 @@
 {
-    "id": "AC4EE482-65DA-4485-A532-7B085873E532",
-    "name": "Maven",
-    "friendlyName": "Maven",
+    "id": "AC4EE482-65DA-4485-A532-7B085873E531",
+    "name": "MavenTest2",
+    "friendlyName": "MavenTest2",
     "description": "Build with Apache Maven",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
@@ -71,21 +71,45 @@
             "required": true,
             "groupName":"junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+        },
+        {
+            "name":"javaHomeSelection",
+            "type":"radio",
+            "label":"Set JAVA_HOME by",
+            "required": true,
+            "groupName":"advanced",
+            "defaultValue":"JDKVersion",
+            "helpMarkDown": "Sets JAVA_HOME either by selecting a JDK version or by enetering a path to the specific JDK manually.",
+            "options": {
+                "JDKVersion":"JDK Version",
+                "Path":"Path"
+            }
         },     
         {
             "name":"jdkVersion",
             "type":"pickList",
             "label":"JDK Version",
-            "required":false,
+            "required": false,
             "groupName":"advanced",
             "defaultValue":"default",
             "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+            "visibleRule":"javaHomeSelection = JDKVersion",
             "options": {
                 "default":"default",
                 "1.8":"JDK 8",
                 "1.7":"JDK 7",
                 "1.6":"JDK 6"
             }
+        },     
+        {
+            "name":"jdkUserInputPath",
+            "type":"string",
+            "label":"JDK Path",
+            "required": true,
+            "groupName":"advanced",
+            "defaultValue":"",
+            "helpMarkDown": "Sets JAVA_HOME to the given path.",
+            "visibleRule":"javaHomeSelection = Path"
         },
         { 
             "name": "jdkArchitecture", 
