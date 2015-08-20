@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "將 Docker 映像部署到遠端電腦",
+  "loc.helpMarkDown": "[詳細資訊](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "將 Docker 映像部署到遠端電腦",
   "loc.instanceNameFormat": "Docker 部署: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker 端點",

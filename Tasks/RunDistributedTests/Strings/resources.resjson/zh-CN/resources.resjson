@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "使用测试代理的 Visual Studio 测试",
-  "loc.helpMarkDown": "对实验室计算机组使用多个测试代理以分布方式运行测试",
+  "loc.helpMarkDown": "[详细信息](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
   "loc.description": "对实验室计算机组使用多个测试代理以分布方式运行测试",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 上运行测试 $(sourcefilters)",
   "loc.group.displayName.testMachineGroups": "测试计算机组",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déployer un groupe de ressources Azure",
-  "loc.helpMarkDown": "Approvisionner et déployer un groupe de ressources Azure",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Approvisionner et déployer un groupe de ressources Azure",
   "loc.instanceNameFormat": "Déploiement Azure : $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "Options de déploiement avancées",

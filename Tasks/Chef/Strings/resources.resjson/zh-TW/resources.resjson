@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "編輯環境屬性，以部署至 Chef 環境",
+  "loc.helpMarkDown": "[詳細資訊](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "編輯環境屬性，以部署至 Chef 環境",
   "loc.instanceNameFormat": "編輯 Chef 訂用帳戶的環境屬性以部署至 Chef $(ChefServer)",
   "loc.input.label.connectedServiceName": "Chef 連接",

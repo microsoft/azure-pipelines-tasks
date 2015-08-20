@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "计算机组操作",
-  "loc.helpMarkDown": "对计算机组执行操作(如启动、停止、删除)",
+  "loc.helpMarkDown": "[详细信息](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "计算机组操作",
   "loc.instanceNameFormat": "$(Action) 计算机组 ",
   "loc.input.label.MachineGroupName": "计算机组",

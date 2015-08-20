@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Действия с группой машин",
-  "loc.helpMarkDown": "Выполнение действий с группой машин, таких как запуск, остановка или удаление",
+  "loc.helpMarkDown": "[Подробнее](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "Действия с группой машин",
   "loc.instanceNameFormat": "Группа машин $(Action) ",
   "loc.input.label.MachineGroupName": "Группа машин",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "部署 Azure 资源组",
-  "loc.helpMarkDown": "设置并部署 Azure 资源组",
+  "loc.helpMarkDown": "[详细信息](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "设置并部署 Azure 资源组",
   "loc.instanceNameFormat": "Azure 部署: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "高级部署选项",

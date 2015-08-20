@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure-Ressourcengruppe bereitstellen",
-  "loc.helpMarkDown": "Azure-Ressourcengruppe bereitstellen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Azure-Ressourcengruppe bereitstellen",
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "Erweiterte Bereitstellungsoptionen",

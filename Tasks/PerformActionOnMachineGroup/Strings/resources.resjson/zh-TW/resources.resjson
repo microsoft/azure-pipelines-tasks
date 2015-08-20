@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "電腦群組動作",
-  "loc.helpMarkDown": "在電腦群組上執行動作 (例如開始、停止、刪除)",
+  "loc.helpMarkDown": "[詳細資訊](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "電腦群組動作",
   "loc.instanceNameFormat": "$(Action) 電腦群組 ",
   "loc.input.label.MachineGroupName": "電腦群組",

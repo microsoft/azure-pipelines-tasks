@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell sur des ordinateurs cibles",
-  "loc.helpMarkDown": "Exécuter des scripts PowerShell sur des ordinateurs distants",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
   "loc.description": "Exécuter des scripts PowerShell sur des ordinateurs distants",
   "loc.instanceNameFormat": "Exécuter PowerShell sur $(EnvironmentName)",
   "loc.group.displayName.advanced": "Avancé",

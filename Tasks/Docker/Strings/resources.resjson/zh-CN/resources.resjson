@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "泊坞窗",
-  "loc.helpMarkDown": "将泊坞窗图像部署到远程计算机",
+  "loc.helpMarkDown": "[详细信息](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "将泊坞窗图像部署到远程计算机",
   "loc.instanceNameFormat": "泊坞窗部署: $(Repository)",
   "loc.input.label.DockerEndpoint": "泊坞窗终结点",

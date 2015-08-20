@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copie des fichiers de l'ordinateur Windows",
-  "loc.helpMarkDown": "Copier les fichiers sur les ordinateurs distants",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "Copier les fichiers sur les ordinateurs distants",
   "loc.instanceNameFormat": "Copier les fichiers sur $(EnvironmentName)",
   "loc.group.displayName.advanced": "Avancé",

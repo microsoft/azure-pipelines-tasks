@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "Déployer dans des environnements Chef en modifiant les attributs d'environnement",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "Déployer dans des environnements Chef en modifiant les attributs d'environnement",
   "loc.instanceNameFormat": "Déployer dans un environnement chef en modifiant les attributs d'environnement de l'abonnement Chef $(ChefServer)",
   "loc.input.label.connectedServiceName": "Connexion Chef",

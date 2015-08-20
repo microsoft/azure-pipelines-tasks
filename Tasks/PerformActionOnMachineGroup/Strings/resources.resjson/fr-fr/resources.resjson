@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Actions du groupe d'ordinateurs",
-  "loc.helpMarkDown": "Effectuer des actions telles que start, stop et delete sur un groupe d'ordinateurs",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "Actions du groupe d'ordinateurs",
   "loc.instanceNameFormat": "$(Action) groupe d'ordinateurs ",
   "loc.input.label.MachineGroupName": "Groupe d'ordinateurs",

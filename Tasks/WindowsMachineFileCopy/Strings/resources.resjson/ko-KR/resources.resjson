@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 컴퓨터 파일 복사",
-  "loc.helpMarkDown": "파일을 원격 컴퓨터에 복사",
+  "loc.helpMarkDown": "[자세한 정보](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "파일을 원격 컴퓨터에 복사",
   "loc.instanceNameFormat": "파일을 $(EnvironmentName)에 복사",
   "loc.group.displayName.advanced": "고급",

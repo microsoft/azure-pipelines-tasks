@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "ターゲット コンピューターでの PowerShell",
-  "loc.helpMarkDown": "リモート コンピューター (複数可) で PowerShell スクリプトを実行します",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
   "loc.description": "リモート コンピューター (複数可) で PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "$(EnvironmentName) での PowerShell の実行",
   "loc.group.displayName.advanced": "詳細設定",

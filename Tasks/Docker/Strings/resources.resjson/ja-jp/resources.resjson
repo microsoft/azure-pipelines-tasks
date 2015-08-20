@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Docker イメージをリモート コンピューターに展開します",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Docker イメージをリモート コンピューターに展開します",
   "loc.instanceNameFormat": "Docker の展開: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker エンドポイント",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "コンピューター グループ アクション",
-  "loc.helpMarkDown": "コンピューター グループで、開始、停止、削除などのアクションを実行します",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "コンピューター グループ アクション",
   "loc.instanceNameFormat": "$(アクション) コンピューター グループ",
   "loc.input.label.MachineGroupName": "コンピューター グループ",

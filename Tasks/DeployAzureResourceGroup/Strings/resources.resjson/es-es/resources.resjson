@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementar un grupo de recursos de Azure",
-  "loc.helpMarkDown": "Aprovisionar e implementar un grupo de recursos de Azure",
+  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Aprovisione e implemente un grupo de recursos de Azure",
   "loc.instanceNameFormat": "Implementación de Azure: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "Opciones de implementación avanzadas",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Computergruppenaktionen",
-  "loc.helpMarkDown": "Aktionen wie Starten, Beenden oder Löschen für eine Computergruppe ausführen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "Computergruppenaktionen",
   "loc.instanceNameFormat": "Computergruppe $(Action)",
   "loc.input.label.MachineGroupName": "Computergruppe",

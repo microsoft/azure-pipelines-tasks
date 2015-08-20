@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Acciones de grupo de equipos",
-  "loc.helpMarkDown": "Realice acciones como iniciar, detener o eliminar en un grupo de equipos",
+  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "Acciones de grupo de equipos",
   "loc.instanceNameFormat": "$(Action) grupo de equipos ",
   "loc.input.label.MachineGroupName": "Grupo de equipos",

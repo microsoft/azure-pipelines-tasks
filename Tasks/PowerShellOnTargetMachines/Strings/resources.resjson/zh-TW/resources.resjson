@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "目標電腦上的 PowerShell",
-  "loc.helpMarkDown": "在遠端電腦上執行 PowerShell 指令碼。",
+  "loc.helpMarkDown": "[詳細資訊](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
   "loc.description": "在遠端電腦上執行 PowerShell 指令碼。",
   "loc.instanceNameFormat": "在 $(EnvironmentName) 執行 PowerShell",
   "loc.group.displayName.advanced": "進階",
