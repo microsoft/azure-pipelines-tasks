@@ -6,7 +6,7 @@
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/TomcatDeployment/README.md)",
     "category": "Deploy",
     "visibility": [
-                     "NoVisibility"
+                     "none"
                   ],
     "author": "Microsoft Corporation",
     "version": {
