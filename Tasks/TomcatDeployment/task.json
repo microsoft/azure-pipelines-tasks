@@ -5,9 +5,7 @@
     "description": "Deploy application (war file) to a tomcat server.",
 	"helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/TomcatDeployment/README.md)",
     "category": "Deploy",
-	"visibility": [
-        "Preview"
-    ],
+	"visibility": [],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
