@@ -315,7 +315,7 @@ try
 }
 catch [Hyak.Common.CloudException]
 {
-    Write-Verbose "(RDFE)$_.Exception.Message.ToString()" -Verbose
+    Write-Verbose "[Azure Call](RDFE)$_.Exception.Message.ToString()" -Verbose
 
     # checking azure powershell version to make calls to ARM endpoint
     Validate-AzurePowershellVersion
