@@ -38,12 +38,12 @@ if($javaHomeSelection -eq 'JDKVersion')
 {
     Write-Verbose "Using JDK version to find and set JAVA_HOME"
     # If the JDK version is not the deafult set the jdkPath to the new JDK version selected
-    if($jdkVersion -and $jdkVersion -ne "default")
+    if($jdkVersion -and ($jdkVersion -ne "default"))
     {
         $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
         if (!$jdkPath) 
         {
-            throw "Could not find JDK $jdkVersion $jdkArchitecture, please make sure the selected JDK is installed properly"
+            throw (Get-LocalizedString -Key 'Could not find JDK {0} {1}. Please make sure the selected JDK is installed properly.' -ArgumentList $jdkVersion, $jdkArchitecture)
         }
     }
 }
@@ -56,7 +56,7 @@ else
     }
     else
     {
-         throw "Path given for the JDK does not exist. Please make sure to enter in a valid path."
+         throw "The specified JDK path does not exist. Please provide a valid path."
     }
 }
 

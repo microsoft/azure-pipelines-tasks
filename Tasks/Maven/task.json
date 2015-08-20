@@ -1,5 +1,5 @@
 {
-    "id": "AC4EE482-65DA-4485-A532-7B085873E532",
+    "id": "AC4EE482-65DA-4485-A532-7B085873E533",
     "name": "Maven",
     "friendlyName": "Maven",
     "description": "Build with Apache Maven",
@@ -79,7 +79,7 @@
             "required":true,
             "groupName":"advanced",
             "defaultValue":"JDKVersion",
-            "helpMarkDown": "Sets JAVA_HOME either by selecting a JDK version or by enetering a path to the specific JDK manually.",
+            "helpMarkDown": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
             "options": {
                 "JDKVersion":"JDK Version",
                 "Path":"Path"

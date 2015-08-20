@@ -28,7 +28,7 @@ if (javaHomeSelection == 'JDKVersion') {
       var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
       specifiedJavaHome = tl.getVariable(envName);
       if (!specifiedJavaHome) {
-        tl.error('Failed to find specified JDK version.  Please make sure environment variable ' + envName + ' exists and is set to a valid JDK.');
+        tl.error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
         tl.exit(1);    
        }
     }
