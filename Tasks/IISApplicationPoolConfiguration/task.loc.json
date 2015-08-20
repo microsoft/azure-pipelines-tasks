@@ -8,7 +8,9 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "visibility": [],
+  "visibility": [
+    "none"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,

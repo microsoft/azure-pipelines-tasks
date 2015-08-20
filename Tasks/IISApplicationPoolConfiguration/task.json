@@ -5,7 +5,9 @@
   "description": "Configure IIS Application pool on machine",
   "helpMarkDown": "[More Information](http://aka.ms/apppoolconfigtaskhelp)",
   "category": "Deploy",
-  "visibility": [],
+  "visibility": [
+                  "none"
+                ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
