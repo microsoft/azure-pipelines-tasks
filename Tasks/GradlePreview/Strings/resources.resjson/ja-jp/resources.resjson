@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Gradle",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.description": "Gradle ラッパー スクリプトを使用してビルドします",
+  "loc.instanceNameFormat": "gradlew $(tasks)",
+  "loc.group.displayName.junitTestResults": "JUnit のテスト結果",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.wrapperScript": "Gradle ラッパー",
+  "loc.input.help.wrapperScript": "リポジトリのルートから 'Gradle のラッパー スクリプト' への相対パス。",
+  "loc.input.label.options": "オプション",
+  "loc.input.label.tasks": "タスク",
+  "loc.input.label.cwd": "作業ディレクトリ",
+  "loc.input.help.cwd": "Gradle のビルドを実行する作業ディレクトリ。指定されない場合はリポジトリのルートになります。",
+  "loc.input.label.publishJUnitResults": "VSO/TFS に発行",
+  "loc.input.help.publishJUnitResults": "このオプションを選択すると、Gradle のビルドによって生成された JUnit のテスト結果を VSO/TFS に発行します。`テスト結果ファイル` と一致する各テスト結果ファイルが、VSO/TFS でのテスト実行として発行されます。",
+  "loc.input.label.testResultsFiles": "テスト結果のファイル",
+  "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます。たとえば、名前が「TEST-」で始まるすべての xml ファイルの場合は `**/TEST-*.xml` です。",
+  "loc.input.label.jdkVersion": "JDK のバージョン",
+  "loc.input.help.jdkVersion": "選択した JDK のバージョンへのパスの検出を試みて、それに従って JAVA_HOME を設定します。",
+  "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
+  "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。"
+}

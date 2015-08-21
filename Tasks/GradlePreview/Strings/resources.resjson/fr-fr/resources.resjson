@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Gradle",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.description": "Générer à l'aide d'un script du wrapper Gradle",
+  "loc.instanceNameFormat": "gradlew $(tasks)",
+  "loc.group.displayName.junitTestResults": "Résultats du test JUnit",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.wrapperScript": "Wrapper Gradle",
+  "loc.input.help.wrapperScript": "Chemin d'accès relatif depuis la racine du référentiel au 'script du wrapper Gradle'.",
+  "loc.input.label.options": "Options",
+  "loc.input.label.tasks": "Tâches",
+  "loc.input.label.cwd": "Répertoire de travail",
+  "loc.input.help.cwd": "Répertoire de travail dans lequel exécuter la build Gradle. Il s'agit généralement de la racine du référentiel.",
+  "loc.input.label.publishJUnitResults": "Publier dans VSO/TFS",
+  "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats du test JUnit produits par la build Gradle dans VSO/TFS. Chaque fichier de résultat de test qui correspond aux 'Fichiers de résultats de test' est publié en tant que série de tests dans VSO/TFS.",
+  "loc.input.label.testResultsFiles": "Fichiers des résultats des tests",
+  "loc.input.help.testResultsFiles": "Chemin d'accès aux fichiers de résultats de test. Les caractères génériques sont autorisés. Par exemple, '**/TEST-*.xml' pour tous les fichiers xml dont le nom commence par TEST-.",
+  "loc.input.label.jdkVersion": "Version de JDK",
+  "loc.input.help.jdkVersion": "Essaiera de découvrir le chemin d'accès à la version du JDK sélectionné et définira JAVA_HOME en conséquence.",
+  "loc.input.label.jdkArchitecture": "Architecture de JDK",
+  "loc.input.help.jdkArchitecture": "Indiquez éventuellement l'architecture (x86, x64) du JDK."
+}

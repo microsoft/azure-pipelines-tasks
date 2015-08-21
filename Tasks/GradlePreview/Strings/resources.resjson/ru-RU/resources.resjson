@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Gradle",
+  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.description": "Сборка с помощью скрипта программы-оболочки Gradle",
+  "loc.instanceNameFormat": "gradlew $(tasks)",
+  "loc.group.displayName.junitTestResults": "Результаты теста JUnit",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.wrapperScript": "Программа-оболочка Gradle",
+  "loc.input.help.wrapperScript": "Относительный путь от корня репозитория к сценарию оболочки Gradle.",
+  "loc.input.label.options": "Параметры",
+  "loc.input.label.tasks": "Задачи",
+  "loc.input.label.cwd": "Рабочий каталог",
+  "loc.input.help.cwd": "Рабочий каталог, в котором должна выполняться сборка Gradle. По умолчанию используется корень репозитория.",
+  "loc.input.label.publishJUnitResults": "Опубликовать в VSO/TFS",
+  "loc.input.help.publishJUnitResults": "Выберите этот параметр, чтобы опубликовать результаты теста JUnit, созданные сборкой Gradle, в VSO/TFS. Каждый файл результатов теста, соответствующий запросу \"Файлы результатов тестов\", будет опубликован как тестовый запуск в VSO/TFS.",
+  "loc.input.label.testResultsFiles": "Файлы результатов тестов",
+  "loc.input.help.testResultsFiles": "Путь к файлам результатов тестов. Можно использовать подстановочные знаки. Пример: **/TEST-*.xml для всех файлов XML, имена которых начинаются с \"TEST-\".",
+  "loc.input.label.jdkVersion": "Версия JDK",
+  "loc.input.help.jdkVersion": "Пытается определить путь к выбранной версии JDK и установить переменную JAVA_HOME соответствующим образом.",
+  "loc.input.label.jdkArchitecture": "Архитектура JDK",
+  "loc.input.help.jdkArchitecture": "Дополнительно укажите архитектуру JDK (x86, x64)."
+}
