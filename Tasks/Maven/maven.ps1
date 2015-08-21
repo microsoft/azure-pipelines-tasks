@@ -50,13 +50,13 @@ if($javaHomeSelection -eq 'JDKVersion')
 else
 {
     Write-Verbose "Using path from user input to set JAVA_HOME"
-    if($jdkUserInputPath -and (Test-Path -Path $jdkUserInputPath))
+    if($jdkUserInputPath -and (Test-Path -LiteralPath $jdkUserInputPath))
     {
         $jdkPath = $jdkUserInputPath
     }
     else
     {
-         throw "The specified JDK path does not exist. Please provide a valid path."
+         throw (Get-LocalizedString -Key "The specified JDK path does not exist. Please provide a valid path.")
     }
 }
 
