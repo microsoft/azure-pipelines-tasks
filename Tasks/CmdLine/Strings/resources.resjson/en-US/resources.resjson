@@ -10,8 +10,8 @@
   "loc.input.label.filename": "Tool",
   "loc.input.help.filename": "Tool name to run.  Tool should be found in your path.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent.<br/> Note: You can use **$(agent.builddirectory)**\\\\... if you want the path relative to repo.",
   "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments passed to the tool",
   "loc.input.label.workingFolder": "Working folder",
-  "loc.input.help.workingFolder": "Arguments passed to the tool",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
   "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
 }
