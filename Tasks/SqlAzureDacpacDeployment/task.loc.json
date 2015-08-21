@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "azureps",
@@ -162,7 +162,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
+    "AzurePowerShell": {
       "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
