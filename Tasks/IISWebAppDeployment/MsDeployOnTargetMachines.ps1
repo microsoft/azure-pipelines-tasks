@@ -64,9 +64,9 @@ function Run-Command
     if(-not ($LASTEXITCODE -eq 0))
     {
         throw $result
-    }     
+    }
     
-    return $result   
+    return $result
 }
 
 function IsInputNullOrEmpty
@@ -346,18 +346,18 @@ function Update-WebSite
 
     if($addBinding -eq "true" -and $isBindingExists -eq $false)
     {
-        $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocal, $ipAddress, $port, $hostname)   
-    }    
+        $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocal, $ipAddress, $port, $hostname)
+    }
 
     if(-not (IsInputNullOrEmpty -str $additionalArgs))
     {
         $appCmdArgs = [string]::Format("{0} {1}", $appCmdArgs, $additionalArgs)
     }
         
-    $appCmdPath = Get-AppCmdLocation -regKeyPath $appCmdRegKey    
-    $command = "`"$appCmdPath`" $appCmdArgs"       
+    $appCmdPath = Get-AppCmdLocation -regKeyPath $appCmdRegKey
+    $command = "`"$appCmdPath`" $appCmdArgs"
     
-    Write-Verbose "Updating WebSite Properties. Running Command : $command"    
+    Write-Verbose "Updating WebSite Properties. Running Command : $command"
     Run-Command -command $command
 }
 
@@ -374,7 +374,7 @@ function Create-Or-Update-WebSite
         [string]$protocal,
         [string]$ipAddress,
         [string]$port,
-        [string]$hostname,        
+        [string]$hostname,
         [string]$additionalArgs
     )
 
@@ -382,8 +382,8 @@ function Create-Or-Update-WebSite
     
     if( -not $doesWebSiteExists)
     {
-        Create-WebSite -siteName $siteName -physicalPath $physicalPath        
-    }    
+        Create-WebSite -siteName $siteName -physicalPath $physicalPath
+    }
 
     Update-WebSite -siteName $siteName -appPoolName $appPoolName -physicalPath $physicalPath -authType $authType -userName $userName -password $password `
     -addBinding $addBinding -protocal $protocal -ipAddress $ipAddress -port $port -hostname $hostname -additionalArgs $additionalArgs
@@ -394,15 +394,15 @@ function Execute-Main
     Write-Verbose "Entering Execute-Main function" -Verbose
 
     if(-not (IsInputNullOrEmpty -str $WebSiteName))
-    {    
+    {
         Create-Or-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
          -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocal $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -additionalArgs $AppCmdArgs
 
         if($Protocol -eq "https")
         {
             Add-SslCert -port $Port -certhash $SslCertThumbPrint
-            Set-SslFlags -siteName $WebSiteName -sni $ServerNameIndication    
-        }        
+            Set-SslFlags -siteName $WebSiteName -sni $ServerNameIndication
+        }
     }
 
     Deploy-WebSite -webDeployPkg $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRiderParams $OverRideParams

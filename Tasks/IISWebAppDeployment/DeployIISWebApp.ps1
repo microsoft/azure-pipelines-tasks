@@ -2,7 +2,7 @@
     [string]$environmentName,
     [string]$resourceFilteringMethod,
     [string]$machineFilter,
-    [string]$webDeployPackage,    
+    [string]$webDeployPackage,
     [string]$webDeployParamFile,
     [string]$overRideParams,
     [string]$webSiteName,
@@ -19,7 +19,7 @@
     [string]$serverNameIndication,
     [string]$sslCertThumbPrint,
     [string]$appCmdArgs,
-    [string]$deployInParallel    
+    [string]$deployInParallel
     )
 
 Write-Verbose "Entering script DeployIISWebApp.ps1" -Verbose

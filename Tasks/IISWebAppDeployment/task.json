@@ -44,7 +44,7 @@
             "name": "ResourceFilteringMethod",
             "type": "radio",
             "label": "Select Machines By",
-            "required": false,            
+            "required": false,
             "defaultValue": "machineNames",
             "options": {
                 "machineNames": "Machine Names",
@@ -56,7 +56,7 @@
             "name": "MachineFilter",
             "type": "string",
             "label": "Deploy to Machines",
-            "required": false,            
+            "required": false,
             "defaultValue": "",
             "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
         },
@@ -64,7 +64,7 @@
             "name": "WebDeployPackage",
             "type": "string",
             "label": "Web Deploy Package",
-            "required": true,            
+            "required": true,
             "defaultValue": "",
             "helpMarkDown": "Location of the MSDeploy zip file on the target machines or on a UNC path like \\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip"
         },
@@ -72,7 +72,7 @@
             "name": "WebDeployParamFile",
             "type": "string",
             "label": "Web Deploy Parameters File",
-            "required": false,            
+            "required": false,
             "defaultValue": "",
             "helpMarkDown": "Parameters file to override any specific configuration settings"
         },
@@ -80,7 +80,7 @@
             "name": "OverRideParams",
             "type": "string",
             "label": "Override Parameters",
-            "required": false,            
+            "required": false,
             "defaultValue": "",
             "helpMarkDown": "Any specific parameters to be overridden in parameters file"
         },
@@ -90,7 +90,7 @@
             "label": "Site Name",
             "required": false,
             "groupName": "website",
-            "defaultValue": "",            
+            "defaultValue": "",
             "helpMarkDown": "Web Site Name to be deployed"
         },
         {
@@ -99,7 +99,7 @@
             "label": "Existing AppPool Name",
             "required": false,
             "groupName": "website",
-            "defaultValue": "",            
+            "defaultValue": "",
             "helpMarkDown": "Application Pool for the web site"
         },
         {
