@@ -2,7 +2,7 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "id": "AC4EE482-65DA-4485-A532-7B085873E533",
+  "id": "AC4EE482-65DA-4485-A532-7B085873E532",
   "name": "Maven",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
