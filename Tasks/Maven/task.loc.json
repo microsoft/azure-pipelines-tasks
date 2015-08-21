@@ -29,6 +29,11 @@
       "isExpanded": true
     },
     {
+      "name": "codeCoverage",
+      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
+      "isExpanded": false
+    },
+    {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
@@ -74,6 +79,54 @@
       "required": true,
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
+    },
+    {
+      "name": "publishCodeCoverageResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishCodeCoverageResults",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.publishCodeCoverageResults"
+    },
+    {
+      "name": "codeCoverageTool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "JaCoCo",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "summeryFileLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.summeryFileLocation",
+      "defaultValue": "**/JaCoCo*.xml",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.summeryFileLocation"
+    },
+    {
+      "name": "reportDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.reportDirectory",
+      "defaultValue": "$(Build.Repository.LocalPath)\\Site",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
+    },
+    {
+      "name": "additionalCodeCoverageFiles",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
+      "defaultValue": "*.exec",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
     },
     {
       "name": "jdkVersion",
