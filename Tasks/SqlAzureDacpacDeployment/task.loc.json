@@ -17,10 +17,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
-    "azureps"
+    "azureps",
+    "sqlpackage"
   ],
   "minimumAgentVersion": "1.87.0",
   "groups": [
@@ -161,7 +162,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
+    "ÄzurePowerShell": {
       "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
