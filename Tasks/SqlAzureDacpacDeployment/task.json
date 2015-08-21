@@ -159,7 +159,7 @@
     ], 
 	"instanceNameFormat": "Deploy Azure SQL DACPAC: $(DacpacFile)",
 	"execution": {
-		"ÄzurePowerShell": {
+		"AzurePowerShell": {
 			"target": "$(currentDirectory)\\DeploySqlAzure.ps1",
 			"argumentFormat": "",
 			"workingDirectory": "$(currentDirectory)"

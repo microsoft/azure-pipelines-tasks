@@ -162,7 +162,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "ÄzurePowerShell": {
+    "AzurePowerShell": {
       "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
