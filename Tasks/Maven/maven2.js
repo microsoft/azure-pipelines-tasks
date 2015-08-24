@@ -35,8 +35,7 @@ if (javaHomeSelection == 'JDKVersion') {
 }
 else {
     tl.debug('Using path from user input to set JAVA_HOME');
-    var jdkUserInputPath = tl.getInput('jdkUserInputPath', true);   
-    tl.checkPath(jdkUserInputPath, 'JDK Path');
+    var jdkUserInputPath = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
 }
 
