@@ -58,11 +58,12 @@ $webDeployParamFile = $webDeployParamFile.Trim('"', ' ')
 $webSiteName = $webSiteName.Trim('"', ' ')
 $appPoolName = $appPoolName.Trim('"', ' ')
 $webSitePhysicalPath = $webSitePhysicalPath.Trim('"', ' ')
+$overRideParams = $overRideParams.Replace('"', '''')
 
 
 $msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
 
-$scriptArgs = [string]::Format(' -WebDeployPackage "{0}" -WebDeployParamFile "{1}" -OverRideParams {2}  -WebSiteName "{3}" -AppPoolName "{4}" -WebSitePhysicalPath "{5}" -WebSitePhysicalPathAuth {6} -WebSiteAuthUserName {7} -WebSiteAuthUserPassword {8} -AddBinding {9} -Protocol {10} -IpAddress "{11}" -Port {12} -HostName {13} -ServerNameIndication {14} -SslCertThumbPrint {15} -AppCmdArgs "{16}" -MethodToInvoke Execute-Main', $webDeployPackage, $webDeployParamFile, $overRideParams, $webSiteName, $appPoolName,  $webSitePhysicalPath, $webSitePhysicalPathAuth, $webSiteAuthUserName, $webSiteAuthUserPassword, $addBinding, $protocol, $ipAddress, $port, $hostName, $serverNameIndication, $sslCertThumbPrint, $appCmdArgs)
+$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -AppPoolName `"$appPoolName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppCmdArgs `"$appCmdArgs`" -MethodToInvoke Execute-Main"
 
 Write-Verbose "MsDeployOnTargetMachines Script Arguments : $scriptArgs" -Verbose
 

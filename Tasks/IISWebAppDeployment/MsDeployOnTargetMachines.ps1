@@ -134,7 +134,7 @@ function Get-AppCmdLocation
         ThrowError -errorMessage $appCmdNotFoundError
     }
 
-    return (Join-Path $path appcmd.exe)
+    return (Join-Path $path appcmd.exe), $version
 }
 
 function Get-MsDeployCmdArgs
@@ -148,7 +148,7 @@ function Get-MsDeployCmdArgs
     
     $webDeployPackage = $webDeployPackage.Trim()
     $webDeployParamFile = $webDeployParamFile.Trim()
-    $overRideParams = $overRideParams.Trim()
+    $overRideParams = $overRideParams.Trim('"').Replace('''', '"')
     
     $msDeployCmdArgs = [string]::Empty
     if(-not (IsInputNullOrEmpty -str $webDeployParamFile))
@@ -169,8 +169,8 @@ function Does-WebSiteExists
 {
     param([string] $siteName)
 
-    $appCmdPath = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
-    $appCmdArgs = [string]::Format(' list site /name:"{0}"',$siteName)
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdArgs = [string]::Format(' list site /name:{0}',$siteName)
     $command = "`"$appCmdPath`" $appCmdArgs"
     Write-Verbose "Checking webSite exists. Running Command : $command"
     
@@ -197,14 +197,16 @@ function Does-BindingExists
     )
 
     
-    $appCmdPath = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
-    $appCmdArgs = [string]::Format(' list site /name:"{0}" /bindings:{1}/{2}:{3}:{4}',$siteName, $protocal, $ipAddress, $port, $hostname)
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdArgs = [string]::Format(' list site /name:{0}',$siteName)
     $command = "`"$appCmdPath`" $appCmdArgs"
     Write-Verbose "Checking binding exists for website $siteName. Running Command : $command" -Verbose
     
     $webSite = cmd.exe /c "`"$command`""
+
+    $binding = [string]::Format("{0}/{1}:{2}:{3}", $protocal, $ipAddress, $port, $hostname)
     
-    if($webSite -ne $null)
+    if($webSite.Contains($binding))
     {
         Write-Verbose "Binding already exists for website $siteName" -Verbose
         return $true
@@ -218,20 +220,30 @@ function Set-SslFlags
 {
     param(
         [string]$siteName,
-        [string]$sni
+        [string]$sni,
+        [string]$ipAddress,
+        [string]$port,
+        [string]$hostname
     )
 
-    if($sni -eq "false" -or (IsInputNullOrEmpty -str $sni))
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+
+    if( -not ($sni -eq "true" -and $iisVersion -ge 8 -and -not (IsInputNullOrEmpty -str $hostname)))
     {
-        Write-Verbose "Enable SNI is set to false .. returning" -Verbose
+        Write-Verbose "Not enabling SNI returning. sni : $sni, iisVersion : $iisVersion, hostname : $hostname" -Verbose
         return
     }
+    
+    if($ipAddress -eq "`"All Unassigned`"")
+    {
+        $ipAddress = "*"
+    }
 
-    $appCmdPath = Get-AppCmdLocation -regKeyPath $AppCmdRegKey 
-    $appCmdArgs = [string]::Format(' set config {0} /section:access -sslFlags:"Ssl" /commit:AppHost',$siteName, $sslFlag)
+    $appCmdArgs = [string]::Format(' set site /site.name:{0} /bindings.[protocol=''https'',bindingInformation=''{1}:{2}:{3}''].sslFlags:"1"',$siteName, $ipAddress, $port, $hostname)
+
     $command = "`"$appCmdPath`" $appCmdArgs"       
     
-    Write-Verbose "Setting Ssl Flags. Running Command : $command"    
+    Write-Verbose "Enabling SNI by setting SslFlags=1 for binding. Running Command : $command"    
     Run-Command -command $command
 }
 
@@ -239,7 +251,10 @@ function Add-SslCert
 {
     param(
         [string]$port,
-        [string]$certhash
+        [string]$certhash,
+        [string]$hostname,
+        [string]$sni,
+        [string]$iisVersion
     )
 
     if(IsInputNullOrEmpty -str $certhash)
@@ -248,23 +263,42 @@ function Add-SslCert
         return
     }
 
-    $command = [string]::Format("netsh http show sslcert ipport=0.0.0.0:{0}", $port)
-    Write-Verbose "Checking SslCert binding already Present. Running Command : $command" -Verbose
-    $result = cmd.exe /c "`"$command`""
+    $result = $null
+    $isItSameBinding = $false
+    $addCertCmd = [string]::Empty
 
-    $isItSamePort = $result.Get(4).Contains([string]::Format("0.0.0.0:{0}", $port))
+    #SNI is supported IIS 8 and above. To enable SNI hostnameport option should be used
+    if($sni -eq "true" -and $iisVersion -ge 8 -and (-not (IsInputNullOrEmpty -str $hostname)))
+    {
+        $showCertCmd = [string]::Format("netsh http show sslcert hostnameport={0}:{1}", $hostname, $port)
+        Write-Verbose "Checking SslCert binding already Present. Running Command : $showCertCmd" -Verbose
+        
+        $result = cmd.exe /c "`"$showCertCmd`""     
+        $isItSameBinding = $result.Get(4).Contains([string]::Format("{0}:{1}", $hostname, $port))
+
+        $addCertCmd = [string]::Format("netsh http add sslcert hostnameport={0}:{1} certhash={2} appid={{{3}}} certstorename=MY", $hostname, $port, $certhash, [System.Guid]::NewGuid().toString())
+    }
+    else
+    {
+        $showCertCmd = [string]::Format("netsh http show sslcert ipport=0.0.0.0:{0}", $port)
+        Write-Verbose "Checking SslCert binding already Present. Running Command : $showCertCmd" -Verbose
+        
+        $result = cmd.exe /c "`"$showCertCmd`""
+        $isItSameBinding = $result.Get(4).Contains([string]::Format("0.0.0.0:{0}", $port))
+        
+        $addCertCmd = [string]::Format("netsh http add sslcert ipport=0.0.0.0:{0} certhash={1} appid={{{2}}}", $port, $certhash, [System.Guid]::NewGuid().toString())
+    }
+
     $isItSameCert = $result.Get(5).Contains([string]::Format("{0}", $certhash))
 
-    if($isItSamePort -and $isItSameCert)
+    if($isItSameBinding -and $isItSameCert)
     {
         Write-Verbose "SSL cert binding already present.. returning" -Verbose
         return
     }
-
-    $command = [string]::Format("netsh http add sslcert ipport=0.0.0.0:{0} certhash={1} appid={{{2}}}", $port, $certhash, [System.Guid]::NewGuid().toString())
-    Write-Verbose "Setting SslCert for Web Site. Running Command: $command" -Verbose           
-    
-    Run-Command -command $command
+        
+    Write-Verbose "Setting SslCert for Web Site. Running Command: $addCertCmd" -Verbose               
+    Run-Command -command $addCertCmd
 }
 
 function Deploy-WebSite
@@ -290,7 +324,7 @@ function Create-WebSite
     [string]$physicalPath
     )
 
-    $appCmdPath = Get-AppCmdLocation -regKeyPath $AppCmdRegKey 
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $appCmdArgs = [string]::Format(' add site /name:{0} /physicalPath:{1}',$siteName, $physicalPath)
     $command = "`"$appCmdPath`" $appCmdArgs"       
     
@@ -354,7 +388,7 @@ function Update-WebSite
         $appCmdArgs = [string]::Format("{0} {1}", $appCmdArgs, $additionalArgs)
     }
         
-    $appCmdPath = Get-AppCmdLocation -regKeyPath $appCmdRegKey
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $command = "`"$appCmdPath`" $appCmdArgs"
     
     Write-Verbose "Updating WebSite Properties. Running Command : $command"
@@ -400,8 +434,9 @@ function Execute-Main
 
         if($Protocol -eq "https")
         {
-            Add-SslCert -port $Port -certhash $SslCertThumbPrint
-            Set-SslFlags -siteName $WebSiteName -sni $ServerNameIndication
+            $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+            Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVerision
+            Set-SslFlags -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
         }
     }
 
