@@ -383,6 +383,7 @@ function Update-WebSite
         $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocal, $ipAddress, $port, $hostname)
     }
 
+    $additionalArgs = $additionalArgs.Trim('"')
     if(-not (IsInputNullOrEmpty -str $additionalArgs))
     {
         $appCmdArgs = [string]::Format("{0} {1}", $appCmdArgs, $additionalArgs)
