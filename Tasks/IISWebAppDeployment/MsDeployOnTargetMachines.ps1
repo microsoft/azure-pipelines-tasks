@@ -16,7 +16,7 @@
     [string]$ServerNameIndication,
     [string]$SslCertThumbPrint,
     [string]$AppCmdArgs,
-    [string]$MethodToInvoke
+    [string]$MethodToInvoke = "Execute-Main"
     )
 
 Write-Verbose "Entering script MsDeployOnTargetMachines.ps1" -Verbose
@@ -36,7 +36,6 @@ Write-Verbose "IpAddress = $IpAddress" -Verbose
 Write-Verbose "Port = $Port" -Verbose
 Write-Verbose "HostName = $HostName" -Verbose
 Write-Verbose "ServerNameIndication = $ServerNameIndication" -Verbose
-Write-Verbose "SslCertThumbPrint = $SslCertThumbPrint" -Verbose
 Write-Verbose "AppCmdArgs = $AppCmdArgs" -Verbose
 
 Write-Verbose "MethodToInvoke = $MethodToInvoke" -Verbose
@@ -59,7 +58,9 @@ function Run-Command
         [string]$command
     )
 
+    $ErrorActionPreference = 'Continue'
     $result = cmd.exe /c "`"$command`""
+    $ErrorActionPreference = 'Stop'
 
     if(-not ($LASTEXITCODE -eq 0))
     {
@@ -85,7 +86,7 @@ function Get-MsDeployLocation
     [string]$regKeyPath
     )
 
-    $msDeployNotFoundError = "Can not find MsDeploy.exe location. Verify MsDeploy.exe is installed on $env:ComputeName and try operation again."
+    $msDeployNotFoundError = "Cannot find MsDeploy.exe location. Verify MsDeploy.exe is installed on $env:ComputeName and try operation again."
     try
     {
         $path = (Get-ChildItem -Path $regKeyPath | Select -Last 1).GetValue("InstallPath")
@@ -110,7 +111,7 @@ function Get-AppCmdLocation
     [string]$regKeyPath
     )
     
-    $appCmdNotFoundError = "Can not find appcmd.exe location. Verify IIS is configured on $env:ComputeName and try operation again."
+    $appCmdNotFoundError = "Cannot find appcmd.exe location. Verify IIS is configured on $env:ComputeName and try operation again."
     $appCmdMinVersionError = "Version of IIS is less than 7.0 on machine $env:COMPUTERNAME. Minimum version of IIS required is 7.0"
     
     try
@@ -126,7 +127,7 @@ function Get-AppCmdLocation
         
         if( -not (Test-Path $path))
         {
-            ThrowError -errorMessage $appCmdNotFoundError 
+            ThrowError -errorMessage $appCmdNotFoundError
         }
     }
     catch
@@ -216,7 +217,7 @@ function Does-BindingExists
     return $false
 }
 
-function Set-SslFlags
+function Enable-SNI
 {
     param(
         [string]$siteName,
@@ -230,7 +231,7 @@ function Set-SslFlags
 
     if( -not ($sni -eq "true" -and $iisVersion -ge 8 -and -not (IsInputNullOrEmpty -str $hostname)))
     {
-        Write-Verbose "Not enabling SNI returning. sni : $sni, iisVersion : $iisVersion, hostname : $hostname" -Verbose
+        Write-Verbose "Not Enabling SNI : sni : $sni, iisVersion : $iisVersion, hostname : $hostname. Possible Reasons: `n 1. IIS Version is less than 8 `n 2. HostName input is not provided `n 3. SNI input is set to false" -Verbose
         return
     }
     
@@ -297,7 +298,7 @@ function Add-SslCert
         return
     }
         
-    Write-Verbose "Setting SslCert for Web Site. Running Command: $addCertCmd" -Verbose               
+    Write-Verbose "Setting SslCert for WebSite." -Verbose               
     Run-Command -command $addCertCmd
 }
 
@@ -435,15 +436,15 @@ function Execute-Main
 
         if($Protocol -eq "https")
         {
-            $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
-            Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVerision
-            Set-SslFlags -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
+            $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+            Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVersion
+            Enable-SNI -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
         }
     }
 
     Deploy-WebSite -webDeployPkg $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRiderParams $OverRideParams
 
-    Write-Verbose "Existing Execute-Main function" -Verbose
+    Write-Verbose "Exiting Execute-Main function" -Verbose
 }
 
 Invoke-Expression $MethodToInvoke

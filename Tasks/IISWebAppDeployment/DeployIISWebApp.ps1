@@ -43,7 +43,6 @@ Write-Verbose "ipAddress = $ipAddress" -Verbose
 Write-Verbose "port = $port" -Verbose
 Write-Verbose "hostName = $hostName" -Verbose
 Write-Verbose "serverNameIndication = $serverNameIndication" -Verbose
-Write-Verbose "sslCertThumbPrint = $sslCertThumbPrint" -Verbose
 Write-Verbose "appCmdArgs = $appCmdArgs" -Verbose
 
 
@@ -63,7 +62,7 @@ $overRideParams = $overRideParams.Replace('"', '''')
 
 $msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
 
-$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -AppPoolName `"$appPoolName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppCmdArgs `"$appCmdArgs`" -MethodToInvoke Execute-Main"
+$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -AppPoolName `"$appPoolName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppCmdArgs `"$appCmdArgs`""
 
 Write-Verbose "MsDeployOnTargetMachines Script Arguments : $scriptArgs" -Verbose
 
