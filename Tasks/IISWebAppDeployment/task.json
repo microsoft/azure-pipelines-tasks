@@ -20,7 +20,12 @@
     ],
     "minimumAgentVersion": "1.87.0",
     "groups": [
-		{
+        {
+            "name": "website",
+            "displayName": "Create Web Site",
+            "isExpanded": true
+        },
+        {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
@@ -32,14 +37,14 @@
             "type": "pickList",
             "label": "Machine Group",
             "defaultValue": "",
-            "required": true,            
+            "required": true,
             "helpMarkDown": "Name of the Machine Group for deploying the database."
         },
         {
             "name": "ResourceFilteringMethod",
             "type": "radio",
             "label": "Select Machines By",
-            "required": false,            
+            "required": false,
             "defaultValue": "machineNames",
             "options": {
                 "machineNames": "Machine Names",
@@ -51,7 +56,7 @@
             "name": "MachineFilter",
             "type": "string",
             "label": "Deploy to Machines",
-            "required": false,            
+            "required": false,
             "defaultValue": "",
             "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
         },
@@ -59,7 +64,7 @@
             "name": "WebDeployPackage",
             "type": "string",
             "label": "Web Deploy Package",
-            "required": true,            
+            "required": true,
             "defaultValue": "",
             "helpMarkDown": "Location of the MSDeploy zip file on the target machines or on a UNC path like \\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip"
         },
@@ -67,17 +72,159 @@
             "name": "WebDeployParamFile",
             "type": "string",
             "label": "Web Deploy Parameters File",
-            "required": false,            
-            "defaultValue": "",			
+            "required": false,
+            "defaultValue": "",
             "helpMarkDown": "Parameters file to override any specific configuration settings"
         },
         {
             "name": "OverRideParams",
             "type": "string",
             "label": "Override Parameters",
-            "required": false,            
-            "defaultValue": "",			
+            "required": false,
+            "defaultValue": "",
             "helpMarkDown": "Any specific parameters to be overridden in parameters file"
+        },
+        {
+            "name": "WebSiteName",
+            "type": "string",
+            "label": "Site Name",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",
+            "helpMarkDown": "Web Site Name to be deployed"
+        },
+        {
+            "name": "AppPoolName",
+            "type": "string",
+            "label": "Existing AppPool Name",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",
+            "helpMarkDown": "Application Pool for the web site"
+        },
+        {
+            "name": "WebSitePhysicalPath",
+            "type": "string",
+            "label": "Physical Path",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+            "helpMarkDown": "Physical path of the web site"
+        },
+        {
+            "name": "WebSitePhysicalPathAuth",
+            "type": "pickList",
+            "label": "Physical Path Authentication",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "Application User(Pass-through)",
+            "options": {
+                "WebSiteUserPassThrough": "Application User(Pass-through)",
+                "WebSiteWindowsAuth": "Windows Authentication"
+            },
+            "helpMarkDown": "Authentication mechanism for accessing the physical path of web site"
+        },
+        {
+            "name": "WebSiteAuthUserName",
+            "type": "string",
+            "label": "User Name",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
+            "helpMarkDown": "User name for accessing web site physical path"
+        },
+        {
+            "name": "WebSiteAuthUserPassword",
+            "type": "string",
+            "label": "Password",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
+            "helpMarkDown": "Password for accessing web site physical path"
+        },
+        {
+            "name": "AddBinding",
+            "type": "boolean",
+            "label": "Add Binding",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "true",
+            "helpMarkDown": "Choose to specify port binding information"
+        },
+        {
+            "name": "Protocol",
+            "type": "pickList",
+            "label": "Protocol",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "http",
+            "options": {
+                "https": "https",
+                "http": "http"
+            },
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "Protocol for web site"
+        },
+        {
+            "name": "IPAddress",
+            "type": "string",
+            "label": "IP Address",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "All Unassigned",
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "IP Address information for binding"
+        },
+        {
+            "name": "Port",
+            "type": "string",
+            "label": "Port",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "80",
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "Port information for binding"
+        },
+        {
+            "name": "HostName",
+            "type": "string",
+            "label": "Host Name",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "Port information for binding"
+        },
+        {
+            "name": "ServerNameIndication",
+            "type": "boolean",
+            "label": "Server Name Indication Required",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "false",
+            "visibleRule": "Protocol = https",
+            "helpMarkDown": "Server Name Indication Required"
+        },
+        {
+            "name": "SSLCertThumbPrint",
+            "type": "string",
+            "label": "SSL Certificate Thumb Print",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "Protocol = https",
+            "helpMarkDown": "Web Site SSL Certificate Thumb Print"
+        },
+        {
+            "name": "AppCmdArgs",
+            "type": "string",
+            "label": "Additional Appcmd.exe Arguments",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",
+            "helpMarkDown": "Additional arguments for Appcmd.exe command line"
         },
         {
             "name": "DeployInParallel",
@@ -88,7 +235,7 @@
             "groupName": "advanced",
             "helpMarkDown": "Setting it to true will run web app deployment scripts in parallel on the target machines."
         }
-    ],	
+    ],
     "sourceDefinitions": [ 
      { 
          "target": "EnvironmentName", 
@@ -97,7 +244,7 @@
          "authKey": "tfs:DevTestLabs" 
      } 
     ], 
-    "instanceNameFormat": "Deploy IIS App: $(WebSiteName)",
+    "instanceNameFormat": "Deploy IIS App: $(WebDeployPackage)",
     "execution": {
         "PowerShell": {
         "target": "$(currentDirectory)\\DeployIISWebApp.ps1",
