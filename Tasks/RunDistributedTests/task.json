@@ -51,7 +51,7 @@
             "label": "Test Drop Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machine' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
             "groupName": "testSettings"
         },
         {
