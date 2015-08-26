@@ -34,6 +34,85 @@ if (!(Get-Command @splat)) {
         [System.Reflection.BindingFlags]::Instance -bor [System.Reflection.BindingFlags]::NonPublic) # bindingFlags
 }
 
+function Add-SourceServerStream {
+    [cmdletbinding()]
+    param(
+        [string]$PdbStrPath = $(throw 'Missing PdbStrPath.'),
+        [string]$SymbolsFilePath = $(throw 'Missing SymbolsFilePath.'),
+        [string]$StreamContent = $(throw 'Missing StreamContent.')
+    )
+
+    # Create a temp file to store the stream content.
+    Write-Verbose "Writing source server stream content to a temp file."
+    [string]$streamContentFilePath = [System.IO.Path]::GetTempFileName()
+    try {
+        # Check for spaces in the temp file path.
+        if ($streamContentFilePath.Contains(' ')) {
+            Write-Warning (Get-LocalizedString -Key 'Source files may not be indexed properly. Temp folder contains spaces in the path. To fix the issue, set the temp folder to a path without spaces.')
+            # Don't short-circuit. Just try anyway even though it will likely fail.
+        }
+
+        # For encoding consistency with previous implementation, use File.WriteAllText(...) instead
+        # of Out-File.
+        [System.IO.File]::WriteAllText($streamContentFilePath, $StreamContent)
+        Write-Verbose "Wrote stream content to: $streamContentFilePath"
+
+        # Store the original symbols file path.
+        [string]$originalSymbolsFilePath = $SymbolsFilePath
+        try {
+            # Pdbstr.exe doesn't work with symbols files with a space in the path. If the symbols file
+            # has a space in file path, then pdbstr.exe just prints the command usage information over
+            # STDOUT. It doesn't inject the indexing info into the PDB file, doesn't write to STDERR,
+            # and doesn't return a non-zero exit code.
+            if ($SymbolsFilePath.Contains(' ')) {
+                # Create a temp file.
+                Write-Verbose "Symbols file path contains a space. Copying to a temp file."
+                $SymbolsFilePath = [System.IO.Path]::GetTempFileName()
+
+                # If the temp file contains a space in the path, then we would have already printed a
+                # warning when the stream content temp file was created above. No need to check and warn
+                # again here.
+
+                # Copy the original symbols file over the temp file.
+                Copy-Item -LiteralPath $originalSymbolsFilePath -Destination $SymbolsFilePath
+                Write-Verbose "Copied symbols file to: $SymbolsFilePath"
+            }
+
+            # Call pdbstr.exe.
+            [string[]]$pdbStrArgs = @(
+                '-w'
+                "-p:""$SymbolsFilePath"""
+                "-i:""$streamContentFilePath"""
+                '-s:srcsrv'
+            )
+            Write-Verbose "$PdbStrPath $pdbStrArgs"
+            # Redirect STDOUT to the verbose pipeline.
+            # Let STDERR output to the error pipeline.
+            & $pdbstrPath $pdbStrArgs |
+                ForEach-Object { Write-Verbose $_ }
+            Write-Verbose "pdbstr.exe exit code: $LASTEXITCODE"
+
+            # Copy the temp symbols file back over the original file.
+            if ($SymbolsFilePath -ne $originalSymbolsFilePath) {
+                Write-Verbose "Copying over the original symbols file from the temp file. Copy source: $SymbolsFilePath ; Copy target: $originalSymbolsFilePath"
+                Copy-Item -LiteralPath $SymbolsFilePath -Destination $originalSymbolsFilePath
+            }
+        }
+        finally {
+            # Clean up the temp symbols file.
+            if ($SymbolsFilePath -ne $originalSymbolsFilePath) {
+                Write-Verbose "Deleting temp symbols file."
+                Remove-Item $SymbolsFilePath
+            }
+        }
+    }
+    finally {
+        # Clean up the temp stream content file.
+        Write-Verbose "Deleting temp source server stream content file: $streamContentFilePath"
+        Remove-Item -LiteralPath $streamContentFilePath
+    }
+}
+
 function Get-SourceFilePaths {
     [cmdletbinding()]
     param(
@@ -64,7 +143,7 @@ function Get-SourceFilePaths {
 
     # Warn if no source file paths were contained in the PDF file.
     if (!$sourceFilePaths) {
-        [string]$message = (Get-LocalizedString -Key 'Unable to index file ''{0}''. The file does not contain any source file paths.' -ArgumentList $SymbolsFilePath)
+        [string]$message = (Get-LocalizedString -Key 'Unable to index sources for symbols file: {0} ; The file does not contain any source file paths.' -ArgumentList $SymbolsFilePath)
         if ($TreatNotIndexedAsWarning) {
             Write-Warning $message
         } else {
@@ -110,7 +189,7 @@ function Get-SourceFilePaths {
 
             if (!$isUnderSourcesRoot) {
                 # Warn that the source file path is not under the sources root.
-                [string]$message = (Get-LocalizedString -Key 'The source file path falls outside of the sources root directory. Source file path ''{0}''. Sources root directory ''{1}''.' -ArgumentList $sourceFilePath, $SourcesRootPath)
+                [string]$message = (Get-LocalizedString -Key 'The source file is not under the sources root directory. Source file: {0} ; Sources root directory: {1}' -ArgumentList $sourceFilePath, $SourcesRootPath)
                 if ($TreatNotIndexedAsWarning) {
                     Write-Warning $message
                 } else {
@@ -403,31 +482,8 @@ try {
         $srcSrvIniContent += ''
         [string]$srcSrvIniContent = [string]::Join([System.Environment]::NewLine, $srcSrvIniContent)
 
-        $tempSrcSrvIniFile = Get-Item -LiteralPath ([System.IO.Path]::GetTempFileName())
-        try {
-            # For encoding consistency with previous implementation, using File.WriteAllText(...) instead
-            # of Out-File.
-            [System.IO.File]::WriteAllText($tempSrcSrvIniFile.FullName, $srcSrvIniContent)
-            Write-Verbose "Wrote srcsrv.ini information to: $($tempSrcSrvIniFile.FullName)"
-
-            # Call pdbstr.exe.
-            [string[]]$pdbStrArgs = @(
-                '-w'
-                "-p:""$symbolsFilePath"""
-                "-i:""$($tempSrcSrvIniFile.FullName)"""
-                '-s:srcsrv'
-            )
-            Write-Verbose "$pdbstrPath $pdbStrArgs"
-            # Redirect STDOUT to the verbose pipeline.
-            # Let STDERR output to the error pipeline.
-            & $pdbstrPath $pdbStrArgs |
-                ForEach-Object { Write-Verbose $_ }
-            Write-Verbose "pdbstr.exe exit code: $LASTEXITCODE"
-            # TODO: Should we error if the exit code is not 0? Need to investigate.
-        }
-        finally {
-            $tempSrcSrvIniFile.Delete()
-        }
+        # Add the source server info to the symbols file.
+        Add-SourceServerStream -PdbStrPath $pdbstrPath -SymbolsFilePath $symbolsFilePath -StreamContent $srcSrvIniContent
     }
 }
 finally {
