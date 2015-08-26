@@ -168,7 +168,7 @@ function New-TfsGitSrcSrvIniContent {
     # then at debugging time the TFS_COLLECTION variable can be overridden.
     #
     # Use the short commit hash in the target file path to alleviate max path issues.
-    "TFS_EXTRACT_TARGET=%targ%\%var2%\%fnvar%(%var6%)%fnbksl%(%var3%)"
+    "TFS_EXTRACT_TARGET=%targ%\%var5%\%fnvar%(%var6%)%fnbksl%(%var7%)"
     # The "commitId" arg requires the full commit ID.
     #
     # The /applyfilters switch indicates whether to conver LF to CRLF. The source file hashes are
@@ -176,9 +176,9 @@ function New-TfsGitSrcSrvIniContent {
     # downloaded file's hash doesn't match the hash embedded in the PDB file. We make the assumption
     # the PDB was built from a source file with CRLFs. In some edge case were this is not true, the
     # variable TFS_APPLY_FILTERS can be overridden at debugging time.
-    "TFS_EXTRACT_CMD=tf.exe git view /collection:%fnvar%(%var2%) /teamproject:""%fnvar%(%var3%)"" /repository:""%fnvar%(%var4%)"" /commitId:%fnvar%(%var5%) /path:""%var7%"" /output:""%SRCSRVTRG%"" %fnvar%(%var8%)"
+    "TFS_EXTRACT_CMD=tf.exe git view /collection:%fnvar%(%var2%) /teamproject:""%fnvar%(%var3%)"" /repository:""%fnvar%(%var4%)"" /commitId:%fnvar%(%var5%) /path:""%var7%"" /output:%SRCSRVTRG% %fnvar%(%var8%)"
     "TFS_COLLECTION=$CollectionUrl"
-    "TFS_TEAM_PROJECT=$ProjectId"
+    "TFS_TEAM_PROJECT=$TeamProjectId"
     "TFS_REPO=$RepoId"
     "TFS_COMMIT=$CommitId"
     "TFS_SHORT_COMMIT=$($CommitId.Substring(0, 8))" # Take the first 8 chars only.
@@ -198,6 +198,8 @@ function New-TfsGitSrcSrvIniContent {
         $relativeSourceFilePath = "/$relativeSourceFilePath"
         "$sourceFilePath*TFS_COLLECTION*TFS_TEAM_PROJECT*TFS_REPO*TFS_COMMIT*TFS_SHORT_COMMIT*$relativeSourceFilePath*TFS_APPLY_FILTERS"
     }
+
+    'SRCSRV: end ------------------------------------------------'
 }
 
 function New-TfsVersionControlSrcSrvIniContent {
@@ -218,7 +220,7 @@ function New-TfsVersionControlSrcSrvIniContent {
         (Get-Date))
     'INDEXER=TFSTB'
     'SRCSRV: variables ------------------------------------------'
-    'TFS_EXTRACT_CMD=tf.exe view /version:%var4% /noprompt "$%var3%" /server:%fnvar%(%var2%) /console > "%SRCSRVTRG%"'
+    'TFS_EXTRACT_CMD=tf.exe view /version:%var4% /noprompt "$%var3%" /server:%fnvar%(%var2%) /console > %SRCSRVTRG%'
     'TFS_EXTRACT_TARGET=%targ%\%var2%%fnbksl%(%var3%)\%var4%\%fnfile%(%var5%)'
     'SRCSRVVERCTRL=tfs'
     'SRCSRVERRDESC=access'
@@ -341,7 +343,7 @@ try {
             break
         }
         default {
-            Write-Warning (Get-LocalizedString -Key 'Only TfsGit and TfsVersionControl source providers are supported for source indexing. Repository type: {0}' -ArgumentList $repoType)
+            Write-Warning (Get-LocalizedString -Key 'Only TfsGit and TfsVersionControl source providers are supported for source indexing. Repository type: {0}' -ArgumentList $provider)
             Write-Warning (Get-LocalizedString -Key 'Unable to index sources.')
             return
         }
