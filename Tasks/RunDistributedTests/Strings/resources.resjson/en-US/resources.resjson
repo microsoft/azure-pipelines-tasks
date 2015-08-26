@@ -4,7 +4,7 @@
 {
   "loc.friendlyName": "Visual Studio Test using Test Agent",
   "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
-  "loc.description": "Run tests distributedly using multiple test agents on a lab machine group",
+  "loc.description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
   "loc.instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Test Machine Group",
   "loc.group.displayName.testSettings": "Test Settings",
@@ -12,7 +12,7 @@
   "loc.input.label.testMachineGroup": "Test Machine Group",
   "loc.input.help.testMachineGroup": "Name of the Test Machine Group on which tests need to be run.",
   "loc.input.label.dropLocation": "Test Drop Location",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
   "loc.input.label.sourcefilters": "Test Assembly",
   "loc.input.help.sourcefilters": "Test binaries to run tests on. Wildcards can be used. For example, '**\\*test*.dll;' for all dlls containing 'test' in their name.",
   "loc.input.label.testFilterCriteria": "Test Filter criteria",
