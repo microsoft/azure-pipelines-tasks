@@ -111,8 +111,8 @@ function Get-AppCmdLocation
     [string]$regKeyPath
     )
     
-    $appCmdNotFoundError = "Cannot find appcmd.exe location. Verify IIS is configured on $env:ComputeName and try operation again."
-    $appCmdMinVersionError = "Version of IIS is less than 7.0 on machine $env:ComputeName. Minimum version of IIS required is 7.0"
+    $appCmdNotFoundError = "Cannot find appcmd.exe location. Verify IIS is configured on $env:ComputerName and try operation again."
+    $appCmdMinVersionError = "Version of IIS is less than 7.0 on machine $env:ComputerName. Minimum version of IIS required is 7.0"
     
     try
     {
@@ -243,7 +243,7 @@ function Enable-SNI
 
     $command = "`"$appCmdPath`" $appCmdArgs"       
     
-    Write-Verbose "Enabling SNI by setting SslFlags=1 for binding. Running Command : $command" -Verbose    
+    Write-Verbose "Enabling SNI by setting SslFlags=1 for binding. Running Command : $command" -Verbose
     Run-Command -command $command
 }
 
