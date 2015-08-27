@@ -293,24 +293,11 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 		$displayName = $resourceProperties.displayName
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $displayName)
 
-        Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
-        Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-        Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-
         $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $parsedSessionVariables 
         Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $deploymentResponse
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
-
-        # getting operation logs
-        $logs = Get-OperationLogs
-        Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
-
-        Write-Verbose "Starting Complete-ResourceOperation cmdlet call on resource: $($resource.Name) with resource operationId: $resOperationId" -Verbose
-        Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $deploymentResponse.Status -ErrorMessage $deploymentResponse.Error -Logs $logs -Connection $connection
-        Write-Verbose "Completed Complete-ResourceOperation cmdlet call on resource: $($resource.Name) with resource operationId: $resOperationId" -Verbose
 
         if ($status -ne "Passed")
         {
@@ -335,12 +322,6 @@ else
 		$displayName = $resourceProperties.displayName
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $displayName)
 
-        Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-        $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection -ErrorAction Stop
-        Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-        Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-
-        $resourceProperties.resOperationId = $resOperationId
         $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $parsedSessionVariables
         $Jobs.Add($job.Id, $resourceProperties)
     }
@@ -369,13 +350,6 @@ else
                     }
                     Write-Output (Get-LocalizedString -Key "Deployment failed on machine '{0}' with following message : '{1}'" -ArgumentList $displayName, $errorMessage)
                 }
-                # getting operation logs
-                $logs = Get-OperationLogs
-                Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
-
-                Write-Verbose "Starting Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
-                Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
-                Write-Verbose "Completed Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
             }
         }
     }
