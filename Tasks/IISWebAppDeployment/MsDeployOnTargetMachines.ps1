@@ -150,9 +150,20 @@ function Get-MsDeployCmdArgs
     $webDeployParamFile = $webDeployParamFile.Trim()
     $overRideParams = $overRideParams.Trim('"').Replace('''', '"')
     
+    if(-not ( Test-Path -Path $webDeployPackage))
+    {
+        ThrowError -errorMessage "Package does not exist : $webDeployPackage"
+    }
+
     $msDeployCmdArgs = [string]::Empty
     if(-not (IsInputNullOrEmpty -str $webDeployParamFile))
-    {    
+    {   
+    
+        if(-not ( Test-Path -Path $webDeployParamFile))
+        {
+            ThrowError -errorMessage "Param file does not exist : $webDeployParamFile"
+        } 
+
         $msDeployCmdArgs = [string]::Format(' -setParamFile={0}', $webDeployParamFile)
     }
 
