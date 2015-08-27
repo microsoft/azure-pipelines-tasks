@@ -112,15 +112,14 @@ function Get-AppCmdLocation
     )
     
     $appCmdNotFoundError = "Cannot find appcmd.exe location. Verify IIS is configured on $env:ComputeName and try operation again."
-    $appCmdMinVersionError = "Version of IIS is less than 7.0 on machine $env:COMPUTERNAME. Minimum version of IIS required is 7.0"
+    $appCmdMinVersionError = "Version of IIS is less than 7.0 on machine $env:ComputeName. Minimum version of IIS required is 7.0"
     
     try
     {
-        $regKey = Get-Item -Path $regKeyPath
-        $path = $regKey.GetValue("InstallPath")
-        $version = $regKey.GetValue("MajorVersion")
+        $path = Get-ItemProperty -Path $regKeyPath -Name "InstallPath"
+        $version = Get-ItemProperty -Path $regKeyPath -Name "MajorVersion"
         
-        if($version -le "6.0")
+        if($version -le 6.0)
         {
             ThrowError -errorMessage $appCmdMinVersionError
         }
@@ -191,7 +190,7 @@ function Does-BindingExists
 {
     param(
         [string]$siteName,
-        [string]$protocal,
+        [string]$protocol,
         [string]$ipAddress,
         [string]$port,
         [string]$hostname
@@ -205,7 +204,7 @@ function Does-BindingExists
     
     $webSite = cmd.exe /c "`"$command`""
 
-    $binding = [string]::Format("{0}/{1}:{2}:{3}", $protocal, $ipAddress, $port, $hostname)
+    $binding = [string]::Format("{0}/{1}:{2}:{3}", $protocol, $ipAddress, $port, $hostname)
     
     if($webSite.Contains($binding))
     {
@@ -244,7 +243,7 @@ function Enable-SNI
 
     $command = "`"$appCmdPath`" $appCmdArgs"       
     
-    Write-Verbose "Enabling SNI by setting SslFlags=1 for binding. Running Command : $command"    
+    Write-Verbose "Enabling SNI by setting SslFlags=1 for binding. Running Command : $command" -Verbose    
     Run-Command -command $command
 }
 
@@ -329,7 +328,7 @@ function Create-WebSite
     $appCmdArgs = [string]::Format(' add site /name:{0} /physicalPath:{1}',$siteName, $physicalPath)
     $command = "`"$appCmdPath`" $appCmdArgs"       
     
-    Write-Verbose "Creating WebSite. Running Command : $command"    
+    Write-Verbose "Creating WebSite. Running Command : $command" -Verbose
     Run-Command -command $command
 }
 
@@ -343,7 +342,7 @@ function Update-WebSite
         [string]$userName,
         [string]$password,
         [string]$addBinding,
-        [string]$protocal,
+        [string]$protocol,
         [string]$ipAddress,
         [string]$port,
         [string]$hostname,
@@ -377,11 +376,11 @@ function Update-WebSite
         $ipAddress = "*"
     }
 
-    $isBindingExists = Does-BindingExists -siteName $siteName -protocal $protocal -ipAddress $ipAddress -port $port -hostname $hostname
+    $isBindingExists = Does-BindingExists -siteName $siteName -protocol $protocol -ipAddress $ipAddress -port $port -hostname $hostname
 
     if($addBinding -eq "true" -and $isBindingExists -eq $false)
     {
-        $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocal, $ipAddress, $port, $hostname)
+        $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocol, $ipAddress, $port, $hostname)
     }
 
     $additionalArgs = $additionalArgs.Trim('"')
@@ -393,11 +392,11 @@ function Update-WebSite
     $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $command = "`"$appCmdPath`" $appCmdArgs"
     
-    Write-Verbose "Updating WebSite Properties. Running Command : $command"
+    Write-Verbose "Updating WebSite Properties. Running Command : $command" -Verbose
     Run-Command -command $command
 }
 
-function Create-Or-Update-WebSite
+function Create-And-Update-WebSite
 {
     param(
         [string]$siteName,
@@ -407,7 +406,7 @@ function Create-Or-Update-WebSite
         [string]$userName,
         [string]$password,
         [string]$addBinding,
-        [string]$protocal,
+        [string]$protocol,
         [string]$ipAddress,
         [string]$port,
         [string]$hostname,
@@ -422,7 +421,7 @@ function Create-Or-Update-WebSite
     }
 
     Update-WebSite -siteName $siteName -appPoolName $appPoolName -physicalPath $physicalPath -authType $authType -userName $userName -password $password `
-    -addBinding $addBinding -protocal $protocal -ipAddress $ipAddress -port $port -hostname $hostname -additionalArgs $additionalArgs
+    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -hostname $hostname -additionalArgs $additionalArgs
 }
 
 function Execute-Main
@@ -431,8 +430,8 @@ function Execute-Main
 
     if(-not (IsInputNullOrEmpty -str $WebSiteName))
     {
-        Create-Or-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
-         -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocal $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -additionalArgs $AppCmdArgs
+        Create-And-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
+         -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocol $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -additionalArgs $AppCmdArgs
 
         if($Protocol -eq "https")
         {
