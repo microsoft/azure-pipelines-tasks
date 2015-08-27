@@ -49,7 +49,7 @@ function ThrowError
 
         $readmelink = "http://aka.ms/iiswebappdeployreadme"
         $helpMessage = [string]::Format("For more info please refer to {0}", $readmelink)
-        throw "$errorMessage $helpMessage"
+        throw "$errorMessage $helpMessage `n"
 }
 
 function Run-Command
@@ -64,7 +64,7 @@ function Run-Command
 
     if(-not ($LASTEXITCODE -eq 0))
     {
-        throw $result
+        ThrowError($result)
     }
     
     return $result
