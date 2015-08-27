@@ -87,17 +87,6 @@ if ($symbolsPath)
     $utcNow = (Get-Date).ToUniversalTime()
     $semaphoreMessage = "Machine: $env:ComputerName, BuildUri: $env:Build_BuildUri, BuildNumber: $env:Build_BuildNumber, RepositoryName: $env:Build_Repository_Name, RepositoryUri: $env:Build_Repository_Uri, Team Project: $env:System_TeamProject, CollectionUri: $env:System_TeamFoundationCollectionUri at $utcNow UTC"
     Write-Verbose "semaphoreMessage = $semaphoreMessage"
-
-    Write-Host @(
-        'Invoke-PublishSymbols'
-        '-PdbFiles [...]'
-        "-Share $symbolsPath"
-        "-Product $symbolsProduct"
-        "-Version $symbolsVersion"
-        "-MaximumWaitTime $($maxWaitTime.TotalMilliseconds)"
-        "-MaximumSemaphoreAge $($maxSemaphoreAge.TotalMinutes)"
-        "-ArtifactName $symbolsArtifactName"
-    )
     [hashtable]$splat = @{
         'PdbFiles' = $pdbFiles
         'Share' = $symbolsPath
@@ -108,6 +97,11 @@ if ($symbolsPath)
         'SemaphoreMessage' = $semaphoreMessage
         'ArtifactName' = $symbolsArtifactName
     }
+    [string[]]$printedArgs =
+        $splat.Keys |
+        Where-Object { $_ -ne 'PdbFiles' } |
+        ForEach-Object { "-$_ '$($splat[$_])'" }
+    Write-Host "Invoke-PublishSymbols -PdbFiles [...] $([string]::Join(' ', $printedArgs))"
     Invoke-PublishSymbols @splat
 }
 else
