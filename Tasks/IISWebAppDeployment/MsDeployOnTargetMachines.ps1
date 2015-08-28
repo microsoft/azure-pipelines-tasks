@@ -116,8 +116,9 @@ function Get-AppCmdLocation
     
     try
     {
-        $path = (Get-ItemProperty -Path $regKeyPath).InstallPath
-        $version = (Get-ItemProperty -Path $regKeyPath).MajorVersion
+        $regKey = Get-ItemProperty -Path $regKeyPath
+        $path = $regKey.InstallPath
+        $version = $regKey.MajorVersion
         
         if($version -le 6.0)
         {
