@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Ant",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.description": "Apache Ant を使用したビルド",
+  "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
+  "loc.group.displayName.junitTestResults": "JUnit のテスト結果",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.antBuildFile": "Ant ビルド ファイル",
+  "loc.input.help.antBuildFile": "リポジトリ ルートから `Ant のビルド ファイル` への相対パス。",
+  "loc.input.label.options": "オプション",
+  "loc.input.label.targets": "ターゲット",
+  "loc.input.label.publishJUnitResults": "VSO/TFS に発行",
+  "loc.input.help.publishJUnitResults": "このオプションを選択すると、Ant のビルドによって生成された JUnit のテスト結果を VSO/TFS に発行します。`テスト結果ファイル` と一致する各テスト結果ファイルが、VSO/TFS のテスト実行として発行されます。",
+  "loc.input.label.testResultsFiles": "テスト結果のファイル",
+  "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます。たとえば、名前が「TEST-」で始まるすべての xml ファイルの場合は `**/TEST-*.xml` です。",
+  "loc.input.label.jdkVersion": "JDK のバージョン",
+  "loc.input.help.jdkVersion": "選択した JDK のバージョンへのパスの検出を試みて、それに従って JAVA_HOME を設定します。",
+  "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
+  "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。"
+}

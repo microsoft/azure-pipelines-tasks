@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Ant",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.description": "使用 Apache Ant 建置",
+  "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
+  "loc.group.displayName.junitTestResults": "JUnit 測試結果",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.antBuildFile": "Ant 組建檔案",
+  "loc.input.help.antBuildFile": "從儲存機制根到 `Ant build file` 的相對路徑。",
+  "loc.input.label.options": "選項",
+  "loc.input.label.targets": "目標",
+  "loc.input.label.publishJUnitResults": "發行至 VSO/TFS",
+  "loc.input.help.publishJUnitResults": "請選取這個選項以將 Ant 組建產生的 JUnit 測試結果發行至 VSO/TFS。每個與 `Test Results Files` 相符的測試結果檔將在 VSO/TFS 中以測試回合發行。",
+  "loc.input.label.testResultsFiles": "測試結果檔案",
+  "loc.input.help.testResultsFiles": "測試結果檔案路徑。可使用萬用字元。例如，適用於所有名稱使用 TEST- 為開頭之 xml 檔的 `**/TEST-*.xml`。",
+  "loc.input.label.jdkVersion": "JDK 版本",
+  "loc.input.help.jdkVersion": "將嘗試探索所選取 JDK 版本的路徑並據此進行設定 JAVA_HOME。",
+  "loc.input.label.jdkArchitecture": "JDK 架構",
+  "loc.input.help.jdkArchitecture": "選擇性地提供 JDK 的架構 (x86、x64)。"
+}

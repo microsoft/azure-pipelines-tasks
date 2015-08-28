@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Ant",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.description": "Générer avec Apache Ant",
+  "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
+  "loc.group.displayName.junitTestResults": "Résultats du test JUnit",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.antBuildFile": "Fichier de build Ant",
+  "loc.input.help.antBuildFile": "Chemin d'accès relatif depuis la racine du référentiel au 'fichier de build Ant'.",
+  "loc.input.label.options": "Options",
+  "loc.input.label.targets": "Cible(s)",
+  "loc.input.label.publishJUnitResults": "Publier dans VSO/TFS",
+  "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats du test JUnit produits par la build Ant dans VSO/TFS. Chaque fichier de résultats de test qui correspond aux 'Fichiers de résultats de test' est publié en tant que série de tests dans VSO/TFS.",
+  "loc.input.label.testResultsFiles": "Fichiers des résultats des tests",
+  "loc.input.help.testResultsFiles": "Chemin d'accès aux fichiers de résultats de test. Les caractères génériques sont autorisés. Par exemple, '**/TEST-*.xml' pour tous les fichiers xml dont le nom commence par TEST-.",
+  "loc.input.label.jdkVersion": "Version de JDK",
+  "loc.input.help.jdkVersion": "Essaiera de découvrir le chemin d'accès à la version du JDK sélectionné et définira JAVA_HOME en conséquence.",
+  "loc.input.label.jdkArchitecture": "Architecture de JDK",
+  "loc.input.help.jdkArchitecture": "Indiquez éventuellement l'architecture (x86, x64) du JDK."
+}
