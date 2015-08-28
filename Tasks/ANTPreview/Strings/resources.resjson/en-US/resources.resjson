@@ -20,7 +20,7 @@
   "loc.input.label.publishCodeCoverageResults": "Publish to VSO/TFS",
   "loc.input.help.publishCodeCoverageResults": "Select this option to publish Code Coverage results produced by the Maven build to VSO/TFS.Code Coverage Summary and code Coverage Files would be published to TFS Server",
   "loc.input.label.codeCoverageTool": "CodeCoverage Tool",
-  "loc.input.help.codeCoverageTool": "Select the tool with which summary files have been generated. Only Jacoco support available currently.",
+  "loc.input.help.codeCoverageTool": "Select the tool with which summary files have been generated. Only Jacoco support available currently. Jacocoant.jar should be present in lib folder of Ant installation.",
   "loc.input.label.summaryFileLocation": "Summary File",
   "loc.input.help.summaryFileLocation": "Path of codecoverage summary file",
   "loc.input.label.reportDirectory": "Report directory",

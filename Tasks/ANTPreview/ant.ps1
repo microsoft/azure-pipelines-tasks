@@ -82,6 +82,12 @@ if($publishCodeCoverageResults)
 {
    # Publish Code Coverage Files
    $codeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
+   
+   if(-not $codeCoverageFiles)
+   {
+      Write-Warning "No code coverage files matching pattern '$additionalCodeCoverageFiles' were found."  
+   }
+   
    Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $codeCoverageFiles -Context $distributedTaskContext    
 }
 else

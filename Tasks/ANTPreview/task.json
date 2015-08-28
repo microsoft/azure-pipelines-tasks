@@ -93,7 +93,7 @@
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "JaCoCo",
-            "helpMarkDown": "Select the tool with which summary files have been generated. Only Jacoco support available currently.",
+            "helpMarkDown": "Select the tool with which summary files have been generated. Only Jacoco support available currently. Jacocoant.jar should be present in lib folder of Ant installation.",
             "options": {
                 "JaCoCo": "JaCoCo"
             }
