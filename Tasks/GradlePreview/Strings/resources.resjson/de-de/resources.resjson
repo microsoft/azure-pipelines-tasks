@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Gradle",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.description": "Mithilfe eines Gradle-Wrapper-Skripts erstellen",
+  "loc.instanceNameFormat": "gradlew $(tasks)",
+  "loc.group.displayName.junitTestResults": "JUnit-Testergebnisse",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.wrapperScript": "Gradle-Wrapper",
+  "loc.input.help.wrapperScript": "Relativer Pfad vom Repositorystamm zum Gradle-Wrapper-Skript.",
+  "loc.input.label.options": "Optionen",
+  "loc.input.label.tasks": "Aufgaben",
+  "loc.input.label.cwd": "Arbeitsverzeichnis",
+  "loc.input.help.cwd": "Arbeitsverzeichnis für die Ausführung des Gradle-Builds. Standardwert ist der Repositorystamm.",
+  "loc.input.label.publishJUnitResults": "In VSO/TFS veröffentlichen",
+  "loc.input.help.publishJUnitResults": "Wählen Sie diese Option, um vom Gradle-Build erzeugte JUnit-Testergebnisse in VSO/TFS zu veröffentlichen. Jede Testergebnisdatei, die mit \"Testergebnisdateien\" übereinstimmt, wird als Testlauf in VSO/TFS veröffentlicht.",
+  "loc.input.label.testResultsFiles": "Testergebnisdateien",
+  "loc.input.help.testResultsFiles": "Pfad der Testergebnisdateien. Platzhalter können verwendet werden. Beispiel: \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
+  "loc.input.label.jdkVersion": "JDK-Version",
+  "loc.input.help.jdkVersion": "Versucht, den Pfad zur ausgewählten JDK-Version zu ermitteln und JAVA_HOME entsprechend festzulegen.",
+  "loc.input.label.jdkArchitecture": "JDK-Architektur",
+  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64)."
+}

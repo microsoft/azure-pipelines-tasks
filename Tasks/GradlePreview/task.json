@@ -1,0 +1,178 @@
+{
+    "id": "32942eff-c7bb-41ed-b045-9ded82aa1b68",
+    "name": "GradleCC",
+    "friendlyName": "Gradle with CodeCoverage",
+    "description": "Build using a Gradle wrapper script and check CodeCoverage",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
+    "category": "Build",
+    "visibility": [
+                "Preview",
+                "Build"
+                  ],    
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "demands" : [
+        "java"
+    ],
+    "minimumAgentVersion": "1.88.0",
+    "groups": [
+        {
+            "name":"junitTestResults",
+            "displayName":"JUnit Test Results",
+            "isExpanded":true
+        },
+        {
+            "name": "codeCoverage",
+            "displayName": "Publish CodeCoverage Results",
+            "isExpanded": false
+        },
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
+    "inputs": [
+        { 
+            "name": "wrapperScript", 
+            "type": "filePath", 
+            "label": "Gradle Wrapper", 
+            "defaultValue": "gradlew", 
+            "required": true,
+            "helpMarkDown": "Relative path from the repository root to the `Gradle Wrapper script`."
+        },
+        { 
+            "name": "options", 
+            "type": "string", 
+             "label": "Options", 
+             "defaultValue": "", 
+             "required": false 
+        },
+        { 
+            "name": "tasks", 
+            "type": "string", 
+            "label": "Tasks", 
+            "defaultValue": "build", 
+            "required": true  
+        },
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Working directory to run Gradle build in. Defaults to repository root.",
+            "groupName": "advanced"
+        },
+        {
+            "name":"publishJUnitResults",
+            "type":"boolean",
+            "label":"Publish to VSO/TFS",
+            "required":true,
+            "defaultValue":"true",
+            "groupName":"junitTestResults",
+            "helpMarkDown":"Select this option to publish JUnit Test results produced by the Gradle build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
+        }, 
+        {
+            "name": "testResultsFiles",
+            "type": "filePath",
+            "label": "Test Results Files",
+            "defaultValue": "**/TEST-*.xml",
+            "required": true,
+            "groupName":"junitTestResults",
+            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+        },   
+        {
+            "name": "publishCodeCoverageResults",
+            "type": "boolean",
+            "label": "Publish to VSO/TFS",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Select this option to publish Code Coverage results produced by the Gradle build to VSO/TFS.Code Coverage Summary and code Coverage Files would be published to TFS Server"
+        },
+        {
+            "name": "codeCoverageTool",
+            "type": "pickList",
+            "label": "CodeCoverage Tool",
+            "required": false,
+            "groupName": "codeCoverage",
+            "defaultValue": "JaCoCo",
+            "helpMarkDown": "Select the tool with which summary files have been generated. Only Jacoco support available currently.",
+            "options": {
+                "JaCoCo": "JaCoCo"
+            }
+        },
+        {
+            "name": "summaryFileLocation",
+            "type": "string",
+            "label": "Summary File",
+            "defaultValue": "$(Build.Repository.LocalPath)\\build\\reports\\jacoco\\test\\jacocoTestReport.xml",
+            "required": true,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Path of codecoverage summary file"
+        },
+        {
+            "name": "reportDirectory",
+            "type": "string",
+            "label": "Report directory",
+            "defaultValue": "$(Build.Repository.LocalPath)\\build\\jacoco",
+            "required": true,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Path of codecoverage report directory"
+        },
+        {
+            "name": "additionalCodeCoverageFiles",
+            "type": "filePath",
+            "label": "Additional files",
+            "defaultValue": "**/*.exec",
+            "required": true,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Regular expression specifying the additional codecoverage files to be attached to build"
+        },
+        {
+            "name":"jdkVersion",
+            "type":"pickList",
+            "label":"JDK Version",
+            "required":false,
+            "groupName":"advanced",
+            "defaultValue":"default",
+            "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+            "options": {
+                "default":"default",
+                "1.8":"JDK 8",
+                "1.7":"JDK 7",
+                "1.6":"JDK 6"
+            }
+        },
+        { 
+            "name": "jdkArchitecture", 
+            "type": "pickList", 
+            "label": "JDK Architecture", 
+            "defaultValue":"x86", 
+            "required":false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+            "groupName":"advanced",
+            "options":{
+                "x86":"x86",
+                "x64":"x64"
+            }
+        }
+    ],
+    "instanceNameFormat": "gradlew $(tasks)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\gradle.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        },
+        "Node": {
+            "target": "gradle2.js",
+            "argumentFormat": ""
+        }
+    }
+}

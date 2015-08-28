@@ -1,0 +1,36 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Gradle with CodeCoverage",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.description": "Build using a Gradle wrapper script and check CodeCoverage",
+  "loc.instanceNameFormat": "gradlew $(tasks)",
+  "loc.group.displayName.junitTestResults": "JUnit Test Results",
+  "loc.group.displayName.codeCoverage": "Publish CodeCoverage Results",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.wrapperScript": "Gradle Wrapper",
+  "loc.input.help.wrapperScript": "Relative path from the repository root to the `Gradle Wrapper script`.",
+  "loc.input.label.options": "Options",
+  "loc.input.label.tasks": "Tasks",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Working directory to run Gradle build in. Defaults to repository root.",
+  "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
+  "loc.input.help.publishJUnitResults": "Select this option to publish JUnit Test results produced by the Gradle build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS.",
+  "loc.input.label.testResultsFiles": "Test Results Files",
+  "loc.input.help.testResultsFiles": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
+  "loc.input.label.publishCodeCoverageResults": "Publish to VSO/TFS",
+  "loc.input.help.publishCodeCoverageResults": "Select this option to publish Code Coverage results produced by the Gradle build to VSO/TFS.Code Coverage Summary and code Coverage Files would be published to TFS Server",
+  "loc.input.label.codeCoverageTool": "CodeCoverage Tool",
+  "loc.input.help.codeCoverageTool": "Select the tool with which summary files have been generated. Only Jacoco support available currently.",
+  "loc.input.label.summaryFileLocation": "Summary File",
+  "loc.input.help.summaryFileLocation": "Path of codecoverage summary file",
+  "loc.input.label.reportDirectory": "Report directory",
+  "loc.input.help.reportDirectory": "Path of codecoverage report directory",
+  "loc.input.label.additionalCodeCoverageFiles": "Additional files",
+  "loc.input.help.additionalCodeCoverageFiles": "Regular expression specifying the additional codecoverage files to be attached to build",
+  "loc.input.label.jdkVersion": "JDK Version",
+  "loc.input.help.jdkVersion": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+  "loc.input.label.jdkArchitecture": "JDK Architecture",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK."
+}
