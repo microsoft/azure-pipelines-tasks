@@ -87,18 +87,17 @@ function Get-MsDeployLocation
     )
 
     $msDeployNotFoundError = "Cannot find MsDeploy.exe location. Verify MsDeploy.exe is installed on $env:ComputeName and try operation again."
-    try
+    
+    if( -not (Test-Path -Path $regKeyPath))
     {
-        $path = (Get-ChildItem -Path $regKeyPath | Select -Last 1).GetValue("InstallPath")
-
-        if( -not (Test-Path $path))
-        {
-            ThrowError -errorMessage $msDeployNotFoundError 
-        }
+        ThrowError -errorMessage $msDeployNotFoundError 
     }
-    catch
+        
+    $path = (Get-ChildItem -Path $regKeyPath | Select -Last 1).GetValue("InstallPath")
+
+    if( -not (Test-Path -Path $path))
     {
-        ThrowError -errorMessage $msDeployNotFoundError
+        ThrowError -errorMessage $msDeployNotFoundError 
     }
 
     return (Join-Path $path msDeploy.exe)
@@ -114,26 +113,26 @@ function Get-AppCmdLocation
     $appCmdNotFoundError = "Cannot find appcmd.exe location. Verify IIS is configured on $env:ComputerName and try operation again."
     $appCmdMinVersionError = "Version of IIS is less than 7.0 on machine $env:ComputerName. Minimum version of IIS required is 7.0"
     
-    try
-    {
-        $regKey = Get-ItemProperty -Path $regKeyPath
-        $path = $regKey.InstallPath
-        $version = $regKey.MajorVersion
-        
-        if($version -le 6.0)
-        {
-            ThrowError -errorMessage $appCmdMinVersionError
-        }
-        
-        if( -not (Test-Path $path))
-        {
-            ThrowError -errorMessage $appCmdNotFoundError
-        }
-    }
-    catch
+    
+    if(-not (Test-Path -Path $regKeyPath))
     {
         ThrowError -errorMessage $appCmdNotFoundError
     }
+
+    $regKey = Get-ItemProperty -Path $regKeyPath
+    $path = $regKey.InstallPath
+    $version = $regKey.MajorVersion
+        
+    if($version -le 6.0)
+    {
+        ThrowError -errorMessage $appCmdMinVersionError
+    }
+        
+    if( -not (Test-Path $path))
+    {
+        ThrowError -errorMessage $appCmdNotFoundError
+    }
+    
 
     return (Join-Path $path appcmd.exe), $version
 }
