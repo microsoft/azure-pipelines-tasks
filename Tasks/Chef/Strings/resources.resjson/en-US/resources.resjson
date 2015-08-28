@@ -11,7 +11,7 @@
   "loc.input.label.Environment": "Environment",
   "loc.input.help.Environment": "Name of the Chef Environment to be used for Deployment. The attributes of that environment will be edited.",
   "loc.input.label.Attributes": "Environment Attributes",
-  "loc.input.help.Attributes": "Specify the value of the leaf node attribute(s) to be updated. Example. {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. Task fails if the leaf node does not exist.",
+  "loc.input.help.Attributes": "Specify the value of the leaf node attribute(s) to be updated. Example. { \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }. Task fails if the leaf node does not exist.",
   "loc.input.label.chefWaitTime": "Wait Time",
   "loc.input.help.chefWaitTime": "The amount of time (in minutes) to wait for this task to complete. Default value: 30 minutes"
 }

@@ -23,7 +23,7 @@ function ThrowError
 
         $readmelink = "http://aka.ms/apppoolconfigtaskhelp"
         $helpMessage = "For more info please refer to $readmelink"
-        throw "$errorMessage $helpMessage"
+        throw "$errorMessage $helpMessage `n"
 }
 
 function Locate-AppCmd()
@@ -83,7 +83,7 @@ function Get-AppCmdLocation
 
    if($appCmdPath -eq $null)
    {
-     $error = "Unable to find the location of appCmd.exe from registry on machine $env:COMPUTERNAME."
+     $error = "IIS not installed on machine $env:COMPUTERNAME."
      ThrowError -errorMessage $error
    }
 
@@ -102,7 +102,7 @@ function executeCommand([string] $command)
 
    if(-not ($LASTEXITCODE -eq 0))
    {
-       throw $result
+       ThrowError($result)
    }
 
    return $result
