@@ -116,8 +116,8 @@ function Get-AppCmdLocation
     
     try
     {
-        $path = Get-ItemProperty -Path $regKeyPath -Name "InstallPath"
-        $version = Get-ItemProperty -Path $regKeyPath -Name "MajorVersion"
+        $path = (Get-ItemProperty -Path $regKeyPath).InstallPath
+        $version = (Get-ItemProperty -Path $regKeyPath).MajorVersion
         
         if($version -le 6.0)
         {
@@ -146,8 +146,8 @@ function Get-MsDeployCmdArgs
     [string]$overRideParams
     )
     
-    $webDeployPackage = $webDeployPackage.Trim()
-    $webDeployParamFile = $webDeployParamFile.Trim()
+    $webDeployPackage = $webDeployPackage.Trim('"')
+    $webDeployParamFile = $webDeployParamFile.Trim('"')
     $overRideParams = $overRideParams.Trim('"').Replace('''', '"')
     
     if(-not ( Test-Path -Path $webDeployPackage))
@@ -164,7 +164,7 @@ function Get-MsDeployCmdArgs
             ThrowError -errorMessage "Param file does not exist : $webDeployParamFile"
         } 
 
-        $msDeployCmdArgs = [string]::Format(' -setParamFile={0}', $webDeployParamFile)
+        $msDeployCmdArgs = [string]::Format(' -setParamFile="{0}"', $webDeployParamFile)
     }
 
     if(-not (IsInputNullOrEmpty -str $overRideParams))
@@ -172,7 +172,7 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs = [string]::Format('{0} -setParam:{1}', $msDeployCmdArgs, $overRideParams)
     }
     
-    $msDeployCmdArgs = [string]::Format(' -verb:sync -source:package={0} {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000', $webDeployPackage, $msDeployCmdArgs)
+    $msDeployCmdArgs = [string]::Format(' -verb:sync -source:package="{0}" {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000', $webDeployPackage, $msDeployCmdArgs)
     return $msDeployCmdArgs
 }
 
@@ -185,8 +185,10 @@ function Does-WebSiteExists
     $command = "`"$appCmdPath`" $appCmdArgs"
     Write-Verbose "Checking webSite exists. Running Command : $command"
     
+    $ErrorActionPreference = 'Continue'
     $webSite = cmd.exe /c "`"$command`""
-    
+    $ErrorActionPreference = 'Stop'
+
     if($webSite -ne $null)
     {
         Write-Verbose "WebSite already exists" -Verbose
@@ -213,7 +215,9 @@ function Does-BindingExists
     $command = "`"$appCmdPath`" $appCmdArgs"
     Write-Verbose "Checking binding exists for website $siteName. Running Command : $command" -Verbose
     
+    $ErrorActionPreference = 'Continue'
     $webSite = cmd.exe /c "`"$command`""
+    $ErrorActionPreference = 'Stop'
 
     $binding = [string]::Format("{0}/{1}:{2}:{3}", $protocol, $ipAddress, $port, $hostname)
     
@@ -343,6 +347,26 @@ function Create-WebSite
     Run-Command -command $command
 }
 
+function Run-AdditionalCommands
+{
+    param(
+        [string]$additionalArgs
+    )
+
+    $additionalArgs = $additionalArgs.Trim('"')
+    if(IsInputNullOrEmpty -str $additionalArgs)
+    {
+        Write-Verbose "No additional commands to run returning" -Verbose
+        return
+    }
+    
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey    
+    $command = "`"$appCmdPath`" $additionalArgs"
+
+    Write-Verbose "Running additional commands. $command" -Verbose
+    Run-Command -command $command
+}
+
 function Update-WebSite
 {
     param(
@@ -356,8 +380,7 @@ function Update-WebSite
         [string]$protocol,
         [string]$ipAddress,
         [string]$port,
-        [string]$hostname,
-        [string]$additionalArgs
+        [string]$hostname        
     )
 
     $appCmdArgs = [string]::Format(' set site /site.name:{0}', $siteName)
@@ -393,18 +416,12 @@ function Update-WebSite
     {
         $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocol, $ipAddress, $port, $hostname)
     }
-
-    $additionalArgs = $additionalArgs.Trim('"')
-    if(-not (IsInputNullOrEmpty -str $additionalArgs))
-    {
-        $appCmdArgs = [string]::Format("{0} {1}", $appCmdArgs, $additionalArgs)
-    }
         
     $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $command = "`"$appCmdPath`" $appCmdArgs"
     
     Write-Verbose "Updating WebSite Properties. Running Command : $command" -Verbose
-    Run-Command -command $command
+    Run-Command -command $command 
 }
 
 function Create-And-Update-WebSite
@@ -420,8 +437,7 @@ function Create-And-Update-WebSite
         [string]$protocol,
         [string]$ipAddress,
         [string]$port,
-        [string]$hostname,
-        [string]$additionalArgs
+        [string]$hostname
     )
 
     $doesWebSiteExists = Does-WebSiteExists -siteName $siteName
@@ -432,7 +448,7 @@ function Create-And-Update-WebSite
     }
 
     Update-WebSite -siteName $siteName -appPoolName $appPoolName -physicalPath $physicalPath -authType $authType -userName $userName -password $password `
-    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -hostname $hostname -additionalArgs $additionalArgs
+    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -hostname $hostname
 }
 
 function Execute-Main
@@ -442,7 +458,7 @@ function Execute-Main
     if(-not (IsInputNullOrEmpty -str $WebSiteName))
     {
         Create-And-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
-         -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocol $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -additionalArgs $AppCmdArgs
+         -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocol $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName
 
         if($Protocol -eq "https")
         {
@@ -450,6 +466,8 @@ function Execute-Main
             Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVersion
             Enable-SNI -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
         }
+
+        Run-AdditionalCommands -additionalArgs $AppCmdArgs
     }
 
     Deploy-WebSite -webDeployPkg $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRiderParams $OverRideParams
