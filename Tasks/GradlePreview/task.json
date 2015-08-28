@@ -11,8 +11,8 @@
                   ],    
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
-        "Minor": 0,
+        "Major": 0,
+        "Minor": 1,
         "Patch": 0
     },
     "demands" : [
@@ -102,7 +102,7 @@
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "JaCoCo",
-            "helpMarkDown": "Select the tool with which summary files have been generated",
+            "helpMarkDown": "Select the tool with which summary files have been generated. Only Jacoco support available currently.",
             "options": {
                 "JaCoCo": "JaCoCo"
             }
@@ -111,16 +111,16 @@
             "name": "summaryFileLocation",
             "type": "string",
             "label": "Summary File",
-            "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco\\jacoco.xml",
+            "defaultValue": "$(Build.Repository.LocalPath)\\build\\reports\\jacoco\\test\\jacocoTestReport.xml",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Path of codecoverage Summary file"
+            "helpMarkDown": "Path of codecoverage summary file"
         },
         {
             "name": "reportDirectory",
             "type": "string",
             "label": "Report directory",
-            "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco",
+            "defaultValue": "$(Build.Repository.LocalPath)\\build\\jacoco",
             "required": true,
             "groupName": "codeCoverage",
             "helpMarkDown": "Path of codecoverage report directory"
@@ -132,7 +132,7 @@
             "defaultValue": "**/*.exec",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "regular expression Specifying the additional codecoverage Files to be attached to build"
+            "helpMarkDown": "Regular expression specifying the additional codecoverage files to be attached to build"
         },
         {
             "name":"jdkVersion",
