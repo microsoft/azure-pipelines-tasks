@@ -81,8 +81,8 @@ else
 if($publishCodeCoverageResults)
 {
    # Publish Code Coverage Files
-   $CodeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $CodeCoverageFiles -Context $distributedTaskContext    
+   $codeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
+   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $codeCoverageFiles -Context $distributedTaskContext    
 }
 else
 {
