@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands" : [
         "Chef",
@@ -44,7 +44,7 @@
             "label": "Environment Attributes",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the value of the leaf node attribute(s) to be updated. Example. {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. Task fails if the leaf node does not exist."
+            "helpMarkDown": "Specify the value of the leaf node attribute(s) to be updated. Example. { \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }. Task fails if the leaf node does not exist."
         },
         {
             "name": "chefWaitTime",

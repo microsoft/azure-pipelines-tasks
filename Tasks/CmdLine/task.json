@@ -36,6 +36,7 @@
             "type": "string", 
             "label": "Arguments", 
             "defaultValue": "", 
+            "helpMarkDown": "Arguments passed to the tool",
             "required": false 
         },
         { 
@@ -43,8 +44,7 @@
             "type": "filePath", 
             "label": "Working folder", 
             "defaultValue": "", 
-            "required": false,
-            "helpMarkDown": "Arguments passed to the tool",
+            "required": false,            
             "groupName":"advanced"
         },
         { 
