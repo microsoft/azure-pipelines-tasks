@@ -42,7 +42,7 @@ if ($solution.Contains("*") -or $solution.Contains("?"))
 }
 else
 {
-    Write-Verbose "No Pattern found in solution parameter."
+    Write-Verbose "No pattern found in solution parameter."
     $solutionFiles = ,$solution
 }
 
@@ -79,16 +79,16 @@ foreach($sf in $solutionFiles)
     {
         $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
 
-        Write-Verbose "Searching for nuget package configuration files using pattern $slnFolder\**\packages.config"
+        Write-Verbose "Searching for NuGet package configuration files using pattern $slnFolder\**\packages.config"
         $pkgConfig = Find-Files -SearchPattern "$slnFolder\**\packages.config"
         if ($pkgConfig)
         {
-            Write-Verbose "Running nuget package restore for $slnFolder"
+            Write-Verbose "Running NuGet package restore for $slnFolder"
             Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" $args" -WorkingFolder $slnFolder
         }
         else
         {
-            Write-Verbose "No nuget package configuration files found for $sf"
+            Write-Verbose "No NuGet package configuration files found for $sf"
         }
     }
 }

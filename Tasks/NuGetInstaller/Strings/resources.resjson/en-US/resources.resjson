@@ -7,12 +7,12 @@
   "loc.description": "Installs and updates missing NuGet packages",
   "loc.instanceNameFormat": "NuGet restore $(solution)",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.solution": "Path to Solution",
-  "loc.input.help.solution": "The path to the Visual Studio Solution file",
+  "loc.input.label.solution": "Path to solution",
+  "loc.input.help.solution": "The path to the Visual Studio solution file",
   "loc.input.label.noCache": "Disable local cache",
-  "loc.input.help.noCache": "Equivalent to the -NoCache NuGet.exe commanline argument",
-  "loc.input.label.nuGetRestoreArgs": "NuGet Arguments",
-  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
+  "loc.input.help.noCache": "Equivalent to `NuGet.exe -NoCache`",
+  "loc.input.label.nuGetRestoreArgs": "NuGet arguments",
+  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to `NuGet.exe restore`. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Path to NuGet.exe",
-  "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
+  "loc.input.help.nuGetPath": "Optionally supply the path to `NuGet.exe`"
 }
