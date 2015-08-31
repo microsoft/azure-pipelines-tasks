@@ -61,18 +61,13 @@ function Run-Command
 
     $ErrorActionPreference = 'Continue'
 
-    $osVersion = cmd /c "ver"
-    $matches = [System.Text.RegularExpressions.Regex]::Matches($osVersion, "([0-9]+).([0-9]).([0-9])");
-    $osMajorVer = $matches[0].Groups[1].Value    
-    Write-Verbose "Current OS Version : $osMajorVer" -Verbose
-
-    if( $osMajorVer -eq 10)
+    if( $psversiontable.PSVersion.Major -le 4)
     {        
-        $result = cmd.exe /c "$command"    
+        $result = cmd.exe /c "`"$command`""    
     }
     else
     {
-        $result = cmd.exe /c "`"$command`""
+        $result = cmd.exe /c "$command"
     }
     
     $ErrorActionPreference = 'Stop'
