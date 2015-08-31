@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -51,12 +51,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder"
     },
     {
-      "name": "SourceFolder",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.SourceFolder",
-      "defaultValue": "",
+      "name": "TreatNotIndexedAsWarning",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TreatNotIndexedAsWarning",
+      "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SourceFolder",
+      "helpMarkDown": "ms-resource:loc.input.help.TreatNotIndexedAsWarning",
       "groupName": "advanced"
     },
     {
