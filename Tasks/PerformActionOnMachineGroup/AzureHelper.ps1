@@ -63,11 +63,12 @@ function Initialize-AzureHelper
 
     Switch-AzureMode AzureResourceManager
 
-    if($machineGroup.ProviderDataList.Count -gt 0)
+    if($machineGroup.ProviderData.Count -gt 0)
     {
-        $providerDataName = $machineGroup.ProviderDataList[0].Name
+        $providerDataName = $machineGroup.ProviderData[0].Name
+        $providerName = $machineGroup.Provider.Name
         Write-Verbose "Getting providerData : $providerDataName" -Verbose
-        $providerData = Get-ProviderData -ProviderDataName $providerDataName -Connection $connection
+        $providerData = Get-ProviderData -ProviderDataName $providerDataName -Connection $connection -ProviderName $providerName
         $subscriptionId = $providerData.Properties.GetProperty("SubscriptionId")     
         
         if( ![string]::IsNullOrEmpty($subscriptionId) )
