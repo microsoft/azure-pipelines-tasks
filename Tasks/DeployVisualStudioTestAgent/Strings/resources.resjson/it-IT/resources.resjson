@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione agente di test di Visual Studio",
-  "loc.helpMarkDown": "Consente di distribuire e configurare l'agente di test per eseguire test su un gruppo di computer lab",
+  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
   "loc.description": "Consente di distribuire e configurare l'agente di test per eseguire test su un gruppo di computer lab",
   "loc.instanceNameFormat": "Distribuisci agente di test in $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Gruppo di computer di test",

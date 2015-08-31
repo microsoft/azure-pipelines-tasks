@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuisci gruppo di risorse di Azure",
-  "loc.helpMarkDown": "Consente di effettuare il provisioning e la distribuzione di un gruppo di risorse di Azure",
+  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Consente di effettuare il provisioning e la distribuzione di un gruppo di risorse di Azure",
   "loc.instanceNameFormat": "Distribuzione Azure: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "Opzioni di distribuzione avanzate",

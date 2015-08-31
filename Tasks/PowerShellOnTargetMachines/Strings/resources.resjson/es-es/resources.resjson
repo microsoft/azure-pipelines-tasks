@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell en equipos de destino",
-  "loc.helpMarkDown": "Ejecutar scripts de PowerShell en equipo(s) remoto(s)",
+  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
   "loc.description": "Ejecutar scripts de PowerShell en equipo(s) remoto(s)",
   "loc.instanceNameFormat": "Ejecutar PowerShell en $(EnvironmentName)",
   "loc.group.displayName.advanced": "Avanzado",

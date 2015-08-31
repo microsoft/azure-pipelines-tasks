@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure リソース グループの展開",
-  "loc.helpMarkDown": "Azure リソース グループをプロビジョニングし、展開します",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Azure リソース グループをプロビジョニングし、展開します",
   "loc.instanceNameFormat": "Azure の展開: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "詳細な展開オプション",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows コンピューターのファイル コピー",
-  "loc.helpMarkDown": "ファイルをリモート コンピューター (複数可) にコピーします",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "ファイルをリモート コンピューター (複数可) にコピーします",
   "loc.instanceNameFormat": "ファイルのコピー先 $(EnvironmentName)",
   "loc.group.displayName.advanced": "詳細設定",

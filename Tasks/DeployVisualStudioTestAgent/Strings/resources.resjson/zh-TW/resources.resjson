@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent 部署",
-  "loc.helpMarkDown": "部署及設定 Test Agent 以在實驗室電腦群組上執行測試",
+  "loc.helpMarkDown": "[詳細資訊](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
   "loc.description": "部署及設定 Test Agent 以在實驗室電腦群組上執行測試",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 部署測試代理程式",
   "loc.group.displayName.testMachineGroups": "測試電腦群組",

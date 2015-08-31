@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Копирование файлов на компьютер Windows",
-  "loc.helpMarkDown": "Копировать файлы на удаленные компьютеры",
+  "loc.helpMarkDown": "[Подробнее](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "Копировать файлы на удаленные компьютеры",
   "loc.instanceNameFormat": "Копировать файлы в $(EnvironmentName)",
   "loc.group.displayName.advanced": "Дополнительно",

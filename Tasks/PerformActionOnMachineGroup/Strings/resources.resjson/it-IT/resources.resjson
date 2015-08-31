@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azioni del gruppo di computer",
-  "loc.helpMarkDown": "Consente di eseguire azioni, come start, stop o delete su un gruppo di computer",
+  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "Azioni del gruppo di computer",
   "loc.instanceNameFormat": "$(Action) gruppo di computer ",
   "loc.input.label.MachineGroupName": "Gruppo di computer",

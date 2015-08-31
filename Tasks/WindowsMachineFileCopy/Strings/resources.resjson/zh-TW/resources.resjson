@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 電腦檔案複製",
-  "loc.helpMarkDown": "複製檔案到遠端電腦",
+  "loc.helpMarkDown": "[詳細資訊](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "複製檔案到遠端電腦",
   "loc.instanceNameFormat": "複製檔案到 $(EnvironmentName)",
   "loc.group.displayName.advanced": "進階",

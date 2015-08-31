@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 리소스 그룹 배포",
-  "loc.helpMarkDown": "Azure 리소스 그룹 프로비전 및 배포",
+  "loc.helpMarkDown": "[자세한 정보](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Azure 리소스 그룹 프로비전 및 배포",
   "loc.instanceNameFormat": "Azure 배포: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "배포 고급 옵션",

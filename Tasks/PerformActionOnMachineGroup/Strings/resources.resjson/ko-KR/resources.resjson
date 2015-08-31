@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "컴퓨터 그룹 작업",
-  "loc.helpMarkDown": "컴퓨터 그룹에 대해 시작, 중지, 삭제와 같은 작업을 수행합니다.",
+  "loc.helpMarkDown": "[자세한 정보](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PerformActionOnMachineGroup/README.md)",
   "loc.description": "컴퓨터 그룹 작업",
   "loc.instanceNameFormat": "컴퓨터 그룹 $(Action)",
   "loc.input.label.MachineGroupName": "컴퓨터 그룹",

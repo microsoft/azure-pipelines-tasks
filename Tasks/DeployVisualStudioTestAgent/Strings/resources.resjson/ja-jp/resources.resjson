@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent の展開",
-  "loc.helpMarkDown": "ラボのコンピューター グループでテストを実行するために Test Agent を展開および構成します",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
   "loc.description": "ラボのコンピューター グループでテストを実行するために Test Agent を展開および構成します",
   "loc.instanceNameFormat": "TestAgent を $(testMachineGroup) に展開",
   "loc.group.displayName.testMachineGroups": "テスト コンピューター グループ",

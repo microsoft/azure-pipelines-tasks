@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copia dei file del computer Windows",
-  "loc.helpMarkDown": "Consente di copiare file nei computer remoti",
+  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "Consente di copiare file nei computer remoti",
   "loc.instanceNameFormat": "Copia file in $(EnvironmentName)",
   "loc.group.displayName.advanced": "Avanzate",

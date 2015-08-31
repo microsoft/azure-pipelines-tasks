@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание группы ресурсов Azure",
-  "loc.helpMarkDown": "Подготовка и развертывание группы ресурсов Azure",
+  "loc.helpMarkDown": "[Подробнее](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Подготовка и развертывание группы ресурсов Azure",
   "loc.instanceNameFormat": "Развертывание Azure: $(resourceGroupName)",
   "loc.group.displayName.advancedDeploymentOptions": "Расширенные параметры развертывания",

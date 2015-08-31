@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "テスト エージェントを使用した Visual Studio テスト",
-  "loc.helpMarkDown": "ラボ コンピューター グループ内の複数のテスト エージェントを使用して、テストを分散して実行します。",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
   "loc.description": "ラボ コンピューター グループ内の複数のテスト エージェントを使用して、テストを分散して実行します。",
   "loc.instanceNameFormat": "$(testMachineGroup) でのテスト $(sourcefilters) の実行",
   "loc.group.displayName.testMachineGroups": "テスト コンピューター グループ",

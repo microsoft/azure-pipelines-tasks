@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell на целевых компьютерах",
-  "loc.helpMarkDown": "Выполнять сценарии PowerShell на удаленных компьютерах",
+  "loc.helpMarkDown": "[Подробнее](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md)",
   "loc.description": "Выполнять сценарии PowerShell на удаленных компьютерах",
   "loc.instanceNameFormat": "Выполнить PowerShell в $(EnvironmentName)",
   "loc.group.displayName.advanced": "Дополнительно",

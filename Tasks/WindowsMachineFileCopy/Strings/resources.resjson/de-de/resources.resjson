@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Dateikopiervorgang auf Windows-Computer",
-  "loc.helpMarkDown": "Dateien auf Remotecomputer kopieren",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "Dateien auf Remotecomputer kopieren",
   "loc.instanceNameFormat": "Dateien nach $(EnvironmentName) kopieren",
   "loc.group.displayName.advanced": "Erweitert",

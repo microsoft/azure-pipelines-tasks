@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copia de archivo en equipo Windows",
-  "loc.helpMarkDown": "Copiar archivos en equipo(s) remoto(s)",
+  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
   "loc.description": "Copiar archivos en equipo(s) remoto(s)",
   "loc.instanceNameFormat": "Copiar archivos en $(EnvironmentName)",
   "loc.group.displayName.advanced": "Avanzado",
