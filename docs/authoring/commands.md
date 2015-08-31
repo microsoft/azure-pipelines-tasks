@@ -127,6 +127,26 @@ The general format for a logging command is:
                 </p>
             </td>
         </tr>
+        <tr>
+            <td>
+                <p align="left">
+                    ##vso[task.addattachment]value
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    type=attachment type (Required) <br>
+                    name=attachment name (Required) <br>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Upload and attach attachment to current timeline record. <br>
+                    Example: <br>
+					##vso[task.addattachment type=myattachmenttype;name=myattachmentname;]c:\myattachment.txt<br> 
+                </p>
+            </td>
+        </tr>
     </tbody>
 </table>
 

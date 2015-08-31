@@ -17,22 +17,36 @@ var gb = new tl.ToolRunner(wrapperScript);
 gb.arg(tl.getDelimitedInput('options', ' ', false));
 gb.arg(tl.getDelimitedInput('tasks', ' ', true));
 
-// update JAVA_HOME if user selected specific JDK version
-var jdkVersion = tl.getInput('jdkVersion');
-var jdkArchitecture = tl.getInput('jdkArchitecture');
-if(jdkVersion != 'default') {
-  // jdkVersion should be in the form of 1.7, 1.8, or 1.10
-  // jdkArchitecture is either x64 or x86
-  // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
-  var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
-  var specifiedJavaHome = tl.getVariable(envName);
-  if (!specifiedJavaHome) {
-    tl.error('Failed to find specified JDK version.  Please make sure environment varialbe ' + envName + ' exists and is set to a valid JDK.');
-    tl.exit(1);    
-   }
+// update JAVA_HOME if user selected specific JDK version or set path manually
+var javaHomeSelection = tl.getInput('javaHomeSelection', true);
+var specifiedJavaHome = null;
 
-   tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
-   process.env['JAVA_HOME'] = specifiedJavaHome;
+if (javaHomeSelection == 'JDKVersion') {
+        tl.debug('Using JDK version to find and set JAVA_HOME');
+        var jdkVersion = tl.getInput('jdkVersion');
+        var jdkArchitecture = tl.getInput('jdkArchitecture');
+    
+        if(jdkVersion != 'default') {
+              // jdkVersion should be in the form of 1.7, 1.8, or 1.10
+              // jdkArchitecture is either x64 or x86
+              // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
+              var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
+              specifiedJavaHome = tl.getVariable(envName);
+              if (!specifiedJavaHome) {
+                    tl.error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
+                    tl.exit(1);    
+              }
+        }
+}
+else {
+    tl.debug('Using path from user input to set JAVA_HOME');
+    var jdkUserInputPath = tl.getPathInput('jdkUserInputPath', true, true);  
+    specifiedJavaHome = jdkUserInputPath;
+}
+
+if (specifiedJavaHome) {
+        tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
+        process.env['JAVA_HOME'] = specifiedJavaHome;
 }
 
 var publishJUnitResults = tl.getInput('publishJUnitResults');

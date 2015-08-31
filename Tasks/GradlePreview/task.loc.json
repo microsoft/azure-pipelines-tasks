@@ -1,0 +1,181 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "32942eff-c7bb-41ed-b045-9ded82aa1b68",
+  "name": "GradleCC",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Preview",
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [
+    "java"
+  ],
+  "minimumAgentVersion": "1.88.0",
+  "groups": [
+    {
+      "name": "junitTestResults",
+      "displayName": "ms-resource:loc.group.displayName.junitTestResults",
+      "isExpanded": true
+    },
+    {
+      "name": "codeCoverage",
+      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "wrapperScript",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.wrapperScript",
+      "defaultValue": "gradlew",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.wrapperScript"
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.options",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "tasks",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tasks",
+      "defaultValue": "build",
+      "required": true
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishJUnitResults",
+      "required": true,
+      "defaultValue": "true",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
+    },
+    {
+      "name": "testResultsFiles",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.testResultsFiles",
+      "defaultValue": "**/TEST-*.xml",
+      "required": true,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
+    },
+    {
+      "name": "publishCodeCoverageResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishCodeCoverageResults",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.publishCodeCoverageResults"
+    },
+    {
+      "name": "codeCoverageTool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "JaCoCo",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "summaryFileLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.summaryFileLocation",
+      "defaultValue": "$(Build.Repository.LocalPath)\\build\\reports\\jacoco\\test\\jacocoTestReport.xml",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
+    },
+    {
+      "name": "reportDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.reportDirectory",
+      "defaultValue": "$(Build.Repository.LocalPath)\\build\\jacoco",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
+    },
+    {
+      "name": "additionalCodeCoverageFiles",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
+      "defaultValue": "**/*.exec",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
+    },
+    {
+      "name": "jdkVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkVersion",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "default",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkVersion",
+      "options": {
+        "default": "default",
+        "1.8": "JDK 8",
+        "1.7": "JDK 7",
+        "1.6": "JDK 6"
+      }
+    },
+    {
+      "name": "jdkArchitecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkArchitecture",
+      "defaultValue": "x86",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
+      "groupName": "advanced",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\gradle.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    },
+    "Node": {
+      "target": "gradle2.js",
+      "argumentFormat": ""
+    }
+  }
+}

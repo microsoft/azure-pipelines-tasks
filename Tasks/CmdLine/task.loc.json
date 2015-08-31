@@ -39,6 +39,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "required": false
     },
     {
@@ -47,7 +48,6 @@
       "label": "ms-resource:loc.input.label.workingFolder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
       "groupName": "advanced"
     },
     {

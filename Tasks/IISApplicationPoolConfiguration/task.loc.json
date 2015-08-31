@@ -73,13 +73,13 @@
       "name": "DotNetVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.DotNetVersion",
-      "defaultValue": ".NET CLR Version v4.0.30319",
+      "defaultValue": "v4.0",
       "required": true,
       "groupName": "applicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.DotNetVersion",
       "options": {
-        "v4.0": ".NET CLR Version v4.0.30319",
-        "v2.0": ".NET CLR Version v2.0.50727",
+        "v4.0": "v4.0",
+        "v2.0": "v2.0",
         "No Managed Code": "No Managed Code"
       }
     },

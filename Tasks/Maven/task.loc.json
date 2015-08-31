@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -76,6 +76,19 @@
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
     },
     {
+      "name": "javaHomeSelection",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.javaHomeSelection",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "JDKVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.javaHomeSelection",
+      "options": {
+        "JDKVersion": "JDK Version",
+        "Path": "Path"
+      }
+    },
+    {
       "name": "jdkVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
@@ -83,12 +96,23 @@
       "groupName": "advanced",
       "defaultValue": "default",
       "helpMarkDown": "ms-resource:loc.input.help.jdkVersion",
+      "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
         "1.6": "JDK 6"
       }
+    },
+    {
+      "name": "jdkUserInputPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jdkUserInputPath",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkUserInputPath",
+      "visibleRule": "javaHomeSelection = Path"
     },
     {
       "name": "jdkArchitecture",

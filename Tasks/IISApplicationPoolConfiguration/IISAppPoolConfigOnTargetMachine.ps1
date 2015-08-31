@@ -23,7 +23,7 @@ function ThrowError
 
         $readmelink = "http://aka.ms/apppoolconfigtaskhelp"
         $helpMessage = "For more info please refer to $readmelink"
-        throw "$errorMessage $helpMessage"
+        throw "$errorMessage $helpMessage `n"
 }
 
 function Locate-AppCmd()
@@ -83,7 +83,7 @@ function Get-AppCmdLocation
 
    if($appCmdPath -eq $null)
    {
-     $error = "Unable to find the location of appCmd.exe from registry on machine $env:COMPUTERNAME."
+     $error = "IIS not installed on machine $env:COMPUTERNAME."
      ThrowError -errorMessage $error
    }
 
@@ -102,7 +102,7 @@ function executeCommand([string] $command)
 
    if(-not ($LASTEXITCODE -eq 0))
    {
-       throw $result
+       ThrowError($result)
    }
 
    return $result
@@ -159,17 +159,17 @@ function SetAdditionalCommands()
    {
    $additionalCommand = $additionalCommand.Replace("'","`"")   
    Write-Verbose "Setting  properties  passed as additional arguments on application pool  : $applicationPoolName, additionalProperties:$additionalArguments on machine $env:COMPUTERNAME" -Verbose
-   $setAdditionalPropertiesCommand = "`"$appcmd`" set apppool /apppool.name:$applicationPoolName $additionalCommand"
+   $setAdditionalPropertiesCommand = "`"$appcmd`" $additionalCommand"
    executeCommand("`"$setAdditionalPropertiesCommand`"")
    Write-Verbose "Successfully set additional properties on application pool: $applicationPoolName on machine $env:COMPUTERNAME" -Verbose
    }
 }
 
 function SetAppPoolProperties()
-{
-   SetAdditionalCommands
+{   
    SetIdentity
    SetManagedRuntimeVersionAndPipelineMode
+   SetAdditionalCommands
 }
 
 function CreateAppPool()

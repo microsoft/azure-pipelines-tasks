@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Gradle",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.description": "使用 Gradle 包装器脚本生成",
+  "loc.instanceNameFormat": "gradlew $(tasks)",
+  "loc.group.displayName.junitTestResults": "JUnit 测试结果",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.wrapperScript": "Gradle Wrapper",
+  "loc.input.help.wrapperScript": "从存储库根到“Gradle 包装器脚本”的相对路径。",
+  "loc.input.label.options": "选项",
+  "loc.input.label.tasks": "任务",
+  "loc.input.label.cwd": "工作目录",
+  "loc.input.help.cwd": "要在其中运行 Gradle 生成的工作目录。默认为存储库根。",
+  "loc.input.label.publishJUnitResults": "发布到 VSO/TFS",
+  "loc.input.help.publishJUnitResults": "选择此选项可将 Gradle 生成形成的 JUnit 测试结果发布到 VSO/TFS。每个与“测试结果文件”匹配的测试结果文件都会在 VSO/TFS 中发布为测试运行。",
+  "loc.input.label.testResultsFiles": "测试结果文件",
+  "loc.input.help.testResultsFiles": "测试结果文件路径。可以使用通配符。例如，\"**/TEST-*.xml\" 表示名称以 TEST- 开头的所有 xml 文件。",
+  "loc.input.label.jdkVersion": "JDK 版本",
+  "loc.input.help.jdkVersion": "将尝试发现所选 JDK 版本的路径并相应地设置 JAVA_HOME。",
+  "loc.input.label.jdkArchitecture": "JDK 体系结构",
+  "loc.input.help.jdkArchitecture": "可以选择提供 JDK 的体系结构(x86、x64)。"
+}

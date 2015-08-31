@@ -24,7 +24,7 @@
   "loc.input.label.Username": "Username",
   "loc.input.label.Password": "Password",
   "loc.input.label.AdditionalArguments": "Additional appcmd.exe arguments",
-  "loc.input.help.AdditionalArguments": "Additional appcmd.exe arguments needed to set application pool properties Eg: queueLength:1000 /startMode:AlwaysRunning /enable32BitAppOnWin64:True",
+  "loc.input.help.AdditionalArguments": "Additional appcmd.exe arguments needed to set application pool properties Eg: /queueLength:1000 /startMode:AlwaysRunning <br> /enable32BitAppOnWin64:True",
   "loc.input.label.ConfigureAppPoolInParallel": "Deploy in Parallel",
   "loc.input.help.ConfigureAppPoolInParallel": "Setting it to true will configure IIS application pool in parallel on the target machines."
 }

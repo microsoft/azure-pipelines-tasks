@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 1
+		"Patch": 2
 	},
 	"demands": [
         "azureps",
@@ -159,7 +159,7 @@
     ], 
 	"instanceNameFormat": "Deploy Azure SQL DACPAC: $(DacpacFile)",
 	"execution": {
-		"PowerShell": {
+		"AzurePowerShell": {
 			"target": "$(currentDirectory)\\DeploySqlAzure.ps1",
 			"argumentFormat": "",
 			"workingDirectory": "$(currentDirectory)"

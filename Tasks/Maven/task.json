@@ -15,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -71,6 +71,19 @@
             "required": true,
             "groupName":"junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+        },
+        {
+            "name":"javaHomeSelection",
+            "type":"radio",
+            "label":"Set JAVA_HOME by",
+            "required":true,
+            "groupName":"advanced",
+            "defaultValue":"JDKVersion",
+            "helpMarkDown": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
+            "options": {
+                "JDKVersion":"JDK Version",
+                "Path":"Path"
+            }
         },     
         {
             "name":"jdkVersion",
@@ -80,12 +93,23 @@
             "groupName":"advanced",
             "defaultValue":"default",
             "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+            "visibleRule":"javaHomeSelection = JDKVersion",
             "options": {
                 "default":"default",
                 "1.8":"JDK 8",
                 "1.7":"JDK 7",
                 "1.6":"JDK 6"
             }
+        },     
+        {
+            "name":"jdkUserInputPath",
+            "type":"string",
+            "label":"JDK Path",
+            "required":true,
+            "groupName":"advanced",
+            "defaultValue":"",
+            "helpMarkDown": "Sets JAVA_HOME to the given path.",
+            "visibleRule":"javaHomeSelection = Path"
         },
         { 
             "name": "jdkArchitecture", 
