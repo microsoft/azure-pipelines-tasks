@@ -55,14 +55,24 @@ function ThrowError
 function Run-Command
 {
     param(
-        [string]$command
+        [string]$command,
+        [bool] $failOnErr = $true
     )
 
     $ErrorActionPreference = 'Continue'
-    $result = cmd.exe /c "`"$command`""
+
+    if( $psversiontable.PSVersion.Major -le 4)
+    {        
+        $result = cmd.exe /c "`"$command`""    
+    }
+    else
+    {
+        $result = cmd.exe /c "$command"
+    }
+    
     $ErrorActionPreference = 'Stop'
 
-    if(-not ($LASTEXITCODE -eq 0))
+    if($failOnErr -and $LASTEXITCODE -ne 0)
     {
         ThrowError($result)
     }
@@ -87,18 +97,17 @@ function Get-MsDeployLocation
     )
 
     $msDeployNotFoundError = "Cannot find MsDeploy.exe location. Verify MsDeploy.exe is installed on $env:ComputeName and try operation again."
-    try
+    
+    if( -not (Test-Path -Path $regKeyPath))
     {
-        $path = (Get-ChildItem -Path $regKeyPath | Select -Last 1).GetValue("InstallPath")
-
-        if( -not (Test-Path $path))
-        {
-            ThrowError -errorMessage $msDeployNotFoundError 
-        }
+        ThrowError -errorMessage $msDeployNotFoundError 
     }
-    catch
+        
+    $path = (Get-ChildItem -Path $regKeyPath | Select -Last 1).GetValue("InstallPath")
+
+    if( -not (Test-Path -Path $path))
     {
-        ThrowError -errorMessage $msDeployNotFoundError
+        ThrowError -errorMessage $msDeployNotFoundError 
     }
 
     return (Join-Path $path msDeploy.exe)
@@ -114,25 +123,26 @@ function Get-AppCmdLocation
     $appCmdNotFoundError = "Cannot find appcmd.exe location. Verify IIS is configured on $env:ComputerName and try operation again."
     $appCmdMinVersionError = "Version of IIS is less than 7.0 on machine $env:ComputerName. Minimum version of IIS required is 7.0"
     
-    try
-    {
-        $path = Get-ItemProperty -Path $regKeyPath -Name "InstallPath"
-        $version = Get-ItemProperty -Path $regKeyPath -Name "MajorVersion"
-        
-        if($version -le 6.0)
-        {
-            ThrowError -errorMessage $appCmdMinVersionError
-        }
-        
-        if( -not (Test-Path $path))
-        {
-            ThrowError -errorMessage $appCmdNotFoundError
-        }
-    }
-    catch
+    
+    if(-not (Test-Path -Path $regKeyPath))
     {
         ThrowError -errorMessage $appCmdNotFoundError
     }
+
+    $regKey = Get-ItemProperty -Path $regKeyPath
+    $path = $regKey.InstallPath
+    $version = $regKey.MajorVersion
+        
+    if($version -le 6.0)
+    {
+        ThrowError -errorMessage $appCmdMinVersionError
+    }
+        
+    if( -not (Test-Path $path))
+    {
+        ThrowError -errorMessage $appCmdNotFoundError
+    }
+    
 
     return (Join-Path $path appcmd.exe), $version
 }
@@ -146,8 +156,8 @@ function Get-MsDeployCmdArgs
     [string]$overRideParams
     )
     
-    $webDeployPackage = $webDeployPackage.Trim()
-    $webDeployParamFile = $webDeployParamFile.Trim()
+    $webDeployPackage = $webDeployPackage.Trim('"')
+    $webDeployParamFile = $webDeployParamFile.Trim('"')
     $overRideParams = $overRideParams.Trim('"').Replace('''', '"')
     
     if(-not ( Test-Path -Path $webDeployPackage))
@@ -164,7 +174,7 @@ function Get-MsDeployCmdArgs
             ThrowError -errorMessage "Param file does not exist : $webDeployParamFile"
         } 
 
-        $msDeployCmdArgs = [string]::Format(' -setParamFile={0}', $webDeployParamFile)
+        $msDeployCmdArgs = [string]::Format(' -setParamFile="{0}"', $webDeployParamFile)
     }
 
     if(-not (IsInputNullOrEmpty -str $overRideParams))
@@ -172,7 +182,7 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs = [string]::Format('{0} -setParam:{1}', $msDeployCmdArgs, $overRideParams)
     }
     
-    $msDeployCmdArgs = [string]::Format(' -verb:sync -source:package={0} {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000', $webDeployPackage, $msDeployCmdArgs)
+    $msDeployCmdArgs = [string]::Format(' -verb:sync -source:package="{0}" {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000', $webDeployPackage, $msDeployCmdArgs)
     return $msDeployCmdArgs
 }
 
@@ -185,7 +195,7 @@ function Does-WebSiteExists
     $command = "`"$appCmdPath`" $appCmdArgs"
     Write-Verbose "Checking webSite exists. Running Command : $command"
     
-    $webSite = cmd.exe /c "`"$command`""
+    $webSite = Run-Command -command $command -failOnErr $false
     
     if($webSite -ne $null)
     {
@@ -206,15 +216,14 @@ function Does-BindingExists
         [string]$port,
         [string]$hostname
     )
-
     
     $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $appCmdArgs = [string]::Format(' list site /name:{0}',$siteName)
     $command = "`"$appCmdPath`" $appCmdArgs"
+
     Write-Verbose "Checking binding exists for website $siteName. Running Command : $command" -Verbose
     
-    $webSite = cmd.exe /c "`"$command`""
-
+    $webSite = Run-Command -command $command -failOnErr $false    
     $binding = [string]::Format("{0}/{1}:{2}:{3}", $protocol, $ipAddress, $port, $hostname)
     
     if($webSite.Contains($binding))
@@ -284,7 +293,7 @@ function Add-SslCert
         $showCertCmd = [string]::Format("netsh http show sslcert hostnameport={0}:{1}", $hostname, $port)
         Write-Verbose "Checking SslCert binding already Present. Running Command : $showCertCmd" -Verbose
         
-        $result = cmd.exe /c "`"$showCertCmd`""     
+        $result = Run-Command -command $showCertCmd -failOnErr $false
         $isItSameBinding = $result.Get(4).Contains([string]::Format("{0}:{1}", $hostname, $port))
 
         $addCertCmd = [string]::Format("netsh http add sslcert hostnameport={0}:{1} certhash={2} appid={{{3}}} certstorename=MY", $hostname, $port, $certhash, [System.Guid]::NewGuid().toString())
@@ -294,7 +303,7 @@ function Add-SslCert
         $showCertCmd = [string]::Format("netsh http show sslcert ipport=0.0.0.0:{0}", $port)
         Write-Verbose "Checking SslCert binding already Present. Running Command : $showCertCmd" -Verbose
         
-        $result = cmd.exe /c "`"$showCertCmd`""
+        $result = Run-Command -command $showCertCmd -failOnErr $false
         $isItSameBinding = $result.Get(4).Contains([string]::Format("0.0.0.0:{0}", $port))
         
         $addCertCmd = [string]::Format("netsh http add sslcert ipport=0.0.0.0:{0} certhash={1} appid={{{2}}}", $port, $certhash, [System.Guid]::NewGuid().toString())
@@ -343,6 +352,26 @@ function Create-WebSite
     Run-Command -command $command
 }
 
+function Run-AdditionalCommands
+{
+    param(
+        [string]$additionalArgs
+    )
+
+    $additionalArgs = $additionalArgs.Trim('"')
+    if(IsInputNullOrEmpty -str $additionalArgs)
+    {
+        Write-Verbose "No additional commands to run returning" -Verbose
+        return
+    }
+    
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey    
+    $command = "`"$appCmdPath`" $additionalArgs"
+
+    Write-Verbose "Running additional commands. $command" -Verbose
+    Run-Command -command $command
+}
+
 function Update-WebSite
 {
     param(
@@ -356,8 +385,7 @@ function Update-WebSite
         [string]$protocol,
         [string]$ipAddress,
         [string]$port,
-        [string]$hostname,
-        [string]$additionalArgs
+        [string]$hostname        
     )
 
     $appCmdArgs = [string]::Format(' set site /site.name:{0}', $siteName)
@@ -393,18 +421,12 @@ function Update-WebSite
     {
         $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocol, $ipAddress, $port, $hostname)
     }
-
-    $additionalArgs = $additionalArgs.Trim('"')
-    if(-not (IsInputNullOrEmpty -str $additionalArgs))
-    {
-        $appCmdArgs = [string]::Format("{0} {1}", $appCmdArgs, $additionalArgs)
-    }
         
     $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $command = "`"$appCmdPath`" $appCmdArgs"
     
     Write-Verbose "Updating WebSite Properties. Running Command : $command" -Verbose
-    Run-Command -command $command
+    Run-Command -command $command 
 }
 
 function Create-And-Update-WebSite
@@ -420,8 +442,7 @@ function Create-And-Update-WebSite
         [string]$protocol,
         [string]$ipAddress,
         [string]$port,
-        [string]$hostname,
-        [string]$additionalArgs
+        [string]$hostname
     )
 
     $doesWebSiteExists = Does-WebSiteExists -siteName $siteName
@@ -432,7 +453,7 @@ function Create-And-Update-WebSite
     }
 
     Update-WebSite -siteName $siteName -appPoolName $appPoolName -physicalPath $physicalPath -authType $authType -userName $userName -password $password `
-    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -hostname $hostname -additionalArgs $additionalArgs
+    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -hostname $hostname
 }
 
 function Execute-Main
@@ -442,7 +463,7 @@ function Execute-Main
     if(-not (IsInputNullOrEmpty -str $WebSiteName))
     {
         Create-And-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
-         -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocol $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -additionalArgs $AppCmdArgs
+         -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocol $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName
 
         if($Protocol -eq "https")
         {
@@ -450,6 +471,8 @@ function Execute-Main
             Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVersion
             Enable-SNI -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
         }
+
+        Run-AdditionalCommands -additionalArgs $AppCmdArgs
     }
 
     Deploy-WebSite -webDeployPkg $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRiderParams $OverRideParams

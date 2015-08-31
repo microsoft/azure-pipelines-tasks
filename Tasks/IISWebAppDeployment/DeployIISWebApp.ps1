@@ -58,6 +58,7 @@ $webSiteName = $webSiteName.Trim('"', ' ')
 $appPoolName = $appPoolName.Trim('"', ' ')
 $webSitePhysicalPath = $webSitePhysicalPath.Trim('"', ' ')
 $overRideParams = $overRideParams.Replace('"', '''')
+$appCmdArgs = $appCmdArgs.Replace('"', '`"')
 
 
 $msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
