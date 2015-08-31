@@ -55,14 +55,24 @@ function ThrowError
 function Run-Command
 {
     param(
-        [string]$command
+        [string]$command,
+        [bool] $failOnErr = $true
     )
 
     $ErrorActionPreference = 'Continue'
-    $result = cmd.exe /c "`"$command`""
+
+    if( $psversiontable.PSVersion.Major -le 4)
+    {        
+        $result = cmd.exe /c "`"$command`""    
+    }
+    else
+    {
+        $result = cmd.exe /c "$command"
+    }
+    
     $ErrorActionPreference = 'Stop'
 
-    if(-not ($LASTEXITCODE -eq 0))
+    if($failOnErr -and $LASTEXITCODE -ne 0)
     {
         ThrowError($result)
     }
@@ -185,10 +195,8 @@ function Does-WebSiteExists
     $command = "`"$appCmdPath`" $appCmdArgs"
     Write-Verbose "Checking webSite exists. Running Command : $command"
     
-    $ErrorActionPreference = 'Continue'
-    $webSite = cmd.exe /c "`"$command`""
-    $ErrorActionPreference = 'Stop'
-
+    $webSite = Run-Command -command $command -failOnErr $false
+    
     if($webSite -ne $null)
     {
         Write-Verbose "WebSite already exists" -Verbose
@@ -208,17 +216,14 @@ function Does-BindingExists
         [string]$port,
         [string]$hostname
     )
-
     
     $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $appCmdArgs = [string]::Format(' list site /name:{0}',$siteName)
     $command = "`"$appCmdPath`" $appCmdArgs"
+
     Write-Verbose "Checking binding exists for website $siteName. Running Command : $command" -Verbose
     
-    $ErrorActionPreference = 'Continue'
-    $webSite = cmd.exe /c "`"$command`""
-    $ErrorActionPreference = 'Stop'
-
+    $webSite = Run-Command -command $command -failOnErr $false    
     $binding = [string]::Format("{0}/{1}:{2}:{3}", $protocol, $ipAddress, $port, $hostname)
     
     if($webSite.Contains($binding))
@@ -288,7 +293,7 @@ function Add-SslCert
         $showCertCmd = [string]::Format("netsh http show sslcert hostnameport={0}:{1}", $hostname, $port)
         Write-Verbose "Checking SslCert binding already Present. Running Command : $showCertCmd" -Verbose
         
-        $result = cmd.exe /c "`"$showCertCmd`""     
+        $result = Run-Command -command $showCertCmd -failOnErr $false
         $isItSameBinding = $result.Get(4).Contains([string]::Format("{0}:{1}", $hostname, $port))
 
         $addCertCmd = [string]::Format("netsh http add sslcert hostnameport={0}:{1} certhash={2} appid={{{3}}} certstorename=MY", $hostname, $port, $certhash, [System.Guid]::NewGuid().toString())
@@ -298,7 +303,7 @@ function Add-SslCert
         $showCertCmd = [string]::Format("netsh http show sslcert ipport=0.0.0.0:{0}", $port)
         Write-Verbose "Checking SslCert binding already Present. Running Command : $showCertCmd" -Verbose
         
-        $result = cmd.exe /c "`"$showCertCmd`""
+        $result = Run-Command -command $showCertCmd -failOnErr $false
         $isItSameBinding = $result.Get(4).Contains([string]::Format("0.0.0.0:{0}", $port))
         
         $addCertCmd = [string]::Format("netsh http add sslcert ipport=0.0.0.0:{0} certhash={1} appid={{{2}}}", $port, $certhash, [System.Guid]::NewGuid().toString())
