@@ -43,15 +43,6 @@ Write-Verbose "MethodToInvoke = $MethodToInvoke" -Verbose
 $AppCmdRegKey = "HKLM:\SOFTWARE\Microsoft\InetStp"
 $MsDeployInstallPathRegKey = "HKLM:\SOFTWARE\Microsoft\IIS Extensions\MSDeploy"
 
-function ThrowError
-{
-    param([string]$errorMessage)
-
-        $readmelink = "http://aka.ms/iiswebappdeployreadme"
-        $helpMessage = [string]::Format("For more info please refer to {0}", $readmelink)
-        throw "$errorMessage $helpMessage `n"
-}
-
 function Run-Command
 {
     param(
@@ -74,7 +65,7 @@ function Run-Command
 
     if($failOnErr -and $LASTEXITCODE -ne 0)
     {
-        ThrowError($result)
+        throw $result
     }
     
     return $result
@@ -100,14 +91,14 @@ function Get-MsDeployLocation
     
     if( -not (Test-Path -Path $regKeyPath))
     {
-        ThrowError -errorMessage $msDeployNotFoundError 
+        throw $msDeployNotFoundError 
     }
         
     $path = (Get-ChildItem -Path $regKeyPath | Select -Last 1).GetValue("InstallPath")
 
     if( -not (Test-Path -Path $path))
     {
-        ThrowError -errorMessage $msDeployNotFoundError 
+        throw $msDeployNotFoundError 
     }
 
     return (Join-Path $path msDeploy.exe)
@@ -126,7 +117,7 @@ function Get-AppCmdLocation
     
     if(-not (Test-Path -Path $regKeyPath))
     {
-        ThrowError -errorMessage $appCmdNotFoundError
+        throw $appCmdNotFoundError
     }
 
     $regKey = Get-ItemProperty -Path $regKeyPath
@@ -135,12 +126,12 @@ function Get-AppCmdLocation
         
     if($version -le 6.0)
     {
-        ThrowError -errorMessage $appCmdMinVersionError
+        throw $appCmdMinVersionError
     }
         
     if( -not (Test-Path $path))
     {
-        ThrowError -errorMessage $appCmdNotFoundError
+        throw $appCmdNotFoundError
     }
     
 
@@ -162,7 +153,7 @@ function Get-MsDeployCmdArgs
     
     if(-not ( Test-Path -Path $webDeployPackage))
     {
-        ThrowError -errorMessage "Package does not exist : $webDeployPackage"
+        throw "Package does not exist : $webDeployPackage"
     }
 
     $msDeployCmdArgs = [string]::Empty
@@ -171,7 +162,7 @@ function Get-MsDeployCmdArgs
     
         if(-not ( Test-Path -Path $webDeployParamFile))
         {
-            ThrowError -errorMessage "Param file does not exist : $webDeployParamFile"
+            throw "Param file does not exist : $webDeployParamFile"
         } 
 
         $msDeployCmdArgs = [string]::Format(' -setParamFile="{0}"', $webDeployParamFile)
