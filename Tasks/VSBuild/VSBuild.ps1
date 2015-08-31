@@ -188,8 +188,8 @@ foreach ($sf in $solutionFiles)
     {
         $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
 
-        Write-Verbose "Searching for nuget package configuration files using pattern $slnFolder\**\packages.config"
-        $pkgConfig = Find-Files -SearchPattern "$slnFolder\**\packages.config"
+        Write-Verbose "Searching for nuget package configuration files using pattern $slnFolder\*\*\packages.config"
+        $pkgConfig = Get-ChildItem -Path $slnFolder\*\* -Filter packages.config
         if ($pkgConfig)
         {
             Write-Verbose "Running nuget package restore for $slnFolder"
