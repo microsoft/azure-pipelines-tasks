@@ -63,7 +63,11 @@ function ThrowError
 
 function Get-ResourceWinRmConfig
 {
-    param([int]$resourceId)
+    param
+	(
+	    [string]$resourceName,
+        [int]$resourceId
+	)
 
     $resourceProperties = @{}
 
@@ -78,17 +82,17 @@ function Get-ResourceWinRmConfig
     {
         Write-Verbose "`t Environment is not standerd environment. Https port has higher precedence" -Verbose
 
-        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceWinRMHttpsPortKeyName" -Verbose
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
         $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceId $resourceId
-        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceWinRMHttpsPortKeyName" -Verbose
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId (Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
 
         if ([string]::IsNullOrEmpty($winrmHttpsPort))
         {
                Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
 
-               Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceWinRMHttpPortKeyName" -Verbose
+               Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
                $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceId $resourceId
-               Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceWinRMHttpPortKeyName" -Verbose
+               Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
 
                if ([string]::IsNullOrEmpty($winrmHttpPort))
                {
@@ -112,17 +116,17 @@ function Get-ResourceWinRmConfig
    {
         Write-Verbose "`t Environment is standerd environment. Http port has higher precedence" -Verbose
 
-        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceWinRMHttpPortKeyName" -Verbose
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
         $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceId $resourceId
-        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceWinRMHttpPortKeyName" -Verbose
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
 
         if ([string]::IsNullOrEmpty($winrmHttpPort))
         {
                Write-Verbose "`t Resource: $resourceName does not have any winrm http port defined, checking for winrm https port" -Verbose
 
-               Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceWinRMHttpsPortKeyName" -Verbose
+               Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
                $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceId $resourceId
-               Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceWinRMHttpsPortKeyName" -Verbose
+               Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
 
                if ([string]::IsNullOrEmpty($winrmHttpsPort))
                {
@@ -180,13 +184,14 @@ function Get-ResourceConnectionDetails
     param([object]$resource)
 
     $resourceProperties = @{}
+    $resourceName = $resource.Name
 	$resourceId = $resource.Id
 
-    Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceFQDNKeyName" -Verbose
+    Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
     $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceId $resourceId
-    Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId and key: $resourceFQDNKeyName" -Verbose
+    Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
 
-    $winrmconfig = Get-ResourceWinRmConfig -resourceId $resourceId
+    $winrmconfig = Get-ResourceWinRmConfig -resourceName $resourceName -resourceId $resourceId
     $resourceProperties.fqdn = $fqdn
     $resourceProperties.winrmPort = $winrmconfig.winrmPort
     $resourceProperties.protocolOption = $winrmconfig.protocolOption
