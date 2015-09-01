@@ -83,10 +83,9 @@
             "label": "CodeCoverage Tool",
             "required": false,
             "groupName": "codeCoverage",
-            "defaultValue": "None",
+            "defaultValue": "JaCoCo",
             "helpMarkDown": "Select the tool for evaluating code coverage. Only Jacoco support available currently. Jacocoant.jar should be present in lib folder of Ant installation.",
             "options": {
-                "None": "",
                 "JaCoCo": "JaCoCo"
             }
         },

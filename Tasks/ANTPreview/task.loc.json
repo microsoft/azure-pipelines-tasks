@@ -87,10 +87,9 @@
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
       "groupName": "codeCoverage",
-      "defaultValue": "None",
+      "defaultValue": "JaCoCo",
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
-        "None": "",
         "JaCoCo": "JaCoCo"
       }
     },
