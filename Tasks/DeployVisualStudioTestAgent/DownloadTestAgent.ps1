@@ -36,7 +36,7 @@ foreach($sourcePath in $source)
             New-Item -ItemType Directory -Path $destinationDirectory
         }
 
-        Write-Verbose -Message "Downloading test agent from $sourcePath to test machine."
+        Write-Verbose -Message "Downloading test agent from $sourcePath to test machine." -Verbose
         Invoke-WebRequest $sourcePath -OutFile $destinationFile[$counter]
         $counter++
     }
