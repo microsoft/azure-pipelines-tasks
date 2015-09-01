@@ -46,7 +46,8 @@ foreach($sourcePath in $source)
         $sourceDirectory = Split-Path -Path $sourcePath -Parent
         $sourceFileName = Split-Path -Path $sourcePath -Leaf
 
-        Write-Verbose -Message "Copying file from $sourcePath to test machine." -f $sourcePath
+	Write-Verbose -Message "Copying file from $sourcePath to test machine." -f $sourcePath
+	Write-Verbose "robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30" -Verbose
 	robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30
 	# If robo copy exits with non zero exit code then throw exception.
 	$robocopyExitCode = $LASTEXITCODE 
