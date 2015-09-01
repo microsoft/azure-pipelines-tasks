@@ -15,35 +15,44 @@ function ValidateSourceFile([string] $sourcePath)
    }
 }
 
-# Create the parent directory if it does not exist
-$destinationDirectory = Split-Path -Path $destinationPath -Parent
-$isPresent = Test-Path $destinationDirectory
-if(!$isPresent)
-{
-    New-Item -ItemType Directory -Path $destinationDirectory
-}
+$source = $sourcePath.Split(";")
+$counter = 0;
+$destinationFile = $destinationPath.Split(";")
 
-# Check if the given path is a valid Uri
-$isUri = [System.Uri]::IsWellFormedUriString($sourcePath, [System.UriKind]::Absolute)
-
-# Download the test agent to desired location if source path is Uri
-if($isUri)
+foreach($sourcePath in $source)
 {
-   Write-Verbose -Message "Downloading test agent from $sourcePath to test machine."
-   Invoke-WebRequest $sourcePath -OutFile $destinationPath
-}
-else
-{
-   / ValidateSourceFile($sourcePath)
-    $sourceDirectory = Split-Path -Path $sourcePath -Parent
-    $sourceFileName = Split-Path -Path $sourcePath -Leaf
+    Write-Verbose $sourcePath -Verbose
+    # Check if the given path is a valid Uri
+    $isUri = [System.Uri]::IsWellFormedUriString($sourcePath, [System.UriKind]::Absolute)
 
-    Write-Verbose -Message "Copying file from $sourcePath to test machine." -f $sourcePath
-    robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30
-    # If robo copy exits with non zero exit code then throw exception.
-    $robocopyExitCode = $LASTEXITCODE 
-    if($robocopyExitCode -eq 0x10)
+    # Download the test agent to desired location if source path is Uri
+    if($isUri)
     {
-         throw "Robocopy failed to copy fail from $sourceDirectory to $destinationDirectory with a exit code $robocopyExitCode."
+        # Create the parent directory if it does not exist
+        $destinationDirectory = Split-Path -Path $destinationFile[$counter] -Parent
+        $isPresent = Test-Path $destinationDirectory
+        if(!$isPresent)
+        {
+            New-Item -ItemType Directory -Path $destinationDirectory
+        }
+
+        Write-Verbose -Message "Downloading test agent from $sourcePath to test machine."
+        Invoke-WebRequest $sourcePath -OutFile $destinationFile[$counter]
+        $counter++
+    }
+    else
+    {
+        ValidateSourceFile($sourcePath)
+        $sourceDirectory = Split-Path -Path $sourcePath -Parent
+        $sourceFileName = Split-Path -Path $sourcePath -Leaf
+
+        Write-Verbose -Message "Copying file from $sourcePath to test machine." -f $sourcePath
+	robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30
+	# If robo copy exits with non zero exit code then throw exception.
+	$robocopyExitCode = $LASTEXITCODE 
+	if($robocopyExitCode -eq 0x10)
+	{
+	   throw "Robocopy failed to copy fail from $sourceDirectory to $destinationDirectory with a exit code $robocopyExitCode."
+	}
     }
 }
