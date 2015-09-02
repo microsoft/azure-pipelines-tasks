@@ -20,7 +20,7 @@
     [string]$AppPoolIdentity,
     [string]$AppPoolUsername,
     [string]$AppPoolPassword,
-    [string]$AppCmdArgs,
+    [string]$AppCmdCommands,
     [string]$MethodToInvoke = "Execute-Main"
     )
 
@@ -48,7 +48,7 @@ Write-Verbose "PipeLineMode = $PipeLineMode" -Verbose
 Write-Verbose "AppPoolIdentity = $AppPoolIdentity" -Verbose
 Write-Verbose "AppPoolUsername = $AppPoolUsername" -Verbose
 
-Write-Verbose "AppCmdArgs = $AppCmdArgs" -Verbose
+Write-Verbose "AppCmdCommands = $AppCmdCommands" -Verbose
 Write-Verbose "MethodToInvoke = $MethodToInvoke" -Verbose
 
 $AppCmdRegKey = "HKLM:\SOFTWARE\Microsoft\InetStp"
@@ -396,21 +396,19 @@ function Create-AppPool
 function Run-AdditionalCommands
 {
     param(
-        [string]$additionalArgs
+        [string]$additionalCommands
     )
 
-    $additionalArgs = $additionalArgs.Trim('"')
-    if(IsInputNullOrEmpty -str $additionalArgs)
+    $appCmdCommands = $additionalCommands.Trim('"').Split([System.Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+
+    foreach($appCmdCommand in $appCmdCommands)
     {
-        Write-Verbose "No additional commands to run returning" -Verbose
-        return
+        $command = "`"$appCmdPath`" $appCmdCommand"
+
+        Write-Verbose "Running additional command. $command" -Verbose
+        Run-Command -command $command
     }
-
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey    
-    $command = "`"$appCmdPath`" $additionalArgs"
-
-    Write-Verbose "Running additional commands. $command" -Verbose
-    Run-Command -command $command
 }
 
 function Update-WebSite
@@ -580,7 +578,7 @@ function Execute-Main
         }
     }
 
-    Run-AdditionalCommands -additionalArgs $AppCmdArgs
+    Run-AdditionalCommands -additionalCommands $AppCmdCommands
 
     Deploy-WebSite -webDeployPkg $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRiderParams $OverRideParams
 

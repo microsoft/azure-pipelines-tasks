@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 5
+        "Minor": 1,
+        "Patch": 6
     },
     "demands": [
     ],
@@ -27,7 +27,7 @@
         },
         {
             "name": "applicationPool",
-            "displayName": "Application Pool",
+            "displayName": "Create or Update Application Pool",
             "isExpanded": true
         },
         {
@@ -284,13 +284,13 @@
             "visibleRule": "AppPoolIdentity = SpecificUser"
         },
         {
-            "name": "AppCmdArgs",
-            "type": "string",
-            "label": "Additional Appcmd.exe Arguments",
+            "name": "AppCmdCommands",
+            "type": "multiLine",
+            "label": "Additional Appcmd.exe Commands",
             "required": false,
             "groupName": "advanced",
             "defaultValue": "",
-            "helpMarkDown": "Additional appcmd.exe commands to set website or application pool properties. For more than one command use line separators, e.g., set config /section:applicationPools /[name='Fabrikam'].autoStart:false add site /name:fabrikam /bindings:http/*:85: fabrikam.com."
+            "helpMarkDown": "Additional appcmd.exe commands to set website or application pool properties. For more than one command use line separators, e.g., set config /section:applicationPools /[name='Fabrikam'].autoStart:false\n add site /name:fabrikam /bindings:http/*:85: fabrikam.com."
         },
         {
             "name": "DeployInParallel",
