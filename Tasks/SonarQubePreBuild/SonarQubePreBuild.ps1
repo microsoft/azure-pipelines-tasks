@@ -21,6 +21,17 @@ Write-Verbose -Verbose "configFile = $configFile"
 Write-Verbose -Verbose "dbConnectionString = $dbUrl"
 Write-Verbose -Verbose "dbUsername = $dbUsername"
 
+$sonarAnalysisMode = Get-TaskVariable -Context $distributedTaskContext -Name "sonaranalysismode"
+if ($sonarAnalysisMode -ieq "incremental")
+{
+    Write-Verbose -Verbose "sonaranalysismode is set to incremental, setting cmdline args for sonar-runner..."
+
+    if (!$cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
+    {
+        Write-Verbose -Verbose "cmdlineargs doesn't contain sonar.analysis.mode"
+        $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=incremental"
+    }
+}
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
