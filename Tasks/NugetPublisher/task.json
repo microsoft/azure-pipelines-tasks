@@ -1,0 +1,66 @@
+{
+    "id": "333b11bd-d341-40d9-afcf-b32d5ce6f25b",
+    "name": "NuGetPublisher",
+    "friendlyName": "NuGet Publisher",
+    "description": "Uploads nupkg files to a nuget server",
+    "helpMarkDown": " ",
+    "category": "Package",
+    "author": "Lawrence Gripper",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 36
+    },
+    "minimumAgentVersion": "1.83.0",
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],    
+    "instanceNameFormat": "NuGet Publisher $(solution)",
+    "inputs": [
+        {
+            "name": "searchPattern",
+            "type": "filePath",
+            "label": "Path/Pattern to nupkg",
+            "defaultValue":"**\\*.nupkg",
+            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded",
+            "required":true
+        },
+        {
+            "name": "connectedServiceName",
+            "type": "connectedService:Generic",
+            "label": "Nuget Server Endpoint",
+            "required": true,
+            "helpMarkDown": "The nuget server generic endpoint, set the key 'Password/Token Key' field to your nuget api key"
+        },
+        {
+            "name": "nuGetAdditionalArgs",
+            "type": "string",
+            "label": "NuGet Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to NuGet.exe pack ",
+            "groupName": "advanced"
+        },
+        {
+            "name": "nuGetPath",
+            "type": "string",
+            "label": "Path to NuGet.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to NuGet.exe",
+            "groupName": "advanced"
+        }
+
+    ],
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\NuGetPublisher.ps1",
+            "argumentFormat": "",
+            "workingDirectory": ""
+        }
+    }
+}

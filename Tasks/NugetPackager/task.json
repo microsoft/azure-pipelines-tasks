@@ -1,0 +1,84 @@
+{
+    "id": "333b11bd-d341-40d9-afcf-b32d5ce6f24b",
+    "name": "NuGetPackager",
+    "friendlyName": "NuGet Packager",
+    "description": "Creates nupkg outputs from csproj or nuspec files",
+    "helpMarkDown": " ",
+    "category": "Package",
+    "author": "Lawrence Gripper",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 54
+    },
+    "minimumAgentVersion": "1.83.0",
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],    
+    "instanceNameFormat": "NuGet Packager $(solution)",
+    "inputs": [
+        {
+            "name": "searchPattern",
+            "type": "filePath",
+            "label": "Path/Pattern to nuspec files",
+            "defaultValue":"**\\*.nuspec",
+            "helpMarkDown": "Minimatch pattern to search for nuspec and csproj files to pack.  [About Minimatch](https://realguess.net/tags/minimatch/)",
+            "required":true
+        },
+        {
+            "name": "versionByBuild",
+            "type": "boolean",
+            "label": "Use Build number to version package",
+            "defaultValue":"false",
+            "helpMarkDown": "Will use the build number to version you package. Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'",
+            "required":false
+        },
+        {
+            "name": "outputdir",
+            "type": "filePath",
+            "label": "Package Folder",
+            "defaultValue":"",
+            "helpMarkDown": "Folder where packages will be created, if empty will be created in the directory of csproj or nuspec file",
+            "required":false
+        },
+        {
+            "name": "configurationToPack",
+            "type": "string",
+            "label": "Configuration to Package",
+            "defaultValue":"Release",
+            "helpMarkDown": "When using a csproj file this specifies the configuration to package",
+            "required":false,
+            "groupName": "advanced"
+        },
+        {
+            "name": "nuGetAdditionalArgs",
+            "type": "string",
+            "label": "NuGet Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to NuGet.exe pack ",
+            "groupName": "advanced"
+        },
+        {
+            "name": "nuGetPath",
+            "type": "string",
+            "label": "Path to NuGet.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to NuGet.exe",
+            "groupName": "advanced"
+        }
+
+    ],
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\NuGetPackager.ps1",
+            "argumentFormat": "",
+            "workingDirectory": ""
+        }
+    }
+}

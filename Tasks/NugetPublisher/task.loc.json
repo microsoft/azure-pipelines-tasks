@@ -1,0 +1,68 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "333b11bd-d341-40d9-afcf-b32d5ce6f25b",
+  "name": "NuGetPublisher",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Lawrence Gripper",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 36
+  },
+  "minimumAgentVersion": "1.83.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "searchPattern",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.searchPattern",
+      "defaultValue": "**\\*.nupkg",
+      "helpMarkDown": "ms-resource:loc.input.help.searchPattern",
+      "required": true
+    },
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "nuGetAdditionalArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nuGetAdditionalArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetAdditionalArgs",
+      "groupName": "advanced"
+    },
+    {
+      "name": "nuGetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nuGetPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\NuGetPublisher.ps1",
+      "argumentFormat": "",
+      "workingDirectory": ""
+    }
+  }
+}
