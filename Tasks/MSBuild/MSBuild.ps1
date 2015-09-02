@@ -143,18 +143,8 @@ foreach ($sf in $solutionFiles)
     if ($nugetPath -and $nugetRestore)
     {
         $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
-
-        Write-Verbose "Searching for nuget package configuration files using pattern $slnFolder\**\packages.config"
-        $pkgConfig = Find-Files -SearchPattern "$slnFolder\**\packages.config"
-        if ($pkgConfig)
-        {
-            Write-Verbose "Running nuget package restore for $slnFolder"
-            Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" -NonInteractive" -WorkingFolder $slnFolder
-        }
-        else
-        {
-            Write-Verbose "No nuget package configuration files found for $sf"
-        }
+        Write-Verbose "Running nuget package restore for $slnFolder"
+        Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" -NonInteractive" -WorkingFolder $slnFolder
     }
 
     if ($cleanBuild)
