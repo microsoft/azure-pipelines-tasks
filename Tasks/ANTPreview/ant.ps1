@@ -21,9 +21,13 @@ Write-Verbose "testResultsFiles = $testResultsFiles"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 
-Write-Verbose "codeCoverageTool = $codeCoverageTool"
-Write-Verbose "classfilesDirectory = $classfilesDirectory"
-Write-Verbose "classFilter = $classFilter"
+$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+if($isCoverageEnabled)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool"
+    Write-Verbose "classfilesDirectory = $classfilesDirectory"
+    Write-Verbose "classFilter = $classFilter"
+}
 	
 #Verify Ant build file is specified
 if(!$antBuildFile)
@@ -54,7 +58,7 @@ $summaryFile = Join-Path $buildRootPath "CodeCoverage\summary.xml"
 $reportDirectory = Join-Path $buildRootPath "CodeCoverage"
 
 # check if code coverage has been enabled
-if($codeCoverageTool)
+if($isCoverageEnabled)
 {
    # Enable code coverage in build file
    Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFile -ReportDirectory $reportDirectory
@@ -86,7 +90,7 @@ else
 }
 
 # check if code coverage has been enabled
-if($codeCoverageTool)
+if($isCoverageEnabled)
 {
    Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }

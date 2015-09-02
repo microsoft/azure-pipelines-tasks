@@ -19,9 +19,14 @@ Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
 Write-Verbose "codeCoverageTool = $codeCoverageTool"
 Write-Verbose "classfilesDirectory = $classfilesDirectory"
-Write-Verbose "classFilter = $classFilter"
-Write-Verbose "jdkVersion = $jdkVersion"
-Write-Verbose "jdkArchitecture = $jdkArchitecture"
+
+$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+if($isCoverageEnabled -eq $true)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool"
+    Write-Verbose "classfilesDirectory = $classfilesDirectory"
+    Write-Verbose "classFilter = $classFilter"
+}
 
 
 #Verify Maven POM file is specified
@@ -53,7 +58,7 @@ $summaryFile = Join-Path $buildRootPath "CodeCoverage\summary.xml"
 $reportDirectory = Join-Path $buildRootPath "CodeCoverage"
 
 # check if code coverage has been enabled
-if($codeCoverageTool)
+if($isCoverageEnabled)
 {
    # Enable code coverage in build file
    Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFile -ReportDirectory $reportDirectory
@@ -83,7 +88,7 @@ else
 }
 
 
-if($codeCoverageTool)
+if($isCoverageEnabled)
 {
    Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }

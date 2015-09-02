@@ -28,7 +28,7 @@
         {
             "name": "codeCoverage",
             "displayName": "Code Coverage Results",
-            "isExpanded": false
+            "isExpanded": true
         },
         {
             "name":"advanced",
@@ -92,9 +92,10 @@
             "label": "CodeCoverage Tool",
             "required": false,
             "groupName": "codeCoverage",
-            "defaultValue": "JaCoCo",
+            "defaultValue": "NoCoverage",
             "helpMarkDown": "Select the tool with which summary files have been generated. Only Jacoco support available currently.",
             "options": {
+                "NoCoverage": "No Coverage",
                 "JaCoCo": "JaCoCo"
             }
         },
@@ -105,7 +106,7 @@
             "defaultValue": "**/*.class",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Regular expression specifying classfiles to be analyzed."
+            "helpMarkDown": "Comma separated list of regular expressions specifying classfiles to be analyzed. For example, +:build/classes/main/**/*.class,-:build/classes/test/**/*"
         },
         {
             "name": "classFilter",
@@ -114,7 +115,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Filter to include or exclude classes for evaluating code coverage."
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes for evaluating code coverage. For example, +:com.*,+:org.*"
         },		
         {
             "name":"jdkVersion",

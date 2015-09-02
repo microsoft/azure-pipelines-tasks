@@ -32,7 +32,7 @@
     {
       "name": "codeCoverage",
       "displayName": "ms-resource:loc.group.displayName.codeCoverage",
-      "isExpanded": false
+      "isExpanded": true
     },
     {
       "name": "advanced",
@@ -87,9 +87,10 @@
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
       "groupName": "codeCoverage",
-      "defaultValue": "JaCoCo",
+      "defaultValue": "NoCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
+        "NoCoverage": "No Coverage",
         "JaCoCo": "JaCoCo"
       }
     },

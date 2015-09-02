@@ -19,9 +19,14 @@ Write-Verbose "options = $options"
 Write-Verbose "tasks = $tasks"
 Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
-Write-Verbose "codeCoverageTool = $codeCoverageTool"
-Write-Verbose "classfilesDirectory = $classfilesDirectory"
-Write-Verbose "classFilter = $classFilter"
+
+$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+if($isCoverageEnabled)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool"
+    Write-Verbose "classfilesDirectory = $classfilesDirectory"
+    Write-Verbose "classFilter = $classFilter"
+}
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -63,7 +68,7 @@ $summaryFile = Join-Path $buildRootPath "CodeCoverage\summary.xml"
 $reportDirectory = Join-Path $buildRootPath "CodeCoverage"
 
 # check if code coverage has been enabled
-if($codeCoverageTool)
+if($isCoverageEnabled)
 {
    # Enable code coverage in build file
    Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $wrapperScript -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFile -ReportDirectory $reportDirectory
@@ -91,7 +96,7 @@ else
 }
 
 # check if code coverage has been enabled
-if($codeCoverageTool)
+if($isCoverageEnabled)
 {
    Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }
