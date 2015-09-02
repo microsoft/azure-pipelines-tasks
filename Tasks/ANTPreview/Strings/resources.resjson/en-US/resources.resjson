@@ -7,7 +7,7 @@
   "loc.description": "Build with Apache Ant and check CodeCoverage",
   "loc.instanceNameFormat": "AntCC $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
-  "loc.group.displayName.codeCoverage": "Publish CodeCoverage Results",
+  "loc.group.displayName.codeCoverage": "Code Coverage Results",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.antBuildFile": "Ant build file",
   "loc.input.help.antBuildFile": "Relative path from the repository root to the `Ant build file`.",

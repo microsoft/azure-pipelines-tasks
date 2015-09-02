@@ -7,7 +7,7 @@
   "loc.description": "Build with Apache Maven and check CodeCoverage",
   "loc.instanceNameFormat": "MavenCC $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
-  "loc.group.displayName.codeCoverage": "Publish CodeCoverage Results",
+  "loc.group.displayName.codeCoverage": "Code Coverage Results",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.mavenPOMFile": "Maven POM file",
   "loc.input.help.mavenPOMFile": "Relative path from the repo root to the `Maven POM file`.",

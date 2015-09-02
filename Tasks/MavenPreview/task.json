@@ -28,7 +28,7 @@
         },
         {
             "name": "codeCoverage",
-            "displayName": "Publish CodeCoverage Results",
+            "displayName": "Code Coverage Results",
             "isExpanded": false
         },
         {

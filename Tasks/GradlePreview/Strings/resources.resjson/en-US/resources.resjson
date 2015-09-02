@@ -7,7 +7,7 @@
   "loc.description": "Build using a Gradle wrapper script and check CodeCoverage",
   "loc.instanceNameFormat": "gradlew $(tasks)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
-  "loc.group.displayName.codeCoverage": "Publish CodeCoverage Results",
+  "loc.group.displayName.codeCoverage": "Code Coverage Results",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.wrapperScript": "Gradle Wrapper",
   "loc.input.help.wrapperScript": "Relative path from the repository root to the `Gradle Wrapper script`.",
