@@ -60,7 +60,7 @@
             "label": "NuGet Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments passed to NuGet.exe pack ",
+            "helpMarkDown": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command).",
             "groupName": "advanced"
         },
         {

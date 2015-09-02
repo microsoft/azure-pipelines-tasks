@@ -16,7 +16,7 @@
   "loc.input.label.configurationToPack": "Configuration to Package",
   "loc.input.help.configurationToPack": "When using a csproj file this specifies the configuration to package",
   "loc.input.label.nuGetAdditionalArgs": "NuGet Arguments",
-  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack ",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command).",
   "loc.input.label.nuGetPath": "Path to NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
 }
