@@ -2,19 +2,19 @@
     "id": "89A3A82D-4B3E-4A09-8D40-A793849DC94F",
     "name": "IISWebAppDeployment",
     "friendlyName": "IIS Web Application Deployment",
-    "description": "Deploy Web Application using MSDeploy to IIS Web Site",
+    "description": "Deploy Web Application using Web Deploy (MSDeploy) to IIS Website",
     "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Preview",
         "Build",
         "Release"
-    ],
+        ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 5
     },
     "demands": [
     ],
@@ -22,7 +22,12 @@
     "groups": [
         {
             "name": "website",
-            "displayName": "Create Web Site",
+            "displayName": "Create or Update Website",
+            "isExpanded": true
+        },
+        {
+            "name": "applicationPool",
+            "displayName": "Application Pool",
             "isExpanded": true
         },
         {
@@ -38,7 +43,7 @@
             "label": "Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Machine Group for deploying the database."
+            "helpMarkDown": "Name of the target Machine Group for deploying the IIS Web Application."
         },
         {
             "name": "ResourceFilteringMethod",
@@ -50,12 +55,12 @@
                 "machineNames": "Machine Names",
                 "tags": "Tags"
             },
-            "helpMarkDown": "Select a subset of machines either by providing machine names or tags."
+            "helpMarkDown": "Optionally select a subset of machines either by providing machine names or tags."
         },
         {
             "name": "MachineFilter",
             "type": "string",
-            "label": "Deploy to Machines",
+            "label": "Filter Criteria",
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
@@ -66,7 +71,7 @@
             "label": "Web Deploy Package",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "Location of the MSDeploy zip file on the target machines or on a UNC path like \\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip"
+            "helpMarkDown": "Location of the Web Deploy (MSDeploy) zip file on the target machines or a UNC path like \\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip."
         },
         {
             "name": "WebDeployParamFile",
@@ -74,7 +79,7 @@
             "label": "Web Deploy Parameters File",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Parameters file to override any specific configuration settings"
+            "helpMarkDown": "Location of the Parameters file on the target machines or a UNC path. Parameters file is used to override Web application configuration settings like IIS Web application name or database connection strings."
         },
         {
             "name": "OverRideParams",
@@ -82,25 +87,16 @@
             "label": "Override Parameters",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Any specific parameters to be overridden in parameters file"
+            "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameters file. For example -  name=\"IIS Web Application Name\", value=\"Fabrikam\"." 
         },
         {
             "name": "WebSiteName",
             "type": "string",
-            "label": "Site Name",
+            "label": "Website Name",
             "required": false,
             "groupName": "website",
-            "defaultValue": "",
-            "helpMarkDown": "Web Site Name to be deployed"
-        },
-        {
-            "name": "AppPoolName",
-            "type": "string",
-            "label": "Existing AppPool Name",
-            "required": false,
-            "groupName": "website",
-            "defaultValue": "",
-            "helpMarkDown": "Application Pool for the web site"
+            "defaultValue": "",            
+            "helpMarkDown": "Name of the website to create in the IIS server. If the website already exists then it will be updated with the settings specified here."
         },
         {
             "name": "WebSitePhysicalPath",
@@ -109,7 +105,7 @@
             "required": true,
             "groupName": "website",
             "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
-            "helpMarkDown": "Physical path of the web site"
+            "helpMarkDown": "Physical path where the website content is stored. The content can reside on the local computer or on a remote directory or share, for example, C:\\Fabrikam or \\ContentShare\\Fabrikam."
         },
         {
             "name": "WebSitePhysicalPathAuth",
@@ -122,7 +118,7 @@
                 "WebSiteUserPassThrough": "Application User(Pass-through)",
                 "WebSiteWindowsAuth": "Windows Authentication"
             },
-            "helpMarkDown": "Authentication mechanism for accessing the physical path of web site"
+            "helpMarkDown": "Authentication mechanism for accessing the physical path of website."
         },
         {
             "name": "WebSiteAuthUserName",
@@ -132,7 +128,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
-            "helpMarkDown": "User name for accessing web site physical path"
+            "helpMarkDown": "User name for accessing the website's physical path."
         },
         {
             "name": "WebSiteAuthUserPassword",
@@ -142,7 +138,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
-            "helpMarkDown": "Password for accessing web site physical path"
+            "helpMarkDown": "Password for accessing the website's physical path."
         },
         {
             "name": "AddBinding",
@@ -151,7 +147,7 @@
             "required": false,
             "groupName": "website",
             "defaultValue": "true",
-            "helpMarkDown": "Choose to specify port binding information"
+            "helpMarkDown": "Select the option to add port binding for the website."
         },
         {
             "name": "Protocol",
@@ -165,7 +161,7 @@
                 "http": "http"
             },
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "Protocol for web site"
+            "helpMarkDown": "Select HTTP for the website to have an HTTP binding, or select HTTPS for the website to have a Secure Sockets Layer (SSL) binding."
         },
         {
             "name": "IPAddress",
@@ -175,7 +171,7 @@
             "groupName": "website",
             "defaultValue": "All Unassigned",
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "IP Address information for binding"
+            "helpMarkDown": "Type an IP address that users can use to access this website. If All Unassigned is selected, the site will respond to requests for all IP addresses on the port and optional host name that is specified for this site, unless another site on the server has a binding on the same port but with a specific IP address."
         },
         {
             "name": "Port",
@@ -185,7 +181,7 @@
             "groupName": "website",
             "defaultValue": "80",
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "Port information for binding"
+            "helpMarkDown": "Type the port on which HTTP.sys must listen for requests made to this website."
         },
         {
             "name": "HostName",
@@ -195,7 +191,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "Port information for binding"
+            "helpMarkDown": "Type a host (domain) name, to assign one or more host names, to one computer that uses a single IP address."
         },
         {
             "name": "ServerNameIndication",
@@ -205,7 +201,7 @@
             "groupName": "website",
             "defaultValue": "false",
             "visibleRule": "Protocol = https",
-            "helpMarkDown": "Server Name Indication Required"
+            "helpMarkDown": "Determines whether the website requires Server Name Indication (SNI). SNI extends the SSL and TLS protocols to indicate what host name the client is attempting to connect to. It allows multiple secure websites with different certificates to use the same IP address."
         },
         {
             "name": "SSLCertThumbPrint",
@@ -215,16 +211,86 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "Protocol = https",
-            "helpMarkDown": "Web Site SSL Certificate Thumb Print"
+            "helpMarkDown": "Thumb-print of the Secure Socket Layer certificate that the website is going to use. The certificate should be installed on the machine."
+        },
+        {
+            "name": "AppPoolName",
+            "type": "string",
+            "label": "Name",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "applicationPool",
+            "helpMarkDown": "Name of the IIS application pool to create or update. Existing application pool will be updated with the settings specified here."
+        },
+        {
+            "name": "DotNetVersion",
+            "type": "pickList",
+            "label": ".NET Version",
+            "defaultValue": "v4.0",
+            "required": true,
+            "groupName": "applicationPool",
+            "helpMarkDown": "Version of the .NET Framework that is loaded by this application pool. If the applications that you want to assign to this application pool do not contain managed code, select the No Managed Code option from the list.",
+            "options": {
+                "v4.0": "v4.0",
+                "v2.0": "v2.0",
+                "No Managed Code": "No Managed Code"
+            }
+        },
+        {
+            "name": "PipeLineMode",
+            "type": "pickList",
+            "label": "Managed Pipeline Mode",
+            "defaultValue": "Integrated",
+            "required": true,
+            "groupName": "applicationPool",
+            "helpMarkDown": "Managed pipeline mode specified how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in Integrated mode.",
+            "options": {
+                "Integrated": "Integrated",
+                "Classic": "Classic"
+            }
+        },
+        {
+            "name": "AppPoolIdentity",
+            "type": "pickList",
+            "label": "Identity",
+            "defaultValue": "ApplicationPoolIdentity",
+            "required": true,
+            "groupName": "applicationPool",
+            "helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
+            "options": {
+                "ApplicationPoolIdentity": "ApplicationPoolIdentity",
+                "LocalService": "LocalService",
+                "LocalSystem": "LocalSystem",
+                "NetworkService": "NetworkService",
+                "SpecificUser": "Custom Account"
+            }
+        },
+        {
+            "name": "AppPoolUsername",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "applicationPool",
+            "visibleRule": "AppPoolIdentity = SpecificUser"
+        },
+        {
+            "name": "AppPoolPassword",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "applicationPool",
+            "visibleRule": "AppPoolIdentity = SpecificUser"
         },
         {
             "name": "AppCmdArgs",
             "type": "string",
             "label": "Additional Appcmd.exe Arguments",
             "required": false,
-            "groupName": "website",
+            "groupName": "advanced",
             "defaultValue": "",
-            "helpMarkDown": "Additional arguments for Appcmd.exe command line"
+            "helpMarkDown": "Additional appcmd.exe commands to set website or application pool properties. For more than one command use line separators, e.g., set config /section:applicationPools /[name='Fabrikam'].autoStart:false add site /name:fabrikam /bindings:http/*:85: fabrikam.com."
         },
         {
             "name": "DeployInParallel",
@@ -233,7 +299,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Setting it to true will run web app deployment scripts in parallel on the target machines."
+            "helpMarkDown": "Setting it to true will deploy the Web application in-parallel on the target machines."
         }
     ],
     "sourceDefinitions": [ 
@@ -243,7 +309,7 @@
          "selector": "jsonpath:$.value[*].name", 
          "authKey": "tfs:DevTestLabs" 
      } 
-    ], 
+    ],
     "instanceNameFormat": "Deploy IIS App: $(WebDeployPackage)",
     "execution": {
         "PowerShell": {

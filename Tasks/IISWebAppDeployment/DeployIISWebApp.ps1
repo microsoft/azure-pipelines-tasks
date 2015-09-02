@@ -5,8 +5,7 @@
     [string]$webDeployPackage,
     [string]$webDeployParamFile,
     [string]$overRideParams,
-    [string]$webSiteName,
-    [string]$appPoolName,
+    [string]$webSiteName,    
     [string]$webSitePhysicalPath,
     [string]$webSitePhysicalPathAuth,
     [string]$webSiteAuthUserName,
@@ -18,6 +17,12 @@
     [string]$hostName,
     [string]$serverNameIndication,
     [string]$sslCertThumbPrint,
+    [string]$appPoolName,
+    [string]$dotNetVersion,
+    [string]$pipeLineMode,
+    [string]$appPoolIdentity,
+    [string]$appPoolUsername,
+    [string]$appPoolPassword,
     [string]$appCmdArgs,
     [string]$deployInParallel
     )
@@ -32,19 +37,24 @@ Write-Verbose "overRideParams = $overRideParams" -Verbose
 Write-Verbose "deployInParallel = $deployInParallel" -Verbose
 
 Write-Verbose "webSiteName = $webSiteName" -Verbose
-Write-Verbose "appPoolName = $appPoolName" -Verbose
 Write-Verbose "webSitePhysicalPath = $webSitePhysicalPath" -Verbose
 Write-Verbose "webSitePhysicalPathAuth = $webSitePhysicalPathAuth" -Verbose
 Write-Verbose "webSiteAuthUserName = $webSiteAuthUserName" -Verbose
-Write-Verbose "webSiteAuthUserPassword = $webSiteAuthUserPassword" -Verbose
 Write-Verbose "addBinding = $addBinding" -Verbose
 Write-Verbose "protocol = $protocol" -Verbose
 Write-Verbose "ipAddress = $ipAddress" -Verbose
 Write-Verbose "port = $port" -Verbose
 Write-Verbose "hostName = $hostName" -Verbose
 Write-Verbose "serverNameIndication = $serverNameIndication" -Verbose
-Write-Verbose "appCmdArgs = $appCmdArgs" -Verbose
 
+Write-Verbose "appPoolName = $appPoolName" -Verbose
+Write-Verbose "dotNetVersion = $dotNetVersion" -Verbose
+Write-Verbose "pipeLineMode = $pipeLineMode" -Verbose
+Write-Verbose "appPoolIdentity = $appPoolIdentity" -Verbose
+Write-Verbose "appPoolUsername = $appPoolUsername" -Verbose
+
+Write-Verbose "appCmdArgs = $appCmdArgs" -Verbose
+Write-Verbose "deployInParallel = $deployInParallel" -Verbose
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -52,21 +62,23 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDeployment"
 
+$overRideParams = $overRideParams.Replace('"', '''')
+
 $webDeployPackage = $webDeployPackage.Trim('"', ' ')
 $webDeployParamFile = $webDeployParamFile.Trim('"', ' ')
 $webSiteName = $webSiteName.Trim('"', ' ')
-$appPoolName = $appPoolName.Trim('"', ' ')
 $webSitePhysicalPath = $webSitePhysicalPath.Trim('"', ' ')
-$overRideParams = $overRideParams.Replace('"', '''')
+$webSiteAuthUserName = $webSiteAuthUserName.Trim()
+
+$appPoolName = $appPoolName.Trim('"', ' ')
+$appPoolUsername = $appPoolUsername.Trim()
+
 $appCmdArgs = $appCmdArgs.Replace('"', '`"')
 
-
 $msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
-
-$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -AppPoolName `"$appPoolName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppCmdArgs `"$appCmdArgs`""
+$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdArgs `"$appCmdArgs`""
 
 Write-Verbose "MsDeployOnTargetMachines Script Arguments : $scriptArgs" -Verbose
-
 Write-Output ( Get-LocalizedString -Key "Starting deployment of IIS Web Deploy Package : {0}" -ArgumentList $webDeployPackage)
 
 $errorMessage = [string]::Empty
