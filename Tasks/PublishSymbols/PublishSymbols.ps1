@@ -80,7 +80,13 @@ foreach ($pdbFile in $pdbFiles) {
 Write-Host (Get-LocalizedString -Key "Found {0} symbol files to index." -ArgumentList $pdbFiles.Count)
 
 # Index the sources.
-& $PSScriptRoot\Invoke-IndexSources.ps1 -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:($treatNotIndexedAsWarning -eq 'true')
+try {
+    & $PSScriptRoot\Invoke-IndexSources.ps1 -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:($treatNotIndexedAsWarning -eq 'true')
+} catch {
+    # Log the exception and prevent it from bubbling any further.
+    # Continue on to symbols publishing even if source indexing fails.
+    Write-Error $_
+}
 
 if ($symbolsPath)
 {
