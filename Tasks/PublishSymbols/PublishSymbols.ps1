@@ -8,7 +8,7 @@ param(
     [string] $symbolsMaximumWaitTime,
     [string] $symbolsFolder,
     [string] $symbolsArtifactName,
-    [bool] $treatNotIndexedAsWarning = $false
+    [string] $treatNotIndexedAsWarning = 'false'
 )
 
 Write-Verbose "Entering script $PSCommandPath"
@@ -20,7 +20,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 # Warn if deprecated parameter was used.
-if ($sourceFolder -ne $env:Build_SourcesDirectory) {
+if ($sourceFolder -and ($sourceFolder -ne $env:Build_SourcesDirectory)) {
     Write-Warning (Get-LocalizedString -Key 'The source folder parameter has been deprecated. Ignoring the value: {0}' -ArgumentList $sourceFolder)
 }
 
@@ -80,7 +80,7 @@ foreach ($pdbFile in $pdbFiles) {
 Write-Host (Get-LocalizedString -Key "Found {0} symbol files to index." -ArgumentList $pdbFiles.Count)
 
 # Index the sources.
-& $PSScriptRoot\Invoke-IndexSources.ps1 -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning $treatNotIndexedAsWarning
+& $PSScriptRoot\Invoke-IndexSources.ps1 -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:($treatNotIndexedAsWarning -eq 'true')
 
 if ($symbolsPath)
 {

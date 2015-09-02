@@ -161,32 +161,33 @@ function Get-ResourceConnectionDetails
 
     $resourceProperties = @{}
     $resourceName = $resource.Name
+	$resourceId = $resource.Id
 
-    Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceFQDNKeyName" -Verbose
-    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceName $resourceName
-    Write-Verbose "`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceFQDNKeyName" -Verbose
+    Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
+    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceId $resourceId
+    Write-Verbose "`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
     Write-Verbose "`t Resource fqdn - $fqdn" -Verbose
 
     $winrmPortToUse = ''
     $protocolToUse = ''
 
     # check whether https port is defined for resource
-    Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpsPortKeyName" -Verbose
-    $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceName $resourceName
-    Write-Verbose "`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpsPortKeyName" -Verbose
+    Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
+    $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceId $resourceId
+    Write-Verbose "`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
 
     if ([string]::IsNullOrEmpty($winrmHttpsPort))
     {
-        Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
+        Write-Verbose "`t Resource: $resourceName (Id : $resourceId) does not have any winrm https port defined, checking for winrm http port" -Verbose
 
-        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
-        $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceName $resourceName
-        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource name: $resourceName and key: $resourceWinRMHttpPortKeyName" -Verbose
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
+        $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceId $resourceId
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
 
         # if resource does not have any port defined then, use https port by default
         if ([string]::IsNullOrEmpty($winrmHttpPort))
         {
-            Write-Verbose "`t Resource: $resourceName does not have any winrm http port or https port defined, using https port by default" -Verbose
+            Write-Verbose "`t Resource: $resourceName (Id : $resourceId) does not have any winrm http port or https port defined, using https port by default" -Verbose
             $winrmPortToUse = $defaultWinRMPort
             $protocolToUse = $defaultConnectionProtocolOption
         }
@@ -210,6 +211,7 @@ function Get-ResourceConnectionDetails
     $resourceProperties.winrmPort = $winrmPortToUse
     $resourceProperties.httpProtocolOption = $protocolToUse
     $resourceProperties.credential = Get-ResourceCredentials -resource $resource
+	$resourceProperties.displayName = $fqdn + ":" + $winrmPortToUse
 
     return $resourceProperties
 }
@@ -245,13 +247,14 @@ function Get-ResourcesProperties
     foreach ($resource in $resources)
     {
         $resourceName = $resource.Name
-        Write-Verbose "Get Resource properties for $resourceName" -Verbose
+		$resourceId = $resource.Id
+        Write-Verbose "Get Resource properties for $resourceName (ResourceId = $resourceId)" -Verbose
 
         # Get other connection details for resource like - Fqdn WinRM Port, Http Protocol, SkipCACheck Option, Resource Credentials
         $resourceProperties = Get-ResourceConnectionDetails -resource $resource -connection $connection
         $resourceProperties.skipCACheckOption = $skipCACheckOption
 
-        $resourcesPropertyBag.Add($resourceName, $resourceProperties)
+        $resourcesPropertyBag.Add($resourceId, $resourceProperties)
     }
 
     return $resourcesPropertyBag
@@ -427,29 +430,17 @@ try
     {
         foreach ($resource in $resources)
         {
-            $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
+            $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
             $machine = $resourceProperties.fqdn
+			$displayName = $resourceProperties.displayName
 
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $machine)
-
-            Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
-            Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-            Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
+            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $displayName)
 
             $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
             $status = $copyResponse.Status
 
-            Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machine -deploymentResponse $copyResponse
-            Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)
-
-            # getting operation logs
-            $logs = Get-OperationLogs
-            Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
-
-            Write-Verbose "Completed Complete-ResourceOperation cmdlet call on resource: $($resource.Name) with resource operationId: $resOperationId" -Verbose
-            Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $copyResponse.Status -ErrorMessage $copyResponse.Error -Logs $logs -Connection $connection
-            Write-Verbose "Completed Complete-ResourceOperation cmdlet call on resource: $($resource.Name) with resource operationId: $resOperationId" -Verbose
+            Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $displayName -deploymentResponse $copyResponse
+            Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
 
             if ($status -ne "Passed")
             {
@@ -469,17 +460,12 @@ try
         [hashtable]$Jobs = @{}
         foreach ($resource in $resources)
         {
-            $resourceProperties = $resourcesPropertyBag.Item($resource.Name)
+            $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
             $machine = $resourceProperties.fqdn
+			$displayName = $resourceProperties.displayName
 
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $machine)
+            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $displayName)
 
-            Write-Verbose "Starting Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-            $resOperationId = Invoke-ResourceOperation -EnvironmentName $environmentName -ResourceName $resource.Name -EnvironmentOperationId $envOperationId -Connection $connection
-            Write-Verbose "Completed Invoke-ResourceOperation cmdlet call on environment name: $environmentName with resource name: $($resource.Name) and environment operationId: $envOperationId" -Verbose
-            Write-Verbose "ResourceOperationId = $resOperationId" -Verbose
-
-            $resourceProperties.resOperationId = $resOperationId
             $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
             $Jobs.Add($job.Id, $resourceProperties)
         }
@@ -495,11 +481,11 @@ try
                     Remove-Job $Job
 
                     $status = $output.Status
-                    $machineName = $Jobs.Item($job.Id).fqdn
+                    $displayName = $Jobs.Item($job.Id).displayName
                     $resOperationId = $Jobs.Item($job.Id).resOperationId
 
-                    Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $machineName -deploymentResponse $output
-                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machineName, $status)
+                    Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $displayName -deploymentResponse $output
+                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
 
                     if ($status -ne "Passed")
                     {
@@ -509,16 +495,8 @@ try
                     {
                         $errorMessage = $output.Error.Message
                     }
-                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $machineName, $errorMessage)
+                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $displayName, $errorMessage)
                     }
-
-                    # getting operation logs
-                    $logs = Get-OperationLogs
-                    Write-Verbose "Upload BuildUri $logs as operation logs." -Verbose
-
-                    Write-Verbose "Starting Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
-                    Complete-ResourceOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -ResourceOperationId $resOperationId -Status $output.Status -ErrorMessage $output.Error -Logs $logs -Connection $connection
-                    Write-Verbose "Completed Complete-ResourceOperation cmdlet call on environment name: $environmentName with resource operationId: $resOperationId" -Verbose
                 }
             }
         }

@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -34,7 +34,7 @@
         {
             "name": "SearchPattern",
             "type": "string",
-            "label": "Search Pattern",
+            "label": "Search pattern",
             "defaultValue": "**\\bin\\**\\*.pdb",
             "required": true,
             "helpMarkDown": "The pattern used to discover the pdb files to publish."
@@ -48,18 +48,18 @@
             "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder."
         },
         {
-            "name": "SourceFolder",
-            "type": "filePath",
-            "label": "Path to source folder",
-            "defaultValue": "",
+            "name": "TreatNotIndexedAsWarning",
+            "type": "boolean",
+            "label": "Warn if not indexed",
+            "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "The path to the source control mapping folder. This option should only be used if the source code being indexed is from a different repository. Otherwise defaults to $(Build.SourcesDirectory)",
+            "helpMarkDown": "Indicates whether to warn if sources are not indexed for a PDB file. Otherwise the messages are logged as normal output.",
             "groupName": "advanced"
         },
         {
             "name": "SymbolsMaximumWaitTime",
             "type": "string",
-            "label": "Max Wait Time (min)",
+            "label": "Max wait time (min)",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The number of minutes to wait before failing the step",
@@ -86,7 +86,7 @@
         {
             "name": "SymbolsArtifactName",
             "type": "string",
-            "label": "Artifact Name",
+            "label": "Artifact name",
             "defaultValue": "Symbols_$(BuildConfiguration)",
             "required": false,
             "helpMarkDown": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)",

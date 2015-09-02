@@ -1,7 +1,7 @@
 [cmdletbinding()]
 param(
     [string[]]$SymbolsFilePaths = $(throw 'Missing SymbolsFilePaths'),
-    [bool]$TreatNotIndexedAsWarning = $(throw 'Missing TreatNotIndexedAsWarning')
+    [switch]$TreatNotIndexedAsWarning
 )
 
 # For pre-M88 agents, get the method info for DbgHelpWrapper.GetIndexedSources(...).
@@ -19,9 +19,10 @@ if (!(Get-Command @splat)) {
     # Get the dbgHelpWrapper type.
     # Because the type's access modifier is 'internal', we have to load it from
     # the assembly rather than using the PowerShell type syntax.
-    $taskInternalAssembly =
+    [string]$taskInternalAssemblyPath =
         Get-Module -Name 'Microsoft.TeamFoundation.DistributedTask.Task.Internal' |
-        Select-Object -ExpandProperty 'ImplementingAssembly'
+        Select-Object -ExpandProperty 'Path'
+    $taskInternalAssembly = [System.Reflection.Assembly]::LoadFrom($taskInternalAssemblyPath)
     $dbgHelpWrapperType = $taskInternalAssembly.GetType(
         'Microsoft.TeamFoundation.DistributedTask.Task.Internal.Core.DbgHelpWrapper', #name
         $true, # throwOnError
@@ -118,7 +119,7 @@ function Get-SourceFilePaths {
     param(
         [string]$SymbolsFilePath = $(throw 'Missing SymbolsFilePath'),
         [string]$SourcesRootPath = $(throw 'Missing SourcesRootPath'),
-        [bool]$TreatNotIndexedAsWarning = $(throw 'Missing TreatNotIndexedAsWarning')
+        [switch]$TreatNotIndexedAsWarning
     )
 
     # Validate the symbols file exists.
