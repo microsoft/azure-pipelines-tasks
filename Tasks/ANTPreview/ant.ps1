@@ -49,9 +49,9 @@ if($jdkVersion -and $jdkVersion -ne "default")
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
-$buildRootPath = split-path $antBuildFile -Parent
-$summaryFile = Join-Path $buildRootPath "target\report.xml"
-$reportDirectory = Join-Path $buildRootPath "target"
+$buildRootPath = Split-Path $antBuildFile -Parent
+$summaryFile = Join-Path $buildRootPath "CodeCoverage\summary.xml"
+$reportDirectory = Join-Path $buildRootPath "CodeCoverage"
 
 # check if code coverage has been enabled
 if($codeCoverageTool)

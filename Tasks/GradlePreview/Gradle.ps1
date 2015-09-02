@@ -58,8 +58,9 @@ $arguments = "$options $tasks"
 Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
 Invoke-BatchScript -Path $wrapperScript -Arguments $arguments -WorkingFolder $cwd
 
-$summaryFile = Join-Path $cwd "build\report.xml"
-$reportDirectory = Join-Path $cwd "build"
+$buildRootPath = Split-Path $wrapperScript -Parent
+$summaryFile = Join-Path $buildRootPath "CodeCoverage\summary.xml"
+$reportDirectory = Join-Path $buildRootPath "CodeCoverage"
 
 # check if code coverage has been enabled
 if($codeCoverageTool)
@@ -92,7 +93,7 @@ else
 # check if code coverage has been enabled
 if($codeCoverageTool)
 {
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $codeCoverageFiles -Context $distributedTaskContext    
+   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }
 else
 {
