@@ -34,4 +34,23 @@ else
      Write-Warning "Could not find the summary report file $summaryMdPath"
 }
 
+. .\CodeAnalysisFilePathComputation.ps1
+$sonarAnalysisMode = Get-TaskVariable -Context $distributedTaskContext -Name "sonaranalysismode"
+if ($sonarAnalysisMode -ieq "incremental")
+{
+    ComputeCodeAnalysisFilePaths $agentBuildDirectory
 
+    $sonarReportFolderPath = [System.IO.Path]::Combine($agentBuildDirectory, ".sonarqube", "out", ".sonar")
+    $sonarReportFilePathProcessed = [System.IO.Path]::Combine($sonarReportFolderPath, "code-analysis-report.json")
+
+
+    if ([System.IO.File]::Exists($sonarReportFilePathProcessed))
+    {
+        Write-Verbose -Verbose "Uploading build artifact code-analysis-report.json from $sonarReportFolderPath"
+        Write-Host "##vso[artifact.upload containerfolder=sonarissues;artifactname=sonarissues;]$sonarReportFilePathProcessed"
+    }
+    else
+    {
+        Write-Warning "Could not find code-analysis-report.json file in $sonarReportFilePathProcessed"
+    }
+}
