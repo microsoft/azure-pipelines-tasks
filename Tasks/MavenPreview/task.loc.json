@@ -82,15 +82,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
     },
     {
-      "name": "publishCodeCoverageResults",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.publishCodeCoverageResults",
-      "required": true,
-      "defaultValue": "false",
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.publishCodeCoverageResults"
-    },
-    {
       "name": "codeCoverageTool",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
@@ -103,31 +94,22 @@
       }
     },
     {
-      "name": "summaryFileLocation",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.summaryFileLocation",
-      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco\\jacoco.xml",
-      "required": true,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
-    },
-    {
-      "name": "reportDirectory",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.reportDirectory",
-      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco",
-      "required": true,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
-    },
-    {
-      "name": "additionalCodeCoverageFiles",
+      "name": "classfilesDirectory",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
-      "defaultValue": "**/*.exec",
+      "label": "ms-resource:loc.input.label.classfilesDirectory",
+      "defaultValue": "**/*.class",
       "required": true,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
+      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectory"
+    },
+    {
+      "name": "classFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilter",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter"
     },
     {
       "name": "jdkVersion",
