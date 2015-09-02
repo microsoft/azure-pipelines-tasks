@@ -455,9 +455,9 @@ function CanSkipTestAgentConfiguration
         }
     }
 
-    if ($TfsCollection -ne $existingConfiguration.TfsCollection)
+    if ($TfsCollection.Trim("/") -ne $existingConfiguration.TfsCollection.Trim("/"))
     {
-        Write-Verbose -Message ("Tfs Collection Url mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $TfsCollection, $existingConfiguration.TfsCollection) -Verbose
+        Write-Verbose -Message ("Tfs Collection Url mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $TfsCollection.Trim("/"), $existingConfiguration.TfsCollection.Trim("/")) -Verbose
         return $false
     }
 
