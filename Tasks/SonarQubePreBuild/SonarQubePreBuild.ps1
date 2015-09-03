@@ -21,10 +21,10 @@ Write-Verbose -Verbose "configFile = $configFile"
 Write-Verbose -Verbose "dbConnectionString = $dbUrl"
 Write-Verbose -Verbose "dbUsername = $dbUsername"
 
-$sonarAnalysisMode = Get-TaskVariable -Context $distributedTaskContext -Name "sonaranalysismode"
-if ($sonarAnalysisMode -ieq "incremental")
+$prcaEnabled = Get-TaskVariable -Context $distributedTaskContext -Name "GitPullRequestCodeAnalysisEnabled"
+if ($prcaEnabled -ieq "true")
 {
-    Write-Verbose -Verbose "sonaranalysismode is set to incremental, setting cmdline args for sonar-runner..."
+    Write-Verbose -Verbose "GitPullRequestCodeAnalysisEnabled is true, setting cmdline args for incremental mode for sonar-runner..."
 
     if (!$cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
     {

@@ -35,8 +35,8 @@ else
 }
 
 . .\CodeAnalysisFilePathComputation.ps1
-$sonarAnalysisMode = Get-TaskVariable -Context $distributedTaskContext -Name "sonaranalysismode"
-if ($sonarAnalysisMode -ieq "incremental")
+$prcaEnabled = Get-TaskVariable -Context $distributedTaskContext -Name "GitPullRequestCodeAnalysisEnabled"
+if ($prcaEnabled -ieq "true")
 {
     ComputeCodeAnalysisFilePaths $agentBuildDirectory
 
@@ -47,7 +47,7 @@ if ($sonarAnalysisMode -ieq "incremental")
     if ([System.IO.File]::Exists($sonarReportFilePathProcessed))
     {
         Write-Verbose -Verbose "Uploading build artifact code-analysis-report.json from $sonarReportFolderPath"
-        Write-Host "##vso[artifact.upload containerfolder=sonarissues;artifactname=sonarissues;]$sonarReportFilePathProcessed"
+        Write-Host "##vso[artifact.upload containerfolder=CodeAnalysisIssues;artifactname=CodeAnalysisIssues;]$sonarReportFilePathProcessed"
     }
     else
     {
