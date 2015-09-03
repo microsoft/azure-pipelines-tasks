@@ -56,7 +56,7 @@ The task runs on the automation agent machine and the following needs to be inst
 
  /p:IgnoreAnsiNulls=True /p:IgnoreComments=True
 
-These arguments will override the settings in the Publish profile XML file (if provided). A full list of the arguments that can provided is listed in the ' **Properties**' sub-section of the 'Publish Parameters, Properties, and SQLCMD Variables' in the [SqlPackage.exe](https://msdn.microsoft.com/en-us/library/hh550080(v=vs.103).aspx) documentation. The SQLCMD variables can be also specified here.
+ These arguments will override the settings in the Publish profile XML file (if provided). A full list of the arguments that can provided is listed in the ' **Properties**' sub-section of the 'Publish Parameters, Properties, and SQLCMD Variables' in the [SqlPackage.exe](https://msdn.microsoft.com/en-us/library/hh550080(v=vs.103).aspx) documentation. The SQLCMD variables can be also specified here.
 
 - **Specify Firewall Rules Using** : For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Server's Firewall. Provide the IP Address range of the automation agents or select to auto-detect the IP Address of the agent where the tasks runs.
 
