@@ -34,7 +34,7 @@ The task runs on the automation agent machine and the following needs to be inst
   a. Visual Studio 2015 install the SqlPackage.exe at - C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120. Here the install location of Visual Studio is - C:\Program Files (x86)\Microsoft Visual Studio 14.0.
   b. Install it by using the [Microsoft Web Platform Installer](http://www.microsoft.com/web/gallery/install.aspx?appid=DACFX) (Web PI), where the DACFX download represents all the MSIs that need to be installed for SqlPackage.exe. Note that the link will open Web PI with the DACFX already ready to install.
   c. [SQL Server Management Studio](https://www.microsoft.com/en-in/download/details.aspx?id=42299) for SQL Server 2014 or SQL Server Express and [DAC Framework](http://www.microsoft.com/en-us/download/details.aspx?id=42293) MSIs install SqlPackage.exe at C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin.
-2. 2.The Azure PowerShell needs to be installed on the automation agent and it can be done easily using the [Microsoft Web Platform Installer](http://go.microsoft.com/fwlink/p/?LinkId=320376) (Web PI). Note that the link will open Web PI with the Azure PowerShell already to install.
+2. The Azure PowerShell needs to be installed on the automation agent and it can be done easily using the [Microsoft Web Platform Installer](http://go.microsoft.com/fwlink/p/?LinkId=320376) (Web PI). Note that the link will open Web PI with the Azure PowerShell already to install.
 
 **Parameters of the task:**
 
@@ -56,7 +56,7 @@ The task runs on the automation agent machine and the following needs to be inst
 
  /p:IgnoreAnsiNulls=True /p:IgnoreComments=True
 
-These arguments will override the settings in the Publish profile XML file (if provided). A full list of the arguments that can provided is listed in the ' **Properties**' sub-section of the 'Publish Parameters, Properties, and SQLCMD Variables' in the [SqlPackage.exe](https://msdn.microsoft.com/en-us/library/hh550080(v=vs.103).aspx) documentation. The SQLCMD variables can be also specified here.
+ These arguments will override the settings in the Publish profile XML file (if provided). A full list of the arguments that can provided is listed in the ' **Properties**' sub-section of the 'Publish Parameters, Properties, and SQLCMD Variables' in the [SqlPackage.exe](https://msdn.microsoft.com/en-us/library/hh550080(v=vs.103).aspx) documentation. The SQLCMD variables can be also specified here.
 
 - **Specify Firewall Rules Using** : For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Server's Firewall. Provide the IP Address range of the automation agents or select to auto-detect the IP Address of the agent where the tasks runs.
 
