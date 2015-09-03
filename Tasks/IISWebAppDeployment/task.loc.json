@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 6
+    "Minor": 0,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -115,9 +115,9 @@
       "label": "ms-resource:loc.input.label.WebSitePhysicalPathAuth",
       "required": true,
       "groupName": "website",
-      "defaultValue": "Application User(Pass-through)",
+      "defaultValue": "Application User (Pass-through)",
       "options": {
-        "WebSiteUserPassThrough": "Application User(Pass-through)",
+        "WebSiteUserPassThrough": "Application User (Pass-through)",
         "WebSiteWindowsAuth": "Windows Authentication"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebSitePhysicalPathAuth"
@@ -150,6 +150,16 @@
       "groupName": "website",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.AddBinding"
+    },
+    {
+      "name": "AssignDuplicateBinding",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AssignDuplicateBinding",
+      "required": false,
+      "groupName": "website",
+      "defaultValue": "true",
+      "visibleRule": "AddBinding = true",
+      "helpMarkDown": "ms-resource:loc.input.help.AssignDuplicateBinding"
     },
     {
       "name": "Protocol",

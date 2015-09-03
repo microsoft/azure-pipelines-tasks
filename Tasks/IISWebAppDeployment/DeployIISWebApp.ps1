@@ -11,6 +11,7 @@
     [string]$webSiteAuthUserName,
     [string]$webSiteAuthUserPassword,
     [string]$addBinding,
+    [string]$assignDuplicateBinding,
     [string]$protocol,
     [string]$ipAddress,
     [string]$port,
@@ -41,6 +42,7 @@ Write-Verbose "webSitePhysicalPath = $webSitePhysicalPath" -Verbose
 Write-Verbose "webSitePhysicalPathAuth = $webSitePhysicalPathAuth" -Verbose
 Write-Verbose "webSiteAuthUserName = $webSiteAuthUserName" -Verbose
 Write-Verbose "addBinding = $addBinding" -Verbose
+Write-Verbose "assignDuplicateBinding = $assignDuplicateBinding" -Verbose
 Write-Verbose "protocol = $protocol" -Verbose
 Write-Verbose "ipAddress = $ipAddress" -Verbose
 Write-Verbose "port = $port" -Verbose
@@ -76,7 +78,7 @@ $appPoolUsername = $appPoolUsername.Trim()
 $appCmdCommands = $appCmdCommands.Replace('"', '`"')
 
 $msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
-$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`""
+$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`""
 
 Write-Verbose "MsDeployOnTargetMachines Script Arguments : $scriptArgs" -Verbose
 Write-Output ( Get-LocalizedString -Key "Starting deployment of IIS Web Deploy Package : {0}" -ArgumentList $webDeployPackage)
