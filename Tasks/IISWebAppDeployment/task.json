@@ -2,7 +2,7 @@
     "id": "89A3A82D-4B3E-4A09-8D40-A793849DC94F",
     "name": "IISWebAppDeployment",
     "friendlyName": "IIS Web Application Deployment",
-    "description": "Deploy Web Application using Web Deploy (MSDeploy) to IIS Website",
+    "description": "Deploy by MSDeploy, create/update website & app pools",
     "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -43,7 +43,7 @@
             "label": "Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the target Machine Group for deploying the IIS Web Application."
+            "helpMarkDown": "Select the target Machine Group for deploying the application. For Azure Resource Groups, type the name of the Resource Group."
         },
         {
             "name": "ResourceFilteringMethod",
@@ -55,7 +55,7 @@
                 "machineNames": "Machine Names",
                 "tags": "Tags"
             },
-            "helpMarkDown": "Optionally select a subset of machines either by providing machine names or tags."
+            "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
         },
         {
             "name": "MachineFilter",
@@ -63,7 +63,7 @@
             "label": "Filter Criteria",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
+            "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are listed then it will deploy to all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name for the machine name like, ffweb, ffdb. The default is to deploy to all machines in the machine/resource group."
         },
         {
             "name": "WebDeployPackage",
@@ -71,7 +71,7 @@
             "label": "Web Deploy Package",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "Location of the Web Deploy (MSDeploy) zip file on the target machines or a UNC path like \\\\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip."
+            "helpMarkDown": "Location of the Web Deploy (MSDeploy) zip file on the target machines or a UNC path like, \\\\\\\\BudgetIT\\WebDeploy\\WebDeployPackage.zip. The UNC path should be accessible to the machine's administrator account."
         },
         {
             "name": "WebDeployParamFile",
@@ -87,7 +87,7 @@
             "label": "Override Parameters",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameters file. For example -  name=\"IIS Web Application Name\", value=\"Fabrikam\"." 
+            "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameters file. For example,  name=\"IIS Web Application Name\", value=\"Fabrikam\"." 
         },
         {
             "name": "WebSiteName",
@@ -96,7 +96,7 @@
             "required": false,
             "groupName": "website",
             "defaultValue": "",
-            "helpMarkDown": "Name of the website to create in the IIS server. If the website already exists then it will be updated with the settings specified here."
+            "helpMarkDown": "Name of the website to create in the IIS server. If the website already exists then it will be updated with the settings specified here. The name of the website should be same as that specified in the MSDeploy zip file. If a Parameters file and override Parameters settings is also specified then it should be same as that in the override Parameters settings."
         },
         {
             "name": "WebSitePhysicalPath",
@@ -105,7 +105,7 @@
             "required": true,
             "groupName": "website",
             "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
-            "helpMarkDown": "Physical path where the website content is stored. The content can reside on the local computer or on a remote directory or share, for example, C:\\Fabrikam or \\\\ContentShare\\Fabrikam."
+            "helpMarkDown": "Physical path where the website content is stored. The content can reside on the local computer or on a remote directory or share like, C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
         },
         {
             "name": "WebSitePhysicalPathAuth",
@@ -113,12 +113,12 @@
             "label": "Physical Path Authentication",
             "required": true,
             "groupName": "website",
-            "defaultValue": "Application User(Pass-through)",
+            "defaultValue": "Application User (Pass-through)",
             "options": {
-                "WebSiteUserPassThrough": "Application User(Pass-through)",
+                "WebSiteUserPassThrough": "Application User (Pass-through)",
                 "WebSiteWindowsAuth": "Windows Authentication"
             },
-            "helpMarkDown": "Authentication mechanism for accessing the physical path of website."
+            "helpMarkDown": "Authentication mechanism for accessing the physical path of the website."
         },
         {
             "name": "WebSiteAuthUserName",
@@ -150,6 +150,16 @@
             "helpMarkDown": "Select the option to add port binding for the website."
         },
         {
+            "name": "AssignDuplicateBinding",
+            "type": "boolean",
+            "label": "Assign Duplicate Binding",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "true",
+            "visibleRule": "AddBinding = true",
+            "helpMarkDown": "If selected, assign the binding to the website even if the binding is assigned to another site. If the binding is assigned to two sites,then only one will start."
+        },
+        {
             "name": "Protocol",
             "type": "pickList",
             "label": "Protocol",
@@ -171,7 +181,7 @@
             "groupName": "website",
             "defaultValue": "All Unassigned",
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "Type an IP address that users can use to access this website. If All Unassigned is selected, the site will respond to requests for all IP addresses on the port and optional host name that is specified for this site, unless another site on the server has a binding on the same port but with a specific IP address."
+            "helpMarkDown": "Type an IP address that users can use to access this website. If All Unassigned is selected, the site will respond to requests for all IP addresses on the port and the optional host name that is specified for this site, unless another site on the server has a binding on the same port but with a specific IP address."
         },
         {
             "name": "Port",
@@ -181,7 +191,7 @@
             "groupName": "website",
             "defaultValue": "80",
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "Type the port on which HTTP.sys must listen for requests made to this website."
+            "helpMarkDown": "Type the port on which Hypertext Transfer Protocol Stack (HTTP.sys) must listen for requests made to this website."
         },
         {
             "name": "HostName",
@@ -191,7 +201,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "Type a host (domain) name, to assign one or more host names, to one computer that uses a single IP address."
+            "helpMarkDown": "To assign one or more host names (aka domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
         },
         {
             "name": "ServerNameIndication",
@@ -211,7 +221,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "Protocol = https",
-            "helpMarkDown": "Thumb-print of the Secure Socket Layer certificate that the website is going to use. The certificate should be installed on the machine."
+            "helpMarkDown": "Thumb-print of the Secure Socket Layer certificate that the website is going to use. The certificate should be already installed and present under Local System Personal store on the machine."
         },
         {
             "name": "AppPoolName",
@@ -229,7 +239,7 @@
             "defaultValue": "v4.0",
             "required": true,
             "groupName": "applicationPool",
-            "helpMarkDown": "Version of the .NET Framework that is loaded by this application pool. If the applications that you want to assign to this application pool do not contain managed code, select the No Managed Code option from the list.",
+            "helpMarkDown": "Version of the .NET Framework that is loaded by this application pool. If the applications assigned to this application pool do not contain managed code, select the No Managed Code option from the list.",
             "options": {
                 "v4.0": "v4.0",
                 "v2.0": "v2.0",
@@ -243,7 +253,7 @@
             "defaultValue": "Integrated",
             "required": true,
             "groupName": "applicationPool",
-            "helpMarkDown": "Managed pipeline mode specified how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in Integrated mode.",
+            "helpMarkDown": "Managed pipeline mode specifies how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in the Integrated mode.",
             "options": {
                 "Integrated": "Integrated",
                 "Classic": "Classic"
@@ -290,7 +300,7 @@
             "required": false,
             "groupName": "advanced",
             "defaultValue": "",
-            "helpMarkDown": "Additional appcmd.exe commands to set website or application pool properties. For more than one command use line separators, e.g., set config /section:applicationPools /[name='Fabrikam'].autoStart:false\n add site /name:fabrikam /bindings:http/*:85: fabrikam.com."
+            "helpMarkDown": "Additional appcmd.exe commands to set website or application pool properties. For more than one command use line separator, e.g., <br/> list apppools <br/> list sites"
         },
         {
             "name": "DeployInParallel",
