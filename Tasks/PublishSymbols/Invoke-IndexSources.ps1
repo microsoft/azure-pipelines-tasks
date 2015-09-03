@@ -35,6 +35,65 @@ if (!(Get-Command @splat)) {
         [System.Reflection.BindingFlags]::Instance -bor [System.Reflection.BindingFlags]::NonPublic) # bindingFlags
 }
 
+function Add-DbghelpLibrary {
+    [cmdletbinding()]
+    param()
+
+    # Check if dbghelp.dll is already loaded.
+    Write-Verbose "Checking if library is already loaded: dbghelp.dll"
+    [string]$filePath = "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll"
+    [bool]$isLoaded = $false
+    [System.Diagnostics.Process]$process = [System.Diagnostics.Process]::GetCurrentProcess();
+    foreach ($module in $process.Modules) {
+        if ($module.ModuleName -eq 'dbghelp.dll') {
+            $isLoaded = $true
+            if ($module.FileName -eq $filePath) {
+                Write-Verbose "Module dbghelp.dll is already loaded from the expected file path: $filePath"
+            } else {
+                Write-Warning (Get-LocalizedString -Key "Library dbghelp.dll is already loaded from an unexpected file path: {0} ; Expected path: {1} ; An incorrect version of the library may result in malformed source file paths to be extracted from the PDB files. If this condition occurs, it will be indicated in the logs below." -ArgumentList $($module.FileName), $filePath)
+            }
+
+            # Don't short-circuit the loop. The module could be loaded more
+            # than once and we should trace info about each loaded instance.
+        }
+    }
+
+    # Short-ciruit if already loaded.
+    if ($isLoaded) {
+        return
+    }
+
+    # Sanity check to make sure the DLL is where we expect it.
+    if (!(Test-Path -LiteralPath $filePath -PathType Leaf)) {
+        throw (Get-LocalizedString -Key 'Could not find dbghelp.dll at: {0}' -ArgumentList $filePath)
+    }
+
+    # Add a type that exposes the native LoadLibrary function. If the type has
+    # already been loaded once, then it is not loaded again. We don't need to
+    # worry about cross task pollution here.
+    Write-Verbose "Adding type: LoadLibraryWrapper"
+    [string]$memberDefinition = @'
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr LoadLibrary(string dllToLoad);
+'@
+    [hashtable]$splat = @{
+        'Name' = 'LoadLibraryWrapper'
+        'MemberDefinition' = $memberDefinition
+        'Namespace' = "InvokeIndexSources"
+        'Debug' = $false
+    }
+    Add-Type @splat
+    Write-Verbose "Loading library: $filePath"
+    $hModule = [InvokeIndexSources.LoadLibraryWrapper]::LoadLibrary($filePath)
+    if ($hModule -eq [System.IntPtr]::Zero) {
+        $errorCode = [System.Runtime.InteropServices.Marshal]::GetLastWin32Error()
+        Write-Warning (Get-LocalizedString -Key "Failed to load dbghelp.dll from location {0} ; Error code: {1}" -ArgumentList $filePath, $errorCode)
+        return
+    }
+
+    $hModule
+}
+
 function Add-SourceServerStream {
     [cmdletbinding()]
     param(
@@ -332,6 +391,34 @@ function New-TfsVersionControlSrcSrvIniContent {
     'SRCSRV: end ------------------------------------------------'
 }
 
+function Remove-DbghelpLibrary {
+    [cmdletbinding()]
+    param(
+        $hModule
+    )
+
+    Write-Verbose "Adding type: FreeLibraryWrapper."
+    # Add a type that exposes the native FreeLibrary function. If the type has
+    # already been loaded once, then it is not loaded again. We don't need to
+    # worry about cross task pollution here.
+    [string]$memberDefinition = @'
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool FreeLibrary(IntPtr hModule);
+'@
+    [hashtable]$splat = @{
+        'Name' = 'FreeLibraryWrapper'
+        'MemberDefinition' = $memberDefinition
+        'Namespace' = "InvokeIndexSources"
+        'Debug' = $false
+    }
+    Add-Type @splat
+    Write-Verbose "Unloading library: dbghelp.dll"
+    if (![InvokeIndexSources.FreeLibraryWrapper]::FreeLibrary($hModule)) {
+        $errorCode = [System.Runtime.InteropServices.Marshal]::GetLastWin32Error()
+        Write-Warning (Get-LocalizedString -Key "Failed to free library dbghelp.dll. Error code: {0}" -ArgumentList $errorCode)
+    }
+}
+
 # Validate at least one symbols file.
 if (!$SymbolsFilePaths) {
     Write-Warning (Get-LocalizedString -Key 'No files were selected for indexing.');
@@ -352,8 +439,12 @@ if (!$pdbstrPath) {
 # For consistency with the previous implementation, set the working directory to the temp folder
 # before calling pdbstr.exe.
 Push-Location $env:TEMP
+$dbghelpModuleHandle = $null
 $tfsTeamProjectCollection = $null
 try {
+    # Load dbghelp.dll if it is not already loaded.
+    $dbghelpModuleHandle = Add-DbghelpLibrary
+
     # Set the provider specific information.
     switch ($provider) {
         'TfsGit' {
@@ -491,5 +582,9 @@ finally {
     if ($tfsTeamProjectCollection) {
         Write-Verbose 'Disposing tfsTeamProjectCollection'
         $tfsTeamProjectCollection.Dispose()
+    }
+
+    if ($dbghelpModuleHandle) {
+        Remove-DbghelpLibrary $dbghelpModuleHandle
     }
 }
