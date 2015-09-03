@@ -404,10 +404,13 @@ function Run-AdditionalCommands
 
     foreach($appCmdCommand in $appCmdCommands)
     {
-        $command = "`"$appCmdPath`" $appCmdCommand"
+        if(-not [string]::IsNullOrEmpty($appCmdCommand.Trim(' ')))
+        {
+            $command = "`"$appCmdPath`" $appCmdCommand"
 
-        Write-Verbose "Running additional command. $command" -Verbose
-        Run-Command -command $command
+            Write-Verbose "Running additional command. $command" -Verbose
+            Run-Command -command $command
+        }
     }
 }
 
