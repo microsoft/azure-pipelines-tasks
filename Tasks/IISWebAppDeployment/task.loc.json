@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 1,
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -25,6 +25,11 @@
     {
       "name": "website",
       "displayName": "ms-resource:loc.group.displayName.website",
+      "isExpanded": true
+    },
+    {
+      "name": "applicationPool",
+      "displayName": "ms-resource:loc.group.displayName.applicationPool",
       "isExpanded": true
     },
     {
@@ -94,15 +99,6 @@
       "groupName": "website",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.WebSiteName"
-    },
-    {
-      "name": "AppPoolName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AppPoolName",
-      "required": false,
-      "groupName": "website",
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.AppPoolName"
     },
     {
       "name": "WebSitePhysicalPath",
@@ -220,13 +216,83 @@
       "helpMarkDown": "ms-resource:loc.input.help.SSLCertThumbPrint"
     },
     {
-      "name": "AppCmdArgs",
+      "name": "AppPoolName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.AppCmdArgs",
-      "required": false,
-      "groupName": "website",
+      "label": "ms-resource:loc.input.label.AppPoolName",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.AppCmdArgs"
+      "required": false,
+      "groupName": "applicationPool",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolName"
+    },
+    {
+      "name": "DotNetVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DotNetVersion",
+      "defaultValue": "v4.0",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "ms-resource:loc.input.help.DotNetVersion",
+      "options": {
+        "v4.0": "v4.0",
+        "v2.0": "v2.0",
+        "No Managed Code": "No Managed Code"
+      }
+    },
+    {
+      "name": "PipeLineMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.PipeLineMode",
+      "defaultValue": "Integrated",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "ms-resource:loc.input.help.PipeLineMode",
+      "options": {
+        "Integrated": "Integrated",
+        "Classic": "Classic"
+      }
+    },
+    {
+      "name": "AppPoolIdentity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppPoolIdentity",
+      "defaultValue": "ApplicationPoolIdentity",
+      "required": true,
+      "groupName": "applicationPool",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolIdentity",
+      "options": {
+        "ApplicationPoolIdentity": "ApplicationPoolIdentity",
+        "LocalService": "LocalService",
+        "LocalSystem": "LocalSystem",
+        "NetworkService": "NetworkService",
+        "SpecificUser": "Custom Account"
+      }
+    },
+    {
+      "name": "AppPoolUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppPoolUsername",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "applicationPool",
+      "visibleRule": "AppPoolIdentity = SpecificUser"
+    },
+    {
+      "name": "AppPoolPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppPoolPassword",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "applicationPool",
+      "visibleRule": "AppPoolIdentity = SpecificUser"
+    },
+    {
+      "name": "AppCmdCommands",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AppCmdCommands",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AppCmdCommands"
     },
     {
       "name": "DeployInParallel",

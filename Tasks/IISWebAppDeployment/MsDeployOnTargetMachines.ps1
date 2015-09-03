@@ -3,7 +3,6 @@
     [string]$WebDeployParamFile,
     [string]$OverRideParams,
     [string]$WebSiteName,
-    [string]$AppPoolName,
     [string]$WebSitePhysicalPath,
     [string]$WebSitePhysicalPathAuth,
     [string]$WebSiteAuthUserName,
@@ -15,7 +14,13 @@
     [string]$HostName,
     [string]$ServerNameIndication,
     [string]$SslCertThumbPrint,
-    [string]$AppCmdArgs,
+    [string]$AppPoolName,
+    [string]$DotNetVersion,
+    [string]$PipeLineMode,
+    [string]$AppPoolIdentity,
+    [string]$AppPoolUsername,
+    [string]$AppPoolPassword,
+    [string]$AppCmdCommands,
     [string]$MethodToInvoke = "Execute-Main"
     )
 
@@ -25,7 +30,7 @@ Write-Verbose "WebDeployParamFile = $WebDeployParamFile" -Verbose
 Write-Verbose "OverRideParams = $OverRideParams" -Verbose
 
 Write-Verbose "WebSiteName = $WebSiteName" -Verbose
-Write-Verbose "AppPoolName = $AppPoolName" -Verbose
+
 Write-Verbose "WebSitePhysicalPath = $WebSitePhysicalPath" -Verbose
 Write-Verbose "WebSitePhysicalPathAuth = $WebSitePhysicalPathAuth" -Verbose
 Write-Verbose "WebSiteAuthUserName = $WebSiteAuthUserName" -Verbose
@@ -36,8 +41,14 @@ Write-Verbose "IpAddress = $IpAddress" -Verbose
 Write-Verbose "Port = $Port" -Verbose
 Write-Verbose "HostName = $HostName" -Verbose
 Write-Verbose "ServerNameIndication = $ServerNameIndication" -Verbose
-Write-Verbose "AppCmdArgs = $AppCmdArgs" -Verbose
 
+Write-Verbose "AppPoolName = $AppPoolName" -Verbose
+Write-Verbose "DotNetVersion = $DotNetVersion" -Verbose
+Write-Verbose "PipeLineMode = $PipeLineMode" -Verbose
+Write-Verbose "AppPoolIdentity = $AppPoolIdentity" -Verbose
+Write-Verbose "AppPoolUsername = $AppPoolUsername" -Verbose
+
+Write-Verbose "AppCmdCommands = $AppCmdCommands" -Verbose
 Write-Verbose "MethodToInvoke = $MethodToInvoke" -Verbose
 
 $AppCmdRegKey = "HKLM:\SOFTWARE\Microsoft\InetStp"
@@ -227,6 +238,31 @@ function Does-BindingExists
     return $false
 }
 
+function Does-AppPoolExists
+{  
+    param(
+        [string]$appPoolName
+    )
+
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdArgs = [string]::Format(' list apppool /name:{0}',$appPoolName)
+    $command = "`"$appCmdPath`" $appCmdArgs"
+
+    Write-Verbose "Checking application exists. Running Command : $command" -Verbose
+    
+    $appPool = Run-Command -command $command -failOnErr $false
+    
+    if($appPool -ne $null)
+    {
+        Write-Verbose "Application Pool ($appPoolName) already exists" -Verbose
+        return $true
+    }
+    
+    Write-Verbose "Application Pool ($appPoolName) does not exists" -Verbose
+    return $false
+
+}
+
 function Enable-SNI
 {
     param(
@@ -252,7 +288,7 @@ function Enable-SNI
 
     $appCmdArgs = [string]::Format(' set site /site.name:{0} /bindings.[protocol=''https'',bindingInformation=''{1}:{2}:{3}''].sslFlags:"1"',$siteName, $ipAddress, $port, $hostname)
 
-    $command = "`"$appCmdPath`" $appCmdArgs"       
+    $command = "`"$appCmdPath`" $appCmdArgs"
     
     Write-Verbose "Enabling SNI by setting SslFlags=1 for binding. Running Command : $command" -Verbose
     Run-Command -command $command
@@ -307,8 +343,8 @@ function Add-SslCert
         Write-Verbose "SSL cert binding already present.. returning" -Verbose
         return
     }
-        
-    Write-Verbose "Setting SslCert for WebSite." -Verbose               
+
+    Write-Verbose "Setting SslCert for WebSite." -Verbose
     Run-Command -command $addCertCmd
 }
 
@@ -343,24 +379,39 @@ function Create-WebSite
     Run-Command -command $command
 }
 
+function Create-AppPool
+{
+    param(
+        [string]$appPoolName
+    )
+
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdArgs = [string]::Format(' add apppool /name:{0}', $appPoolName)
+    $command = "`"$appCmdPath`" $appCmdArgs"
+    
+    Write-Verbose "Creating Application Pool. Running Command : $command" -Verbose
+    Run-Command -command $command
+}
+
 function Run-AdditionalCommands
 {
     param(
-        [string]$additionalArgs
+        [string]$additionalCommands
     )
 
-    $additionalArgs = $additionalArgs.Trim('"')
-    if(IsInputNullOrEmpty -str $additionalArgs)
-    {
-        Write-Verbose "No additional commands to run returning" -Verbose
-        return
-    }
-    
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey    
-    $command = "`"$appCmdPath`" $additionalArgs"
+    $appCmdCommands = $additionalCommands.Trim('"').Split([System.Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
 
-    Write-Verbose "Running additional commands. $command" -Verbose
-    Run-Command -command $command
+    foreach($appCmdCommand in $appCmdCommands)
+    {
+        if(-not [string]::IsNullOrEmpty($appCmdCommand.Trim(' ')))
+        {
+            $command = "`"$appCmdPath`" $appCmdCommand"
+
+            Write-Verbose "Running additional command. $command" -Verbose
+            Run-Command -command $command
+        }
+    }
 }
 
 function Update-WebSite
@@ -376,7 +427,7 @@ function Update-WebSite
         [string]$protocol,
         [string]$ipAddress,
         [string]$port,
-        [string]$hostname        
+        [string]$hostname
     )
 
     $appCmdArgs = [string]::Format(' set site /site.name:{0}', $siteName)
@@ -420,6 +471,46 @@ function Update-WebSite
     Run-Command -command $command 
 }
 
+function Update-AppPool
+{
+    param(
+        [string]$appPoolName,
+        [string]$clrVersion,
+        [string]$pipeLineMode,
+        [string]$identity,
+        [string]$userName,
+        [string]$password
+    )
+
+    $appCmdArgs = ' set config  -section:system.applicationHost/applicationPools'
+
+    if(-not (IsInputNullOrEmpty -str $clrVersion))
+    {    
+        $appCmdArgs = [string]::Format('{0} /[name=''{1}''].managedRuntimeVersion:{2}', $appCmdArgs, $appPoolName, $clrVersion)
+    }
+
+    if(-not (IsInputNullOrEmpty -str $pipeLineMode))
+    {
+        $appCmdArgs = [string]::Format('{0} /[name=''{1}''].managedPipelineMode:{2}', $appCmdArgs, $appPoolName, $pipeLineMode)
+    }
+
+    if($identity -eq "SpecificUser" -and -not (IsInputNullOrEmpty -str $userName) -and -not (IsInputNullOrEmpty -str $password))
+    {
+        $appCmdArgs = [string]::Format('{0} /[name=''{1}''].processModel.identityType:SpecificUser /[name=''{1}''].processModel.userName:{2} /[name=''{1}''].processModel.password:{3}',`
+                                $appCmdArgs, $appPoolName, $userName, $password)
+    }
+    else
+    {
+        $appCmdArgs = [string]::Format('{0} /[name=''{1}''].processModel.identityType:{2}', $appCmdArgs, $appPoolName, $identity)
+    }    
+        
+    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $command = "`"$appCmdPath`" $appCmdArgs"
+    
+    Write-Verbose "Updating Application Pool Properties. Running Command : $command" -Verbose
+    Run-Command -command $command
+}
+
 function Create-And-Update-WebSite
 {
     param(
@@ -447,9 +538,35 @@ function Create-And-Update-WebSite
     -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -hostname $hostname
 }
 
+function Create-And-Update-AppPool
+{
+    param(
+        [string]$appPoolName,
+        [string]$clrVerion,
+        [string]$pipeLineMode,
+        [string]$identity,
+        [string]$userName,
+        [string]$password
+    )
+
+    $doesAppPoolExists = Does-AppPoolExists -appPoolName $appPoolName
+
+    if(-not $doesAppPoolExists)
+    {
+        Create-AppPool -appPoolName $appPoolName
+    }
+
+    Update-AppPool -appPoolName $appPoolName -clrVersion $clrVerion -pipeLineMode $pipeLineMode -identity $identity -userName $userName -password $password
+}
+
 function Execute-Main
 {
     Write-Verbose "Entering Execute-Main function" -Verbose
+
+    if(-not (IsInputNullOrEmpty -str $AppPoolName))
+    {
+        Create-And-Update-AppPool -appPoolName $AppPoolName -clrVerion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
+    }
 
     if(-not (IsInputNullOrEmpty -str $WebSiteName))
     {
@@ -462,9 +579,9 @@ function Execute-Main
             Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVersion
             Enable-SNI -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
         }
-
-        Run-AdditionalCommands -additionalArgs $AppCmdArgs
     }
+
+    Run-AdditionalCommands -additionalCommands $AppCmdCommands
 
     Deploy-WebSite -webDeployPkg $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRiderParams $OverRideParams
 
