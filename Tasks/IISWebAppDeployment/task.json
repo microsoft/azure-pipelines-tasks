@@ -9,12 +9,12 @@
         "Preview",
         "Build",
         "Release"
-        ],
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 6
+        "Minor": 0,
+        "Patch": 0
     },
     "demands": [
     ],
@@ -71,7 +71,7 @@
             "label": "Web Deploy Package",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "Location of the Web Deploy (MSDeploy) zip file on the target machines or a UNC path like \\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip."
+            "helpMarkDown": "Location of the Web Deploy (MSDeploy) zip file on the target machines or a UNC path like \\\\BudgetIT\\Web\\Deploy\\WebDeployPackage.zip."
         },
         {
             "name": "WebDeployParamFile",
@@ -95,7 +95,7 @@
             "label": "Website Name",
             "required": false,
             "groupName": "website",
-            "defaultValue": "",            
+            "defaultValue": "",
             "helpMarkDown": "Name of the website to create in the IIS server. If the website already exists then it will be updated with the settings specified here."
         },
         {
@@ -105,7 +105,7 @@
             "required": true,
             "groupName": "website",
             "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
-            "helpMarkDown": "Physical path where the website content is stored. The content can reside on the local computer or on a remote directory or share, for example, C:\\Fabrikam or \\ContentShare\\Fabrikam."
+            "helpMarkDown": "Physical path where the website content is stored. The content can reside on the local computer or on a remote directory or share, for example, C:\\Fabrikam or \\\\ContentShare\\Fabrikam."
         },
         {
             "name": "WebSitePhysicalPathAuth",
