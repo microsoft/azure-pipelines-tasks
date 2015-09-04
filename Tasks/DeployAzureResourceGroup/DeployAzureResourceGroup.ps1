@@ -1,9 +1,9 @@
 param(
     [string][Parameter(Mandatory=$true)]$ConnectedServiceName,
     [string][Parameter(Mandatory=$true)]$Action,
-    [string][Parameter(Mandatory=$true)]$resourceGroupName,    
-    [string][Parameter(Mandatory=$true)]$location,    
-    [string][Parameter(Mandatory=$true)]$csmFile,    
+    [string][Parameter(Mandatory=$true)]$resourceGroupName,
+    [string][Parameter(Mandatory=$true)]$location,
+    [string][Parameter(Mandatory=$true)]$csmFile,
     [string]$csmParametersFile,
     [string]$overrideParameters,
     [string]$dscDeployment,
@@ -56,7 +56,7 @@ if( $Action -eq "Create Or Update Resource Group" )
 
     #Create csm parameter object
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
-    $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])          
+    $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
 
     $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
     $parametersObject = Refresh-SASToken -moduleUrlParameterNames $moduleUrlParameterNames -sasTokenParameterNames $sasTokenParameterNames -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
@@ -83,8 +83,8 @@ else
     # Loads the required file based on the provider, so that functions in that provider are called.
     Switch ($providerName)
     {
-       "AzureResourceGroupManagerV2" {             
-           . ./AzureResourceManagerHelper.ps1           
+       "AzureResourceGroupManagerV2" {
+           . ./AzureResourceManagerHelper.ps1
            Switch-AzureMode AzureResourceManager
            break
        }

@@ -552,56 +552,6 @@ function Update-EnvironemntDetailsInDTL
     $environmentOperationId = Create-EnvironmentOperation -environment $environment
 }
 
-function Get-FilterDetails
-{
-    param([string]$action,
-        [string]$resourceFilteringMethodStart,
-        [string]$filtersStart,
-        [string]$resourceFilteringMethodStop,
-        [string]$filtersStop,
-        [string]$resourceFilteringMethodRestart,
-        [string]$filtersRestart,
-        [string]$resourceFilteringMethodDelete,
-        [string]$filtersDelete,
-        [string]$resourceFilteringMethodDeleteRG,
-        [string]$filtersDeleteRG)
-    $resourceFilteringMethod = ""
-    $filters= ""
-
-    Switch ($action)
-    {
-         "Start" {             
-             $resourceFilteringMethod = $resourceFilteringMethodStart
-             $filters = $filtersStart
-             break
-          }
-
-          "Stop" {             
-             $resourceFilteringMethod = $resourceFilteringMethodStop
-             $filters = $filtersStop
-             break
-          }
-
-          "Restart" {
-             Write-Verbose "Resource filtering method: $resourceFilteringMethodRestart" -Verbose
-             Write-Verbose "Resource filters: $filtersRestart" -Verbose
-             $resourceFilteringMethod = $resourceFilteringMethodRestart
-             $filters = $filtersRestart
-             break
-          }
-
-          "Delete" {             
-             $resourceFilteringMethod = $resourceFilteringMethodDelete
-             $filters = $filtersDelete
-             break
-          }
-                                   
-         default { }
-    }
-
-    @{"resourceFilteringMethod" = $($resourceFilteringMethod); "filters" = $($filters) }    
-}
-
 function Get-CsmAndParameterFiles
 {
     param([string] $csmFile,
@@ -642,37 +592,37 @@ function Get-FilterDetails
 
     Switch ($action)
     {
-         "Start" {             
+         "Start" {
              $resourceFilteringMethod = $resourceFilteringMethodStart
              $filters = $filtersStart
              break
           }
 
-          "Stop" {             
+          "Stop" {
              $resourceFilteringMethod = $resourceFilteringMethodStop
              $filters = $filtersStop
              break
           }
 
-          "Restart" {            
+          "Restart" {
              $resourceFilteringMethod = $resourceFilteringMethodRestart
              $filters = $filtersRestart
              break
           }
 
-          "Delete" {             
+          "Delete" {
              $resourceFilteringMethod = $resourceFilteringMethodDelete
              $filters = $filtersDelete
              break
           }
-                                   
+
          default { }
     }
 
      Write-Verbose "Resource filtering method: $resourceFilteringMethod" -Verbose
      Write-Verbose "Resource filters: $filters" -Verbose
 
-    @{"resourceFilteringMethod" = $($resourceFilteringMethod); "filters" = $($filters) }    
+    @{"resourceFilteringMethod" = $($resourceFilteringMethod); "filters" = $($filters) }
 }
 
 function Get-ProviderHelperFile
@@ -689,7 +639,7 @@ function Get-ProviderHelperFile
 	    $providerName = $machineGroup.Provider.Name
     }
 
-    Write-Verbose -Verbose "ProviderName = $providerName"    
+    Write-Verbose -Verbose "ProviderName = $providerName"
 
     $providerName
 }
@@ -709,15 +659,15 @@ function Perform-Action
              break
           }  
           
-          "Delete" {             
+          "Delete" {
              Delete-MachinesHelper -machineGroupName $resourceGroupName -filters $filterDetails["filters"] -machines $machineGroup.Resources
              break
           }
           
-          "DeleteRG" {                     
+          "DeleteRG" {
               Delete-MachineGroupFromProvider -machineGroupName $resourceGroupName
              break
-          }               
+          }
          default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $Action, $providerName) }
     }
 }

@@ -5,7 +5,7 @@
     "description": "Provision and Deploy an Azure Resource Group",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
-    "visibility": [                
+    "visibility": [
                 "Preview",
                 "Build",
                 "Release"
@@ -259,7 +259,7 @@
     ],
     "sourceDefinitions": [
     {
-        "target": "resourceGroupName",                    
+        "target": "resourceGroupName",
         "endpoint": "https://management.core.windows.net/subscriptions/$(ConnectedServiceName)/resourcegroups?api-version=2015-01-01",
         "selector": "jsonpath:$.value[*].name",
         "authKey": "$(ConnectedServiceName)"

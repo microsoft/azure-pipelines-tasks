@@ -1,12 +1,3 @@
-function Initialize-DTLServiceHelper
-{
-    Write-Verbose "Getting the vss connection object" -Verbose
-
-    $connection = Get-VssConnection -TaskContext $distributedTaskContext
-
-    Set-Variable -Name connection -Value $connection -Scope "Script"
-}
-
 function Create-Provider
 {
     param([string]$providerName,
@@ -376,4 +367,13 @@ function Invoke-WithRetry {
             }
         }
     } while (!$success);
+}
+
+function Initialize-DTLServiceHelper
+{
+    Write-Verbose "Getting the vss connection object" -Verbose
+
+    $connection = Get-VssConnection -TaskContext $distributedTaskContext
+
+    Set-Variable -Name connection -Value $connection -Scope "Script"
 }
