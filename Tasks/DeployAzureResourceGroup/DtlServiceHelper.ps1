@@ -20,9 +20,9 @@ function Create-ProviderData
     
     Write-Verbose "Registering provider data $providerDataName" -Verbose
 
-    $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'          
+    $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $subscriptionId)  
-    $propertyBag.Add("SubscriptionId", $property)  
+    $propertyBag.Add("SubscriptionId", $property)
 
     #TODO Figure out authentication mechanism and store it
     $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
@@ -48,12 +48,12 @@ function Create-EnvironmentDefinition
         $csmParameters = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $csmParametersFileContent)
         $propertyBag.Add("CsmParameters", $csmParameters)
     }
-    
+
     $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
 	$url = $environmentDefinition.Url
     Write-Verbose "Registered machine group definition $environmentDefinitionName with url $url" -Verbose
 
-    return $environmentDefinition   
+    return $environmentDefinition
 }
 
 function Create-Environment
@@ -67,7 +67,7 @@ function Create-Environment
           [System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]]$resources)
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
-   
+
     Write-Verbose "Adding parameters to the machine group" -Verbose
     foreach($key in $azureResourceGroupDeployment.Parameters.Keys)
     {
@@ -231,7 +231,7 @@ function Get-MachineGroupWithFilteredResources
           [string]$filters,
           [string]$resourceFilteringMethod)
             
-    Write-Verbose "pavan: Machine Group name is or Environemnt: $machineGroupName" -Verbose
+    Write-Verbose "Machine Group name is or Environemnt: $machineGroupName" -Verbose
     $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
 
     if($resourceFilteringMethod -eq "tags")
@@ -250,7 +250,7 @@ function Get-MachineGroupWithFilteredResources
     }
 
     $environment.Resources = $resources
-    return $environment  
+    return $environment
 }
 
 function Get-MachineGroup
@@ -358,7 +358,7 @@ function Invoke-WithRetry {
                 else 
                 {             
                     Write-Warning (Get-LocalizedString -Key "Operation {0} failed: {1}. Retrying after {2} second(s)" -ArgumentList $OperationDetail, $_.Exception.Message, $RetryDelayInSeconds)
-                    Start-Sleep -s $RetryDelayInSeconds            
+                    Start-Sleep -s $RetryDelayInSeconds
                 }
             }
             else
