@@ -2,7 +2,7 @@
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunVisualStudioTestsusingTestAgent",
     "friendlyName": "Visual Studio Test using Test Agent",
-    "description": "Run tests distributedly using multiple test agents on a lab machine group",
+    "description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
     "category": "Test",
     "visibility": [     
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "demands": [
     ],
@@ -51,7 +51,7 @@
             "label": "Test Drop Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Copy files to Machines' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
             "groupName": "testSettings"
         },
         {
