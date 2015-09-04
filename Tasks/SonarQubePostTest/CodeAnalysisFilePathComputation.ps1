@@ -29,8 +29,8 @@ function IsComponentFormatValid($tokens)
         return $isFormatValid
     }
 
-    #second last token must be a guid
-    $guidToken = $tokens[$tokens.Count - 2]
+    #third token must be a guid
+    $guidToken = $tokens[2]
 
     $outGuid = New-Object -TypeName "System.Guid"
     if (![System.Guid]::TryParse($guidToken, [ref]$outGuid))
@@ -54,7 +54,7 @@ function GetRelativeFilePath($component)
         return $relativeFilePath
     }
 
-    #MSBuild runner creates the component value as '[SonarQube project key]:[SonarQube project value]:[MSBuild project guid]:[file name relative to MSBuild project file path]'
+    #sonar runner creates the component value as '[SonarQube project key]:[SonarQube project value]:[MSBuild project guid]:[file name relative to MSBuild project file path]'
     $tokens = $component.ToString().Split(":")
     $isFormatValid = IsComponentFormatValid($tokens)
     if (!$isFormatValid)
@@ -63,8 +63,8 @@ function GetRelativeFilePath($component)
         return $null
     }
 
-    #second last token must be guid
-    $guidToken = $tokens[$tokens.Count - 2]
+    #third token must be guid
+    $guidToken = $tokens[2]
     Write-Verbose -Verbose "GetRelativeFilePath: guidToken:$guidToken"
 
     if (!$ProjectGuidAndFilePathMap.ContainsKey($guidToken))
@@ -194,8 +194,6 @@ function CreateProjectGuidAndPathMap
     {
         $projectInfoFilePath = [System.IO.Path]::Combine($directory.FullName, "ProjectInfo.xml")
         
-        #Write-Host $projectInfoFilePath
-        
         if ([System.IO.File]::Exists($projectInfoFilePath))
         {
             Write-Verbose -Verbose "CreateProjectGuidAndPathMap: Processing project info file: $projectInfoFilePath"
@@ -209,7 +207,7 @@ function CreateProjectGuidAndPathMap
     }
 }
 
-#post-process sonar runner output (sonar-report.json) to generate code-analysis-report.json which has new issues only and right file paths
+#post-process sonar runner output (sonar-report.json) to generate code-analysis-report.json which has new issues only and repo relative file paths
 function GenerateCodeAnalysisReport
 {
     param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
