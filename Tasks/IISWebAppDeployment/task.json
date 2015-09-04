@@ -22,12 +22,12 @@
     "groups": [
         {
             "name": "website",
-            "displayName": "Create or Update Website",
+            "displayName": "Website",
             "isExpanded": true
         },
         {
             "name": "applicationPool",
-            "displayName": "Create or Update Application Pool",
+            "displayName": "Application Pool",
             "isExpanded": true
         },
         {
@@ -90,12 +90,22 @@
             "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameters file. For example,  name=\"IIS Web Application Name\", value=\"Fabrikam\"." 
         },
         {
+            "name": "CreateWebSite",
+            "type": "boolean",
+            "label": "Create or Update Website",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to create the website or update an existing website."
+        },
+        {
             "name": "WebSiteName",
             "type": "string",
             "label": "Website Name",
-            "required": false,
+            "required": true,
             "groupName": "website",
             "defaultValue": "",
+            "visibleRule": "CreateWebSite = true",
             "helpMarkDown": "Name of the website to create in the IIS server. If the website already exists then it will be updated with the settings specified here. The name of the website should be same as that specified in the MSDeploy zip file. If a Parameters file and override Parameters settings is also specified then it should be same as that in the override Parameters settings."
         },
         {
@@ -105,6 +115,7 @@
             "required": true,
             "groupName": "website",
             "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+            "visibleRule": "CreateWebSite = true",
             "helpMarkDown": "Physical path where the website content is stored. The content can reside on the local computer or on a remote directory or share like, C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
         },
         {
@@ -114,6 +125,7 @@
             "required": true,
             "groupName": "website",
             "defaultValue": "Application User (Pass-through)",
+            "visibleRule": "CreateWebSite = true",
             "options": {
                 "WebSiteUserPassThrough": "Application User (Pass-through)",
                 "WebSiteWindowsAuth": "Windows Authentication"
@@ -147,6 +159,7 @@
             "required": false,
             "groupName": "website",
             "defaultValue": "true",
+            "visibleRule": "CreateWebSite = true",
             "helpMarkDown": "Select the option to add port binding for the website."
         },
         {
@@ -155,9 +168,9 @@
             "label": "Assign Duplicate Binding",
             "required": false,
             "groupName": "website",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "If selected, assign the binding to the website even if the binding is assigned to another site. If the binding is assigned to two sites,then only one will start."
+            "helpMarkDown": "Select to allow duplicate binding across multiple websites. If the binding is assigned to two sites, then only one will start."
         },
         {
             "name": "Protocol",
@@ -212,7 +225,7 @@
             "defaultValue": "false",
             "visibleRule": "Protocol = https",
             "helpMarkDown": "Determines whether the website requires Server Name Indication (SNI). SNI extends the SSL and TLS protocols to indicate what host name the client is attempting to connect to. It allows multiple secure websites with different certificates to use the same IP address."
-        },
+        },      
         {
             "name": "SSLCertThumbPrint",
             "type": "string",
@@ -224,12 +237,22 @@
             "helpMarkDown": "Thumb-print of the Secure Socket Layer certificate that the website is going to use. The certificate should be already installed and present under Local System Personal store on the machine."
         },
         {
+            "name": "CreateAppPool",
+            "type": "boolean",
+            "label": "Create or Update Application Pool",
+            "required": false,
+            "groupName": "applicationPool",
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to create application pool or update an existing application pool."
+        },
+        {
             "name": "AppPoolName",
             "type": "string",
             "label": "Name",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "groupName": "applicationPool",
+            "visibleRule": "CreateAppPool = true",
             "helpMarkDown": "Name of the IIS application pool to create or update. Existing application pool will be updated with the settings specified here."
         },
         {
@@ -239,6 +262,7 @@
             "defaultValue": "v4.0",
             "required": true,
             "groupName": "applicationPool",
+            "visibleRule": "CreateAppPool = true",
             "helpMarkDown": "Version of the .NET Framework that is loaded by this application pool. If the applications assigned to this application pool do not contain managed code, select the No Managed Code option from the list.",
             "options": {
                 "v4.0": "v4.0",
@@ -253,6 +277,7 @@
             "defaultValue": "Integrated",
             "required": true,
             "groupName": "applicationPool",
+            "visibleRule": "CreateAppPool = true",
             "helpMarkDown": "Managed pipeline mode specifies how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in the Integrated mode.",
             "options": {
                 "Integrated": "Integrated",
@@ -266,6 +291,7 @@
             "defaultValue": "ApplicationPoolIdentity",
             "required": true,
             "groupName": "applicationPool",
+            "visibleRule": "CreateAppPool = true",
             "helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
             "options": {
                 "ApplicationPoolIdentity": "ApplicationPoolIdentity",
