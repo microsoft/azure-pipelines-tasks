@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [
     "azureps"
@@ -40,11 +40,111 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "defaultValue": "Create Or Update Resource Group",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Action",
+      "options": {
+        "Create Or Update Resource Group": "Create Or Update Resource Group",
+        "Start": "Start Virtual Machines",
+        "Stop": "Stop Virtual Machines",
+        "Restart": "Restart Virtual Machines",
+        "Delete": "Delete Virtual Machines",
+        "DeleteRG": "Delete Resource Group"
+      }
+    },
+    {
       "name": "resourceGroupName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.resourceGroupName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
+    },
+    {
+      "name": "ResourceFilteringMethodStart",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethodStart",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "visibleRule": "Action = Start"
+    },
+    {
+      "name": "FiltersStart",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FiltersStart",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.FiltersStart",
+      "visibleRule": "Action = Start"
+    },
+    {
+      "name": "ResourceFilteringMethodStop",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethodStop",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "visibleRule": "Action = Stop"
+    },
+    {
+      "name": "FiltersStop",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FiltersStop",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.FiltersStop",
+      "visibleRule": "Action = Stop"
+    },
+    {
+      "name": "ResourceFilteringMethodRestart",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethodRestart",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "visibleRule": "Action = Restart"
+    },
+    {
+      "name": "FiltersRestart",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FiltersRestart",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.FiltersRestart",
+      "visibleRule": "Action = Restart"
+    },
+    {
+      "name": "ResourceFilteringMethodDelete",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethodDelete",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "visibleRule": "Action = Delete"
+    },
+    {
+      "name": "FiltersDelete",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FiltersDelete",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.FiltersDelete",
+      "visibleRule": "Action = Delete"
     },
     {
       "name": "location",
@@ -62,7 +162,8 @@
       },
       "properties": {
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "Action = Create Or Update Resource Group"
     },
     {
       "name": "csmFile",
@@ -70,7 +171,8 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile",
+      "visibleRule": "Action = Create Or Update Resource Group"
     },
     {
       "name": "csmParametersFile",
@@ -78,7 +180,8 @@
       "label": "ms-resource:loc.input.label.csmParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile"
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
+      "visibleRule": "Action = Create Or Update Resource Group"
     },
     {
       "name": "overrideParameters",
@@ -86,36 +189,8 @@
       "label": "ms-resource:loc.input.label.overrideParameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters"
-    },
-    {
-      "name": "dscDeployment",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.dscDeployment",
-      "required": false,
-      "defaultValue": "false",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
-    },
-    {
-      "name": "moduleUrlParameterName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.moduleUrlParameterName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
-      "visibleRule": "dscDeployment = true"
-    },
-    {
-      "name": "sasTokenParameterName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sasTokenParameterName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
-      "visibleRule": "dscDeployment = true"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
+      "visibleRule": "Action = Create Or Update Resource Group"
     },
     {
       "name": "vmCreds",
@@ -154,6 +229,43 @@
       "defaultValue": "true",
       "groupName": "advancedDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
+    },
+    {
+      "name": "dscDeployment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.dscDeployment",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "advancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
+    },
+    {
+      "name": "moduleUrlParameterName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.moduleUrlParameterName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
+      "visibleRule": "dscDeployment = true"
+    },
+    {
+      "name": "sasTokenParameterName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sasTokenParameterName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
+      "visibleRule": "dscDeployment = true"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "resourceGroupName",
+      "endpoint": "https://management.core.windows.net/subscriptions/$(ConnectedServiceName)/resourcegroups?api-version=2015-01-01",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "$(ConnectedServiceName)"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

@@ -5,7 +5,7 @@
     "description": "Provision and Deploy an Azure Resource Group",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
-    "visibility": [
+    "visibility": [                
                 "Preview",
                 "Build",
                 "Release"
@@ -14,12 +14,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.88.0",
+"minimumAgentVersion": "1.88.0",
     "groups": [
         {
             "name": "advancedDeploymentOptions",
@@ -36,12 +36,112 @@
             "required": true,
             "helpMarkDown": "Azure subscription to target for the deployment."
         },
-	{
+        {
+            "name": "Action", 
+            "type": "pickList", 
+            "label": "Action",
+            "defaultValue": "Create Or Update Resource Group",
+            "required": true,
+            "helpMarkDown" : "Action to be performed on the machines or machine group.",
+            "options": {
+                 "Create Or Update Resource Group": "Create Or Update Resource Group",                 
+                 "Start": "Start Virtual Machines",
+                 "Stop": "Stop Virtual Machines",
+                 "Restart": "Restart Virtual Machines",
+                 "Delete": "Delete Virtual Machines",
+                 "DeleteRG": "Delete Resource Group"
+                }
+        },
+        {
             "name": "resourceGroupName", 
-            "type": "string", 
+            "type": "pickList", 
             "label": "Resource Group",
             "required": true,
-            "helpMarkDown": "If the resource group already exists it will be updated, else a new one will be created."
+            "helpMarkDown": "Provide the name of the resource group."            
+        },
+        {
+            "name":"ResourceFilteringMethodStart",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+            "machineNames":"Machine Names",
+            "tags":"Tags"
+            },
+            "visibleRule": "Action = Start"
+       }, 
+       {
+           "name": "FiltersStart",
+           "type": "string",
+           "label": "Filter Criteria",
+           "defaultValue": "",
+           "required": false,
+           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
+           "visibleRule": "Action = Start"
+        },
+        {
+            "name":"ResourceFilteringMethodStop",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+            "machineNames":"Machine Names",
+            "tags":"Tags"
+            },
+            "visibleRule": "Action = Stop"
+       }, 
+       {
+           "name": "FiltersStop",
+           "type": "string",
+           "label": "Filter Criteria",
+           "defaultValue": "",
+           "required": false,
+           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
+           "visibleRule": "Action = Stop"
+        },
+        {
+            "name":"ResourceFilteringMethodRestart",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+            "machineNames":"Machine Names",
+            "tags":"Tags"
+            },
+            "visibleRule": "Action = Restart"
+       }, 
+       {
+           "name": "FiltersRestart",
+           "type": "string",
+           "label": "Filter Criteria",
+           "defaultValue": "",
+           "required": false,
+           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
+           "visibleRule": "Action = Restart"
+        },
+        {
+            "name":"ResourceFilteringMethodDelete",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+            "machineNames":"Machine Names",
+            "tags":"Tags"
+            },
+            "visibleRule": "Action = Delete"
+       }, 
+       {
+           "name": "FiltersDelete",
+           "type": "string",
+           "label": "Filter Criteria",
+           "defaultValue": "",
+           "required": false,
+           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
+           "visibleRule": "Action = Delete"
         },
         {
             "name": "location",
@@ -59,15 +159,17 @@
             },
             "properties": {
                 "EditableOptions": "True" 
-            }
-        },
+            },
+            "visibleRule": "Action = Create Or Update Resource Group"
+        },        
         { 
             "name": "csmFile", 
             "type": "filePath", 
             "label": "Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates see - http://aka.ms/azuretemplates."
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates see - http://aka.ms/azuretemplates.",
+            "visibleRule": "Action = Create Or Update Resource Group"
         },
         {
             "name": "csmParametersFile",
@@ -75,15 +177,55 @@
             "label": "Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template."
+            "helpMarkDown": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template.",
+            "visibleRule": "Action = Create Or Update Resource Group"
         },
-	{
+	    {
             "name": "overrideParameters",
             "type": "multiLine",
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>"
+            "helpMarkDown": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
+            "visibleRule": "Action = Create Or Update Resource Group"
+        },        
+        {
+            "name": "vmCreds",
+            "type": "boolean",
+            "label": "Store Virtual Machine Details for Use in Later Tasks",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "advancedDeploymentOptions",
+            "helpMarkDown": "Provide the VMs Administrator Username and Password as specified in the above template. Needed by other tasks like PowerShell on Target Machines, Azure File Copy etc."            
+        },       
+        {
+            "name": "vmUserName",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advancedDeploymentOptions",
+            "visibleRule": "vmCreds = true",
+            "helpMarkDown": "Administrator Username of the VMs."
+        },
+        {
+            "name": "vmPassword",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advancedDeploymentOptions",
+            "visibleRule": "vmCreds = true",
+            "helpMarkDown": "Administrator Password of the VMs."
+        },
+        {
+            "name": "skipCACheck",
+            "type": "boolean",
+            "label": "Test Certificate",
+            "required": false,
+            "defaultValue": "true",
+            "groupName": "advancedDeploymentOptions",
+            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."            
         },
         {
             "name": "dscDeployment",
@@ -113,46 +255,16 @@
             "groupName": "advancedDeploymentOptions",
             "helpMarkDown": "Names of the SAS token parameters separated by ; in the format <br><b><i>token1;token2;token3</b></i>",
             "visibleRule": "dscDeployment = true"
-        },
-        {
-            "name": "vmCreds",
-            "type": "boolean",
-            "label": "Virtual Machine Credentials",
-            "required": false,
-            "defaultValue": "false",
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Provide the VMs Administrator Username and Password as specified in the above template. Needed by other tasks like PowerShell on Target Machines, Azure File Copy etc."
-        },
-        {
-            "name": "vmUserName",
-            "type": "string",
-            "label": "Username",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "visibleRule": "vmCreds = true",
-            "helpMarkDown": "Administrator Username of the VMs."
-        },
-        {
-            "name": "vmPassword",
-            "type": "string",
-            "label": "Password",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "visibleRule": "vmCreds = true",
-            "helpMarkDown": "Administrator Password of the VMs."
-        },
-        {
-            "name": "skipCACheck",
-            "type": "boolean",
-            "label": "Test Certificate",
-            "required": false,
-            "defaultValue": "true",
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
-        }
+        }     
     ],
+    "sourceDefinitions": [
+    {
+        "target": "resourceGroupName",                    
+        "endpoint": "https://management.core.windows.net/subscriptions/$(ConnectedServiceName)/resourcegroups?api-version=2015-01-01",
+        "selector": "jsonpath:$.value[*].name",
+        "authKey": "$(ConnectedServiceName)"
+    }
+  ],
     "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
   "execution": {
     "AzurePowerShell": {
