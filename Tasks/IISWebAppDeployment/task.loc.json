@@ -92,12 +92,22 @@
       "helpMarkDown": "ms-resource:loc.input.help.OverRideParams"
     },
     {
+      "name": "CreateWebSite",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CreateWebSite",
+      "required": false,
+      "groupName": "website",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.CreateWebSite"
+    },
+    {
       "name": "WebSiteName",
       "type": "string",
       "label": "ms-resource:loc.input.label.WebSiteName",
-      "required": false,
+      "required": true,
       "groupName": "website",
       "defaultValue": "",
+      "visibleRule": "CreateWebSite = true",
       "helpMarkDown": "ms-resource:loc.input.help.WebSiteName"
     },
     {
@@ -107,6 +117,7 @@
       "required": true,
       "groupName": "website",
       "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+      "visibleRule": "CreateWebSite = true",
       "helpMarkDown": "ms-resource:loc.input.help.WebSitePhysicalPath"
     },
     {
@@ -115,9 +126,10 @@
       "label": "ms-resource:loc.input.label.WebSitePhysicalPathAuth",
       "required": true,
       "groupName": "website",
-      "defaultValue": "Application User(Pass-through)",
+      "defaultValue": "Application User (Pass-through)",
+      "visibleRule": "CreateWebSite = true",
       "options": {
-        "WebSiteUserPassThrough": "Application User(Pass-through)",
+        "WebSiteUserPassThrough": "Application User (Pass-through)",
         "WebSiteWindowsAuth": "Windows Authentication"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebSitePhysicalPathAuth"
@@ -149,7 +161,18 @@
       "required": false,
       "groupName": "website",
       "defaultValue": "true",
+      "visibleRule": "CreateWebSite = true",
       "helpMarkDown": "ms-resource:loc.input.help.AddBinding"
+    },
+    {
+      "name": "AssignDuplicateBinding",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AssignDuplicateBinding",
+      "required": false,
+      "groupName": "website",
+      "defaultValue": "false",
+      "visibleRule": "AddBinding = true",
+      "helpMarkDown": "ms-resource:loc.input.help.AssignDuplicateBinding"
     },
     {
       "name": "Protocol",
@@ -216,12 +239,22 @@
       "helpMarkDown": "ms-resource:loc.input.help.SSLCertThumbPrint"
     },
     {
+      "name": "CreateAppPool",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CreateAppPool",
+      "required": false,
+      "groupName": "applicationPool",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.CreateAppPool"
+    },
+    {
       "name": "AppPoolName",
       "type": "string",
       "label": "ms-resource:loc.input.label.AppPoolName",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "groupName": "applicationPool",
+      "visibleRule": "CreateAppPool = true",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolName"
     },
     {
@@ -231,6 +264,7 @@
       "defaultValue": "v4.0",
       "required": true,
       "groupName": "applicationPool",
+      "visibleRule": "CreateAppPool = true",
       "helpMarkDown": "ms-resource:loc.input.help.DotNetVersion",
       "options": {
         "v4.0": "v4.0",
@@ -245,6 +279,7 @@
       "defaultValue": "Integrated",
       "required": true,
       "groupName": "applicationPool",
+      "visibleRule": "CreateAppPool = true",
       "helpMarkDown": "ms-resource:loc.input.help.PipeLineMode",
       "options": {
         "Integrated": "Integrated",
@@ -258,6 +293,7 @@
       "defaultValue": "ApplicationPoolIdentity",
       "required": true,
       "groupName": "applicationPool",
+      "visibleRule": "CreateAppPool = true",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolIdentity",
       "options": {
         "ApplicationPoolIdentity": "ApplicationPoolIdentity",
