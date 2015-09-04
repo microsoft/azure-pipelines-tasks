@@ -73,7 +73,7 @@ function CreateCommandLineArgs
 
 # Set a variable in a property bag that is accessible by all steps
 # To retrieve the variable use $val = Get-Variable $distributedTaskContext "varName"
-function SetTaskContextVaraible
+function SetTaskContextVariable
 {
     param([string][ValidateNotNullOrEmpty()]$varName, 
           [string][ValidateNotNullOrEmpty()]$varValue)

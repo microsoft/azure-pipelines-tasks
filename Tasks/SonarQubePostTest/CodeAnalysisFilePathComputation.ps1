@@ -6,15 +6,47 @@ function ConstructComponentKeyAndPathMap($json)
 {
     foreach ($component in $json.Components)
     {
-        #Write-Host "Component Key: $($component.key), Path:$($component.path)"
-        $ComponentKeyAndPathMap.Add($component.key, $component.path)
+        if (!$ComponentKeyAndPathMap.ContainsKey($component.key))
+        {
+            $ComponentKeyAndPathMap.Add($component.key, $component.path)
+        }
     }
+}
+
+function IsComponentFormatValid($tokens)
+{
+    #expected format for component '[SonarQube project key]:[SonarQube project value]:[MSBuild project guid]:[file name relative to MSBuild project file path]'
+    $isFormatValid = $false
+
+    if (!$tokens)
+    {
+        Write-Verbose -Verbose "IsComponentFormatValid: tokens is invalid"
+        return $isFormatValid
+    }
+    if ($tokens.Count -ne 4) 
+    {
+        Write-Verbose -Verbose "IsComponentFormatValid: component is not in expected format, token count is not equal to 4"
+        return $isFormatValid
+    }
+
+    #second last token must be a guid
+    $guidToken = $tokens[$tokens.Count - 2]
+
+    $outGuid = New-Object -TypeName "System.Guid"
+    if (![System.Guid]::TryParse($guidToken, [ref]$outGuid))
+    {
+        Write-Verbose -Verbose "$guidToken is not a GUID"
+        return $isFormatValid
+    }
+
+    $isFormatValid = $true
+    return $isFormatValid
 }
 
 #returns a path relative to the repo root for a file which has new code analysis issue(s)
 function GetRelativeFilePath($component)
 {
-    if ($ComponentKeyAndRelativePathCache.ContainsKey($component))
+    if ($component -and $ComponentKeyAndRelativePathCache.ContainsKey($component))
     {
         $relativeFilePath = $ComponentKeyAndRelativePathCache[$component]
         Write-Verbose -Verbose "GetRelativeFilePath: Found cached entry, returning data from cache, relativePath:$relativeFilePath"
@@ -24,28 +56,17 @@ function GetRelativeFilePath($component)
 
     #MSBuild runner creates the component value as '[SonarQube project key]:[SonarQube project value]:[MSBuild project guid]:[file name relative to MSBuild project file path]'
     $tokens = $component.ToString().Split(":")
-
-    if ($tokens -eq $null)
+    $isFormatValid = IsComponentFormatValid($tokens)
+    if (!$isFormatValid)
     {
-        Write-Verbose -Verbose "GetRelativeFilePath: tokens is null, component:$component"
-        return $null
-    }
-    if ($tokens.Count -lt 2) 
-    {
-        Write-Verbose -Verbose "GetRelativeFilePath: tokens.count is less than 2, component:$component"
+        Write-Warning "Component is not in expected format, ignoring component:$component"
         return $null
     }
 
-    #fair to assume second last token will be guid?
+    #second last token must be guid
     $guidToken = $tokens[$tokens.Count - 2]
     Write-Verbose -Verbose "GetRelativeFilePath: guidToken:$guidToken"
 
-    $outGuid = New-Object -TypeName "System.Guid"
-    if (![System.Guid]::TryParse($guidToken, [ref]$outGuid))
-    {
-        Write-Verbose -Verbose "$guidToken is not a GUID, component:$component"
-        return $null
-    }
     if (!$ProjectGuidAndFilePathMap.ContainsKey($guidToken))
     {
         Write-Verbose -Verbose "GetRelativeFilePath: An entry for project guid $guidToken could not be found, check ProjectInfo.xml file"
@@ -79,7 +100,7 @@ function GetRelativeFilePath($component)
     #after the SubString() call finalFilePath=\Mail2Bug\Main.cs
     $finalFilePath = $finalFilePath.ToString().SubString($repoLocalPath.Length);
 
-    #Replace '\' with '/'. VSO expects file path like /Mail2Bug/Main.cs (\Mail2Bug\Main.cs doesn't work)
+    #Replace '\' with '/'. VSO expects file path like /Mail2Bug/Main.cs (\Mail2Bug\Main.cs does not work)
     $finalFilePath = $finalFilePath.ToString().Replace([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
     Write-Verbose -Verbose "GetRelativeFilePath: Returning finalFilePath:$finalFilePath"
 
@@ -89,21 +110,50 @@ function GetRelativeFilePath($component)
     return $finalFilePath
 }
 
-function ProcessSonarCodeAnalysisReport
+function GetSonarReportProcessedFilePath
+{
+    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
+
+    $sonarReportFolderPath = [System.IO.Path]::Combine($agentBuildDirectory, ".sonarqube", "out", ".sonar")
+    $sonarReportProcessedFilePath = [System.IO.Path]::Combine($sonarReportFolderPath, "code-analysis-report.json")
+
+    return $sonarReportProcessedFilePath
+}
+
+function GetSonarReportFilePath
 {
     param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
 
     $sonarReportFolderPath = [System.IO.Path]::Combine($agentBuildDirectory, ".sonarqube", "out", ".sonar")
     $sonarReportFilePath = [System.IO.Path]::Combine($sonarReportFolderPath, "sonar-report.json")
 
-    $sonarReportFilePathProcessed = [System.IO.Path]::Combine($sonarReportFolderPath, "code-analysis-report.json")
-    
-    if (![System.IO.File]::Exists($sonarReportFilePath))
-    {
-        Write-Host "ProcessSonarCodeAnalysisReport: $sonarReportFilePath does not exist! Returning.."
-        return;
-    }
+    return $sonarReportFilePath
+}
 
+function UploadCodeAnalysisArtifact
+{
+    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
+
+    $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath $agentBuildDirectory
+
+    if ([System.IO.File]::Exists($sonarReportProcessedFilePath))
+    {
+        Write-Verbose -Verbose "Uploading build artifact $sonarReportProcessedFilePath"
+        Write-Host "##vso[artifact.upload containerfolder=CodeAnalysisIssues;artifactname=CodeAnalysisIssues;]$sonarReportProcessedFilePath"
+    }
+    else
+    {
+        Write-Warning "Could not find file $sonarReportProcessedFilePath"
+    }
+}
+
+function ProcessSonarCodeAnalysisReport
+{
+    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
+
+    $sonarReportFilePath = GetSonarReportFilePath $agentBuildDirectory
+    $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath $agentBuildDirectory
+    
     #read sonar-report.json file as a json object
     $json = Get-Content -Raw $sonarReportFilePath | ConvertFrom-Json
     Write-Verbose -Verbose "ProcessSonarCodeAnalysisReport: Total issues: $($json.issues.Count)"
@@ -125,18 +175,20 @@ function ProcessSonarCodeAnalysisReport
         }
 
         #save the results into output file
-        $newIssues | ConvertTo-Json | Set-Content -Path $sonarReportFilePathProcessed
+        $newIssues | ConvertTo-Json | Set-Content -Path $sonarReportProcessedFilePath
     }
 }
 
-#creates a mapping of msbuild project guid and the path on disk using ProjectInfo.xml file
+#creates a mapping of msbuild project guid and the path of .xxproj file on disk using ProjectInfo.xml file
 function CreateProjectGuidAndPathMap
 {
     param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
 
     $parentFolder = [System.IO.Path]::Combine($agentBuildDirectory, ".sonarqube", "out")
     $parentFolderItem = Get-Item $parentFolder
-    $directories = $parentFolderItem.GetDirectories()     
+    $directories = $parentFolderItem.GetDirectories()
+
+    Write-Host "Processing project info files..."
 
     foreach ($directory in $directories)
     {
@@ -146,10 +198,10 @@ function CreateProjectGuidAndPathMap
         
         if ([System.IO.File]::Exists($projectInfoFilePath))
         {
-            Write-host "CreateProjectGuidAndPathMap: Processing project info file: $projectInfoFilePath"
+            Write-Verbose -Verbose "CreateProjectGuidAndPathMap: Processing project info file: $projectInfoFilePath"
             [xml]$xmlContent = Get-Content $projectInfoFilePath
 
-            if ($xmlContent -ne $null)
+            if ($xmlContent -and !$ProjectGuidAndFilePathMap.ContainsKey($xmlContent.ProjectInfo.ProjectGuid))
             {
                 $ProjectGuidAndFilePathMap.Add($xmlContent.ProjectInfo.ProjectGuid, $xmlContent.ProjectInfo.FullPath)
             }
@@ -157,14 +209,25 @@ function CreateProjectGuidAndPathMap
     }
 }
 
-function ComputeCodeAnalysisFilePaths
+#post-process sonar runner output (sonar-report.json) to generate code-analysis-report.json which has new issues only and right file paths
+function GenerateCodeAnalysisReport
 {
     param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
 
     Write-Host "Starting code analysis file path computation..."
 
-    Write-Verbose -Verbose "ComputeCodeAnalysisFilePaths: buildAgentDir=$agentBuildDirectory"
-    
+    Write-Verbose -Verbose "GenerateCodeAnalysisReport: agentBuildDirectory=$agentBuildDirectory"
+
+    #bail out if sonar-report.json does not exist
+    $sonarReportFilePath = GetSonarReportFilePath $agentBuildDirectory
+    if (![System.IO.File]::Exists($sonarReportFilePath))
+    {
+        Write-Warning "Could not find file $sonarReportFilePath"
+        return
+    }
+
     CreateProjectGuidAndPathMap $agentBuildDirectory
     ProcessSonarCodeAnalysisReport $agentBuildDirectory
+
+    UploadCodeAnalysisArtifact $agentBuildDirectory
 }

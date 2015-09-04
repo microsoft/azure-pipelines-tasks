@@ -21,21 +21,24 @@ Write-Verbose -Verbose "configFile = $configFile"
 Write-Verbose -Verbose "dbConnectionString = $dbUrl"
 Write-Verbose -Verbose "dbUsername = $dbUsername"
 
-$prcaEnabled = Get-TaskVariable -Context $distributedTaskContext -Name "GitPullRequestCodeAnalysisEnabled"
+. ./SonarQubeHelper.ps1
+
+$prcaEnabled = Get-TaskVariable -Context $distributedTaskContext -Name "PullRequestCodeAnalysisEnabled"
 if ($prcaEnabled -ieq "true")
 {
-    Write-Verbose -Verbose "GitPullRequestCodeAnalysisEnabled is true, setting cmdline args for incremental mode for sonar-runner..."
+    Write-Verbose -Verbose "PullRequestCodeAnalysisEnabled is true, setting command line args for incremental mode for sonar-runner..."
 
     if (!$cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
     {
-        Write-Verbose -Verbose "cmdlineargs doesn't contain sonar.analysis.mode"
+        Write-Verbose -Verbose "cmdLineArgs does not contain sonar.analysis.mode. Setting analysis mode to incremental"
         $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=incremental"
+
+        #use this variable in post-test task
+        SetTaskContextVariable "SonarqubeAnalysisModeIsIncremental" "true"
     }
 }
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-
-. ./SonarQubeHelper.ps1
 
 $serviceEndpoint = GetEndpointData $connectedServiceName
 
@@ -48,7 +51,7 @@ $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQu
 
 # Set the path as context variable so that the post-test task will be able to read it and not compute it again;
 # Also, if the variable is not set, the post-test task will know that the pre-build task did not execute
-SetTaskContextVaraible "BootstrapperPath" $bootstrapperPath
+SetTaskContextVariable "BootstrapperPath" $bootstrapperPath
 
 $arguments = CreateCommandLineArgs $projectKey $projectName $projectVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUrl $dbUsername $dbPassword $cmdLineArgs $configFile
 
