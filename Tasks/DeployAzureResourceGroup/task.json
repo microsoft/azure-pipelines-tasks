@@ -44,7 +44,7 @@
             "required": true,
             "helpMarkDown" : "Action to be performed on the machines or machine group.",
             "options": {
-                 "Create Or Update Resource Group": "Create Or Update Resource Group",                 
+                 "Create Or Update Resource Group": "Create Or Update Resource Group",
                  "Start": "Start Virtual Machines",
                  "Stop": "Stop Virtual Machines",
                  "Restart": "Restart Virtual Machines",
@@ -57,7 +57,7 @@
             "type": "pickList", 
             "label": "Resource Group",
             "required": true,
-            "helpMarkDown": "Provide the name of the resource group."            
+            "helpMarkDown": "Provide the name of the resource group."
         },
         {
             "name":"ResourceFilteringMethodStart",
@@ -70,7 +70,7 @@
             "tags":"Tags"
             },
             "visibleRule": "Action = Start"
-       }, 
+       },
        {
            "name": "FiltersStart",
            "type": "string",
@@ -91,7 +91,7 @@
             "tags":"Tags"
             },
             "visibleRule": "Action = Stop"
-       }, 
+       },
        {
            "name": "FiltersStop",
            "type": "string",
@@ -112,7 +112,7 @@
             "tags":"Tags"
             },
             "visibleRule": "Action = Restart"
-       }, 
+       },
        {
            "name": "FiltersRestart",
            "type": "string",
@@ -133,7 +133,7 @@
             "tags":"Tags"
             },
             "visibleRule": "Action = Delete"
-       }, 
+       },
        {
            "name": "FiltersDelete",
            "type": "string",
@@ -161,8 +161,8 @@
                 "EditableOptions": "True" 
             },
             "visibleRule": "Action = Create Or Update Resource Group"
-        },        
-        { 
+        },
+        {
             "name": "csmFile", 
             "type": "filePath", 
             "label": "Template", 
@@ -188,7 +188,7 @@
             "required": false,
             "helpMarkDown": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
             "visibleRule": "Action = Create Or Update Resource Group"
-        },        
+        },
         {
             "name": "vmCreds",
             "type": "boolean",
@@ -197,7 +197,7 @@
             "defaultValue": "false",
             "groupName": "advancedDeploymentOptions",
             "helpMarkDown": "Provide the VMs Administrator Username and Password as specified in the above template. Needed by other tasks like PowerShell on Target Machines, Azure File Copy etc."            
-        },       
+        },
         {
             "name": "vmUserName",
             "type": "string",
@@ -255,7 +255,7 @@
             "groupName": "advancedDeploymentOptions",
             "helpMarkDown": "Names of the SAS token parameters separated by ; in the format <br><b><i>token1;token2;token3</b></i>",
             "visibleRule": "dscDeployment = true"
-        }     
+        }
     ],
     "sourceDefinitions": [
     {
