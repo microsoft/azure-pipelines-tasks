@@ -1,8 +1,8 @@
 {
     "id": "70A3A82D-4A3C-4A09-8D30-A793739DC94F",
     "name": "SqlServerDacpacDeployment",
-    "friendlyName": "Sql Server Dacpac Deployment",
-    "description": "Deploy Dacpac to SQL Server",
+    "friendlyName": "SQL Server Database Deployment",
+    "description": "Deploy SQL Server Database using DACPAC",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/SqlServerDacpacDeployment/README.md)",
     "category": "Deploy",
     "visibility": [
@@ -44,7 +44,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "source",
-            "helpMarkDown": "Name of the Machine Group for deploying the database."
+            "helpMarkDown": "Select the target Machine Group for deploying the database. For Azure Resource Groups, type the name of the Resource Group."
         },
         {
             "name": "ResourceFilteringMethod",
@@ -57,7 +57,7 @@
                 "machineNames": "Machine Names",
                 "tags": "Tags"
             },
-            "helpMarkDown": "Select a subset of machines either by providing machine names or tags."
+            "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
         },
         {
             "name": "MachineFilter",
@@ -66,7 +66,7 @@
             "required": false,
             "groupName": "source",
             "defaultValue": "",
-            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
+            "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are listed then it will deploy to all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name for the machine name like, ffweb, ffdb. The default is to deploy to all machines in the machine/resource group."
         },
         {
             "name": "DacpacFile",
@@ -75,7 +75,7 @@
             "required": true,
             "groupName": "source",
             "defaultValue": "",
-            "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like \\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac"
+            "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account."
         },
         {
             "name": "TargetMethod",
@@ -89,7 +89,7 @@
                 "connectionString": "Connection String",
                 "publishProfile": "Publish Profile"
             },
-            "helpMarkDown": "Selection the option to specify the target SQL Server amongst SQL Server and instance details, or connection string or Publish profile file."
+            "helpMarkDown": "Select the option to connect to the target SQL Server Database. The options are to provide SQL Server Database details, or a SQL Server connection string, or a Publish profile XML file."
         },
         {
             "name": "ServerName",
@@ -99,7 +99,7 @@
             "groupName": "target",
             "defaultValue": "localhost",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "SQL Server name like machinename\\SqlInstanceName,1433 or localhost or .\\SQL2012R2"
+            "helpMarkDown": "Provide the SQL Server name like, machinename\\FabriakmSQL,1433 or localhost or .\\SQL2012R2. Specifying localhost will connect to the Default SQL Server instance on the machine."
         },
         {
             "name": "DatabaseName",
@@ -109,7 +109,7 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "Name of the SQL Server database."
+            "helpMarkDown": "Provide the name of the SQL Server database."
         },
         {
             "name": "SqlUsername",
@@ -119,7 +119,7 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "SQL Server login, the default is to use the machine admin credentials."
+            "helpMarkDown": "If the SQL Server login is specified, it will be used to connect to the SQL Server. The default is Integrated Authentication and uses the machine administrator credentials."
         },
         {
             "name": "SqlPassword",
@@ -129,7 +129,7 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "SQL Server password, the default is to use the machine admin credentials."
+            "helpMarkDown": "If SQL Server login user name is specified then provide the SQL Server password. The default is Integrated Authentication and uses the machine administrator credentials."
         },
         {
             "name": "ConnectionString",
@@ -139,7 +139,7 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = connectionString",
-            "helpMarkDown": "SQL Server connection string that will be used to connect to the SQL."
+            "helpMarkDown": "Specify the SQL Server connection string like \"Server=localhost;Database=Fabrikam;User ID=sqluser;Password=password;\"."
         },
         {
             "name": "PublishProfile",
@@ -148,7 +148,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Path to the Publish profile file on the target machine."
+            "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database creation or upgrades. Specify the path to the Publish profile XML file on the target machine."
         },
         {
             "name": "AdditionalArguments",
@@ -157,7 +157,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied on the SQL Server like /p:IgnoreAnsiNulls=True /p:IgnoreComments=True"
+            "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when creating or updating the SQL Server database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided)."
         },
         {
             "name": "DeployInParallel",
@@ -166,7 +166,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Setting it to true will run dacpac deployment scripts in parallel on the target machines."
+            "helpMarkDown": "Setting it to true will run the database deployment in-parallel on the target machines."
         }
     ],
     "sourceDefinitions": [ 
