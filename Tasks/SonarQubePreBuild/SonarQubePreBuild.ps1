@@ -23,19 +23,20 @@ Write-Verbose -Verbose "dbUsername = $dbUsername"
 
 . ./SonarQubeHelper.ps1
 
-$prcaEnabled = Get-TaskVariable -Context $distributedTaskContext -Name "PullRequestCodeAnalysisEnabled"
+$prcaEnabled = Get-TaskVariable -Context $distributedTaskContext -Name "PullRequestSonarQubeCodeAnalysisEnabled"
 if ($prcaEnabled -ieq "true")
 {
-    Write-Verbose -Verbose "PullRequestCodeAnalysisEnabled is true, setting command line args for incremental mode for sonar-runner..."
-
-    if (!$cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
+    if ($cmdLineArgs -and $cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
     {
-        Write-Verbose -Verbose "cmdLineArgs does not contain sonar.analysis.mode. Setting analysis mode to incremental"
-        $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=incremental"
-
-        #use this variable in post-test task
-        SetTaskContextVariable "SonarqubeAnalysisModeIsIncremental" "true"
+        throw "Error: sonar.analysis.mode seems to be set already. Please check the properties of SonarQube build tasks and try again."
     }
+
+    Write-Verbose -Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for incremental mode for sonar-runner..."
+
+    $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=incremental"
+
+    #use this variable in post-test task
+    SetTaskContextVariable "SonarqubeAnalysisModeIsIncremental" "true"
 }
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"

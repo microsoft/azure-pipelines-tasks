@@ -138,7 +138,7 @@ function UploadCodeAnalysisArtifact
 
     if ([System.IO.File]::Exists($sonarReportProcessedFilePath))
     {
-        Write-Verbose -Verbose "Uploading build artifact $sonarReportProcessedFilePath"
+        Write-Host "Uploading build artifact $sonarReportProcessedFilePath"
         Write-Host "##vso[artifact.upload containerfolder=CodeAnalysisIssues;artifactname=CodeAnalysisIssues;]$sonarReportProcessedFilePath"
     }
     else
@@ -212,7 +212,7 @@ function GenerateCodeAnalysisReport
 {
     param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
 
-    Write-Host "Starting code analysis file path computation..."
+    Write-Host "Post-processing sonar analysis report..."
 
     Write-Verbose -Verbose "GenerateCodeAnalysisReport: agentBuildDirectory=$agentBuildDirectory"
 
