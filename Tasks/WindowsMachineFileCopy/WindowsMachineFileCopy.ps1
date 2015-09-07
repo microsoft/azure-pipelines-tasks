@@ -25,6 +25,8 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
+$sourcePath = $sourcePath.Trim('"')
+$targetPath = $targetPath.Trim('"')
 
 # Default + constants #
 $defaultWinRMPort = '5985'

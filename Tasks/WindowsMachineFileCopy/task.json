@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "minimumAgentVersion": "1.88.0",
     "groups": [
@@ -24,7 +24,7 @@
         }
     ],
     "inputs": [
-	{
+    {
             "name": "SourcePath",
             "type": "filePath",
             "label": "Source",
@@ -94,7 +94,7 @@
      } 
     ], 
     "instanceNameFormat": "Copy files to $(EnvironmentName)",
-	 "execution": {
+    "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
             "argumentFormat": "",

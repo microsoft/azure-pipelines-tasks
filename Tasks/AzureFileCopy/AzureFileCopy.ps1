@@ -64,7 +64,7 @@ function ThrowError
 {
     param([string]$errorMessage)
 
-    $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/AzureFileCopy/README.md"
+    $readmelink = "http://aka.ms/windowsfilecopyreadme"
     $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
     throw "$errorMessage $helpMessage"
 }

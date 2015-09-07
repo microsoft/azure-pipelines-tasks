@@ -28,6 +28,8 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal
 
 # keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
+$scriptPath = $scriptPath.Trim('"')
+$initializationScriptPath = $initializationScriptPath.Trim('"')
 
 # Getting resource tag key name for corresponding tag
 $resourceFQDNKeyName = Get-ResourceFQDNTagKey
@@ -56,7 +58,7 @@ function ThrowError
 {
 	param([string]$errorMessage)
 	
-        $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md"
+        $readmelink = "http://aka.ms/powershellontargetmachinesreadme"
         $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
         throw "$errorMessage $helpMessage"
 }
