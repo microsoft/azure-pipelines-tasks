@@ -73,15 +73,21 @@ function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
 
-    Write-Verbose "[Azure Call](ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
-    $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
-    Write-Verbose "[Azure Call](ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
-
-    $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
-    if ([string]::IsNullOrEmpty($azureResourceGroupName) -eq $true)
+    try
     {
-        Write-Verbose "(ARM)Storage account: $storageAccountName not found" -Verbose
-        Throw (Get-LocalizedString -Key "Storage acccout: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
+        Write-Verbose "[Azure Call](ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+        $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
+        Write-Verbose "[Azure Call](ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+
+        $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
+    }
+    finally
+    {
+        if ([string]::IsNullOrEmpty($azureResourceGroupName) -eq $true)
+        {
+            Write-Verbose "(ARM)Storage account: $storageAccountName not found" -Verbose
+            Throw (Get-LocalizedString -Key "Storage acccout: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
+        }  
     }
 
     return $azureStorageAccountResourceDetails.ResourceGroupName
@@ -161,7 +167,7 @@ function Get-ResourceConnectionDetails
 
     $resourceProperties = @{}
     $resourceName = $resource.Name
-	$resourceId = $resource.Id
+    $resourceId = $resource.Id
 
     Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
     $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceId $resourceId
@@ -211,7 +217,7 @@ function Get-ResourceConnectionDetails
     $resourceProperties.winrmPort = $winrmPortToUse
     $resourceProperties.httpProtocolOption = $protocolToUse
     $resourceProperties.credential = Get-ResourceCredentials -resource $resource
-	$resourceProperties.displayName = $fqdn + ":" + $winrmPortToUse
+    $resourceProperties.displayName = $fqdn + ":" + $winrmPortToUse
 
     return $resourceProperties
 }
@@ -247,7 +253,7 @@ function Get-ResourcesProperties
     foreach ($resource in $resources)
     {
         $resourceName = $resource.Name
-		$resourceId = $resource.Id
+        $resourceId = $resource.Id
         Write-Verbose "Get Resource properties for $resourceName (ResourceId = $resourceId)" -Verbose
 
         # Get other connection details for resource like - Fqdn WinRM Port, Http Protocol, SkipCACheck Option, Resource Credentials
@@ -309,16 +315,18 @@ $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
 # try to get storage key from RDFE, if not exists will try from ARM endpoint
+$storageAccount = $storageAccount.Trim()
 try
 {
     Switch-AzureMode AzureServiceManagement
 
-    # getting storage key from RDFE
+    # getting storage key from RDFE    
     $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
 }
 catch [Hyak.Common.CloudException]
 {
-    Write-Verbose "[Azure Call](RDFE)$_.Exception.Message.ToString()" -Verbose
+    $errorMsg = $_.Exception.Message.ToString()
+    Write-Verbose "[Azure Call](RDFE) $errorMsg" -Verbose
 
     # checking azure powershell version to make calls to ARM endpoint
     Validate-AzurePowershellVersion
@@ -342,6 +350,7 @@ if ([string]::IsNullOrEmpty($containerName))
 }
 
 # uploading files to container
+$sourcePath = $sourcePath.Trim('"')
 try
 {
     Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccount, $containerName, $blobPrefix)
@@ -432,7 +441,7 @@ try
         {
             $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
             $machine = $resourceProperties.fqdn
-			$displayName = $resourceProperties.displayName
+            $displayName = $resourceProperties.displayName
 
             Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $displayName)
 
@@ -462,7 +471,7 @@ try
         {
             $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
             $machine = $resourceProperties.fqdn
-			$displayName = $resourceProperties.displayName
+            $displayName = $resourceProperties.displayName
 
             Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $displayName)
 

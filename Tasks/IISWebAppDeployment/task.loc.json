@@ -209,16 +209,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.Port"
     },
     {
-      "name": "HostName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.HostName",
-      "required": false,
-      "groupName": "website",
-      "defaultValue": "",
-      "visibleRule": "AddBinding = true",
-      "helpMarkDown": "ms-resource:loc.input.help.HostName"
-    },
-    {
       "name": "ServerNameIndication",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ServerNameIndication",
@@ -227,6 +217,36 @@
       "defaultValue": "false",
       "visibleRule": "Protocol = https",
       "helpMarkDown": "ms-resource:loc.input.help.ServerNameIndication"
+    },
+    {
+      "name": "HostNameWithOutSNI",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HostNameWithOutSNI",
+      "required": false,
+      "groupName": "website",
+      "defaultValue": "",
+      "visibleRule": "ServerNameIndication = false",
+      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithOutSNI"
+    },
+    {
+      "name": "HostNameWithHttp",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HostNameWithHttp",
+      "required": false,
+      "groupName": "website",
+      "defaultValue": "",
+      "visibleRule": "Protocol = http",
+      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithHttp"
+    },
+    {
+      "name": "HostNameWithSNI",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HostNameWithSNI",
+      "required": true,
+      "groupName": "website",
+      "defaultValue": "",
+      "visibleRule": "ServerNameIndication = true",
+      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithSNI"
     },
     {
       "name": "SSLCertThumbPrint",

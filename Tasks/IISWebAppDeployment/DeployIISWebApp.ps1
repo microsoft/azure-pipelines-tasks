@@ -15,7 +15,9 @@
     [string]$protocol,
     [string]$ipAddress,
     [string]$port,
-    [string]$hostName,
+    [string]$hostNameWithHttp,
+    [string]$hostNameWithOutSNI,
+    [string]$hostNameWithSNI,
     [string]$serverNameIndication,
     [string]$sslCertThumbPrint,
     [string]$appPoolName,
@@ -29,6 +31,22 @@
     )
 
 Write-Verbose "Entering script DeployIISWebApp.ps1" -Verbose
+
+$hostName = [string]::Empty
+
+if($protocol -eq "http")
+{
+    $hostName = $hostNameWithHttp
+}
+elseif($serverNameIndication -eq "true")
+{
+    $hostName = $hostNameWithSNI
+}
+else
+{
+    $hostName = $hostNameWithOutSNI
+}
+
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineFilter = $machineFilter" -Verbose

@@ -207,16 +207,6 @@
             "helpMarkDown": "Type the port on which Hypertext Transfer Protocol Stack (HTTP.sys) must listen for requests made to this website."
         },
         {
-            "name": "HostName",
-            "type": "string",
-            "label": "Host Name",
-            "required": false,
-            "groupName": "website",
-            "defaultValue": "",
-            "visibleRule": "AddBinding = true",
-            "helpMarkDown": "To assign one or more host names (aka domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
-        },
-        {
             "name": "ServerNameIndication",
             "type": "boolean",
             "label": "Server Name Indication Required",
@@ -225,7 +215,37 @@
             "defaultValue": "false",
             "visibleRule": "Protocol = https",
             "helpMarkDown": "Determines whether the website requires Server Name Indication (SNI). SNI extends the SSL and TLS protocols to indicate what host name the client is attempting to connect to. It allows multiple secure websites with different certificates to use the same IP address."
-        },      
+        },
+        {
+            "name": "HostNameWithOutSNI",
+            "type": "string",
+            "label": "Host Name",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "ServerNameIndication = false",
+            "helpMarkDown": "To assign one or more host names (aka domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
+        },
+        {
+            "name": "HostNameWithHttp",
+            "type": "string",
+            "label": "Host Name",
+            "required": false,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "Protocol = http",
+            "helpMarkDown": "To assign one or more host names (aka domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
+        },
+        {
+            "name": "HostNameWithSNI",
+            "type": "string",
+            "label": "Host Name",
+            "required": true,
+            "groupName": "website",
+            "defaultValue": "",
+            "visibleRule": "ServerNameIndication = true",
+            "helpMarkDown": "To assign one or more host names (aka domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
+        },
         {
             "name": "SSLCertThumbPrint",
             "type": "string",
