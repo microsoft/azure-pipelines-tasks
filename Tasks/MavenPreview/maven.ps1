@@ -4,11 +4,9 @@
     [string]$goals,
     [string]$publishJUnitResults,   
     [string]$testResultsFiles, 
-    [string]$publishCodeCoverageResults,
     [string]$codeCoverageTool,
-    [string]$summaryFileLocation,
-    [string]$reportDirectory,
-    [string]$additionalCodeCoverageFiles,
+    [string]$classfilesDirectory,
+    [string]$classFilter,
     [string]$jdkVersion,
     [string]$jdkArchitecture
 )
@@ -19,13 +17,16 @@ Write-Verbose "options = $options"
 Write-Verbose "goals = $goals"
 Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
-Write-Verbose "publishCodeCoverageResults = $publishCodeCoverageResults"
 Write-Verbose "codeCoverageTool = $codeCoverageTool"
-Write-Verbose "summaryFileLocation = $summaryFileLocation"
-Write-Verbose "reportDirectory = $reportDirectory"
-Write-Verbose "additionalCodeCoverageFiles = $additionalCodeCoverageFiles"
-Write-Verbose "jdkVersion = $jdkVersion"
-Write-Verbose "jdkArchitecture = $jdkArchitecture"
+Write-Verbose "classfilesDirectory = $classfilesDirectory"
+
+$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+if($isCoverageEnabled -eq $true)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool"
+    Write-Verbose "classfilesDirectory = $classfilesDirectory"
+    Write-Verbose "classFilter = $classFilter"
+}
 
 
 #Verify Maven POM file is specified
@@ -52,6 +53,17 @@ if($jdkVersion -and $jdkVersion -ne "default")
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
+$buildRootPath = Split-Path $mavenPOMFile -Parent
+$summaryFile = Join-Path $buildRootPath "CodeCoverage\summary.xml"
+$reportDirectory = Join-Path $buildRootPath "CodeCoverage"
+
+# check if code coverage has been enabled
+if($isCoverageEnabled)
+{
+   # Enable code coverage in build file
+   Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFile -ReportDirectory $reportDirectory
+}
+
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
 
 # Publish test results files
@@ -76,11 +88,9 @@ else
 }
 
 
-if($publishCodeCoverageResults)
+if($isCoverageEnabled)
 {
-   # Publish Code Coverage Files
-   $CodeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $CodeCoverageFiles -Context $distributedTaskContext    
+   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }
 else
 {

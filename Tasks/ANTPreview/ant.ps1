@@ -7,11 +7,9 @@
     [string]$jdkVersion,
     [string]$jdkArchitecture,
 	
-    [string]$publishCodeCoverageResults,
     [string]$codeCoverageTool,
-    [string]$summaryFileLocation,
-    [string]$reportDirectory,
-    [string]$additionalCodeCoverageFiles
+    [string]$classfilesDirectory,
+    [string]$classFilter
 )
 
 Write-Verbose 'Entering Ant.ps1'
@@ -23,12 +21,14 @@ Write-Verbose "testResultsFiles = $testResultsFiles"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 
-Write-Verbose "publishCodeCoverageResults = $publishCodeCoverageResults"
-Write-Verbose "codeCoverageTool = $codeCoverageTool"
-Write-Verbose "summaryFileLocation = $summaryFileLocation"
-Write-Verbose "reportDirectory = $reportDirectory"
-Write-Verbose "additionalCodeCoverageFiles = $additionalCodeCoverageFiles"
-
+$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+if($isCoverageEnabled)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool"
+    Write-Verbose "classfilesDirectory = $classfilesDirectory"
+    Write-Verbose "classFilter = $classFilter"
+}
+	
 #Verify Ant build file is specified
 if(!$antBuildFile)
 {
@@ -52,6 +52,18 @@ if($jdkVersion -and $jdkVersion -ne "default")
     $env:JAVA_HOME = $jdkPath
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
+
+$buildRootPath = Split-Path $antBuildFile -Parent
+$summaryFile = Join-Path $buildRootPath "CodeCoverage\summary.xml"
+$reportDirectory = Join-Path $buildRootPath "CodeCoverage"
+
+# check if code coverage has been enabled
+if($isCoverageEnabled)
+{
+   # Enable code coverage in build file
+   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFile -ReportDirectory $reportDirectory
+}
+	
 
 Write-Verbose "Running Ant..."
 Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets
@@ -77,18 +89,10 @@ else
     Write-Verbose "Option to publish JUnit Test results produced by Ant build was not selected and is being skipped."
 }
 
-
-if($publishCodeCoverageResults)
+# check if code coverage has been enabled
+if($isCoverageEnabled)
 {
-   # Publish Code Coverage Files
-   $codeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
-   
-   if(-not $codeCoverageFiles)
-   {
-      Write-Warning "No code coverage files matching pattern '$additionalCodeCoverageFiles' were found."  
-   }
-   
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $codeCoverageFiles -Context $distributedTaskContext    
+   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }
 else
 {
