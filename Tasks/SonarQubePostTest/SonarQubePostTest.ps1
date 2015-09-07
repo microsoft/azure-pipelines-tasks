@@ -34,4 +34,9 @@ else
      Write-Warning "Could not find the summary report file $summaryMdPath"
 }
 
-
+. .\CodeAnalysisFilePathComputation.ps1
+$sonarQubeAnalysisModeIsIncremental = Get-TaskVariable -Context $distributedTaskContext -Name "SonarqubeAnalysisModeIsIncremental" -Global $FALSE
+if ($sonarQubeAnalysisModeIsIncremental -ieq "true")
+{
+    GenerateCodeAnalysisReport $agentBuildDirectory
+}
