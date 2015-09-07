@@ -80,7 +80,7 @@
         {
             "name": "codeCoverageTool",
             "type": "pickList",
-            "label": "CodeCoverage Tool",
+            "label": "Code Coverage Tool",
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "NoCoverage",
@@ -93,7 +93,7 @@
         {
             "name": "classfilesDirectory",
             "type": "string",
-            "label": "Classfiles Directory",
+            "label": "Class files Directory",
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
