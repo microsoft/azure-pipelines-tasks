@@ -37,53 +37,67 @@ For example, FullyQualifiedName~Chrome:12 will report all test methods which hav
 	
 - **Application Under Test Machine Group:**	Machine(s) on which the Application Under Test is deployed. This is used to collect Code Coverage data from those machines. Use this in conjunction with Code Coverage Enabled checkbox. 
 
-###Scenarios Supported
-Here is a High level list of the topology supported when using this task:
+### Scenarios Supported
+Here is a high level list of the topology support using this task:
+
 1.	Running automated tests against on-premise standard environments 
 2.	Running automated tests against existing azure environments
 3.	Running automated tests against newly provisioned azure environments
 
 ### This is the supported matrix for the scenarios above:
-1.	TFS
+1.	**TFS**
+
 	a.	On Premise and VS Online
- 
-2.	BuildAgents
+	
+2.	**BuildAgents**
+
 	a.	Both Hosted as well as Onpremise BuildAgents are supported.
+
 	b.	Using crossplat agent for any BDT tasks is not supported.
+
 	c.	BuildAgent must be able to communicate with all test machines, and thus if test machines are on-premise, hosted build agent pool (in case of VS Online) can't be used.
+
 	d.	BuildAgent should have internet access to download test agents.
-		If this is not the case, testagent should be manually downloaded from official msdn page, uploaded to a 			network location accessible by build agent, and then used in DeployTestAgent task via "custom test agent 			location" parameter. However if there is a new version of TestAgent available, the onus is on the user 		to repeat the same process again to update the test machines. Details provided in the above help section. 
+If this is not the case, testagent should be manually downloaded from official msdn page, uploaded to a network location accessible by build agent, and then used in DeployTestAgent task via "custom test agent location" parameter. However if there is a new version of TestAgent available, the onus is on the user to repeat the same process again to update the test machines. Details provided in the above help section. 
  
-3.	CI/CD workflow
+3.	**CI/CD workflow**
+
 	a.	The BDT tasks are supported in both Build and RM workflow
  
-4.	Machine group configuration
-	a.	To use BDT, only Windows OS based machines are supported inside a machine group. Adding Linux/IOS or other 			platforms inside machines groups and using BDT tasks is not supported.
+4.	**Machine group configuration**
+
+	a.	To use BDT, only Windows OS based machines are supported inside a machine group. Adding Linux/IOS or other platforms inside machines groups and using BDT tasks is not supported.
+
 	b.	Installing any VisualStudio SKU on any of the test machines is not supported.
+
 	c.	Similarly installing any older version of TestAgent on any of the test machines is not supported.
  
-5.	Test machine topologies
-	a.	Azure based test machines are fully supported - both existing test machines, and newly provisioned ones. 			Details on how to create azure machines in previous sections.
-	b.	TestAgent machines must have network access to the TFS instance in use. Because of this network isolated test 		machines are not supported.
+5.	**Test machine topologies**
+
+	a.	Azure based test machines are fully supported - both existing test machines, and newly provisioned ones. Details on how to create azure machines in previous sections.
+
+	b.	TestAgent machines must have network access to the TFS instance in use. Because of this network isolated test machines are not supported.
+
 	c.	Domain joined machines are supported.
-	d.	For workgroup joined testmachines, https authentication must be enabled and configured during machine group 			creation. Details on how to enable https authentication in previous sections.
- 
-### Here is a list of the other tasks that work with this task in the Build-Deploy-Test (BDT) workflow:
-1.	Deploy Azure Resource Group: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup
-2.	Azure File Copy: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/AzureFileCopy
-3.	Windows Machine File Copy: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/WindowsMachineFileCopy
-4.	PowerShell on Target Machines: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/PowerShellOnTargetMachines
-5.	Deploy Visual Studio Test Agent: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployVisualStudioTestAgent
- 
- 
-6.	Usage :
-a.	Using same test machines across different machine groups, and running builds (with any BDT tasks) parallely against those machine groups is not supported.
-b.	Cancelling an inprogress build/release with BDT tasks is not supported. If you do cancel, your subsequent builds may misbehave.
-c.	Cancelling an ongoing test run queued via BDT tasks is not supported.
-d.	Configuring Testagent and running tests as a non-admin/service account is not supported.
 
-7.	Testing support
-a.	All tests supported by Visual Studio Test Agents. (Expand this) Selenium etc.
+	d.	For workgroup joined testmachines, https authentication must be enabled and configured during machine group creation. Details on how to enable https authentication in previous sections.
 
+6.	**Usage Error Conditions**
+
+	a.	Using same test machines across different machine groups, and running builds (with any BDT tasks) parallely against those machine groups is not supported.
+	
+	b.	Cancelling an inprogress build/release with BDT tasks is not supported. If you do cancel, your subsequent builds may misbehave.
+	
+	c.	Cancelling an ongoing test run queued via BDT tasks is not supported.
+	
+	d.	Configuring Testagent and running tests as a non-admin/service account is not supported.
+
+### Here is a list of other tasks that can be used with this task in the Build-Deploy-Test (BDT) workflow:
+
+1.	*Deploy Azure Resource Group*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup
+2.	*Azure File Copy*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/AzureFileCopy
+3.	*Windows Machine File Copy*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/WindowsMachineFileCopy
+4.	*PowerShell on Target Machines*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/PowerShellOnTargetMachines
+5.	*Deploy Visual Studio Test Agent*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployVisualStudioTestAgent
 
 <br/>
