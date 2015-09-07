@@ -45,11 +45,11 @@ Here is a high level list of the topology support using this task:
 3.	Running automated tests against newly provisioned azure environments
 
 ### This is the supported matrix for the scenarios above:
-1.	**TFS**
+-	**TFS**
 
 	a.	On Premise and VS Online
 	
-2.	**BuildAgents**
+-	**BuildAgents**
 
 	a.	Both Hosted as well as Onpremise BuildAgents are supported.
 
@@ -58,13 +58,13 @@ Here is a high level list of the topology support using this task:
 	c.	BuildAgent must be able to communicate with all test machines, and thus if test machines are on-premise, hosted build agent pool (in case of VS Online) can't be used.
 
 	d.	BuildAgent should have internet access to download test agents.
-If this is not the case, testagent should be manually downloaded from official msdn page, uploaded to a network location accessible by build agent, and then used in DeployTestAgent task via "custom test agent location" parameter. However if there is a new version of TestAgent available, the onus is on the user to repeat the same process again to update the test machines. Details provided in the above help section. 
+If this is not the case, testagent should be manually downloaded from official msdn page, uploaded to a network location accessible by build agent, and then used in DeployTestAgent task via "custom test agent location" parameter. However if there is a new version of TestAgent available, the onus is on the user to repeat the same process again to update the test machines. Details provided in the help section for the Test Agent Deployment task. 
  
-3.	**CI/CD workflow**
+-	**CI/CD workflow**
 
 	a.	The BDT tasks are supported in both Build and RM workflow
  
-4.	**Machine group configuration**
+-	**Machine group configuration**
 
 	a.	To use BDT, only Windows OS based machines are supported inside a machine group. Adding Linux/IOS or other platforms inside machines groups and using BDT tasks is not supported.
 
@@ -72,17 +72,17 @@ If this is not the case, testagent should be manually downloaded from official m
 
 	c.	Similarly installing any older version of TestAgent on any of the test machines is not supported.
  
-5.	**Test machine topologies**
+-	**Test machine topologies**
 
-	a.	Azure based test machines are fully supported - both existing test machines, and newly provisioned ones. Details on how to create azure machines in previous sections.
+	a.	Azure based test machines are fully supported - both existing test machines, and newly provisioned ones.
 
 	b.	TestAgent machines must have network access to the TFS instance in use. Because of this network isolated test machines are not supported.
 
 	c.	Domain joined machines are supported.
 
-	d.	For workgroup joined testmachines, https authentication must be enabled and configured during machine group creation. Details on how to enable https authentication in previous sections.
+	d.	For workgroup joined testmachines, https authentication must be enabled and configured during machine group creation.
 
-6.	**Usage Error Conditions**
+-	**Usage Error Conditions**
 
 	a.	Using same test machines across different machine groups, and running builds (with any BDT tasks) parallely against those machine groups is not supported.
 	
