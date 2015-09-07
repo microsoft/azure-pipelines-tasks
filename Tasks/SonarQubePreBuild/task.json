@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 19
+        "Patch": 20
     },
     "demands": [
         "msbuild",
@@ -103,7 +103,7 @@
             "type": "string",
             "label": "Additional Settings",
             "required": false,
-            "helpMarkDown": "Pass in settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://docs.sonarqube.org/)",
+            "helpMarkDown": "Space separated settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://docs.sonarqube.org/)",
             "groupName": "advanced"
         },
         {
