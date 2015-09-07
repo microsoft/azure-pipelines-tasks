@@ -25,7 +25,7 @@
   "loc.input.label.dbPassword": "Db User Password",
   "loc.input.help.dbPassword": "SonarQube server 5.1 and lower only. The password for the database user, i.e. sonar.jdbc.password",
   "loc.input.label.cmdLineArgs": "Additional Settings",
-  "loc.input.help.cmdLineArgs": "Pass in settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://docs.sonarqube.org/)",
+  "loc.input.help.cmdLineArgs": "Space separated settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://go.microsoft.com/fwlink/?LinkID=624390)",
   "loc.input.label.configFile": "Settings File",
   "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](http://go.microsoft.com/fwlink/?LinkID=620062)"
 }
