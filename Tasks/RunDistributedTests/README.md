@@ -45,28 +45,28 @@ Here is a High level list of the topology supported when using this task:
 
 ### This is the supported matrix for the scenarios above:
 1.	TFS
-a.	On Premise and VS Online
+	a.	On Premise and VS Online
  
 2.	BuildAgents
-a.	Both Hosted as well as Onpremise BuildAgents are supported.
-b.	Using crossplat agent for any BDT tasks is not supported.
-c.	BuildAgent must be able to communicate with all test machines, and thus if test machines are on-premise, hosted build agent pool (in case of VS Online) can't be used.
-d.	BuildAgent should have internet access to download test agents.
-If this is not the case, testagent should be manually downloaded from official msdn page, uploaded to a network location accessible by build agent, and then used in DeployTestAgent task via "custom test agent location" parameter. However if there is a new version of TestAgent available, the onus is on the user to repeat the same process again to update the test machines. Details provided in the above help section. 
+	a.	Both Hosted as well as Onpremise BuildAgents are supported.
+	b.	Using crossplat agent for any BDT tasks is not supported.
+	c.	BuildAgent must be able to communicate with all test machines, and thus if test machines are on-premise, hosted build agent pool (in case of VS Online) can't be used.
+	d.	BuildAgent should have internet access to download test agents.
+		If this is not the case, testagent should be manually downloaded from official msdn page, uploaded to a 			network location accessible by build agent, and then used in DeployTestAgent task via "custom test agent 			location" parameter. However if there is a new version of TestAgent available, the onus is on the user 		to repeat the same process again to update the test machines. Details provided in the above help section. 
  
 3.	CI/CD workflow
-a.	The BDT tasks are supported in both Build and RM workflow
+	a.	The BDT tasks are supported in both Build and RM workflow
  
 4.	Machine group configuration
-a.	To use BDT, only Windows OS based machines are supported inside a machine group. Adding Linux/IOS or other platforms inside machines groups and using BDT tasks is not supported.
-b.	Installing any VisualStudio SKU on any of the test machines is not supported.
-c.	Similarly installing any older version of TestAgent on any of the test machines is not supported.
+	a.	To use BDT, only Windows OS based machines are supported inside a machine group. Adding Linux/IOS or other 			platforms inside machines groups and using BDT tasks is not supported.
+	b.	Installing any VisualStudio SKU on any of the test machines is not supported.
+	c.	Similarly installing any older version of TestAgent on any of the test machines is not supported.
  
 5.	Test machine topologies
-a.	Azure based test machines are fully supported - both existing test machines, and newly provisioned ones. Details on how to create azure machines in previous sections.
-b.	TestAgent machines must have network access to the TFS instance in use. Because of this network isolated test machines are not supported.
-c.	Domain joined machines are supported.
-d.	For workgroup joined testmachines, https authentication must be enabled and configured during machine group creation. Details on how to enable https authentication in previous sections.
+	a.	Azure based test machines are fully supported - both existing test machines, and newly provisioned ones. 			Details on how to create azure machines in previous sections.
+	b.	TestAgent machines must have network access to the TFS instance in use. Because of this network isolated test 		machines are not supported.
+	c.	Domain joined machines are supported.
+	d.	For workgroup joined testmachines, https authentication must be enabled and configured during machine group 			creation. Details on how to enable https authentication in previous sections.
  
 ### Here is a list of the other tasks that work with this task in the Build-Deploy-Test (BDT) workflow:
 1.	Deploy Azure Resource Group: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup
