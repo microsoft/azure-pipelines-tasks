@@ -64,7 +64,7 @@ function ThrowError
 {
     param([string]$errorMessage)
 
-    $readmelink = "http://aka.ms/windowsfilecopyreadme"
+    $readmelink = "http://aka.ms/azurefilecopyreadme"
     $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
     throw "$errorMessage $helpMessage"
 }

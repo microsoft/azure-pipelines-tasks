@@ -58,7 +58,7 @@ else
 
 if(-not [string]::IsNullOrEmpty($errorMessage))
 {
-    $readmelink = "http://aka.ms/sqlazuredeployreadme"
+    $readmelink = "http://aka.ms/sqlserverdacpackreadme"
     $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
     throw "$errorMessage $helpMessage"
 }

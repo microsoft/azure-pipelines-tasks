@@ -3,7 +3,7 @@
     "name": "SqlServerDacpacDeployment",
     "friendlyName": "SQL Server Database Deployment",
     "description": "Deploy SQL Server Database using DACPAC",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/SqlServerDacpacDeployment/README.md)",
+    "helpMarkDown": "[More Information](http://aka.ms/sqlserverdacpackreadme)",
     "category": "Deploy",
     "visibility": [
         "Preview",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
     ],

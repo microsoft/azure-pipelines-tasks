@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Azure File Copy",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/AzureFileCopy/README.md)",
+  "loc.helpMarkDown": "[More Information](http://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copy files to Azure blob or VM(s)",
   "loc.instanceNameFormat": "$(Destination) File Copy",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",

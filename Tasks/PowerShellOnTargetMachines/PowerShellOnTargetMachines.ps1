@@ -56,8 +56,8 @@ if ($enableDetailedLoggingString -ne "true")
 
 function ThrowError
 {
-	param([string]$errorMessage)
-	
+    param([string]$errorMessage)
+    
         $readmelink = "http://aka.ms/powershellontargetmachinesreadme"
         $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
         throw "$errorMessage $helpMessage"
@@ -66,10 +66,10 @@ function ThrowError
 function Get-ResourceWinRmConfig
 {
     param
-	(
-	    [string]$resourceName,
+    (
+        [string]$resourceName,
         [int]$resourceId
-	)
+    )
 
     $resourceProperties = @{}
 
@@ -187,7 +187,7 @@ function Get-ResourceConnectionDetails
 
     $resourceProperties = @{}
     $resourceName = $resource.Name
-	$resourceId = $resource.Id
+    $resourceId = $resource.Id
 
     Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
     $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceId $resourceId
@@ -198,7 +198,7 @@ function Get-ResourceConnectionDetails
     $resourceProperties.winrmPort = $winrmconfig.winrmPort
     $resourceProperties.protocolOption = $winrmconfig.protocolOption
     $resourceProperties.credential = Get-ResourceCredentials -resource $resource
-	$resourceProperties.displayName = $fqdn + ":" + $winrmconfig.winrmPort
+    $resourceProperties.displayName = $fqdn + ":" + $winrmconfig.winrmPort
 
     return $resourceProperties
 }
@@ -213,7 +213,7 @@ function Get-ResourcesProperties
     foreach ($resource in $resources)
     {
         $resourceName = $resource.Name
-		$resourceId = $resource.Id
+        $resourceId = $resource.Id
         Write-Verbose "Get Resource properties for $resourceName (ResourceId = $resourceId)" -Verbose
         $resourceProperties = Get-ResourceConnectionDetails -resource $resource
         $resourceProperties.skipCACheckOption = $skipCACheckOption
@@ -297,7 +297,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
     {
         $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
         $machine = $resourceProperties.fqdn
-		$displayName = $resourceProperties.displayName
+        $displayName = $resourceProperties.displayName
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $displayName)
 
         $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $parsedSessionVariables 
@@ -326,7 +326,7 @@ else
     {
         $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
         $machine = $resourceProperties.fqdn
-		$displayName = $resourceProperties.displayName
+        $displayName = $resourceProperties.displayName
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $displayName)
 
         $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $parsedSessionVariables
