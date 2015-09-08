@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "demands" : [
         "ant"
@@ -97,7 +97,7 @@
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. ",
+            "helpMarkDown": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
@@ -107,7 +107,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*",
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
@@ -117,7 +117,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Specify source directory for code coverage reports to include highlighted source code. For example, src",
+            "helpMarkDown": "Specify source directory for code coverage reports to include highlighted source code. For example, src. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },		
         {
