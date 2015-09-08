@@ -1,11 +1,11 @@
 function Create-AzureResourceGroup
 {
-    param([string]$csmFile, 
+    param([string]$csmFile,
           [System.Collections.Hashtable]$csmParametersObject,
           [string]$resourceGroupName,
           [string]$location,
           [string]$overrideParameters)
-    
+
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
         Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
@@ -30,7 +30,7 @@ function Create-AzureResourceGroup
             Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
             Invoke-Expression -Command $finalCommand
         }
-
+		
         if ($azureResourceGroupDeployment)
         {
             Write-Verbose -Verbose "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
@@ -347,7 +347,7 @@ function Get-MachinesFqdnsForLB
     return $fqdnMap
 }
 
-function Get-MachinesFqdns 
+function Get-MachinesFqdns
 {
     param([string]$resourceGroupName)
 
@@ -680,6 +680,7 @@ function Delete-MachineGroupFromProvider
     param([string]$machineGroupName)
 
     Write-Verbose "[Azure Resource Manager]Deleting resource group $machineGroupName from Azure provider" -Verbose
+
     Remove-AzureResourceGroup -ResourceGroupName $machineGroupName -Force -ErrorAction Stop -Verbose
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}' from Azure provider" -ArgumentList $machineGroupName)
 }
@@ -688,15 +689,15 @@ function Delete-MachineFromProvider
 {
     param([string]$machineGroupName,
           [string]$machineName)
-    
+
     $errorVariable=@()
     Write-Verbose "[Azure Resource Manager]Deleting machine $machineName from Azure provider" -Verbose
-    $removeResponse = Remove-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -Force -ErrorAction SilentlyContinue -ErrorVariable  errorVariable -Verbose
+    $removeResponse = Remove-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -Force -ErrorAction SilentlyContinue -ErrorVariable errorVariable -Verbose
 
     if($errorVariable.Count -eq 0)
     {
          Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
-         return "Succedded"
+         return "Succeded"
     }
     else
     {
@@ -710,8 +711,12 @@ function Start-MachineInProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Verbose "[Azure Resource Manager]Starting machine $machineName on Azure provider" -Verbose
-    Start-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose
+    $errorVariable=@()
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
+
+    Start-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable | Out-Null        
+
+    return $errorVariable
 }
 
 function Stop-MachineInProvider
@@ -719,8 +724,12 @@ function Stop-MachineInProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Verbose "[Azure Resource Manager]Stopping machine $machineName on Azure provider" -Verbose
-    Stop-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose -Force
+    $errorVariable=@()
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
+
+    Stop-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable -Force | Out-Null
+
+    return $errorVariable
 }
 
 function Restart-MachineInProvider
@@ -728,6 +737,10 @@ function Restart-MachineInProvider
     param([string]$machineGroupName,
           [string]$machineName)
 
-    Write-Verbose "[Azure Resource Manager]Restarting machine $machineName on Azure provider" -Verbose
-    Restart-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -Verbose 
+    $errorVariable=@()
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Restarting machine '{0}'" -ArgumentList $machineName)
+
+    Restart-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable | Out-Null
+
+    return $errorVariable
 }

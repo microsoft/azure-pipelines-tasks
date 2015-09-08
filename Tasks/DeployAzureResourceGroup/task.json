@@ -6,10 +6,10 @@
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
     "visibility": [
-                "Preview",
-                "Build",
-                "Release"
-                  ],
+        "Preview",
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
@@ -37,7 +37,7 @@
             "helpMarkDown": "Azure subscription to target for the deployment."
         },
         {
-            "name": "Action", 
+            "name": "action", 
             "type": "pickList", 
             "label": "Action",
             "defaultValue": "Create Or Update Resource Group",
@@ -54,13 +54,13 @@
         },
         {
             "name": "resourceGroupName", 
-            "type": "pickList", 
+            "type": "string", 
             "label": "Resource Group",
             "required": true,
             "helpMarkDown": "Provide the name of the resource group."
         },
         {
-            "name":"ResourceFilteringMethodStart",
+            "name":"resourceFilteringMethodStart",
             "type":"radio",
             "label":"Select Machines By",
             "required":false,
@@ -69,19 +69,19 @@
             "machineNames":"Machine Names",
             "tags":"Tags"
             },
-            "visibleRule": "Action = Start"
+            "visibleRule": "action = Start"
        },
        {
-           "name": "FiltersStart",
+           "name": "filtersStart",
            "type": "string",
            "label": "Filter Criteria",
            "defaultValue": "",
            "required": false,
            "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
-           "visibleRule": "Action = Start"
+           "visibleRule": "action = Start"
         },
         {
-            "name":"ResourceFilteringMethodStop",
+            "name":"resourceFilteringMethodStop",
             "type":"radio",
             "label":"Select Machines By",
             "required":false,
@@ -90,19 +90,19 @@
             "machineNames":"Machine Names",
             "tags":"Tags"
             },
-            "visibleRule": "Action = Stop"
+            "visibleRule": "action = Stop"
        },
        {
-           "name": "FiltersStop",
+           "name": "filtersStop",
            "type": "string",
            "label": "Filter Criteria",
            "defaultValue": "",
            "required": false,
            "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
-           "visibleRule": "Action = Stop"
+           "visibleRule": "action = Stop"
         },
         {
-            "name":"ResourceFilteringMethodRestart",
+            "name":"resourceFilteringMethodRestart",
             "type":"radio",
             "label":"Select Machines By",
             "required":false,
@@ -111,19 +111,19 @@
             "machineNames":"Machine Names",
             "tags":"Tags"
             },
-            "visibleRule": "Action = Restart"
+            "visibleRule": "action = Restart"
        },
        {
-           "name": "FiltersRestart",
+           "name": "filtersRestart",
            "type": "string",
            "label": "Filter Criteria",
            "defaultValue": "",
            "required": false,
            "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
-           "visibleRule": "Action = Restart"
+           "visibleRule": "action = Restart"
         },
         {
-            "name":"ResourceFilteringMethodDelete",
+            "name":"resourceFilteringMethodDelete",
             "type":"radio",
             "label":"Select Machines By",
             "required":false,
@@ -132,16 +132,16 @@
             "machineNames":"Machine Names",
             "tags":"Tags"
             },
-            "visibleRule": "Action = Delete"
+            "visibleRule": "action = Delete"
        },
        {
-           "name": "FiltersDelete",
+           "name": "filtersDelete",
            "type": "string",
            "label": "Filter Criteria",
            "defaultValue": "",
            "required": false,
            "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
-           "visibleRule": "Action = Delete"
+           "visibleRule": "action = Delete"
         },
         {
             "name": "location",
@@ -160,7 +160,7 @@
             "properties": {
                 "EditableOptions": "True" 
             },
-            "visibleRule": "Action = Create Or Update Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "csmFile", 
@@ -169,7 +169,7 @@
             "defaultValue":"",
             "required": true,
             "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates see - http://aka.ms/azuretemplates.",
-            "visibleRule": "Action = Create Or Update Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "csmParametersFile",
@@ -178,16 +178,16 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template.",
-            "visibleRule": "Action = Create Or Update Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
-	    {
+        {
             "name": "overrideParameters",
             "type": "multiLine",
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
-            "visibleRule": "Action = Create Or Update Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "vmCreds",
@@ -221,7 +221,7 @@
         {
             "name": "skipCACheck",
             "type": "boolean",
-            "label": "Test Certificate",
+            "label": "Skip CA Check",
             "required": false,
             "defaultValue": "true",
             "groupName": "advancedDeploymentOptions",

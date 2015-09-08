@@ -351,12 +351,13 @@ function Invoke-OperationHelper
 {
      param([string]$machineGroupName,
            [string]$operationName,
-          [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
+           [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
 
     Write-Verbose "Entered perform action $operationName on machines for machine group $machineGroupName" -Verbose
     
     if(! $machines)
     {
+        Write-Verbose "Machine group $machineGroupName has no machines in it" -Verbose
         return
     }
 
@@ -373,34 +374,31 @@ function Invoke-OperationHelper
     Foreach($machine in $machines)
     {
         $machineName = $machine.Name
-        $operation = Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
-        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
+        $error = Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
+        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose        
 
+        $errorMessage = [string]::Empty
         # Determines the status of the operation. Marks the status of machine group operation as 'Failed' if any one of the machine operation fails.
-        if(! $operation)
+        if($error.Count -ne 0)
         {
-            $status = "Failed"
-            $machineStatus = "Failed"
+            $machineStatus = $status = "Failed"
             $passedOperationCount--
-            Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed" -ArgumentList $operationName, $machine.Name)
+            
+            if($error[0].Exception)
+            {
+                $errorMessage = $error[0].Exception.Message
+            }
+
+            Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed with error '{2}'" -ArgumentList $operationName, $machine.Name, $errorMessage)
         }
         else
         {
-            $status = $operation.Status
-            if($status -ne "Succeeded")
-            {
-                $machineStatus = "Failed"
-                $passedOperationCount--
-                Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed with error '{2}'" -ArgumentList $operationName, $machine.Name, $operation.Error.Message)
-            }
-            else
-            {
-                 Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
-            }
+            $status = "Succeeded"
+            Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
         }
         
         # Logs the completion of particular machine operation. Updates the status based on the provider response.
-        End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $operation.Error.Message
+        End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $errorMessage
     }
 
     # Logs completion of the machine group operation.
@@ -433,7 +431,7 @@ function Delete-MachinesHelper
       Foreach($machine in $machines)
       {
           $response = Delete-MachineFromProvider -machineGroupName $machineGroupName -machineName $machine.Name 
-          if($response -ne "Succedded")
+          if($response -ne "Succeded")
            {
               $passedOperationCount--
            }
@@ -459,22 +457,22 @@ function Invoke-OperationOnProvider
     Switch ($operationName)
     {
          "Start" {
-             $operation = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName                          
          }
 
          "Stop" {
-             $operation = Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             $error = Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
          }
 
          "Restart" {
-             $operation = Restart-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             $error = Restart-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
          }
  
          default {
               throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
          }
     }
-    return $operation
+    return $error
 }
 
 # Task fails if operation fails on all the machines
@@ -636,7 +634,7 @@ function Get-ProviderHelperFile
     }
     else
     {
-	    $providerName = $machineGroup.Provider.Name
+        $providerName = $machineGroup.Provider.Name
     }
 
     Write-Verbose -Verbose "ProviderName = $providerName"

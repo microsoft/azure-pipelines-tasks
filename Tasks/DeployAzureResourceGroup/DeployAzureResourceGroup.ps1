@@ -1,6 +1,6 @@
 param(
     [string][Parameter(Mandatory=$true)]$ConnectedServiceName,
-    [string][Parameter(Mandatory=$true)]$Action,
+    [string][Parameter(Mandatory=$true)]$action,
     [string][Parameter(Mandatory=$true)]$resourceGroupName,
     [string][Parameter(Mandatory=$true)]$location,
     [string][Parameter(Mandatory=$true)]$csmFile,
@@ -13,27 +13,27 @@ param(
     [string]$vmUserName,
     [string]$vmPassword,
     [string]$skipCACheck,
-    [string]$ResourceFilteringMethodStart,
-    [string]$FiltersStart,
-    [string]$ResourceFilteringMethodStop,
-    [string]$FiltersStop,
-    [string]$ResourceFilteringMethodRestart,
-    [string]$FiltersRestart,
-    [string]$ResourceFilteringMethodDelete,
-    [string]$FiltersDelete,
-    [string]$ResourceFilteringMethodDeleteRG,
-    [string]$FiltersDeleteRG
+    [string]$resourceFilteringMethodStart,
+    [string]$filtersStart,
+    [string]$resourceFilteringMethodStop,
+    [string]$filtersStop,
+    [string]$resourceFilteringMethodRestart,
+    [string]$filtersRestart,
+    [string]$resourceFilteringMethodDelete,
+    [string]$filtersDelete,
+    [string]$resourceFilteringMethodDeleteRG,
+    [string]$filtersDeleteRG
 )
 
 Write-Verbose "Starting Azure Resource Group Deployment Task" -Verbose
 
-Write-Verbose -Verbose "SubscriptionId = $ConnectedServiceName"
-Write-Verbose -Verbose "Action = $Action"
-Write-Verbose -Verbose "environmentName = $resourceGroupName"
-Write-Verbose -Verbose "location = $location"
-Write-Verbose -Verbose "overrideParameters = $overrideParameters"
-Write-Verbose -Verbose "moduleUrlParameterNames = $moduleUrlParameterNames"
-Write-Verbose -Verbose "sasTokenParamterNames = $sasTokenParameterNames" 
+Write-Verbose -Verbose "ConnectedServiceName = $ConnectedServiceName"
+Write-Verbose -Verbose "Action = $action"
+Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
+Write-Verbose -Verbose "Location = $location"
+Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
+Write-Verbose -Verbose "ModuleUrlParameterNames = $moduleUrlParameterNames"
+Write-Verbose -Verbose "SASTokenParamterNames = $sasTokenParameterNames" 
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
@@ -47,11 +47,11 @@ $ErrorActionPreference = "Stop"
 Initialize-DTLServiceHelper
 Validate-AzurePowershellVersion
 
-if( $Action -eq "Create Or Update Resource Group" )
-{    
+if( $action -eq "Create Or Update Resource Group" )
+{
     . ./AzureResourceManagerHelper.ps1
-    
-    Check-EnvironmentNameAvailability -environmentName $resourceGroupName  
+
+    Check-EnvironmentNameAvailability -environmentName $resourceGroupName
     Validate-Credentials -vmCreds $vmCreds -vmUserName $vmUserName -vmPassword $vmPassword
 
     #Create csm parameter object
@@ -67,14 +67,14 @@ if( $Action -eq "Create Or Update Resource Group" )
 
     # Update the resource group in DTL
     $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
-    Update-EnvironemntDetailsInDTL -subscription $subscription -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState    
+    Update-EnvironemntDetailsInDTL -subscription $subscription -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState
 }
 else
 {
-    # TODO: This is a temporary fix. Will remove it once task json's visibility rul supports conditional operator "!="
-    $filterDetails = Get-FilterDetails -action $Action -resourceFilteringMethodStart $ResourceFilteringMethodStart -filtersStart $FiltersStart -resourceFilteringMethodStop $ResourceFilteringMethodStop -filtersStop $FiltersStop `
-                                        -resourceFilteringMethodRestart $ResourceFilteringMethodRestart -filtersRestart $FiltersRestart -resourceFilteringMethodDelete $ResourceFilteringMethodDelete -filtersDelete $FiltersDelete `
-                                        -resourceFilteringMethodDeleteRG $ResourceFilteringMethodDeleteRG -filtersDeleteRG $FiltersDeleteRG
+    # TODO: This is a temporary fix. Will remove it once task json's visibility rule supports conditional operator "!="
+    $filterDetails = Get-FilterDetails -action $action -resourceFilteringMethodStart $resourceFilteringMethodStart -filtersStart $filtersStart -resourceFilteringMethodStop $resourceFilteringMethodStop -filtersStop $filtersStop `
+                                        -resourceFilteringMethodRestart $resourceFilteringMethodRestart -filtersRestart $filtersRestart -resourceFilteringMethodDelete $resourceFilteringMethodDelete -filtersDelete $filtersDelete `
+                                        -resourceFilteringMethodDeleteRG $resourceFilteringMethodDeleteRG -filtersDeleteRG $filtersDeleteRG
 
     $machineGroup = Get-MachineGroup -machineGroupName $resourceGroupName -filters $filterDetails["filters"]  -resourceFilteringMethod $filterDetails["resourceFilteringMethod"] -Verbose
 
@@ -89,15 +89,10 @@ else
            break
        }
 
-       "Pre-existing machines" {
-            . ./PreExistingMachinesHelper.ps1
-            break
-       }
-
        default { throw (Get-LocalizedString -Key "Machine group provider is not supported") }
     }
 
-    Perform-Action -action $Action -resourceGroupName $resourceGroupName -resources $machineGroup.Resources -filters $filterDetails["filters"] -ProviderName $providerName
+    Perform-Action -action $action -resourceGroupName $resourceGroupName -resources $machineGroup.Resources -filters $filterDetails["filters"] -ProviderName $providerName
 }
 
 Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose

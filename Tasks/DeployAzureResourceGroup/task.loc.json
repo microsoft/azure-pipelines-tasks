@@ -40,12 +40,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "Action",
+      "name": "action",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.Action",
+      "label": "ms-resource:loc.input.label.action",
       "defaultValue": "Create Or Update Resource Group",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.Action",
+      "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
         "Create Or Update Resource Group": "Create Or Update Resource Group",
         "Start": "Start Virtual Machines",
@@ -57,94 +57,94 @@
     },
     {
       "name": "resourceGroupName",
-      "type": "pickList",
+      "type": "string",
       "label": "ms-resource:loc.input.label.resourceGroupName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
     },
     {
-      "name": "ResourceFilteringMethodStart",
+      "name": "resourceFilteringMethodStart",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethodStart",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethodStart",
       "required": false,
       "defaultValue": "machineNames",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
       },
-      "visibleRule": "Action = Start"
+      "visibleRule": "action = Start"
     },
     {
-      "name": "FiltersStart",
+      "name": "filtersStart",
       "type": "string",
-      "label": "ms-resource:loc.input.label.FiltersStart",
+      "label": "ms-resource:loc.input.label.filtersStart",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.FiltersStart",
-      "visibleRule": "Action = Start"
+      "helpMarkDown": "ms-resource:loc.input.help.filtersStart",
+      "visibleRule": "action = Start"
     },
     {
-      "name": "ResourceFilteringMethodStop",
+      "name": "resourceFilteringMethodStop",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethodStop",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethodStop",
       "required": false,
       "defaultValue": "machineNames",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
       },
-      "visibleRule": "Action = Stop"
+      "visibleRule": "action = Stop"
     },
     {
-      "name": "FiltersStop",
+      "name": "filtersStop",
       "type": "string",
-      "label": "ms-resource:loc.input.label.FiltersStop",
+      "label": "ms-resource:loc.input.label.filtersStop",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.FiltersStop",
-      "visibleRule": "Action = Stop"
+      "helpMarkDown": "ms-resource:loc.input.help.filtersStop",
+      "visibleRule": "action = Stop"
     },
     {
-      "name": "ResourceFilteringMethodRestart",
+      "name": "resourceFilteringMethodRestart",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethodRestart",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethodRestart",
       "required": false,
       "defaultValue": "machineNames",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
       },
-      "visibleRule": "Action = Restart"
+      "visibleRule": "action = Restart"
     },
     {
-      "name": "FiltersRestart",
+      "name": "filtersRestart",
       "type": "string",
-      "label": "ms-resource:loc.input.label.FiltersRestart",
+      "label": "ms-resource:loc.input.label.filtersRestart",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.FiltersRestart",
-      "visibleRule": "Action = Restart"
+      "helpMarkDown": "ms-resource:loc.input.help.filtersRestart",
+      "visibleRule": "action = Restart"
     },
     {
-      "name": "ResourceFilteringMethodDelete",
+      "name": "resourceFilteringMethodDelete",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethodDelete",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethodDelete",
       "required": false,
       "defaultValue": "machineNames",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
       },
-      "visibleRule": "Action = Delete"
+      "visibleRule": "action = Delete"
     },
     {
-      "name": "FiltersDelete",
+      "name": "filtersDelete",
       "type": "string",
-      "label": "ms-resource:loc.input.label.FiltersDelete",
+      "label": "ms-resource:loc.input.label.filtersDelete",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.FiltersDelete",
-      "visibleRule": "Action = Delete"
+      "helpMarkDown": "ms-resource:loc.input.help.filtersDelete",
+      "visibleRule": "action = Delete"
     },
     {
       "name": "location",
@@ -163,7 +163,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "Action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "csmFile",
@@ -172,7 +172,7 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.csmFile",
-      "visibleRule": "Action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "csmParametersFile",
@@ -181,7 +181,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
-      "visibleRule": "Action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "overrideParameters",
@@ -190,7 +190,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
-      "visibleRule": "Action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "vmCreds",

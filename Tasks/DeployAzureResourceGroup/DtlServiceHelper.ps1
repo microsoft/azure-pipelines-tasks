@@ -231,7 +231,7 @@ function Get-MachineGroupWithFilteredResources
           [string]$filters,
           [string]$resourceFilteringMethod)
             
-    Write-Verbose "Machine Group name is or Environemnt: $machineGroupName" -Verbose
+    Write-Verbose "Machine Group name is : $machineGroupName" -Verbose
     $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
 
     if($resourceFilteringMethod -eq "tags")
@@ -257,11 +257,11 @@ function Get-MachineGroup
 {
     param([string]$machineGroupName,
           [string]$filters,
-          [string]$resourceFilteringMethod)    
-    
+          [string]$resourceFilteringMethod)
+
         Write-Verbose "Getting the machine group $machineGroupName" -Verbose
         $environment = Get-MachineGroupWithFilteredResources -machineGroupName $machineGroupName -filters $filters -resourceFilteringMethod $resourceFilteringMethod
-        
+
         Write-Verbose "Retrieved the machine group"
 
     return $environment
@@ -273,11 +273,11 @@ function Delete-MachineGroup
           [string]$filters)
 
     Write-Verbose "Deleting machine group $machineGroupName" -Verbose
-    # If filters are not provided then it deltes entire machine group. If filters are given then it will delete all the machines satisfing the given filters.
+    # If filters are not provided then it deletes entire machine group. If filters are given then it will delete all the machines satisfying the given filters.
     if($filters)
     {
         Remove-EnvironmentResources -EnvironmentName $machineGroupName -Filters $filters -Connection $connection -ErrorAction Stop -Verbose
-        Write-Verbose "Removed machines of the machine group $machineGroupName" -Verbose
+        Write-Verbose "Removed machines from the machine group $machineGroupName" -Verbose
     }
     else
     {
@@ -324,49 +324,6 @@ function End-MachineOperation
     Write-Verbose "Saving $operationName details for machine $machineName in machine group $machineGroupName" -Verbose
     Complete-EnvironmentResourceOperation -EnvironmentName $machineGroupName -ResourceName $machineName -EnvironmentOperationId $operationId -Status $status -Connection $connection -ErrorAction SilentlyContinue -Verbose
     Write-Verbose "Completed $operationName for the machine $machineName in machine group $machineGroupName" -Verbose
-}
-
-function Invoke-WithRetry {
-    param(    
-    [Parameter(Mandatory)]$Command,
-    [Parameter(Mandatory)]$RetryDurationInMinutes = 30,
-    [Parameter(Mandatory)]$OperationDetail,
-    $RetryDelayInSeconds = 30)
-    
-    $ErrorActionPreference = 'Stop'
-    $currentRetry = 0
-    $endTime = [System.DateTime]::UtcNow.AddMinutes($RetryDurationInMinutes)
-    $success = $false
-
-    do {
-        try
-        {
-            $result = & $Command
-            return $result
-        }
-        catch [System.Exception]
-        {
-            if ($_.Exception.GetType().FullName -eq "Microsoft.VisualStudio.Services.DevTestLabs.Client.DtlReservationAccessException")
-            {
-                $currentTime = [System.DateTime]::UtcNow
-                $currentRetry = $currentRetry + 1
-            
-                if ($currentTime -gt $endTime)
-                {
-                    throw $_
-                } 
-                else 
-                {             
-                    Write-Warning (Get-LocalizedString -Key "Operation {0} failed: {1}. Retrying after {2} second(s)" -ArgumentList $OperationDetail, $_.Exception.Message, $RetryDelayInSeconds)
-                    Start-Sleep -s $RetryDelayInSeconds
-                }
-            }
-            else
-            {
-                throw $_
-            }
-        }
-    } while (!$success);
 }
 
 function Initialize-DTLServiceHelper
