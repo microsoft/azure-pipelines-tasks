@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Windows Machine File Copy",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
+  "loc.helpMarkDown": "[More Information](http://aka.ms/windowsfilecopyreadme)",
   "loc.description": "Copy files to remote machine(s)",
   "loc.instanceNameFormat": "Copy files to $(EnvironmentName)",
   "loc.group.displayName.advanced": "Advanced",

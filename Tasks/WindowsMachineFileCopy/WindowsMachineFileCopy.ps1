@@ -25,6 +25,8 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
+$sourcePath = $sourcePath.Trim('"')
+$targetPath = $targetPath.Trim('"')
 
 # Default + constants #
 $defaultWinRMPort = '5985'
@@ -44,9 +46,9 @@ $envOperationStatus = 'Passed'
 
 function ThrowError
 {
-	param([string]$errorMessage)
-	
-        $readmelink = "https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md"
+    param([string]$errorMessage)
+    
+        $readmelink = "http://aka.ms/windowsfilecopyreadme"
         $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
         throw "$errorMessage $helpMessage"
 }
@@ -74,21 +76,21 @@ function Get-SkipCACheckOption
 function Get-ResourceConnectionDetails
 {
     param([object]$resource)
-	
-	$resourceProperties = @{}
-	
-	$resourceName = $resource.Name
-	$resourceId = $resource.Id
-	
+
+    $resourceProperties = @{}
+
+    $resourceName = $resource.Name
+    $resourceId = $resource.Id
+
     Write-Verbose "`t`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
-	$fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceId $resourceId -ErrorAction Stop
+    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceId $resourceId -ErrorAction Stop
     Write-Verbose "`t`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
-	
-	Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose	
-		
-	$resourceProperties.fqdn = $fqdn
-	
-	$winrmPortToUse = ''
+
+    Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose	
+
+    $resourceProperties.fqdn = $fqdn
+
+    $winrmPortToUse = ''
     $protocolToUse = ''
 
     # check whether http port is defined for resource
@@ -124,37 +126,37 @@ function Get-ResourceConnectionDetails
         $winrmPortToUse = $winrmHttpPort
         $protocolToUse = $useHttpProtocolOption
     }
-	
-	$resourceProperties.winrmPort = $winrmPortToUse
+    
+    $resourceProperties.winrmPort = $winrmPortToUse
     $resourceProperties.httpProtocolOption = $protocolToUse
-	$resourceProperties.credential = Get-ResourceCredentials -resource $resource
-	$resourceProperties.displayName = $fqdn + ":" + $winrmPortToUse
-	
-	return $resourceProperties
+    $resourceProperties.credential = Get-ResourceCredentials -resource $resource
+    $resourceProperties.displayName = $fqdn + ":" + $winrmPortToUse
+
+    return $resourceProperties
 }
 
 function Get-ResourcesProperties
 {
     param([object]$resources)
-	
-	$skipCACheckOption = Get-SkipCACheckOption -environmentName $environmentName -connection $connection
 
-	[hashtable]$resourcesPropertyBag = @{}
-	
-	foreach ($resource in $resources)
+    $skipCACheckOption = Get-SkipCACheckOption -environmentName $environmentName -connection $connection
+
+    [hashtable]$resourcesPropertyBag = @{}
+
+    foreach ($resource in $resources)
     {
-		$resourceName = $resource.Name
-		$resourceId = $resource.Id
-		Write-Verbose "Get Resource properties for $resourceName (ResourceId = $resourceId)" -Verbose		
-		
-		# Get other connection details for resource like - fqdn wirmport, http protocol, skipCACheckOption, resource credentials
+        $resourceName = $resource.Name
+        $resourceId = $resource.Id
+        Write-Verbose "Get Resource properties for $resourceName (ResourceId = $resourceId)" -Verbose		
 
-		$resourceProperties = Get-ResourceConnectionDetails -resource $resource
-		$resourceProperties.skipCACheckOption = $skipCACheckOption
-		
-		$resourcesPropertyBag.Add($resourceId, $resourceProperties)
-	}
-	 return $resourcesPropertyBag
+        # Get other connection details for resource like - fqdn wirmport, http protocol, skipCACheckOption, resource credentials
+
+        $resourceProperties = Get-ResourceConnectionDetails -resource $resource
+        $resourceProperties.skipCACheckOption = $skipCACheckOption
+        
+        $resourcesPropertyBag.Add($resourceId, $resourceProperties)
+    }
+    return $resourcesPropertyBag
 }
 
 function Get-WellFormedTagsList
@@ -222,14 +224,14 @@ $resourcesPropertyBag = Get-ResourcesProperties -resources $resources
 if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
     foreach($resource in $resources)
-    {		
-		$resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-		
+    {
+        $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
+
         $machine = $resourceProperties.fqdn
-		$displayName = $resourceProperties.displayName
-		
+        $displayName = $resourceProperties.displayName
+
         Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $displayName)
-		
+
         $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
        
         $status = $copyResponse.Status
@@ -239,11 +241,11 @@ if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 
         if($status -ne "Passed")
         {
-			Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
+            Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
             Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection -ErrorAction Stop
-			Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
+            Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
 
-			Write-Verbose $copyResponse.Error.ToString() -Verbose
+            Write-Verbose $copyResponse.Error.ToString() -Verbose
             $errorMessage =  $copyResponse.Error.Message
             ThrowError -errorMessage $errorMessage
         }
@@ -256,11 +258,11 @@ else
 
     foreach($resource in $resources)
     {
-		$resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-		
+        $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
+
         $machine = $resourceProperties.fqdn
-		$displayName = $resourceProperties.displayName
-		
+        $displayName = $resourceProperties.displayName
+
         Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $displayName)
 
         $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption
@@ -278,12 +280,12 @@ else
                  $output = Receive-Job -Id $job.Id
                  Remove-Job $Job
                  $status = $output.Status
-				 
-				 $displayName = $Jobs.Item($job.Id).displayName
-				 $resOperationId = $Jobs.Item($job.Id).resOperationId
+
+                 $displayName = $Jobs.Item($job.Id).displayName
+                 $resOperationId = $Jobs.Item($job.Id).resOperationId
 
                  Write-ResponseLogs -operationName "copy" -fqdn $displayName -deploymentResponse $output
-				 
+
                  Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
 
                  if($status -ne "Passed")

@@ -45,6 +45,8 @@ $scriptArguments = "-sqlPackageArguments $sqlPackageArguments"
 
 $errorMessage = [string]::Empty
 
+Write-Output ( Get-LocalizedString -Key "Starting deployment of Sql Dacpac File : {0}" -ArgumentList $dacpacFile)
+
 if($resourceFilteringMethod -eq "tags")
 {
     $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
@@ -56,7 +58,9 @@ else
 
 if(-not [string]::IsNullOrEmpty($errorMessage))
 {
-    $readmelink = "http://aka.ms/sqlazuredeployreadme"
+    $readmelink = "http://aka.ms/sqlserverdacpackreadme"
     $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
     throw "$errorMessage $helpMessage"
 }
+
+Write-Output ( Get-LocalizedString -Key "Successfully deployed Sql Dacpac File : {0}" -ArgumentList $dacpacFile)
