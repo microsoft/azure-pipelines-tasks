@@ -414,7 +414,7 @@ function Delete-MachinesHelper
     Write-Verbose "Entered delete machines for the machine group $machineGroupName" -Verbose
 
     # If filters are not provided then deletes the entire machine group.
-    if(! $Filters)
+    if(! $filters)
     {
        Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
     }

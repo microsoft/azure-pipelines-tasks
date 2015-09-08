@@ -230,7 +230,7 @@ function Get-MachineGroupWithFilteredResources
     param([string]$machineGroupName,
           [string]$filters,
           [string]$resourceFilteringMethod)
-            
+
     Write-Verbose "Machine Group name is : $machineGroupName" -Verbose
     $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
 

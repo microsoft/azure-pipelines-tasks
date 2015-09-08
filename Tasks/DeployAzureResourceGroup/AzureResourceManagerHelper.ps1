@@ -338,7 +338,6 @@ function Get-MachinesFqdnsForLB
                 }
             }
         }
-
     }
 
     Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
@@ -385,7 +384,6 @@ function Get-MachinesFqdns
         }
 
         $fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
-    
     }
 
     Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
