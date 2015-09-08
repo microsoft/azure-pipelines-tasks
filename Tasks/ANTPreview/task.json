@@ -84,7 +84,7 @@
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "NoCoverage",
-            "helpMarkDown": "Select the tool for evaluating code coverage. Only Jacoco support available currently. Jacocoant.jar should be present in lib folder of Ant installation.",
+            "helpMarkDown": "Select the code coverage tool. Please make sure jacocoant.jar is available in lib folder of Ant installation.",
             "options": {
                 "NoCoverage": "No Coverage",
                 "JaCoCo": "JaCoCo"
@@ -93,7 +93,7 @@
         {
             "name": "classfilesDirectory",
             "type": "string",
-            "label": "Class files Directory",
+            "label": "Class Files Directory",
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
@@ -103,7 +103,7 @@
         {
             "name": "classFilter",
             "type": "string",
-            "label": "Class Inclusion/Exclusion",
+            "label": "Class Inclusion/Exclusion Filters",
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
@@ -113,7 +113,7 @@
         {
             "name": "srcDirectory",
             "type": "string",
-            "label": "Source directory",
+            "label": "Source Files Directory",
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
