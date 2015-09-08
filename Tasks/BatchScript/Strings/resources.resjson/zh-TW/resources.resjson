@@ -11,7 +11,7 @@
   "loc.input.label.modifyEnvironment": "修改環境",
   "loc.input.help.modifyEnvironment": "判斷環境變數修改是否會影響後續工作。",
   "loc.input.label.workingFolder": "工作資料夾",
-  "loc.input.help.workingFolder": "執行指令碼時的目前工作目錄。預設為指令碼所在的資料夾。",
+  "loc.input.help.workingFolder": "執行指令碼後的目前工作目錄。預設為指令碼所在的資料夾。",
   "loc.input.label.failOnStandardError": "發生標準錯誤的失敗",
-  "loc.input.help.failOnStandardError": "如果為 true，則任何錯誤寫入至 StandardError 資料流時，此工作會失敗。"
+  "loc.input.help.failOnStandardError": "如果為 true，則任何錯誤寫入至 StandardError 資料流時，此工作將會失敗。"
 }

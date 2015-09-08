@@ -2,7 +2,7 @@
   "loc.friendlyName": "Compilación de Xcode",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Compile un área de trabajo de Xcode en Mac OS",
-  "loc.instanceNameFormat": "$(actions) de XCode",
+  "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.xcWorkspacePath": "Ruta de acceso del área de trabajo",
   "loc.input.help.xcWorkspacePath": "Ruta de acceso relativa de la raíz del repositorio donde está la carpeta xcworkspace.",

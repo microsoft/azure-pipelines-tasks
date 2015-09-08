@@ -5,10 +5,10 @@
   "loc.instanceNameFormat": "Ejecutar $(filename)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.filename": "Herramienta",
-  "loc.input.help.filename": "Nombre de la herramienta que se va a ejecutar. La herramienta debe estar en una ruta de acceso o poder resolverse en una. Opcionalmente, también puede indicar una ruta de acceso completa pero esto depende de si hay alguna en el agente.",
+  "loc.input.help.filename": "Nombre de la herramienta que se va a ejecutar. La herramienta debe estar en la ruta de acceso. Opcionalmente, también puede indicar una ruta de acceso completa, pero esto depende de si hay alguna en el agente.<br/> Nota: Puede usar **$(agent.builddirectory)**\\\\... si desea que la ruta sea relativa al repositorio.",
   "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Arguments passed to the tool",
   "loc.input.label.workingFolder": "Carpeta de trabajo",
-  "loc.input.help.workingFolder": "Argumentos pasados a la herramienta",
   "loc.input.label.failOnStandardError": "Error en Error estándar",
   "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."
 }

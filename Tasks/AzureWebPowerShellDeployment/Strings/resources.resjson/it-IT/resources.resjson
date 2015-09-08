@@ -1,16 +1,16 @@
 {
-  "loc.friendlyName": "Distribuzione sito Web di Azure",
+  "loc.friendlyName": "Distribuzione app Web di Azure",
   "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613750)",
-  "loc.description": "Consente di distribuire un sito Web in Microsoft Azure",
+  "loc.description": "Consente di pubblicare un progetto Web di Visual Studio in un'app Web di Microsoft Azure con Distribuzione Web",
   "loc.instanceNameFormat": "Distribuzione Azure: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
   "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure usata come destinazione della distribuzione.",
-  "loc.input.label.WebSiteLocation": "Percorso sito Web",
+  "loc.input.label.WebSiteName": "Nome app Web",
+  "loc.input.label.WebSiteLocation": "Percorso app Web",
   "loc.input.help.WebSiteLocation": "Selezionare un'area per la distribuzione.",
-  "loc.input.label.WebSiteName": "Nome del sito Web",
   "loc.input.label.Slot": "Slot",
   "loc.input.help.Slot": "Slot",
-  "loc.input.label.Package": "Pacchetto",
-  "loc.input.help.Package": "Percorso del pacchetto nella directory predefinita dell'elemento.",
+  "loc.input.label.Package": "Pacchetto Distribuzione Web",
+  "loc.input.help.Package": "Percorso al pacchetto Distribuzione Web di Visual Studio nella directory di elementi predefiniti.",
   "loc.input.label.AdditionalArguments": "Argomenti aggiuntivi"
 }

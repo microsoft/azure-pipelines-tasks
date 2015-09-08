@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "ファイルを cURL でアップロード",
-  "loc.description": "cURL を使用して、サポートするプロトコル (FTP、FTPS、SFTP、HTTP など) でファイルをアップロードします。",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.description": "cURL を使用して、サポートされているプロトコル (FTP、FTPS、SFTP、HTTP など) でファイルをアップロードします。",
   "loc.instanceNameFormat": "cURL で $(files) をアップロード",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.files": "ファイル",
@@ -13,6 +14,6 @@
   "loc.input.help.url": "ファイルのアップロード先の URL を指定します。ディレクトリは末尾のスラッシュで終わる必要があります。使用可能なプロトコルは DICT、FILE、FTP、FTPS、GOPHER、HTTP、HTTPS、IMAP、IMAPS、LDAP、LDAPS、POP3、POP3S、RTMP、RTSP、SCP、SFTP、SMTP、SMTPS、TELNET、および TFTP などです。",
   "loc.input.label.options": "オプションの引数",
   "loc.input.help.options": "cURL に渡す追加の引数。",
-  "loc.input.label.redirectStderr": "標準エラーを標準出力にリダイレクトします。",
+  "loc.input.label.redirectStderr": "標準エラーを標準出力にリダイレクトします",
   "loc.input.help.redirectStderr": "'--stderr -' を cURL に追加します。既定では、cURL は stderr に進行状況バーを書き込み、ビルドはそれをエラー出力と見なします。この動作を抑制します。"
 }

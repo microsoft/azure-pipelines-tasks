@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Compilazione Visual Studio",
   "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Consente di compilare con MSBuild al prompt dei comandi per gli sviluppatori di Visual Studio",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property",
   "loc.instanceNameFormat": "Compila la soluzione $(solution)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.solution": "Soluzione",
@@ -12,16 +12,9 @@
   "loc.input.label.configuration": "Configurazione",
   "loc.input.label.clean": "Pulisci",
   "loc.input.label.restoreNugetPackages": "Ripristina pacchetti NuGet",
-  "loc.input.label.vsLocationMethod": "Visual Studio",
   "loc.input.label.vsVersion": "Versione Visual Studio",
-  "loc.input.label.vsLocation": "Percorso Visual Studio",
-  "loc.input.help.vsLocation": "Consente, facoltativamente, di specificare il percorso di installazione di Visual Studio, usato per individuare il file batch del prompt dei comandi per gli sviluppatori. Per impostazione predefinita, verrà cercata la versione più recente.",
-  "loc.input.label.msbuildLocationMethod": "MSBuild",
-  "loc.input.label.msbuildVersion": "Versione MSBuild",
-  "loc.input.help.msbuildVersion": "Versione di MSBuild da eseguire. Per impostazione predefinita, verrà cercata la versione più recente.",
+  "loc.input.help.vsVersion": "Se la versione preferita non viene trovata, verrà usata la versione più recente.",
   "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
   "loc.input.help.msbuildArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di MSBuild da eseguire.",
-  "loc.input.label.msbuildLocation": "Percorso di MSBuild",
-  "loc.input.help.msbuildLocation": "Consente, facoltativamente, di specificare il percorso di MSBuild. Per impostazione predefinita, verrà cercata la versione più recente.",
   "loc.input.label.logProjectEvents": "Registra dettagli progetto"
 }

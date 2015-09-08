@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "아티팩트 게시: $(ArtifactName)",
   "loc.input.label.CopyRoot": "루트 복사",
   "loc.input.help.CopyRoot": "사본 패턴을 적용할 루트 폴더입니다. 비어 있으면 리포지토리의 루트입니다. 빌드 단계가 리포지토리의 외부에서 빌드 중일 경우 변수를 사용하세요. 예: $(agent.builddirectory)",
-  "loc.input.label.Contents": "콘텐츠",
+  "loc.input.label.Contents": "내용물",
   "loc.input.help.Contents": "아티팩트의 일부로 포함할 파일 또는 폴더 경로이며, 여러 줄이나 minimatch 패턴을 지원합니다. [자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.input.label.ArtifactName": "아티팩트 이름",
   "loc.input.help.ArtifactName": "만들 아티팩트의 이름입니다.",

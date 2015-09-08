@@ -2,9 +2,9 @@
   "loc.friendlyName": "CMake",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Mit dem plattformübergreifenden CMake-Buildsystem erstellen",
-  "loc.instanceNameFormat": "CMake $(args)",
+  "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Ausführung von CMake.",
-  "loc.input.label.args": "Argumente",
-  "loc.input.help.args": "An CMake übergebene Argumente"
+  "loc.input.label.cmakeArgs": "Argumente",
+  "loc.input.help.cmakeArgs": "An CMake übergebene Argumente"
 }

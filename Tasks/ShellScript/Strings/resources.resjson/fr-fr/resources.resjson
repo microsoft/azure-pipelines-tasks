@@ -11,5 +11,5 @@
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script.",
   "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
-  "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError."  
+  "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError."
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio 빌드",
   "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Visual Studio 개발자 명령 프롬프트에서 MSBuild로 빌드",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property",
   "loc.instanceNameFormat": "솔루션 $(solution) 빌드",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.solution": "솔루션",
@@ -12,16 +12,9 @@
   "loc.input.label.configuration": "구성",
   "loc.input.label.clean": "클린",
   "loc.input.label.restoreNugetPackages": "NuGet 패키지 복원",
-  "loc.input.label.vsLocationMethod": "Visual Studio",
   "loc.input.label.vsVersion": "Visual Studio 버전",
-  "loc.input.label.vsLocation": "Visual Studio 위치",
-  "loc.input.help.vsLocation": "원하는 경우 개발자 명령 프롬프트 일괄 처리 파일을 찾는 데 사용되는 Visual Studio 설치 위치의 경로를 제공하세요. 기본값은 최신 버전 검색입니다.",
-  "loc.input.label.msbuildLocationMethod": "MSBuild",
-  "loc.input.label.msbuildVersion": "MSBuild 버전",
-  "loc.input.help.msbuildVersion": "실행할 MSBuild의 버전입니다. 기본적으로 최신 버전을 검색합니다.",
+  "loc.input.help.vsVersion": "기본 설정 버전을 찾을 수 없는 경우 발견된 최신 버전이 대신 사용됩니다.",
   "loc.input.label.msbuildArchitecture": "MSBuild 아키텍처",
   "loc.input.help.msbuildArchitecture": "원하는 경우 실행할 MSBuild의 아키텍처(x86, x64)를 제공하세요.",
-  "loc.input.label.msbuildLocation": "MSBuild 경로",
-  "loc.input.help.msbuildLocation": "원하는 경우 MSBuild의 경로를 제공하세요. 기본값은 최신 버전 검색입니다.",
   "loc.input.label.logProjectEvents": "프로젝트 정보 기록"
 }

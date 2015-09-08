@@ -13,7 +13,7 @@
   "loc.input.label.user": "ユーザーの電子メール",
   "loc.input.help.user": "このテストの実行に使用するユーザー名。",
   "loc.input.label.devices": "デバイス",
-  "loc.input.help.devices": "デバイス文字列は、Xamarin Test Cloud によって生成されます。これは Test Cloud テスト実行の --devices コマンド ライン 引数の値として参照できます。",
+  "loc.input.help.devices": "デバイス文字列は、Xamarin Test Cloud によって生成されます。これは Test Cloud テスト実行の --devices コマンド ライン引数の値として参照できます。",
   "loc.input.label.series": "系列",
   "loc.input.help.series": "テスト実行を編成するためのシリーズ名 (たとえば、master、production、beta)。",
   "loc.input.label.testDir": "テスト アセンブリ ディレクトリ",

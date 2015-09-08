@@ -2,7 +2,7 @@
   "loc.friendlyName": "Maven",
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Générer avec Apache Maven",
-  "loc.instanceNameFormat": "Maven $(args)",
+  "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "Résultats du test JUnit",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.mavenPOMFile": "Fichier POM Maven",
@@ -12,9 +12,13 @@
   "loc.input.label.publishJUnitResults": "Publier dans VSO/TFS",
   "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats du test JUnit produits par la build Maven dans VSO/TFS. Chaque fichier de résultats de test qui correspond aux 'Fichiers de résultats du test' est publié en tant que série de tests dans VSO/TFS.",
   "loc.input.label.testResultsFiles": "Fichiers des résultats des tests",
-  "loc.input.help.testResultsFiles": "Chemin d'accès aux fichiers de résultats de test. Les caractères génériques sont autorisés. Par exemple, '**/TEST-*.xml' pour tous les fichiers xml dont le nom commence par TEST-.",
+  "loc.input.help.testResultsFiles": "Chemin d'accès des fichiers de résultats de test. Les caractères génériques sont autorisés. Par exemple, '**/TEST-*.xml' pour tous les fichiers xml dont le nom commence par TEST-.",
+  "loc.input.label.javaHomeSelection": "Set JAVA_HOME by",
+  "loc.input.help.javaHomeSelection": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
   "loc.input.label.jdkVersion": "Version de JDK",
   "loc.input.help.jdkVersion": "Essaiera de découvrir le chemin d'accès à la version du JDK sélectionné et définira JAVA_HOME en conséquence.",
+  "loc.input.label.jdkUserInputPath": "JDK Path",
+  "loc.input.help.jdkUserInputPath": "Sets JAVA_HOME to the given path.",
   "loc.input.label.jdkArchitecture": "Architecture de JDK",
   "loc.input.help.jdkArchitecture": "Indiquez éventuellement l'architecture (x86, x64) du JDK."
 }

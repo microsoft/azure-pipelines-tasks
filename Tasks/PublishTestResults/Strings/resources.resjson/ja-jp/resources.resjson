@@ -7,7 +7,7 @@
   "loc.input.label.testRunner": "テスト結果の形式",
   "loc.input.help.testRunner": "選択するテスト ランナーで生成するテスト結果の形式。たとえば、JUnit、VSTest など。",
   "loc.input.label.testResultsFiles": "テスト結果のファイル",
-  "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます。たとえば、名前が TEST で始まるすべての xml ファイルの場合は `**\\*TEST-*.xml` となります。",
+  "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます。たとえば、名前が TEST- で始まるすべての xml ファイルの場合は `**/TEST-*.xml` です。",
   "loc.input.label.mergeTestResults": "テスト結果の結合",
   "loc.input.help.mergeTestResults": "すべてのテスト結果ファイルの結果を TFS/VSO での 1 つのテスト実行に結合するには、このオプションをオンにします。テスト結果ファイルごとにテスト実行を作成するには、このオプションをオフにします。",
   "loc.input.label.platform": "プラットフォーム",

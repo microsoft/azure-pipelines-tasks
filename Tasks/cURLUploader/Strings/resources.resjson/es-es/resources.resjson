@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "Cargar archivos con cURL",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Use cURL para cargar archivos con los protocolos admitidos (FTP, FTPS, SFTP, HTTP, etc.).",
   "loc.instanceNameFormat": "Cargar $(files) con cURL",
   "loc.group.displayName.advanced": "Avanzado",
@@ -10,7 +11,7 @@
   "loc.input.label.password": "Contraseña",
   "loc.input.help.password": "Especifique la contraseña que se va a usar para la autenticación de servidor. La contraseña tiene que hacer referencia a una variable secreta definida en la pestaña de variables.",
   "loc.input.label.url": "Dirección URL",
-  "loc.input.help.url": "Especifique la dirección URL a la que se van a cargar los archivos. El directorio debe finalizar con una barra diagonal. Los protocolos posibles son DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET y TFTP.",
+  "loc.input.help.url": "Especifique la dirección URL en la que se van a cargar los archivos. El directorio debe finalizar con una barra diagonal. Los protocolos posibles son DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET y TFTP.",
   "loc.input.label.options": "Argumentos opcionales",
   "loc.input.help.options": "Argumentos adicionales que se van a pasar a cURL.",
   "loc.input.label.redirectStderr": "Redirigir error estándar a resultado estándar",

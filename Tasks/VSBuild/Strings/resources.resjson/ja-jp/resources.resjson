@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio のビルド",
   "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Visual Studio 開発者コマンド プロンプトで MSBuild を使用してビルドします",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property",
   "loc.instanceNameFormat": "ソリューション $(solution) のビルド",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.solution": "ソリューション",
@@ -12,16 +12,9 @@
   "loc.input.label.configuration": "構成",
   "loc.input.label.clean": "クリーン",
   "loc.input.label.restoreNugetPackages": "NuGet パッケージの復元",
-  "loc.input.label.vsLocationMethod": "Visual Studio",
   "loc.input.label.vsVersion": "Visual Studio のバージョン",
-  "loc.input.label.vsLocation": "Visual Studio の場所",
-  "loc.input.help.vsLocation": "オプションで、開発者コマンド プロンプトのバッチ ファイルを見つけるために使用される、Visual Studio のインストール場所へのパスを指定します。指定しない場合は、最新のバージョンが検索されます。",
-  "loc.input.label.msbuildLocationMethod": "MSBuild",
-  "loc.input.label.msbuildVersion": "MSBuild のバージョン",
-  "loc.input.help.msbuildVersion": "実行する MSBuild のバージョン。指定しない場合は、最新のバージョンが検索されます。",
+  "loc.input.help.vsVersion": "優先するバージョンが見つからない場合は、見つかった最新のバージョンが代わりに使用されます。",
   "loc.input.label.msbuildArchitecture": "MSBuild アーキテクチャ",
   "loc.input.help.msbuildArchitecture": "(省略可能) 実行する MSBuild のアーキテクチャ (x86、x64) を指定します。",
-  "loc.input.label.msbuildLocation": "MSBuild へのパス",
-  "loc.input.help.msbuildLocation": "オプションで、MSBuild へのパスを指定します。指定しない場合は、最新のバージョンが検索されます。",
-  "loc.input.label.logProjectEvents": "プロジェクト詳細の報告"
+  "loc.input.label.logProjectEvents": "プロジェクトの詳細の記録"
 }

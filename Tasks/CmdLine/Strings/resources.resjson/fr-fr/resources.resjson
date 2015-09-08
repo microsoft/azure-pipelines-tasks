@@ -5,10 +5,10 @@
   "loc.instanceNameFormat": "Exécuter $(filename)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.filename": "Outil",
-  "loc.input.help.filename": "Nom de l'outil à exécuter. L'outil doit se trouver dans le chemin d'accès ou être accessible via ce dernier. Éventuellement, un chemin d'accès complet peut être indiqué, mais cela suppose qu'il est présent sur l'agent.",
+  "loc.input.help.filename": "Nom de l'outil à exécuter. L'outil doit se trouver dans votre chemin d'accès. Éventuellement, un chemin d'accès complet peut être indiqué, mais cela suppose qu'il soit présent sur l'agent.<br/> Remarque : vous pouvez utiliser **$(agent.builddirectory)**\\\\... si vous voulez le chemin d'accès relatif au référentiel.",
   "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments passed to the tool",
   "loc.input.label.workingFolder": "Dossier de travail",
-  "loc.input.help.workingFolder": "Arguments passés à l'outil",
   "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
   "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError."
 }

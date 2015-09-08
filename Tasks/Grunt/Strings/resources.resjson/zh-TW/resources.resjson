@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Grunt",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "JavaScript 工作執行器",
+  "loc.instanceNameFormat": "grunt $(targets)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.gruntFile": "Grunt 檔案路徑",
+  "loc.input.help.gruntFile": "要執行之 grunt 檔案指令檔儲存機制根目錄的相對路徑。",
+  "loc.input.label.targets": "Grunt 工作",
+  "loc.input.help.targets": "可省略。以空格分隔要執行之工作的清單。若未指定，將會執行預設工作。",
+  "loc.input.label.arguments": "引數",
+  "loc.input.help.arguments": "傳遞給 grunt 的額外引數。  因為 --gruntfile 已經由前述的 gruntFile 輸入加入，所以無須再提供。",
+  "loc.input.label.cwd": "工作目錄",
+  "loc.input.help.cwd": "執行指令碼時的目前工作目錄。預設為指令碼所在的資料夾。"
+}

@@ -8,7 +8,7 @@
   "loc.input.label.files": "APK-Dateien",
   "loc.input.help.files": "Relativer Pfad vom Repositorystamm der Dateien. Platzhalter können verwendet werden. Beispiel: \"**\\bin\\*.apk\" für alle APK-Dateien im Unterordner \"bin\".",
   "loc.input.label.jarsign": "APK signieren",
-  "loc.input.label.keystoreFile": "Keystore-Datei",
+  "loc.input.label.keystoreFile": "KeyStore-Datei",
   "loc.input.help.keystoreFile": "Vollständiger Pfad zur KeyStore-Datei.",
   "loc.input.label.keystorePass": "Keystore-Kennwort",
   "loc.input.label.keystoreAlias": "Alias",

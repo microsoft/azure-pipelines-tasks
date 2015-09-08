@@ -6,12 +6,10 @@
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.solution": "ソリューションへの引数",
   "loc.input.help.solution": "Visual Studio のソリューション ファイルへのパス",
-  "loc.input.label.excludeVersion": "バージョンの除外",
-  "loc.input.help.excludeVersion": "NuGet でパッケージのフォルダー名からパッケージのバージョンを除外します。-ExcludeVersion NuGet.exe コマンド ライン引数と同等です。",
   "loc.input.label.noCache": "ローカル キャッシュの無効化",
-  "loc.input.help.noCache": "-NoCache NuGet.exe コマンドライン引数と同等です。",
+  "loc.input.help.noCache": "-NoCache NuGet.exe コマンドライン引数と同等です",
   "loc.input.label.nuGetRestoreArgs": "NuGet の引数",
-  "loc.input.help.nuGetRestoreArgs": "NuGet.exe restore に渡す追加の引数。",
+  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "NuGet.exe へのパス",
   "loc.input.help.nuGetPath": "(省略可能) NuGet.exe へのパスを指定します。"
 }

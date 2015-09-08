@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "Chemin d'accès à CsCfg dans le répertoire de l'artefact par défaut.",
   "loc.input.label.Slot": "Environnement (emplacement)",
   "loc.input.help.Slot": "**Production** ou **Intermédiaire**",
+  "loc.input.label.DeploymentLabel": "Étiquette du déploiement",
+  "loc.input.help.DeploymentLabel": "Spécifie le nom d'étiquette pour le nouveau déploiement. À défaut de spécification, un identificateur global unique (GUID) est utilisé.",
+  "loc.input.label.AppendDateTimeToLabel": "Ajouter date et heure actuelles",
+  "loc.input.help.AppendDateTimeToLabel": "Ajoute la date et l'heure actuelles à l'étiquette du déploiement",
   "loc.input.label.AllowUpgrade": "Autoriser la mise à niveau"
 }

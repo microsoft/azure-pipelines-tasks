@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "cURL 파일 업로드",
-  "loc.description": "cURL을 사용하여 지원되는 프로토콜이 있는 파일을 업로드하세요. (FTP, FTPS, SFTP, HTTP 등)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.description": "지원되는 프로토콜(FTP, FTPS, SFTP, HTTP 등)로 cURL을 사용하여 파일을 업로드합니다.",
   "loc.instanceNameFormat": "cURL로 $(files) 업로드",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.files": "파일",
