@@ -7,28 +7,30 @@
     [string]$jdkVersion,
     [string]$jdkArchitecture,
 	
-    [string]$publishCodeCoverageResults,
     [string]$codeCoverageTool,
-    [string]$summaryFileLocation,
-    [string]$reportDirectory,
-    [string]$additionalCodeCoverageFiles
+    [string]$classFilesDirectory,
+    [string]$classFilter,
+    [string]$srcDirectory
 )
 
-Write-Verbose 'Entering Ant.ps1'
-Write-Verbose "antBuildFile = $antBuildFile"
-Write-Verbose "options = $options"
-Write-Verbose "targets = $targets"
-Write-Verbose "publishJUnitResults = $publishJUnitResults"
-Write-Verbose "testResultsFiles = $testResultsFiles"
-Write-Verbose "jdkVersion = $jdkVersion"
-Write-Verbose "jdkArchitecture = $jdkArchitecture"
+Write-Verbose 'Entering Ant.ps1' -Verbose
+Write-Verbose "antBuildFile = $antBuildFile" -Verbose
+Write-Verbose "options = $options" -Verbose
+Write-Verbose "targets = $targets" -Verbose
+Write-Verbose "publishJUnitResults = $publishJUnitResults" -Verbose
+Write-Verbose "testResultsFiles = $testResultsFiles" -Verbose
+Write-Verbose "jdkVersion = $jdkVersion" -Verbose
+Write-Verbose "jdkArchitecture = $jdkArchitecture" -Verbose
 
-Write-Verbose "publishCodeCoverageResults = $publishCodeCoverageResults"
-Write-Verbose "codeCoverageTool = $codeCoverageTool"
-Write-Verbose "summaryFileLocation = $summaryFileLocation"
-Write-Verbose "reportDirectory = $reportDirectory"
-Write-Verbose "additionalCodeCoverageFiles = $additionalCodeCoverageFiles"
-
+$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+if($isCoverageEnabled)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
+    Write-Verbose "classFilesDirectory = $classFilesDirectory" -Verbose
+    Write-Verbose "classFilter = $classFilter" -Verbose
+    Write-Verbose "srcDirectory = $srcDirectory" -Verbose
+}
+	
 #Verify Ant build file is specified
 if(!$antBuildFile)
 {
@@ -50,17 +52,48 @@ if($jdkVersion -and $jdkVersion -ne "default")
 
     Write-Host "Setting JAVA_HOME to $jdkPath"
     $env:JAVA_HOME = $jdkPath
-    Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
+    Write-Verbose "JAVA_HOME set to $env:JAVA_HOME" -Verbose
 }
 
-Write-Verbose "Running Ant..."
+$buildRootPath = Split-Path $antBuildFile -Parent
+$reportDirectoryName = "CodeCoverage"
+$reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+
+if(Test-Path $reportDirectory)
+{
+   # delete any previous code coverage data 
+   rm -r $reportDirectory -force 
+}
+
+$summaryFileName = "summary.xml"
+$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
+$summaryFile = Join-Path $summaryFile $summaryFileName
+# ensuring unique code coverage report task name by using guid
+$CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
+
+if($isCoverageEnabled)
+{
+   # Enable code coverage in build file
+   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SourceDirectory $srcDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask
+   Write-Verbose "code coverage is successfully enabled." -Verbose
+}
+	
+
+Write-Verbose "Running Ant..." -Verbose
 Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets
+
+if($isCoverageEnabled)
+{
+   # run report code coverage task which generates code coverage reports.
+   Write-Verbose "Reporting code coverage" -Verbose
+   Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask
+}
 
 # Publish test results files
 $publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
 if($publishJUnitResultsFromAntBuild)
 {
-   # check for JUnit test result files
+    # check for JUnit test result files
     $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
     if (!$matchingTestResultsFiles)
     {
@@ -68,35 +101,27 @@ if($publishJUnitResultsFromAntBuild)
     }
     else
     {
-        Write-Verbose "Calling Publish-TestResults"
+        Write-Verbose "Calling Publish-TestResults" -Verbose
         Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
     }    
 }
 else
 {
-    Write-Verbose "Option to publish JUnit Test results produced by Ant build was not selected and is being skipped."
+    Write-Verbose "Option to publish JUnit Test results produced by Ant build was not selected and is being skipped." -Verbose
 }
 
-
-if($publishCodeCoverageResults)
+# check if code coverage has been enabled
+if($isCoverageEnabled)
 {
-   # Publish Code Coverage Files
-   $codeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
-   
-   if(-not $codeCoverageFiles)
-   {
-      Write-Warning "No code coverage files matching pattern '$additionalCodeCoverageFiles' were found."  
-   }
-   
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $codeCoverageFiles -Context $distributedTaskContext    
+   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }
 else
 {
-    Write-Verbose "Option to publish CodeCoverage results produced by Maven build was not selected and is being skipped."
+    Write-Verbose "Option to publish CodeCoverage results produced by Maven build was not selected and is being skipped." -Verbose
 }
 
 
-Write-Verbose "Leaving script Ant.ps1"
+Write-Verbose "Leaving script Ant.ps1" -Verbose
 
 
 
