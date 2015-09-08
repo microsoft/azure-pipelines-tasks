@@ -1,7 +1,7 @@
 {
     "id": "B8C7DDE3-ACA0-4D27-B1EF-259806BC31B6",
     "name": "MavenCC",
-    "friendlyName": "Maven With CodeCoverage",
+    "friendlyName": "Maven with CodeCoverage",
     "description": "Build with Apache Maven and check CodeCoverage",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
@@ -10,14 +10,14 @@
                 "Build"
                   ],    
     "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 1
+    },
     "demands" : [
         "maven"
     ],
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 0
-    },
     "minimumAgentVersion": "1.88.0",
     "instanceNameFormat": "MavenCC $(mavenPOMFile)",
     "groups": [
@@ -28,8 +28,8 @@
         },
         {
             "name": "codeCoverage",
-            "displayName": "Publish CodeCoverage Results",
-            "isExpanded": false
+            "displayName": "Code Coverage",
+            "isExpanded": true
         },
         {
             "name":"advanced",
@@ -77,15 +77,6 @@
             "required": true,
             "groupName":"junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
-        },   
-        {
-            "name": "publishCodeCoverageResults",
-            "type": "boolean",
-            "label": "Publish to VSO/TFS",
-            "required": true,
-            "defaultValue": "false",
-            "groupName": "codeCoverage",
-            "helpMarkDown": "Select this option to publish Code Coverage results produced by the Maven build to VSO/TFS.Code Coverage Summary and code Coverage Files would be published to TFS Server"
         },
         {
             "name": "codeCoverageTool",
@@ -93,40 +84,23 @@
             "label": "CodeCoverage Tool",
             "required": false,
             "groupName": "codeCoverage",
-            "defaultValue": "JaCoCo",
-            "helpMarkDown": "Select the tool with which summary files have been generated",
+            "defaultValue": "NoCoverage",
+            "helpMarkDown": "Select the tool for evaluating code coverage. Only Jacoco support available currently.",
             "options": {
+                "NoCoverage": "No Coverage",
                 "JaCoCo": "JaCoCo"
             }
         },
         {
-            "name": "summaryFileLocation",
+            "name": "classFilter",
             "type": "string",
-            "label": "Summary File",
-            "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco\\jacoco.xml",
-            "required": true,
+            "label": "Class Inclusion/Exclusion",
+            "defaultValue": "",
+            "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Path of codecoverage Summary file"
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html.",
+            "visibleRule": "codeCoverageTool = JaCoCo"
         },
-        {
-            "name": "reportDirectory",
-            "type": "string",
-            "label": "Report directory",
-            "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco",
-            "required": true,
-            "groupName": "codeCoverage",
-            "helpMarkDown": "Path of codecoverage report directory"
-        },
-        {
-            "name": "additionalCodeCoverageFiles",
-            "type": "filePath",
-            "label": "Additional files",
-            "defaultValue": "**/*.exec",
-            "required": true,
-            "groupName": "codeCoverage",
-            "helpMarkDown": "regular expression Specifying the additional codecoverage Files to be attached to build"
-        }, 
-
         {
             "name":"jdkVersion",
             "type":"pickList",
