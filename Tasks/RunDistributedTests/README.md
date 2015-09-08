@@ -1,19 +1,19 @@
 # Visual Studio Test using Test Agent Task
 
 ###Overview
-The Visual Studio Test using Test Agent task should be used when you want to run tests on Test Agent machine(s). Given multiple machines in the Test Machine Group, the task can do parallel distributed runs of your tests. Parallelism is at the test assembly level. To use this task, it needs to be preceded with “Visual Studio Test Agent Deployment” task.
+The Visual Studio Test using Test Agent task should be used when you want to run tests on remote machines and you cannot run tests on build machine. Typical scenarios – tests that require additional installations on the test machines like different browsers for Selenium tests, running Coded UI Tests or a specific OS configuration or execute lots of unit tests faster on multiple machines etc. You can run unit tests, integration tests, functional tests – any test that you can execute using vstest runner. Given multiple machines in the Test Machine Group, the task can do parallel distributed execution of your tests. Parallelism is at the test assembly level. To use this task, *it needs to be preceded with “Visual Studio Test Agent Deployment” task*.
 To learn more about the general usage of the task, please see https://msdn.microsoft.com/en-us/library/mt270062.aspx and http://blogs.msdn.com/b/visualstudioalm/archive/2015/06/28/10618066.aspx
 
 ###The different parameters of the task are explained below:
 
-- **Test Machine Group:**	Required Field. Name of the Test Machine Group which should be used to run tests. Click on ‘Manage’ to navigate to the Machine Group page and create/manage your machine groups.
+- **Test Machine Group:**	Required Field. Name of the Test Machine Group which should be used to run tests. Click on ‘Manage’ to navigate to the Machine Group page and create/manage your machine groups. If you are using Azure Resource Group to dynamically provision machines, 'Resource Group' is same as 'Machine Group'.
 
-- **Test Drop Location:**	Required Field. Location on the Test machine(s) where the test binaries have been copied to.  ‘Windows Machine File Copy’ task or ‘Azure File Copy’ task can be used. System Environment Variables from the agent machines can also be used in specifying the drop location. For example, c:\tests or %systemdrive%\Tests
+- **Test Drop Location:**	Required Field. Location on the Test machine(s) where the test binaries have been copied to.  ‘Windows Machine File Copy’ task or ‘Azure File Copy’ task (for Azure machines) can be used. System Environment Variables from the agent machines can also be used in specifying the drop location. For example, c:\tests or %systemdrive%\Tests
 
 - **Test Assembly:**	Required Field. This field specifies the test assemblies(s) from which the tests should be picked. 
 	*	Wildcards can be used
 	*	Multiple paths can be specified separated by a semicolon
-	*	Paths are relative to the Sources Directory
+	*	Paths are relative to the root directory of the test drop location
 
 For example, `**\commontests\*test*.dll; **\frontendtests\*test*.dll;`
 
@@ -25,7 +25,7 @@ For more information, see https://msdn.microsoft.com/en-us/library/jj155796.aspx
 
 - **Configuration:**	Build Configuration against which the Test Run should be reported. Field is used for reporting purposes only. For example, Debug or Release. If you are using the Deployment – Build, Deploy and Distributed Test template, this is already defined for you. Alternatively, if you have defined a variable for Configuration in your Build task, use that here.
  
-- **Run Settings:** File	Path to a runsettings or testsettings file can be specified here. The path can be to a file in the repository or a path to file on disk. Use $(agent.BuildDirectory)\$(system.teamProject) to access the Project folder. For more information on these files, please see https://msdn.microsoft.com/library/jj635153.aspx
+- **Run Settings:** File Path to a runsettings or testsettings file can be specified here. The path can be to a file in the repository or a path to a file on the Build Agent machine. Use $(Build.SourcesDirectory) to access the root project folder. For more information on these files, please see https://msdn.microsoft.com/library/jj635153.aspx
 
 - **Override TestRun Parameters:**	Override parameters defined in the TestRunParameters section of the runsettings file. For example: Platform=$(platform);Port=8080 
 For more information, please see http://blogs.msdn.com/b/visualstudioalm/archive/2015/09/04/supplying-run-time-parameters-to-tests.aspx
