@@ -3,7 +3,7 @@ function Validate-AzurePowershellVersion
     $currentVersion =  Get-AzureCmdletsVersion
     $minimumAzureVersion = New-Object System.Version(0, 9, 0)
     $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
-    
+
     if(!$versionCompatible)
     {
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
@@ -110,7 +110,6 @@ function Validate-Credentials
             throw (Get-LocalizedString -Key "Please specify valid password")
         }
     }
-
 }
 
 function Validate-AzureKeyVaultSecret
@@ -181,7 +180,7 @@ function Create-CSMForWinRMConfiguration
     Write-Verbose -Verbose "Generating deployment template for WinRM configuration from base template file"
     Write-Verbose -Verbose "azureKeyVaultName : $azureKeyVaultName"
     Write-Verbose -Verbose "azureKeyVaultSecretId : $azureKeyVaultSecretId"
-    
+
     # TODO: Explore to avoid if/else statement, didn't find better way to check if virtualMachineResources is returning as array or single item
     if ($virtualMachineResources -is [system.array])
     {
@@ -354,7 +353,7 @@ function Invoke-OperationHelper
            [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
 
     Write-Verbose "Entered perform action $operationName on machines for machine group $machineGroupName" -Verbose
-    
+
     if(! $machines)
     {
         Write-Verbose "Machine group $machineGroupName has no machines in it" -Verbose
@@ -362,7 +361,7 @@ function Invoke-OperationHelper
     }
 
     $machineStatus = "Succeeded"
-    
+
     # Logs in the Dtl service that operation has started.
     $operationId = Invoke-MachineGroupOperation -machineGroupName $machineGroupName -operationName $operationName -machines $machines
 
@@ -396,7 +395,7 @@ function Invoke-OperationHelper
             $status = "Succeeded"
             Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
         }
-        
+
         # Logs the completion of particular machine operation. Updates the status based on the provider response.
         End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $errorMessage
     }
@@ -426,7 +425,7 @@ function Delete-MachinesHelper
       {
           return
       }
-  
+
       $passedOperationCount = $machines.Count
       Foreach($machine in $machines)
       {
@@ -441,7 +440,7 @@ function Delete-MachinesHelper
            }
       }
     }
-    
+
     Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
     # Deletes the machine or machine group from Dtl
     Delete-MachineGroup -machineGroupName $MachineGroupName -filters $filter
@@ -452,7 +451,7 @@ function Invoke-OperationOnProvider
     param([string]$machineGroupName,
           [string]$machineName,
           [string]$operationName)
-     
+
     # Performes the operation on provider based on the operation name.
     Switch ($operationName)
     {
@@ -467,7 +466,7 @@ function Invoke-OperationOnProvider
          "Restart" {
              $error = Restart-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
          }
- 
+
          default {
               throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
          }
@@ -533,7 +532,7 @@ function Update-EnvironemntDetailsInDTL
           [string]$environmentStatus)
 
     $provider = Create-Provider -providerName "AzureResourceGroupManagerV2" -providerType "Microsoft Azure Compute Resource Provider"
-        
+
     $providerData = Create-ProviderData -providerName $provider.Name -providerDataName $subscription.SubscriptionName -providerDataType $subscription.Environment -subscriptionId $subscription.SubscriptionId
 
     $environmentDefinitionName = [System.String]::Format("{0}_{1}", $csmFileName, $env:BUILD_BUILDNUMBER)
@@ -655,13 +654,13 @@ function Perform-Action
           { @("Start", "Stop", "Restart") -contains $_ } {
              Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $Action -machines $machineGroup.Resources
              break
-          }  
-          
+          }
+
           "Delete" {
              Delete-MachinesHelper -machineGroupName $resourceGroupName -filters $filterDetails["filters"] -machines $machineGroup.Resources
              break
           }
-          
+
           "DeleteRG" {
               Delete-MachineGroupFromProvider -machineGroupName $resourceGroupName
              break

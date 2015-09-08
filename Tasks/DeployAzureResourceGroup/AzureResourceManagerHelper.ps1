@@ -30,7 +30,7 @@ function Create-AzureResourceGroup
             Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
             Invoke-Expression -Command $finalCommand
         }
-		
+
         if ($azureResourceGroupDeployment)
         {
             Write-Verbose -Verbose "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
@@ -102,7 +102,7 @@ function Get-Resources
                 $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
                 $propertyBag.Add("Location", $resourceLocation)
                 $propertyBag.Add("PlatformId", $platformId)
-             
+
                 #Adding resource tags
                 foreach($tag in $resource.Tags)
                 {
@@ -125,14 +125,14 @@ function Get-Resources
                         $propertyBag.Add($resourcePropertyKey, $property)
                     }
                 }
-            
+
                 #Adding FQDN property
                 if([string]::IsNullOrEmpty($fqdnMap[$resource.Name]) -eq $false)
                 {
                     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnMap[$resource.Name])
                     $propertyBag.Add("Microsoft-Vslabs-MG-Resource-FQDN", $property)
                 }
-        
+
                 #Adding WinRMHttp port property
                 if([string]::IsNullOrEmpty($winRmHttpPortMap[$resource.Name]) -eq $false)
                 {
@@ -151,7 +151,7 @@ function Get-Resources
 
                 $resources.Add($environmentResource)
             }
-        
+
         }
 
         Write-Verbose -Verbose "Got resources: $resources"
@@ -163,7 +163,7 @@ function Get-Resources
 function Get-MachineConnectionInformation
 {
     param([string]$resourceGroupName)
-    
+
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Getting machines in resource group $resourceGroupName"
@@ -185,13 +185,13 @@ function Get-MachineConnectionInformation
 
         $fqdnMap = @{}
         Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
-        
+
         $winRmHttpPortMap = @{}
         Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
 
         $winRmHttpsPortMap = @{}
         Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
-        
+
         if($lbGroup.Count -gt 0)
         {
             foreach($lb in $lbGroup)
@@ -286,7 +286,6 @@ function Get-MachinesFqdnsForLB
 {
     param([string]$resourceGroupName)
 
-    
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
     {
         Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
@@ -399,9 +398,9 @@ function GetMachineNameFromId
     param([System.Collections.Hashtable]$map,
           [string]$mapParameter,
           [boolean]$throwOnTotalUnavaialbility)
-    
+
     if($map)
-    {	
+    {
         $errorCount = 0
         foreach($vm in $azureVms)
         {
@@ -420,7 +419,7 @@ function GetMachineNameFromId
                 Write-Verbose "Unable to find $mapParameter for resource $resourceName" -Verbose
             }
         }
-        
+
         if($throwOnTotalUnavaialbility -eq $true)
         {
             if($errorCount -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
@@ -466,7 +465,7 @@ function Refresh-SASToken
         $sasTokenParameterNames.Split(';', [System.StringSplitOptions]::RemoveEmptyEntries)  | Foreach-Object { if([string]::IsNullOrWhiteSpace($_) -eq $false){ $sasTokenParameterNameList.Add($_) } }
         $moduleUrlParameterNameList = New-Object System.Collections.Generic.List[string]
         $moduleUrlParameterNames.Split(';', [System.StringSplitOptions]::RemoveEmptyEntries) | Foreach-Object { if([string]::IsNullOrWhiteSpace($_) -eq $false){ $moduleUrlParameterNameList.Add($_) } }
-        
+
         if($sasTokenParameterNameList.Count -ne $moduleUrlParameterNameList.Count)
         {
             throw (Get-LocalizedString -Key "Some module url paramter names do not have a matching sas token paramter name or viceversa. Please verify the lists specified and their formats")
@@ -553,7 +552,7 @@ function Get-MachineLogs
         $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
         Write-Verbose -Verbose "[Azure Resource Manager]Got resource group $resourceGroupName"
         Set-Variable -Name azureResourceGroup -Value $azureResourceGroup -Scope "Global"
-        
+
         $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
         foreach($resource in $azureResourceGroupResources)
@@ -644,7 +643,7 @@ function Create-AzureResourceGroupIfNotExist
     [string]$location)
 
     $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
-    
+
     if(!$azureResourceGroup)
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"

@@ -17,7 +17,7 @@ function Create-ProviderData
           [string]$providerDataName,
           [string]$providerDataType,
           [string]$subscriptionId)
-    
+
     Write-Verbose "Registering provider data $providerDataName" -Verbose
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
@@ -26,7 +26,7 @@ function Create-ProviderData
 
     #TODO Figure out authentication mechanism and store it
     $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
-	$url = $providerData.Url
+    $url = $providerData.Url
     Write-Verbose "Registered provider data $providerDataName with url $url" -Verbose
 
     return $providerData
@@ -36,7 +36,7 @@ function Create-EnvironmentDefinition
 {
     param([string]$environmentDefinitionName,
           [string]$providerName)
-  
+
     Write-Verbose "Registering machine group definition $environmentDefinitionName" -Verbose
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
@@ -50,7 +50,7 @@ function Create-EnvironmentDefinition
     }
 
     $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
-	$url = $environmentDefinition.Url
+    $url = $environmentDefinition.Url
     Write-Verbose "Registered machine group definition $environmentDefinitionName with url $url" -Verbose
 
     return $environmentDefinition
@@ -103,7 +103,7 @@ function Create-Environment
         $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $vmPassword)
         $propertyBag.Add($passwordTagKey, $property)
     }
-    
+
     if([string]::IsNullOrEmpty($WinRmProtocol) -eq $false)
     {
         $winRmProtocolKey = "Microsoft-Vslabs-MG-WinRMProtocol"
@@ -116,12 +116,12 @@ function Create-Environment
     $propertyBag.Add($skipCACheckKey, $property)
 
     Write-Verbose -Verbose "Registering machine group $environmentName"
-   
+
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
     Write-Host (Get-LocalizedString -Key "Registered machine group '{0}'" -ArgumentList $environmentName)
-	$url = $environment.Url
-	Write-Verbose -Verbose "Registered machine group $environmentName with url $url"
+    $url = $environment.Url
+    Write-Verbose -Verbose "Registered machine group $environmentName with url $url"
 
     return $environment
 }
@@ -129,7 +129,7 @@ function Create-Environment
 function Create-EnvironmentOperation
 {
     param([Microsoft.VisualStudio.Services.DevTestLabs.Model.Environment]$environment)
-    
+
     if($environment)
     {
         $name = $environment.Name
@@ -151,7 +151,7 @@ function Create-EnvironmentOperation
             $operationEndTime = $deploymentOperationLogs[0].EventTimestamp
             $operationStatus = $deploymentOperationLogs[0].Status
         }
- 
+
         $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $operationStartTime -Connection $connection -ErrorAction Stop
 
         Create-ResourceOperations  -operationLogs $operationLogs -environment $environment -environmentOperationId $envOperationId
@@ -283,8 +283,7 @@ function Delete-MachineGroup
     {
         Remove-Environment -EnvironmentName $machineGroupName -Connection $connection -ErrorAction Stop
         Write-Verbose "Deleted machine group $machineGroupName" -Verbose
-    } 
-
+    }
 }
 
 function Invoke-MachineGroupOperation
