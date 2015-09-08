@@ -48,10 +48,10 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 				if($testAgentFileExists)
 				{
 					# delete the file which indicated that test agent installation failed.
-					remove-item $testAgentFile | Out-Null
+					remove-item $testAgentFile -force | Out-Null
 					# we have retried once .Now fail with appropriate message
 					Write-Warning -Verbose "Retried to install Test Agent"
-					throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
+					throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 				}
 				else
 				{
@@ -64,19 +64,19 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 			catch
 			{
 				Write-Warning -Verbose "Error occured while retrying the Test Agent installation"
-				throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
+				throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 			}
 		}
 
 		if($exitCode -eq 2147205120)
 		{
 			# pending windows update.
-			throw ("Pending windows update. The return code {0} was not expected during installation of Test Agent. Please install windows update and try again." -f $exitCode.ToString())
+			throw ("Pending windows update. The return code {0} was not expected during installation of Test Agent. Install windows update and try again." -f $exitCode.ToString())
 		}
 
 		if(-not ($exitCode -eq 0 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641))
 		{
-			throw ("The return code {0} was not expected during installation of Test Agent. Please check the installation logs for more details." -f $exitCode.ToString())
+			throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 		}
 
 		if($exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641)
