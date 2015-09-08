@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "CMake",
   "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613719)",
-  "loc.description": "CMake クロス プラットフォームのビルド システムを使ったビルド",
-  "loc.instanceNameFormat": "CMake $(args)",
+  "loc.description": "CMake クロス プラットフォームのビルド システムを使ってビルドします",
+  "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "cmake の実行時の現行の作業ディレクトリ。",
-  "loc.input.label.args": "引数",
-  "loc.input.help.args": "cmake に渡される引数"
+  "loc.input.label.cmakeArgs": "引数 ",
+  "loc.input.help.cmakeArgs": "cmake に渡される引数 "
 }

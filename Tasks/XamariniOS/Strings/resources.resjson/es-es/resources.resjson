@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613729)",
-  "loc.description": "Compile una aplicación para iOS con Xamarin en Mac OS",
+  "loc.description": "Compilar una aplicación para iOS con Xamarin en Mac OS",
   "loc.instanceNameFormat": "Compilar solución Xamarin.iOS $(solution)",
   "loc.input.label.solution": "Solución",
   "loc.input.help.solution": "Ruta de acceso relativa de la raíz del repositorio de la solución Xamarin.iOS que se va a compilar.",

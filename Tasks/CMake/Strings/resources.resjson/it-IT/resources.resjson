@@ -2,9 +2,9 @@
   "loc.friendlyName": "CMake",
   "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Consente di compilare con il sistema di compilazione multipiattaforma CMake",
-  "loc.instanceNameFormat": "CMake $(args)",
+  "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "Directory di lavoro",
   "loc.input.help.cwd": "Directory di lavoro corrente durante l'esecuzione di cmake.",
-  "loc.input.label.args": "Argomenti",
-  "loc.input.help.args": "Argomenti passati a cmake"
+  "loc.input.label.cmakeArgs": "Argomenti",
+  "loc.input.help.cmakeArgs": "Argomenti passati a cmake"
 }

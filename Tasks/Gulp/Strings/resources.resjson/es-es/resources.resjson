@@ -7,7 +7,7 @@
   "loc.input.label.gulpFile": "Ruta de acceso del archivo Gulp",
   "loc.input.help.gulpFile": "Ruta de acceso relativa de la raíz del repositorio del archivo de script de archivo Gulp que se va a ejecutar.",
   "loc.input.label.targets": "Tareas de Gulp",
-  "loc.input.help.targets": "Opcional. Se ejecutará la tarea predeterminada si no se especifica una. Lista delimitada por espacios de tareas que se van a ejecutar. Si no se especifica, se ejecutará la tarea predeterminada.",
+  "loc.input.help.targets": "Opcional. Lista de tareas para ejecutar delimitada por espacios. Si no se especifica, se ejecutará la tarea predeterminada.",
   "loc.input.label.arguments": "Argumentos",
   "loc.input.help.arguments": "Argumentos adicionales pasados a Gulp. --gulpfile no es necesario porque ya se agregó a través de la entrada gulpFile anterior.",
   "loc.input.label.cwd": "Directorio de trabajo",

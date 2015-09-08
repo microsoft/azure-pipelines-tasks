@@ -7,7 +7,7 @@
   "loc.input.label.testRunner": "Formato dei risultati test",
   "loc.input.help.testRunner": "Formato dei file dei risultati del test generati con il test runner scelto, ad esempio JUnit, VSTest e così via.",
   "loc.input.label.testResultsFiles": "File dei risultati del test",
-  "loc.input.help.testResultsFiles": "Percorso dei file dei risultati del test. È possibile usare i caratteri jolly, ad esempio `**\\TEST-*.xml` per individuare tutti i file XML il cui nome inizia con TEST-.",
+  "loc.input.help.testResultsFiles": "Percorso dei file dei risultati del test. È possibile usare i caratteri jolly, ad esempio `**/TEST-*.xml` per tutti i file XML il cui nome inizia con TEST-.",
   "loc.input.label.mergeTestResults": "Unisci risultati test",
   "loc.input.help.mergeTestResults": "Selezionare questa opzione per unire i risultati di tutti i file di risultati del test in un'unica esecuzione dei test in TFS/VSO. Deselezionarla per creare un'esecuzione dei test per ogni file di risultati del test.",
   "loc.input.label.platform": "Piattaforma",

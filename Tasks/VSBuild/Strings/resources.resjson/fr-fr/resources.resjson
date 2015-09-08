@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Build Visual Studio",
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Générer avec MSBuild via l'invite de commandes développeur pour Visual Studio",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property",
   "loc.instanceNameFormat": "Générer la solution $(solution)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.solution": "Solution",
@@ -12,16 +12,9 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.clean": "Nettoyer",
   "loc.input.label.restoreNugetPackages": "Restaurer des packages NuGet",
-  "loc.input.label.vsLocationMethod": "Visual Studio",
   "loc.input.label.vsVersion": "Version de Visual Studio",
-  "loc.input.label.vsLocation": "Emplacement de Visual Studio",
-  "loc.input.help.vsLocation": "Indiquez éventuellement le chemin d'accès à l'emplacement d'installation de Visual Studio, utilisé pour localiser le fichier de commandes de l'invite de commandes du développeur. Il s'agit généralement de rechercher la dernière version.",
-  "loc.input.label.msbuildLocationMethod": "MSBuild",
-  "loc.input.label.msbuildVersion": "Version de MSBuild",
-  "loc.input.help.msbuildVersion": "Version de MSBuild à exécuter. Il s'agit généralement de rechercher la dernière version",
+  "loc.input.help.vsVersion": "Si la version par défaut est introuvable, la dernière version trouvée est utilisée à la place.",
   "loc.input.label.msbuildArchitecture": "Architecture MSBuild",
   "loc.input.help.msbuildArchitecture": "Indiquez éventuellement l'architecture (x86, x64) de MSBuild à exécuter.",
-  "loc.input.label.msbuildLocation": "Chemin d'accès de MSBuild",
-  "loc.input.help.msbuildLocation": "Indiquez éventuellement le chemin d'accès à MSBuild. Il s'agit généralement de rechercher la dernière version.",
   "loc.input.label.logProjectEvents": "Enregistrer les détails du projet"
 }

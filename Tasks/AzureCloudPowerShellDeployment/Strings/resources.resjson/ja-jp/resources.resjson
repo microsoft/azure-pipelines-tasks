@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure クラウド サービスの展開",
+  "loc.friendlyName": "Azure クラウド サービスのデプロイ",
   "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613748)",
-  "loc.description": "Azure クラウド サービスの展開",
+  "loc.description": "Azure クラウド サービスのデプロイ",
   "loc.instanceNameFormat": "Azure 展開: $(CsPkg)",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceName": "展開対象への Azure のサブスクリプション。",
@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "成果物の既定のディレクトリにある CsCfg のパス。",
   "loc.input.label.Slot": "環境 (スロット)",
   "loc.input.help.Slot": "**運用環境** または **ステージング**",
+  "loc.input.label.DeploymentLabel": "展開ラベル",
+  "loc.input.help.DeploymentLabel": "新しい展開のラベル名を指定します。指定しない場合は、グローバル一意識別子 (GUID) が使用されます。",
+  "loc.input.label.AppendDateTimeToLabel": "現在の日付と時刻の追加 ",
+  "loc.input.help.AppendDateTimeToLabel": "展開ラベルに現在の日付と時刻を追加します",
   "loc.input.label.AllowUpgrade": "アップグレードを許可"
 }

@@ -7,7 +7,7 @@
   "loc.input.label.xcWorkspacePath": "ワークスペース パス",
   "loc.input.help.xcWorkspacePath": "リポジトリ ルートを基準に指定した、xcworkspace フォルダーが存在する相対パス。",
   "loc.input.label.scheme": "スキーム",
-  "loc.input.help.scheme": "Xcode でのスキーム名。「共有スキームでなければなりません」(Xcode での管理スキームの下の共有チェックボックス)",
+  "loc.input.help.scheme": "Xcode でのスキーム名。共有スキームでなければなりません (Xcode での管理スキームの下の共有チェックボックス)",
   "loc.input.label.actions": "アクション",
   "loc.input.help.actions": "スペース区切りのアクションのリスト。有効なオプションは、build、clean、test、analyze、および archive です。たとえば、`build clean` はクリーン ビルドを実行します。[xcodebuild man ページ](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html) を参照してください。",
   "loc.input.label.configuration": "構成",

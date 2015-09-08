@@ -8,7 +8,7 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Les configurations standard sont Ad-Hoc, AppStore, Debug, Release.",
   "loc.input.label.mdtoolLocation": "Remplacer le chemin d'accès de mdtool",
-  "loc.input.help.mdtoolLocation": "Indiquez éventuellement le chemin d'accès à mdtool, l'outil de génération de Xamarin Studio. Si non spécifié, le chemin d'accès par défaut est utilisé : /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
+  "loc.input.help.mdtoolLocation": "Indiquez éventuellement le chemin d'accès à mdtool, l'outil de build de Xamarin Studio. Si non spécifié, le chemin d'accès par défaut est utilisé : /Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
   "loc.input.label.forSimulator": "Build pour iOS Simulator",
   "loc.input.help.forSimulator": "Effectue éventuellement une génération pour le simulateur iOS au lieu des appareils iOS physiques."
 }

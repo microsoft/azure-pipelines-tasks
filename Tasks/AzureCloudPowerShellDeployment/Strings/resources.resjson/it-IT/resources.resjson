@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "Percorso di CsCfg nella directory predefinita dell'elemento.",
   "loc.input.label.Slot": "Ambiente (slot)",
   "loc.input.help.Slot": "**Produzione** o **Gestione temporanea**",
+  "loc.input.label.DeploymentLabel": "Etichetta di distribuzione",
+  "loc.input.help.DeploymentLabel": "Specifica il nome dell'etichetta per la nuova distribuzione. Se non è specificato, viene usato un identificatore univoco globale (GUID).",
+  "loc.input.label.AppendDateTimeToLabel": "Aggiungi data e ora correnti",
+  "loc.input.help.AppendDateTimeToLabel": "Aggiunge la data e l'ora correnti all'etichetta della distribuzione",
   "loc.input.label.AllowUpgrade": "Consenti aggiornamento"
 }

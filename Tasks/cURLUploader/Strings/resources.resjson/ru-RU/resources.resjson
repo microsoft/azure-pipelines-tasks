@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "Отправка файлов с помощью cURL",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Используйте cURL для отправки файлов по поддерживаемым протоколам (FTP, FTPS, SFTP, HTTP и другим).",
   "loc.instanceNameFormat": "Отправить $(files) с помощью cURL",
   "loc.group.displayName.advanced": "Дополнительно",

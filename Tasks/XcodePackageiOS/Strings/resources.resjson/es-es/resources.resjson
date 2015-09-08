@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Paquete XCode $(appName)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.appName": "Nombre de .app",
-  "loc.input.help.appName": "Nombre de .app, que a veces es distinto de .ipa",
+  "loc.input.help.appName": "Nombre de archivo .app, que a veces es distinto del nombre de archivo .ipa",
   "loc.input.label.ipaName": "Nombre de .ipa",
   "loc.input.help.ipaName": "Nombre de .ipa, que a veces es distinto de .app",
   "loc.input.label.provisioningProfile": "Nombre del perfil de aprovisionamiento",

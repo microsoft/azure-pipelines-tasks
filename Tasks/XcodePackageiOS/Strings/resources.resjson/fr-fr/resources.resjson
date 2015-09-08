@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Package Xcode iOS",
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613731)",
-  "loc.description": "Générer un fichier .ipa à partir de la sortie de génération Xcode",
+  "loc.description": "Générer un fichier .ipa à partir de la sortie de build Xcode",
   "loc.instanceNameFormat": "Package Xcode $(appName)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.appName": "Nom du fichier .app",

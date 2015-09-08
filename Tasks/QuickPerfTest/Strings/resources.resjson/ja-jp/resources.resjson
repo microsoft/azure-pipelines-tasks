@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "クラウド ベースの Web パフォーマンス テスト",
-  "loc.helpMarkDown": "このタスクは、Visual Studio Online を使用するクラウド ベースのロード テストを起動するために使用できます。[詳細](http://go.microsoft.com/fwlink/?linkid=613203).",
-  "loc.description": "Visual Studio Online を使用して、クラウドでのクイック Web パフォーマンス テストを実行します。",
+  "loc.friendlyName": "クラウドベースの Web パフォーマンス テスト",
+  "loc.helpMarkDown": "このタスクは、Visual Studio Online を使用するクラウドベースのロード テストを起動するために使用できます。[詳細](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.description": "Visual Studio Online を使用して、クラウドでのクイック Web パフォーマンス テストを実行します",
   "loc.instanceNameFormat": "クイック Web パフォーマンス テスト $(testName)",
   "loc.input.label.connectedServiceName": "登録された接続",
   "loc.input.help.connectedServiceName": "以前に登録されたサービス接続を選択して、クラウド ベースのロード テスト サービスと通信します。新しい接続を登録するには [管理] を選択します。",

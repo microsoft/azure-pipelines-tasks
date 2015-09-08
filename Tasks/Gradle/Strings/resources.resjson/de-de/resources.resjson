@@ -15,8 +15,12 @@
   "loc.input.help.publishJUnitResults": "Wählen Sie diese Option, um vom Gradle-Build erzeugte JUnit-Testergebnisse in VSO/TFS zu veröffentlichen. Jede Testergebnisdatei, die mit \"Testergebnisdateien\" übereinstimmt, wird als Testlauf in VSO/TFS veröffentlicht.",
   "loc.input.label.testResultsFiles": "Testergebnisdateien",
   "loc.input.help.testResultsFiles": "Pfad der Testergebnisdateien. Platzhalter können verwendet werden. Beispiel: \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
+  "loc.input.label.javaHomeSelection": "Set JAVA_HOME by",
+  "loc.input.help.javaHomeSelection": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
   "loc.input.label.jdkVersion": "JDK-Version",
   "loc.input.help.jdkVersion": "Versucht, den Pfad zur ausgewählten JDK-Version zu ermitteln und JAVA_HOME entsprechend festzulegen.",
+  "loc.input.label.jdkUserInputPath": "JDK Path",
+  "loc.input.help.jdkUserInputPath": "Sets JAVA_HOME to the given path.",
   "loc.input.label.jdkArchitecture": "JDK-Architektur",
   "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64)."
 }

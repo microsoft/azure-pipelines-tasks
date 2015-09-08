@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "cURL 上载文件",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "通过支持的协议，使用 cURL 上载文件。(FTP、FTPS、SFTP、HTTP 等)",
   "loc.instanceNameFormat": "使用 cURL 上载 $(files)",
   "loc.group.displayName.advanced": "高级",

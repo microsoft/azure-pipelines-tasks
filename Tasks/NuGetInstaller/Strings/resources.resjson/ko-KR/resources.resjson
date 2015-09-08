@@ -6,12 +6,10 @@
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.solution": "솔루션 경로",
   "loc.input.help.solution": "Visual Studio 솔루션 파일의 경로",
-  "loc.input.label.excludeVersion": "제외 버전",
-  "loc.input.help.excludeVersion": "NuGet이 패키지 폴더 이름에서 패키지 버전을 제외합니다. -ExcludeVersion NuGet.exe 명령줄 인수에 해당",
   "loc.input.label.noCache": "로컬 캐시 사용 안 함",
   "loc.input.help.noCache": "-NoCache NuGet.exe 명령줄 인수에 해당",
   "loc.input.label.nuGetRestoreArgs": "NuGet 인수",
-  "loc.input.help.nuGetRestoreArgs": "추가 인수를 NuGet.exe 복원에 전달했습니다.",
+  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "NuGet.exe 경로",
   "loc.input.help.nuGetPath": "원하는 경우 NuGet.exe의 경로를 제공하세요."
 }

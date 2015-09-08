@@ -4,7 +4,7 @@
   "loc.description": "Implemente un servicio en la nube de Azure",
   "loc.instanceNameFormat": "Implementación de Azure: $(CsPkg)",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
-  "loc.input.help.ConnectedServiceName": "Suscripción de Azure en el destino para la implementación.",
+  "loc.input.help.ConnectedServiceName": "Suscripción de Azure de destino para la implementación.",
   "loc.input.label.StorageAccount": "Cuenta de almacenamiento",
   "loc.input.help.StorageAccount": "Tiene que haber una cuenta de almacenamiento antes de la implementación.",
   "loc.input.label.ServiceName": "Nombre del servicio",
@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "Ruta de acceso de CsCfg en el directorio de artefacto predeterminado.",
   "loc.input.label.Slot": "Entorno (ranura)",
   "loc.input.help.Slot": "**Producción** o **Almacenamiento**",
+  "loc.input.label.DeploymentLabel": "Etiqueta de implementación",
+  "loc.input.help.DeploymentLabel": "Especifica el nombre de la etiqueta para la nueva implementación. Si no se especifica, se usa un identificador único global (GUID).",
+  "loc.input.label.AppendDateTimeToLabel": "Anexar la fecha y hora actuales",
+  "loc.input.help.AppendDateTimeToLabel": "Anexa la fecha y hora actuales a la etiqueta de implementación",
   "loc.input.label.AllowUpgrade": "Permitir actualización"
 }

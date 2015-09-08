@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "環境属性を編集して Chef 環境を展開します",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "環境属性を編集して Chef 環境を展開します",
   "loc.instanceNameFormat": "Chef のサブスクリプション $(ChefServer) の環境属性を編集して Chef に展開します",
   "loc.input.label.connectedServiceName": "Chef 接続",
@@ -8,7 +8,7 @@
   "loc.input.label.Environment": "環境",
   "loc.input.help.Environment": "展開に使用する Chef 環境の名前。その環境の属性は編集されます。",
   "loc.input.label.Attributes": "環境属性",
-  "loc.input.help.Attributes": "更新するリーフ ノードの属性値を指定します。例: {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}。リーフ ノードが存在しない場合、タスクは失敗します。",
+  "loc.input.help.Attributes": "Specify the value of the leaf node attribute(s) to be updated. Example. { \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }. Task fails if the leaf node does not exist.",
   "loc.input.label.chefWaitTime": "待機時間",
   "loc.input.help.chefWaitTime": "このタスクが完了するまで待機する時間 (分単位)。既定値: 30 分"
 }

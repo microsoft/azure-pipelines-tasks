@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "Развертывание в средах Chef путем изменения атрибутов среды",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "Развертывание в средах Chef путем изменения атрибутов среды",
   "loc.instanceNameFormat": "Выполните развертывание в Сhef, изменив атрибуты среды для подписки Chef $(ChefServer)",
   "loc.input.label.connectedServiceName": "Подключение Chef",
@@ -8,7 +8,7 @@
   "loc.input.label.Environment": "Среда",
   "loc.input.help.Environment": "Имя среды Chef, используемой для развертывания. Атрибуты этой среды будут изменены.",
   "loc.input.label.Attributes": "Атрибуты среды",
-  "loc.input.help.Attributes": "Укажите значения обновляемых атрибутов листового узла. Пример: {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. Если листовой узел не существует, задача завершится сбоем.",
+  "loc.input.help.Attributes": "Specify the value of the leaf node attribute(s) to be updated. Example. { \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }. Task fails if the leaf node does not exist.",
   "loc.input.label.chefWaitTime": "Время ожидания",
   "loc.input.help.chefWaitTime": "Период ожидания завершения задачи (в минутах). Значение по умолчанию: 30 минут"
 }

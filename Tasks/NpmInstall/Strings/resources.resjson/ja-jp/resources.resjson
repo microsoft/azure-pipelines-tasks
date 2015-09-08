@@ -7,5 +7,5 @@
   "loc.input.label.arguments": "引数",
   "loc.input.help.arguments": "npm のインストールに渡す追加の引数。",
   "loc.input.label.cwd": "作業ディレクトリ",
-  "loc.input.help.cwd": "npm のインストールが実行する現行の作業ディレクトリ。指定しない場合はレポジトリのルートになります。"
+  "loc.input.help.cwd": "npm のインストールが実行する現行の作業ディレクトリ。既定値はリポジトリのルートです。"
 }

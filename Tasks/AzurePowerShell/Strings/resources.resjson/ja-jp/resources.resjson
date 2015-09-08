@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceName": "PowerShell を実行する前に構成する Azure サブスクリプション",
   "loc.input.label.ScriptPath": "スクリプト パス",
-  "loc.input.help.ScriptPath": "スクリプトのパス。完全修飾パスか、既定の作業ディレクトリを基準とした相対パスのいずれか。",
+  "loc.input.help.ScriptPath": "スクリプトのパス。完全修飾パスか、既定の作業ディレクトリを基準とした相対パスのいずれかです。",
   "loc.input.label.ScriptArguments": "スクリプトの引数",
   "loc.input.help.ScriptArguments": "PowerShell に渡す追加のパラメーター。順序によるパラメーターまたは名前指定されたパラメーターのいずれかです。"
 }

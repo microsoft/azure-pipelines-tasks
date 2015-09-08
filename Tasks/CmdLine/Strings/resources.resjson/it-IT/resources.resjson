@@ -5,10 +5,10 @@
   "loc.instanceNameFormat": "Esegui $(filename)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.filename": "Strumento",
-  "loc.input.help.filename": "Nome dello strumento da eseguire. Lo strumento deve essere disponibile nel percorso o risolvibile tramite which. Facoltativamente, è possibile specificare un percorso completo, basato tuttavia su quello presente nell'agente.",
+  "loc.input.help.filename": "Nome strumento da eseguire. Lo strumento dovrebbe trovarsi nel percorso. Facoltativamente, è possibile fornire un percorso completo, a condizione che sia presente nell'agente.<br/> Nota: è possibile usare **$(agent.builddirectory)**\\\\... per un percorso relativo al repository.",
   "loc.input.label.arguments": "Argomenti",
+  "loc.input.help.arguments": "Arguments passed to the tool",
   "loc.input.label.workingFolder": "Cartella di lavoro",
-  "loc.input.help.workingFolder": "Argomenti passati allo strumento",
   "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard",
   "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError."
 }

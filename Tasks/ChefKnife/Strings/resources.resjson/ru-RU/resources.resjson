@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "Выполнение сценариев с помощью команд Knife на рабочей станции Chef",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/ChefKnife/README.md)",
   "loc.description": "Выполнение скриптов с помощью команд Knife на рабочей станции Chef",
   "loc.instanceNameFormat": "Сценарий Knife Chef: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Подписка Chef",

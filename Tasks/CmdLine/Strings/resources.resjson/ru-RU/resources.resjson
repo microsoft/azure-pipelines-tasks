@@ -5,10 +5,10 @@
   "loc.instanceNameFormat": "Выполнить $(filename)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.filename": "Инструмент",
-  "loc.input.help.filename": "Имя запускаемого средства. Средство должно находиться по пути или разрешаться через него. Дополнительно можно указать полный путь, но при этом средство должно находиться  в агенте.",
+  "loc.input.help.filename": "Имя запускаемого средства. Средство должно находиться по указанному пути. Дополнительно можно указать полный путь, но при этом средство должно находиться в агенте.<br/> Примечание. Вы можете использовать **$(agent.builddirectory)**\\\\..., если хотите получить относительный путь к репозиторию.",
   "loc.input.label.arguments": "Аргументы",
+  "loc.input.help.arguments": "Arguments passed to the tool",
   "loc.input.label.workingFolder": "Рабочая папка",
-  "loc.input.help.workingFolder": "Аргументы, передаваемые в средство",
   "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой",
   "loc.input.help.failOnStandardError": "Если имеет значение true, задача завершится сбоем при записи любых ошибок в поток StandardError."
 }

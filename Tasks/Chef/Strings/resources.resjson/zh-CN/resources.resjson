@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "通过编辑环境属性部署到 Chef 环境",
+  "loc.helpMarkDown": "[详细信息](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "通过编辑环境属性部署到 Chef 环境",
   "loc.instanceNameFormat": "通过编辑 Chef 订阅 $(ChefServer) 的环境属性来部署到 chef",
   "loc.input.label.connectedServiceName": "Chef 连接",
@@ -8,7 +8,7 @@
   "loc.input.label.Environment": "环境",
   "loc.input.help.Environment": "要用于部署的 Chef 环境的名称。将编辑该环境的属性。",
   "loc.input.label.Attributes": "环境属性",
-  "loc.input.help.Attributes": "指定要更新的叶节点属性的值。示例。{\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}。如果叶节点不存在，则任务会失败。",
+  "loc.input.help.Attributes": "Specify the value of the leaf node attribute(s) to be updated. Example. { \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }. Task fails if the leaf node does not exist.",
   "loc.input.label.chefWaitTime": "等待时间",
   "loc.input.help.chefWaitTime": "等待此任务完成的时间量(以分钟为单位)。默认值: 30 分钟"
 }

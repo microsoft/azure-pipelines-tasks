@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "cURL 上傳檔案",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "使用 cURL 搭配支援的通訊協定來上傳檔案。(FTP、FTPS、SFTP、HTTP 等等)",
   "loc.instanceNameFormat": "使用 cURL 上傳 $(files) ",
   "loc.group.displayName.advanced": "進階",

@@ -7,7 +7,7 @@
   "loc.input.label.gulpFile": "Gulp-Dateipfad",
   "loc.input.help.gulpFile": "Relativer Pfad vom Repositorystamm der auszuführenden gulp-Skriptdatei.",
   "loc.input.label.targets": "Gulp-Aufgabe(n)",
-  "loc.input.help.targets": "Optional. Standardaufgabe wird ausgeführt, wenn nicht angegeben. Mit Leerzeichen getrennte Liste der auszuführenden Aufgaben. Wenn nicht angegeben, wird die Standardaufgabe ausgeführt.",
+  "loc.input.help.targets": "Optional. Mit Leerzeichen getrennte Liste der auszuführenden Aufgaben. Wenn nicht angegeben, wird die Standardaufgabe ausgeführt.",
   "loc.input.label.arguments": "Argumente",
   "loc.input.help.arguments": "Zusätzliche Argumente, die an Gulp übergeben werden. \"--gulpfile\" ist nicht erforderlich, da es bereits über die gulpFile-Eingabe weiter oben hinzugefügt wurde.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",

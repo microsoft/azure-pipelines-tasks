@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Dateikopiervorgang auf Windows-Computer",
-  "loc.helpMarkDown": "Dateien auf Remotecomputer kopieren",
+  "loc.helpMarkDown": "[More Information](http://aka.ms/windowsfilecopyreadme)",
   "loc.description": "Dateien auf Remotecomputer kopieren",
   "loc.instanceNameFormat": "Dateien nach $(EnvironmentName) kopieren",
   "loc.group.displayName.advanced": "Erweitert",
@@ -8,12 +8,13 @@
   "loc.input.help.SourcePath": "Absoluter Pfad des Quellordners oder der Quelldatei auf dem lokalen Computer oder eine UNC-Freigabe.",
   "loc.input.label.EnvironmentName": "Computergruppe",
   "loc.input.help.EnvironmentName": "Name der Zielcomputergruppe, auf die die Dateien kopiert werden sollen",
-  "loc.input.label.MachineNames": "Auf Computer kopieren",
-  "loc.input.help.MachineNames": "Geben Sie eine mit Kommata getrennte Liste von Computern an, z. B. Computer1, Computer2. Standardmäßig werden alle Computer in der Computergruppe ausgewählt.",
+  "loc.input.label.ResourceFilteringMethod": "Computer auswählen nach",
+  "loc.input.label.MachineNames": "Filterkriterien",
+  "loc.input.help.MachineNames": "Geben Sie eine Liste von IP-Adressen bzw. FQDN (z. B. dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34) oder Tags (z. B. Role:DB;OS:Win8.1) an. Alle Computer mit mindestens einem der Tags werden zurückgegeben. Standardmäßig werden alle Computer in der Computergruppe zurückgegeben.",
   "loc.input.label.TargetPath": "Zielordner",
-  "loc.input.help.TargetPath": "Lokaler Pfad auf den Zielcomputern zum Kopieren der Dateien von der Quelle. Umgebungsvariable kann wie folgt verwendet werden: $env:windir\\BudgetIT\\Web.",
+  "loc.input.help.TargetPath": "Lokaler Pfad auf den Zielcomputern zum Kopieren der Dateien von der Quelle. Eine Umgebungsvariable kann wie folgt verwendet werden: $env:windir\\BudgetIT\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Ziel bereinigen",
   "loc.input.help.CleanTargetBeforeCopy": "Wenn diese Option auf \"True\" festgelegt wird, wird der Inhalt des Zielordners vor dem Kopieren der Dateien gelöscht.",
   "loc.input.label.CopyFilesInParallel": "Dateien parallel kopieren",
-  "loc.input.help.CopyFilesInParallel": "Wenn diese Option auf \"True\" festgelegt wird, werden Dateien parallel auf die Computer kopiert."
+  "loc.input.help.CopyFilesInParallel": "Wenn diese Option aktiviert wird, werden Dateien parallel auf die Computer kopiert."
 }

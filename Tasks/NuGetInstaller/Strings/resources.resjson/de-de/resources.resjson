@@ -4,14 +4,12 @@
   "loc.description": "Installiert und aktualisiert fehlende NuGet-Pakete",
   "loc.instanceNameFormat": "NuGet restore $(solution)",
   "loc.group.displayName.advanced": "Erweitert",
-  "loc.input.label.solution": "Pfad zur Lösung",
-  "loc.input.help.solution": "Der Pfad zur Visual Studio-Lösungsdatei",
-  "loc.input.label.excludeVersion": "Version ausschließen",
-  "loc.input.help.excludeVersion": "Bewirkt, dass NuGet die Paketversion aus den Paketordnernamen ausschließt. Entspricht dem Befehlszeilenargument \"-ExcludeVersion\" für NuGet.exe",
+  "loc.input.label.solution": "Pfad zur Projektmappe",
+  "loc.input.help.solution": "Der Pfad zur Visual Studio-Projektmappendatei",
   "loc.input.label.noCache": "Lokalen Cache deaktivieren",
   "loc.input.help.noCache": "Entspricht dem Befehlszeilenargument \"-NoCache\" für Nuget.exe",
   "loc.input.label.nuGetRestoreArgs": "NuGet-Argumente",
-  "loc.input.help.nuGetRestoreArgs": "Zusätzliche Argumente, die an NuGet.exe restore übergeben werden.",
+  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Pfad zu NuGet.exe",
   "loc.input.help.nuGetPath": "Geben Sie optional den Pfad zu NuGet.exe an."
 }

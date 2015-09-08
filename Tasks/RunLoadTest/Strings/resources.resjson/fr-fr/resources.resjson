@@ -8,7 +8,7 @@
   "loc.input.label.TestSettings": "Fichier des paramètres de test",
   "loc.input.help.TestSettings": "Chemin d'accès relatif depuis la racine du référentiel au fichier de paramètres de test à utiliser pour le test de charge.",
   "loc.input.label.TestDrop": "Dossier des fichiers de test de charge",
-  "loc.input.help.TestDrop": "Chemin d'accès relatif depuis la racine du référentiel dans lequel la sortie de génération de la solution du test de charge sera disponible.",
+  "loc.input.help.TestDrop": "Chemin d'accès relatif depuis la racine du référentiel dans lequel la sortie de build de la solution du test de charge sera disponible.",
   "loc.input.label.LoadTest": "Fichier de test de charge",
   "loc.input.help.LoadTest": "Nom du fichier de test de charge à utiliser dans le dossier du test de charge spécifié ci-dessus.",
   "loc.input.label.ThresholdLimit": "Nombre de violations de seuils admissibles",

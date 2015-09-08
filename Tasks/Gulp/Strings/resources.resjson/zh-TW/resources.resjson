@@ -7,7 +7,7 @@
   "loc.input.label.gulpFile": "Gulp 檔案路徑",
   "loc.input.help.gulpFile": "要執行的 gulp 檔指令檔儲存機制根相對路徑。",
   "loc.input.label.targets": "Gulp 工作",
-  "loc.input.help.targets": "選擇性。若未指定則會執行預設工作。要執行的以空格分隔的工作清單。若未指定則會執行預設工作。",
+  "loc.input.help.targets": "可省略。以空格分隔要執行之工作的清單。若未指定，將會執行預設工作。",
   "loc.input.label.arguments": "引數",
   "loc.input.help.arguments": "傳遞至 gulp 的額外引數。  --不需要 gulpfile 因為已透過上述 gulpFile 輸入加入。",
   "loc.input.label.cwd": "工作目錄",

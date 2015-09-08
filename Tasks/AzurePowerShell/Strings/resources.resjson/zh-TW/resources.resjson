@@ -4,7 +4,7 @@
   "loc.description": "在 Azure 環境中執行 PowerShell 指令碼",
   "loc.instanceNameFormat": "Azure PowerShell 指令碼: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
-  "loc.input.help.ConnectedServiceName": "執行 PowerShell 前用來設定的 Azure 訂用帳戶。",
+  "loc.input.help.ConnectedServiceName": "執行 PowerShell 前要先設定的 Azure 訂用帳戶。",
   "loc.input.label.ScriptPath": "指令碼路徑",
   "loc.input.help.ScriptPath": "指令碼的路徑。必須是完整路徑名稱或相對於預設工作目錄。",
   "loc.input.label.ScriptArguments": "指令碼引數",
