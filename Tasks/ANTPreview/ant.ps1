@@ -77,7 +77,10 @@ if($isCoverageEnabled)
    Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SourceDirectory $srcDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask
    Write-Verbose "code coverage is successfully enabled." -Verbose
 }
-	
+else
+{
+    Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
+}	
 
 Write-Verbose "Running Ant..." -Verbose
 Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets
@@ -113,13 +116,9 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
+   Write-Verbose "Calling Publish-CodeCoverage" -Verbose
    Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }
-else
-{
-    Write-Verbose "Option to publish CodeCoverage results produced by Maven build was not selected and is being skipped." -Verbose
-}
-
 
 Write-Verbose "Leaving script Ant.ps1" -Verbose
 
