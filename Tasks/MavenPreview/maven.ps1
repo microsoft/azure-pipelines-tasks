@@ -58,7 +58,7 @@ if(Test-Path $reportDirectory)
    rm -r $reportDirectory -force | Out-Null
 }
 
-$summaryFileName = "summary.xml"
+$summaryFileName = "jacoco.xml"
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
 $summaryFile = Join-Path $summaryFile $summaryFileName
 $CCReportTask = "jacoco:report"
