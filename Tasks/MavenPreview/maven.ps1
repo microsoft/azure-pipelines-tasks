@@ -16,7 +16,6 @@ Write-Verbose "options = $options" -Verbose
 Write-Verbose "goals = $goals" -Verbose
 Write-Verbose "publishJUnitResults = $publishJUnitResults" -Verbose
 Write-Verbose "testResultsFiles = $testResultsFiles" -Verbose
-Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
 
 $isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
 if($isCoverageEnabled -eq $true)
@@ -56,7 +55,7 @@ $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 if(Test-Path $reportDirectory)
 {
    # delete any previous code coverage data 
-   rm -r $reportDirectory -force 
+   rm -r $reportDirectory -force | Out-Null
 }
 
 $summaryFileName = "summary.xml"
@@ -70,6 +69,10 @@ if($isCoverageEnabled)
    # Enable code coverage in build file
    Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName
    Write-Verbose "Code coverage is successfully enabled." -Verbose
+}
+else
+{
+    Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
 }
 
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
@@ -105,12 +108,8 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
+   Write-Verbose "Calling Publish-CodeCoverage" -Verbose
    Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }
-else
-{
-    Write-Verbose "Option to publish CodeCoverage results produced by Maven build was not selected and is being skipped." -Verbose
-}
-
 
 Write-Verbose "Leaving script Maven.ps1" -Verbose

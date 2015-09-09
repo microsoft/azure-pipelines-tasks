@@ -1,7 +1,7 @@
 {
     "id": "B8C7DDE3-ACA0-4D27-B1EF-259806BC31B6",
     "name": "MavenCC",
-    "friendlyName": "Maven with CodeCoverage",
+    "friendlyName": "Maven With CodeCoverage",
     "description": "Build with Apache Maven and check CodeCoverage",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
@@ -85,7 +85,7 @@
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "NoCoverage",
-            "helpMarkDown": "Select the tool for evaluating code coverage. Only Jacoco support available currently.",
+            "helpMarkDown": "Select the code coverage tool.",
             "options": {
                 "NoCoverage": "No Coverage",
                 "JaCoCo": "JaCoCo"
@@ -94,7 +94,7 @@
         {
             "name": "classFilter",
             "type": "string",
-            "label": "Class Inclusion/Exclusion",
+            "label": "Class Inclusion/Exclusion Filters",
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",

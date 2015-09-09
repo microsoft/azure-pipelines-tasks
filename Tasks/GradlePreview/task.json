@@ -1,7 +1,7 @@
 {
     "id": "32942eff-c7bb-41ed-b045-9ded82aa1b68",
     "name": "GradleCC",
-    "friendlyName": "Gradle with CodeCoverage",
+    "friendlyName": "Gradle With CodeCoverage",
     "description": "Build using a Gradle wrapper script and check CodeCoverage",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
     "category": "Build",
@@ -94,7 +94,7 @@
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "NoCoverage",
-            "helpMarkDown": "Select the tool for evaluating code coverage. Only Jacoco support available currently.",
+            "helpMarkDown": "Select the code coverage tool.",
             "options": {
                 "NoCoverage": "No Coverage",
                 "JaCoCo": "JaCoCo"
@@ -103,7 +103,7 @@
         {
             "name": "classfilesDirectory",
             "type": "string",
-            "label": "Classfiles Directory",
+            "label": "Class Files Directory",
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
@@ -113,7 +113,7 @@
         {
             "name": "classFilter",
             "type": "string",
-            "label": "Class Inclusion/Exclusion",
+            "label": "Class Inclusion/Exclusion Filters",
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
