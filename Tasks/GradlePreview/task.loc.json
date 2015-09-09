@@ -107,7 +107,7 @@
       "name": "classfilesDirectory",
       "type": "string",
       "label": "ms-resource:loc.input.label.classfilesDirectory",
-      "defaultValue": ".",
+      "defaultValue": "build/classes/main",
       "required": true,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectory",
