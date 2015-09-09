@@ -71,13 +71,14 @@ if(Test-Path $reportDirectory)
 
 $summaryFileName = "summary.xml"
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
-$summaryFile = Join-Path $summaryFile $summaryFileName
+$summaryFile = Join-Path $summaryFile $summaryFileName 
+$buildFile = Join-Path $buildRootPath "build.gradle"
 
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $wrapperScript -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName
+   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName
    Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
