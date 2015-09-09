@@ -10,6 +10,6 @@
   "loc.input.help.args": "An das Shellskript übergebene Argumente",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist.",
-  "loc.input.label.failOnStandardError": "Fehler bei Standardfehler",
-  "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden."  
+  "loc.input.label.failOnStandardError": "Fehler bei StandardError",
+  "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden."
 }

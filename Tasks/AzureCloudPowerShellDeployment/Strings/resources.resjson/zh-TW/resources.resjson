@@ -4,7 +4,7 @@
   "loc.description": "部署 Azure 雲端服務",
   "loc.instanceNameFormat": "Azure 部署: $(CsPkg)",
   "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
-  "loc.input.help.ConnectedServiceName": "以部署為目標的 Azure 訂用帳戶。",
+  "loc.input.help.ConnectedServiceName": "要加以部署的 Azure 訂用帳戶。",
   "loc.input.label.StorageAccount": "儲存體帳戶",
   "loc.input.help.StorageAccount": "儲存體帳戶必須存在才能部署應用程式。",
   "loc.input.label.ServiceName": "服務名稱",
@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "預設成品目錄之下的 CsCfg 路徑。",
   "loc.input.label.Slot": "環境 (位置)",
   "loc.input.help.Slot": "**生產** 或 **預備**",
+  "loc.input.label.DeploymentLabel": "部署標籤",
+  "loc.input.help.DeploymentLabel": "指定新部署的標籤名稱。若未指定，將會使用全域唯一識別項 (GUID)。",
+  "loc.input.label.AppendDateTimeToLabel": "附加目前的日期與時間",
+  "loc.input.help.AppendDateTimeToLabel": "將目前的日期與時間附加到部署標籤",
   "loc.input.label.AllowUpgrade": "允許升級"
 }

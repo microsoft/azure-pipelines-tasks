@@ -1,15 +1,15 @@
 {
   "loc.friendlyName": "Gulp",
   "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613721)",
-  "loc.description": "Node.js がタスク ベースのビルド システムをストリーミングしています",
+  "loc.description": "Node.js ストリーミング タスク ベースのビルド システムです",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.gulpFile": "Gulp ファイル パス",
   "loc.input.help.gulpFile": "リポジトリのルートを基準として指定する、実行する gulp スクリプト ファイルの相対パス。",
   "loc.input.label.targets": "Gulp タスク",
-  "loc.input.help.targets": "(省略可能) 指定されていない場合は既定のタスクを実行します。実行するタスクのスペース区切りのリストです。指定されていない場合は、既定のタスクが実行されます。",
+  "loc.input.help.targets": "(省略可能) スペース区切りの実行タスクのリスト。指定しない場合は、既定のタスクが実行されます。",
   "loc.input.label.arguments": "引数",
-  "loc.input.help.arguments": "gulp に渡される追加の引数。--gulpfile は、上記の gulpFile の入力を経由して既に追加されているため不要です。",
+  "loc.input.help.arguments": "gulp に渡される追加の引数。上記の gulpFile 入力で既に追加されているので、--gulpfile は不要です。",
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。"
 }

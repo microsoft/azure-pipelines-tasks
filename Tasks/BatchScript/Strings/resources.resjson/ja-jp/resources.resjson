@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "スクリプト $(filename) の実行",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.filename": "パス",
-  "loc.input.help.filename": "実行するコマンドレットまたはバッチ スクリプトのパス。完全修飾パスか、既定の作業ディレクトリを基準にした相対パスのいずれか。",
+  "loc.input.help.filename": "実行するコマンドレットまたはバッチ スクリプトのパス。完全修飾パスか、既定の作業ディレクトリを基準にした相対パスのいずれかです。",
   "loc.input.label.arguments": "引数",
   "loc.input.help.arguments": "コマンドレットまたはバッチ スクリプトに渡される引数",
   "loc.input.label.modifyEnvironment": "環境の変更",

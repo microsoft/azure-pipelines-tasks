@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Grunt",
+  "loc.helpMarkDown": "[Дополнительные сведения](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "Средство запуска задач JavaScript",
+  "loc.instanceNameFormat": "grunt $(targets)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.gruntFile": "Путь к файлу Grunt",
+  "loc.input.help.gruntFile": "Относительный путь из корневого репозитория запускаемого файла скрипта файла Grunt.",
+  "loc.input.label.targets": "Задачи Grunt",
+  "loc.input.help.targets": "Необязательно. Список запускаемых задач с разделителями-пробелами. Если он не указан, будет запущена задача по умолчанию.",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.help.arguments": "Дополнительные аргументы, переданные Grunt. Параметр --gruntfile не требуется, так как он уже добавлен с помощью ввода gruntFile выше.",
+  "loc.input.label.cwd": "Рабочий каталог",
+  "loc.input.help.cwd": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий."
+}

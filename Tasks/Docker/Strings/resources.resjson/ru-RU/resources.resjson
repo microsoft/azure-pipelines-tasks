@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Развертывание образа Docker на удаленном компьютере",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Развертывание образа Docker на удаленном компьютере",
   "loc.instanceNameFormat": "Развертывание Docker: $(Repository)",
   "loc.input.label.DockerEndpoint": "Конечная точка Docker",

@@ -6,12 +6,10 @@
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.solution": "Путь к решению",
   "loc.input.help.solution": "Путь к файлу решения Visual Studio",
-  "loc.input.label.excludeVersion": "Исключить версию",
-  "loc.input.help.excludeVersion": "Предписывает NuGet исключить версию пакета из списка имен папок пакетов. Эквивалентно аргументу -ExcludeVersion NuGet.exe командной строки",
   "loc.input.label.noCache": "Отключить локальный кэш",
-  "loc.input.help.noCache": "Эквивалентно аргументу -NoCache NuGet.exe командной строки",
+  "loc.input.help.noCache": "Эквивалентно аргументу -NoCache командной строки NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Аргументы NuGet",
-  "loc.input.help.nuGetRestoreArgs": "Дополнительные аргументы, передаваемые средству восстановления NuGet.exe.",
+  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Путь к NuGet.exe",
   "loc.input.help.nuGetPath": "При необходимости укажите путь к NuGet.exe"
 }

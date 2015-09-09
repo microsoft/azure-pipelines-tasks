@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "기본 아티팩트 디렉터리의 CsCfg 경로입니다.",
   "loc.input.label.Slot": "환경(슬롯)",
   "loc.input.help.Slot": "**프로덕션** 또는 **스테이징**",
+  "loc.input.label.DeploymentLabel": "배포 레이블",
+  "loc.input.help.DeploymentLabel": "새 배포에 대해 레이블 이름을 지정합니다. 지정하지 않은 경우 GUID(Globally Unique Identifier)가 사용됩니다.",
+  "loc.input.label.AppendDateTimeToLabel": "현재 날짜와 시간 추가",
+  "loc.input.help.AppendDateTimeToLabel": "배포 레이블에 현재 날짜와 시간을 추가합니다.",
   "loc.input.label.AllowUpgrade": "업그레이드 허용"
 }

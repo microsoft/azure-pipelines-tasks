@@ -11,7 +11,7 @@
   "loc.input.label.modifyEnvironment": "Изменить среду",
   "loc.input.help.modifyEnvironment": "Определяет, будут ли изменения переменных среды влиять на последующие задачи.",
   "loc.input.label.workingFolder": "Рабочая папка",
-  "loc.input.help.workingFolder": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий.",  
+  "loc.input.help.workingFolder": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий.",
   "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой",
   "loc.input.help.failOnStandardError": "Если имеет значение true, задача завершится сбоем при записи любых ошибок в поток StandardError."
 }

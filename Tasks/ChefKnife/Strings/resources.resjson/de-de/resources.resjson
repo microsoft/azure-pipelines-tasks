@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "Skripte mit Knife-Befehlen auf Ihrer Chef-Arbeitsstation ausführen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/ChefKnife/README.md)",
   "loc.description": "Skripte mit Knife-Befehlen auf Ihrer Chef-Arbeitsstation ausführen",
   "loc.instanceNameFormat": "Chef Knife-Skript: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Chef-Abonnements",
@@ -8,5 +8,5 @@
   "loc.input.label.ScriptPath": "Skriptpfad",
   "loc.input.help.ScriptPath": "Pfad des Skripts. Muss der vollständig qualifizierte Pfad oder ein Pfad relativ zum Standardarbeitsverzeichnis sein.",
   "loc.input.label.ScriptArguments": "Skriptargumente",
-  "loc.input.help.ScriptArguments": "Zusätzliche Argumente, die an Skript übergeben werden sollen. Entweder Ordnungszahl- oder benannte Parameter."
+  "loc.input.help.ScriptArguments": "Zusätzliche Parameter, die an Skript übergeben werden sollen. Entweder Ordnungszahl- oder benannte Parameter."
 }

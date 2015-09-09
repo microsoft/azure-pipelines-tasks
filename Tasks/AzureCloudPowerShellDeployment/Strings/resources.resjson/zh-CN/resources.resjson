@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "默认项目目录下 CsCfg 的路径。",
   "loc.input.label.Slot": "环境(槽)",
   "loc.input.help.Slot": "**Production** 或 **Staging**",
+  "loc.input.label.DeploymentLabel": "部署标签",
+  "loc.input.help.DeploymentLabel": "指定新部署的标签名。如未指定，将使用全局唯一标识符(GUID)。",
+  "loc.input.label.AppendDateTimeToLabel": "追加当前的日期和时间",
+  "loc.input.help.AppendDateTimeToLabel": "将当前的日期和时间追加到部署标签",
   "loc.input.label.AllowUpgrade": "允许升级"
 }

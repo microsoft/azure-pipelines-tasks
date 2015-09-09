@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Exécuter le script $(filename)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.filename": "Chemin d'accès",
-  "loc.input.help.filename": "Chemin d'accès au script cmd ou bat à exécuter. Doit être un chemin d'accès complet ou relatif au répertoire de travail par défaut.",
+  "loc.input.help.filename": "Chemin d'accès du script cmd ou bat à exécuter. Doit être un chemin d'accès complet ou relatif au répertoire de travail par défaut.",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Arguments passés au script cmd ou bat",
   "loc.input.label.modifyEnvironment": "Modifier l'environnement",

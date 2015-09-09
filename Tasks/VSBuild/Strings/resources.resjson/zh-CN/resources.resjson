@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio 版本",
   "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "在 Visual Studio 开发者命令提示符中使用 MSBuild 生成",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property",
   "loc.instanceNameFormat": "生成解决方案 $(solution)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.solution": "解决方案",
@@ -12,16 +12,9 @@
   "loc.input.label.configuration": "配置",
   "loc.input.label.clean": "清理",
   "loc.input.label.restoreNugetPackages": "还原 NuGet 包",
-  "loc.input.label.vsLocationMethod": "Visual Studio",
   "loc.input.label.vsVersion": "Visual Studio 版本",
-  "loc.input.label.vsLocation": "Visual Studio 位置",
-  "loc.input.help.vsLocation": "可以选择提供用于查找开发人员命令提示批处理文件的 Visual Studio 安装位置路径。默认为搜索最新版本。",
-  "loc.input.label.msbuildLocationMethod": "MSBuild",
-  "loc.input.label.msbuildVersion": "MSBuild 版本",
-  "loc.input.help.msbuildVersion": "要运行的 MSBuild 的版本。默认为搜索最新版本",
+  "loc.input.help.vsVersion": "如果找不到首选版本，将改为使用找到的最新版本。",
   "loc.input.label.msbuildArchitecture": "MSBuild 体系结构",
   "loc.input.help.msbuildArchitecture": "可以选择提供 MSBuild 的体系结构(x86、x64)进行运行。",
-  "loc.input.label.msbuildLocation": "MSBuild 的路径",
-  "loc.input.help.msbuildLocation": "可以选择提供 MSBuild 的路径。默认为搜索最新版本。",
   "loc.input.label.logProjectEvents": "记录项目详情"
 }

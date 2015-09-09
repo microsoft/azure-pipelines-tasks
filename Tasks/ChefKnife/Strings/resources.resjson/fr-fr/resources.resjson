@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Knife pour Chef",
-  "loc.helpMarkDown": "Exécuter des scripts avec des commandes knife sur votre station de travail chef",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/ChefKnife/README.md)",
   "loc.description": "Exécuter des scripts avec des commandes knife sur votre station de travail chef",
   "loc.instanceNameFormat": "Script Chef Knife : $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Abonnement Chef",
   "loc.input.help.ConnectedServiceName": "Abonnement Chef à configurer avant d'exécuter des commandes knife",
   "loc.input.label.ScriptPath": "Chemin d'accès du script",
-  "loc.input.help.ScriptPath": "Chemin d'accès au script. Doit être un chemin d'accès complet ou relatif au répertoire de travail par défaut.",
+  "loc.input.help.ScriptPath": "Chemin d'accès du script. Doit être un chemin d'accès complet ou relatif au répertoire de travail par défaut.",
   "loc.input.label.ScriptArguments": "Arguments de script",
   "loc.input.help.ScriptArguments": "Paramètres supplémentaires à passer au script. Peuvent être des paramètres ordinaux ou nommés."
 }

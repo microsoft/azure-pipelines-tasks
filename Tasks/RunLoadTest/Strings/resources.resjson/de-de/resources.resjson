@@ -8,8 +8,8 @@
   "loc.input.label.TestSettings": "Testeinstellungsdatei",
   "loc.input.help.TestSettings": "Relativer Pfad vom Repositorystamm für die Testeinstellungsdatei, die für den Auslastungstest verwendet werden soll.",
   "loc.input.label.TestDrop": "Ordner für Auslastungstestdatei",
-  "loc.input.help.TestDrop": "Relativer Pfad vom Repositorystamm, in dem die Ausgabe der Auslastungstest-Lösungserstellung verfügbar sein wird.",
-  "loc.input.label.LoadTest": "Aulastungstestdatei",
+  "loc.input.help.TestDrop": "Relativer Pfad vom Repositorystamm, in dem die Ausgabe der Auslastungstest-Projektmappenerstellung verfügbar sein wird.",
+  "loc.input.label.LoadTest": "Auslastungstestdatei",
   "loc.input.help.LoadTest": "Der Dateiname des Auslastungstests, der unter dem oben angegebenen Auslastungstestordner verwendet werden soll.",
   "loc.input.label.ThresholdLimit": "Anzahl zulässiger Schwellenwertverletzungen",
   "loc.input.help.ThresholdLimit": "Anzahl der Schwellenwertverletzungen, ab der das Ergebnis des Auslastungstests als nicht erfolgreich betrachtet wird"

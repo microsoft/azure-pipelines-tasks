@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Grunt",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "El ejecutor de tareas de JavaScript",
+  "loc.instanceNameFormat": "$(targets) de Grunt",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.gruntFile": "Ruta de acceso del archivo de Grunt",
+  "loc.input.help.gruntFile": "Ruta de acceso relativa de la raíz del repositorio del archivo del script del archivo de Grunt que se va a ejecutar.",
+  "loc.input.label.targets": "Tarea o tareas de Grunt",
+  "loc.input.help.targets": "Opcional. Lista de tareas para ejecutar delimitada por espacios. Si no se especifica, se ejecutará la tarea predeterminada.",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Los argumentos adicionales se pasaron a Grunt. --gruntfile no es necesario puesto que ya se añadió a través de la entrada gruntFile anterior.",
+  "loc.input.label.cwd": "Directorio de trabajo",
+  "loc.input.help.cwd": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta en la que se encuentra el script."
+}

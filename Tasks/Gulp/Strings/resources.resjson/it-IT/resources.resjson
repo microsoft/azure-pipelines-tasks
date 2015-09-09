@@ -7,7 +7,7 @@
   "loc.input.label.gulpFile": "Percorso file di Gulp",
   "loc.input.help.gulpFile": "Percorso relativo dalla radice del repository del file di script del file gulp da eseguire.",
   "loc.input.label.targets": "Attività di Gulp",
-  "loc.input.help.targets": "Facoltativo. Se non viene specificato, verrà eseguita l'attività predefinita. Elenco con valori delimitati da spazi delle attività da eseguire. Se non viene specificato, verrà eseguita l'attività predefinita.",
+  "loc.input.help.targets": "Facoltativo. Elenco di attività delimitate da spazio da eseguire. Se non è specificato, viene eseguita l'attività predefinita.",
   "loc.input.label.arguments": "Argomenti",
   "loc.input.help.arguments": "Argomenti aggiuntivi passati a gulp. --gulpfile non è necessario dal momento che è già stato aggiunto tramite l'input di gulpFile in precedenza.",
   "loc.input.label.cwd": "Directory di lavoro",

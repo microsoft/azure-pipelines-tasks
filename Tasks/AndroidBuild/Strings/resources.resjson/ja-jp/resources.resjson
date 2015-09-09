@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Android のビルド",
   "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613716)",
-  "loc.description": "Gradle を使用して Android アプリを作成し、必要に応じて単体テストのエミュレーターを開始します",
+  "loc.description": "Gradle を使用して Android アプリを作成し、必要に応じて単体テストのエミュレーターを起動します",
   "loc.instanceNameFormat": "Android のビルド $(gradleProj)",
   "loc.group.displayName.avdOptions": "Android 仮想デバイス (AVD) のオプション",
   "loc.group.displayName.emulatorOptions": "エミュレーター オプション",

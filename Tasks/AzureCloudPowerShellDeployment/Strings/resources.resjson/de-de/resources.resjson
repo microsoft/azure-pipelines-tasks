@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "Pfad von CsCfg unter dem Artefaktstandardverzeichnis.",
   "loc.input.label.Slot": "Umgebung (Platz)",
   "loc.input.help.Slot": "**Produktion** oder **Staging**",
+  "loc.input.label.DeploymentLabel": "Bereitstellungsbezeichnung",
+  "loc.input.help.DeploymentLabel": "Gibt die Bezeichnung für die neue Bereitstellung an. Wenn dieser Wert nicht angegeben wird, wird ein Globally Unique Identifier (GUID) verwendet.",
+  "loc.input.label.AppendDateTimeToLabel": "Aktuelle(s) Datum und Uhrzeit anfügen",
+  "loc.input.help.AppendDateTimeToLabel": "Fügt das aktuelle Datum und die aktuelle Uhrzeit an die Bereitstellungsbezeichnung an",
   "loc.input.label.AllowUpgrade": "Upgrade zulassen"
 }

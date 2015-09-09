@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Déployer une image Docker sur un ordinateur distant",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Déployer une image Docker sur un ordinateur distant",
   "loc.instanceNameFormat": "Déploiement de Docker : $(Repository)",
   "loc.input.label.DockerEndpoint": "Point de terminaison Docker",

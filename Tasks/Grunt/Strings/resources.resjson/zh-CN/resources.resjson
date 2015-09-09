@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Grunt",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "JavaScript 任务运行程序",
+  "loc.instanceNameFormat": "grunt $(targets)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.gruntFile": "Grunt 文件路径",
+  "loc.input.help.gruntFile": "相对于待运行 grunt 文件脚本文件的存储库根的路径。",
+  "loc.input.label.targets": "Grunt 任务",
+  "loc.input.help.targets": "可选。待运行任务的列表，以空格分隔。如未指定，则将运行默认任务。",
+  "loc.input.label.arguments": "参数",
+  "loc.input.help.arguments": "传递给 grunt 的其他参数。不需要 --gruntfile，因为已通过上面的 gruntFile 输入进行添加。",
+  "loc.input.label.cwd": "工作目录",
+  "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。"
+}

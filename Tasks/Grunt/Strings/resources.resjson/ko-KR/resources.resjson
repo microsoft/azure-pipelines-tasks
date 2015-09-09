@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Grunt",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "JavaScript Task Runner",
+  "loc.instanceNameFormat": "grunt $(targets)",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.gruntFile": "Grunt 파일 경로",
+  "loc.input.help.gruntFile": "실행할 grunt 파일 스크립트 파일의 리포지토리 루트로부터의 상대 경로입니다.",
+  "loc.input.label.targets": "Grunt 작업",
+  "loc.input.help.targets": "선택 사항. 공백으로 구분된 실행할 작업 목록입니다. 지정하지 않을 경우 기본 작업이 실행됩니다.",
+  "loc.input.label.arguments": "인수",
+  "loc.input.help.arguments": "추가 인수가 grunt로 전달되었습니다. --gruntfile은 위의 gruntFile 입력을 통해 이미 추가되었으므로 필요하지 않습니다.",
+  "loc.input.label.cwd": "작업 디렉터리",
+  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 기본값은 스크립트가 있는 폴더입니다."
+}

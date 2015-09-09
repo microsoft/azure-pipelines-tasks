@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Grunt",
+  "loc.helpMarkDown": "[詳細] (http://go.microsoft.com/fwlink/?LinkID=613721) ",
+  "loc.description": "JavaScript タスク ランナー",
+  "loc.instanceNameFormat": "grunt $(targets)",
+  "loc.group.displayName.advanced": "詳細設定 ",
+  "loc.input.label.gruntFile": "Grunt ファイルのパス",
+  "loc.input.help.gruntFile": "実行する Grunt スクリプト ファイルのリポジトリ ルートからの相対パス。",
+  "loc.input.label.targets": "Grunt タスク",
+  "loc.input.help.targets": "(省略可能) スペース区切りの実行タスクのリスト。指定しない場合は、既定のタスクが実行されます。",
+  "loc.input.label.arguments": "引数 ",
+  "loc.input.help.arguments": "Grunt に渡される追加引数。上記の gruntFile 入力で既に追加されているので、--gruntfile は不要です。",
+  "loc.input.label.cwd": "作業ディレクトリ ",
+  "loc.input.help.cwd": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。　"
+}

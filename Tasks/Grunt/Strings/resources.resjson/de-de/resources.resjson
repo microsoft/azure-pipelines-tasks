@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Grunt",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "Das JavaScript-Ausführungsmodul",
+  "loc.instanceNameFormat": "grunt $(targets)",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.gruntFile": "Grunt-Dateipfad",
+  "loc.input.help.gruntFile": "Relativer Pfad vom Repositorystamm der auszuführenden Grunt-Skriptdatei.",
+  "loc.input.label.targets": "Grunt-Aufgabe(n)",
+  "loc.input.help.targets": "Optional. Mit Leerzeichen getrennte Liste der auszuführenden Aufgaben. Wenn nicht angegeben, wird die Standardaufgabe ausgeführt.",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.help.arguments": "Zusätzliche Argumente, die an Grunt übergeben werden. \"--gruntfile\" wurde bereits über die gruntFile-Eingabe weiter oben hinzugefügt und ist daher nicht erforderlich.",
+  "loc.input.label.cwd": "Arbeitsverzeichnis",
+  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist."
+}

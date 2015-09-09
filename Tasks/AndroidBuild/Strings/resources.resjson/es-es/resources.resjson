@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Compilación de Android",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613716)",
-  "loc.description": "Compile una aplicación Android con Gradle y, opcionalmente, inicie el emulador para realizar pruebas unitarias",
+  "loc.description": "Compilar una aplicación Android con Gradle y, opcionalmente, inicie el emulador para realizar pruebas unitarias",
   "loc.instanceNameFormat": "Compilación de Android $(gradleProj)",
   "loc.group.displayName.avdOptions": "Opciones de dispositivo virtual Android (AVD)",
   "loc.group.displayName.emulatorOptions": "Opciones del emulador",
@@ -25,7 +25,7 @@
   "loc.input.help.startEmulator": "Inicie el emulador de Android y deténgalo cuando esta tarea acabe.",
   "loc.input.label.emulatorTimeout": "Tiempo de espera en segundos",
   "loc.input.help.emulatorTimeout": "Tiempo que el compilador espera a que el emulador se inicie.",
-  "loc.input.label.emulatorHeadless": "Pantalla sin periféricos",
+  "loc.input.label.emulatorHeadless": "Emulador de pantalla",
   "loc.input.help.emulatorHeadless": "Use \"-no-skin -no-audio -no-window\" cuando inicie el emulador.",
   "loc.input.label.emulatorOptionalArgs": "Argumentos opcionales de emulador",
   "loc.input.help.emulatorOptionalArgs": "Argumentos adicionales pasados a \"tools\\emulator\" de Android.",

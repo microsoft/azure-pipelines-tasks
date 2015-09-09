@@ -11,5 +11,5 @@
   "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。",
   "loc.input.label.failOnStandardError": "因标准错误失败",
-  "loc.input.help.failOnStandardError": "如果这是 true，则在向 StandardError 流写入任何错误时，此任务都会失败。"
+  "loc.input.help.failOnStandardError": "如果为 true，则在向 StandardError 流写入任何错误时，此任务都会失败。"
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Gradle",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613720)",
-  "loc.description": "Realice compilaciones con un script de contenedor de Gradle",
+  "loc.description": "Compilar con un script de contenedor de Gradle",
   "loc.instanceNameFormat": "$(tasks) de Gradlew",
   "loc.group.displayName.junitTestResults": "Resultados de pruebas JUnit",
   "loc.group.displayName.advanced": "Avanzado",
@@ -15,8 +15,12 @@
   "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar en VSO/TFS los resultados de pruebas JUnit generados por la compilación de Gradle. Cada archivo de resultado de prueba que coincida con \"Archivos de resultados de pruebas\" se publicará como una serie de pruebas en VSO/TFS.",
   "loc.input.label.testResultsFiles": "Archivos de resultados de pruebas",
   "loc.input.help.testResultsFiles": "Ruta de acceso de los archivos de resultados de pruebas. Puede usar caracteres comodín. Por ejemplo, \"**/TEST-*.xml\" para todos los archivos XML cuyos nombres empiecen por TEST-.",
+  "loc.input.label.javaHomeSelection": "Set JAVA_HOME by",
+  "loc.input.help.javaHomeSelection": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
   "loc.input.label.jdkVersion": "Versión de JDK",
   "loc.input.help.jdkVersion": "Se tratará de hallar la ruta de acceso a la versión de JDK seleccionada y establecer JAVA_HOME según sea el caso.",
+  "loc.input.label.jdkUserInputPath": "JDK Path",
+  "loc.input.help.jdkUserInputPath": "Sets JAVA_HOME to the given path.",
   "loc.input.label.jdkArchitecture": "Arquitectura JDK",
   "loc.input.help.jdkArchitecture": "Indique opcionalmente la arquitectura (x86, x64) de JDK."
 }

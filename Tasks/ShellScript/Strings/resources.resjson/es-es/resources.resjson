@@ -10,6 +10,6 @@
   "loc.input.help.args": "Argumentos pasados al script de shell",
   "loc.input.label.cwd": "Directorio de trabajo",
   "loc.input.help.cwd": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script.",
-  "loc.input.label.failOnStandardError": "Error en Error estándar",
-  "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."  
+  "loc.input.label.failOnStandardError": "Error en la secuencia Error estándar",
+  "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."
 }

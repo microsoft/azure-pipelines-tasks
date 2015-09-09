@@ -2,16 +2,14 @@
   "loc.friendlyName": "Instalador de NuGet",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613747)",
   "loc.description": "Instala y actualiza los paquetes NuGet que faltan",
-  "loc.instanceNameFormat": "$(solution) de restauración NuGet",
+  "loc.instanceNameFormat": "NuGet restore $(solution)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.solution": "Ruta de acceso de la solución",
   "loc.input.help.solution": "Ruta de acceso al archivo de solución de Visual Studio",
-  "loc.input.label.excludeVersion": "Excluir versión",
-  "loc.input.help.excludeVersion": "Crea la versión de paquete de exclusión NuGet a partir de los nombres de carpeta de paquete. Equivale al argumento de línea de comandos -ExcludeVersion de NuGet.exe",
   "loc.input.label.noCache": "Deshabilitar la caché local",
   "loc.input.help.noCache": "Equivale al argumento de línea de comandos -NoCache de NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Argumentos de NuGet",
-  "loc.input.help.nuGetRestoreArgs": "Argumentos adicionales pasados a la restauración de NuGet.exe.",
+  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Ruta de acceso de NuGet.exe",
   "loc.input.help.nuGetPath": "Indique opcionalmente la ruta de acceso a NuGet.exe"
 }
