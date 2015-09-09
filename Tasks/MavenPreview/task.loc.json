@@ -13,14 +13,14 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
-  "demands": [
-    "maven"
-  ],
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
+  "demands": [
+    "maven"
+  ],
   "minimumAgentVersion": "1.88.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -32,7 +32,7 @@
     {
       "name": "codeCoverage",
       "displayName": "ms-resource:loc.group.displayName.codeCoverage",
-      "isExpanded": false
+      "isExpanded": true
     },
     {
       "name": "advanced",
@@ -82,52 +82,27 @@
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
     },
     {
-      "name": "publishCodeCoverageResults",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.publishCodeCoverageResults",
-      "required": true,
-      "defaultValue": "false",
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.publishCodeCoverageResults"
-    },
-    {
       "name": "codeCoverageTool",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
       "groupName": "codeCoverage",
-      "defaultValue": "JaCoCo",
+      "defaultValue": "NoCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
+        "NoCoverage": "No Coverage",
         "JaCoCo": "JaCoCo"
       }
     },
     {
-      "name": "summaryFileLocation",
+      "name": "classFilter",
       "type": "string",
-      "label": "ms-resource:loc.input.label.summaryFileLocation",
-      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco\\jacoco.xml",
-      "required": true,
+      "label": "ms-resource:loc.input.label.classFilter",
+      "defaultValue": "",
+      "required": false,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
-    },
-    {
-      "name": "reportDirectory",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.reportDirectory",
-      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco",
-      "required": true,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
-    },
-    {
-      "name": "additionalCodeCoverageFiles",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
-      "defaultValue": "**/*.exec",
-      "required": true,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
       "name": "jdkVersion",

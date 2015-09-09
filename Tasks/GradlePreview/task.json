@@ -1,7 +1,7 @@
 {
     "id": "32942eff-c7bb-41ed-b045-9ded82aa1b68",
     "name": "GradleCC",
-    "friendlyName": "Gradle with CodeCoverage",
+    "friendlyName": "Gradle With CodeCoverage",
     "description": "Build using a Gradle wrapper script and check CodeCoverage",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
     "category": "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "demands" : [
         "java"
@@ -27,8 +27,8 @@
         },
         {
             "name": "codeCoverage",
-            "displayName": "Publish CodeCoverage Results",
-            "isExpanded": false
+            "displayName": "Code Coverage",
+            "isExpanded": true
         },
         {
             "name":"advanced",
@@ -36,6 +36,7 @@
             "isExpanded":false
         }
     ],
+    "instanceNameFormat": "gradlew $(tasks)",
     "inputs": [
         { 
             "name": "wrapperScript", 
@@ -85,15 +86,6 @@
             "required": true,
             "groupName":"junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
-        },   
-        {
-            "name": "publishCodeCoverageResults",
-            "type": "boolean",
-            "label": "Publish to VSO/TFS",
-            "required": true,
-            "defaultValue": "false",
-            "groupName": "codeCoverage",
-            "helpMarkDown": "Select this option to publish Code Coverage results produced by the Gradle build to VSO/TFS.Code Coverage Summary and code Coverage Files would be published to TFS Server"
         },
         {
             "name": "codeCoverageTool",
@@ -101,39 +93,33 @@
             "label": "CodeCoverage Tool",
             "required": false,
             "groupName": "codeCoverage",
-            "defaultValue": "JaCoCo",
-            "helpMarkDown": "Select the tool with which summary files have been generated. Only Jacoco support available currently.",
+            "defaultValue": "NoCoverage",
+            "helpMarkDown": "Select the code coverage tool.",
             "options": {
+                "NoCoverage": "No Coverage",
                 "JaCoCo": "JaCoCo"
             }
         },
         {
-            "name": "summaryFileLocation",
+            "name": "classfilesDirectory",
             "type": "string",
-            "label": "Summary File",
-            "defaultValue": "$(Build.Repository.LocalPath)\\build\\reports\\jacoco\\test\\jacocoTestReport.xml",
+            "label": "Class Files Directory",
+            "defaultValue": "build/classes/main",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Path of codecoverage summary file"
+            "helpMarkDown": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer https://docs.gradle.org/current/userguide/jacoco_plugin.html.",
+            "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
-            "name": "reportDirectory",
+            "name": "classFilter",
             "type": "string",
-            "label": "Report directory",
-            "defaultValue": "$(Build.Repository.LocalPath)\\build\\jacoco",
-            "required": true,
+            "label": "Class Inclusion/Exclusion Filters",
+            "defaultValue": "",
+            "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Path of codecoverage report directory"
-        },
-        {
-            "name": "additionalCodeCoverageFiles",
-            "type": "filePath",
-            "label": "Additional files",
-            "defaultValue": "**/*.exec",
-            "required": true,
-            "groupName": "codeCoverage",
-            "helpMarkDown": "Regular expression specifying the additional codecoverage files to be attached to build"
-        },
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer https://docs.gradle.org/current/userguide/jacoco_plugin.html.",
+            "visibleRule": "codeCoverageTool = JaCoCo"
+        },		
         {
             "name":"jdkVersion",
             "type":"pickList",
@@ -163,7 +149,6 @@
             }
         }
     ],
-    "instanceNameFormat": "gradlew $(tasks)",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\gradle.ps1",

@@ -62,7 +62,7 @@ $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 if(Test-Path $reportDirectory)
 {
    # delete any previous code coverage data 
-   rm -r $reportDirectory -force 
+   rm -r $reportDirectory -force | Out-Null
 }
 
 $summaryFileName = "summary.xml"
@@ -121,7 +121,3 @@ if($isCoverageEnabled)
 }
 
 Write-Verbose "Leaving script Ant.ps1" -Verbose
-
-
-
-

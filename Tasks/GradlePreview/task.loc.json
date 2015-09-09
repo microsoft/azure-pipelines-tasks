@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "java"
@@ -31,7 +31,7 @@
     {
       "name": "codeCoverage",
       "displayName": "ms-resource:loc.group.displayName.codeCoverage",
-      "isExpanded": false
+      "isExpanded": true
     },
     {
       "name": "advanced",
@@ -39,6 +39,7 @@
       "isExpanded": false
     }
   ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "wrapperScript",
@@ -90,52 +91,37 @@
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
     },
     {
-      "name": "publishCodeCoverageResults",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.publishCodeCoverageResults",
-      "required": true,
-      "defaultValue": "false",
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.publishCodeCoverageResults"
-    },
-    {
       "name": "codeCoverageTool",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
       "groupName": "codeCoverage",
-      "defaultValue": "JaCoCo",
+      "defaultValue": "NoCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
+        "NoCoverage": "No Coverage",
         "JaCoCo": "JaCoCo"
       }
     },
     {
-      "name": "summaryFileLocation",
+      "name": "classfilesDirectory",
       "type": "string",
-      "label": "ms-resource:loc.input.label.summaryFileLocation",
-      "defaultValue": "$(Build.Repository.LocalPath)\\build\\reports\\jacoco\\test\\jacocoTestReport.xml",
+      "label": "ms-resource:loc.input.label.classfilesDirectory",
+      "defaultValue": "build/classes/main",
       "required": true,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
+      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectory",
+      "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
-      "name": "reportDirectory",
+      "name": "classFilter",
       "type": "string",
-      "label": "ms-resource:loc.input.label.reportDirectory",
-      "defaultValue": "$(Build.Repository.LocalPath)\\build\\jacoco",
-      "required": true,
+      "label": "ms-resource:loc.input.label.classFilter",
+      "defaultValue": "",
+      "required": false,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
-    },
-    {
-      "name": "additionalCodeCoverageFiles",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
-      "defaultValue": "**/*.exec",
-      "required": true,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
       "name": "jdkVersion",
@@ -166,7 +152,6 @@
       }
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\gradle.ps1",

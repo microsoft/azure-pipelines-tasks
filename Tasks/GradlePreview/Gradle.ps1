@@ -7,24 +7,26 @@ param(
     [string]$testResultsFiles, 
     [string]$jdkVersion,      # JDK version
     [string]$jdkArchitecture,  # JDK arch
-    [string]$publishCodeCoverageResults,
+	
     [string]$codeCoverageTool,
-    [string]$summaryFileLocation,
-    [string]$reportDirectory,
-    [string]$additionalCodeCoverageFiles
+    [string]$classFilesDirectory,
+    [string]$classFilter
 )
 
-Write-Verbose "Entering script Gradle.ps1"
-Write-Verbose "wrapperScript = $wrapperScript"
-Write-Verbose "options = $options"
-Write-Verbose "tasks = $tasks"
-Write-Verbose "publishJUnitResults = $publishJUnitResults"
-Write-Verbose "testResultsFiles = $testResultsFiles"
-Write-Verbose "publishCodeCoverageResults = $publishCodeCoverageResults"
-Write-Verbose "codeCoverageTool = $codeCoverageTool"
-Write-Verbose "summaryFileLocation = $summaryFileLocation"
-Write-Verbose "reportDirectory = $reportDirectory"
-Write-Verbose "additionalCodeCoverageFiles = $additionalCodeCoverageFiles"
+Write-Verbose "Entering script Gradle.ps1" -Verbose
+Write-Verbose "wrapperScript = $wrapperScript" -Verbose
+Write-Verbose "options = $options" -Verbose
+Write-Verbose "tasks = $tasks" -Verbose
+Write-Verbose "publishJUnitResults = $publishJUnitResults" -Verbose
+Write-Verbose "testResultsFiles = $testResultsFiles" -Verbose
+
+$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+if($isCoverageEnabled)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
+    Write-Verbose "classFilesDirectory = $classFilesDirectory" -Verbose
+    Write-Verbose "classFilter = $classFilter" -Verbose
+}
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -54,11 +56,38 @@ if($jdkVersion -and $jdkVersion -ne "default")
 
     Write-Host "Setting JAVA_HOME to $jdkPath"
     $env:JAVA_HOME = $jdkPath
-    Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
+    Write-Verbose "JAVA_HOME set to $env:JAVA_HOME" -Verbose
+}
+
+$buildRootPath = Split-Path $wrapperScript -Parent
+$reportDirectoryName = "CodeCoverage"
+$reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+
+if(Test-Path $reportDirectory)
+{
+   # delete any previous code coverage data 
+   rm -r $reportDirectory -force | Out-Null
+}
+
+$summaryFileName = "summary.xml"
+$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
+$summaryFile = Join-Path $summaryFile $summaryFileName 
+$buildFile = Join-Path $buildRootPath "build.gradle"
+
+# check if code coverage has been enabled
+if($isCoverageEnabled)
+{
+   # Enable code coverage in build file
+   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName
+   Write-Verbose "Code coverage is successfully enabled." -Verbose
+}
+else
+{
+    Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
 }
 
 $arguments = "$options $tasks"
-Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
+Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments" -Verbose
 Invoke-BatchScript -Path $wrapperScript -Arguments $arguments -WorkingFolder $cwd
 
 # Publish test results files
@@ -73,30 +102,20 @@ if($publishJUnitResultsFromAntBuild)
     }
     else
     {
-        Write-Verbose "Calling Publish-TestResults"
+        Write-Verbose "Calling Publish-TestResults" -Verbose
         Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
     }    
 }
 else
 {
-    Write-Verbose "Option to publish JUnit Test results produced by Gradle build was not selected and is being skipped."
+    Write-Verbose "Option to publish JUnit Test results produced by Gradle build was not selected and is being skipped." -Verbose
 }
 
-if($publishCodeCoverageResults)
+# check if code coverage has been enabled
+if($isCoverageEnabled)
 {
-   # Publish Code Coverage Files
-   $codeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
-   
-   if(-not $codeCoverageFiles)
-   {
-      Write-Warning "No code coverage files matching pattern '$additionalCodeCoverageFiles' were found."  
-   }
-   
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $codeCoverageFiles -Context $distributedTaskContext    
-}
-else
-{
-    Write-Verbose "Option to publish CodeCoverage results produced by Gradle build was not selected and is being skipped."
+   Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
 }
 
-Write-Verbose "Leaving script Gradle.ps1"
+Write-Verbose "Leaving script Gradle.ps1" -Verbose
