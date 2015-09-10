@@ -17,16 +17,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
   "groups": [
-    {
-      "name": "source",
-      "displayName": "ms-resource:loc.group.displayName.source",
-      "isExpanded": true
-    },
     {
       "name": "target",
       "displayName": "ms-resource:loc.group.displayName.target",
@@ -45,7 +40,6 @@
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
-      "groupName": "source",
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
     },
     {
@@ -53,7 +47,6 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
       "required": false,
-      "groupName": "source",
       "defaultValue": "machineNames",
       "options": {
         "machineNames": "Machine Names",
@@ -66,7 +59,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.MachineFilter",
       "required": false,
-      "groupName": "source",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
     },
@@ -75,7 +67,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.DacpacFile",
       "required": true,
-      "groupName": "source",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.DacpacFile"
     },
