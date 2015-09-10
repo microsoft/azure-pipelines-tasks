@@ -6,7 +6,8 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [
-                "Build"
+                "Build",
+                "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
