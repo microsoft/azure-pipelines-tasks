@@ -6,8 +6,9 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],    
+                "Build",
+                "Release"
+                  ],
     "author": "Microsoft Corporation",
     "demands" : [
         "maven"
