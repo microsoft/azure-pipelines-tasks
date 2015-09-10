@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Maven With CodeCoverage",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=624541)",
   "loc.description": "Build with Apache Maven and check CodeCoverage",
   "loc.instanceNameFormat": "MavenCC $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
@@ -12,7 +12,9 @@
   "loc.input.label.mavenPOMFile": "Maven POM file",
   "loc.input.help.mavenPOMFile": "Relative path from the repo root to the `Maven POM file`.",
   "loc.input.label.options": "Options",
+  "loc.input.help.options": "Specify any commandline options to be passed to Maven.",
   "loc.input.label.goals": "Goal(s)",
+  "loc.input.help.goals": "Specify the name of the goal to be invoked by Maven.",
   "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
   "loc.input.help.publishJUnitResults": "Select this option to publish JUnit Test results produced by the Maven build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS.",
   "loc.input.label.testResultsFiles": "Test Results Files",

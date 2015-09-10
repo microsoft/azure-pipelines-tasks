@@ -3,7 +3,7 @@
     "name": "MavenCC",
     "friendlyName": "Maven With CodeCoverage",
     "description": "Build with Apache Maven and check CodeCoverage",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=624541)",
     "category": "Build",
     "visibility": [
                 "Preview",
@@ -50,15 +50,17 @@
             "name": "options", 
             "type": "string", 
             "label": "Options", 
-             "defaultValue": "", 
-             "required": false
+            "defaultValue": "", 
+            "required": false,
+            "helpMarkDown": "Specify any commandline options to be passed to Maven."
         },
         { 
             "name": "goals",
             "type": "string", 
             "label": "Goal(s)", 
             "defaultValue": "package", 
-            "required": false 
+            "required": false,
+            "helpMarkDown": "Specify the name of the goal to be invoked by Maven."
         },        
         {
             "name":"publishJUnitResults",
@@ -84,10 +86,10 @@
             "label": "CodeCoverage Tool",
             "required": false,
             "groupName": "codeCoverage",
-            "defaultValue": "NoCoverage",
+            "defaultValue": "None",
             "helpMarkDown": "Select the code coverage tool.",
             "options": {
-                "NoCoverage": "No Coverage",
+                "NoCoverage": "None",
                 "JaCoCo": "JaCoCo"
             }
         },

@@ -22,7 +22,7 @@ Write-Verbose "testResultsFiles = $testResultsFiles" -Verbose
 Write-Verbose "jdkVersion = $jdkVersion" -Verbose
 Write-Verbose "jdkArchitecture = $jdkArchitecture" -Verbose
 
-$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+$isCoverageEnabled = !$codeCoverageTool.equals("None")
 if($isCoverageEnabled)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose

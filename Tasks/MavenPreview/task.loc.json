@@ -54,14 +54,16 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.options",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.options"
     },
     {
       "name": "goals",
       "type": "string",
       "label": "ms-resource:loc.input.label.goals",
       "defaultValue": "package",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.goals"
     },
     {
       "name": "publishJUnitResults",
@@ -87,10 +89,10 @@
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
       "groupName": "codeCoverage",
-      "defaultValue": "NoCoverage",
+      "defaultValue": "None",
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
-        "NoCoverage": "No Coverage",
+        "NoCoverage": "None",
         "JaCoCo": "JaCoCo"
       }
     },

@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Gradle With CodeCoverage",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=624542)",
   "loc.description": "Build using a Gradle wrapper script and check CodeCoverage",
   "loc.instanceNameFormat": "gradlew $(tasks)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
@@ -12,7 +12,9 @@
   "loc.input.label.wrapperScript": "Gradle Wrapper",
   "loc.input.help.wrapperScript": "Relative path from the repository root to the `Gradle Wrapper script`.",
   "loc.input.label.options": "Options",
+  "loc.input.help.options": "Specify any commandline options to be passed to Gradle.",
   "loc.input.label.tasks": "Tasks",
+  "loc.input.help.tasks": "Specify the name of the tasks to be invoked by Gradle.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Working directory to run Gradle build in. Defaults to repository root.",
   "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
