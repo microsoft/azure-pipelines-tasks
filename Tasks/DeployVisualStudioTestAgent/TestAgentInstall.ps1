@@ -34,7 +34,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 		}
 		catch
 		{
-			Write-Warning -Verbose "Caught exception while installing Test Agent"
+			Write-Verbose -Verbose "Caught exception while installing Test Agent"
 			throw $_.Exception
 		}
                  
@@ -50,20 +50,20 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 					# delete the file which indicated that test agent installation failed.
 					remove-item $testAgentFile -force | Out-Null
 					# we have retried once .Now fail with appropriate message
-					Write-Warning -Verbose "Retried to install Test Agent"
+					Write-Verbose -Verbose "Retried to install Test Agent"
 					throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 				}
 				else
 				{
 					#creating testagent file to indicate testagent installation failed.
 					New-Item -Path $testAgentFile -type File | Out-Null
-					Write-Warning -Message ("Installation of Test Agent failed with Error code {0}. Retrying once by rebooting machine" -f $exitCode.ToString()) -Verbose
+					Write-Verbose -Message ("Installation of Test Agent failed with Error code {0}. Retrying once by rebooting machine" -f $exitCode.ToString()) -Verbose
 					return 3010;
 				}
 			}
 			catch
 			{
-				Write-Warning -Verbose "Error occured while retrying the Test Agent installation"
+				Write-Verbose -Verbose "Error occured while retrying the Test Agent installation"
 				throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 			}
 		}

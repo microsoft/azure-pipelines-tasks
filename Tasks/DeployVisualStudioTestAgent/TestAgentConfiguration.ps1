@@ -831,7 +831,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
         $stderr = $p.StandardError.ReadToEnd()
 
         Write-Verbose -Message ("Stdout : {0}" -f $stdout) -Verbose
-        Write-Warning -Message ("Stderr : {0}" -f $stderr)
+        Write-Verbose -Message ("Stderr : {0}" -f $stderr) -Verbose
         Write-Verbose -Message ("Exit code : {0}" -f $p.ExitCode) -Verbose
 
         $out = @{
