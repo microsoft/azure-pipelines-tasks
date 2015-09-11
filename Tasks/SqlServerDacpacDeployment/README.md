@@ -52,7 +52,79 @@ The SQL Server Database Deployment task uses the [Windows Remote Management](htt
 2. To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the SQL Server Database Deployment task.
 3. For pre-existing on-premises machines, domain-joined or workgroup, and whether they are physical machines or virtual machines, set them up as per the table below to ensure that the deployment tasks work fine with them:
 
-**Table Pending : roniga**
+<table border="1" style="width:100%">
+<tr>
+	<th> Target Machine State </th>
+	<th> Target Machine Trust with Automation Agent </th>
+	<th> Machine Identity </th>
+	<th> Authentication Account </th>
+	<th> Authentication Mode </th>
+	<th> Authentication Account Permission on Target Machine </th>
+	<th> Connection Type </th>
+	<th> Pre-requisites in Target machine for Deployment Tasks to Succeed </th>
+</tr>
+<tr>
+	<td> Domain joined machine in Corp network </td>
+	<td> Trusted </td>
+	<td> DNS name </td>
+	<td> Domain account </td>
+	<td> Kerberos </td>
+	<td> Machine Administrator </td>
+	<td> WinRM HTTP </td>
+	<td>	<ul>
+		<li> WinRM HTTP port (default 5985) opened in Firewall. </li>
+		<li> File & Printer sharing enabled </li>
+		</ul> </td>
+</tr>
+<tr>
+	<td> Domain joined machine in Corp network </td>
+	<td> Trusted </td>
+	<td> DNS name </td>
+	<td> Domain account </td>
+	<td> Kerberos </td>
+	<td> Machine Administrator </td>
+	<td> WinRM HTTPS </td>
+	<td>	<ul>
+		<li> WinRM HTTPS port (default 5986) opened in Firewall. </li>
+		<li> Trusted certificate in Automation agent. </li>
+		<li> If Trusted certificate not in Automation agent, then Test Certificate option enabled in Task for deployment. </li>
+		<li> File & Printer sharing enabled. </li>
+		</ul> </td>
+</tr>
+<tr>
+	<td> Domain joined machine or Workgroup machine, in Corp network </td>
+	<td> Any </td>
+	<td> DNS name </td>
+	<td> Local machine account </td>
+	<td> NTLM </td>
+	<td> Machine Administrator </td>
+	<td> WinRM HTTP </td>
+	<td>	<ul>
+		<li> WinRM HTTP port (default 5985) opened in Firewall. </li>
+		<li> Disable UAC remote restrictions (<a href="https://support.microsoft.com/en-us/kb/951016">link</a>). </li>
+		<li> Credential in <Account> format. </li>
+		<li> Set "AllowUnencrypted" option and add remote machines in "Trusted Host" list in Automation Agent (<a href="https://msdn.microsoft.com/en-us/library/aa384372(v=vs.85).aspx">link</a>). </li>
+		<li> File & Printer sharing enabled. </li>
+		</ul> </td>
+</tr>
+<tr>
+	<td> Domain joined machine or Workgroup machine, in Corp network </td>
+	<td> Any </td>
+	<td> DNS name </td>
+	<td> Local machine account </td>
+	<td> NTLM </td>
+	<td> Machine Administrator </td>
+	<td> WinRM HTTPS </td>
+	<td>	<ul>
+		<li> WinRM HTTPS port (default 5986) opened in Firewall. </li>
+		<li> Disable UAC remote restrictions(<a href="https://support.microsoft.com/en-us/kb/951016">link</a>). </li>
+		<li> Credential in <Account> format. </li>
+		<li> Trusted certificate in Automation agent. </li>
+		<li> If Trusted certificate not in Automation agent, then Test Certificate option enabled in Task for deployment. </li>
+		<li> File & Printer sharing enabled. </li>
+		</ul> </td>
+</tr>
+</table>
 
 ## Parameters of the task:
 
