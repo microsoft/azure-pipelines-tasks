@@ -3,7 +3,7 @@ param(
     [string][Parameter(Mandatory=$true)]$action,
     [string][Parameter(Mandatory=$true)]$resourceGroupName,
     [string][Parameter(Mandatory=$true)]$location,
-    [string][Parameter(Mandatory=$true)]$csmFile,
+    [string]$csmFile,
     [string]$csmParametersFile,
     [string]$overrideParameters,
     [string]$dscDeployment,
@@ -47,12 +47,22 @@ $ErrorActionPreference = "Stop"
 Initialize-DTLServiceHelper
 Validate-AzurePowershellVersion
 
+$resourceGroupName = $resourceGroupName.Trim()
+$location = $location.Trim()
+$csmFile = $csmFile.Trim()
+$csmParametersFile = $csmParametersFile.Trim()
+$overrideParameters = $overrideParameters.Trim()
+$vmUserName = $vmUserName.Trim()
+$vmPassword = $vmPassword.Trim()
+
 if( $action -eq "Create Or Update Resource Group" )
 {
     . ./AzureResourceManagerHelper.ps1
 
     Check-EnvironmentNameAvailability -environmentName $resourceGroupName
     Validate-Credentials -vmCreds $vmCreds -vmUserName $vmUserName -vmPassword $vmPassword
+
+    $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 
     #Create csm parameter object
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
@@ -67,7 +77,7 @@ if( $action -eq "Create Or Update Resource Group" )
 
     # Update the resource group in DTL
     $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
-    Update-EnvironemntDetailsInDTL -subscription $subscription -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState
+    Update-EnvironemntDetailsInDTL -subscription $subscription -csmFileName $csmFileName -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState
 }
 else
 {

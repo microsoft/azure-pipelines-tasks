@@ -405,6 +405,18 @@ function Invoke-OperationHelper
     Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
 }
 
+function Delete-MachineGroupHelper
+{
+    param([string]$machineGroupName)
+
+    Write-Verbose "Entered delete machine group helper for machine group $machineGroupName" -Verbose
+
+    Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
+
+    # Deletes the machine or machine group from Dtl
+    Delete-MachineGroup -machineGroupName $MachineGroupName 
+}
+
 function Delete-MachinesHelper
 {
     param([string]$machineGroupName,
@@ -413,35 +425,29 @@ function Delete-MachinesHelper
 
     Write-Verbose "Entered delete machines for the machine group $machineGroupName" -Verbose
 
-    # If filters are not provided then deletes the entire machine group.
-    if(! $filters)
+    
+    # If there are no machines corresponding to given machine names or tags then will not delete any machine.
+    if(! $machines -or $machines.Count -eq 0)
     {
-       Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
+        return
     }
-    else
-    {
-      # If there are no machines corresponding to given machine names or tags then will not delete any machine.
-      if(! $machines -or $machines.Count -eq 0)
-      {
-          return
-      }
 
-      $passedOperationCount = $machines.Count
-      Foreach($machine in $machines)
-      {
-          $response = Delete-MachineFromProvider -machineGroupName $machineGroupName -machineName $machine.Name 
-          if($response -ne "Succeded")
-           {
-              $passedOperationCount--
-           }
-          else
-           {
-              $filter = $filter + $machine.Name + ","
-           }
-      }
+    $passedOperationCount = $machines.Count
+    Foreach($machine in $machines)
+    {
+        $response = Delete-MachineFromProvider -machineGroupName $machineGroupName -machineName $machine.Name 
+        if($response -ne "Succeeded")
+        {
+            $passedOperationCount--
+        }
+        else
+        {
+            $filter = $filter + $machine.Name + ","
+        }
     }
 
     Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
+
     # Deletes the machine or machine group from Dtl
     Delete-MachineGroup -machineGroupName $MachineGroupName -filters $filter
 }
@@ -527,7 +533,8 @@ function Get-WellFormedTagsList
 
 function Update-EnvironemntDetailsInDTL
 {
-    param([Object]$subscription, 
+    param([Object]$subscription,
+          [string]$csmFileName,
           [string]$resourceGroupName,
           [string]$environmentStatus)
 
@@ -536,6 +543,8 @@ function Update-EnvironemntDetailsInDTL
     $providerData = Create-ProviderData -providerName $provider.Name -providerDataName $subscription.SubscriptionName -providerDataType $subscription.Environment -subscriptionId $subscription.SubscriptionId
 
     $environmentDefinitionName = [System.String]::Format("{0}_{1}", $csmFileName, $env:BUILD_BUILDNUMBER)
+
+    Write-Host "pavan: Environment definition name is: $environmentDefinitionName"
 
     $environmentDefinition = Create-EnvironmentDefinition -environmentDefinitionName $environmentDefinitionName -providerName $provider.Name
 
@@ -652,7 +661,7 @@ function Perform-Action
     Switch ($Action)
     {
           { @("Start", "Stop", "Restart") -contains $_ } {
-             Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $Action -machines $machineGroup.Resources
+             Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $action -machines $machineGroup.Resources
              break
           }
 
@@ -662,9 +671,16 @@ function Perform-Action
           }
 
           "DeleteRG" {
-              Delete-MachineGroupFromProvider -machineGroupName $resourceGroupName
+             #Delete-MachineGroupFromProvider -machineGroupName $resourceGroupName
+
+             # Deletes the machine or machine group from Dtl
+             #Delete-MachineGroup -machineGroupName $MachineGroupName
+             
+             Delete-MachineGroupHelper -machineGroupName $resourceGroupName
+             #Delete-MachinesHelper -machineGroupName $resourceGroupName
              break
           }
-         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $Action, $providerName) }
+
+         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, $providerName) }
     }
 }
