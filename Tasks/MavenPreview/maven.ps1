@@ -17,7 +17,7 @@ Write-Verbose "goals = $goals" -Verbose
 Write-Verbose "publishJUnitResults = $publishJUnitResults" -Verbose
 Write-Verbose "testResultsFiles = $testResultsFiles" -Verbose
 
-$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
+$isCoverageEnabled = !$codeCoverageTool.equals("None")
 if($isCoverageEnabled -eq $true)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose

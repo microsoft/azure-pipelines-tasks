@@ -3,7 +3,7 @@
   "name": "VSTest",
   "friendlyName": "Visual Studio Test",
   "description": "Run tests with Visual Studio test runner",
-  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613743)",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624539)",
   "category": "Test",
   "visibility": [
                 "Build",

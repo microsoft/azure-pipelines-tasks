@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Test",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613743)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Run tests with Visual Studio test runner",
   "loc.instanceNameFormat": "Test Assemblies $(testAssembly)",
   "loc.group.displayName.advanced": "Advanced",
