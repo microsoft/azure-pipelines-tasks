@@ -544,8 +544,6 @@ function Update-EnvironemntDetailsInDTL
 
     $environmentDefinitionName = [System.String]::Format("{0}_{1}", $csmFileName, $env:BUILD_BUILDNUMBER)
 
-    Write-Host "pavan: Environment definition name is: $environmentDefinitionName"
-
     $environmentDefinition = Create-EnvironmentDefinition -environmentDefinitionName $environmentDefinitionName -providerName $provider.Name
 
     $providerDataNames = New-Object System.Collections.Generic.List[string]
