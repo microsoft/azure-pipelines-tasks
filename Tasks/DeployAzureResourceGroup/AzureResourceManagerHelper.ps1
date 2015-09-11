@@ -1,11 +1,11 @@
 function Create-AzureResourceGroup
 {
-    param([string]$csmFile, 
+    param([string]$csmFile,
           [System.Collections.Hashtable]$csmParametersObject,
           [string]$resourceGroupName,
           [string]$location,
           [string]$overrideParameters)
-    
+
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
         Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
@@ -102,7 +102,7 @@ function Get-Resources
                 $platformId = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $resource.ResourceId)
                 $propertyBag.Add("Location", $resourceLocation)
                 $propertyBag.Add("PlatformId", $platformId)
-             
+
                 #Adding resource tags
                 foreach($tag in $resource.Tags)
                 {
@@ -125,14 +125,14 @@ function Get-Resources
                         $propertyBag.Add($resourcePropertyKey, $property)
                     }
                 }
-            
+
                 #Adding FQDN property
                 if([string]::IsNullOrEmpty($fqdnMap[$resource.Name]) -eq $false)
                 {
                     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $fqdnMap[$resource.Name])
                     $propertyBag.Add("Microsoft-Vslabs-MG-Resource-FQDN", $property)
                 }
-        
+
                 #Adding WinRMHttp port property
                 if([string]::IsNullOrEmpty($winRmHttpPortMap[$resource.Name]) -eq $false)
                 {
@@ -151,7 +151,7 @@ function Get-Resources
 
                 $resources.Add($environmentResource)
             }
-        
+
         }
 
         Write-Verbose -Verbose "Got resources: $resources"
@@ -163,7 +163,7 @@ function Get-Resources
 function Get-MachineConnectionInformation
 {
     param([string]$resourceGroupName)
-    
+
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Getting machines in resource group $resourceGroupName"
@@ -185,13 +185,13 @@ function Get-MachineConnectionInformation
 
         $fqdnMap = @{}
         Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
-        
+
         $winRmHttpPortMap = @{}
         Set-Variable -Name winRmHttpPortMap -Value $winRmHttpPortMap -Scope "Global"
 
         $winRmHttpsPortMap = @{}
         Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
-        
+
         if($lbGroup.Count -gt 0)
         {
             foreach($lb in $lbGroup)
@@ -286,7 +286,6 @@ function Get-MachinesFqdnsForLB
 {
     param([string]$resourceGroupName)
 
-    
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVms)
     {
         Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
@@ -339,7 +338,6 @@ function Get-MachinesFqdnsForLB
                 }
             }
         }
-
     }
 
     Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
@@ -347,7 +345,7 @@ function Get-MachinesFqdnsForLB
     return $fqdnMap
 }
 
-function Get-MachinesFqdns 
+function Get-MachinesFqdns
 {
     param([string]$resourceGroupName)
 
@@ -386,7 +384,6 @@ function Get-MachinesFqdns
         }
 
         $fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
-    
     }
 
     Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
@@ -399,9 +396,9 @@ function GetMachineNameFromId
     param([System.Collections.Hashtable]$map,
           [string]$mapParameter,
           [boolean]$throwOnTotalUnavaialbility)
-    
+
     if($map)
-    {	
+    {
         $errorCount = 0
         foreach($vm in $azureVms)
         {
@@ -420,7 +417,7 @@ function GetMachineNameFromId
                 Write-Verbose "Unable to find $mapParameter for resource $resourceName" -Verbose
             }
         }
-        
+
         if($throwOnTotalUnavaialbility -eq $true)
         {
             if($errorCount -eq $azureVMs.Count -and $azureVMs.Count -ne 0)
@@ -466,7 +463,7 @@ function Refresh-SASToken
         $sasTokenParameterNames.Split(';', [System.StringSplitOptions]::RemoveEmptyEntries)  | Foreach-Object { if([string]::IsNullOrWhiteSpace($_) -eq $false){ $sasTokenParameterNameList.Add($_) } }
         $moduleUrlParameterNameList = New-Object System.Collections.Generic.List[string]
         $moduleUrlParameterNames.Split(';', [System.StringSplitOptions]::RemoveEmptyEntries) | Foreach-Object { if([string]::IsNullOrWhiteSpace($_) -eq $false){ $moduleUrlParameterNameList.Add($_) } }
-        
+
         if($sasTokenParameterNameList.Count -ne $moduleUrlParameterNameList.Count)
         {
             throw (Get-LocalizedString -Key "Some module url paramter names do not have a matching sas token paramter name or viceversa. Please verify the lists specified and their formats")
@@ -553,7 +550,7 @@ function Get-MachineLogs
         $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
         Write-Verbose -Verbose "[Azure Resource Manager]Got resource group $resourceGroupName"
         Set-Variable -Name azureResourceGroup -Value $azureResourceGroup -Scope "Global"
-        
+
         $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
         foreach($resource in $azureResourceGroupResources)
@@ -644,7 +641,7 @@ function Create-AzureResourceGroupIfNotExist
     [string]$location)
 
     $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
-    
+
     if(!$azureResourceGroup)
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
@@ -673,4 +670,74 @@ function Print-OperationLog
             Write-Verbose -Verbose "Message: $message"
         }
     }
+}
+
+function Delete-MachineGroupFromProvider
+{
+    param([string]$machineGroupName)
+
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group {0}" -ArgumentList $machineGroupName)
+
+    Remove-AzureResourceGroup -ResourceGroupName $machineGroupName -Force -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}' from Azure provider" -ArgumentList $machineGroupName)
+}
+
+function Delete-MachineFromProvider
+{
+    param([string]$machineGroupName,
+          [string]$machineName)
+
+    $errorVariable=@()
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting machine '{0}'" -ArgumentList $machineName)
+    $removeResponse = Remove-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -Force -ErrorAction SilentlyContinue -ErrorVariable errorVariable -Verbose
+
+    if($errorVariable.Count -eq 0)
+    {
+         Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
+         return "Succeeded"
+    }
+    else
+    {
+         Write-Warning(Get-LocalizedString -Key "[Azure Resource Manager]Deletion of machine '{0}' failed in Azure with error '{1}'" -ArgumentList $machineName, $errorVariable)
+         return "Failed"
+    }
+}
+
+function Start-MachineInProvider
+{
+    param([string]$machineGroupName,
+          [string]$machineName)
+
+    $errorVariable=@()
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
+
+    Start-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable | Out-Null
+
+    return $errorVariable
+}
+
+function Stop-MachineInProvider
+{
+    param([string]$machineGroupName,
+          [string]$machineName)
+
+    $errorVariable=@()
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
+
+    Stop-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable -Force | Out-Null
+
+    return $errorVariable
+}
+
+function Restart-MachineInProvider
+{
+    param([string]$machineGroupName,
+          [string]$machineName)
+
+    $errorVariable=@()
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Restarting machine '{0}'" -ArgumentList $machineName)
+
+    Restart-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable | Out-Null
+
+    return $errorVariable
 }

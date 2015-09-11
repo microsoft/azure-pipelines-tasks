@@ -17,16 +17,16 @@ function Create-ProviderData
           [string]$providerDataName,
           [string]$providerDataType,
           [string]$subscriptionId)
-    
+
     Write-Verbose "Registering provider data $providerDataName" -Verbose
 
-    $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'          
+    $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $subscriptionId)  
-    $propertyBag.Add("SubscriptionId", $property)  
+    $propertyBag.Add("SubscriptionId", $property)
 
     #TODO Figure out authentication mechanism and store it
     $providerData = Register-ProviderData -Name $providerDataName -Type $providerDataType -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
-	$url = $providerData.Url
+    $url = $providerData.Url
     Write-Verbose "Registered provider data $providerDataName with url $url" -Verbose
 
     return $providerData
@@ -36,7 +36,7 @@ function Create-EnvironmentDefinition
 {
     param([string]$environmentDefinitionName,
           [string]$providerName)
-  
+
     Write-Verbose "Registering machine group definition $environmentDefinitionName" -Verbose
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
@@ -48,12 +48,12 @@ function Create-EnvironmentDefinition
         $csmParameters = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $csmParametersFileContent)
         $propertyBag.Add("CsmParameters", $csmParameters)
     }
-    
+
     $environmentDefinition = Register-EnvironmentDefinition -Name $environmentDefinitionName -ProviderName $providerName -PropertyBagValue $propertyBag -Connection $connection -ErrorAction Stop
-	$url = $environmentDefinition.Url
+    $url = $environmentDefinition.Url
     Write-Verbose "Registered machine group definition $environmentDefinitionName with url $url" -Verbose
 
-    return $environmentDefinition   
+    return $environmentDefinition
 }
 
 function Create-Environment
@@ -67,7 +67,7 @@ function Create-Environment
           [System.Collections.Generic.List[Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2]]$resources)
 
     $propertyBag = New-Object 'System.Collections.Generic.Dictionary[string, Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData]'
-   
+
     Write-Verbose "Adding parameters to the machine group" -Verbose
     foreach($key in $azureResourceGroupDeployment.Parameters.Keys)
     {
@@ -103,7 +103,7 @@ function Create-Environment
         $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($true, $vmPassword)
         $propertyBag.Add($passwordTagKey, $property)
     }
-    
+
     if([string]::IsNullOrEmpty($WinRmProtocol) -eq $false)
     {
         $winRmProtocolKey = "Microsoft-Vslabs-MG-WinRMProtocol"
@@ -116,12 +116,12 @@ function Create-Environment
     $propertyBag.Add($skipCACheckKey, $property)
 
     Write-Verbose -Verbose "Registering machine group $environmentName"
-   
+
     $environment = Register-Environment -Name $environmentName -Type $environmentType -Status $environmentStatus -ProviderName $providerName -ProviderDataNames $providerDataNames -EnvironmentDefinitionName $environmentDefinitionName -PropertyBagValue $propertyBag -Resources $resources -Connection $connection -ErrorAction Stop
 
     Write-Host (Get-LocalizedString -Key "Registered machine group '{0}'" -ArgumentList $environmentName)
-	$url = $environment.Url
-	Write-Verbose -Verbose "Registered machine group $environmentName with url $url"
+    $url = $environment.Url
+    Write-Verbose -Verbose "Registered machine group $environmentName with url $url"
 
     return $environment
 }
@@ -129,7 +129,7 @@ function Create-Environment
 function Create-EnvironmentOperation
 {
     param([Microsoft.VisualStudio.Services.DevTestLabs.Model.Environment]$environment)
-    
+
     if($environment)
     {
         $name = $environment.Name
@@ -151,7 +151,7 @@ function Create-EnvironmentOperation
             $operationEndTime = $deploymentOperationLogs[0].EventTimestamp
             $operationStatus = $deploymentOperationLogs[0].Status
         }
- 
+
         $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environment.Name -OperationName "CreateOrUpdate" -StartTime $operationStartTime -Connection $connection -ErrorAction Stop
 
         Create-ResourceOperations  -operationLogs $operationLogs -environment $environment -environmentOperationId $envOperationId
@@ -223,6 +223,106 @@ function Check-EnvironmentNameAvailability
 
         Write-Host (Get-LocalizedString -Key "Checked machine group name availability")
     }
+}
+
+function Get-MachineGroupWithFilteredResources
+{
+    param([string]$machineGroupName,
+          [string]$filters,
+          [string]$resourceFilteringMethod)
+
+    Write-Verbose "Machine Group name is : $machineGroupName" -Verbose
+    $environment = Get-Environment -EnvironmentName $machineGroupName  -Connection $connection -ErrorAction Stop -Verbose
+
+    if($resourceFilteringMethod -eq "tags")
+    {
+        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $filters
+
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on machine group name: $machineGroupName with tag filter: $wellFormedTagsList" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $machineGroupName -TagFilter $wellFormedTagsList -Connection $connection
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for machine group name: $machineGroupName with tag filter" -Verbose
+    }
+    else
+    {
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on machine group name: $machineGroupName with machine filter: $filters" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $machineGroupName -ResourceFilter $filters -Connection $connection
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for machine group name: $machineGroupName with machine filter" -Verbose
+    }
+
+    $environment.Resources = $resources
+    return $environment
+}
+
+function Get-MachineGroup
+{
+    param([string]$machineGroupName,
+          [string]$filters,
+          [string]$resourceFilteringMethod)
+
+        Write-Verbose "Getting the machine group $machineGroupName" -Verbose
+        $environment = Get-MachineGroupWithFilteredResources -machineGroupName $machineGroupName -filters $filters -resourceFilteringMethod $resourceFilteringMethod
+
+        Write-Verbose "Retrieved the machine group"
+
+    return $environment
+}
+
+function Delete-MachineGroup
+{
+    param([string]$machineGroupName,
+          [string]$filters)
+
+    Write-Verbose "Deleting machine group $machineGroupName" -Verbose
+    # If filters are not provided then it deletes entire machine group. If filters are given then it will delete all the machines satisfying the given filters.
+    if($filters)
+    {
+        Remove-EnvironmentResources -EnvironmentName $machineGroupName -Filters $filters -Connection $connection -ErrorAction Stop -Verbose
+        Write-Verbose "Removed machines from the machine group $machineGroupName" -Verbose
+    }
+    else
+    {
+        Remove-Environment -EnvironmentName $machineGroupName -Connection $connection -ErrorAction Stop
+        Write-Verbose "Deleted machine group $machineGroupName" -Verbose
+    }
+}
+
+function Invoke-MachineGroupOperation
+{
+     param([string]$machineGroupName,
+           [string]$operationName,
+           [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
+
+    Write-Verbose "Invoking $operationName for the machine group $machineGroupName" -Verbose
+    $operationId = Invoke-EnvironmentOperation -EnvironmentName $machineGroupName -OperationName $operationName -ResourceNames $machines.Name -Connection $connection -ErrorAction SilentlyContinue -Verbose
+    Write-Verbose "Invoked $operationName for the machine group $machineGroupName" -Verbose
+
+    return $operationId
+}
+
+function End-MachineGroupOperation
+{
+    param([string]$machineGroupName,
+          [string]$operationName,
+          [Guid]$operationId,
+          [string]$error,
+          [string]$status)
+
+    Write-Verbose "Saving $operationName details for machine group $machineGroupName" -Verbose
+    Complete-EnvironmentOperation -EnvironmentName $machineGroupName -EnvironmentOperationId $operationId -Status $status -Connection $connection -ErrorMessage $error -ErrorAction SilentlyContinue -Verbose
+    Write-Verbose "Saved $operationName details for machine group $machineGroupName" -Verbose
+}
+
+function End-MachineOperation
+{
+    param([string]$machineGroupName,
+          [string]$machineName,
+          [string]$operationName,
+          [Guid]$operationId,
+          [string]$status)
+
+    Write-Verbose "Saving $operationName details for machine $machineName in machine group $machineGroupName" -Verbose
+    Complete-EnvironmentResourceOperation -EnvironmentName $machineGroupName -ResourceName $machineName -EnvironmentOperationId $operationId -Status $status -Connection $connection -ErrorAction SilentlyContinue -Verbose
+    Write-Verbose "Completed $operationName for the machine $machineName in machine group $machineGroupName" -Verbose
 }
 
 function Initialize-DTLServiceHelper
