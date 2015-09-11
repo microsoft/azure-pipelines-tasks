@@ -1,4 +1,4 @@
-# Deploy Visual Studio Agent Task
+# Deploy Visual Studio Test Agent Task
 
 ###Overview
 The Deploy Test agent task is used to Deploy the Test Agent to a set of machines. This Test Agent can then be used to enable data collection or run Distributed Tests using the ‘Visual Studio Test using Test Agent’ task. 
@@ -16,7 +16,7 @@ To learn more about the general usage of the task, please see https://msdn.micro
 
 - **Interactive Process:**	Select to indicate that the Test Agent should run as an interactive process. This is required when you are dealing with UI elements or starting applications during your tests. 
 
-For example, Coded UI or Selenium tests that are running on full fidelity browsers would need this checked.
+        For example, Coded UI or Selenium tests that are running on full fidelity browsers would need this checked.
 
 - **Test Agent Location:**	Use this to supply a path to the Test Agent (vstf_testagent.exe) which is different from the default (http://go.microsoft.com/fwlink/?LinkId=536423). You can specify a local path or a network location. 
 
@@ -24,6 +24,6 @@ For example, Coded UI or Selenium tests that are running on full fidelity browse
 
 - **Enable Data Collection Only:**	Checking this box will prevent tests from running on these set of machines. This is useful for scenarios where you only want to enable data collection, like Code Coverage data, from a set of machines.
 
-For example, in a client-server application model, you would use this option to deploy a smaller footprint Test Agent on the server machines and use another deploy task to deploy the full Test Agent to test machines. This will enable you to collect data from both Server and client machines
+        For example, in a client-server application model, you would use this option to deploy a smaller footprint Test Agent on the server machines and use another deploy task to deploy the full Test Agent to test machines. This will enable you to collect data from both Server and client machines
 
 <br/>
