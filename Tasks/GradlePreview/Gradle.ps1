@@ -116,12 +116,14 @@ if($isCoverageEnabled)
 {
 	if(Test-Path $summaryFile)
 	{
+		Write-Verbose "Summary file = $summaryFile" -Verbose
+		Write-Verbose "Report directory = $reportDirectory" -Verbose
 		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
 		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext   
 	}
 	else
 	{
-		Write-Warning "No code coverage found to publish." -Verbose
+		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
 	}   
 }
 
