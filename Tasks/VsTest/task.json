@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 18
   },
   "demands": [
     "vstest"
@@ -29,7 +29,7 @@
   "inputs": [
     {
       "name": "testAssembly",
-      "type": "filePath",
+      "type": "string",
       "label": "Test Assembly",
       "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
       "required": true,
