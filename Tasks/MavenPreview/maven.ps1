@@ -67,7 +67,7 @@ $CCReportTask = "jacoco:report"
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName
+   Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
@@ -76,13 +76,6 @@ else
 }
 
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
-
-if($isCoverageEnabled)
-{
-   # run report code coverage task which generates code coverage reports.
-   Write-Verbose "Reporting code coverage" -Verbose
-   Invoke-Maven -MavenPomFile $mavenPOMFile -Goals $CCReportTask
-}
 
 # Publish test results files
 $publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
@@ -108,8 +101,26 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
-   Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+   # run report code coverage task which generates code coverage reports.
+   Write-Verbose "Collecting code coverage reports" -Verbose
+   try
+   {
+		Invoke-Maven -MavenPomFile $mavenPOMFile -Goals $CCReportTask
+   }
+   catch
+   {
+		Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
+   }
+   
+   if(Test-Path $summaryFile)
+   {
+		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+   }
+   else
+   {
+		Write-Warning "No code coverage found to publish." -Verbose
+   }
 }
 
 Write-Verbose "Leaving script Maven.ps1" -Verbose

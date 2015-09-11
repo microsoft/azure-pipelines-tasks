@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string]$antBuildFile,
     [string]$options,
     [string]$targets,
@@ -22,7 +22,7 @@ Write-Verbose "testResultsFiles = $testResultsFiles" -Verbose
 Write-Verbose "jdkVersion = $jdkVersion" -Verbose
 Write-Verbose "jdkArchitecture = $jdkArchitecture" -Verbose
 
-$isCoverageEnabled = !$codeCoverageTool.equals("None")
+$isCoverageEnabled = !$codeCoverageTool.equals("NoCoverage")
 if($isCoverageEnabled)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
@@ -74,7 +74,7 @@ $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SourceDirectory $srcDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask
+   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SourceDirectory $srcDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
    Write-Verbose "code coverage is successfully enabled." -Verbose
 }
 else
@@ -84,13 +84,6 @@ else
 
 Write-Verbose "Running Ant..." -Verbose
 Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets
-
-if($isCoverageEnabled)
-{
-   # run report code coverage task which generates code coverage reports.
-   Write-Verbose "Reporting code coverage" -Verbose
-   Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask
-}
 
 # Publish test results files
 $publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
@@ -116,8 +109,26 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
-   Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+   # run report code coverage task which generates code coverage reports.
+   Write-Verbose "Collecting code coverage reports" -Verbose
+   try
+   {
+		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
+   }
+   catch
+   {
+		Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
+   }
+   
+   if(Test-Path $summaryFile)
+   {
+		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+   }
+   else
+   {
+		Write-Warning "No code coverage found to publish." -Verbose
+   }
 }
 
 Write-Verbose "Leaving script Ant.ps1" -Verbose
