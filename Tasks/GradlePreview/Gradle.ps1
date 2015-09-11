@@ -78,7 +78,7 @@ $buildFile = Join-Path $buildRootPath "build.gradle"
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName
+   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
@@ -114,8 +114,17 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
-   Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-   Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+	if(Test-Path $summaryFile)
+	{
+		Write-Verbose "Summary file = $summaryFile" -Verbose
+		Write-Verbose "Report directory = $reportDirectory" -Verbose
+		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext   
+	}
+	else
+	{
+		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
+	}   
 }
 
 Write-Verbose "Leaving script Gradle.ps1" -Verbose
