@@ -3,7 +3,7 @@ function Validate-AzurePowershellVersion
     $currentVersion =  Get-AzureCmdletsVersion
     $minimumAzureVersion = New-Object System.Version(0, 9, 0)
     $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
-    
+
     if(!$versionCompatible)
     {
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
@@ -32,7 +32,6 @@ function Get-SingleFile($files, $pattern)
 function Get-File($pattern)
 {
     #Find the File based on pattern
-
     Write-Verbose -Verbose "Finding files based on $pattern"
     $filesMatchingPattern = Find-Files -SearchPattern "$pattern"
 
@@ -111,7 +110,6 @@ function Validate-Credentials
             throw (Get-LocalizedString -Key "Please specify valid password")
         }
     }
-
 }
 
 function Validate-AzureKeyVaultSecret
@@ -182,7 +180,7 @@ function Create-CSMForWinRMConfiguration
     Write-Verbose -Verbose "Generating deployment template for WinRM configuration from base template file"
     Write-Verbose -Verbose "azureKeyVaultName : $azureKeyVaultName"
     Write-Verbose -Verbose "azureKeyVaultSecretId : $azureKeyVaultSecretId"
-    
+
     # TODO: Explore to avoid if/else statement, didn't find better way to check if virtualMachineResources is returning as array or single item
     if ($virtualMachineResources -is [system.array])
     {
@@ -346,4 +344,341 @@ function Get-SecretValueForAzureKeyVault
     $secret = ConvertTo-SecureString -String $jsonEncoded -AsPlainText –Force
 
     return $secret
+}
+
+function Invoke-OperationHelper
+{
+     param([string]$machineGroupName,
+           [string]$operationName,
+           [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
+
+    Write-Verbose "Entered perform action $operationName on machines for machine group $machineGroupName" -Verbose
+
+    if(! $machines)
+    {
+        Write-Verbose "Machine group $machineGroupName has no machines in it" -Verbose
+        return
+    }
+
+    $machineStatus = "Succeeded"
+
+    # Logs in the Dtl service that operation has started.
+    $operationId = Invoke-MachineGroupOperation -machineGroupName $machineGroupName -operationName $operationName -machines $machines
+
+    if($machines.Count -gt 0)
+    {
+       $passedOperationCount = $machines.Count
+    }
+
+    Foreach($machine in $machines)
+    {
+        $machineName = $machine.Name
+        $error = Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
+        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose        
+
+        $errorMessage = [string]::Empty
+        # Determines the status of the operation. Marks the status of machine group operation as 'Failed' if any one of the machine operation fails.
+        if($error.Count -ne 0)
+        {
+            $machineStatus = $status = "Failed"
+            $passedOperationCount--
+            
+            if($error[0].Exception)
+            {
+                $errorMessage = $error[0].Exception.Message
+            }
+
+            Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed with error '{2}'" -ArgumentList $operationName, $machine.Name, $errorMessage)
+        }
+        else
+        {
+            $status = "Succeeded"
+            Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
+        }
+
+        # Logs the completion of particular machine operation. Updates the status based on the provider response.
+        End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $errorMessage
+    }
+
+    # Logs completion of the machine group operation.
+    End-MachineGroupOperation -machineGroupName $machineGroupName -operationName operationName -operationId $operationId -status $machineStatus
+    Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
+}
+
+function Delete-MachineGroupHelper
+{
+    param([string]$machineGroupName)
+
+    Write-Verbose "Entered delete machine group helper for machine group $machineGroupName" -Verbose
+
+    Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
+
+    # Deletes the machine or machine group from Dtl
+    Delete-MachineGroup -machineGroupName $MachineGroupName 
+}
+
+function Delete-MachinesHelper
+{
+    param([string]$machineGroupName,
+          [string]$filters,
+          [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
+
+    Write-Verbose "Entered delete machines for the machine group $machineGroupName" -Verbose
+
+    
+    # If there are no machines corresponding to given machine names or tags then will not delete any machine.
+    if(! $machines -or $machines.Count -eq 0)
+    {
+        return
+    }
+
+    $passedOperationCount = $machines.Count
+    Foreach($machine in $machines)
+    {
+        $response = Delete-MachineFromProvider -machineGroupName $machineGroupName -machineName $machine.Name 
+        if($response -ne "Succeeded")
+        {
+            $passedOperationCount--
+        }
+        else
+        {
+            $filter = $filter + $machine.Name + ","
+        }
+    }
+
+    Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
+
+    # Deletes the machine or machine group from Dtl
+    Delete-MachineGroup -machineGroupName $MachineGroupName -filters $filter
+}
+
+function Invoke-OperationOnProvider
+{
+    param([string]$machineGroupName,
+          [string]$machineName,
+          [string]$operationName)
+
+    # Performes the operation on provider based on the operation name.
+    Switch ($operationName)
+    {
+         "Start" {
+             $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName                          
+         }
+
+         "Stop" {
+             $error = Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+         }
+
+         "Restart" {
+             $error = Restart-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+         }
+
+         default {
+              throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
+         }
+    }
+    return $error
+}
+
+# Task fails if operation fails on all the machines
+function Throw-ExceptionIfOperationFailesOnAllMachine
+{
+   param([string]$passedOperationCount,
+         [string]$operationName,
+         [string]$machineGroupName)
+
+  if(($passedOperationCount -ne $null) -and ($passedOperationCount -eq 0))
+  {
+        throw ( Get-LocalizedString -Key "Operation '{0}' failed on the machines in '{1}'" -ArgumentList $operationName, $machineGroupName )
+  }
+}
+
+# Gets the tags in correct format
+function Get-WellFormedTagsList
+{
+    [CmdletBinding()]
+    Param
+    (
+        [string]$tagsListString
+    )
+
+    if([string]::IsNullOrWhiteSpace($tagsListString))
+    {
+        return $null
+    }
+
+    $tagsArray = $tagsListString.Split(';')
+    $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
+    foreach($tag in $tagsArray)
+    {
+        if([string]::IsNullOrWhiteSpace($tag)) {continue}
+        $tagKeyValue = $tag.Split(':')
+        if($tagKeyValue.Length -ne 2)
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        if([string]::IsNullOrWhiteSpace($tagKeyValue[0]) -or [string]::IsNullOrWhiteSpace($tagKeyValue[1]))
+        {
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
+
+        $tagTuple = New-Object "System.Tuple[string,string]" ($tagKeyValue[0].Trim(), $tagKeyValue[1].Trim())
+        $tagList.Add($tagTuple) | Out-Null
+    }
+
+    $tagList = [System.Collections.Generic.IEnumerable[Tuple[string,string]]]$tagList
+    return ,$tagList
+}
+
+function Update-EnvironemntDetailsInDTL
+{
+    param([Object]$subscription,
+          [string]$csmFileName,
+          [string]$resourceGroupName,
+          [string]$environmentStatus)
+
+    $provider = Create-Provider -providerName "AzureResourceGroupManagerV2" -providerType "Microsoft Azure Compute Resource Provider"
+
+    $providerData = Create-ProviderData -providerName $provider.Name -providerDataName $subscription.SubscriptionName -providerDataType $subscription.Environment -subscriptionId $subscription.SubscriptionId
+
+    $environmentDefinitionName = [System.String]::Format("{0}_{1}", $csmFileName, $env:BUILD_BUILDNUMBER)
+
+    $environmentDefinition = Create-EnvironmentDefinition -environmentDefinitionName $environmentDefinitionName -providerName $provider.Name
+
+    $providerDataNames = New-Object System.Collections.Generic.List[string]
+    $providerDataNames.Add($providerData.Name)
+
+    $environmentResources = Get-Resources -resourceGroupName $resourceGroupName
+
+    $environment = Create-Environment -environmentName $resourceGroupName -environmentType "Azure CSM V2" -environmentStatus $environmentStatus -providerName $provider.Name -providerDataNames $providerDataNames -environmentDefinitionName $environmentDefinition.Name -resources $environmentResources
+
+    $environmentOperationId = Create-EnvironmentOperation -environment $environment
+}
+
+function Get-CsmAndParameterFiles
+{
+    param([string] $csmFile,
+          [string] $csmParametersFile)
+
+    #Find the matching deployment definition File
+    $csmFile = Get-File $csmFile
+    Write-Verbose -Verbose "deploymentDefinitionFile = $csmFile"
+
+    # csmParametersFile value would be  BUILD_SOURCESDIRECTORY when left empty in UI.
+    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY)
+    {
+        #Find the matching deployment definition Parameter File
+        $csmParametersFile = Get-File $csmParametersFile
+        Write-Verbose -Verbose "deploymentDefinitionParametersFile = $csmParametersFile"
+    }
+
+    Validate-DeploymentFileAndParameters -csmFile $csmFile -csmParametersFile $csmParametersFile
+
+    @{"csmFile" = $($csmFile); "csmParametersFile" = $($csmParametersFile)}
+}
+
+function Get-FilterDetails
+{
+    param([string]$action,
+        [string]$resourceFilteringMethodStart,
+        [string]$filtersStart,
+        [string]$resourceFilteringMethodStop,
+        [string]$filtersStop,
+        [string]$resourceFilteringMethodRestart,
+        [string]$filtersRestart,
+        [string]$resourceFilteringMethodDelete,
+        [string]$filtersDelete,
+        [string]$resourceFilteringMethodDeleteRG,
+        [string]$filtersDeleteRG)
+    $resourceFilteringMethod = ""
+    $filters= ""
+
+    Switch ($action)
+    {
+         "Start" {
+             $resourceFilteringMethod = $resourceFilteringMethodStart
+             $filters = $filtersStart
+             break
+          }
+
+          "Stop" {
+             $resourceFilteringMethod = $resourceFilteringMethodStop
+             $filters = $filtersStop
+             break
+          }
+
+          "Restart" {
+             $resourceFilteringMethod = $resourceFilteringMethodRestart
+             $filters = $filtersRestart
+             break
+          }
+
+          "Delete" {
+             $resourceFilteringMethod = $resourceFilteringMethodDelete
+             $filters = $filtersDelete
+             break
+          }
+
+         default { }
+    }
+
+     Write-Verbose "Resource filtering method: $resourceFilteringMethod" -Verbose
+     Write-Verbose "Resource filters: $filters" -Verbose
+
+    @{"resourceFilteringMethod" = $($resourceFilteringMethod); "filters" = $($filters) }
+}
+
+function Get-ProviderHelperFile
+{
+    param([Object]$machineGroup)
+
+    # If providerName is null or empty then follow same path as standard environment.
+    if($machineGroup.Provider -eq $null)
+    {
+        $providerName = "Pre-existing machines"
+    }
+    else
+    {
+        $providerName = $machineGroup.Provider.Name
+    }
+
+    Write-Verbose -Verbose "ProviderName = $providerName"
+
+    $providerName
+}
+
+function Perform-Action
+{
+    param([string]$action,
+          [string]$resourceGroupName,
+          [Object]$resources,
+          [string]$filters,
+          [string]$providerName)
+
+    Switch ($Action)
+    {
+          { @("Start", "Stop", "Restart") -contains $_ } {
+             Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $action -machines $machineGroup.Resources
+             break
+          }
+
+          "Delete" {
+             Delete-MachinesHelper -machineGroupName $resourceGroupName -filters $filterDetails["filters"] -machines $machineGroup.Resources
+             break
+          }
+
+          "DeleteRG" {
+             #Delete-MachineGroupFromProvider -machineGroupName $resourceGroupName
+
+             # Deletes the machine or machine group from Dtl
+             #Delete-MachineGroup -machineGroupName $MachineGroupName
+             
+             Delete-MachineGroupHelper -machineGroupName $resourceGroupName
+             #Delete-MachinesHelper -machineGroupName $resourceGroupName
+             break
+          }
+
+         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, $providerName) }
+    }
 }
