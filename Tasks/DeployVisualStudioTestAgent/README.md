@@ -37,3 +37,6 @@ The task requires:
   
 ###Scenarios Supported
 For a list of scenarios supported, please see https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md 
+
+###Configuring Test Machine Group / Azure Resource Group
+Prerequisites for configuring Test machine group or Azure resource group to work with this task and other BDT tasks can be found at https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md#machine-pre-requisites-for-the-task-
