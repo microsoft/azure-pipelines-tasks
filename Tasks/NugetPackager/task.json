@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 54
+        "Patch": 55
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -52,6 +52,15 @@
             "defaultValue":"Release",
             "helpMarkDown": "When using a csproj file this specifies the configuration to package",
             "required":false,
+            "groupName": "advanced"
+        },
+        {
+            "name": "buildProperties",
+            "type": "string",
+            "label": "Additional build properties",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Semicolon delimited list of properties used to build the package.",
             "groupName": "advanced"
         },
         {
