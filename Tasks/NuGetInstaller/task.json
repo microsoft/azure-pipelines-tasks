@@ -34,7 +34,7 @@
             "type": "boolean",
             "label": "Disable local cache",
             "defaultValue": "false",
-            "helpMarkDown": "Equivalent to the -NoCache NuGet.exe commanline argument",
+            "helpMarkDown": "Equivalent to the -NoCache NuGet.exe command line argument",
             "required":"false"
         },
         {
