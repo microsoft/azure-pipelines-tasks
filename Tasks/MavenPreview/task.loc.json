@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "maven"
@@ -92,7 +92,7 @@
       "defaultValue": "None",
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
-        "NoCoverage": "None",
+        "None": "None",
         "JaCoCo": "JaCoCo"
       }
     },
