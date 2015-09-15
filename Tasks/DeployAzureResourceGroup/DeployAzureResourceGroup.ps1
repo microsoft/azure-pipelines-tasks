@@ -73,16 +73,9 @@ if( $action -eq "Create Or Update Resource Group" )
 
     # Create azure resource group
     Switch-AzureMode AzureResourceManager
-    try
-    {
-        $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
-    }
-    catch
-    {
-        Delete-MachineGroupFromProvider -machineGroupName $resourceGroupName -ErrorAction silentlyContinue | Out-Null
-        throw $_
-    }
 
+    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
+    
     # Update the resource group in DTL
     $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
     Update-EnvironmentDetailsInDTL -subscription $subscription -csmFileName $csmFileName -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState

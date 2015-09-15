@@ -271,7 +271,7 @@ function Delete-MachineGroup
 {
     param([string]$machineGroupName,
           [string]$filters)
-    
+
     # If filters are not provided then it deletes entire machine group. If filters are given then it will delete all the machines satisfying the given filters.
     if($filters)
     {

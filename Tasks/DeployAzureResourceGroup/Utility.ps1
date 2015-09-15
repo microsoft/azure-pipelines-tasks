@@ -670,8 +670,8 @@ function Perform-Action
              break
           }
 
-          "DeleteRG" {            
-             Delete-MachineGroupHelper -machineGroupName $resourceGroupName             
+          "DeleteRG" {
+             Delete-MachineGroupHelper -machineGroupName $resourceGroupName
              break
           }
 
