@@ -30,6 +30,16 @@ if ($testAssembly.Contains("*") -or $testAssembly.Contains("?"))
     Write-Verbose "Pattern found in solution parameter. Calling Find-Files."
     Write-Verbose "Calling Find-Files with pattern: $testAssembly"
     $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+    if(!$sourcesDirectory)
+    {
+        # For RM, look for the test assemblies under the release directory.
+        $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Agent.ReleaseDirectory"
+    }
+    if(!$sourcesDirectory)
+    {
+        # If there is still no sources directory, error out immediately.
+        throw "No source directory found."
+    }
     $testAssemblyFiles = Find-Files -SearchPattern $testAssembly -RootFolder $sourcesDirectory
     Write-Verbose "Found files: $testAssemblyFiles"
 }
