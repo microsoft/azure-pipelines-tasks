@@ -271,16 +271,17 @@ function Delete-MachineGroup
 {
     param([string]$machineGroupName,
           [string]$filters)
-
-    Write-Verbose "Deleting machine group $machineGroupName" -Verbose
+    
     # If filters are not provided then it deletes entire machine group. If filters are given then it will delete all the machines satisfying the given filters.
     if($filters)
     {
+        Write-Verbose "Deleting machines from the machine group $machineGroupName" -Verbose
         Remove-EnvironmentResources -EnvironmentName $machineGroupName -Filters $filters -Connection $connection -ErrorAction Stop -Verbose
         Write-Verbose "Removed machines from the machine group $machineGroupName" -Verbose
     }
     else
     {
+        Write-Verbose "Deleting machine group $machineGroupName" -Verbose
         Remove-Environment -EnvironmentName $machineGroupName -Connection $connection -ErrorAction Stop
         Write-Verbose "Deleted machine group $machineGroupName" -Verbose
     }
