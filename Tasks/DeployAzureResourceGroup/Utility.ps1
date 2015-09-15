@@ -538,7 +538,7 @@ function Update-EnvironmentDetailsInDTL
           [string]$resourceGroupName,
           [string]$environmentStatus)
 
-    Write-Verbose ("Updating Machine group $resourceGroupName details in DTL")
+    Write-Verbose -Verbose "Updating Machine group $resourceGroupName details in DTL"
 
     $provider = Create-Provider -providerName "AzureResourceGroupManagerV2" -providerType "Microsoft Azure Compute Resource Provider"
 

@@ -75,7 +75,7 @@ if( $action -eq "Create Or Update Resource Group" )
     Switch-AzureMode AzureResourceManager
 
     $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
-    
+
     # Update the resource group in DTL
     $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
     Update-EnvironmentDetailsInDTL -subscription $subscription -csmFileName $csmFileName -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState
