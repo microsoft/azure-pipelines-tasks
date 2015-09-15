@@ -153,6 +153,9 @@ function ProcessSonarCodeAnalysisReport
 
     $sonarReportFilePath = GetSonarReportFilePath $agentBuildDirectory
     $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath $agentBuildDirectory
+
+    $sonarReportProcessedRootObj = New-Object -TypeName PSObject
+    Add-Member -InputObject $sonarReportProcessedRootObj -MemberType NoteProperty -Name status -Value "Analysis Complete"
     
     #read sonar-report.json file as a json object
     $json = Get-Content -Raw $sonarReportFilePath | ConvertFrom-Json
@@ -173,10 +176,12 @@ function ProcessSonarCodeAnalysisReport
             #add a new property in json which stores the file path so it can be consumed directly
             Add-Member -InputObject $issue -MemberType NoteProperty -Name relativePath -Value $filePath
         }
-
-        #save the results into output file
-        $newIssues | ConvertTo-Json | Set-Content -Path $sonarReportProcessedFilePath
     }
+
+    Add-Member -InputObject $sonarReportProcessedRootObj -MemberType NoteProperty -Name issues -Value $newIssues
+
+    #save the results into output file
+    $sonarReportProcessedRootObj | ConvertTo-Json | Set-Content -Path $sonarReportProcessedFilePath
 }
 
 #creates a mapping of msbuild project guid and the path of .xxproj file on disk using ProjectInfo.xml file
