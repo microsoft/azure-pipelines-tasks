@@ -531,12 +531,14 @@ function Get-WellFormedTagsList
     return ,$tagList
 }
 
-function Update-EnvironemntDetailsInDTL
+function Update-EnvironmentDetailsInDTL
 {
     param([Object]$subscription,
           [string]$csmFileName,
           [string]$resourceGroupName,
           [string]$environmentStatus)
+
+    Write-Verbose -Verbose "Updating Machine group $resourceGroupName details in DTL"
 
     $provider = Create-Provider -providerName "AzureResourceGroupManagerV2" -providerType "Microsoft Azure Compute Resource Provider"
 
@@ -664,18 +666,12 @@ function Perform-Action
           }
 
           "Delete" {
-             Delete-MachinesHelper -machineGroupName $resourceGroupName -filters $filterDetails["filters"] -machines $machineGroup.Resources
+             Delete-MachinesHelper -machineGroupName $resourceGroupName -filters $filters -machines $machineGroup.Resources
              break
           }
 
           "DeleteRG" {
-             #Delete-MachineGroupFromProvider -machineGroupName $resourceGroupName
-
-             # Deletes the machine or machine group from Dtl
-             #Delete-MachineGroup -machineGroupName $MachineGroupName
-             
              Delete-MachineGroupHelper -machineGroupName $resourceGroupName
-             #Delete-MachinesHelper -machineGroupName $resourceGroupName
              break
           }
 
