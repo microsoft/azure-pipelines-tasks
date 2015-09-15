@@ -35,6 +35,11 @@ if ($testAssembly.Contains("*") -or $testAssembly.Contains("?"))
         # For RM, look for the test assemblies under the release directory.
         $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Agent.ReleaseDirectory"
     }
+    if(!$sourcesDirectory)
+    {
+        # If there is still no sources directory, error out immediately.
+        throw "No source directory found."
+    }
     $testAssemblyFiles = Find-Files -SearchPattern $testAssembly -RootFolder $sourcesDirectory
     Write-Verbose "Found files: $testAssemblyFiles"
 }
