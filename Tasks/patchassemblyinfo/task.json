@@ -1,0 +1,62 @@
+{
+  "id": "66204EDC-8DA1-4BD3-8618-B8CF4DC17A8F",
+  "name": "PatchAssemblyInfo",
+  "friendlyName": "Patch AssemblyInfo",
+  "description": "Patch assembly, file and informational versions in assemblyinfo files",
+  "author": "Peter Csajtai",
+  "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/README.md)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "12"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "Patch AssemblyInfo",
+  "inputs": [
+    {
+        "name": "Path",
+        "type": "string",
+        "label": "Search pattern",
+        "defaultValue": "**\\AssemblyInfo.*",
+        "required": true,
+        "helpMarkDown": "Search pattern to assemblyinfo files"
+    },
+	{
+        "name": "AssemblyVersion",
+        "type": "string",
+        "label": "AssemblyVersion",
+        "defaultValue": "$(Build.BuildNumber)",
+        "required": true,
+        "helpMarkDown": "Assembly version number"
+    },
+	{
+        "name": "AssemblyFileVersion",
+        "type": "string",
+        "label": "AssemblyFileVersion",
+        "defaultValue": "$(Build.BuildNumber)",
+        "required": true,
+        "helpMarkDown": "Assembly file version number"
+    },
+	{
+        "name": "AssemblyInformationalVersion",
+        "type": "string",
+        "label": "AssemblyInformationalVersion",
+        "defaultValue": "$(Build.BuildNumber)",
+        "required": true,
+        "helpMarkDown": "Assembly informational version number"
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\PatchAssemblyInfo.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

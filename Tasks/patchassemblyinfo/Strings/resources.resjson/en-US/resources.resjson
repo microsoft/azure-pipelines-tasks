@@ -1,0 +1,17 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Patch AssemblyInfo",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/README.md)",
+  "loc.description": "Patch assembly, file and informational versions in assemblyinfo files",
+  "loc.instanceNameFormat": "Patch AssemblyInfo",
+  "loc.input.label.Path": "Search pattern",
+  "loc.input.help.Path": "Search pattern to assemblyinfo files",
+  "loc.input.label.AssemblyVersion": "AssemblyVersion",
+  "loc.input.help.AssemblyVersion": "Assembly version number",
+  "loc.input.label.AssemblyFileVersion": "AssemblyFileVersion",
+  "loc.input.help.AssemblyFileVersion": "Assembly file version number",
+  "loc.input.label.AssemblyInformationalVersion": "AssemblyInformationalVersion",
+  "loc.input.help.AssemblyInformationalVersion": "Assembly informational version number"
+}
