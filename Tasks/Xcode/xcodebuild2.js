@@ -38,18 +38,22 @@ xcv.exec()															// Print version of xcodebuild / xctool
 		tl.exit(code);
 	})
 	.fail(function(err) {
-		if(deleteKeychain) {										// Delete keychain if created - catch all to avoid problems
-			deleteKeychain.exec().done();
-		}
 		console.error(err.message);
 		tl.debug('taskRunner fail');
-		tl.exit(1);
+		if(deleteKeychain) {										// Delete keychain if created - catch all to avoid problems
+			deleteKeychain.exec()
+				.then(function(code) {
+					tl.exit(1);
+				});
+		} else {
+			tl.exit(1);
+		}
 	});
 
 function processInputs() {  
 	// if output is rooted ($(build.buildDirectory)/output/...), will resolve to fully qualified path, 
 	// else relative to repo root
-	buildSourceDirectory = tl.getVariable('build.sourceDirectory');
+	buildSourceDirectory = tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
 	out = path.resolve(buildSourceDirectory, tl.getInput('outputPattern', true));
 
 	//Process working directory
@@ -81,7 +85,7 @@ function processInputs() {
 		if(workspaceFile && workspaceFile.length > 0) {
 			tl.debug("Found " + workspaceFile.length + ' workspaces matching.')
 			xcb.arg('-workspace');
-			xcb.arg(workspaceFile[0]);				
+			xcb.arg('"' + workspaceFile[0] + '"');				
 		} else {
 			console.error('No workspaces found matching ' + workspace);
 		}
@@ -92,7 +96,7 @@ function processInputs() {
 	var scheme = tl.getInput('scheme', false);
 	if(scheme) {
 		xcb.arg('-scheme');
-		xcb.arg(tl.getInput('scheme', true));
+		xcb.arg('"' + tl.getInput('scheme', true) + '"');
 	} else {
 		tl.debug('No scheme specified in task.');
 	}
@@ -108,7 +112,7 @@ function processCert(code) {
 	// Add identity arg if specified
 	var identity = tl.getInput('identity', false);
 	if(identity) {
-		xcb.arg('CODE_SIGN_IDENTITY=' + tl.getInput('identity', true));
+		xcb.arg('CODE_SIGN_IDENTITY="' + tl.getInput('identity', true) + '"');
 	} else {
 		tl.debug('No explicit signing identity specified in task.')
 	}
@@ -119,14 +123,16 @@ function processCert(code) {
 		var p12pwd = tl.getInput('p12pwd', true);
 		var keychain = path.join(buildSourceDirectory, '_tasktmp.keychain');
 		var keychainPwd = Math.random();
-		
-		var createKeychain = new tl.ToolRunner(tl.which('bash', true));
-		createKeychain.arg([path.resolve(__dirname,'createkeychain.sh'), keychain, keychainPwd, p12, p12pwd]);	
-		var promise = createKeychain.exec();
 	
 		// Configure keychain delete command
 		deleteKeychain = new tl.ToolRunner('/usr/bin/security', true);
 		deleteKeychain.arg(['delete-keychain', keychain]);	
+		
+		var createKeychain = new tl.ToolRunner(tl.which('bash', true));
+		createKeychain.arg([path.resolve(__dirname,'createkeychain.sh'), keychain, keychainPwd, p12, p12pwd]);	
+		var promise = createKeychain.exec();
+		
+		xcb.arg('OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '"');
 		
 		// Run command to set the identity based on the contents of the p12 if not specified in task config
 		if(!identity) {
@@ -134,8 +140,9 @@ function processCert(code) {
 					return exec('/usr/bin/security find-identity -v -p codesigning "' + keychain + '" | grep -oE \'"(.+?)"\'');
 				})
 				.then(function(foundIdent) {
-					tl.debug('Using signing identity in p12 ' + foundIdent);
-					xcb.arg('CODE_SIGN_IDENTITY=' + foundIdent);
+					foundIdent = removeExecOutputNoise(foundIdent);
+					tl.debug('Using signing identity in p12: (' + foundIdent + ')');
+					xcb.arg("CODE_SIGN_IDENTITY=" + foundIdent);
 				});	
 		} else {
 			tl.warning('Signing Identitiy specified along with P12 Certificate P12. Omit Signing Identity in task to ensure p12 value used.')
@@ -158,8 +165,8 @@ function processProfile(code) {
 		// Get UUID of provisioning profile
 		return exec('/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i "' + profilePath + '")')
 			.then(function(uuid) {
+				uuid = removeExecOutputNoise(uuid);
 				tl.debug(profilePath + ' has UUID of ' + uuid);
-				uuid = uuid.trim();
 				if(!provProfileUuid) {
 					// Add UUID to xcodebuild args
 					xcb.arg('PROVISIONING_PROFILE=' + uuid);								
@@ -168,12 +175,12 @@ function processProfile(code) {
 				}
 				// Create delete profile call if flag specified
 				if(tl.getInput('removeProfile', true) == "true") {
-					var deleteProvProfile = tl.ToolRunner(tl.which('rm'), true);
-					deleteProvProfile.arg('-f', '$HOME/Library/MobileDevice/Provisioning\ Profiles/"' + uuid + '.mobileprovision"');
+					deleteProvProfile = new tl.ToolRunner(tl.which('rm'), true);
+					deleteProvProfile.arg(['-f', process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + uuid + '.mobileprovision']);
 				}
-				// return exec of copy command;
-				var copyProvProfile = tl.ToolRunner(tl.which('cp'), true);
-				copyProvProfile.arg('-f', profilePath, '$HOME/Library/MobileDevice/Provisioning\ Profiles/"' + uuid + '.mobileprovision"');
+				// return exec of copy command
+				var copyProvProfile = new tl.ToolRunner(tl.which('cp'), true);
+				copyProvProfile.arg(['-f', profilePath, process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + uuid + '.mobileprovision']);
 				return copyProvProfile.exec();
 			}); 
 	}
@@ -185,6 +192,10 @@ function execBuild(code) {
 	var args=tl.getDelimitedInput('args', ' ', false);			
 	if(args) {
 		xcb.arg(args);						
+	}
+	tl.debug('Complete build args: ');
+	for(var arg in xcb.args) {
+		tl.debug(xcb.args[arg]);
 	}
 	return xcb.exec();	
 }
@@ -215,3 +226,8 @@ function packageApps(code) {
 	}
 }
 
+function removeExecOutputNoise(input) {
+	var output = input + "";
+	output = output.trim().replace(/[,\n\r\f\v]/gm,'');	
+	return output;
+}
