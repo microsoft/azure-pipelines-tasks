@@ -1,4 +1,3 @@
-var path = require('path');
 var tl = require('vso-task-lib');
 
 var mvntool = tl.which('mvn', true);
@@ -138,34 +137,46 @@ function getEndpointDetails(inputFieldName) {
 }
 
 function createSonarQubeArgs(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword) {
-    var sqArgs = "";
-    if (sqHostUrl) {
-        sqArgs += '-Dsonar.host.url="' + sqHostUrl + '" '
-    }
+    var sqArgs = '-Dsonar.host.url="' + sqHostUrl + '" ';
     if (sqHostUsername) {
-        sqArgs += '-Dsonar.login="' + sqHostUsername + '" '
+        sqArgs += '-Dsonar.login="' + sqHostUsername + '" ';
     }
     if (sqHostPassword) {
-        sqArgs += '-Dsonar.password="' + sqHostPassword + '" '
+        sqArgs += '-Dsonar.password="' + sqHostPassword + '" ';
     }
     if (sqDbUrl) {
-        sqArgs += '-Dsonar.jdbc.url="' + sqDbUrl + '" '
+        sqArgs += '-Dsonar.jdbc.url="' + sqDbUrl + '" ';
     }
     if (sqDbUsername) {
-        sqArgs += '-Dsonar.jdbc.username="' + sqDbUsername + '" '
+        sqArgs += '-Dsonar.jdbc.username="' + sqDbUsername + '" ';
     }
     if (sqDbPassword) {
-        sqArgs += '-Dsonar.jdbc.password="' + sqDbPassword + '" '
+        sqArgs += '-Dsonar.jdbc.password="' + sqDbPassword + '" ';
     }
 
     return sqArgs;
 }
 
-// Maven task orchestration
+/*
+Maven task orchestration:
+
+1. Check that maven exists 
+2. Run maven with the user goals. Compilation or test errors will cause this to fail
+3. Always try to publish tests results 
+4. Always try to run the SonarQube analysis if it is enabled. In case the build has failed, the analysis 
+will still succeed but the report will have less data. 
+5. If #2 above failed, exit with an error code to mark the entire step as failed. Same for #4.
+
+*/
+
 
 var runFailed = false;
 
 mvnv.exec()
+.fail(function (err) {
+    console.error("Maven is not installed on the agent");
+    tl.exit(1);
+})
 .then(function (code) {
     return mvnb.exec(); // run Maven with the user specified goals
 })
@@ -182,7 +193,7 @@ mvnv.exec()
     if (mvnsq) {
         // run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures)
         // note that running sonar:sonar along with the user goals is not supported due to a SonarQube bug
-        return mvnsq.exec()  
+        return mvnsq.exec()
     }
 })
 .fail(function (err) {

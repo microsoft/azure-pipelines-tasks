@@ -144,14 +144,14 @@
             "type": "connectedService:Generic",
             "label": "SonarQube Endpoint",
             "required": true,
-            "helpMarkDown": "The SonarQube server generic endpoint",
+            "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
             "groupName": "SQAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },
         {
             "name": "sqDbDetailsRequired",
             "type": "boolean",
-            "label": "The SonarQube Server version is lower that 5.2",
+            "label": "The SonarQube server version is lower than 5.2",
             "required": true,
             "defaultValue": "false",
             "groupName": "SQAnalysis",
@@ -163,7 +163,7 @@
             "type": "string",
             "label": "Db Connection String",
             "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. The database connection setting, i.e. sonar.jdbc.url. For example jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The database connection setting i.e. sonar.jdbc.url. For example jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
             "groupName": "SQAnalysis",
             "visibleRule": "sqDbDetailsRequired = true"
         },
@@ -172,7 +172,7 @@
             "type": "string",
             "label": "Db UserName",
             "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only The username for the database user, i.e. sonar.jdbc.username.",
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The username for the database user i.e. sonar.jdbc.username.",
             "groupName": "SQAnalysis",
             "visibleRule": "sqDbDetailsRequired = true"
         },
@@ -181,7 +181,7 @@
             "type": "string",
             "label": "Db User Password",
             "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. The password for the database user, i.e. sonar.jdbc.password",
+            "helpMarkDown": "SonarQube server 5.1 and lower only. The password for the database user i.e. sonar.jdbc.password",
             "groupName": "SQAnalysis",
             "visibleRule": "sqDbDetailsRequired = true"
         }

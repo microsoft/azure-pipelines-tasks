@@ -56,7 +56,7 @@ Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
 # Publish test results
 PublishTestResults $publishJUnitResults $testResultsFiles
 
-# Run SonarQUbe analysis by invoking Maven with the "sonar:sonar" goal
+# Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile
 
 Write-Verbose "Leaving script Maven.ps1"
