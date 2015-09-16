@@ -1,41 +1,217 @@
-var tl = require('vso-task-lib');
-var path = require('path');
+var tl = require('vso-task-lib'),
+	path = require('path'),
+	fs = require('fs'),
+	glob = require('glob'),
+	Q = require ('q'),
+	exec = Q.nfbind(require('child_process').exec);
 
-// if output is rooted ($(build.buildDirectory)/output/...), will resolve to fully qualified path, 
-// else relative to repo root
-var out = path.resolve(tl.getVariable('build.sourceDirectory'), 
-	                            tl.getInput('outputPattern', true));
-tl.mkdirP(out);
+// Commands
+var xcv = null, 
+	xcb = null, 
+	deleteKeychain = null, 
+	deleteProvProfile = null;
 
-var tool = tl.which('xctool', false) || tl.which('xcodebuild', true);
-var xcv = new tl.ToolRunner(tool);
-xcv.arg('-version');
+// Globals
+var buildSourceDirectory, out, sdk;
 
-var xcb = new tl.ToolRunner(tool);
-xcb.arg('-workspace');
-xcb.arg(tl.getPathInput('xcWorkspacePath', true, true));
-xcb.arg('-sdk');
-xcb.arg(tl.getInput('sdk', true));
-xcb.arg('-configuration');
-xcb.arg(tl.getInput('configuration', true));
-xcb.arg('-scheme');
-xcb.arg(tl.getInput('scheme', true));
-xcb.arg(tl.getDelimitedInput('actions', ' ', true));
-xcb.arg('DSTROOT=' + path.join(out, 'build.dst'));
-xcb.arg('OBJROOT=' + path.join(out, 'build.obj'));
-xcb.arg('SYMROOT=' + path.join(out, 'build.sym'));
-xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(out, 'build.pch'));
+processInputs();													// Process inputs to task and create xcv, xcb
+xcv.exec()															// Print version of xcodebuild / xctool
+	.then(processCert)												// Process any p12 files configured
+	.then(processProfile)											// Processing any provisioning profiles
+	.then(execBuild)												// Run main xcodebuild / xctool task
+	.then(packageApps)												// Package apps if configured
+	.then(function(code) {											// When done, delete the temporary keychain if it exists
+		if(deleteKeychain) {
+			return deleteKeychain.exec();
+		} else {
+			return 0;
+		}
+	})
+	.then(function(code) {											// Next delete the provisioning profile if says this should happen		
+		if(deleteProvProfile) {
+			return deleteProvProfile.exec();
+		} else {
+			return 0;
+		}
+	})
+	.then(function(code) {											// On success, exit
+		tl.exit(code);
+	})
+	.fail(function(err) {
+		if(deleteKeychain) {										// Delete keychain if created - catch all to avoid problems
+			deleteKeychain.exec().done();
+		}
+		console.error(err.message);
+		tl.debug('taskRunner fail');
+		tl.exit(1);
+	});
 
+function processInputs() {  
+	// if output is rooted ($(build.buildDirectory)/output/...), will resolve to fully qualified path, 
+	// else relative to repo root
+	buildSourceDirectory = tl.getVariable('build.sourceDirectory');
+	out = path.resolve(buildSourceDirectory, tl.getInput('outputPattern', true));
 
-xcv.exec()
-.then(function(code) {
-	return xcb.exec();
-})
-.then(function(code) {
-	tl.exit(code);
-})
-.fail(function(err) {
-	console.error(err.message);
-	tl.debug('taskRunner fail');
-	tl.exit(1);
-})
+	//Process working directory
+	var cwd = tl.getInput('cwd') || buildSourceDirectory;
+	tl.cd(cwd);
+
+	// Create output directory if not present
+	tl.mkdirP(out);
+
+	// Use xctool or xccode build based on flag
+	var tool = tl.getInput('useXctool', false) == "true" ? tl.which('xctool', true) : tl.which('xcodebuild', true);
+	tl.debug('Tool selected: '+ tool);
+	// Get version 
+	xcv = new tl.ToolRunner(tool);
+	xcv.arg('-version');
+	// Xcode build call
+	xcb = new tl.ToolRunner(tool);
+	
+	// Add required flags
+	sdk = tl.getInput('sdk', true);
+	xcb.arg('-sdk');
+	xcb.arg(sdk);
+	xcb.arg('-configuration');
+	xcb.arg(tl.getInput('configuration', true));
+	// Args: Add optional workspace flag
+	var workspace = tl.getPathInput('xcWorkspacePath', false, false)
+	if(workspace) {
+		var workspaceFile = glob.sync(workspace);
+		if(workspaceFile && workspaceFile.length > 0) {
+			tl.debug("Found " + workspaceFile.length + ' workspaces matching.')
+			xcb.arg('-workspace');
+			xcb.arg(workspaceFile[0]);				
+		} else {
+			console.error('No workspaces found matching ' + workspace);
+		}
+	} else {
+		tl.debug('No workspace path specified in task.');
+	}
+	// Args: Add optional scheme flag
+	var scheme = tl.getInput('scheme', false);
+	if(scheme) {
+		xcb.arg('-scheme');
+		xcb.arg(tl.getInput('scheme', true));
+	} else {
+		tl.debug('No scheme specified in task.');
+	}
+	// Args: Add output path config
+	xcb.arg(tl.getDelimitedInput('actions', ' ', true));
+	xcb.arg('DSTROOT=' + path.join(out, 'build.dst'));
+	xcb.arg('OBJROOT=' + path.join(out, 'build.obj'));
+	xcb.arg('SYMROOT=' + path.join(out, 'build.sym'));
+	xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(out, 'build.pch'));	
+}
+
+function processCert(code) {
+	// Add identity arg if specified
+	var identity = tl.getInput('identity', false);
+	if(identity) {
+		xcb.arg('CODE_SIGN_IDENTITY=' + tl.getInput('identity', true));
+	} else {
+		tl.debug('No explicit signing identity specified in task.')
+	}
+	// If p12 specified, create temporary keychain, import it, add to search path
+	var p12 = tl.getPathInput('p12', false, false);
+	if(p12 && fs.lstatSync(p12).isFile() ) {
+		p12 = path.resolve(buildSourceDirectory,p12);
+		var p12pwd = tl.getInput('p12pwd', true);
+		var keychain = path.join(buildSourceDirectory, '_tasktmp.keychain');
+		var keychainPwd = Math.random();
+		
+		var createKeychain = new tl.ToolRunner(tl.which('bash', true));
+		createKeychain.arg([path.resolve(__dirname,'createkeychain.sh'), keychain, keychainPwd, p12, p12pwd]);	
+		var promise = createKeychain.exec();
+	
+		// Configure keychain delete command
+		deleteKeychain = new tl.ToolRunner('/usr/bin/security', true);
+		deleteKeychain.arg(['delete-keychain', keychain]);	
+		
+		// Run command to set the identity based on the contents of the p12 if not specified in task config
+		if(!identity) {
+			promise = promise.then(function() {
+					return exec('/usr/bin/security find-identity -v -p codesigning "' + keychain + '" | grep -oE \'"(.+?)"\'');
+				})
+				.then(function(foundIdent) {
+					tl.debug('Using signing identity in p12 ' + foundIdent);
+					xcb.arg('CODE_SIGN_IDENTITY=' + foundIdent);
+				});	
+		} else {
+			tl.warning('Signing Identitiy specified along with P12 Certificate P12. Omit Signing Identity in task to ensure p12 value used.')
+		}
+		return promise;		
+	} else {
+		tl.debug('p12 not specified in task.')
+		return Q();
+	}
+}
+
+function processProfile(code) {
+	var provProfileUuid = tl.getPathInput('provProfileUuid', false);
+	if(provProfileUuid) {
+		xcb.arg('PROVISIONING_PROFILE=' + provProfileUuid);	
+	}
+	var profilePath = path.resolve(buildSourceDirectory, tl.getPathInput('provProfile', false));
+	if(fs.existsSync(profilePath) && fs.lstatSync(profilePath).isFile()) { 
+		tl.debug('Provisioning profile file found.')
+		// Get UUID of provisioning profile
+		return exec('/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i "' + profilePath + '")')
+			.then(function(uuid) {
+				tl.debug(profilePath + ' has UUID of ' + uuid);
+				uuid = uuid.trim();
+				if(!provProfileUuid) {
+					// Add UUID to xcodebuild args
+					xcb.arg('PROVISIONING_PROFILE=' + uuid);								
+				} else {
+					tl.warning('Provisioning Profile UUID specified along with Provisioning Profile File. Omit Provisioning Profile UUID in task to ensure file value used.')			
+				}
+				// Create delete profile call if flag specified
+				if(tl.getInput('removeProfile', true) == "true") {
+					var deleteProvProfile = tl.ToolRunner(tl.which('rm'), true);
+					deleteProvProfile.arg('-f', '$HOME/Library/MobileDevice/Provisioning\ Profiles/"' + uuid + '.mobileprovision"');
+				}
+				// return exec of copy command;
+				var copyProvProfile = tl.ToolRunner(tl.which('cp'), true);
+				copyProvProfile.arg('-f', profilePath, '$HOME/Library/MobileDevice/Provisioning\ Profiles/"' + uuid + '.mobileprovision"');
+				return copyProvProfile.exec();
+			}); 
+	}
+	return Q();
+}
+
+function execBuild(code) {
+	// Add optional additional args
+	var args=tl.getDelimitedInput('args', ' ', false);			
+	if(args) {
+		xcb.arg(args);						
+	}
+	return xcb.exec();	
+}
+	
+function packageApps(code) {
+	if(tl.getInput('packageApp', true) == "true") {
+		tl.debug('Packaging apps.');
+		var promise = Q();
+		tl.debug('out: ' + out);
+		var outPath=path.join(out, 'build.sym');
+		tl.debug('out: ' + outPath);
+		var appList = glob.sync( outPath + '/**/*.app');
+		if(appList) {
+			tl.debug(appList.length + ' apps found for packaging.');
+			var xcrunPath = tl.which('xcrun', true);
+			for(var i=0; i<appList.length; i++) {
+				var appFolder = appList[i];
+				tl.debug('Packaging ' + appFolder);
+				var ipa = appFolder.substring(0, appFolder.length-3) + "ipa";
+				var xcr = new tl.ToolRunner(xcrunPath);
+				xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', appFolder, '-o', ipa]);
+				promise = promise.then(function(code) { return xcr.exec(); });
+			}
+			return promise;				
+		} else {
+			tl.warning('No apps found to package in ' + outPath);
+		}
+	}
+}
+

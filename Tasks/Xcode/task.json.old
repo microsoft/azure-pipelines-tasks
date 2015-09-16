@@ -1,0 +1,85 @@
+{
+    "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
+    "name": "Xcode",
+    "friendlyName": "Xcode Build",
+    "description": "Build an Xcode workspace on Mac OS",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613730)",
+    "category": "Build",
+    "visibility": [
+                "Build"
+                  ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 10
+    },
+    "demands" : [
+        "xcode"
+    ],
+    "instanceNameFormat": "Xcode $(actions)",
+     "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
+    "inputs": [
+        { 
+            "name": "xcWorkspacePath", 
+            "type": "filePath", 
+            "label": "Workspace Path", 
+            "defaultValue":"", 
+            "required":true, 
+            "helpMarkDown": "Relative path from repo root where xcworkspace folder exists." 
+        },
+        { 
+            "name": "scheme", 
+            "type": "string", 
+            "label": "Scheme", 
+            "defaultValue":"", 
+            "required":true,
+            "helpMarkDown": "Scheme name in Xcode.  *Must be a shared scheme* (shared checkbox under managed schemes in Xcode)" 
+        },
+        { 
+            "name": "actions", 
+            "type": "string", 
+            "label": "Actions", 
+            "defaultValue":"build", 
+            "required":true, 
+            "helpMarkDown": "Space delimited list of actions.  Valid options are build, clean, test, analyze, and archive.  For example: `build clean` would do a clean build.  See [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)"
+        },
+        { 
+            "name": "configuration", 
+            "type": "string", 
+            "label": "Configuration", 
+            "defaultValue":"$(Configuration)", 
+            "required":true 
+        },
+        { 
+            "name": "sdk", 
+            "type": "string", 
+            "label": "SDK", 
+            "defaultValue":"$(SDK)", 
+            "required":true,
+            "helpMarkDown": "Build an Xcode project or workspace against the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs."
+        },
+        { 
+            "name": "outputPattern", 
+            "type": "string", 
+            "label": 
+            "Output", 
+            "defaultValue":"output/$(SDK)/$(Configuration)", 
+            "required":true,
+            "helpMarkDown": "Relative path where build output (binaries) will be placed.",
+            "groupName":"advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "xcodebuild2.js",
+            "argumentFormat": ""
+        }        
+    }    
+}
