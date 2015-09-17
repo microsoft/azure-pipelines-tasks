@@ -83,7 +83,7 @@ function processInputs() {
 	if(tl.getInput("unlockDefaultKeychain")=="true") {
 		// Need to wrap in a bash script in order to unlock keychain since it needs to happen in same child process
 		xcb = new tl.ToolRunner(tl.which('bash')); 
-		xcb.arg(['-l','-c','/usr/bin/security unlock-keychain -p "' + tl.getInput('defaultKeychainPassword',true) + '" $(security default-keychain | grep -oE \'"(.+?)"\' | grep -oE \'[^"]*[\\n]\'); ' + tool]);
+		xcb.arg(['-l','-c','/usr/bin/security unlock-keychain -p "' + tl.getInput('defaultKeychainPassword',true) + '" $(security default-keychain | grep -oE \'"(.+?)"\' | grep -oE \'[^"]*[\\n]\'); $0 "$@"', tool]);
 	} else {
 		xcb = new tl.ToolRunner(tool);
 	}
@@ -219,7 +219,7 @@ function execBuild(code) {
 }
 	
 function packageApps(code) {
-	if(tl.getInput('packageApp', true) == "true") {
+	if(tl.getInput('packageApp', true) == "true" && sdk != "iphonesimulator") {
 		tl.debug('Packaging apps.');
 		var promise = Q();
 		tl.debug('out: ' + out);
