@@ -78,11 +78,12 @@ function getSonarQubeRunner() {
     var sqAnalysisEnabled = tl.getInput('sqAnalysisEnabled', true);
 
     if (sqAnalysisEnabled != 'true') {
-        console.log("SonarQube analysis is not enabled.");
+        console.log("SonarQube analysis is not enabled");
         return;
     }
 
     console.log("SonarQube analysis is enabled");
+    var mvnsq;
     var sqArguments;
     var sqEndpoint = getEndpointDetails("sqConnectedServiceName");
     var sqDbDetailsRequired = tl.getInput('sqDbDetailsRequired', true);
@@ -91,18 +92,14 @@ function getSonarQubeRunner() {
         var sqDbUrl = tl.getInput('sqDbUrl', false);
         var sqDbUsername = tl.getInput('sqDbUsername', false);
         var sqDbPassword = tl.getInput('sqDbPassword', false);
-        sqArguments = createSonarQubeArgs(sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password, sqDbUrl, sqDbUsername, sqDbPassword);
+        mvnsq = createMavenSQRunner(sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password, sqDbUrl, sqDbUsername, sqDbPassword);
     } else {
-        sqArguments = createSonarQubeArgs(sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password);
+        mvnsq = createMavenSQRunner(sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password);
     }
 
-    sqArguments = mavenOptions + " " + sqArguments;
-    tl.debug("Running Maven with goal sonar:sonar and options " + sqArguments);
-
-    var mvnsq = new tl.ToolRunner(mvntool);
     mvnsq.arg('-f');
     mvnsq.arg(mavenPOMFile);
-    mvnsq.arg(sqArguments);
+    mvnsq.arg(mavenOptions); // add the user options to allow further customization of the SQ run
     mvnsq.arg("sonar:sonar");
 
     return mvnsq;
@@ -136,25 +133,27 @@ function getEndpointDetails(inputFieldName) {
     };
 }
 
-function createSonarQubeArgs(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword) {
-    var sqArgs = '-Dsonar.host.url="' + sqHostUrl + '" ';
+function createMavenSQRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword) {
+    var mvnsq = new tl.ToolRunner(mvntool);
+
+    mvnsq.arg('-Dsonar.host.url="' + sqHostUrl + '"');
     if (sqHostUsername) {
-        sqArgs += '-Dsonar.login="' + sqHostUsername + '" ';
+        mvnsq.arg('-Dsonar.login="' + sqHostUsername + '"');
     }
     if (sqHostPassword) {
-        sqArgs += '-Dsonar.password="' + sqHostPassword + '" ';
+        mvnsq.arg('-Dsonar.password="' + sqHostPassword + '"');
     }
     if (sqDbUrl) {
-        sqArgs += '-Dsonar.jdbc.url="' + sqDbUrl + '" ';
+        mvnsq.arg('-Dsonar.jdbc.url="' + sqDbUrl + '"');
     }
     if (sqDbUsername) {
-        sqArgs += '-Dsonar.jdbc.username="' + sqDbUsername + '" ';
+        mvnsq.arg('-Dsonar.jdbc.username="' + sqDbUsername + '"');
     }
     if (sqDbPassword) {
-        sqArgs += '-Dsonar.jdbc.password="' + sqDbPassword + '" ';
+        mvnsq.arg('-Dsonar.jdbc.password="' + sqDbPassword + '"');
     }
 
-    return sqArgs;
+    return mvnsq;
 }
 
 /*
