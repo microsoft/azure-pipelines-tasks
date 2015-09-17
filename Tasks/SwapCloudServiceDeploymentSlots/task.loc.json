@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "id": "2B921C43-1BAD-4C9F-A20F-FA1A3143503D",
-  "name": "SwapCloudServiceSlots",
+  "name": "SwapCloudServiceDeploymentSlots",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 8
   },
   "demands": [
     "azureps"
@@ -58,24 +58,24 @@
       "label": "ms-resource:loc.input.label.WaitInstancesReady",
       "defaultValue": "true",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.WaitInstancesReady",
-      "groupName": "instancestatecheck"
+      "groupName": "instancestatecheck",
+      "helpMarkDown": "ms-resource:loc.input.help.WaitInstancesReady"
     },
     {
       "name": "CheckInterval",
       "type": "string",
       "label": "ms-resource:loc.input.label.CheckInterval",
       "defaultValue": "30",
-      "helpMarkDown": "ms-resource:loc.input.help.CheckInterval",
-      "groupName": "instancestatecheck"
+      "groupName": "instancestatecheck",
+      "helpMarkDown": "ms-resource:loc.input.help.CheckInterval"
     },
     {
       "name": "CheckTimeout",
       "type": "string",
       "label": "ms-resource:loc.input.label.CheckTimeout",
       "defaultValue": "900",
-      "helpMarkDown": "ms-resource:loc.input.help.CheckTimeout",
-      "groupName": "instancestatecheck"
+      "groupName": "instancestatecheck",
+      "helpMarkDown": "ms-resource:loc.input.help.CheckTimeout"
     }
   ],
   "sourceDefinitions": [
