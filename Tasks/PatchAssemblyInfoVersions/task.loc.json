@@ -1,0 +1,65 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "66204EDC-8DA1-4BD3-8618-B8CF4DC17A8F",
+  "name": "PatchAssemblyInfo",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Peter Csajtai",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "12"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "Path",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Path",
+      "defaultValue": "**\\AssemblyInfo.*",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Path"
+    },
+    {
+      "name": "AssemblyVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AssemblyVersion",
+      "defaultValue": "$(Build.BuildNumber)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.AssemblyVersion"
+    },
+    {
+      "name": "AssemblyFileVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AssemblyFileVersion",
+      "defaultValue": "$(Build.BuildNumber)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.AssemblyFileVersion"
+    },
+    {
+      "name": "AssemblyInformationalVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AssemblyInformationalVersion",
+      "defaultValue": "$(Build.BuildNumber)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.AssemblyInformationalVersion"
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\PatchAssemblyInfo.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
