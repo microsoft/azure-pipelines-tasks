@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 49
+        "Patch": 58
     },
     "demands" : [
         "xcode"
@@ -20,9 +20,14 @@
     "instanceNameFormat": "Xcode $(actions)",
      "groups": [
         {
-            "name":"signAndPackage",
-            "displayName":"Signing, Provisioning, Packaging",
-            "isExpanded":false            
+            "name":"sign",
+            "displayName":"Code Signing",
+            "isExpanded":true            
+        },
+        {
+            "name":"prov",
+            "displayName":"Provisioning Profile",
+            "isExpanded":true            
         },
         {
             "name":"advanced",
@@ -75,16 +80,15 @@
             "label": "Create App Package", 
             "defaultValue":true, 
             "required":true,
-            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build.",
-            "groupName":"signAndPackage"
+            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
         },
         { 
             "name": "identity", 
             "type": "string", 
             "label": "Signing Identity", 
             "required":false,
-            "helpMarkDown": "Optional signing identity override that should be used to sign the build. Not required if P12 Certificate File specified. Defaults to Xcode Project setting. *You may need to use the [security command](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/security.1.html) to unlock the login.keychain if you use this option*",
-            "groupName":"signAndPackage"
+            "helpMarkDown": "Optional signing identity override that should be used to sign the build. **Not required if P12 Certificate File specified.** Defaults to Xcode Project setting. You may need to select Unlock Default Keychain if you use this option.",
+            "groupName":"sign"
         },
         { 
             "name": "p12", 
@@ -92,7 +96,7 @@
             "label": "P12 Certificate File", 
             "required":false,
             "helpMarkDown": "Optional relative path to a PKCS12 formated p12 certificate file containing a signing certificate to be used for this build. **Omit Signing Idenity if specified.**",
-            "groupName":"signAndPackage"
+            "groupName":"sign"
         },
         { 
             "name": "p12pwd", 
@@ -100,7 +104,24 @@
             "label": "P12 Password", 
             "required":false,
             "helpMarkDown": "Password to P12 Certificate File if specified. Use a Build Variable to encrypt.",
-            "groupName":"signAndPackage"
+            "groupName":"sign"
+        },
+        { 
+            "name": "unlockDefaultKeychain", 
+            "type": "boolean", 
+            "label": "Unlock Default Keychain", 
+            "defaultValue":false,
+            "required": true,
+            "helpMarkDown": "Resolve \"User interaction is not allowed\" errors by unlocking the default keychain.",
+            "groupName":"sign"
+        },
+        { 
+            "name": "defaultKeychainPassword", 
+            "type": "string", 
+            "label": "Default Keychain Password", 
+            "required": false,
+            "helpMarkDown": "Password to unlock the default keychain when this option is set.",
+            "groupName":"sign"
         },
         { 
             "name": "provProfileUuid", 
@@ -108,7 +129,7 @@
             "label": "Provisioning Profile UUID", 
             "required":false,
             "helpMarkDown": "Optional UUID of an installed provisioning profile to be used for this build. Not required if Provisioning Profile File specified. Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
-            "groupName":"signAndPackage"
+            "groupName":"prov"
         },
         { 
             "name": "provProfile", 
@@ -116,7 +137,7 @@
             "label": "Provisioning Profile File", 
             "required":false,
             "helpMarkDown": "Optional relative path to file containing provisioning profile override to be used for this build. **Omit Provisioning Profile UUID if specified.** Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
-            "groupName":"signAndPackage"
+            "groupName":"prov"
         },
         { 
             "name": "removeProfile", 
@@ -125,7 +146,7 @@
             "defaultValue":false, 
             "required":false,
             "helpMarkDown": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
-            "groupName":"signAndPackage"
+            "groupName":"prov"
         },
         { 
             "name": "args", 
@@ -151,6 +172,14 @@
             "defaultValue":"output/$(SDK)/$(Configuration)", 
             "required":true,
             "helpMarkDown": "Relative path where build output (binaries) will be placed.",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "xcodeDeveloperDir", 
+            "type": "string", 
+            "label": "Xcode Developer Path", 
+            "required":false,
+            "helpMarkDown": "Optional path to Xcode Developer folder if not the system default. For use when multiple versions of Xcode are installed on a system. Ex: /Applications/Xcode 7.app/Contents/Developer",
             "groupName":"advanced"
         },
         { 

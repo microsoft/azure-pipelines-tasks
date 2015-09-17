@@ -12,7 +12,7 @@ var xcv = null,
 	deleteProvProfile = null;
 
 // Globals
-var buildSourceDirectory, out, sdk;
+var buildSourceDirectory, xcodeDeveloperDir, out, sdk;
 
 processInputs();													// Process inputs to task and create xcv, xcb
 xcv.exec()															// Print version of xcodebuild / xctool
@@ -64,13 +64,30 @@ function processInputs() {
 	tl.mkdirP(out);
 
 	// Use xctool or xccode build based on flag
-	var tool = tl.getInput('useXctool', false) == "true" ? tl.which('xctool', true) : tl.which('xcodebuild', true);
+	var tool;
+	xcodeDeveloperDir = tl.getInput('xcodeDeveloperDir', false);
+	if(tl.getInput('useXctool', false) == "true") {
+		tool = tl.which('xctool', true);
+	} else {
+		if(xcodeDeveloperDir) {
+			tool = path.join(xcodeDeveloperDir, 'usr', 'bin', 'xcodebuild');
+		} else {
+			tool = tl.which('xcodebuild', true);
+		}
+	}
 	tl.debug('Tool selected: '+ tool);
 	// Get version 
 	xcv = new tl.ToolRunner(tool);
 	xcv.arg('-version');
 	// Xcode build call
-	xcb = new tl.ToolRunner(tool);
+	if(tl.getInput("unlockDefaultKeychain")=="true") {
+		// Need to wrap in a bash script in order to unlock keychain since it needs to happen in same child process
+		xcb = new tl.ToolRunner(tl.which('bash')); 
+		xcb.arg(['-l','-c','/usr/bin/security unlock-keychain -p "' + tl.getInput('defaultKeychainPassword',true) + '" $(security default-keychain | grep -oE \'"(.+?)"\' | grep -oE \'[^"]*[\\n]\'); ' + tool]);
+	} else {
+		xcb = new tl.ToolRunner(tool);
+	}
+
 	
 	// Add required flags
 	sdk = tl.getInput('sdk', true);
@@ -150,7 +167,7 @@ function processCert(code) {
 		return promise;		
 	} else {
 		tl.debug('p12 not specified in task.')
-		return Q();
+		return 0;
 	}
 }
 
@@ -183,8 +200,9 @@ function processProfile(code) {
 				copyProvProfile.arg(['-f', profilePath, process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + uuid + '.mobileprovision']);
 				return copyProvProfile.exec();
 			}); 
+	} else {
+		return 0;
 	}
-	return Q();
 }
 
 function execBuild(code) {
@@ -210,7 +228,12 @@ function packageApps(code) {
 		var appList = glob.sync( outPath + '/**/*.app');
 		if(appList) {
 			tl.debug(appList.length + ' apps found for packaging.');
-			var xcrunPath = tl.which('xcrun', true);
+			var xcrunPath = tl.which('xcrun', true);	
+			if(xcodeDeveloperDir) {
+				xcrunPath = path.join(xcodeDeveloperDir, 'usr', 'bin', 'xcrun');
+			} else {
+				xcrunPath = tl.which('xcrun', true);
+			}
 			for(var i=0; i<appList.length; i++) {
 				var appFolder = appList[i];
 				tl.debug('Packaging ' + appFolder);
@@ -224,6 +247,7 @@ function packageApps(code) {
 			tl.warning('No apps found to package in ' + outPath);
 		}
 	}
+	return 0;
 }
 
 function removeExecOutputNoise(input) {
