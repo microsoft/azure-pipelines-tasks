@@ -1,0 +1,71 @@
+﻿{
+    "id": "7C6A6b71-4355-4AFC-A274-480EAB5678E9",
+    "name": "DecryptFile",
+    "friendlyName": "Decrypt File",
+    "description": "A thin utility task for file decryption.",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613735)",
+    "category": "Utility",
+    "visibility": [
+                  "Build",
+                  "Release"
+                  ],    
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 9
+    },
+    "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+    ],
+    "instanceNameFormat": "Decrypt $(inFile)",
+    "inputs": [
+        { 
+            "name": "cipher", 
+            "type": "string", 
+            "label": "Cypher", 
+            "defaultValue": "des3", 
+            "required": true,
+            "helpMarkDown": "Encryption cyper to use. See [cypher suite names](http://openssl.org/docs/manmaster/apps/ciphers.html) for a complete list of possible values."
+        },
+        { 
+            "name": "inFile", 
+            "type": "filePath", 
+            "label": "Encrypted File", 
+            "required": true,
+            "helpMarkDown": "Relative path of file to decrypt."
+        },
+        { 
+            "name": "passphrase", 
+            "type": "string", 
+            "label": "Passphrase", 
+            "required": true,
+            "helpMarkDown": "Passphrase to use for decryption. **Use a Variable to encrypt the passphrase.**"
+        },
+        { 
+            "name": "outFile", 
+            "type": "filePath", 
+            "label": "Decrypted File Path", 
+            "required": false,
+            "helpMarkDown": "Optional filename for decytped file. Defaults to the Encrypted File with a \".out\" extension"
+        },
+        { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working folder", 
+            "defaultValue": "", 
+            "required": false,            
+            "groupName":"advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "decrypt.js",
+            "argumentFormat": ""
+        }        
+    }
+}
