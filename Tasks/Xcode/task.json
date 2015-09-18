@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 79
+        "Patch": 80
     },
     "demands" : [
         "xcode"
@@ -188,6 +188,14 @@
             "label": "Use xctool", 
             "required":false,
             "helpMarkDown": "Use xctool instead of xcodebuild. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details.",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "xctoolReporter", 
+            "type": "string", 
+            "label": "xctool Test Reporter Format", 
+            "required":false,
+            "helpMarkDown": "Test reporter format to use when \"test\" action is specified and \"Use xctool\" is checked. Specify \"junit:output-file-path-here.xml\" to generate a file format compatible with the Publish Test Results task. When specified, \"plain\" is automatically added as well. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details.",
             "groupName":"advanced"
         }
     ],

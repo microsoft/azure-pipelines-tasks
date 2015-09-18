@@ -77,7 +77,8 @@ function processInputs() {
 		process.env['DEVELOPER_DIR'] = xcodeDeveloperDir;
 	}
 	// Use xctool or xccode build based on flag
-	var tool = tl.getInput('useXctool', false) == "true" ? tl.which('xctool', true) : tl.which('xcodebuild', true);
+	var useXctool = (tl.getInput('useXctool', false) == "true");
+	var tool = useXctool ? tl.which('xctool', true) : tl.which('xcodebuild', true);
 	tl.debug('Tool selected: '+ tool);
 	// Get version 
 	xcv = new tl.ToolRunner(tool);
@@ -119,6 +120,14 @@ function processInputs() {
 	} else {
 		tl.debug('No scheme specified in task.');
 	}
+	if(useXctool) {
+		var xctoolReporter = tl.getInput('xctoolReporter', false);
+		if(xctoolReporter) {
+			xcb.arg(['-reporter', 'plain', '-reporter', xctoolReporter])
+		}
+		
+	}
+	
 	// Args: Add output path config
 	xcb.arg(tl.getDelimitedInput('actions', ' ', true));
 	xcb.arg('DSTROOT=' + path.join(out, 'build.dst'));
