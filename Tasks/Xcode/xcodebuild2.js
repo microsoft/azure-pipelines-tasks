@@ -12,7 +12,10 @@ var xcv = null,
 	deleteProvProfile = null;
 
 // Globals
-var buildSourceDirectory, xcodeDeveloperDir, out, sdk;
+var buildSourceDirectory, origXcodeDeveloperDir, out, sdk;
+
+// Store original Xcode developer directory so we can restore it after build completes if its overridden
+var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
 
 processInputs();													// Process inputs to task and create xcv, xcb
 xcv.exec()															// Print version of xcodebuild / xctool
@@ -35,9 +38,11 @@ xcv.exec()															// Print version of xcodebuild / xctool
 		}
 	})
 	.then(function(code) {											// On success, exit
+		process.env['DEVELOPER_DIR'] = origXcodeDeveloperDir;
 		tl.exit(code);
 	})
 	.fail(function(err) {
+		process.env['DEVELOPER_DIR'] = origXcodeDeveloperDir;
 		console.error(err.message);
 		tl.debug('taskRunner fail');
 		if(deleteKeychain) {										// Delete keychain if created - catch all to avoid problems
@@ -63,31 +68,27 @@ function processInputs() {
 	// Create output directory if not present
 	tl.mkdirP(out);
 
-	// Use xctool or xccode build based on flag
-	var tool;
-	xcodeDeveloperDir = tl.getInput('xcodeDeveloperDir', false);
-	if(tl.getInput('useXctool', false) == "true") {
-		tool = tl.which('xctool', true);
-	} else {
-		if(xcodeDeveloperDir) {
-			tool = path.join(xcodeDeveloperDir, 'usr', 'bin', 'xcodebuild');
-		} else {
-			tool = tl.which('xcodebuild', true);
-		}
+	// Set the path to the developer tools for this process call if not the default
+	var xcodeDeveloperDir = tl.getInput('xcodeDeveloperDir', false);
+	if(xcodeDeveloperDir) {
+		tl.debug('DEVELOPER_DIR was ' + origXcodeDeveloperDir)
+		tl.debug('DEVELOPER_DIR for build set to ' + xcodeDeveloperDir);
+		process.env['DEVELOPER_DIR'] = xcodeDeveloperDir;
 	}
+	// Use xctool or xccode build based on flag
+	var tool = tl.getInput('useXctool', false) == "true" ? tl.which('xctool', true) : tl.which('xcodebuild', true);
 	tl.debug('Tool selected: '+ tool);
 	// Get version 
 	xcv = new tl.ToolRunner(tool);
 	xcv.arg('-version');
 	// Xcode build call
 	if(tl.getInput("unlockDefaultKeychain")=="true") {
-		// Need to wrap in a bash script in order to unlock keychain since it needs to happen in same child process
+		// May be able to refactor this so that the unlock is called as a separate step rather than during the xcodebuild call via bash - Saw inconsistant results so more research required to determine if the child process inherits the unlock.
 		xcb = new tl.ToolRunner(tl.which('bash')); 
 		xcb.arg(['-l','-c','/usr/bin/security unlock-keychain -p "' + tl.getInput('defaultKeychainPassword',true) + '" $(security default-keychain | grep -oE \'"(.+?)"\' | grep -oE \'[^"]*[\\n]\'); $0 "$@"', tool]);
 	} else {
 		xcb = new tl.ToolRunner(tool);
 	}
-
 	
 	// Add required flags
 	sdk = tl.getInput('sdk', true);
@@ -229,11 +230,6 @@ function packageApps(code) {
 		if(appList) {
 			tl.debug(appList.length + ' apps found for packaging.');
 			var xcrunPath = tl.which('xcrun', true);	
-			if(xcodeDeveloperDir) {
-				xcrunPath = path.join(xcodeDeveloperDir, 'usr', 'bin', 'xcrun');
-			} else {
-				xcrunPath = tl.which('xcrun', true);
-			}
 			for(var i=0; i<appList.length; i++) {
 				var appFolder = appList[i];
 				tl.debug('Packaging ' + appFolder);
