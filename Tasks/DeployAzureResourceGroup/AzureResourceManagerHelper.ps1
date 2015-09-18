@@ -147,6 +147,9 @@ function Get-Resources
                 {
                     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $winRmHttpPortMap[$resource.Name])
                     $propertyBag.Add("WinRM_Http", $property)
+
+					$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, "5985")
+                    $propertyBag.Add("WinRM_Http_Private", $property)
                 }
 
                 #Adding WinRMHttps port property
@@ -154,6 +157,9 @@ function Get-Resources
                 {
                     $property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, $winRmHttpsPortMap[$resource.Name])
                     $propertyBag.Add("WinRM_Https", $property)
+
+					$property = New-Object Microsoft.VisualStudio.Services.DevTestLabs.Model.PropertyBagData($false, "5986")
+                    $propertyBag.Add("WinRM_Https_Private", $property)
                 }
 
                 $environmentResource.Properties.AddOrUpdateProperties($propertyBag)
