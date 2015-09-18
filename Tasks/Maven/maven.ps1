@@ -7,7 +7,13 @@
     [string]$javaHomeSelection,
     [string]$jdkVersion,
     [string]$jdkArchitecture,
-    [string]$jdkUserInputPath
+    [string]$jdkUserInputPath, 
+	[string]$sqAnalysisEnabled, 
+    [string]$sqConnectedServiceName, 
+    [string]$sqDbDetailsRequired,
+    [string]$sqDbUrl,
+	[string]$sqDbUsername,
+	[string]$sqDbPassword
 )
 
 Write-Verbose 'Entering Maven.ps1'
@@ -21,7 +27,13 @@ Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 Write-Verbose "jdkUserInputPath = $jdkUserInputPath"
 
-#Verify Maven POM file is specified
+Write-Verbose "sqAnalysisEnabled = $sqAnalysisEnabled"
+Write-Verbose "connectedServiceName = $sqConnectedServiceName"
+Write-Verbose "sqDbDetailsRequired = $sqDbDetailsRequired"
+Write-Verbose "dbUrl = $sqDbUrl"
+Write-Verbose "dbUsername = $sqDbUsername"
+
+# Verify Maven POM file is specified
 if(!$mavenPOMFile)
 {
     throw "Maven POM file is not specified"
@@ -32,66 +44,20 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
-# If JAVA_HOME is being set by choosing a JDK version find the path to that specified version else use the path given by the user
-$jdkPath = $null
-if($javaHomeSelection -eq 'JDKVersion')
-{
-    Write-Verbose "Using JDK version to find and set JAVA_HOME"
-    # If the JDK version is not the deafult set the jdkPath to the new JDK version selected
-    if($jdkVersion -and ($jdkVersion -ne "default"))
-    {
-        $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
-        if (!$jdkPath) 
-        {
-            throw (Get-LocalizedString -Key 'Could not find JDK {0} {1}. Please make sure the selected JDK is installed properly.' -ArgumentList $jdkVersion, $jdkArchitecture)
-        }
-    }
-}
-else
-{
-    Write-Verbose "Using path from user input to set JAVA_HOME"
-    if($jdkUserInputPath -and (Test-Path -LiteralPath $jdkUserInputPath))
-    {
-        $jdkPath = $jdkUserInputPath
-    }
-    else
-    {
-         throw (Get-LocalizedString -Key "The specified JDK path does not exist. Please provide a valid path.")
-    }
-}
+. ./mavenHelper.ps1
 
-# If jdkPath is set to something other than the default then update JAVA_HOME
-if ($jdkPath)
-{
-    Write-Host "Setting JAVA_HOME to $jdkPath"
-    $env:JAVA_HOME = $jdkPath
-    Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
-}
+# Use a specific JDK
+ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
 
-Write-Verbose "Running Maven..."
-Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
+# Invoke MVN
+Write-Host "Running Maven..."
+Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 
-# Publish test results files
-$publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
-if($publishJUnitResultsFromAntBuild)
-{
-   # check for JUnit test result files
-    $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
-    if (!$matchingTestResultsFiles)
-    {
-        Write-Host "No JUnit test results files were found matching pattern '$testResultsFiles', so publishing JUnit test results is being skipped."
-    }
-    else
-    {
-        Write-Verbose "Calling Publish-TestResults"
-        Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
-    }    
-}
-else
-{
-    Write-Verbose "Option to publish JUnit Test results produced by Maven build was not selected and is being skipped."
-}
+# Publish test results
+PublishTestResults $publishJUnitResults $testResultsFiles
 
+# Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
+RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile
 
 Write-Verbose "Leaving script Maven.ps1"
 

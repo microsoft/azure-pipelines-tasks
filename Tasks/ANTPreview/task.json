@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
     "demands" : [
         "ant"
@@ -89,7 +89,7 @@
             "defaultValue": "None",
             "helpMarkDown": "Select the code coverage tool. Please make sure jacocoant.jar is available in lib folder of Ant installation.",
             "options": {
-                "NoCoverage": "None",
+                "None": "None",
                 "JaCoCo": "JaCoCo"
             }
         },

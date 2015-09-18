@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 54
+    "Patch": 55
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -55,6 +55,15 @@
       "defaultValue": "Release",
       "helpMarkDown": "ms-resource:loc.input.help.configurationToPack",
       "required": false,
+      "groupName": "advanced"
+    },
+    {
+      "name": "buildProperties",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildProperties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildProperties",
       "groupName": "advanced"
     },
     {

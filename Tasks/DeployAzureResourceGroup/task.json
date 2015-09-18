@@ -2,7 +2,7 @@
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
-    "description": "Provision and Deploy an Azure Resource Group",
+    "description": "Provision, Deploy and Perform Actions on a Azure Resource Group",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
     "visibility": [
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [
         "azureps"
@@ -24,7 +24,7 @@
         {
             "name": "advancedDeploymentOptions",
             "displayName": "Advanced Deployment Options",
-            "isExpanded": true
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -42,7 +42,7 @@
             "label": "Action",
             "defaultValue": "Create Or Update Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the machines or machine group.",
+            "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
             "options": {
                  "Create Or Update Resource Group": "Create Or Update Resource Group",
                  "Start": "Start Virtual Machines",
@@ -265,7 +265,7 @@
         "authKey": "$(ConnectedServiceName)"
     }
   ],
-    "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
+    "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",

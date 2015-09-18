@@ -56,6 +56,7 @@ Write-Host "packageFile= $packageFile"
 
 #Ensure that at most a single package (.zip) file is found
 $packageFile = Get-SingleFile $packageFile $Package
+$azureWebSiteError = $null
 
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)
@@ -63,12 +64,16 @@ if($WebSiteLocation)
     if ($Slot)
     {
         Write-Host "Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue"
-        $azureWebSite = Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue
+        $azureWebSite = Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError
     }
     else
     {
         Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue"
-        $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue
+        $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError
+    }
+    
+    if($azureWebSiteError){
+        $azureWebSiteError | ForEach-Object { Write-Warning $_.Exception.ToString() }
     }
     
     if(!$azureWebSite)
