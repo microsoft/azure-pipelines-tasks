@@ -92,16 +92,16 @@ function CreateCommandLineArgs
 
 function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
 {
-	$prcaEnabled = GetTaskContextVariable "PullRequestSonarQubeCodeAnalysisEnabled"
-	if ($prcaEnabled -ieq "true")
-	{
-		if ($cmdLineArgs -and $cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
-		{
-			throw "Error: sonar.analysis.mode seems to be set already. Please check the properties of SonarQube build tasks and try again."
-		}
+    $prcaEnabled = GetTaskContextVariable "PullRequestSonarQubeCodeAnalysisEnabled"
+    if ($prcaEnabled -ieq "true")
+    {
+        if ($cmdLineArgs -and $cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
+        {
+            throw "Error: sonar.analysis.mode seems to be set already. Please check the properties of SonarQube build tasks and try again."
+        }
 
         $sqServerVersion = GetSonarQubeServerVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password
-		Write-Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for sonar-runner. SonarQube version:$sqServerVersion"
+        Write-Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for sonar-runner. SonarQube version:$sqServerVersion"
 
         if (!$sqServerVersion)
         {
@@ -109,7 +109,7 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
             throw "Error: Unable to fetch SonarQube server version. Please make sure SonarQube server is reachable at $($serviceEndpoint.Url)"
         }
 
-		$sqMajorVersion = GetSQMajorVersionNumber $sqServerVersion
+        $sqMajorVersion = GetSQMajorVersionNumber $sqServerVersion
         $sqMinorVersion = GetSQMinorVersionNumber $sqServerVersion
 
         #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremntal mode is not supported in SQ 5.2+
