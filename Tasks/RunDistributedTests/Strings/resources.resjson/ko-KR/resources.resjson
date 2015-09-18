@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "테스트 에이전트를 사용하여 Visual Studio 테스트",
-  "loc.helpMarkDown": "[자세한 정보](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
   "loc.instanceNameFormat": "$(testMachineGroup)에서 테스트 $(sourcefilters) 실행",
   "loc.group.displayName.testMachineGroups": "테스트 컴퓨터 그룹",

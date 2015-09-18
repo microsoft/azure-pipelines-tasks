@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "テスト エージェントを使用した Visual Studio テスト",
-  "loc.helpMarkDown": "[詳細] (https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
+  "loc.helpMarkDown": "[詳細] (http://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
   "loc.instanceNameFormat": "$(testMachineGroup) でのテスト $(sourcefilters) の実行",
   "loc.group.displayName.testMachineGroups": "テスト コンピューター グループ",
