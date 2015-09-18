@@ -30,7 +30,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "type": "connectedService:Azure",
+            "type": "connectedService:Azure:UsernamePassword,ServicePrinciple",
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
