@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de Visual Studio Test Agent",
-  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "Implementar y configurar Test Agent para que ejecute pruebas en un grupo de equipos de laboratorio",
   "loc.instanceNameFormat": "Implementar TestAgent en $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Grupo de equipos de prueba",

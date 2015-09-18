@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent-Bereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "Test-Agent für die Ausführung von Tests auf einer Lab-Computergruppe bereitstellen und konfigurieren",
   "loc.instanceNameFormat": "TestAgent auf $(testMachineGroup) bereitstellen",
   "loc.group.displayName.testMachineGroups": "Testcomputergruppe",
