@@ -24,11 +24,12 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 . ./SonarQubePreBuildImpl.ps1
 
 
-$cmdLineArgs = UpdateArgsForPullRequestAnalysis $cmdLineArgs
-Write-Verbose -Verbose $cmdLineArgs
-
 $serviceEndpoint = GetEndpointData $connectedServiceName
 Write-Verbose "serverUrl = $($serviceEndpoint.Url)"
+
+$cmdLineArgs = UpdateArgsForPullRequestAnalysis $cmdLineArgs $serviceEndpoint
+Write-Verbose -Verbose $cmdLineArgs
+
 
 $currentDir = (Get-Item -Path ".\" -Verbose).FullName
 $bootstrapperDir = [System.IO.Path]::Combine($currentDir, "MSBuild.SonarQube.Runner-1.0.1") # the MSBuild.SonarQube.Runner is version specific

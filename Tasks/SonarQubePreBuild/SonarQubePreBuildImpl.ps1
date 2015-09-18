@@ -90,10 +90,8 @@ function CreateCommandLineArgs
     return $sb.ToString();
 }
 
-function UpdateArgsForPullRequestAnalysis
+function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
 {
-	param([string]$cmdLineArgs)
-
 	$prcaEnabled = GetTaskContextVariable "PullRequestSonarQubeCodeAnalysisEnabled"
 	if ($prcaEnabled -ieq "true")
 	{
@@ -102,9 +100,27 @@ function UpdateArgsForPullRequestAnalysis
 			throw "Error: sonar.analysis.mode seems to be set already. Please check the properties of SonarQube build tasks and try again."
 		}
 
-		Write-Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for incremental mode for sonar-runner..."
+        $sqServerVersion = GetSonarQubeServerVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password
+		Write-Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for sonar-runner. SonarQube version:$sqServerVersion"
 
-		$cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=incremental"
+        if (!$sqServerVersion)
+        {
+            #we want to fail the build step if SonarQube server version isn't fetched
+            throw "Error: Unable to fetch SonarQube server version. Please make sure SonarQube server is reachable at $($serviceEndpoint.Url)"
+        }
+
+		$sqMajorVersion = GetSQMajorVersionNumber $sqServerVersion
+        $sqMinorVersion = GetSQMinorVersionNumber $sqServerVersion
+
+        #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremntal mode is not supported in SQ 5.2+
+        if ($sqMajorVersion -ge 5 -and $sqMinorVersion -ge 2)
+        {
+            $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=issues" + " " + "/d:sonar.report.export.path=sonar-report.json"
+        }
+        else
+        {
+            $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=incremental"
+        }
 
 		#use this variable in post-test task
 		SetTaskContextVariable "MsBuild.SonarQube.AnalysisModeIsIncremental" "true"
@@ -172,3 +188,95 @@ function IsFilePathSpecified
                 [StringComparison]::OrdinalIgnoreCase)
 }
 
+
+function GetVersion($uri, $headers)
+{
+    $version = $null
+
+    Try
+    {
+        $jsonResp = Invoke-RestMethod -Uri $uri -Method Get -Headers $headers -ContentType "text/json"
+
+        if ($jsonResp)
+        {
+            $version = $jsonResp.SonarQube.Version
+        }
+
+    }
+    Catch [System.Net.WebException]
+    {
+        Write-Verbose "WebException while trying to invoke $url"
+    }
+
+    return $version
+}
+
+#
+# Helper that returns the version number of the SonarQube server
+#
+function GetSonarQubeServerVersion()
+{
+    param([String][ValidateNotNullOrEmpty()]$serverUrl,
+          [String]$userName,
+          [String]$password)
+
+    Write-Host "Fetching SonarQube server version.."
+
+    $httpHeaders = @{}
+    $serverUri = New-Object -TypeName System.Uri -ArgumentList $serverUrl
+    $serverApiUri = New-Object -TypeName System.Uri -ArgumentList ($serverUri, "/api/system/info")
+
+    $base64Auth = [System.Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$($userName):$($password)"))
+    $base64AuthHeader = "Basic $base64Auth"
+
+    $httpHeaders.Add('Authorization', $base64AuthHeader)
+
+    $sqVersion = GetVersion $serverApiUri $httpHeaders
+
+    if(!$sqVersion)
+    {
+        Write-Verbose "Trying to fetch SonarQube version number again.."
+        Start-Sleep -s 2
+
+        $sqVersion = GetVersion $serverApiUri $httpHeaders
+    }
+
+    Write-Verbose "Returning SonarQube server version:$sqVersion"
+    return $sqVersion
+}
+
+#
+# Helper that returns the major version number of the SonarQube server
+#
+function GetSQMajorVersionNumber()
+{
+    param([String]$sqServerVersion)
+
+    [int]$majorVersion = 0;
+    $tokens = $sqServerVersion.Split(".")
+
+    if ($tokens -and $tokens.Count -ge 1)
+    {
+        $result = [int]::TryParse($tokens[0], [ref]$majorVersion)
+    }
+
+    return $majorVersion
+}
+
+#
+# Helper that returns the minor version number of the SonarQube server
+#
+function GetSQMinorVersionNumber()
+{
+    param([String]$sqServerVersion)
+
+    [int]$minorVersion = 0;
+    $tokens = $sqServerVersion.Split(".")
+
+    if ($tokens -and $tokens.Count -ge 2)
+    {
+        $result = [int]::TryParse($tokens[1], [ref]$minorVersion)
+    }
+
+    return $minorVersion
+}
