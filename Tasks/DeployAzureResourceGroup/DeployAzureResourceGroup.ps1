@@ -68,8 +68,11 @@ if( $action -eq "Create Or Update Resource Group" )
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
     $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
 
+    #Get current subscription
+    $currentSubscription = Get-CurrentSubscriptionInformation
+
     $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
-    $parametersObject = Refresh-SASToken -moduleUrlParameterNames $moduleUrlParameterNames -sasTokenParameterNames $sasTokenParameterNames -csmParametersObject $parametersObject -subscriptionId $ConnectedServiceName -dscDeployment $dscDeployment
+    $parametersObject = Refresh-SASToken -moduleUrlParameterNames $moduleUrlParameterNames -sasTokenParameterNames $sasTokenParameterNames -csmParametersObject $parametersObject -subscriptionId $currentSubscription.SubscriptionId -dscDeployment $dscDeployment
 
     # Create azure resource group
     Switch-AzureMode AzureResourceManager
@@ -77,8 +80,7 @@ if( $action -eq "Create Or Update Resource Group" )
     $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
 
     # Update the resource group in DTL
-    $subscription = Get-SubscriptionInformation -subscriptionId $ConnectedServiceName
-    Update-EnvironmentDetailsInDTL -subscription $subscription -csmFileName $csmFileName -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState
+    Update-EnvironmentDetailsInDTL -subscription $currentSubscription -csmFileName $csmFileName -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState
 }
 else
 {

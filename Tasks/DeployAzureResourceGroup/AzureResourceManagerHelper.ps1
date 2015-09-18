@@ -64,6 +64,15 @@ function Create-AzureResourceGroup
     }
 }
 
+
+function Get-CurrentSubscriptionInformation
+{
+    $subscription = Get-AzureSubscription -Current -Verbose -ErrorAction Stop
+
+    return $subscription
+}
+
+
 function Get-SubscriptionInformation
 {
     param([string]$subscriptionId)
