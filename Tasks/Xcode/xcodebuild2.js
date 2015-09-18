@@ -8,11 +8,12 @@ var tl = require('vso-task-lib'),
 // Commands
 var xcv = null, 
 	xcb = null, 
+	xcr = null,
 	deleteKeychain = null, 
 	deleteProvProfile = null;
 
 // Globals
-var buildSourceDirectory, origXcodeDeveloperDir, out, sdk;
+var buildSourceDirectory, origXcodeDeveloperDir, out, sdk, appFolders;
 
 // Store original Xcode developer directory so we can restore it after build completes if its overridden
 var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
@@ -89,7 +90,7 @@ function processInputs() {
 	} else {
 		xcb = new tl.ToolRunner(tool);
 	}
-	
+		
 	// Add required flags
 	sdk = tl.getInput('sdk', true);
 	xcb.arg('-sdk');
@@ -225,18 +226,20 @@ function packageApps(code) {
 		var promise = Q();
 		tl.debug('out: ' + out);
 		var outPath=path.join(out, 'build.sym');
-		tl.debug('out: ' + outPath);
-		var appList = glob.sync( outPath + '/**/*.app');
-		if(appList) {
-			tl.debug(appList.length + ' apps found for packaging.');
+		tl.debug('outPath: ' + outPath);
+		appFolders = glob.sync(outPath + '/**/*.app')
+		if(appFolders) {
+			tl.debug(appFolders.length + ' apps found for packaging.');
 			var xcrunPath = tl.which('xcrun', true);	
-			for(var i=0; i<appList.length; i++) {
-				var appFolder = appList[i];
-				tl.debug('Packaging ' + appFolder);
-				var ipa = appFolder.substring(0, appFolder.length-3) + "ipa";
-				var xcr = new tl.ToolRunner(xcrunPath);
-				xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', appFolder, '-o', ipa]);
-				promise = promise.then(function(code) { return xcr.exec(); });
+			for(var i=0; i<appFolders.length; i++) {
+				promise = promise.then(function(code) { 
+					var app = appFolders.pop();
+					tl.debug('Packaging ' + app);
+					var ipa = app.substring(0, app.length-3) + "ipa";
+					var xcr = new tl.ToolRunner(xcrunPath);
+					xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', app, '-o', ipa]);
+					return xcr.exec(); 
+				});
 			}
 			return promise;				
 		} else {
