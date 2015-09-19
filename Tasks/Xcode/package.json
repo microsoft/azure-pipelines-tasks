@@ -1,7 +1,7 @@
 {
   "name": "vso-task-xcode",
   "version": "2.0.0",
-  "description": "A VSO build task for deploying a mobile app to HockeyApp",
+  "description": "A VSO build task for building Xcode projects",
   "scripts": {
     "deploy": "tfx build tasks upload ./ --overwrite"
   },

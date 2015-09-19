@@ -1,0 +1,16 @@
+{
+  "name": "vso-task-cordova",
+  "version": "1.0.0",
+  "description": "A VSO build task for building Cordova apps.",
+  "scripts": {
+    "deploy": "tfx build tasks upload ./ --overwrite"
+  },
+  "author": "Chuck Lantz",
+  "license": "MIT",
+  "dependencies": {
+    "q": "^1.4.1",
+    "vso-task-lib": "^0.4.5",
+    "glob": "^5.0.14",
+    "taco-team-build": "http://aka.ms/tacoteambuild-rel"
+    }
+}

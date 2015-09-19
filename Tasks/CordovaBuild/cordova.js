@@ -3,27 +3,27 @@ var tl = require('vso-task-lib'),
 	fs = require('fs'),
 	glob = require('glob'),
 	Q = require ('q'),
+	ttb = require(path.join(__dirname,'taco-team-build')),
 	exec = Q.nfbind(require('child_process').exec);
 
+//** TODO: Update taco-team-build so it pulls the support plugin from npm since you can't access locally due to security - WHAT ABOUT < 5.0.0 NOW THAT THE REPO IS READ ONLY?
+
 // Commands
-var xcv = null, 
-	xcb = null, 
-	xcr = null,
-	deleteKeychain = null, 
+var deleteKeychain = null, 
 	deleteProvProfile = null;
 
 // Globals
-var origXcodeDeveloperDir, out, sdk, appFolders, cwd;
+var origXcodeDeveloperDir, configuration, platform, out, buildArgs = [], iosXcConfig = '', cwd;
 
 // Store original Xcode developer directory so we can restore it after build completes if its overridden
 var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
 
-processInputs();													// Process inputs to task and create xcv, xcb
-xcv.exec()															// Print version of xcodebuild / xctool
-	.then(processCert)												// Process any p12 files configured
-	.then(processProfile)											// Processing any provisioning profiles
+processInputs()														// Process inputs to task and create xcv, xcb
 	.then(execBuild)												// Run main xcodebuild / xctool task
-	.then(packageApps)												// Package apps if configured
+	.then(function() {
+		// **TODO: Update taco-team-build to not create ipa if Cordova version already does it
+		return ttb.packageProject(platform);						// Package apps if configured
+	})												
 	.then(function(code) {											// When done, delete the temporary keychain if it exists
 		if(deleteKeychain) {
 			return deleteKeychain.exec();
@@ -76,71 +76,41 @@ function processInputs() {
 		tl.debug('DEVELOPER_DIR for build set to ' + xcodeDeveloperDir);
 		process.env['DEVELOPER_DIR'] = xcodeDeveloperDir;
 	}
-	// Use xctool or xccode build based on flag
-	var useXctool = (tl.getInput('useXctool', false) == "true");
-	var tool = useXctool ? tl.which('xctool', true) : tl.which('xcodebuild', true);
-	tl.debug('Tool selected: '+ tool);
-	// Get version 
-	xcv = new tl.ToolRunner(tool);
-	xcv.arg('-version');
-	// Xcode build call
-	if(tl.getInput("unlockDefaultKeychain")=="true") {
-		// May be able to refactor this so that the unlock is called as a separate step rather than during the xcodebuild call via bash - Saw inconsistant results so more research required to determine if the child process inherits the unlock.
-		xcb = new tl.ToolRunner(tl.which('bash')); 
-		xcb.arg(['-l','-c','/usr/bin/security unlock-keychain -p "' + tl.getInput('defaultKeychainPassword',true) + '" $(security default-keychain | grep -oE \'"(.+?)"\' | grep -oE \'[^"]*[\\n]\'); $0 "$@"', tool]);
-	} else {
-		xcb = new tl.ToolRunner(tool);
+	
+	platform = tl.getInput('platform', true);
+	if(platform == 'android') {
+		buildArgs.push('--gradleArg=--no-daemon');  // Gradle daemon will hang the agent - need to turn it off	
 	}
+
 		
-	// Add required flags
-	sdk = tl.getInput('sdk', true);
-	xcb.arg('-sdk');
-	xcb.arg(sdk);
-	xcb.arg('-configuration');
-	xcb.arg(tl.getInput('configuration', true));
-	// Args: Add optional workspace flag
-	var workspace = tl.getPathInput('xcWorkspacePath', false, false)
-	if(workspace) {
-		var workspaceFile = glob.sync(workspace);
-		if(workspaceFile && workspaceFile.length > 0) {
-			tl.debug("Found " + workspaceFile.length + ' workspaces matching.')
-			xcb.arg('-workspace');
-			xcb.arg('"' + workspaceFile[0] + '"');				
-		} else {
-			console.error('No workspaces found matching ' + workspace);
-		}
-	} else {
-		tl.debug('No workspace path specified in task.');
+	configuration = tl.getInput('configuration', true).toLowerCase();
+	buildArgs.push('--' + configuration);		
+	
+	var archs = tl.getInput('archs', false);
+	if(archs) {
+		buildArgs.push('--archs="' + archs + '"')
 	}
-	// Args: Add optional scheme flag
-	var scheme = tl.getInput('scheme', false);
-	if(scheme) {
-		xcb.arg('-scheme');
-		xcb.arg('"' + tl.getInput('scheme', true) + '"');
-	} else {
-		tl.debug('No scheme specified in task.');
-	}
-	if(useXctool) {
-		var xctoolReporter = tl.getInput('xctoolReporter', false);
-		if(xctoolReporter) {
-			xcb.arg(['-reporter', 'plain', '-reporter', xctoolReporter])
-		}
-		
+
+	if(tl.getInput('forceAnt', false) == "true") {
+		buildArgs.push('--ant');
 	}
 	
-	// Args: Add output path config
-	xcb.arg(tl.getDelimitedInput('actions', ' ', true));
-	xcb.arg('DSTROOT=' + path.join(out, 'build.dst'));
-	xcb.arg('OBJROOT=' + path.join(out, 'build.obj'));
-	xcb.arg('SYMROOT=' + path.join(out, 'build.sym'));
-	xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(out, 'build.pch'));	
+	if(tl.getInput('targetEmulator', false) == "true") {
+		buildArgs.push('--emulator');
+	} else {
+		buildArgs.push('--device')		
+	}
+	
+	return processCert().then(processProfile);
 }
 
 function processCert(code) {
+	
 	// Add identity arg if specified
 	var identity = tl.getInput('identity', false);
 	if(identity) {
-		xcb.arg('CODE_SIGN_IDENTITY="' + tl.getInput('identity', true) + '"');
+		iosXcConfig += 'CODE_SIGN_IDENTITY="' + tl.getInput('identity', true) + '"\n';
+		iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]="' + tl.getInput('identity', true) + '"\n';
 	} else {
 		tl.debug('No explicit signing identity specified in task.')
 	}
@@ -160,7 +130,7 @@ function processCert(code) {
 		createKeychain.arg([path.resolve(__dirname,'createkeychain.sh'), keychain, keychainPwd, p12, p12pwd]);	
 		var promise = createKeychain.exec();
 		
-		xcb.arg('OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '"');
+		iosXcConfig += 'OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '"\n';
 		
 		// Run command to set the identity based on the contents of the p12 if not specified in task config
 		if(!identity) {
@@ -170,7 +140,8 @@ function processCert(code) {
 				.then(function(foundIdent) {
 					foundIdent = removeExecOutputNoise(foundIdent);
 					tl.debug('Using signing identity in p12: (' + foundIdent + ')');
-					xcb.arg("CODE_SIGN_IDENTITY=" + foundIdent);
+					iosXcConfig += 'CODE_SIGN_IDENTITY="' + foundIdent + '"\n';
+					iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]="' + foundIdent + '"\n';
 				});	
 		} else {
 			tl.warning('Signing Identitiy specified along with P12 Certificate P12. Omit Signing Identity in task to ensure p12 value used.')
@@ -185,7 +156,7 @@ function processCert(code) {
 function processProfile(code) {
 	var provProfileUuid = tl.getPathInput('provProfileUuid', false);
 	if(provProfileUuid) {
-		xcb.arg('PROVISIONING_PROFILE=' + provProfileUuid);	
+		iosXcConfig += 'PROVISIONING_PROFILE=' + provProfileUuid + '\n';	
 	}
 	var profilePath = path.resolve(cwd, tl.getPathInput('provProfile', false));
 	if(fs.existsSync(profilePath) && fs.lstatSync(profilePath).isFile()) { 
@@ -197,7 +168,7 @@ function processProfile(code) {
 				tl.debug(profilePath + ' has UUID of ' + uuid);
 				if(!provProfileUuid) {
 					// Add UUID to xcodebuild args
-					xcb.arg('PROVISIONING_PROFILE=' + uuid);								
+					iosXcConfig += 'PROVISIONING_PROFILE=' + uuid + '\n';								
 				} else {
 					tl.warning('Provisioning Profile UUID specified along with Provisioning Profile File. Omit Provisioning Profile UUID in task to ensure file value used.')			
 				}
@@ -217,49 +188,66 @@ function processProfile(code) {
 }
 
 function execBuild(code) {
+	var cordovaConfig = {
+		projectPath: cwd
+	}
+
 	// Add optional additional args
 	var args=tl.getDelimitedInput('args', ' ', false);			
 	if(args) {
-		xcb.arg(args);						
+		args.forEach(function(arg) {
+			arg = arg.replace('-- --', '--');  // Cut out double-double dash for platform specific args... not needed here	
+			buildArgs.push(arg);	
+		});
 	}
-	tl.debug('Complete build args: ');
-	for(var arg in xcb.args) {
-		tl.debug(xcb.args[arg]);
+			
+	var version = tl.getInput('cordovaVersion', false);
+	if(version) {
+		cordovaConfig.cordovaVersion = version;
 	}
-	return xcb.exec();	
+		
+	var updateXcconfig = (iosXcConfig != '')
+	return ttb.setupCordova(cordovaConfig)
+		.then(function(cordova) {
+			// Add update Xcconfig hook if needed
+			if(updateXcconfig) {
+				tl.debug('Adding Xcconfig update hook')
+				cordova.on('before_compile', writeVsoXcconfig)				
+			}
+			return ttb.buildProject(platform,buildArgs)
+				.fin(function() {
+					// Remove xcconfig hook
+					if(updateXcconfig) {				
+						tl.debug('Removing Xcconfig update hook')
+						cordova.off('before_compile', writeVsoXcconfig)
+					}
+				});
+		});
 }
 	
-function packageApps(code) {
-	if(tl.getInput('packageApp', true) == "true" && sdk != "iphonesimulator") {
-		tl.debug('Packaging apps.');
-		var promise = Q();
-		tl.debug('out: ' + out);
-		var outPath=path.join(out, 'build.sym');
-		tl.debug('outPath: ' + outPath);
-		appFolders = glob.sync(outPath + '/**/*.app')
-		if(appFolders) {
-			tl.debug(appFolders.length + ' apps found for packaging.');
-			var xcrunPath = tl.which('xcrun', true);	
-			for(var i=0; i<appFolders.length; i++) {
-				promise = promise.then(function(code) { 
-					var app = appFolders.pop();
-					tl.debug('Packaging ' + app);
-					var ipa = app.substring(0, app.length-3) + "ipa";
-					var xcr = new tl.ToolRunner(xcrunPath);
-					xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', app, '-o', ipa]);
-					return xcr.exec(); 
-				});
-			}
-			return promise;				
-		} else {
-			tl.warning('No apps found to package in ' + outPath);
-		}
-	}
-	return Q(0);
-}
-
 function removeExecOutputNoise(input) {
 	var output = input + "";
 	output = output.trim().replace(/[,\n\r\f\v]/gm,'');	
 	return output;
+}
+
+function writeVsoXcconfig(data) {
+	var buildVsoXcconfig = path.join(cwd, 'platforms', 'ios', 'cordova', 'build-vso.xcconfig');
+	// *** TODO: Check these files for the include instead since res/native can wipe them out!
+	if(!fs.exists(buildVsoXcconfig)) {
+		var debugConfig = path.join(cwd, 'platforms', 'ios', 'cordova', 'build-debug.xcconfig');
+		if(fs.exists(debugConfig)) {
+			// Update release and debug xcconfig files to have VSO config file in them
+			fs.appendFileSync(debugConfig, '\n#include "build-vso.xcconfig"');
+			fs.appendFileSync(path.join(cwd, 'platforms', 'ios', 'cordova', 'build-release.xcconfig'), '\n#include "build-vso.xcconfig"');
+		} else {
+			// Really old Cordova version - add it to main build.xcconfig
+			fs.appendFileSync(path.join(cwd, 'platforms', 'ios', 'cordova', 'build.xcconfig'), '\n#include "build-vso.xcconfig"');				
+		}
+	} else {
+		fs.unlinkSync(buildVsoXcconfig);
+	}
+	// Write out build-vso.xcconfig
+	tl.debug('Writing config to ' + buildVsoXcconfig + '. Contents:\n' + iosXcConfig);
+	fs.writeFileSync(buildVsoXcconfig, iosXcConfig);
 }

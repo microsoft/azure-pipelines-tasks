@@ -1,0 +1,232 @@
+{
+    "id": "70E94267-15DC-434D-8973-023D766825D7",
+    "name": "CordovaBuild",
+    "friendlyName": "Cordova Build",
+    "description": "Build a hybrid app project based on the Cordova CLI, Ionic CLI, and/or Tools for Apache Cordova ",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613730)",
+    "category": "Build",
+    "visibility": [
+                "Build"
+                  ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 11
+    },
+    "demands" : [
+    ],
+    "instanceNameFormat": "Cordova Build $(platform)",
+     "groups": [
+        {
+          "name":"android",
+          "displayName": "Android",
+          "isExpanded": false
+        },
+        {
+            "name":"ios",
+            "displayName":"iOS",
+            "isExpanded":false            
+        },
+        {
+            "name":"windows",
+            "displayName":"Windows",
+            "isExpanded":false            
+        },
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],
+    "inputs": [
+        { 
+            "name": "platform", 
+            "type": "string", 
+            "label": "Platforms", 
+            "defaultValue":"android", 
+            "required":true, 
+            "helpMarkDown": "Cordova platform to build. Valid options include android, ios, windows, and wp8."
+        },
+        { 
+            "name": "configuration", 
+            "type": "string", 
+            "label": "Configuration", 
+            "defaultValue":"$(Configuration)", 
+            "required":true 
+        },
+        { 
+            "name": "archs", 
+            "type": "string", 
+            "label": "Target Architectures", 
+            "required":false, 
+            "helpMarkDown": "Space delimited list device architectures to build. Valid options for Windows include anycpu, x86, x84, and arm. Valid options for Android include x86 and arm."
+        },
+        { 
+            "name": "cordovaVersion", 
+            "type": "string", 
+            "label": "Cordova Version", 
+            "required":false, 
+            "helpMarkDown": "Version of Cordova tools to use to build. If not specified, looks at taco.json to determine the version and falls back on a default if no taco.json is found."
+        },
+        {
+            "name": "antBuild",
+            "type": "boolean",
+            "label": "Force Ant Build",
+            "required": false,
+            "helpMarkDown": "Forces Cordova to use Apache Ant to build instead of Gradle on version of Cordova 5.0.0 and up.",
+            "groupName":"android"   
+        },
+        {
+            "name": "keystoreFile",
+            "type": "filePath",
+            "label": "Keystore File",
+            "required": false,
+            "helpMarkDown": "Path to the keystore file.",
+            "groupName":"android"   
+        },
+        {
+            "name": "keystorePass",
+            "type": "string",
+            "label": "Keystore Password",
+            "required": false,
+            "groupName":"android"   
+        },
+        {
+            "name": "keystoreAlias",
+            "type": "string",
+            "label": "Alias",
+            "required": false,
+            "groupName":"android"   
+        },
+        {
+            "name": "keyPass",
+            "type": "string",
+            "label": "Key Password",
+            "required": false,
+            "groupName":"android"   
+        },
+        { 
+            "name": "identity", 
+            "type": "string", 
+            "label": "Signing Identity", 
+            "required":false,
+            "helpMarkDown": "Optional signing identity override that should be used to sign the build. **Not required if P12 Certificate File specified.** Defaults to Xcode Project setting. You may need to select Unlock Default Keychain if you use this option.",
+            "groupName":"ios"
+        },
+        { 
+            "name": "p12", 
+            "type": "filePath", 
+            "label": "P12 Certificate File", 
+            "required":false,
+            "helpMarkDown": "Optional relative path to a PKCS12 formated p12 certificate file containing a signing certificate to be used for this build. **Omit Signing Idenity if specified.**",
+            "groupName":"ios"
+        },
+        { 
+            "name": "p12pwd", 
+            "type": "string", 
+            "label": "P12 Password", 
+            "required":false,
+            "helpMarkDown": "Password to P12 Certificate File if specified. Use a Build Variable to encrypt.",
+            "groupName":"ios"
+        },
+        { 
+            "name": "unlockDefaultKeychain", 
+            "type": "boolean", 
+            "label": "Unlock Default Keychain", 
+            "defaultValue":false,
+            "required": true,
+            "helpMarkDown": "Resolve \"User interaction is not allowed\" errors by unlocking the default keychain.",
+            "groupName":"ios"
+        },
+        { 
+            "name": "defaultKeychainPassword", 
+            "type": "string", 
+            "label": "Default Keychain Password", 
+            "required": false,
+            "helpMarkDown": "Password to unlock the default keychain when this option is set.",
+            "groupName":"ios"
+        },
+        { 
+            "name": "provProfileUuid", 
+            "type": "string", 
+            "label": "Provisioning Profile UUID", 
+            "required":false,
+            "helpMarkDown": "Optional UUID of an installed provisioning profile to be used for this build. Not required if Provisioning Profile File specified. Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
+            "groupName":"ios"
+        },
+        { 
+            "name": "provProfile", 
+            "type": "filePath", 
+            "label": "Provisioning Profile File", 
+            "required":false,
+            "helpMarkDown": "Optional relative path to file containing provisioning profile override to be used for this build. **Omit Provisioning Profile UUID if specified.** Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
+            "groupName":"ios"
+        },
+        { 
+            "name": "removeProfile", 
+            "type": "boolean", 
+            "label": "Remove Profile After Build", 
+            "defaultValue":false, 
+            "required":false,
+            "helpMarkDown": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
+            "groupName":"ios"
+        },
+        { 
+            "name": "xcodeDeveloperDir", 
+            "type": "string", 
+            "label": "Xcode Developer Path", 
+            "required":false,
+            "helpMarkDown": "Optional path to Xcode Developer folder if not the system default. For use when multiple versions of Xcode are installed on a system. Ex: /Applications/Xcode 7.app/Contents/Developer",
+            "groupName":"ios"
+        },
+        {
+            "name": "windowsAppx", 
+            "type": "string", 
+            "label": "Windows APPX Target", 
+            "required":false,
+            "helpMarkDown": "Overrides type of APPX generated (Windows/Phone 8.1, 10). Valid values include: 8.1-win, 8.1-phone, uap (aka Windows/Phone 10).",
+            "groupName":"windows"
+        },
+        { 
+            "name": "args", 
+            "type": "string", 
+            "label": "Arguments", 
+            "required":false,
+            "helpMarkDown": "Additional command line arguments that should be used to build.",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working Directory", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Working directory for build runs. Defaults to the root of the repository.",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "outputPattern", 
+            "type": "string", 
+            "label": "Output Directory", 
+            "defaultValue":"bin", 
+            "required":true,
+            "helpMarkDown": "Relative path where build output (binaries) will be placed.",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "targetEmulator", 
+            "type": "boolean", 
+            "label": "Build for Emulator/Simulator", 
+            "required":false, 
+            "helpMarkDown": "Build for a emulator or simulator instead of devices.",
+            "groupName":"advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "cordova.js",
+            "argumentFormat": ""
+        }        
+    }    
+}
