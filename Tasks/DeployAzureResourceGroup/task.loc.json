@@ -33,7 +33,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "connectedService:Azure:UsernamePassword,ServicePrinciple",
+      "type": "connectedService:Azure:UsernamePassword,ServicePrincipal",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
