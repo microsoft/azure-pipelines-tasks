@@ -12,10 +12,8 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 48
+        "Patch": 70
     },
-    "demands" : [
-    ],
     "instanceNameFormat": "Cordova Build $(platform)",
      "groups": [
         {
@@ -227,6 +225,11 @@
         "Node": {
             "target": "cordova.js",
             "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\bootstrapper.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
         }        
     }    
 }

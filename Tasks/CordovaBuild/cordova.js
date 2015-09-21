@@ -10,7 +10,7 @@ var deleteKeychain = null,
 	deleteProvProfile = null;
 
 // Globals
-var origXcodeDeveloperDir, configuration, platform, out, buildArgs = [], iosXcConfig = '', cwd, targetEmulator;
+var origXcodeDeveloperDir, configuration, platform, out, buildArgs = [], iosXcConfig = '', antProperties = {}, cwd, targetEmulator;
 
 // Store original Xcode developer directory so we can restore it after build completes if its overridden
 var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
@@ -64,12 +64,6 @@ function processInputs() {
 		tl.debug('DEVELOPER_DIR for build set to ' + xcodeDeveloperDir);
 		process.env['DEVELOPER_DIR'] = xcodeDeveloperDir;
 	}
-	
-	platform = tl.getInput('platform', true);
-	if(platform == 'android') {
-		buildArgs.push('--gradleArg=--no-daemon');  // Gradle daemon will hang the agent - need to turn it off	
-	}
-
 		
 	configuration = tl.getInput('configuration', true).toLowerCase();
 	buildArgs.push('--' + configuration);		
@@ -79,17 +73,18 @@ function processInputs() {
 		buildArgs.push('--archs="' + archs + '"')
 	}
 
-	if(tl.getInput('forceAnt', false) == "true") {
-		buildArgs.push('--ant');
-	}
-	
 	targetEmulator = (tl.getInput('targetEmulator', false) == "true");
 	if(targetEmulator) {
 		buildArgs.push('--emulator');
 	} else {
 		buildArgs.push('--device')		
 	}
-	
+
+	platform = tl.getInput('platform', true);
+	if(platform == 'android') {
+		processAndroidInputs();
+	}
+
 	return iosIdentity().then(iosProfile);
 }
 
@@ -106,13 +101,13 @@ function iosIdentity(code) {
 		
 	return xcutils.determineIdentity(input, function(identity, keychain, deleteCommand) {
 		if(identity) {
-			iosXcConfig += 'CODE_SIGN_IDENTITY="' + identity + '"\n';
-			iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]="' + identity + '"\n';
+			iosXcConfig += 'CODE_SIGN_IDENTITY=' + identity + '\n';
+			iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]=' + identity + '\n';
 		} else {
 			tl.debug('No explicit signing identity specified in task.')
 		}
 		if(keychain) {
-			iosXcConfig += 'OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '"\n';
+			iosXcConfig += 'OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '\n';
 		}	
 		deleteKeychain = deleteCommand;
 	});
@@ -134,6 +129,44 @@ function iosProfile(code) {
 	});
 }
 
+function processAndroidInputs() {
+	if(tl.getInput('forceAnt', false) == "true") {
+		buildArgs.push('--ant');
+	} else {
+		buildArgs.push('--gradleArg=--no-daemon');  // Gradle daemon will hang the agent - need to turn it off			
+	}
+
+	// Pass in args for Android 4.0.0+, modify ant.properties before_compile for < 4.0.0 (event handler added at exec time)
+	// Override gradle args
+	var keystoreFile = tl.getPathInput('keystoreFile', false);
+	if(fs.lstatSync(keystoreFile).isFile()) {
+		buildArgs.push('--keystore="' + keystoreFile + '"');
+		antProperties['key.store'] = keystoreFile;
+		antProperties.override = true;		
+	}
+	
+	var keystorePass = tl.getInput('keystorePass', false);
+	if(keystorePass) {
+		buildArgs.push('--storePassword="' + keystorePass + '"');
+		antProperties['key.store.password'] = keystorePass;		
+		antProperties.override = true;		
+	}
+	
+	var keystoreAlias = tl.getInput('keystoreAlias', false);
+	if(keystoreAlias) {
+		buildArgs.push('--alias="' + keystoreAlias + '"');
+		antProperties['key.alias'] = keystoreAlias;		
+		antProperties.override = true;		
+	}
+
+	var keyPass = tl.getInput('keyPass', false);
+	if(keyPass) {
+		buildArgs.push('--password="' + keyPass + '"');
+		antProperties['key.alias.password'] = keyPass;		
+		antProperties.override = true;		
+	}
+}
+
 
 function execBuild(code) {
 	var cordovaConfig = {
@@ -153,14 +186,18 @@ function execBuild(code) {
 	if(version) {
 		cordovaConfig.cordovaVersion = version;
 	}
-		
+			
 	var updateXcconfig = (iosXcConfig != '')
 	return ttb.setupCordova(cordovaConfig)
 		.then(function(cordova) {
 			// Add update Xcconfig hook if needed
 			if(updateXcconfig) {
 				tl.debug('Adding Xcconfig update hook')
-				cordova.on('before_compile', writeVsoXcconfig)				
+				cordova.on('before_compile', writeVsoXcconfig)
+			}
+			if(antProperties.override) {
+				tl.debug('Adding ant.properties update hook')
+				cordova.on('before_compile', writeAntProperties)				
 			}
 			return ttb.buildProject(platform,buildArgs)
 				.fin(function() {
@@ -169,27 +206,64 @@ function execBuild(code) {
 						tl.debug('Removing Xcconfig update hook')
 						cordova.off('before_compile', writeVsoXcconfig)
 					}
+					if(antProperties.override) {
+						tl.debug('Removing ant.properties update hook')
+						cordova.on('before_compile', writeAntProperties)				
+					}
 				});
 		});
 }
 
 function writeVsoXcconfig(data) {
+	tl.debug('before_prepare fired hook  writeVsoXcconfig');
+	var includeText = '\n#include "build-vso.xcconfig"';
 	var buildVsoXcconfig = path.join(cwd, 'platforms', 'ios', 'cordova', 'build-vso.xcconfig');
-	// *** TODO: Check these files for the include instead since res/native can wipe them out!
-	if(!fs.exists(buildVsoXcconfig)) {
-		var debugConfig = path.join(cwd, 'platforms', 'ios', 'cordova', 'build-debug.xcconfig');
-		if(fs.exists(debugConfig)) {
-			// Update release and debug xcconfig files to have VSO config file in them
-			fs.appendFileSync(debugConfig, '\n#include "build-vso.xcconfig"');
-			fs.appendFileSync(path.join(cwd, 'platforms', 'ios', 'cordova', 'build-release.xcconfig'), '\n#include "build-vso.xcconfig"');
-		} else {
-			// Really old Cordova version - add it to main build.xcconfig
-			fs.appendFileSync(path.join(cwd, 'platforms', 'ios', 'cordova', 'build.xcconfig'), '\n#include "build-vso.xcconfig"');				
-		}
+	var buildXccondig;
+	var debugConfig = path.join(cwd, 'platforms', 'ios', 'cordova', 'build-debug.xcconfig');
+	if(fs.existsSync(debugConfig)) {
+		// Need to update build-debug.xcconfig and build-release.xcconfig as needed
+		buildXccondig = [debugConfig, path.join(cwd, 'platforms', 'ios', 'cordova', 'build-release.xcconfig')];
 	} else {
+		buildXccondig = [path.join(cwd, 'platforms', 'ios', 'cordova', 'build.xcconfig')];
+	}
+	tl.debug('xcconfig files to add include to: ' + JSON.stringify(buildXccondig));
+	// Append build-vso.xcconfig include if needed
+	buildXccondig.forEach(function(xcconfig) {
+		var origContents = fs.readFileSync(xcconfig) + '';
+		if(origContents.indexOf(includeText) < 0) {
+			fs.appendFileSync(xcconfig, includeText);
+			tl.debug('Appended build-vso.xcconfig include to ' + xcconfig);
+		} else {
+			tl.debug('build-vso.xcconfig include already present in ' + xcconfig);			
+		}		
+	});
+	// Delete existing build-vso.xcconfig if present
+	if(fs.existsSync(buildVsoXcconfig)) {
 		fs.unlinkSync(buildVsoXcconfig);
 	}
 	// Write out build-vso.xcconfig
 	tl.debug('Writing config to ' + buildVsoXcconfig + '. Contents:\n' + iosXcConfig);
 	fs.writeFileSync(buildVsoXcconfig, iosXcConfig);
+}
+
+function writeAntProperties(data) {
+	tl.debug('before_prepare fired hook writeAntProperties');
+	var antFile = path.join(cwd, 'platforms', 'android', 'ant.propeties');
+	var contents = '\n';
+	for(var prop in antProperties) {
+		if(prop != 'override') {
+			contents += prop + '="' + antProperties[prop] + '"\n'; 
+		}
+	}
+	if(fs.existsSync(antFile)) {
+		var origContents = fs.readFileSync(antFile);
+		for(var prop in antProperties) {
+			origContents=origContents.replace(prop + '[.*?]\n','');
+		}
+		contents = origContents + contents;
+		fs.unlinkSync(antFile);
+	}
+	tl.debug('Writing config to ' + antFile + '. Contents:');
+	tl.debug(contents);
+	fs.writeFileSync(antFile, contents);
 }
