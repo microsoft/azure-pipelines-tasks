@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 15
+        "Patch": 16
     },
     "demands": [
         "azureps"
@@ -30,7 +30,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "type": "connectedService:Azure",
+            "type": "connectedService:Azure:UsernamePassword,ServicePrincipal",
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
