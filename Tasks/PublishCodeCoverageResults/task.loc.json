@@ -61,7 +61,7 @@
   ],
   "execution": {
     "PowerShell": {
-      "target": "$(currentDirectory)\\PublishCodeCoverage.ps1",
+      "target": "$(currentDirectory)\\PublishCodeCoverageResults.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
