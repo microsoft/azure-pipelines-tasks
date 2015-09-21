@@ -101,7 +101,7 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
         }
 
         $sqServerVersion = GetSonarQubeServerVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password
-        Write-Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for sonar-runner. SonarQube version:$sqServerVersion"
+        Write-Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for sonar-runner."
 
         if (!$sqServerVersion)
         {
@@ -109,11 +109,13 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
             throw "Error: Unable to fetch SonarQube server version. Please make sure SonarQube server is reachable at $($serviceEndpoint.Url)"
         }
 
+        Write-Verbose "SonarQube version:$sqServerVersion"
+
         $sqMajorVersion = GetSQMajorVersionNumber $sqServerVersion
         $sqMinorVersion = GetSQMinorVersionNumber $sqServerVersion
 
-        #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremntal mode is not supported in SQ 5.2+
-        if ($sqMajorVersion -ge 5 -and $sqMinorVersion -ge 2)
+        #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+
+        if (($sqMajorVersion -gt 5) -or ($sqMajorVersion -ge 5 -and $sqMinorVersion -ge 2))
         {
             $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=issues" + " " + "/d:sonar.report.export.path=sonar-report.json"
         }
@@ -195,7 +197,7 @@ function GetVersion($uri, $headers)
 
     Try
     {
-        $jsonResp = Invoke-RestMethod -Uri $uri -Method Get -Headers $headers -ContentType "text/json"
+        $jsonResp = Invoke-RestMethod -Uri $uri -Method Get -Headers $headers
 
         if ($jsonResp)
         {
@@ -205,7 +207,7 @@ function GetVersion($uri, $headers)
     }
     Catch [System.Net.WebException]
     {
-        Write-Verbose "WebException while trying to invoke $url"
+        Write-Verbose "WebException while trying to invoke $url. Exception msg:$($_.Exception.Message)"
     }
 
     return $version
@@ -217,8 +219,8 @@ function GetVersion($uri, $headers)
 function GetSonarQubeServerVersion()
 {
     param([String][ValidateNotNullOrEmpty()]$serverUrl,
-          [String]$userName,
-          [String]$password)
+          [String][ValidateNotNullOrEmpty()]$userName,
+          [String][ValidateNotNullOrEmpty()]$password)
 
     Write-Host "Fetching SonarQube server version.."
 
