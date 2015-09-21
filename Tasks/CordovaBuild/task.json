@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 48
     },
     "demands" : [
     ],
@@ -107,7 +107,7 @@
             "groupName":"android"   
         },
         { 
-            "name": "identity", 
+            "name": "iosSigningIdentity", 
             "type": "string", 
             "label": "Signing Identity", 
             "required":false,

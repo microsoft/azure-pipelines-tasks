@@ -11,6 +11,7 @@
     "q": "^1.4.1",
     "vso-task-lib": "^0.4.5",
     "glob": "^5.0.14",
-    "taco-team-build": "http://aka.ms/tacoteambuild-rel"
+    "taco-team-build": "../../lib/taco-team-build",
+    "xcode-task-utils": "../../lib/xcode-task-utils"
     }
 }

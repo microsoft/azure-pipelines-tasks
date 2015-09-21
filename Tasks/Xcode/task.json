@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 80
+        "Patch": 81
     },
     "demands" : [
         "xcode"
@@ -83,7 +83,7 @@
             "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
         },
         { 
-            "name": "identity", 
+            "name": "iosSigningIdentity", 
             "type": "string", 
             "label": "Signing Identity", 
             "required":false,

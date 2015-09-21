@@ -20,8 +20,8 @@ var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
 
 processInputs();													// Process inputs to task and create xcv, xcb
 xcv.exec()															// Print version of xcodebuild / xctool
-	.then(processCert)												// Process any p12 files configured
-	.then(processProfile)											// Processing any provisioning profiles
+	.then(iosIdentity)												// Process any p12 files configured
+	.then(iosProfile)												// Processing any provisioning profiles
 	.then(execBuild)												// Run main xcodebuild / xctool task
 	.then(packageApps)												// Package apps if configured
 	.then(function(code) {											// When done, delete the temporary keychain if it exists
@@ -136,9 +136,9 @@ function processInputs() {
 	xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(out, 'build.pch'));	
 }
 
-function processCert(code) {
+function iosIdentity(code) {
 	// Add identity arg if specified
-	var identity = tl.getInput('identity', false);
+	var identity = tl.getInput('iosSigningIdentity', false);
 	if(identity) {
 		xcb.arg('CODE_SIGN_IDENTITY="' + tl.getInput('identity', true) + '"');
 	} else {
@@ -182,7 +182,7 @@ function processCert(code) {
 	}
 }
 
-function processProfile(code) {
+function iosProfile(code) {
 	var provProfileUuid = tl.getPathInput('provProfileUuid', false);
 	if(provProfileUuid) {
 		xcb.arg('PROVISIONING_PROFILE=' + provProfileUuid);	

@@ -1,19 +1,16 @@
 var tl = require('vso-task-lib'),
 	path = require('path'),
 	fs = require('fs'),
-	glob = require('glob'),
 	Q = require ('q'),
-	ttb = require(path.join(__dirname,'taco-team-build')),
-	exec = Q.nfbind(require('child_process').exec);
-
-//** TODO: Update taco-team-build so it pulls the support plugin from npm since you can't access locally due to security - WHAT ABOUT < 5.0.0 NOW THAT THE REPO IS READ ONLY?
+	xcutils = require('xcode-task-utils'),
+	ttb = require('taco-team-build');
 
 // Commands
 var deleteKeychain = null, 
 	deleteProvProfile = null;
 
 // Globals
-var origXcodeDeveloperDir, configuration, platform, out, buildArgs = [], iosXcConfig = '', cwd;
+var origXcodeDeveloperDir, configuration, platform, out, buildArgs = [], iosXcConfig = '', cwd, targetEmulator;
 
 // Store original Xcode developer directory so we can restore it after build completes if its overridden
 var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
@@ -21,22 +18,13 @@ var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
 processInputs()														// Process inputs to task and create xcv, xcb
 	.then(execBuild)												// Run main xcodebuild / xctool task
 	.then(function() {
-		// **TODO: Update taco-team-build to not create ipa if Cordova version already does it
-		return ttb.packageProject(platform);						// Package apps if configured
+		return targetEmulator ? 0 : ttb.packageProject(platform);	// Package apps if configured
 	})												
 	.then(function(code) {											// When done, delete the temporary keychain if it exists
-		if(deleteKeychain) {
-			return deleteKeychain.exec();
-		} else {
-			return 0;
-		}
+		return deleteKeychain ? deleteKeychain.exec() : 0;
 	})
 	.then(function(code) {											// Next delete the provisioning profile if says this should happen		
-		if(deleteProvProfile) {
-			return deleteProvProfile.exec();
-		} else {
-			return 0;
-		}
+		return deleteProvProfile ? deleteProvProfile.exec() : 0;
 	})
 	.then(function(code) {											// On success, exit
 		process.env['DEVELOPER_DIR'] = origXcodeDeveloperDir;
@@ -95,97 +83,57 @@ function processInputs() {
 		buildArgs.push('--ant');
 	}
 	
-	if(tl.getInput('targetEmulator', false) == "true") {
+	targetEmulator = (tl.getInput('targetEmulator', false) == "true");
+	if(targetEmulator) {
 		buildArgs.push('--emulator');
 	} else {
 		buildArgs.push('--device')		
 	}
 	
-	return processCert().then(processProfile);
+	return iosIdentity().then(iosProfile);
 }
 
-function processCert(code) {
+function iosIdentity(code) {
 	
-	// Add identity arg if specified
-	var identity = tl.getInput('identity', false);
-	if(identity) {
-		iosXcConfig += 'CODE_SIGN_IDENTITY="' + tl.getInput('identity', true) + '"\n';
-		iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]="' + tl.getInput('identity', true) + '"\n';
-	} else {
-		tl.debug('No explicit signing identity specified in task.')
+	var input = {
+		cwd: cwd,
+		unlockDefaultKeychain: (tl.getInput('unlockDefaultKeychain', false)=="true"),
+		defaultKeychainPassword: tl.getInput('defaultKeychainPassword',false),
+		p12: tl.getPathInput('p12', false, false),
+		p12pwd: tl.getInput('p12pwd', false),
+		iosSigningIdentity: tl.getInput('iosSigningIdentity', false)
 	}
-	// If p12 specified, create temporary keychain, import it, add to search path
-	var p12 = tl.getPathInput('p12', false, false);
-	if(p12 && fs.lstatSync(p12).isFile() ) {
-		p12 = path.resolve(cwd,p12);
-		var p12pwd = tl.getInput('p12pwd', true);
-		var keychain = path.join(cwd, '_tasktmp.keychain');
-		var keychainPwd = Math.random();
-	
-		// Configure keychain delete command
-		deleteKeychain = new tl.ToolRunner('/usr/bin/security', true);
-		deleteKeychain.arg(['delete-keychain', keychain]);	
 		
-		var createKeychain = new tl.ToolRunner(tl.which('bash', true));
-		createKeychain.arg([path.resolve(__dirname,'createkeychain.sh'), keychain, keychainPwd, p12, p12pwd]);	
-		var promise = createKeychain.exec();
-		
-		iosXcConfig += 'OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '"\n';
-		
-		// Run command to set the identity based on the contents of the p12 if not specified in task config
-		if(!identity) {
-			promise = promise.then(function() {
-					return exec('/usr/bin/security find-identity -v -p codesigning "' + keychain + '" | grep -oE \'"(.+?)"\'');
-				})
-				.then(function(foundIdent) {
-					foundIdent = removeExecOutputNoise(foundIdent);
-					tl.debug('Using signing identity in p12: (' + foundIdent + ')');
-					iosXcConfig += 'CODE_SIGN_IDENTITY="' + foundIdent + '"\n';
-					iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]="' + foundIdent + '"\n';
-				});	
+	return xcutils.determineIdentity(input, function(identity, keychain, deleteCommand) {
+		if(identity) {
+			iosXcConfig += 'CODE_SIGN_IDENTITY="' + identity + '"\n';
+			iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]="' + identity + '"\n';
 		} else {
-			tl.warning('Signing Identitiy specified along with P12 Certificate P12. Omit Signing Identity in task to ensure p12 value used.')
+			tl.debug('No explicit signing identity specified in task.')
 		}
-		return promise;		
-	} else {
-		tl.debug('p12 not specified in task.')
-		return Q(0);
-	}
+		if(keychain) {
+			iosXcConfig += 'OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '"\n';
+		}	
+		deleteKeychain = deleteCommand;
+	});
 }
 
-function processProfile(code) {
-	var provProfileUuid = tl.getPathInput('provProfileUuid', false);
-	if(provProfileUuid) {
-		iosXcConfig += 'PROVISIONING_PROFILE=' + provProfileUuid + '\n';	
+function iosProfile(code) {
+	var input = {
+		cwd: cwd,
+		provProfileUuid:tl.getInput('provProfileUuid', false),
+		provProfilePath:tl.getPathInput('provProfilePath', false),
+		removeProfile:(tl.getInput('removeProfile', false)=="true")
 	}
-	var profilePath = path.resolve(cwd, tl.getPathInput('provProfile', false));
-	if(fs.existsSync(profilePath) && fs.lstatSync(profilePath).isFile()) { 
-		tl.debug('Provisioning profile file found.')
-		// Get UUID of provisioning profile
-		return exec('/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i "' + profilePath + '")')
-			.then(function(uuid) {
-				uuid = removeExecOutputNoise(uuid);
-				tl.debug(profilePath + ' has UUID of ' + uuid);
-				if(!provProfileUuid) {
-					// Add UUID to xcodebuild args
-					iosXcConfig += 'PROVISIONING_PROFILE=' + uuid + '\n';								
-				} else {
-					tl.warning('Provisioning Profile UUID specified along with Provisioning Profile File. Omit Provisioning Profile UUID in task to ensure file value used.')			
-				}
-				// Create delete profile call if flag specified
-				if(tl.getInput('removeProfile', true) == "true") {
-					deleteProvProfile = new tl.ToolRunner(tl.which('rm'), true);
-					deleteProvProfile.arg(['-f', process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + uuid + '.mobileprovision']);
-				}
-				// return exec of copy command
-				var copyProvProfile = new tl.ToolRunner(tl.which('cp'), true);
-				copyProvProfile.arg(['-f', profilePath, process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + uuid + '.mobileprovision']);
-				return copyProvProfile.exec();
-			}); 
-	} else {
-		return Q(0);
-	}
+	
+	return xcutils.determineProfile(input, function(uuid, deleteCommand) {
+		if(uuid) {
+			iosXcConfig += 'PROVISIONING_PROFILE=' + uuid + '\n';	
+		}
+		deleteProvProfile = deleteCommand;
+	});
 }
+
 
 function execBuild(code) {
 	var cordovaConfig = {
@@ -223,12 +171,6 @@ function execBuild(code) {
 					}
 				});
 		});
-}
-	
-function removeExecOutputNoise(input) {
-	var output = input + "";
-	output = output.trim().replace(/[,\n\r\f\v]/gm,'');	
-	return output;
 }
 
 function writeVsoXcconfig(data) {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) Microsoft. All rights reserved.  
+  Licensed under the MIT license. See LICENSE file in the project root for full license information.
+-->
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="cordova-plugin-vs-taco-support"
+    version="0.2.1-dev">
+    <name>Visual Studio Tools for Apache Cordova CLI Support Plugin</name>
+    <description>Visual Studio Tools for Apache Cordova CLI Support Plugin</description>
+    <license>MIT</license>
+    <keywords>cordova,taco,visualstudio,vs,visual,studio</keywords>
+    <repo></repo>
+    <issue></issue>
+
+    <!-- Fix missing execute bits for cordova platforms -->
+    <hook type="before_plugin_add" src="hooks/hook-execute-bit-fix.js" />
+    <hook type="before_platform_add" src="hooks/hook-execute-bit-fix.js" />
+    <hook type="before_prepare" src="hooks/hook-execute-bit-fix.js" />
+
+    <!-- Remove bad plugin json files -->
+    <hook type="before_platform_add" src="hooks/hook-remove-plugin-json.js" />
+
+    <!-- res/native support -->
+    <hook type="before_prepare" src="hooks/hook-res-native.js" />
+
+    <!-- iOS framework symlink fixes -->
+    <platform name="ios">
+	    <hook type="before_compile" src="hooks/hook-symlink-fix.js" />
+	</platform>
+    
+    <!-- Windows packaging fixes -->
+    <platform name="windows">
+        <hook type="after_prepare" src="hooks/hook-windows-package.js" />
+    </platform>
+</plugin>
