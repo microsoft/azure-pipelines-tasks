@@ -1,0 +1,69 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
+  "name": "PublishCodeCoverageResults",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Preview",
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.88.0",
+  "groups": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "codeCoverageTool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": false,
+      "defaultValue": "JaCoCo",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "summaryFileLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.summaryFileLocation",
+      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco\\jacoco.xml",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
+    },
+    {
+      "name": "reportDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.reportDirectory",
+      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
+    },
+    {
+      "name": "additionalCodeCoverageFiles",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
+      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\**\\*.exec",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\PublishCodeCoverage.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
