@@ -2,9 +2,9 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Maven With CodeCoverage",
+  "loc.friendlyName": "Maven With Code Coverage",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=624541)",
-  "loc.description": "Build with Apache Maven and check CodeCoverage",
+  "loc.description": "Build with Apache Maven and check code coverage",
   "loc.instanceNameFormat": "MavenCC $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.codeCoverage": "Code Coverage",
