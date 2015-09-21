@@ -38,7 +38,7 @@
       "name": "summaryFileLocation",
       "type": "string",
       "label": "ms-resource:loc.input.label.summaryFileLocation",
-      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco\\jacoco.xml",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
     },
@@ -46,16 +46,16 @@
       "name": "reportDirectory",
       "type": "string",
       "label": "ms-resource:loc.input.label.reportDirectory",
-      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\jacoco",
-      "required": true,
+      "defaultValue": "",
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
     },
     {
       "name": "additionalCodeCoverageFiles",
       "type": "string",
       "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
-      "defaultValue": "$(Build.Repository.LocalPath)\\my-app\\target\\site\\**\\*.exec",
-      "required": true,
+      "defaultValue": "",
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
     }
   ],
