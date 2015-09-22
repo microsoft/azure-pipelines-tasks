@@ -9,7 +9,7 @@ param (
     [string]$httpProtocolOption,
     [string]$skipCACheckOption,
     [string]$enableDetailedLogging,
-    [object]$sessionVariables
+    [string]$sessionVariables
     )
 
     Write-Verbose "fqdn = $fqdn" -Verbose
@@ -36,9 +36,11 @@ param (
     {
         $enableDetailedLoggingOption = '-EnableDetailedLogging'
     }
+
+    $parsedSessionVariables = Get-ParsedSessionVariables -inputSessionVariables $sessionVariables
    
     Write-Verbose "Initiating deployment on $fqdn" -Verbose
-    [String]$psOnRemoteScriptBlockString = "Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath `$scriptPath -WinRMPort $port -Credential `$credential -ScriptArguments `$scriptArguments -InitializationScriptPath `$initializationScriptPath -SessionVariables `$sessionVariables $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
+    [String]$psOnRemoteScriptBlockString = "Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath `$scriptPath -WinRMPort $port -Credential `$credential -ScriptArguments `$scriptArguments -InitializationScriptPath `$initializationScriptPath -SessionVariables `$parsedSessionVariables $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
     [scriptblock]$psOnRemoteScriptBlock = [scriptblock]::Create($psOnRemoteScriptBlockString)
     $deploymentResponse = Invoke-Command -ScriptBlock $psOnRemoteScriptBlock
     
