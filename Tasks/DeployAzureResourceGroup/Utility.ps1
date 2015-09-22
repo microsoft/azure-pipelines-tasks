@@ -150,9 +150,6 @@ function Delete-MachineGroupHelper
     Write-Verbose "Entered delete machine group helper for machine group $machineGroupName" -Verbose
 
     Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
-
-    # Deletes the machine or machine group from Dtl
-    Delete-MachineGroup -machineGroupName $MachineGroupName 
 }
 
 function Delete-MachinesHelper
