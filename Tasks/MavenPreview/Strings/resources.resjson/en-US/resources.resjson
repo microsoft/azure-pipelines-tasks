@@ -9,7 +9,7 @@
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.mavenPOMFile": "Maven POM file",
+  "loc.input.label.mavenPOMFile": "Maven POM File",
   "loc.input.help.mavenPOMFile": "Relative path from the repo root to the `Maven POM file`.",
   "loc.input.label.options": "Options",
   "loc.input.help.options": "Specify any commandline options to be passed to Maven.",

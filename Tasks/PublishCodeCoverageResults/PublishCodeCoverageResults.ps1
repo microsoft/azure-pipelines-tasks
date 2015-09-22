@@ -16,12 +16,12 @@ Write-Verbose "additionalCodeCoverageFiles = $additionalCodeCoverageFiles" -Verb
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 
 # Publish Code Coverage Files
-$CodeCoverageFiles = $null
+$codeCoverageFiles = $null
 if($additionalCodeCoverageFiles)
 {
-	$CodeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
+	$codeCoverageFiles = Find-Files -SearchPattern $additionalCodeCoverageFiles
 }
 
-Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $CodeCoverageFiles -Context $distributedTaskContext    
+Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileLocation -ReportDirectory $reportDirectory -AdditionalCodeCoverageFiles $codeCoverageFiles -Context $distributedTaskContext    
 
 Write-Verbose "Leaving script PublishCodeCoverage.ps1"

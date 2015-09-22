@@ -20,14 +20,13 @@
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
-  "groups": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "codeCoverageTool",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
-      "required": false,
+      "required": true,
       "defaultValue": "JaCoCo",
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {

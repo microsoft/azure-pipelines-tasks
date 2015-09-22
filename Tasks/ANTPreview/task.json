@@ -41,7 +41,7 @@
         { 
             "name": "antBuildFile", 
             "type": "filePath", 
-            "label": "Ant build file", 
+            "label": "Ant Build File", 
             "defaultValue": "", 
             "required": true,
             "helpMarkDown": "Relative path from the repository root to the `Ant build file`."
