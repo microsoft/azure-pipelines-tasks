@@ -6,7 +6,6 @@ param (
 )
 
 Write-Verbose 'Entering PublishCodeCoverage.ps1' -Verbose
-Write-Verbose "publishCodeCoverageResults = $publishCodeCoverageResults" -Verbose
 Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
 Write-Verbose "summaryFileLocation = $summaryFileLocation" -Verbose
 Write-Verbose "reportDirectory = $reportDirectory" -Verbose
