@@ -1,8 +1,8 @@
 {
     "id": "B8C7DDE3-ACA0-4D27-B1EF-259806BC31B6",
     "name": "MavenCC",
-    "friendlyName": "Maven With CodeCoverage",
-    "description": "Build with Apache Maven and check CodeCoverage",
+    "friendlyName": "Maven With Code Coverage",
+    "description": "Build with Apache Maven and check code coverage",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=624541)",
     "category": "Build",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands" : [
         "maven"
@@ -41,7 +41,7 @@
         { 
             "name": "mavenPOMFile", 
             "type": "filePath", 
-            "label": "Maven POM file", 
+            "label": "Maven POM File", 
             "defaultValue": "", 
             "required": true,
             "helpMarkDown": "Relative path from the repo root to the `Maven POM file`."
