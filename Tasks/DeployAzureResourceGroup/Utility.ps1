@@ -53,7 +53,7 @@ function Validate-DeploymentFileAndParameters
         throw (Get-LocalizedString -Key "Please specify a complete and a valid template file path")
     }
 
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
+    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\") -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
     {
          throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
     }
