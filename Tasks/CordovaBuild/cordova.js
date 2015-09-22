@@ -1,3 +1,8 @@
+/*
+  Copyright (c) Microsoft. All rights reserved.  
+  Licensed under the MIT license. See LICENSE file in the project root for full license information.
+*/
+
 var tl = require('vso-task-lib'),
 	path = require('path'),
 	fs = require('fs'),
@@ -81,11 +86,15 @@ function processInputs() {
 	}
 
 	platform = tl.getInput('platform', true);
-	if(platform == 'android') {
-		processAndroidInputs();
+	switch(platform) {
+		case 'android':
+			processAndroidInputs();
+			return Q(0);
+		case 'ios':
+			return iosIdentity().then(iosProfile);
+		default: 
+			return Q(0);
 	}
-
-	return iosIdentity().then(iosProfile);
 }
 
 function iosIdentity(code) {

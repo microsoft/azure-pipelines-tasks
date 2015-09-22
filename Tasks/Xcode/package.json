@@ -10,6 +10,7 @@
   "dependencies": {
     "q": "^1.4.1",
     "vso-task-lib": "^0.4.5",
-    "glob": "^5.0.14"
+    "glob": "^5.0.14",
+    "xcode-task-utils": "../../lib/xcode-task-utils"
   }
 }

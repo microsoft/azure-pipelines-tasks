@@ -1,9 +1,14 @@
+/*
+  Copyright (c) Microsoft. All rights reserved.  
+  Licensed under the MIT license. See LICENSE file in the project root for full license information.
+*/
+
 var tl = require('vso-task-lib'),
 	path = require('path'),
 	fs = require('fs'),
 	glob = require('glob'),
 	Q = require ('q'),
-	exec = Q.nfbind(require('child_process').exec);
+	xcutils = require('xcode-task-utils');
 
 // Commands
 var xcv = null, 
@@ -18,25 +23,17 @@ var origXcodeDeveloperDir, out, sdk, appFolders, cwd;
 // Store original Xcode developer directory so we can restore it after build completes if its overridden
 var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
 
-processInputs();													// Process inputs to task and create xcv, xcb
-xcv.exec()															// Print version of xcodebuild / xctool
-	.then(iosIdentity)												// Process any p12 files configured
-	.then(iosProfile)												// Processing any provisioning profiles
+processInputs() 													// Process inputs to task and create xcv, xcb, import certs, profiles as required
+	.then(function(code) {
+		return xcv.exec();											// Print version of xcodebuild / xctool
+	})			
 	.then(execBuild)												// Run main xcodebuild / xctool task
 	.then(packageApps)												// Package apps if configured
 	.then(function(code) {											// When done, delete the temporary keychain if it exists
-		if(deleteKeychain) {
-			return deleteKeychain.exec();
-		} else {
-			return 0;
-		}
+		return deleteKeychain ? deleteKeychain.exec() : 0;
 	})
 	.then(function(code) {											// Next delete the provisioning profile if says this should happen		
-		if(deleteProvProfile) {
-			return deleteProvProfile.exec();
-		} else {
-			return 0;
-		}
+		return deleteProvProfile ? deleteProvProfile.exec() : 0;			
 	})
 	.then(function(code) {											// On success, exit
 		process.env['DEVELOPER_DIR'] = origXcodeDeveloperDir;
@@ -83,15 +80,8 @@ function processInputs() {
 	// Get version 
 	xcv = new tl.ToolRunner(tool);
 	xcv.arg('-version');
-	// Xcode build call
-	if(tl.getInput("unlockDefaultKeychain")=="true") {
-		// May be able to refactor this so that the unlock is called as a separate step rather than during the xcodebuild call via bash - Saw inconsistant results so more research required to determine if the child process inherits the unlock.
-		xcb = new tl.ToolRunner(tl.which('bash')); 
-		xcb.arg(['-l','-c','/usr/bin/security unlock-keychain -p "' + tl.getInput('defaultKeychainPassword',true) + '" $(security default-keychain | grep -oE \'"(.+?)"\' | grep -oE \'[^"]*[\\n]\'); $0 "$@"', tool]);
-	} else {
-		xcb = new tl.ToolRunner(tool);
-	}
-		
+	
+	xcb = new tl.ToolRunner(tool);		
 	// Add required flags
 	sdk = tl.getInput('sdk', true);
 	xcb.arg('-sdk');
@@ -133,87 +123,52 @@ function processInputs() {
 	xcb.arg('DSTROOT=' + path.join(out, 'build.dst'));
 	xcb.arg('OBJROOT=' + path.join(out, 'build.obj'));
 	xcb.arg('SYMROOT=' + path.join(out, 'build.sym'));
-	xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(out, 'build.pch'));	
+	xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(out, 'build.pch'));
+	
+	return iosIdentity().then(iosProfile);	
 }
 
 function iosIdentity(code) {
-	// Add identity arg if specified
-	var identity = tl.getInput('iosSigningIdentity', false);
-	if(identity) {
-		xcb.arg('CODE_SIGN_IDENTITY="' + tl.getInput('identity', true) + '"');
-	} else {
-		tl.debug('No explicit signing identity specified in task.')
-	}
-	// If p12 specified, create temporary keychain, import it, add to search path
-	var p12 = tl.getPathInput('p12', false, false);
-	if(p12 && fs.lstatSync(p12).isFile() ) {
-		p12 = path.resolve(cwd,p12);
-		var p12pwd = tl.getInput('p12pwd', true);
-		var keychain = path.join(cwd, '_tasktmp.keychain');
-		var keychainPwd = Math.random();
 	
-		// Configure keychain delete command
-		deleteKeychain = new tl.ToolRunner('/usr/bin/security', true);
-		deleteKeychain.arg(['delete-keychain', keychain]);	
-		
-		var createKeychain = new tl.ToolRunner(tl.which('bash', true));
-		createKeychain.arg([path.resolve(__dirname,'createkeychain.sh'), keychain, keychainPwd, p12, p12pwd]);	
-		var promise = createKeychain.exec();
-		
-		xcb.arg('OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '"');
-		
-		// Run command to set the identity based on the contents of the p12 if not specified in task config
-		if(!identity) {
-			promise = promise.then(function() {
-					return exec('/usr/bin/security find-identity -v -p codesigning "' + keychain + '" | grep -oE \'"(.+?)"\'');
-				})
-				.then(function(foundIdent) {
-					foundIdent = removeExecOutputNoise(foundIdent);
-					tl.debug('Using signing identity in p12: (' + foundIdent + ')');
-					xcb.arg("CODE_SIGN_IDENTITY=" + foundIdent);
-				});	
-		} else {
-			tl.warning('Signing Identitiy specified along with P12 Certificate P12. Omit Signing Identity in task to ensure p12 value used.')
-		}
-		return promise;		
-	} else {
-		tl.debug('p12 not specified in task.')
-		return Q(0);
+	var input = {
+		cwd: cwd,
+		unlockDefaultKeychain: (tl.getInput('unlockDefaultKeychain', false)=="true"),
+		defaultKeychainPassword: tl.getInput('defaultKeychainPassword',false),
+		p12: tl.getPathInput('p12', false, false),
+		p12pwd: tl.getInput('p12pwd', false),
+		iosSigningIdentity: tl.getInput('iosSigningIdentity', false)
 	}
+		
+	return xcutils.determineIdentity(input)
+		.then(function(result) {
+			if(result.identity) {
+				// TODO: Add CODE_SIGN_IDENTITY[iphoneos*]? 
+				xcb.arg('CODE_SIGN_IDENTITY=' + result.identity);
+			} else {
+				tl.debug('No explicit signing identity specified in task.')
+			}
+			if(result.keychain) {
+				xcb.arg('OTHER_CODE_SIGN_FLAGS=--keychain="' + result.keychain + '"');
+			}	
+			deleteKeychain = result.deleteCommand;
+		});
 }
 
 function iosProfile(code) {
-	var provProfileUuid = tl.getPathInput('provProfileUuid', false);
-	if(provProfileUuid) {
-		xcb.arg('PROVISIONING_PROFILE=' + provProfileUuid);	
+	var input = {
+		cwd: cwd,
+		provProfileUuid:tl.getInput('provProfileUuid', false),
+		provProfilePath:tl.getPathInput('provProfilePath', false),
+		removeProfile:(tl.getInput('removeProfile', false)=="true")
 	}
-	var profilePath = path.resolve(cwd, tl.getPathInput('provProfile', false));
-	if(fs.existsSync(profilePath) && fs.lstatSync(profilePath).isFile()) { 
-		tl.debug('Provisioning profile file found.')
-		// Get UUID of provisioning profile
-		return exec('/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i "' + profilePath + '")')
-			.then(function(uuid) {
-				uuid = removeExecOutputNoise(uuid);
-				tl.debug(profilePath + ' has UUID of ' + uuid);
-				if(!provProfileUuid) {
-					// Add UUID to xcodebuild args
-					xcb.arg('PROVISIONING_PROFILE=' + uuid);								
-				} else {
-					tl.warning('Provisioning Profile UUID specified along with Provisioning Profile File. Omit Provisioning Profile UUID in task to ensure file value used.')			
-				}
-				// Create delete profile call if flag specified
-				if(tl.getInput('removeProfile', true) == "true") {
-					deleteProvProfile = new tl.ToolRunner(tl.which('rm'), true);
-					deleteProvProfile.arg(['-f', process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + uuid + '.mobileprovision']);
-				}
-				// return exec of copy command
-				var copyProvProfile = new tl.ToolRunner(tl.which('cp'), true);
-				copyProvProfile.arg(['-f', profilePath, process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + uuid + '.mobileprovision']);
-				return copyProvProfile.exec();
-			}); 
-	} else {
-		return Q(0);
-	}
+	
+	return xcutils.determineProfile(input)
+		.then(function(result) {
+			if(result.uuid) {
+				xcb.arg('PROVISIONING_PROFILE=' + result.uuid);								
+			}
+			deleteProvProfile = result.deleteCommand;
+		});
 }
 
 function execBuild(code) {
