@@ -66,7 +66,15 @@ if( $action -eq "Create Or Update Resource Group" )
 
     #Create csm parameter object
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
-    $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
+
+    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
+    {
+        $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
+    }
+    else
+    {
+        $csmParametersFileContent = [String]::Empty
+    }
 
     #Get current subscription
     $currentSubscription = Get-CurrentSubscriptionInformation
