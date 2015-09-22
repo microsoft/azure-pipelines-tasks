@@ -99,18 +99,19 @@ function iosIdentity(code) {
 		iosSigningIdentity: tl.getInput('iosSigningIdentity', false)
 	}
 		
-	return xcutils.determineIdentity(input, function(identity, keychain, deleteCommand) {
-		if(identity) {
-			iosXcConfig += 'CODE_SIGN_IDENTITY=' + identity + '\n';
-			iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]=' + identity + '\n';
-		} else {
-			tl.debug('No explicit signing identity specified in task.')
-		}
-		if(keychain) {
-			iosXcConfig += 'OTHER_CODE_SIGN_FLAGS="--keychain=' + keychain + '\n';
-		}	
-		deleteKeychain = deleteCommand;
-	});
+	return xcutils.determineIdentity(input)
+		.then(function(result) {
+			if(result.identity) {
+				iosXcConfig += 'CODE_SIGN_IDENTITY=' + result.identity + '\n';
+				iosXcConfig += 'CODE_SIGN_IDENTITY[sdk=iphoneos*]=' + result.identity + '\n';
+			} else {
+				tl.debug('No explicit signing identity specified in task.')
+			}
+			if(result.keychain) {
+				iosXcConfig += 'OTHER_CODE_SIGN_FLAGS="--keychain=' + result.keychain + '\n';
+			}	
+			deleteKeychain = result.deleteCommand;
+		});
 }
 
 function iosProfile(code) {
@@ -121,11 +122,12 @@ function iosProfile(code) {
 		removeProfile:(tl.getInput('removeProfile', false)=="true")
 	}
 	
-	return xcutils.determineProfile(input, function(uuid, deleteCommand) {
-		if(uuid) {
-			iosXcConfig += 'PROVISIONING_PROFILE=' + uuid + '\n';	
+	return xcutils.determineProfile(input)
+		.then(function(result) {
+		if(result.uuid) {
+			iosXcConfig += 'PROVISIONING_PROFILE=' + result.uuid + '\n';	
 		}
-		deleteProvProfile = deleteCommand;
+		deleteProvProfile = result.deleteCommand;
 	});
 }
 
