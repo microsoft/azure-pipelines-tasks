@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "demands": [
     "azureps"
@@ -74,7 +74,7 @@
     },
     {
       "name": "Package",
-      "type": "string",
+      "type": "artifactPath",
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.Package",

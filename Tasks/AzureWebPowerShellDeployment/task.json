@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "demands": [
     "azureps"
@@ -71,7 +71,7 @@
     },
     {
       "name": "Package",
-      "type": "string",
+      "type": "artifactPath",
       "label": "Web Deploy Package",
       "defaultValue": "",
       "helpMarkDown": "Path to the Visual Studio Web Deploy package under the default artifact directory.",

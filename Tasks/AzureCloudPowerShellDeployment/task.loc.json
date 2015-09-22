@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 16
   },
   "demands": [
     "azureps"
@@ -56,7 +56,7 @@
     },
     {
       "name": "CsPkg",
-      "type": "string",
+      "type": "artifactPath",
       "label": "ms-resource:loc.input.label.CsPkg",
       "defaultValue": "",
       "required": true,
@@ -64,7 +64,7 @@
     },
     {
       "name": "CsCfg",
-      "type": "string",
+      "type": "artifactPath",
       "label": "ms-resource:loc.input.label.CsCfg",
       "defaultValue": "",
       "required": true,
