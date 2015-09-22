@@ -2,14 +2,14 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Ant With CodeCoverage",
+  "loc.friendlyName": "Ant With Code Coverage",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624540)",
-  "loc.description": "Build with Apache Ant and check CodeCoverage",
+  "loc.description": "Build with Apache Ant and check code coverage",
   "loc.instanceNameFormat": "AntCC $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.antBuildFile": "Ant build file",
+  "loc.input.label.antBuildFile": "Ant Build File",
   "loc.input.help.antBuildFile": "Relative path from the repository root to the `Ant build file`.",
   "loc.input.label.options": "Options",
   "loc.input.help.options": "Specify any commandline options to be passed to ant",

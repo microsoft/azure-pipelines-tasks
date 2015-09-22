@@ -1,8 +1,8 @@
 {
     "id": "32942eff-c7bb-41ed-b045-9ded82aa1b68",
     "name": "GradleCC",
-    "friendlyName": "Gradle With CodeCoverage",
-    "description": "Build using a Gradle wrapper script and check CodeCoverage",
+    "friendlyName": "Gradle With Code Coverage",
+    "description": "Build using a Gradle wrapper script and check code coverage",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=624542)",
     "category": "Build",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 5
     },
     "demands" : [
         "java"
