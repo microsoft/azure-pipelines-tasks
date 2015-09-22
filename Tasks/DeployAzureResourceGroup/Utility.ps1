@@ -1,4 +1,4 @@
-function Validate-AzurePowershellVerion
+function Validate-AzurePowershellVersion
 {
     $currentVersion =  Get-AzureCmdletsVersion
     $minimumAzureVersion = New-Object System.Version(0, 9, 0)
