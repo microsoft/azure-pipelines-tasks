@@ -100,8 +100,8 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
             throw "Error: sonar.analysis.mode seems to be set already. Please check the properties of SonarQube build tasks and try again."
         }
 
-        $sqServerVersion = GetSonarQubeServerVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password
         Write-Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for sonar-runner."
+        $sqServerVersion = GetSonarQubeServerVersion $serviceEndpoint.Url
 
         if (!$sqServerVersion)
         {
@@ -109,7 +109,7 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
             throw "Error: Unable to fetch SonarQube server version. Please make sure SonarQube server is reachable at $($serviceEndpoint.Url)"
         }
 
-        Write-Verbose "SonarQube version:$sqServerVersion"
+        Write-Verbose "SonarQube server version:$sqServerVersion"
 
         $sqMajorVersion = GetSQMajorVersionNumber $sqServerVersion
         $sqMinorVersion = GetSQMinorVersionNumber $sqServerVersion
@@ -191,23 +191,17 @@ function IsFilePathSpecified
 }
 
 
-function GetVersion($uri, $headers)
+function GetVersion($uri)
 {
     $version = $null
 
     Try
     {
-        $jsonResp = Invoke-RestMethod -Uri $uri -Method Get -Headers $headers
-
-        if ($jsonResp)
-        {
-            $version = $jsonResp.SonarQube.Version
-        }
-
+        $version = Invoke-RestMethod -Uri $uri -Method Get
     }
     Catch [System.Net.WebException]
     {
-        Write-Verbose "WebException while trying to invoke $url. Exception msg:$($_.Exception.Message)"
+        Write-Verbose "WebException while trying to invoke $uri. Exception msg:$($_.Exception.Message)"
     }
 
     return $version
@@ -218,29 +212,21 @@ function GetVersion($uri, $headers)
 #
 function GetSonarQubeServerVersion()
 {
-    param([String][ValidateNotNullOrEmpty()]$serverUrl,
-          [String][ValidateNotNullOrEmpty()]$userName,
-          [String][ValidateNotNullOrEmpty()]$password)
+    param([String][ValidateNotNullOrEmpty()]$serverUrl)
 
     Write-Host "Fetching SonarQube server version.."
 
-    $httpHeaders = @{}
     $serverUri = New-Object -TypeName System.Uri -ArgumentList $serverUrl
-    $serverApiUri = New-Object -TypeName System.Uri -ArgumentList ($serverUri, "/api/system/info")
+    $serverApiUri = New-Object -TypeName System.Uri -ArgumentList ($serverUri, "/api/server/version")
 
-    $base64Auth = [System.Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$($userName):$($password)"))
-    $base64AuthHeader = "Basic $base64Auth"
-
-    $httpHeaders.Add('Authorization', $base64AuthHeader)
-
-    $sqVersion = GetVersion $serverApiUri $httpHeaders
+    $sqVersion = GetVersion $serverApiUri
 
     if(!$sqVersion)
     {
         Write-Verbose "Trying to fetch SonarQube version number again.."
         Start-Sleep -s 2
 
-        $sqVersion = GetVersion $serverApiUri $httpHeaders
+        $sqVersion = GetVersion $serverApiUri
     }
 
     Write-Verbose "Returning SonarQube server version:$sqVersion"
@@ -255,7 +241,9 @@ function GetSQMajorVersionNumber()
     param([String]$sqServerVersion)
 
     [int]$majorVersion = 0;
-    $tokens = $sqServerVersion.Split(".")
+
+    #split on dot-hyphen to handle versions like 5.2-SNAPSHOT
+    $tokens = $sqServerVersion.Split(".-")
 
     if ($tokens -and $tokens.Count -ge 1)
     {
@@ -273,7 +261,9 @@ function GetSQMinorVersionNumber()
     param([String]$sqServerVersion)
 
     [int]$minorVersion = 0;
-    $tokens = $sqServerVersion.Split(".")
+
+    #split on dot-hyphen to handle versions like 5.2-SNAPSHOT
+    $tokens = $sqServerVersion.Split(".-")
 
     if ($tokens -and $tokens.Count -ge 2)
     {
