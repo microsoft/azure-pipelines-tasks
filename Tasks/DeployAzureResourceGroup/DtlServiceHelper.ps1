@@ -1,3 +1,4 @@
+<#
 function Create-Provider
 {
     param([string]$providerName,
@@ -334,3 +335,4 @@ function Initialize-DTLServiceHelper
 
     Set-Variable -Name connection -Value $connection -Scope "Script"
 }
+#>

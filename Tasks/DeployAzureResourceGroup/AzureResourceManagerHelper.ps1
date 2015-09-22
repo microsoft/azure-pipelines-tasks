@@ -64,7 +64,6 @@ function Create-AzureResourceGroup
     }
 }
 
-
 function Get-CurrentSubscriptionInformation
 {
     $subscription = Get-AzureSubscription -Current -Verbose -ErrorAction Stop
@@ -72,7 +71,7 @@ function Get-CurrentSubscriptionInformation
     return $subscription
 }
 
-
+<#
 function Get-SubscriptionInformation
 {
     param([string]$subscriptionId)
@@ -445,6 +444,7 @@ function GetMachineNameFromId
         return $map
     }
 }
+#>
 
 function Refresh-SASToken
 {
@@ -604,6 +604,7 @@ function Get-MachineLogs
     }
 }
 
+<#
 function Create-AzureKeyVaultIfNotExist
 {
     param([string]$azureKeyVaultName,
@@ -643,6 +644,7 @@ function Create-AzureKeyVaultSecret
 
     return $response
 }
+#>
 
 function Create-AzureResourceGroupIfNotExist
 {
@@ -679,6 +681,18 @@ function Print-OperationLog
             Write-Verbose -Verbose "Message: $message"
         }
     }
+}
+
+function Get-AzureMachinesInResourceGroup
+{
+    param([string]$resourceGroupName)
+
+    Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group $resourceGroupName"
+    $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
+    Write-Verbose -Verbose "[Azure Resource Manager]Got resource group $resourceGroupName"
+
+    $azureResourceGroupVMResources  = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
+    return $azureResourceGroupVMResources
 }
 
 function Delete-MachineGroupFromProvider

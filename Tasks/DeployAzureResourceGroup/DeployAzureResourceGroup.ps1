@@ -9,10 +9,10 @@ param(
     [string]$dscDeployment,
     [string]$moduleUrlParameterNames,
     [string]$sasTokenParameterNames,
+    [string]$skipCACheck<#,
     [string]$vmCreds,
     [string]$vmUserName,
     [string]$vmPassword,
-    [string]$skipCACheck,
     [string]$resourceFilteringMethodStart,
     [string]$filtersStart,
     [string]$resourceFilteringMethodStop,
@@ -22,7 +22,7 @@ param(
     [string]$resourceFilteringMethodDelete,
     [string]$filtersDelete,
     [string]$resourceFilteringMethodDeleteRG,
-    [string]$filtersDeleteRG
+    [string]$filtersDeleteRG#>
 )
 
 Write-Verbose "Starting Azure Resource Group Deployment Task" -Verbose
@@ -35,16 +35,16 @@ Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
 Write-Verbose -Verbose "ModuleUrlParameterNames = $moduleUrlParameterNames"
 Write-Verbose -Verbose "SASTokenParamterNames = $sasTokenParameterNames" 
 
-import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
+#import-module Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"
 
-. ./DtlServiceHelper.ps1
+#. ./DtlServiceHelper.ps1
 . ./Utility.ps1
 
-Initialize-DTLServiceHelper
+#Initialize-DTLServiceHelper
 Validate-AzurePowershellVersion
 
 $resourceGroupName = $resourceGroupName.Trim()
@@ -52,15 +52,12 @@ $location = $location.Trim()
 $csmFile = $csmFile.Trim()
 $csmParametersFile = $csmParametersFile.Trim()
 $overrideParameters = $overrideParameters.Trim()
-$vmUserName = $vmUserName.Trim()
-$vmPassword = $vmPassword.Trim()
+<#$vmUserName = $vmUserName.Trim()
+$vmPassword = $vmPassword.Trim()#>
 
 if( $action -eq "Create Or Update Resource Group" )
 {
     . ./AzureResourceManagerHelper.ps1
-
-    Check-EnvironmentNameAvailability -environmentName $resourceGroupName
-    Validate-Credentials -vmCreds $vmCreds -vmUserName $vmUserName -vmPassword $vmPassword
 
     $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 
@@ -80,11 +77,13 @@ if( $action -eq "Create Or Update Resource Group" )
     $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
 
     # Update the resource group in DTL
-    Update-EnvironmentDetailsInDTL -subscription $currentSubscription -csmFileName $csmFileName -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState
+    # Update-EnvironmentDetailsInDTL -subscription $currentSubscription -csmFileName $csmFileName -resourceGroupName $resourceGroupName -environmentStatus $resourceGroupDeployment.ProvisioningState
+
 }
 else
 {
-    # TODO: This is a temporary fix. Will remove it once task json's visibility rule supports conditional operator "!="
+    <#
+     # TODO: This is a temporary fix. Will remove it once task json's visibility rule supports conditional operator "!="
     $filterDetails = Get-FilterDetails -action $action -resourceFilteringMethodStart $resourceFilteringMethodStart -filtersStart $filtersStart -resourceFilteringMethodStop $resourceFilteringMethodStop -filtersStop $filtersStop `
                                         -resourceFilteringMethodRestart $resourceFilteringMethodRestart -filtersRestart $filtersRestart -resourceFilteringMethodDelete $resourceFilteringMethodDelete -filtersDelete $filtersDelete `
                                         -resourceFilteringMethodDeleteRG $resourceFilteringMethodDeleteRG -filtersDeleteRG $filtersDeleteRG
@@ -106,6 +105,12 @@ else
     }
 
     Perform-Action -action $action -resourceGroupName $resourceGroupName -resources $machineGroup.Resources -filters $filterDetails["filters"] -ProviderName $providerName
+    #>
+
+    # Perform action on resource group
+    Switch-AzureMode AzureResourceManager
+
+    Perform-Action -action $action -resourceGroupName $resourceGroupName
 }
 
 Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose

@@ -92,6 +92,7 @@ function Get-CsmParameterObject
     }
 }
 
+<#
 function Validate-Credentials
 {
     param([string]$vmCreds,
@@ -345,14 +346,17 @@ function Get-SecretValueForAzureKeyVault
 
     return $secret
 }
+#>
 
 function Invoke-OperationHelper
 {
      param([string]$machineGroupName,
-           [string]$operationName,
-           [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
+           [string]$operationName<#,
+           [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines#>)
 
     Write-Verbose "Entered perform action $operationName on machines for machine group $machineGroupName" -Verbose
+
+    $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $machineGroupName
 
     if(! $machines)
     {
@@ -360,11 +364,11 @@ function Invoke-OperationHelper
         return
     }
 
-    $machineStatus = "Succeeded"
-
     # Logs in the Dtl service that operation has started.
-    $operationId = Invoke-MachineGroupOperation -machineGroupName $machineGroupName -operationName $operationName -machines $machines
+    # $operationId = Invoke-MachineGroupOperation -machineGroupName $machineGroupName -operationName $operationName -machines $machines
 
+
+    $machineStatus = "Succeeded"
     if($machines.Count -gt 0)
     {
        $passedOperationCount = $machines.Count
@@ -374,7 +378,7 @@ function Invoke-OperationHelper
     {
         $machineName = $machine.Name
         $error = Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
-        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose        
+        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
 
         $errorMessage = [string]::Empty
         # Determines the status of the operation. Marks the status of machine group operation as 'Failed' if any one of the machine operation fails.
@@ -382,7 +386,7 @@ function Invoke-OperationHelper
         {
             $machineStatus = $status = "Failed"
             $passedOperationCount--
-            
+
             if($error[0].Exception)
             {
                 $errorMessage = $error[0].Exception.Message
@@ -397,17 +401,20 @@ function Invoke-OperationHelper
         }
 
         # Logs the completion of particular machine operation. Updates the status based on the provider response.
-        End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $errorMessage
+        # End-MachineOperation -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName -operationId $operationId -status $status -error $errorMessage
     }
 
     # Logs completion of the machine group operation.
-    End-MachineGroupOperation -machineGroupName $machineGroupName -operationName operationName -operationId $operationId -status $machineStatus
+    # End-MachineGroupOperation -machineGroupName $machineGroupName -operationName operationName -operationId $operationId -status $machineStatus
+
     Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
 }
 
 function Delete-MachineGroupHelper
 {
-    param([string]$machineGroupName)
+    param([string]$machineGroupName<#,
+          [string]$filters,
+          [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines#>)
 
     Write-Verbose "Entered delete machine group helper for machine group $machineGroupName" -Verbose
 
@@ -419,13 +426,12 @@ function Delete-MachineGroupHelper
 
 function Delete-MachinesHelper
 {
-    param([string]$machineGroupName,
-          [string]$filters,
-          [Microsoft.VisualStudio.Services.DevTestLabs.Model.ResourceV2[]]$machines)
+    param([string]$machineGroupName)
 
     Write-Verbose "Entered delete machines for the machine group $machineGroupName" -Verbose
 
-    
+    $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $machineGroupName
+
     # If there are no machines corresponding to given machine names or tags then will not delete any machine.
     if(! $machines -or $machines.Count -eq 0)
     {
@@ -440,16 +446,18 @@ function Delete-MachinesHelper
         {
             $passedOperationCount--
         }
+        <#
         else
         {
             $filter = $filter + $machine.Name + ","
         }
+        #>
     }
 
     Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
 
     # Deletes the machine or machine group from Dtl
-    Delete-MachineGroup -machineGroupName $MachineGroupName -filters $filter
+    # Delete-MachineGroup -machineGroupName $MachineGroupName -filters $filter
 }
 
 function Invoke-OperationOnProvider
@@ -462,7 +470,7 @@ function Invoke-OperationOnProvider
     Switch ($operationName)
     {
          "Start" {
-             $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName                          
+             $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
          }
 
          "Stop" {
@@ -493,6 +501,7 @@ function Throw-ExceptionIfOperationFailesOnAllMachine
   }
 }
 
+<#
 # Gets the tags in correct format
 function Get-WellFormedTagsList
 {
@@ -557,6 +566,7 @@ function Update-EnvironmentDetailsInDTL
 
     $environmentOperationId = Create-EnvironmentOperation -environment $environment
 }
+#>
 
 function Get-CsmAndParameterFiles
 {
@@ -580,6 +590,7 @@ function Get-CsmAndParameterFiles
     @{"csmFile" = $($csmFile); "csmParametersFile" = $($csmParametersFile)}
 }
 
+<#
 function Get-FilterDetails
 {
     param([string]$action,
@@ -649,24 +660,27 @@ function Get-ProviderHelperFile
 
     $providerName
 }
+#>
 
 function Perform-Action
 {
     param([string]$action,
-          [string]$resourceGroupName,
+          [string]$resourceGroupName<#,
           [Object]$resources,
           [string]$filters,
-          [string]$providerName)
+          [string]$providerName#>)
+
+    $providerName = "Azure"
 
     Switch ($Action)
     {
           { @("Start", "Stop", "Restart") -contains $_ } {
-             Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $action -machines $machineGroup.Resources
+             Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $action # -machines $machineGroup.Resources
              break
           }
 
           "Delete" {
-             Delete-MachinesHelper -machineGroupName $resourceGroupName -filters $filters -machines $machineGroup.Resources
+             Delete-MachinesHelper -machineGroupName $resourceGroupName # -filters $filters -machines $machineGroup.Resources
              break
           }
 

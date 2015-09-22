@@ -63,90 +63,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
     },
     {
-      "name": "resourceFilteringMethodStart",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.resourceFilteringMethodStart",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "visibleRule": "action = Start"
-    },
-    {
-      "name": "filtersStart",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.filtersStart",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.filtersStart",
-      "visibleRule": "action = Start"
-    },
-    {
-      "name": "resourceFilteringMethodStop",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.resourceFilteringMethodStop",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "visibleRule": "action = Stop"
-    },
-    {
-      "name": "filtersStop",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.filtersStop",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.filtersStop",
-      "visibleRule": "action = Stop"
-    },
-    {
-      "name": "resourceFilteringMethodRestart",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.resourceFilteringMethodRestart",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "visibleRule": "action = Restart"
-    },
-    {
-      "name": "filtersRestart",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.filtersRestart",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.filtersRestart",
-      "visibleRule": "action = Restart"
-    },
-    {
-      "name": "resourceFilteringMethodDelete",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.resourceFilteringMethodDelete",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "visibleRule": "action = Delete"
-    },
-    {
-      "name": "filtersDelete",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.filtersDelete",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.filtersDelete",
-      "visibleRule": "action = Delete"
-    },
-    {
       "name": "location",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.location",
@@ -191,35 +107,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "visibleRule": "action = Create Or Update Resource Group"
-    },
-    {
-      "name": "vmCreds",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.vmCreds",
-      "required": false,
-      "defaultValue": "false",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.vmCreds"
-    },
-    {
-      "name": "vmUserName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vmUserName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "vmCreds = true",
-      "helpMarkDown": "ms-resource:loc.input.help.vmUserName"
-    },
-    {
-      "name": "vmPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vmPassword",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "vmCreds = true",
-      "helpMarkDown": "ms-resource:loc.input.help.vmPassword"
     },
     {
       "name": "skipCACheck",
