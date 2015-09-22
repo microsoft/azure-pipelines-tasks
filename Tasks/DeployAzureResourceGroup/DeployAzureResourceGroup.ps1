@@ -28,6 +28,7 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 $ErrorActionPreference = "Stop"
 
 . ./Utility.ps1
+. ./AzureResourceManagerHelper.ps1
 
 Validate-AzurePowershellVersion
 
@@ -39,8 +40,6 @@ $overrideParameters = $overrideParameters.Trim()
 
 if( $action -eq "Create Or Update Resource Group" )
 {
-    . ./AzureResourceManagerHelper.ps1
-
     $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 
     #Create csm parameter object
@@ -62,6 +61,7 @@ else
 {
     Switch-AzureMode AzureResourceManager
 
+    #Performing action on resource group 
     Perform-Action -action $action -resourceGroupName $resourceGroupName
 }
 
