@@ -428,7 +428,7 @@ if (!$SymbolsFilePaths) {
 # Resolve location of pdbstr.exe.
 [string]$pdbstrPath = Get-ToolPath -Name 'Pdbstr\pdbstr.exe'
 if (!$pdbstrPath) {
-    throw (Get-LocalizedString 'Could not find pdbstr.exe')
+    throw (Get-LocalizedString -Key 'Could not find pdbstr.exe')
 }
 
 # Set source provider information.
