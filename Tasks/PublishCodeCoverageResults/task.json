@@ -53,7 +53,7 @@
             "label": "Additional Files",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Regular expression specifying the additional code coverage files to be published as an artifact against the build. For example, $(Build.Repository.LocalPath)\\**\\*.exec"
+            "helpMarkDown": "Regular expression specifying the additional code coverage files to be published as an artifact against the build. For example, `$(Build.Repository.LocalPath)\\**\\*.exec`"
         }        
     ],
     "execution": {
