@@ -154,9 +154,6 @@ function ProcessSonarCodeAnalysisReport
     $sonarReportFilePath = GetSonarReportFilePath $agentBuildDirectory
     $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath $agentBuildDirectory
 
-    $sonarReportProcessedRootObj = New-Object -TypeName PSObject
-    Add-Member -InputObject $sonarReportProcessedRootObj -MemberType NoteProperty -Name status -Value "Analysis Complete"
-    
     #read sonar-report.json file as a json object
     $json = Get-Content -Raw $sonarReportFilePath | ConvertFrom-Json
     Write-Verbose "ProcessSonarCodeAnalysisReport: Total issues: $($json.issues.Count)"
@@ -178,6 +175,8 @@ function ProcessSonarCodeAnalysisReport
         }
     }
 
+    $sonarReportProcessedRootObj = New-Object -TypeName PSObject
+    Add-Member -InputObject $sonarReportProcessedRootObj -MemberType NoteProperty -Name status -Value "Analysis Complete"
     Add-Member -InputObject $sonarReportProcessedRootObj -MemberType NoteProperty -Name issues -Value $newIssues
 
     #save the results into output file
