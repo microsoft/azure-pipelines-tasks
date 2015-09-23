@@ -23,9 +23,7 @@ Write-Verbose -Verbose "ConnectedServiceName = $ConnectedServiceName"
 Write-Verbose -Verbose "Action = $action"
 Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
 Write-Verbose -Verbose "Location = $location"
-Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
-Write-Verbose -Verbose "ModuleUrlParameterNames = $moduleUrlParameterNames"
-Write-Verbose -Verbose "SASTokenParamterNames = $sasTokenParameterNames" 
+Write-Verbose -Verbose "OverrideParameters = $overrideParameters" 
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
