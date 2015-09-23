@@ -37,6 +37,7 @@
 
     if (-not $installRoot)
     {
+        Write-Host "##vso[task.logissue type=error;code=DT001003;]ta install path not found"
         # We still got nothing
         throw "Unable to find TestAgent installation path"
     }
@@ -245,6 +246,7 @@ function Set-TestAgentConfiguration
     {
         if (-not $configAsProcess)
         {
+            Write-Host "##vso[task.logissue type=error;code=DT001001;]invalid input - enableAutoLogon"
             throw "EnableAutoLogon option is not valid for configureAsService."
         }
 
@@ -256,6 +258,7 @@ function Set-TestAgentConfiguration
     {
         if (-not $configAsProcess)
         {
+            Write-Host "##vso[task.logissue type=error;code=DT001001;]invalid input - disableScreenSaver"
             throw "DisableScreenSaver option is not valid for configureAsService."
         }
 
@@ -605,14 +608,14 @@ function CanSkipTestAgentConfiguration
         $creds = ReadCredentials -TFSCollectionUrl $TfsCollection -TestAgentVersion $TestAgentVersion
         if ($creds -eq $null)
         {
-         Write-Verbose -Message "No personal access token found in the credential store" -Verbose
-             return $false
+            Write-Verbose -Message "No personal access token found in the credential store" -Verbose
+            return $false
         }
 
         if($creds.Credentials -eq $null)
         {
-         Write-Verbose -Message "No credentials found in stored identity" -Verbose
-             return $false
+            Write-Verbose -Message "No credentials found in stored identity" -Verbose
+            return $false
         }
 
         $storedString = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($creds.Credentials.SecurePassword))
@@ -724,8 +727,10 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     $vsRoot = Locate-TestVersionAndVsRoot($Version)
     if ([string]::IsNullOrWhiteSpace($vsRoot))
     {
+        Write-Host "##vso[task.logissue type=error;code=DT001003;]ta install path not found"
         throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
     }
+    
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
 
@@ -802,12 +807,14 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
     $ExeName = "TestAgentConfig.exe"
     if (-not (Test-IsAdmin))
     {
+        Write-Host "##vso[task.logissue type=error;code=DT001005;]running as nonadmin"
         throw "You need to be an Administrator to run this tool."
     }
 
     $vsRoot = Locate-TestVersionAndVsRoot($Version)
     if ([string]::IsNullOrWhiteSpace($vsRoot))
     {
+        Write-Host "##vso[task.logissue type=error;code=DT001003;]ta install path not found"
         throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
     }
 
@@ -842,6 +849,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
         return $out
     }
 
+    Write-Host "##vso[task.logissue type=error;code=DT001003;]ta install path not found"
     throw "Did not find TestAgentConfig.exe at : $exePath. Ensure that TestAgent is installed."
 }
 

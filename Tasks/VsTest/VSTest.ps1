@@ -21,6 +21,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if (!$testAssembly)
 {
+    Write-Host "##vso[task.logissue type=error;code=DT002001;]invalid input - testAssembly"
     throw (Get-LocalizedString -Key "Test assembly parameter not set on script")
 }
 
@@ -30,9 +31,11 @@ if(!$sourcesDirectory)
     # For RM, look for the test assemblies under the release directory.
     $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Agent.ReleaseDirectory"
 }
+
 if(!$sourcesDirectory)
 {
     # If there is still no sources directory, error out immediately.
+    Write-Host "##vso[task.logissue type=error;code=DT002002;]unable to get source directory"
     throw "No source directory found."
 }
 
@@ -77,6 +80,7 @@ if($testAssemblyFiles)
     }
     else
     {
+        Write-Host "##vso[task.logissue type=warning;code=DT002003;]no results to publish"
         Write-Warning "No results found to publish."
     }
 }

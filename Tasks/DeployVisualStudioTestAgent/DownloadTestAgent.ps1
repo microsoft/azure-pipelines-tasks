@@ -7,11 +7,14 @@ function ValidateSourceFile([string] $sourcePath)
 {
    if(! (Test-Path -Path $sourcePath))
    {
-         throw "Test agent source path '{0}' is not accessible to the test machine. Please check if the file exists and that test machine has access to that machine" -f $sourcePath
+        Write-Host "##vso[task.logissue type=error;code=DT001001;]invalid input - sourcePath"
+        throw "Test agent source path '{0}' is not accessible to the test machine. Please check if the file exists and that test machine has access to that machine" -f $sourcePath
    }
+   
    if((Get-Item $sourcePath) -is [System.IO.DirectoryInfo])
    {
-          throw "Please provide the source path of test agent till the installation file. Given path is {0}" -f $sourcePath
+        Write-Host "##vso[task.logissue type=error;code=DT001001;]invalid input - sourcePath"
+        throw "Please provide the source path of test agent till the installation file. Given path is {0}" -f $sourcePath
    }
 }
 
@@ -46,14 +49,15 @@ foreach($sourcePath in $source)
         $sourceDirectory = Split-Path -Path $sourcePath -Parent
         $sourceFileName = Split-Path -Path $sourcePath -Leaf
 
-	Write-Verbose -Message "Copying file from $sourcePath to test machine." -f $sourcePath
-	Write-Verbose "robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30" -Verbose
-	robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30
-	# If robo copy exits with non zero exit code then throw exception.
-	$robocopyExitCode = $LASTEXITCODE 
-	if($robocopyExitCode -eq 0x10)
-	{
-	   throw "Robocopy failed to copy fail from $sourceDirectory to $destinationDirectory with a exit code $robocopyExitCode."
-	}
+        Write-Verbose -Message "Copying file from $sourcePath to test machine." -f $sourcePath
+        Write-Verbose "robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30" -Verbose
+        robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30
+        # If robo copy exits with non zero exit code then throw exception.
+        $robocopyExitCode = $LASTEXITCODE 
+        if($robocopyExitCode -eq 0x10)
+        {
+            Write-Host "##vso[task.logissue type=error;code=DT001006]robocopy failed with exit code $robocopyExitCode"
+            throw "Robocopy failed to copy fail from $sourceDirectory to $destinationDirectory with a exit code $robocopyExitCode."
+        }
     }
 }

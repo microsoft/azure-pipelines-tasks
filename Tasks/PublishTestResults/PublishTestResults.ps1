@@ -15,11 +15,13 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if(!$testRunner)
 {
+    Write-Host "##vso[task.logissue type=error;code=DT003001;]invalid input - testrunner"
     throw (Get-LocalizedString -Key "Test runner parameter has to be specified")
 }
 
 if (!$testResultsFiles)
 {
+    Write-Host "##vso[task.logissue type=error;code=DT003001;]invalid input - testresultsfile"
     throw (Get-LocalizedString -Key "Test results files parameter has to be specified")
 }
 

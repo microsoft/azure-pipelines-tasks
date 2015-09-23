@@ -34,6 +34,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 		}
 		catch
 		{
+        	Write-Host "##vso[task.logissue type=error;code=DT001007;]ta install failed with exit code $exitCode"
 			Write-Verbose -Verbose "Caught exception while installing Test Agent"
 			throw $_.Exception
 		}
@@ -51,6 +52,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 					remove-item $testAgentFile -force | Out-Null
 					# we have retried once .Now fail with appropriate message
 					Write-Verbose -Verbose "Retried to install Test Agent"
+        			Write-Host "##vso[task.logissue type=error;code=DT001008;]ta install failed with exit code $exitCode"
 					throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 				}
 				else
@@ -64,6 +66,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 			catch
 			{
 				Write-Verbose -Verbose "Error occured while retrying the Test Agent installation"
+				Write-Host "##vso[task.logissue type=error;code=DT001008;]ta install failed with exit code $exitCode"
 				throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 			}
 		}
@@ -71,11 +74,13 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 		if($exitCode -eq 2147205120)
 		{
 			# pending windows update.
+			Write-Host "##vso[task.logissue type=error;code=DT001009;]ta install failed with exit code $exitCode"
 			throw ("Pending windows update. The return code {0} was not expected during installation of Test Agent. Install windows update and try again." -f $exitCode.ToString())
 		}
 
 		if(-not ($exitCode -eq 0 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641))
 		{
+        	Write-Host "##vso[task.logissue type=error;code=DT001007;]ta install failed with exit code $exitCode"
 			throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 		}
 
@@ -95,6 +100,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
    		}
 		else
 		{
+        	Write-Host "##vso[task.logissue type=error;code=DT001010;]ta install failed"
 			throw "Look up in registry failed. Test agent failed to install."
 		}
 	}

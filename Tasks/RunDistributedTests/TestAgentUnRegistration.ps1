@@ -8,6 +8,7 @@
         {
             $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
         }
+        
         $Version = Get-Item $regPath | %{$_.GetSubKeyNames()} | Sort-Object -Descending | Select-Object -First 1
         if ([string]::IsNullOrWhiteSpace($Version))
         {
@@ -36,6 +37,7 @@
     if (-not $installRoot)
     {
         # We still got nothing
+        Write-Host "##vso[task.logissue type=error;code=DT004001;]ta install path not found"
         throw "Unable to find TestAgent installation path"
     }
     return $installRoot
@@ -83,12 +85,14 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version)
     $ExeName = "TestAgentConfig.exe"
     if (-not (Test-IsAdmin))
     {
+        Write-Host "##vso[task.logissue type=error;code=DT004002;]running as nonadmin"
         throw "You need to be an Administrator to run this tool."
     }
 
     $vsRoot = Locate-TestVersionAndVsRoot($Version)
     if ([string]::IsNullOrWhiteSpace($vsRoot))
     {
+        Write-Host "##vso[task.logissue type=error;code=DT004001;]ta install path not found"
         throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
     }
 
@@ -123,6 +127,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version)
         return $out
     }
 
+    Write-Host "##vso[task.logissue type=error;code=DT004001;]ta install path not found"
     throw "Did not find TestAgentConfig.exe at : $exePath. Ensure that TestAgent is installed."
 }
 
