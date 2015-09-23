@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 20
+    "Patch": 21
   },
   "demands": [
     "vstest"
@@ -84,8 +84,7 @@
       "label": "ms-resource:loc.input.label.codeCoverageEnabled",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
-      "groupName": "advanced"
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled"
     },
     {
       "name": "vsTestVersion",
