@@ -163,6 +163,7 @@ function Delete-MachinesHelper
     # If there are no machines corresponding to given machine names or tags then will not delete any machine.
     if(! $machines -or $machines.Count -eq 0)
     {
+        Write-Verbose "Machine group $machineGroupName has no machines in it" -Verbose
         return
     }
 

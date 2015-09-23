@@ -6,9 +6,14 @@ param(
     [string]$csmFile,
     [string]$csmParametersFile,
     [string]$overrideParameters,
+    # for preventing compat break scenarios passing below parameters also,
+    # though we don't require them in current implementation of task
     [string]$dscDeployment,
     [string]$moduleUrlParameterNames,
     [string]$sasTokenParameterNames,
+    [string]$vmCreds,
+    [string]$vmUserName,
+    [string]$vmPassword,
     [string]$skipCACheck
 )
 
@@ -18,9 +23,7 @@ Write-Verbose -Verbose "ConnectedServiceName = $ConnectedServiceName"
 Write-Verbose -Verbose "Action = $action"
 Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
 Write-Verbose -Verbose "Location = $location"
-Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
-Write-Verbose -Verbose "ModuleUrlParameterNames = $moduleUrlParameterNames"
-Write-Verbose -Verbose "SASTokenParamterNames = $sasTokenParameterNames" 
+Write-Verbose -Verbose "OverrideParameters = $overrideParameters" 
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
@@ -58,7 +61,6 @@ if( $action -eq "Create Or Update Resource Group" )
     $currentSubscription = Get-CurrentSubscriptionInformation
 
     $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
-    $parametersObject = Refresh-SASToken -moduleUrlParameterNames $moduleUrlParameterNames -sasTokenParameterNames $sasTokenParameterNames -csmParametersObject $parametersObject -subscriptionId $currentSubscription.SubscriptionId -dscDeployment $dscDeployment
 
     # Create azure resource group
     Switch-AzureMode AzureResourceManager

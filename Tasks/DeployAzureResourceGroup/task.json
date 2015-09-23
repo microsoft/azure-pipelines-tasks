@@ -14,19 +14,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
         "azureps"
     ],
      "minimumAgentVersion": "1.88.0",
-    "groups": [
-        {
-            "name": "advancedDeploymentOptions",
-            "displayName": "Advanced Deployment Options",
-            "isExpanded": false
-        }
-    ],
     "inputs": [
         {
             "name": "ConnectedServiceName",
@@ -104,44 +97,6 @@
             "required": false,
             "helpMarkDown": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
             "visibleRule": "action = Create Or Update Resource Group"
-        },
-        {
-            "name": "skipCACheck",
-            "type": "boolean",
-            "label": "Skip CA Check",
-            "required": false,
-            "defaultValue": "true",
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."            
-        },
-        {
-            "name": "dscDeployment",
-            "type": "boolean",
-            "label": "Refresh SAS token",
-            "required": false,
-            "defaultValue": "false",
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Refresh SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly."
-        },
-        {
-            "name": "moduleUrlParameterName",
-            "type": "string",
-            "label": "Azure Blob Parameter",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Names of the parameter corresponding to the Azure blobs separated by ; in the format <br><b><i>url1;url2;url3</b></i>",
-            "visibleRule": "dscDeployment = true"
-        },
-        {
-            "name": "sasTokenParameterName",
-            "type": "string",
-            "label": "SAS Token Parameter",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Names of the SAS token parameters separated by ; in the format <br><b><i>token1;token2;token3</b></i>",
-            "visibleRule": "dscDeployment = true"
         }
     ],
     "sourceDefinitions": [

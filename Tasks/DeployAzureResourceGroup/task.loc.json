@@ -17,19 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.88.0",
-  "groups": [
-    {
-      "name": "advancedDeploymentOptions",
-      "displayName": "ms-resource:loc.group.displayName.advancedDeploymentOptions",
-      "isExpanded": false
-    }
-  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -107,44 +100,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "visibleRule": "action = Create Or Update Resource Group"
-    },
-    {
-      "name": "skipCACheck",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.skipCACheck",
-      "required": false,
-      "defaultValue": "true",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
-    },
-    {
-      "name": "dscDeployment",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.dscDeployment",
-      "required": false,
-      "defaultValue": "false",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
-    },
-    {
-      "name": "moduleUrlParameterName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.moduleUrlParameterName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
-      "visibleRule": "dscDeployment = true"
-    },
-    {
-      "name": "sasTokenParameterName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sasTokenParameterName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
-      "visibleRule": "dscDeployment = true"
     }
   ],
   "sourceDefinitions": [
