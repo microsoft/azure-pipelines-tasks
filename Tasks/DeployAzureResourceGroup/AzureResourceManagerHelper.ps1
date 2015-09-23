@@ -166,10 +166,20 @@ function Print-OperationLog
 function Get-AzureMachinesInResourceGroup
 {
     param([string]$resourceGroupName)
-
-    Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName virtual machines type resources"
-    $azureResourceGroupVMResources = Get-AzureResource -ResourceType "Microsoft.Compute/virtualMachines" -ResourceGroupName $resourceGroupName -ErrorAction Stop
-    Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName virtual machines type resources"
+    try
+    {
+        Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName virtual machines type resources"
+        $azureResourceGroupVMResources = Get-AzureResource -ResourceType "Microsoft.Compute/virtualMachines" -ResourceGroupName $resourceGroupName -ErrorAction Stop
+        Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName virtual machines type resources"
+    }
+    catch [Microsoft.Azure.Commands.ResourceManager.Cmdlets.Entities.ErrorResponses.ErrorResponseMessageException]
+    {
+        Write-Error $_.Exception.ErrorResponseMessage.Error.Message -Verbose
+    }
+    catch
+    {
+        Write-Error $_.Exception.Message -Verbose
+    }
 
     return $azureResourceGroupVMResources
 }
