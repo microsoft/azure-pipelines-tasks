@@ -111,11 +111,14 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
 
         Write-Verbose "SonarQube server version:$sqServerVersion"
 
-        $sqMajorVersion = GetSQMajorVersionNumber $sqServerVersion
-        $sqMinorVersion = GetSQMinorVersionNumber $sqServerVersion
+        #strip out '-SNAPSHOT' if it is present in version (developer versions of SonarQube might return version in this format: 5.2-SNAPSHOT)
+        $sqServerVersion = $sqServerVersion.ToUpper().Replace("-SNAPSHOT", "")
 
-        #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+
-        if (($sqMajorVersion -gt 5) -or ($sqMajorVersion -ge 5 -and $sqMinorVersion -ge 2))
+        $sqVersion = New-Object -TypeName System.Version -ArgumentList $sqServerVersion
+        $sqVersion5dot2 = New-Object -TypeName System.Version -ArgumentList "5.2"
+
+        #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+. -ge below calls the overloaded operator in System.Version class
+        if ($sqServerVersion -ge $sqVersion5dot2)
         {
             $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=issues" + " " + "/d:sonar.report.export.path=sonar-report.json"
         }
@@ -191,7 +194,7 @@ function IsFilePathSpecified
 }
 
 
-function GetVersion($uri)
+function GetVersionString($uri)
 {
     $version = $null
 
@@ -219,56 +222,16 @@ function GetSonarQubeServerVersion()
     $serverUri = New-Object -TypeName System.Uri -ArgumentList $serverUrl
     $serverApiUri = New-Object -TypeName System.Uri -ArgumentList ($serverUri, "/api/server/version")
 
-    $sqVersion = GetVersion $serverApiUri
+    $sqVersion = GetVersionString $serverApiUri
 
     if(!$sqVersion)
     {
         Write-Verbose "Trying to fetch SonarQube version number again.."
         Start-Sleep -s 2
 
-        $sqVersion = GetVersion $serverApiUri
+        $sqVersion = GetVersionString $serverApiUri
     }
 
     Write-Verbose "Returning SonarQube server version:$sqVersion"
     return $sqVersion
-}
-
-#
-# Helper that returns the major version number of the SonarQube server
-#
-function GetSQMajorVersionNumber()
-{
-    param([String]$sqServerVersion)
-
-    [int]$majorVersion = 0;
-
-    #split on dot-hyphen to handle versions like 5.2-SNAPSHOT
-    $tokens = $sqServerVersion.Split(".-")
-
-    if ($tokens -and $tokens.Count -ge 1)
-    {
-        $result = [int]::TryParse($tokens[0], [ref]$majorVersion)
-    }
-
-    return $majorVersion
-}
-
-#
-# Helper that returns the minor version number of the SonarQube server
-#
-function GetSQMinorVersionNumber()
-{
-    param([String]$sqServerVersion)
-
-    [int]$minorVersion = 0;
-
-    #split on dot-hyphen to handle versions like 5.2-SNAPSHOT
-    $tokens = $sqServerVersion.Split(".-")
-
-    if ($tokens -and $tokens.Count -ge 2)
-    {
-        $result = [int]::TryParse($tokens[1], [ref]$minorVersion)
-    }
-
-    return $minorVersion
 }
