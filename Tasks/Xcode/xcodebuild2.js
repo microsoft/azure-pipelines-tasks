@@ -8,7 +8,7 @@ var tl = require('vso-task-lib'),
 	fs = require('fs'),
 	glob = require('glob'),
 	Q = require ('q'),
-	xcutils = require('xcode-task-utils');
+	xcutils = require('./xcode-task-utils.js');
 
 // Commands
 var xcv = null, 

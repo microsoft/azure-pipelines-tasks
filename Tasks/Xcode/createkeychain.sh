@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+#  Copyright (c) Microsoft. All rights reserved.  
+#  Licensed under the MIT license. See LICENSE file in the project root for full license information.
+#
 if [ -f "$1" ]
 then
 	/usr/bin/security delete-keychain "$1"
@@ -42,3 +46,5 @@ then
 fi
 
 /usr/bin/security list-keychain -d user
+
+#
