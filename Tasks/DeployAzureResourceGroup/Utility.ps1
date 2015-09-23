@@ -198,7 +198,12 @@ function Invoke-OperationOnProvider
          }
 
          "Restart" {
-             $error = Restart-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             $error = Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+
+             if($error.Count -eq 0)
+             {
+                $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             }
          }
 
          default {
