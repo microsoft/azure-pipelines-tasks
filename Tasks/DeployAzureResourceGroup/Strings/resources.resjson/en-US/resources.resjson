@@ -6,7 +6,6 @@
   "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Provision, Deploy and Perform Actions on a Azure Resource Group",
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
-  "loc.group.displayName.advancedDeploymentOptions": "Advanced Deployment Options",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure subscription to target for the deployment.",
   "loc.input.label.action": "Action",
@@ -20,11 +19,5 @@
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.help.csmParametersFile": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template.",
   "loc.input.label.overrideParameters": "Override Template Parameters",
-  "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
-  "loc.input.label.dscDeployment": "Refresh SAS token",
-  "loc.input.help.dscDeployment": "Refresh SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly.",
-  "loc.input.label.moduleUrlParameterName": "Azure Blob Parameter",
-  "loc.input.help.moduleUrlParameterName": "Names of the parameter corresponding to the Azure blobs separated by ; in the format <br><b><i>url1;url2;url3</b></i>",
-  "loc.input.label.sasTokenParameterName": "SAS Token Parameter",
-  "loc.input.help.sasTokenParameterName": "Names of the SAS token parameters separated by ; in the format <br><b><i>token1;token2;token3</b></i>"
+  "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>"
 }
