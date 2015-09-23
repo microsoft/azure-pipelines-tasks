@@ -9,6 +9,9 @@ param(
     [string]$dscDeployment,
     [string]$moduleUrlParameterNames,
     [string]$sasTokenParameterNames,
+    [string]$vmCreds,
+    [string]$vmUserName,
+    [string]$vmPassword,
     [string]$skipCACheck
 )
 

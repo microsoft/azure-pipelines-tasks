@@ -21,8 +21,6 @@
   "loc.input.help.csmParametersFile": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template.",
   "loc.input.label.overrideParameters": "Override Template Parameters",
   "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
-  "loc.input.label.skipCACheck": "Skip CA Check",
-  "loc.input.help.skipCACheck": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
   "loc.input.label.dscDeployment": "Refresh SAS token",
   "loc.input.help.dscDeployment": "Refresh SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly.",
   "loc.input.label.moduleUrlParameterName": "Azure Blob Parameter",

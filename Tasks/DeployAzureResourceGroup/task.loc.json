@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [
     "azureps"
@@ -107,15 +107,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "visibleRule": "action = Create Or Update Resource Group"
-    },
-    {
-      "name": "skipCACheck",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.skipCACheck",
-      "required": false,
-      "defaultValue": "true",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
     },
     {
       "name": "dscDeployment",
