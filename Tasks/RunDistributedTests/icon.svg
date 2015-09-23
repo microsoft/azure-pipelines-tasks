@@ -32,8 +32,8 @@
      id="namedview3342"
      showgrid="true"
      inkscape:zoom="0.70710678"
-     inkscape:cx="471.97185"
-     inkscape:cy="659.37624"
+     inkscape:cx="157.80381"
+     inkscape:cy="724.86262"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -41,7 +41,9 @@
      inkscape:snap-bbox="true"
      inkscape:snap-global="true"
      inkscape:bbox-paths="false"
-     inkscape:bbox-nodes="true">
+     inkscape:bbox-nodes="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-nodes="true">
     <inkscape:grid
        type="xygrid"
        id="grid4170"
@@ -60,7 +62,7 @@
         <dc:identifier>
                     visual-studio-online
                 </dc:identifier>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:format>
                     image/svg+xml
                 </dc:format>
@@ -75,40 +77,37 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <rect
-     style="fill:#69207a;fill-opacity:1;stroke:none"
-     id="rect4135"
-     width="1024"
-     height="1024"
-     x="0"
-     y="0"
-     rx="0" />
   <circle
-     style="fill:#ffffff;fill-opacity:1"
+     style="fill:#69207a;fill-opacity:1"
      id="path5854"
-     cx="640"
+     cx="672"
      cy="512"
-     r="256" />
-  <circle
-     r="112"
-     cy="784"
-     cx="240"
+     r="352" />
+  <ellipse
+     cy="880"
+     cx="144"
      id="circle5856"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#69207a;fill-opacity:1"
+     rx="144"
+     ry="143.99997" />
   <circle
-     style="fill:#ffffff;fill-opacity:1"
+     style="fill:#69207a;fill-opacity:1"
      id="circle5858"
-     cx="240"
-     cy="240"
-     r="112" />
+     cx="144"
+     cy="144"
+     r="144" />
   <path
-     style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:64;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
-     d="M 241.30469,197.08203 206.69531,250.91797 612.82227,512 206.69531,773.08203 241.30469,826.91797 731.17578,512 241.30469,197.08203 Z"
+     style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#69207a;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:64;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+     d="M 151.07291,92.109363 104.92707,163.89061 646.42967,511.99998 104.92707,860.10934 151.07291,931.8906 804.23435,511.99998 151.07291,92.109363 Z"
      id="path5875"
      inkscape:connector-curvature="0" />
   <path
+     inkscape:export-ydpi="2.8099999"
+     inkscape:export-xdpi="2.8099999"
+     sodipodi:nodetypes="cccccccccccccccccccccc"
+     id="path8"
+     overflow="visible"
+     d="m 576,288 0,32 32,0 0,128 -128,224 64,64 256,0 64,-64 -128,-224 0,-128 32,0 0,-32 z m 64,32 64,0 0,128 32,64 -64,0 -96,192 -32,-64 96,-192 z"
      inkscape:connector-curvature="0"
-     d="m 792.40136,622.5 q 12.2799,20.39576 4.71468,34.94797 Q 789.5508,672 766.30685,672 l -252.61388,0 Q 490.44902,672 482.884,657.44797 475.31876,642.89576 487.59846,622.5 l 110.29914,-181.72915 0,-91.43746 -14.03393,0 q -5.70133,0 -9.86774,-4.35424 -4.1664,-4.35424 -4.1664,-10.31254 0,-5.9583 4.1664,-10.31237 Q 578.16234,320 583.86367,320 l 112.27269,0 q 5.70134,0 9.86775,4.35424 4.16639,4.35407 4.16639,10.31237 0,5.9583 -4.16639,10.31254 -4.16641,4.35424 -9.86775,4.35424 l -14.03413,0 0,91.43746 z m -170.8212,-166.14576 -59.64481,98.31237 156.12934,0 -59.64503,-98.31237 -4.3855,-7.10424 0,-99.91661 -28.06828,0 0,99.91661 z"
-     id="path4116"
-     style="fill:#69207a;fill-opacity:1" />
+     style="color:#000000;overflow:visible;fill:#ffffff;fill-opacity:1;enable-background:accumulate" />
 </svg>

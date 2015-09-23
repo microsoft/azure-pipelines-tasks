@@ -32,7 +32,7 @@
      id="namedview3342"
      showgrid="true"
      inkscape:zoom="0.5"
-     inkscape:cx="808.52703"
+     inkscape:cx="926.52703"
      inkscape:cy="453.30121"
      inkscape:window-x="1514"
      inkscape:window-y="231"
@@ -60,7 +60,7 @@
         <dc:identifier>
                     visual-studio-online
                 </dc:identifier>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:format>
                     image/svg+xml
                 </dc:format>
@@ -75,17 +75,21 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <rect
-     style="fill:#69207a;fill-opacity:1;stroke:none"
-     id="rect4135"
-     width="1024"
-     height="1024"
-     x="0"
-     y="0"
-     rx="0" />
   <path
-     d="M 705.76388,128 896,204.62935 896,819.349 703.98917,896 398.54682,592.98153 204.80413,742.76172 128,704.44781 128,319.55219 204.80413,282.98693 398.54682,434.49559 705.76388,128 Z m -500.95975,269.93043 0,233.36516 L 320.01071,512.87498 204.80413,397.93043 Z m 300.22515,114.94455 198.98125,156.75648 0,-313.51411 -198.98125,156.75763 z"
-     id="path3340"
-     style="fill:#ffffff;fill-opacity:1"
+     inkscape:connector-curvature="0"
+     id="path4137"
+     d="M 800,256 800,768 480,512 Z"
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd" />
+  <path
+     style="fill:#ffffff;fill-rule:evenodd;fill-opacity:1"
+     d="M 64,288 64,736 320,512 Z"
+     id="path4135"
      inkscape:connector-curvature="0" />
+  <path
+     d="M 770.35184,0 1024,102.17247 1024,921.79866 767.98556,1024 360.72911,619.97537 102.40551,819.6823 0,768.59708 0,255.40292 102.40551,206.64924 360.72911,408.66079 770.35184,0 Z m -667.94633,359.90724 0,311.15355 L 256.01427,513.16663 102.40551,359.90724 Z m 400.30021,153.25939 265.30832,209.00864 0,-418.0188 -265.30832,209.01016 z"
+     id="path3340"
+     style="fill:#69207a;fill-opacity:1"
+     inkscape:connector-curvature="0"
+     inkscape:export-xdpi="2.8099999"
+     inkscape:export-ydpi="2.8099999" />
 </svg>

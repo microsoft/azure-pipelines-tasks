@@ -13,7 +13,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="icon.svg"
-   inkscape:export-filename="C:\Users\Jamie\Sources\vso-agent-tasks\Tasks\MSBuild\icon.png"
+   inkscape:export-filename="C:\Users\Jamie\Sources\vso-agent-tasks\Tasks\PublishTestResults\icon.png"
    inkscape:export-xdpi="2.8099999"
    inkscape:export-ydpi="2.8099999">
   <defs
@@ -32,8 +32,8 @@
      id="namedview3342"
      showgrid="true"
      inkscape:zoom="0.70710678"
-     inkscape:cx="1.7983989"
-     inkscape:cy="579.29002"
+     inkscape:cx="720.40405"
+     inkscape:cy="577.29309"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -42,7 +42,9 @@
      inkscape:snap-global="true"
      inkscape:bbox-paths="false"
      inkscape:bbox-nodes="true"
-     inkscape:object-nodes="true">
+     showguides="false"
+     inkscape:object-nodes="true"
+     inkscape:snap-nodes="true">
     <inkscape:grid
        type="xygrid"
        id="grid4170"
@@ -77,55 +79,30 @@
     </rdf:RDF>
   </metadata>
   <path
-     style="fill:#69207a;fill-opacity:1"
-     d="m 0,448 0,576 1024,0 0,-576 -128,0 0,288 -768,0 0,-288 z"
-     id="rect3371"
+     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:34.62200165;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 288,64 288,344.88867 64,768 128,849.67773 544,846.97461 430.89844,480 608,480 512,64 Z"
+     id="rect4148"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="ccccccccc" />
-  <rect
-     ry="0"
-     y="512"
-     x="193"
-     height="160.00002"
-     width="160"
-     id="rect3377"
-     style="fill:#69207a;fill-opacity:1" />
   <path
+     style="color:#000000;overflow:visible;fill:#69207a;fill-opacity:1;enable-background:accumulate"
+     d="m 192,0 0,64 64,0 0,224 L 0,773.81836 83.199219,896 736,896 736,736 560,736 688,608 725.08203,570.91797 576,288 l 0,-224 64,0 0,-64 z m 128,64 192,0 0,224 70.40039,160 L 384,448 192,832 128,832 83.199219,773.81836 320,288 Z"
+     id="path8"
      inkscape:connector-curvature="0"
-     style="fill:#69207a;fill-opacity:1"
-     d="M 480,0 480,256 288,96 288,192 512,384 736,192 736,96 544,256 544,0 Z"
-     id="rect3391"
-     sodipodi:nodetypes="cccccccccc" />
+     sodipodi:nodetypes="cccccccccccccccccccccccccc"
+     inkscape:export-xdpi="2.8099999"
+     inkscape:export-ydpi="2.8099999" />
   <rect
-     style="fill:#69207a;fill-opacity:1"
-     id="rect4145"
-     width="160"
-     height="160.00002"
-     x="672"
-     y="512"
-     ry="0" />
-  <rect
-     ry="0"
-     y="512"
-     x="433"
-     height="160.00002"
-     width="160"
-     id="rect4147"
-     style="fill:#69207a;fill-opacity:1" />
-  <rect
-     style="fill:#ffffff;fill-opacity:1"
-     id="rect4156"
-     width="160"
-     height="160"
-     x="320"
-     y="800"
-     ry="0" />
-  <rect
-     ry="0"
-     y="800"
-     x="544"
-     height="160"
-     width="160"
-     id="rect4168"
-     style="fill:#ffffff;fill-opacity:1" />
+     x="640"
+     y="960"
+     width="384"
+     height="64"
+     id="rect8"
+     style="fill:#424242;fill-opacity:1" />
+  <path
+     d="m 768,896 128,0 0,-192 128,0 -192,-192 -192,192 128,0 z"
+     id="polygon6"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccccccc"
+     style="fill:#424242;fill-opacity:1" />
 </svg>
