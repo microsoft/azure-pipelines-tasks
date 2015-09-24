@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 26
     },
     "demands": [
         "azureps"
@@ -26,7 +26,7 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription to target for the deployment."
+            "helpMarkDown": "Select the Azure subscription for the deployment. Supported Azure service connections are of the authentication type of Credentials or Service Principals."
         },
         {
             "name": "action", 
@@ -94,7 +94,7 @@
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
+            "helpMarkDown": "Specify the template parameters to be overridden in the format like, <br>–storageName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)",
             "visibleRule": "action = Create Or Update Resource Group"
         }
     ],
