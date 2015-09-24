@@ -248,6 +248,23 @@ The general format for a logging command is:
                     ##vso[build.uploadsummary]c:\testsummary.md
                 </p>
             </td>
+        </tr><tr>
+            <td>
+                <p align="left">
+                    ##vso[build.updatebuildnumber]build number
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Update build number for current build.<br>
+                    Example: <br>
+                    ##vso[build.updatebuildnumber]my-new-build-number
+                </p>
+            </td>
         </tr>
     </tbody>
 </table>
