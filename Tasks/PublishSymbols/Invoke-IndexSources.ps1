@@ -486,7 +486,22 @@ try {
             $versionControlServer = $tfsTeamProjectCollection.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
             $workspace = $versionControlServer.TryGetWorkspace($sourcesRootPath)
             if (!$workspace) {
-                # TODO: SHOULDN'T THIS BE AN ERROR? THIS SHOULD NEVER HAPPEN.
+                Write-Verbose "Unable to determine workspace from source folder: $sourcesRootPath"
+                $workspaceInfos = [Microsoft.TeamFoundation.VersionControl.Client.Workstation]::Current.GetLocalWorkspaceInfoRecursively($sourcesRootPath);
+                if ($workspaceInfos) {
+                    foreach ($workspaceInfo in $workspaceInfos) {
+                        Write-Verbose "Attempting to determine workspace from workspace info. Server URI: $($workspaceInfo.ServerUri) ; Name: $($workspaceInfo.Name) ; Owner Name: $($workspaceInfo.OwnerName)"
+                        try {
+                            $workspace = $versionControlServer.GetWorkspace($workspaceInfo)
+                            break
+                        } catch {
+                            Write-Verbose "Determination failed. Exception: $_"
+                        }
+                    }
+                }
+            }
+
+            if (!$workspace) {
                 Write-Warning (Get-LocalizedString -Key 'Unable to determine workspace from source folder ''{0}''.' -ArgumentList $sourcesRootPath)
                 return
             }
