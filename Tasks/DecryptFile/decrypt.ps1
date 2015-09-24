@@ -25,33 +25,33 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 #Verify curl is installed correctly
 $openssl = Get-Command openssl.exe
 if(!$openssl) {
-    throw 'Unable to find OpenSSL (openssl.exe). Verify it is installed correctly on the build agent from a mirror at: http://openssl.org/community/binaries.html'   
+    throw (Get-LocalizedString -Key "Unable to find OpenSSL (openssl.exe). Verify it is installed correctly on the build agent from a mirror at: http://openssl.org/community/binaries.html" )
 }
 
 $openssl = $openssl.Path
-Write-Verbose "Found OpenSSL at $openssl"
+Write-Verbose (Get-LocalizedString -Key "Found OpenSSL at {0}" -ArgumentList $openssl)
 
 if (!$cipher)
 {
-    throw "Cipher parameter not set on script"
+   throw (Get-LocalizedString -Key "Cipher parameter not set on script")
 }
 
 if (!$inFile)
 {
-    throw "Encrypted File paramter not set"
+    throw (Get-LocalizedString -Key throw "Encrypted File parameter not set")
 }
 
 if (!$passphrase)
 {
-    throw "Passphrase paramter not set"
+    throw (Get-LocalizedString -Key throw "Passphrase parameter not set")
 }
 
 if (!$outFile)
 {
-    $outFile = $outFile + ".out"
+    $outFile = $inFile + ".out"
 }
 
-Write-Verbose "Running openssl..."
-Invoke-Tool -Path $openssl -WorkingFolder $cwd -Arguments  "$cipher -d -in $inFile -pass pass:$passphrase -out $outFile"
+Write-Verbose (Get-LocalizedString -Key "Running openssl...")
+Invoke-Tool -Path $openssl -WorkingFolder $cwd -Arguments  "$cipher -d -in ""$inFile"" -pass ""pass:$passphrase"" -out ""$outFile"""
 
-Write-Verbose "Leaving script DecryptFile.ps1"
+Write-Verbose (Get-LocalizedString -Key "Leaving script DecryptFile.ps1")
