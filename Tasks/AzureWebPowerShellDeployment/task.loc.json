@@ -91,7 +91,7 @@
   "sourceDefinitions": [
     {
       "target": "WebSiteName",
-      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/webspaces/$(WebSiteLocation)Webspace/sites",
+      "endpoint": "https://management.core.windows.net/$(authKey.SubscriptionId)/services/webspaces/$(WebSiteLocation)Webspace/sites",
       "selector": "xpath://Site/Name",
       "authKey": "$(ConnectedServiceName)"
     }

@@ -104,7 +104,7 @@
   "sourceDefinitions": [
     {
       "target": "resourceGroupName",
-      "endpoint": "https://management.core.windows.net/subscriptions/$(ConnectedServiceName)/resourcegroups?api-version=2015-01-01",
+      "endpoint": "https://management.core.windows.net/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
       "selector": "jsonpath:$.value[*].name",
       "authKey": "$(ConnectedServiceName)"
     }
