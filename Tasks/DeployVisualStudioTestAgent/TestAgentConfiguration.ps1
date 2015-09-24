@@ -605,14 +605,14 @@ function CanSkipTestAgentConfiguration
         $creds = ReadCredentials -TFSCollectionUrl $TfsCollection -TestAgentVersion $TestAgentVersion
         if ($creds -eq $null)
         {
-         Write-Verbose -Message "No personal access token found in the credential store" -Verbose
-             return $false
+            Write-Verbose -Message "No personal access token found in the credential store" -Verbose
+            return $false
         }
 
         if($creds.Credentials -eq $null)
         {
-         Write-Verbose -Message "No credentials found in stored identity" -Verbose
-             return $false
+            Write-Verbose -Message "No credentials found in stored identity" -Verbose
+            return $false
         }
 
         $storedString = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($creds.Credentials.SecurePassword))
@@ -726,6 +726,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     {
         throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
     }
+    
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
 
