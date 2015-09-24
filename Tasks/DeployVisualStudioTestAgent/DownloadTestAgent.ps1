@@ -7,13 +7,13 @@ function ValidateSourceFile([string] $sourcePath)
 {
    if(! (Test-Path -Path $sourcePath))
    {
-        Write-Host "##vso[task.logissue type=error;code=DT001001;]invalid input - sourcePath"
+        Write-Host "##vso[task.logissue type=error;code=001001;]"
         throw "Test agent source path '{0}' is not accessible to the test machine. Please check if the file exists and that test machine has access to that machine" -f $sourcePath
    }
    
    if((Get-Item $sourcePath) -is [System.IO.DirectoryInfo])
    {
-        Write-Host "##vso[task.logissue type=error;code=DT001001;]invalid input - sourcePath"
+        Write-Host "##vso[task.logissue type=error;code=001001;]"
         throw "Please provide the source path of test agent till the installation file. Given path is {0}" -f $sourcePath
    }
 }
@@ -56,7 +56,7 @@ foreach($sourcePath in $source)
         $robocopyExitCode = $LASTEXITCODE 
         if($robocopyExitCode -eq 0x10)
         {
-            Write-Host "##vso[task.logissue type=error;code=DT001006]robocopy failed with exit code $robocopyExitCode"
+            Write-Host "##vso[task.logissue type=error;code=001006]"
             throw "Robocopy failed to copy fail from $sourceDirectory to $destinationDirectory with a exit code $robocopyExitCode."
         }
     }

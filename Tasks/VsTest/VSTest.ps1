@@ -21,7 +21,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if (!$testAssembly)
 {
-    Write-Host "##vso[task.logissue type=error;code=DT002001;]invalid input - testAssembly"
+    Write-Host "##vso[task.logissue type=error;code=002001;]" 
     throw (Get-LocalizedString -Key "Test assembly parameter not set on script")
 }
 
@@ -35,7 +35,7 @@ if(!$sourcesDirectory)
 if(!$sourcesDirectory)
 {
     # If there is still no sources directory, error out immediately.
-    Write-Host "##vso[task.logissue type=error;code=DT002002;]unable to get source directory"
+    Write-Host "##vso[task.logissue type=error;code=002002;]"
     throw "No source directory found."
 }
 
@@ -80,12 +80,14 @@ if($testAssemblyFiles)
     }
     else
     {
-        Write-Host "##vso[task.logissue type=warning;code=DT002003;]no results to publish"
+        Write-Host "##vso[task.logissue type=warning;code=002003;]"
         Write-Warning "No results found to publish."
     }
 }
 else
 {
+    Write-Host "##vso[task.logissue type=warning;code=002004;]"
     Write-Warning "No test assemblies found matching the pattern: $testAssembly"
 }
+
 Write-Verbose "Leaving script VSTestConsole.ps1"

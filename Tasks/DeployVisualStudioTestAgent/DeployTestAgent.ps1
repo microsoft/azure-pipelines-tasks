@@ -61,7 +61,7 @@ $personalAccessToken = $vssEndpoint.Authorization.Parameters.AccessToken
 
 if ( [string]::IsNullOrEmpty($personalAccessToken))
 {
-    Write-Host "##vso[task.logissue type=error;code=DT001002;]PAT failure"
+    Write-Host "##vso[task.logissue type=error;code=001002;]"
     throw (Get-LocalizedString -Key "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator")
 }
 
