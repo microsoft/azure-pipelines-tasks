@@ -6,7 +6,6 @@
   "helpMarkDown": "[More Information](http://aka.ms/azurefilecopyreadme)",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -14,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [
     "azureps"
