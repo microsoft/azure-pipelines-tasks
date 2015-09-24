@@ -43,7 +43,7 @@
             "label": "Machine Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the target Machine Group for deploying the application. For Azure Resource Groups, type the name of the Resource Group."
+            "helpMarkDown": "Select the target Machine Group, where the web application deployment task will be run. For Azure Resource Groups, type-in the name of the Resource Group."
         },
         {
             "name": "ResourceFilteringMethod",
@@ -60,10 +60,10 @@
         {
             "name": "MachineFilter",
             "type": "string",
-            "label": "Filter Criteria",
+            "label": "Deploy to Machines",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are listed then it will deploy to all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name for the machine name like, ffweb, ffdb. The default is to deploy to all machines in the machine/resource group."
+            "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
         },
         {
             "name": "WebDeployPackage",
@@ -71,15 +71,15 @@
             "label": "Web Deploy Package",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "Location of the Web Deploy (MSDeploy) zip file on the target machines or a UNC path like, \\\\\\\\BudgetIT\\WebDeploy\\WebDeployPackage.zip. The UNC path should be accessible to the machine's administrator account."
+            "helpMarkDown": "Location of the Web Deploy (MSDeploy) zip file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\WebDeploy\\WebDeployPackage.zip. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported like, $env:windir, $env:systemroot, like, $env:windir\\FabrikamFibre\\Web."
         },
         {
             "name": "WebDeployParamFile",
             "type": "string",
-            "label": "Web Deploy Parameters File",
+            "label": "Web Deploy Parameter File",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Location of the Parameters file on the target machines or a UNC path. Parameters file is used to override Web application configuration settings like IIS Web application name or database connection strings."
+            "helpMarkDown": "Location of the Parameter file on the target machines or on a UNC path. Parameter file is used to override Web application configuration settings like, IIS Web application name or database connection string."
         },
         {
             "name": "OverRideParams",
@@ -87,7 +87,7 @@
             "label": "Override Parameters",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameters file. For example,  name=\"IIS Web Application Name\", value=\"Fabrikam\"." 
+            "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. For example,  name=\"IIS Web Application Name\", value=\"Fabrikam\"." 
         },
         {
             "name": "CreateWebSite",
@@ -96,7 +96,7 @@
             "required": false,
             "groupName": "website",
             "defaultValue": "false",
-            "helpMarkDown": "Select the option to create the website or update an existing website."
+            "helpMarkDown": "Select the option to create a website or to update an existing website."
         },
         {
             "name": "WebSiteName",
@@ -106,7 +106,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "CreateWebSite = true",
-            "helpMarkDown": "Name of the website to create in the IIS server. If the website already exists then it will be updated with the settings specified here. The name of the website should be same as that specified in the MSDeploy zip file. If a Parameters file and override Parameters settings is also specified then it should be same as that in the override Parameters settings."
+            "helpMarkDown": "Name of the IIS website that will be created if it does not exist, or it will be updated if it is already present on the IIS server. The name of the website should be same as that specified in the web deploy zip package file. If a Parameter file and override Parameters setting is also specified, then the name of the website should be same as that in the override Parameters setting."
         },
         {
             "name": "WebSitePhysicalPath",
@@ -170,7 +170,7 @@
             "groupName": "website",
             "defaultValue": "false",
             "visibleRule": "AddBinding = true",
-            "helpMarkDown": "Select to allow duplicate binding across multiple websites. If the binding is assigned to two sites, then only one will start."
+            "helpMarkDown": "Select the option to add the bindings specified here, even if there is another website with the same bindings. If there are binding conflicts, then only one of the website will start."
         },
         {
             "name": "Protocol",
@@ -224,7 +224,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "ServerNameIndication = false",
-            "helpMarkDown": "To assign one or more host names (aka domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
+            "helpMarkDown": "To assign one or more host names (or domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
         },
         {
             "name": "HostNameWithHttp",
@@ -234,7 +234,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "Protocol = http",
-            "helpMarkDown": "To assign one or more host names (aka domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
+            "helpMarkDown": "To assign one or more host names (or domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
         },
         {
             "name": "HostNameWithSNI",
@@ -244,7 +244,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "ServerNameIndication = true",
-            "helpMarkDown": "To assign one or more host names (aka domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
+            "helpMarkDown": "To assign one or more host names (or domain names) to a computer that uses a single IP address, type a host name here. If a host name is specified then the clients must use the host name instead of the IP address to access the website."
         },
         {
             "name": "SSLCertThumbPrint",
@@ -254,7 +254,7 @@
             "groupName": "website",
             "defaultValue": "",
             "visibleRule": "Protocol = https",
-            "helpMarkDown": "Thumb-print of the Secure Socket Layer certificate that the website is going to use. The certificate should be already installed and present under Local System Personal store on the machine."
+            "helpMarkDown": "Thumb-print of the Secure Socket Layer certificate that the website is going to use. The certificate should be already installed on the machine and present under the Local Computer, Personal store."
         },
         {
             "name": "CreateAppPool",
@@ -263,7 +263,7 @@
             "required": false,
             "groupName": "applicationPool",
             "defaultValue": "false",
-            "helpMarkDown": "Select the option to create application pool or update an existing application pool."
+            "helpMarkDown": "Select the option to create an application pool or to update an existing application pool."
         },
         {
             "name": "AppPoolName",
@@ -342,11 +342,11 @@
         {
             "name": "AppCmdCommands",
             "type": "multiLine",
-            "label": "Additional Appcmd.exe Commands",
+            "label": "Additional AppCmd.exe Commands",
             "required": false,
             "groupName": "advanced",
             "defaultValue": "",
-            "helpMarkDown": "Additional appcmd.exe commands to set website or application pool properties. For more than one command use line separator, e.g., <br/> list apppools <br/> list sites"
+            "helpMarkDown": "Additional AppCmd.exe commands to set website or application pool properties. For more than one command use line separator, e.g., <br/> list apppools <br/> list sites"
         },
         {
             "name": "DeployInParallel",
