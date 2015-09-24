@@ -724,7 +724,6 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     $vsRoot = Locate-TestVersionAndVsRoot($Version)
     if ([string]::IsNullOrWhiteSpace($vsRoot))
     {
-        Write-Host "##vso[task.logissue type=error;code=001003;]"
         throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
     }
     
