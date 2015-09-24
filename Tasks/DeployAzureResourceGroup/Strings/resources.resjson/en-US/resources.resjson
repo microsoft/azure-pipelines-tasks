@@ -4,7 +4,7 @@
 {
   "loc.friendlyName": "Azure Resource Group Deployment",
   "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
-  "loc.description": "Provision, Deploy and Perform Actions on a Azure Resource Group",
+  "loc.description": "Deploy, start, stop, delete Azure Resource Groups",
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure subscription to target for the deployment.",
@@ -13,7 +13,7 @@
   "loc.input.label.resourceGroupName": "Resource Group",
   "loc.input.help.resourceGroupName": "Provide the name of the resource group.",
   "loc.input.label.location": "Location",
-  "loc.input.help.location": "Location of the deployment",
+  "loc.input.help.location": "Location for deploying the resource group. If an existing resource group is updated, then this will be ignored.",
   "loc.input.label.csmFile": "Template",
   "loc.input.help.csmFile": "Specify the path to the Azure Resource Manager template. For more information on templates see - http://aka.ms/azuretemplates.",
   "loc.input.label.csmParametersFile": "Template Parameters",
