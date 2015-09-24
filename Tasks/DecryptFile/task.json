@@ -2,7 +2,7 @@
     "id": "7C6A6b71-4355-4AFC-A274-480EAB5678E9",
     "name": "DecryptFile",
     "friendlyName": "Decrypt File",
-    "description": "A thin utility task for file decryption.",
+    "description": "A thin utility task for file decryption using OpenSSL.",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613735)",
     "category": "Utility",
     "visibility": [
@@ -30,7 +30,7 @@
             "label": "Cypher", 
             "defaultValue": "des3", 
             "required": true,
-            "helpMarkDown": "Encryption cyper to use. See [cypher suite names](http://openssl.org/docs/manmaster/apps/ciphers.html) for a complete list of possible values."
+            "helpMarkDown": "Encryption cypher to use. See [cypher suite names](http://openssl.org/docs/manmaster/apps/ciphers.html) for a complete list of possible values."
         },
         { 
             "name": "inFile", 
@@ -51,14 +51,15 @@
             "type": "filePath", 
             "label": "Decrypted File Path", 
             "required": false,
-            "helpMarkDown": "Optional filename for decytped file. Defaults to the Encrypted File with a \".out\" extension"
+            "helpMarkDown": "Optional filename for decrypted file. Defaults to the Encrypted File with a \".out\" extension"
         },
         { 
             "name": "cwd", 
             "type": "filePath", 
-            "label": "Working folder", 
+            "label": "Working Directory", 
             "defaultValue": "", 
-            "required": false,            
+            "required": false,          
+            "helpMarkDown": "Working directory for decryption. Defaults to the root of the repository.",
             "groupName":"advanced"
         }
     ],

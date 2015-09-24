@@ -29,28 +29,23 @@ processInputs() 													// Process inputs to task and create xcv, xcb, impo
 	})			
 	.then(execBuild)												// Run main xcodebuild / xctool task
 	.then(packageApps)												// Package apps if configured
-	.then(function(code) {											// When done, delete the temporary keychain if it exists
-		return deleteKeychain ? deleteKeychain.exec() : 0;
-	})
-	.then(function(code) {											// Next delete the provisioning profile if says this should happen		
-		return deleteProvProfile ? deleteProvProfile.exec() : 0;			
-	})
 	.then(function(code) {											// On success, exit
-		process.env['DEVELOPER_DIR'] = origXcodeDeveloperDir;
 		tl.exit(code);
 	})
-	.fail(function(err) {
+	.fin(function(code) {
 		process.env['DEVELOPER_DIR'] = origXcodeDeveloperDir;
+		var promise = deleteKeychain ? deleteKeychain.exec() : Q(0);
+		if(deleteProvProfile) {
+			promise = promise.then(function(code) {
+				return deleteProvProfile.exec();
+			});
+		}
+		return promise;
+	})
+	.fail(function(err) {
 		console.error(err.message);
 		tl.debug('taskRunner fail');
-		if(deleteKeychain) {										// Delete keychain if created - catch all to avoid problems
-			deleteKeychain.exec()
-				.then(function(code) {
-					tl.exit(1);
-				});
-		} else {
-			tl.exit(1);
-		}
+		tl.exit(1);
 	});
 
 function processInputs() {  
@@ -143,7 +138,7 @@ function iosIdentity(code) {
 		.then(function(result) {
 			if(result.identity) {
 				// TODO: Add CODE_SIGN_IDENTITY[iphoneos*]? 
-				xcb.arg('CODE_SIGN_IDENTITY=' + result.identity);
+				xcb.arg('CODE_SIGN_IDENTITY="' + result.identity + '"');
 			} else {
 				tl.debug('No explicit signing identity specified in task.')
 			}
@@ -158,7 +153,7 @@ function iosProfile(code) {
 	var input = {
 		cwd: cwd,
 		provProfileUuid:tl.getInput('provProfileUuid', false),
-		provProfilePath:tl.getPathInput('provProfilePath', false),
+		provProfilePath:tl.getPathInput('provProfile', false),
 		removeProfile:(tl.getInput('removeProfile', false)=="true")
 	}
 	

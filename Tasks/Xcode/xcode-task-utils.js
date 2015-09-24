@@ -10,6 +10,7 @@ var tl = require('vso-task-lib'),
 	exec = Q.nfbind(require('child_process').exec);
 
 function determineIdentity(input) {
+	tl.debug('Input to determineIdentity: ' + JSON.stringify(input));
 	// Unlock keychain?
 	var promise;
 	if(input.unlockDefaultKeychain) {
@@ -32,8 +33,8 @@ function determineIdentity(input) {
 		createKeychain.arg([path.resolve(__dirname,'createkeychain.sh'), keychain, keychainPwd, p12, input.p12pwd]);	
 
 		// Configure keychain delete command
-		var deleteKeychain = new tl.ToolRunner('/usr/bin/security', true);
-		deleteKeychain.arg(['delete-keychain', keychain]);	
+		var deleteCommand = new tl.ToolRunner('/usr/bin/security', true);
+		deleteCommand.arg(['delete-keychain', keychain]);	
 
 		promise = promise.then(function(code) {
 			return createKeychain.exec();		
@@ -56,17 +57,19 @@ function determineIdentity(input) {
 					identity: ident,
 					foundIdentity: foundIdent,
 					keychain: keychain,
-					deleteCommand: deleteKeychain
+					deleteCommand: deleteCommand
 				});
 			});	
 	} else {
 		tl.debug('p12 not specified in task.')
-		return Q({ identity: input.iosSigningIdentitiy });
-	}		
+		return promise.then(function() {
+			return { identity: input.iosSigningIdentitiy };
+		});
+	}	
 }
 
 function determineProfile(input) {
-	
+	tl.debug('Input to determineProfile: ' + JSON.stringify(input));
 	if(input.provProfilePath) {
 		var profilePath = path.resolve(input.cwd, input.provProfilePath);
 		if(fs.existsSync(profilePath) && fs.lstatSync(profilePath).isFile()) { 
@@ -76,11 +79,11 @@ function determineProfile(input) {
 				.then(function(foundUuid) {
 					foundUuid = removeExecOutputNoise(foundUuid);
 					tl.debug(profilePath + ' has UUID of ' + foundUuid);
-					var deleteProvProfile;
 					// Create delete profile call if flag specified
+					var deleteCommand;
 					if(input.removeProfile) {
-						deleteProvProfile = new tl.ToolRunner(tl.which('rm'), true);
-						deleteProvProfile.arg(['-f', process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + foundUuid + '.mobileprovision']);
+						deleteCommand = new tl.ToolRunner(tl.which('rm'), true);
+						deleteCommand.arg(['-f', process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + foundUuid + '.mobileprovision']);
 					}
 					
 					// return exec of copy command
@@ -100,19 +103,18 @@ function determineProfile(input) {
 							return {
 								uuid: uuid,
 								foundUuid: foundUuid,
-								deleteCommand: deleteProvProfile
+								deleteCommand: deleteCommand
 							}
 						});
 				});
 		} 	
-	} else {
-		return Q({uuid: input.provProfileUuid});	
-	}
+	} 
+	return Q({uuid: input.provProfileUuid});	
 }
 	
 function removeExecOutputNoise(input) {
 	var output = input + "";
-	output = output.trim().replace(/[,\n\r\f\v]/gm,'');	
+	output = output.trim().replace(/[",\n\r\f\v]/gm,'');	
 	return output;
 }
 	

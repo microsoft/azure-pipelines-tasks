@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "demands" : [
         "xcode"
@@ -95,7 +95,7 @@
             "type": "filePath", 
             "label": "P12 Certificate File", 
             "required":false,
-            "helpMarkDown": "Optional relative path to a PKCS12 formated p12 certificate file containing a signing certificate to be used for this build. **Omit Signing Idenity if specified.**",
+            "helpMarkDown": "Optional relative path to a PKCS12 formatted p12 certificate file containing a signing certificate to be used for this build. **Omit Signing Idenity if specified.**",
             "groupName":"sign"
         },
         { 
