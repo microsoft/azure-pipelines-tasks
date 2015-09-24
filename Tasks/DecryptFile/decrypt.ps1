@@ -23,16 +23,13 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
 #Verify curl is installed correctly
-try
-{
-    $openssl = Get-Command openssl.exe
-    $openssl = $openssl.Path
-    Write-Verbose "Found OpenSSL at $openssl"
+$openssl = Get-Command openssl.exe
+if(!$openssl) {
+    throw 'Unable to find OpenSSL (openssl.exe). Verify it is installed correctly on the build agent from a mirror at: http://openssl.org/community/binaries.html'   
 }
-catch
-{
-    throw 'Unable to find OpenSSL (openssl.exe). Verify it is installed correctly on the build agent from a mirror at: http://openssl.org/community/binaries.html'
-}
+
+$openssl = $openssl.Path
+Write-Verbose "Found OpenSSL at $openssl"
 
 if (!$cipher)
 {
