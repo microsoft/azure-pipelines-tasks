@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 24
+        "Patch": 25
     },
     "demands": [
         "azureps"
@@ -94,7 +94,7 @@
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to be overridden in the format like, –storageAccountName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)",
+            "helpMarkDown": "Specify the template parameters to be overridden in the format like, <br>–storageName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)",
             "visibleRule": "action = Create Or Update Resource Group"
         }
     ],

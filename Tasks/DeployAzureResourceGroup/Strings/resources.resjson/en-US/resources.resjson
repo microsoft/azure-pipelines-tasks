@@ -19,5 +19,5 @@
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.help.csmParametersFile": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template.",
   "loc.input.label.overrideParameters": "Override Template Parameters",
-  "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format like, –storageAccountName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)"
+  "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format like, <br>–storageName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)"
 }
