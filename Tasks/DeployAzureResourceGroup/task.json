@@ -6,7 +6,6 @@
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
     "visibility": [
-        "Preview",
         "Build",
         "Release"
     ],
@@ -14,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 22
     },
     "demands": [
         "azureps"
     ],
-     "minimumAgentVersion": "1.88.0",
+    "minimumAgentVersion": "1.88.0",
     "inputs": [
         {
             "name": "ConnectedServiceName",
