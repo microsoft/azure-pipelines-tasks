@@ -37,7 +37,6 @@
 
     if (-not $installRoot)
     {
-        Write-Host "##vso[task.logissue type=error;code=001003;]"
         # We still got nothing
         throw "Unable to find TestAgent installation path"
     }
@@ -246,7 +245,6 @@ function Set-TestAgentConfiguration
     {
         if (-not $configAsProcess)
         {
-            Write-Host "##vso[task.logissue type=error;code=001001;]"
             throw "EnableAutoLogon option is not valid for configureAsService."
         }
 
@@ -258,7 +256,6 @@ function Set-TestAgentConfiguration
     {
         if (-not $configAsProcess)
         {
-            Write-Host "##vso[task.logissue type=error;code=001001;]"
             throw "DisableScreenSaver option is not valid for configureAsService."
         }
 
@@ -807,14 +804,12 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
     $ExeName = "TestAgentConfig.exe"
     if (-not (Test-IsAdmin))
     {
-        Write-Host "##vso[task.logissue type=error;code=001005;]"
         throw "You need to be an Administrator to run this tool."
     }
 
     $vsRoot = Locate-TestVersionAndVsRoot($Version)
     if ([string]::IsNullOrWhiteSpace($vsRoot))
     {
-        Write-Host "##vso[task.logissue type=error;code=001003;]"
         throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
     }
 
@@ -849,7 +844,6 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
         return $out
     }
 
-    Write-Host "##vso[task.logissue type=error;code=001003;]"
     throw "Did not find TestAgentConfig.exe at : $exePath. Ensure that TestAgent is installed."
 }
 
