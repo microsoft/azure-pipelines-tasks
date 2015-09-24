@@ -13,7 +13,7 @@ var inFile = tl.getInput('inFile', true);
 tr.arg(['-d', '-in', inFile]);
 
 tr.arg('-out');
-var outFile = tl.getPathInput('outfile', false);
+var outFile = tl.getPathInput('outFile', false);
 if(fs.existsSync(outFile) && fs.lstatSync(outFile).isDirectory()) {
 	tr.arg(inFile + '.out');
 } else {
