@@ -97,13 +97,13 @@ function Invoke-OperationHelper
      param([string]$machineGroupName,
            [string]$operationName)
 
-    Write-Verbose "Entered perform action $operationName on machines for machine group $machineGroupName" -Verbose
+    Write-Verbose "Entered perform action $operationName on machines for resource group $machineGroupName" -Verbose
 
     $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $machineGroupName
 
     if(! $machines)
     {
-        Write-Verbose "Machine group $machineGroupName has no machines in it" -Verbose
+        Write-Verbose "Resource group $machineGroupName has no machines in it" -Verbose
         return
     }
 
@@ -147,7 +147,7 @@ function Delete-MachineGroupHelper
 {
     param([string]$machineGroupName)
 
-    Write-Verbose "Entered delete machine group helper for machine group $machineGroupName" -Verbose
+    Write-Verbose "Entered delete resource group helper for resource group $machineGroupName" -Verbose
 
     Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
 }
@@ -156,14 +156,14 @@ function Delete-MachinesHelper
 {
     param([string]$machineGroupName)
 
-    Write-Verbose "Entered delete machines for the machine group $machineGroupName" -Verbose
+    Write-Verbose "Entered delete machines for the resource group $machineGroupName" -Verbose
 
     $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $machineGroupName
 
     # If there are no machines corresponding to given machine names or tags then will not delete any machine.
     if(! $machines -or $machines.Count -eq 0)
     {
-        Write-Verbose "Machine group $machineGroupName has no machines in it" -Verbose
+        Write-Verbose "Resource group $machineGroupName has no machines in it" -Verbose
         return
     }
 

@@ -2,7 +2,7 @@
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
-    "description": "Provision, Deploy and Perform Actions on a Azure Resource Group",
+    "description": "Deploy, start, stop, delete Azure Resource Groups",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 23
     },
     "demands": [
         "azureps"
@@ -57,7 +57,7 @@
             "label": "Location",
             "defaultValue": "East US",
             "required": true,
-            "helpMarkDown": "Location of the deployment",
+            "helpMarkDown": "Location for deploying the resource group. If an existing resource group is updated, then this will be ignored.",
             "options": {
                 "East Asia": "East Asia",
                 "East US": "East US",
