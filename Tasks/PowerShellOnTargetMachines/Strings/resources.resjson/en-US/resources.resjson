@@ -2,7 +2,7 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "PowerShell on Target Machines",
+  "loc.friendlyName": "PowerShell on Machine Group",
   "loc.helpMarkDown": "[More Information](http://aka.ms/powershellontargetmachinesreadme)",
   "loc.description": "Execute PowerShell scripts on remote machine(s)",
   "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
@@ -11,7 +11,7 @@
   "loc.input.help.EnvironmentName": "Name of the Machine Group for deploying application.",
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
   "loc.input.label.MachineNames": "Filter Criteria",
-  "loc.input.help.MachineNames": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
+  "loc.input.help.MachineNames": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group.",
   "loc.input.label.ScriptPath": "PowerShell Script",
   "loc.input.help.ScriptPath": "Location of the PowerShell script on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\Website.ps1",
   "loc.input.label.ScriptArguments": "Script Arguments",
