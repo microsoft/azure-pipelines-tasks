@@ -3,14 +3,14 @@
 // *******************************************************
 {
   "loc.friendlyName": "Visual Studio Test Agent Deployment",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group",
   "loc.instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Test Machine Group",
   "loc.group.displayName.agentConfiguration": "Agent Configuration",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.testMachineGroup": "Test Machine Group",
-  "loc.input.help.testMachineGroup": "Name of the Test Machine Group on which tests need to be run.",
+  "loc.input.label.testMachineGroup": "Test Machine Group / Azure Resource Group",
+  "loc.input.help.testMachineGroup": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
   "loc.input.label.testMachines": "Filter Criteria",
   "loc.input.help.testMachines": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",

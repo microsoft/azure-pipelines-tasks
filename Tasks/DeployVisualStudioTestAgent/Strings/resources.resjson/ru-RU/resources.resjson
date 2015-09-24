@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание агента тестирования Visual Studio",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
+  "loc.helpMarkDown": "[Дополнительные сведения](http://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "Разверните и настройте агент тестирования для выполнения тестов в группе лабораторных машин",
   "loc.instanceNameFormat": "Развернуть агент тестирования в $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Группа тестовых машин",

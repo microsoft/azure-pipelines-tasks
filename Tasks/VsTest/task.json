@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 22
   },
   "demands": [
     "vstest"
@@ -81,8 +81,7 @@
       "label": "Code Coverage Enabled",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "Collect code coverage information from the Test run.",
-      "groupName":"advanced"
+      "helpMarkDown": "Collect code coverage information from the Test run."
     },    
     {
       "name": "vsTestVersion",

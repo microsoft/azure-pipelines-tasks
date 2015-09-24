@@ -3,7 +3,7 @@
     "name": "RunVisualStudioTestsusingTestAgent",
     "friendlyName": "Visual Studio Test using Test Agent",
     "description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624389)",
     "category": "Test",
     "visibility": [     
                   "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 10
     },
     "demands": [
     ],
@@ -39,10 +39,10 @@
         {
             "name": "testMachineGroup",
             "type": "pickList",
-            "label": "Test Machine Group",
+            "label": "Test Machine Group / Azure Resource Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
+            "helpMarkDown": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
             "groupName": "testMachineGroups"
         },
         {

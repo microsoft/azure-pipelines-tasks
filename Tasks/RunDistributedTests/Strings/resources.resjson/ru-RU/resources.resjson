@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Тест Visual Studio с использованием агента тестирования",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md)",
+  "loc.helpMarkDown": "[Дополнительные сведения](http://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
   "loc.instanceNameFormat": "Выполнить тесты $(sourcefilters) для $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Группа тестовых машин",

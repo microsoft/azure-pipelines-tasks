@@ -6,7 +6,6 @@
   "helpMarkDown": "[More Information](http://aka.ms/azurefilecopyreadme)",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -14,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 15
   },
   "demands": [
     "azureps"
@@ -78,10 +77,10 @@
     {
       "name": "EnvironmentName",
       "type": "pickList",
-      "label": "Resource Group",
+      "label": "Machine Group",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the target Resource Group for copying the files to.​",
+      "helpMarkDown": "Name of the target Machine Group for copying files to. Applicable only for Azure virtual machines.",
       "visibleRule": "Destination = AzureVMs"
     },
     {

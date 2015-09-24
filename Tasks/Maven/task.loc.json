@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 12
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -33,6 +33,11 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "SQAnalysis",
+      "displayName": "ms-resource:loc.group.displayName.SQAnalysis",
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -127,6 +132,61 @@
         "x86": "x86",
         "x64": "x64"
       }
+    },
+    {
+      "name": "sqAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "SQAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
+    },
+    {
+      "name": "sqConnectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.sqConnectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
+      "groupName": "SQAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqDbDetailsRequired",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "SQAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbDetailsRequired",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqDbUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbUrl",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbUrl",
+      "groupName": "SQAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "sqDbUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbUsername",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbUsername",
+      "groupName": "SQAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "sqDbPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbPassword",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
+      "groupName": "SQAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
     }
   ],
   "execution": {

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 테스트 에이전트 배포",
-  "loc.helpMarkDown": "[자세한 정보](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "테스트 에이전트를 배포 및 구성하여 랩 컴퓨터 그룹에서 테스트 실행",
   "loc.instanceNameFormat": "$(testMachineGroup)에서 테스트에이전트 배포",
   "loc.group.displayName.testMachineGroups": "테스트 컴퓨터 그룹",

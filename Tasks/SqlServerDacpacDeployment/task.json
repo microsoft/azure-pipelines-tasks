@@ -14,17 +14,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
     ],
     "minimumAgentVersion": "1.88.0",
     "groups": [
-        {
-            "name": "source",
-            "displayName": "Source",
-            "isExpanded": true
-        },
         {
             "name": "target",
             "displayName": "Target",
@@ -43,15 +38,13 @@
             "label": "Machine Group",
             "defaultValue": "",
             "required": true,
-            "groupName": "source",
-            "helpMarkDown": "Select the target Machine Group for deploying the database. For Azure Resource Groups, type the name of the Resource Group."
+            "helpMarkDown": "Select the target Machine Group, where the database deployment task will be run. For Azure Resource Groups, type-in the name of the Resource Group."
         },
         {
             "name": "ResourceFilteringMethod",
             "type": "radio",
             "label": "Select Machines By",
             "required": false,
-            "groupName": "source",
             "defaultValue": "machineNames",
             "options": {
                 "machineNames": "Machine Names",
@@ -64,18 +57,16 @@
             "type": "string",
             "label": "Deploy to Machines",
             "required": false,
-            "groupName": "source",
             "defaultValue": "",
-            "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are listed then it will deploy to all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name for the machine name like, ffweb, ffdb. The default is to deploy to all machines in the machine/resource group."
+            "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
         },
         {
             "name": "DacpacFile",
             "type": "string",
             "label": "DACPAC File",
             "required": true,
-            "groupName": "source",
             "defaultValue": "",
-            "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account."
+            "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported like $env:windir, $env:systemroot, like, $env:windir\\FabrikamFibre\\Web."
         },
         {
             "name": "TargetMethod",
@@ -119,7 +110,7 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "If the SQL Server login is specified, it will be used to connect to the SQL Server. The default is Integrated Authentication and uses the machine administrator credentials."
+            "helpMarkDown": "If the SQL Server login is specified, it will be used to connect to the SQL Server. The default is Integrated Authentication and uses the machine administrator's credentials."
         },
         {
             "name": "SqlPassword",
@@ -129,7 +120,7 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "If SQL Server login user name is specified then provide the SQL Server password. The default is Integrated Authentication and uses the machine administrator credentials."
+            "helpMarkDown": "If SQL Server login user name is specified, then provide the SQL Server password. The default is Integrated Authentication and uses the machine administrator's credentials."
         },
         {
             "name": "ConnectionString",
@@ -148,7 +139,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database creation or upgrades. Specify the path to the Publish profile XML file on the target machine."
+            "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database creation or upgrades. Specify the path to the Publish profile XML file on the target machine or on a UNC share that is accessible by the machine administrator’s credentials."
         },
         {
             "name": "AdditionalArguments",
@@ -166,7 +157,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Setting it to true will run the database deployment in-parallel on the target machines."
+            "helpMarkDown": "Setting it to true will run the database deployment task in-parallel on the target machines."
         }
     ],
     "sourceDefinitions": [ 

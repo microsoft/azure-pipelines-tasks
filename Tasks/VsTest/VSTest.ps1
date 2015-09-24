@@ -21,15 +21,29 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 if (!$testAssembly)
 {
+    Write-Host "##vso[task.logissue type=error;code=002001;]" 
     throw (Get-LocalizedString -Key "Test assembly parameter not set on script")
+}
+
+$sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+if(!$sourcesDirectory)
+{
+    # For RM, look for the test assemblies under the release directory.
+    $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Agent.ReleaseDirectory"
+}
+
+if(!$sourcesDirectory)
+{
+    # If there is still no sources directory, error out immediately.
+    Write-Host "##vso[task.logissue type=error;code=002002;]"
+    throw "No source directory found."
 }
 
 # check for solution pattern
 if ($testAssembly.Contains("*") -or $testAssembly.Contains("?"))
 {
     Write-Verbose "Pattern found in solution parameter. Calling Find-Files."
-    Write-Verbose "Calling Find-Files with pattern: $testAssembly"
-    $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+    Write-Verbose "Calling Find-Files with pattern: $testAssembly"    
     $testAssemblyFiles = Find-Files -SearchPattern $testAssembly -RootFolder $sourcesDirectory
     Write-Verbose "Found files: $testAssemblyFiles"
 }
@@ -66,11 +80,14 @@ if($testAssemblyFiles)
     }
     else
     {
+        Write-Host "##vso[task.logissue type=warning;code=002003;]"
         Write-Warning "No results found to publish."
     }
 }
 else
 {
+    Write-Host "##vso[task.logissue type=warning;code=002004;]"
     Write-Warning "No test assemblies found matching the pattern: $testAssembly"
 }
+
 Write-Verbose "Leaving script VSTestConsole.ps1"

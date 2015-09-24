@@ -2,11 +2,10 @@
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
-    "description": "Provision and Deploy an Azure Resource Group",
+    "description": "Deploy, start, stop, delete Azure Resource Groups",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
     "visibility": [
-        "Preview",
         "Build",
         "Release"
     ],
@@ -14,27 +13,20 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 25
     },
     "demands": [
         "azureps"
     ],
-"minimumAgentVersion": "1.88.0",
-    "groups": [
-        {
-            "name": "advancedDeploymentOptions",
-            "displayName": "Advanced Deployment Options",
-            "isExpanded": true
-        }
-    ],
+    "minimumAgentVersion": "1.88.0",
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "type": "connectedService:Azure",
+            "type": "connectedService:Azure:UsernamePassword,ServicePrincipal",
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription to target for the deployment."
+            "helpMarkDown": "Select the Azure subscription for the deployment. Supported Azure service connections are of the authentication type of Credentials or Service Principals."
         },
         {
             "name": "action", 
@@ -42,7 +34,7 @@
             "label": "Action",
             "defaultValue": "Create Or Update Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the machines or machine group.",
+            "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
             "options": {
                  "Create Or Update Resource Group": "Create Or Update Resource Group",
                  "Start": "Start Virtual Machines",
@@ -53,95 +45,11 @@
                 }
         },
         {
-            "name": "resourceGroupName", 
-            "type": "string", 
+            "name": "resourceGroupName",
+            "type": "string",
             "label": "Resource Group",
             "required": true,
             "helpMarkDown": "Provide the name of the resource group."
-        },
-        {
-            "name":"resourceFilteringMethodStart",
-            "type":"radio",
-            "label":"Select Machines By",
-            "required":false,
-            "defaultValue":"machineNames",
-            "options": {
-            "machineNames":"Machine Names",
-            "tags":"Tags"
-            },
-            "visibleRule": "action = Start"
-       },
-       {
-           "name": "filtersStart",
-           "type": "string",
-           "label": "Filter Criteria",
-           "defaultValue": "",
-           "required": false,
-           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
-           "visibleRule": "action = Start"
-        },
-        {
-            "name":"resourceFilteringMethodStop",
-            "type":"radio",
-            "label":"Select Machines By",
-            "required":false,
-            "defaultValue":"machineNames",
-            "options": {
-            "machineNames":"Machine Names",
-            "tags":"Tags"
-            },
-            "visibleRule": "action = Stop"
-       },
-       {
-           "name": "filtersStop",
-           "type": "string",
-           "label": "Filter Criteria",
-           "defaultValue": "",
-           "required": false,
-           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
-           "visibleRule": "action = Stop"
-        },
-        {
-            "name":"resourceFilteringMethodRestart",
-            "type":"radio",
-            "label":"Select Machines By",
-            "required":false,
-            "defaultValue":"machineNames",
-            "options": {
-            "machineNames":"Machine Names",
-            "tags":"Tags"
-            },
-            "visibleRule": "action = Restart"
-       },
-       {
-           "name": "filtersRestart",
-           "type": "string",
-           "label": "Filter Criteria",
-           "defaultValue": "",
-           "required": false,
-           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
-           "visibleRule": "action = Restart"
-        },
-        {
-            "name":"resourceFilteringMethodDelete",
-            "type":"radio",
-            "label":"Select Machines By",
-            "required":false,
-            "defaultValue":"machineNames",
-            "options": {
-            "machineNames":"Machine Names",
-            "tags":"Tags"
-            },
-            "visibleRule": "action = Delete"
-       },
-       {
-           "name": "filtersDelete",
-           "type": "string",
-           "label": "Filter Criteria",
-           "defaultValue": "",
-           "required": false,
-           "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group. Filters are not applied for block or unblock actions.",
-           "visibleRule": "action = Delete"
         },
         {
             "name": "location",
@@ -149,7 +57,7 @@
             "label": "Location",
             "defaultValue": "East US",
             "required": true,
-            "helpMarkDown": "Location of the deployment",
+            "helpMarkDown": "Location for deploying the resource group. If an existing resource group is updated, then this will be ignored.",
             "options": {
                 "East Asia": "East Asia",
                 "East US": "East US",
@@ -186,75 +94,8 @@
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to be overridden in the format <br><b><i>-parameterName $(variableName)</b></i> or <br><b><i>-parameterName parameterValue</b></i>",
+            "helpMarkDown": "Specify the template parameters to be overridden in the format like, <br>–storageName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)",
             "visibleRule": "action = Create Or Update Resource Group"
-        },
-        {
-            "name": "vmCreds",
-            "type": "boolean",
-            "label": "Store Virtual Machine Details for Use in Later Tasks",
-            "required": false,
-            "defaultValue": "false",
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Provide the VMs Administrator Username and Password as specified in the above template. Needed by other tasks like PowerShell on Target Machines, Azure File Copy etc."            
-        },
-        {
-            "name": "vmUserName",
-            "type": "string",
-            "label": "Username",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "visibleRule": "vmCreds = true",
-            "helpMarkDown": "Administrator Username of the VMs."
-        },
-        {
-            "name": "vmPassword",
-            "type": "string",
-            "label": "Password",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "visibleRule": "vmCreds = true",
-            "helpMarkDown": "Administrator Password of the VMs."
-        },
-        {
-            "name": "skipCACheck",
-            "type": "boolean",
-            "label": "Skip CA Check",
-            "required": false,
-            "defaultValue": "true",
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."            
-        },
-        {
-            "name": "dscDeployment",
-            "type": "boolean",
-            "label": "Refresh SAS token",
-            "required": false,
-            "defaultValue": "false",
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Refresh SAS token for the Azure blobs that are used in the template. Useful if the SAS token expires quickly."
-        },
-        {
-            "name": "moduleUrlParameterName",
-            "type": "string",
-            "label": "Azure Blob Parameter",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Names of the parameter corresponding to the Azure blobs separated by ; in the format <br><b><i>url1;url2;url3</b></i>",
-            "visibleRule": "dscDeployment = true"
-        },
-        {
-            "name": "sasTokenParameterName",
-            "type": "string",
-            "label": "SAS Token Parameter",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "advancedDeploymentOptions",
-            "helpMarkDown": "Names of the SAS token parameters separated by ; in the format <br><b><i>token1;token2;token3</b></i>",
-            "visibleRule": "dscDeployment = true"
         }
     ],
     "sourceDefinitions": [
@@ -265,7 +106,7 @@
         "authKey": "$(ConnectedServiceName)"
     }
   ],
-    "instanceNameFormat": "Azure Deployment: $(resourceGroupName)",
+    "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
