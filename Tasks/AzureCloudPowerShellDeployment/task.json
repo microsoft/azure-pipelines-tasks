@@ -102,7 +102,7 @@
   "sourceDefinitions": [
     {
         "target": "StorageAccount",
-        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
+        "endpoint": "https://management.core.windows.net/$(authKey.SubscriptionId)/services/storageservices",
         "selector": "xpath://ServiceName",
         "authKey": "$(ConnectedServiceName)"
     },
