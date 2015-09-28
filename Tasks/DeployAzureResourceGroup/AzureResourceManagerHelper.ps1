@@ -131,7 +131,9 @@ function Create-AzureResourceGroupIfNotExist
     param([string]$resourceGroupName,
     [string]$location)
 
+    Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName"
     $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+    Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
 
     if(!$azureResourceGroup)
     {
