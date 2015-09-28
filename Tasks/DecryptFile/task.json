@@ -1,9 +1,8 @@
 ﻿{
     "id": "7C6A6b71-4355-4AFC-A274-480EAB5678E9",
     "name": "DecryptFile",
-    "friendlyName": "Decrypt File",
+    "friendlyName": "Decrypt File (OpenSSL)",
     "description": "A thin utility task for file decryption using OpenSSL.",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613735)",
     "category": "Utility",
     "visibility": [
                   "Build",
@@ -30,7 +29,7 @@
             "label": "Cypher", 
             "defaultValue": "des3", 
             "required": true,
-            "helpMarkDown": "Encryption cypher to use. See [cypher suite names](http://openssl.org/docs/manmaster/apps/ciphers.html) for a complete list of possible values."
+            "helpMarkDown": "Encryption cypher to use. See [cypher suite names](http://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values."
         },
         { 
             "name": "inFile", 

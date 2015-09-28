@@ -25,11 +25,11 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 #Verify curl is installed correctly
 $openssl = Get-Command openssl.exe
 if(!$openssl) {
-    throw (Get-LocalizedString -Key "Unable to find OpenSSL (openssl.exe). Verify it is installed correctly on the build agent from a mirror at: http://openssl.org/community/binaries.html" )
+    throw (Get-LocalizedString -Key "Unable to find OpenSSL (openssl.exe). Verify it is installed correctly and in the path on the build agent server. Binaries can be found at: http://go.microsoft.com/fwlink/?LinkID=627128" )
 }
 
 $openssl = $openssl.Path
-Write-Verbose (Get-LocalizedString -Key "Found OpenSSL at {0}" -ArgumentList $openssl)
+Write-Verbose  "Found OpenSSL at $openssl"
 
 if (!$cipher)
 {
@@ -46,12 +46,12 @@ if (!$passphrase)
     throw (Get-LocalizedString -Key throw "Passphrase parameter not set")
 }
 
-if (!$outFile)
+if ($outFile -eq $cwd)
 {
     $outFile = $inFile + ".out"
 }
 
-Write-Verbose (Get-LocalizedString -Key "Running openssl...")
+Write-Verbose "Running openssl..."
 Invoke-Tool -Path $openssl -WorkingFolder $cwd -Arguments  "$cipher -d -in ""$inFile"" -pass ""pass:$passphrase"" -out ""$outFile"""
 
-Write-Verbose (Get-LocalizedString -Key "Leaving script DecryptFile.ps1")
+Write-Verbose "Leaving script DecryptFile.ps1"
