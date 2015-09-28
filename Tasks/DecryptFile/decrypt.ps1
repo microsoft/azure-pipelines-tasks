@@ -38,12 +38,12 @@ if (!$cipher)
 
 if (!$inFile)
 {
-    throw (Get-LocalizedString -Key throw "Encrypted File parameter not set")
+    throw (Get-LocalizedString -Key "Encrypted File parameter not set")
 }
 
 if (!$passphrase)
 {
-    throw (Get-LocalizedString -Key throw "Passphrase parameter not set")
+    throw (Get-LocalizedString -Key "Passphrase parameter not set")
 }
 
 if ($outFile -eq $cwd)
