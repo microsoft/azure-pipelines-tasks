@@ -98,7 +98,7 @@ $foundCount = $foundFiles.Count
 Write-Host "Found files: $foundCount"
 foreach ($fileToPackage in $foundFiles)
 {
-    Write-Host "--File: $fileToPackage"
+    Write-Host "--File: `"$fileToPackage`""
 }
 
 foreach ($fileToPackage in $foundFiles)
@@ -111,7 +111,7 @@ foreach ($fileToPackage in $foundFiles)
     {
         $buildProps = ($buildProps + ";" + $buildProperties)
     }
-    $argsPack = "pack $fileToPackage -OutputDirectory $outputdir -Properties $buildProps";
+    $argsPack = "pack `"$fileToPackage`" -OutputDirectory `"$outputdir`" -Properties $buildProps";
     
     if ($b_versionByBuild)
     {
