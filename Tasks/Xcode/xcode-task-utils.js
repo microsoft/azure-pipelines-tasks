@@ -63,7 +63,7 @@ function determineIdentity(input) {
 	} else {
 		tl.debug('p12 not specified in task.')
 		return promise.then(function() {
-			return { identity: input.iosSigningIdentitiy };
+			return { identity: input.iosSigningIdentity };
 		});
 	}	
 }
