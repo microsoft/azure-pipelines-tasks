@@ -29,7 +29,7 @@ foreach($key in $PSBoundParameters.Keys)
 Write-Verbose "Importing modules"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-    
+
 
 #Setup Nuget
 Write-Host "Creating Nuget Arguments"
@@ -77,12 +77,12 @@ else
     Write-Host "No Pattern found in solution parameter."
     $packagesToPush = ,$searchPattern
 }
- 
-$foundCount = $packagesToPush.Count 
+
+$foundCount = $packagesToPush.Count
 Write-Host "Found files: $foundCount"
 foreach ($packageFile in $packagesToPush)
 {
-    Write-Host "File: $packagesToPush"
+    Write-Host "File: $packageFile"
 }
 
 foreach ($packageFile in $packagesToPush)
@@ -91,7 +91,7 @@ foreach ($packageFile in $packagesToPush)
     if($nuGetAdditionalArgs)
     {
         $argsUpload = ($argsUpload + " " + $nuGetAdditionalArgs);
-    } 
-    Write-Host "Invoking nuget with $argsUpload on $packageFile"  
-    Invoke-Tool -Path $nugetPath -Arguments "$argsUpload" 
+    }
+    Write-Host "Invoking nuget with $argsUpload on $packageFile"
+    Invoke-Tool -Path $nugetPath -Arguments "$argsUpload"
 }
