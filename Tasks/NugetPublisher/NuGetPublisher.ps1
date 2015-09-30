@@ -82,7 +82,7 @@ $foundCount = $packagesToPush.Count
 Write-Host "Found files: $foundCount"
 foreach ($packageFile in $packagesToPush)
 {
-    Write-Host "File: $packagesToPush"
+    Write-Host "File: $packageFile"
 }
 
 foreach ($packageFile in $packagesToPush)
