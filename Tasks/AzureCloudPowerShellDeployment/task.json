@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 16
   },
   "demands": [
     "azureps"
@@ -53,7 +53,7 @@
     },
     {
       "name": "CsPkg",
-      "type": "string",
+      "type": "filePath",
       "label": "CsPkg",
       "defaultValue": "",
       "required": true,
@@ -61,7 +61,7 @@
     },
     {
       "name": "CsCfg",
-      "type": "string",
+      "type": "filePath",
       "label": "CsCfg",
       "defaultValue": "",
       "required": true,
