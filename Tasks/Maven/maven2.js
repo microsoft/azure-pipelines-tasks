@@ -84,7 +84,6 @@ function getSonarQubeRunner() {
 
     console.log("SonarQube analysis is enabled");
     var mvnsq;
-    var sqArguments;
     var sqEndpoint = getEndpointDetails("sqConnectedServiceName");
     var sqDbDetailsRequired = tl.getInput('sqDbDetailsRequired', true);
 
@@ -106,7 +105,7 @@ function getSonarQubeRunner() {
 }
 
 function getEndpointDetails(inputFieldName) {
-    var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.0)"
+    var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)"
     if (!tl.getEndpointUrl) {
         throw new Error(errorMessage);
     }
@@ -117,11 +116,14 @@ function getEndpointDetails(inputFieldName) {
     }
 
     hostUrl = tl.getEndpointUrl(genericEndpoint, false);
-
+    if (!hostUrl) {
+        throw new Error(errorMessage);
+    }
 
     hostUsername = getAuthParameter(genericEndpoint, 'username');
     hostPassword = getAuthParameter(genericEndpoint, 'password');
-    
+    tl.debug("hostUsername: " + hostUsername);
+    tl.debug("hostPassword: " + hostPassword);
 
     return {
         "Url": hostUrl,
@@ -131,7 +133,7 @@ function getEndpointDetails(inputFieldName) {
 }
 
 // The endpoint stores the auth details as JSON. Unfortunately the structure of the JSON has changed through time, namely the keys were sometimes Upercase
-// To work around this, we can perform case-insensitive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
+// To work around this, we can perform case insenstive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
 function getAuthParameter(endpoint, paramName) {
 
     var paramValue = null;
@@ -154,7 +156,6 @@ function getAuthParameter(endpoint, paramName) {
     });
 
     paramValue = auth['parameters'][keyName];
-    tl.debug(paramName + ": " + paramValue);
 
     return paramValue;
 }
