@@ -120,10 +120,11 @@ function getEndpointDetails(inputFieldName) {
         throw new Error(errorMessage);
     }
 
+    // Currently the username and the password are required, but in the future they will not be mandatory
+    // - so not validating the values here
     hostUsername = getAuthParameter(genericEndpoint, 'username');
     hostPassword = getAuthParameter(genericEndpoint, 'password');
     tl.debug("hostUsername: " + hostUsername);
-    tl.debug("hostPassword: " + hostPassword);
 
     return {
         "Url": hostUrl,
@@ -132,8 +133,9 @@ function getEndpointDetails(inputFieldName) {
     };
 }
 
-// The endpoint stores the auth details as JSON. Unfortunately the structure of the JSON has changed through time, namely the keys were sometimes Upercase
+// The endpoint stores the auth details as JSON. Unfortunately the structure of the JSON has changed through time, namely the keys were sometimes upper-case.
 // To work around this, we can perform case insenstive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
+// See https://github.com/Microsoft/vso-agent/blob/bbabbcab3f96ef0cfdbae5ef8237f9832bef5e9a/src/agent/plugins/release/artifact/jenkinsArtifact.ts for a similar implementation
 function getAuthParameter(endpoint, paramName) {
 
     var paramValue = null;
@@ -229,6 +231,10 @@ mvnv.exec()
     if (runFailed) {
         tl.exit(1); // exit with a non-zero code to mark the entire task as having failed
     } else {
+        if (!code) {
+            code = 0; // task success
+        }
+
         tl.exit(code);
     }
 });
