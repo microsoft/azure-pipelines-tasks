@@ -134,7 +134,7 @@ function getEndpointDetails(inputFieldName) {
 }
 
 // The endpoint stores the auth details as JSON. Unfortunately the structure of the JSON has changed through time, namely the keys were sometimes upper-case.
-// To work around this, we can perform case insenstive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
+// To work around this, we can perform case insensitive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
 // See https://github.com/Microsoft/vso-agent/blob/bbabbcab3f96ef0cfdbae5ef8237f9832bef5e9a/src/agent/plugins/release/artifact/jenkinsArtifact.ts for a similar implementation
 function getAuthParameter(endpoint, paramName) {
 
@@ -195,23 +195,21 @@ will still succeed but the report will have less data.
 5. If #2 above failed, exit with an error code to mark the entire step as failed. Same for #4.
 */
 
-
-var runFailed = false;
+var userRunFailed = false;
+var sqRunFailed = false;
 
 mvnv.exec()
 .fail(function (err) {
     console.error("Maven is not installed on the agent");
-    tl.exit(1);
+    tl.exit(1);  // tl.exit sets the step result but does not stop execution
+    process.exit(1);
 })
 .then(function (code) {
     return mvnb.exec(); // run Maven with the user specified goals
 })
 .fail(function (err) {
     console.error(err.message);
-    runFailed = true; // record the error, but do not exit
-})
-.fin(function () {
-    publishTestResults(publishJUnitResults, testResultsFiles); // publish test results even if tests fail, causing Maven to fail
+    userRunFailed = true; // record the error and continue
 })
 .then(function (code) {
     mvnsq = getSonarQubeRunner();
@@ -225,16 +223,16 @@ mvnv.exec()
 .fail(function (err) {
     console.error(err.message);
     console.error("SonarQube analysis failed");
-    tl.exit(1)
+    sqRunFailed = true;
 })
-.then(function (code) {
-    if (runFailed) {
-        tl.exit(1); // exit with a non-zero code to mark the entire task as having failed
+.then(function () {
+    // publish test results even if tests fail, causing Maven to fail;
+    publishTestResults(publishJUnitResults, testResultsFiles);
+    if (userRunFailed || sqRunFailed) {
+        tl.exit(1); // mark task failure
     } else {
-        if (!code) {
-            code = 0; // task success
-        }
-
-        tl.exit(code);
+        tl.exit(0); // mark task success
     }
-});
+
+    // do not force an exit as publishing results is async and it won't have finished 
+})
