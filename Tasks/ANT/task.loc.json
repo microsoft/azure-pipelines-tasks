@@ -16,16 +16,21 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "demands": [
     "ant"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.89.0",
   "groups": [
     {
       "name": "junitTestResults",
       "displayName": "ms-resource:loc.group.displayName.junitTestResults",
+      "isExpanded": true
+    },
+    {
+      "name": "codeCoverage",
+      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
       "isExpanded": true
     },
     {
@@ -75,6 +80,49 @@
       "required": true,
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
+    },
+    {
+      "name": "codeCoverageTool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "None": "None",
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "classfilesDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classfilesDirectory",
+      "defaultValue": ".",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectory",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "classFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilter",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "srcDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.srcDirectory",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.srcDirectory",
+      "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
       "name": "javaHomeSelection",

@@ -5,10 +5,14 @@ param(
     [string]$tasks,           # Gradle tasks
     [string]$publishJUnitResults,   
     [string]$testResultsFiles, 
+    [string]$codeCoverageTool,
+    [string]$classFilesDirectory,
+    [string]$classFilter,
     [string]$javaHomeSelection,
     [string]$jdkVersion,      # JDK version
     [string]$jdkArchitecture,  # JDK arch
     [string]$jdkUserInputPath
+
 )
 
 Write-Verbose "Entering script Gradle.ps1"
@@ -17,6 +21,14 @@ Write-Verbose "options = $options"
 Write-Verbose "tasks = $tasks"
 Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
+$isCoverageEnabled = !$codeCoverageTool.equals("None")
+if($isCoverageEnabled)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool" 
+    Write-Verbose "classFilesDirectory = $classFilesDirectory" 
+    Write-Verbose "classFilter = $classFilter"
+}
+
 Write-Verbose "javaHomeSelection = $javaHomeSelection"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
@@ -76,6 +88,33 @@ if ($jdkPath)
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
+$buildRootPath = Split-Path $wrapperScript -Parent
+$reportDirectoryName = "CodeCoverage"
+$reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+
+if(Test-Path $reportDirectory)
+{
+   # delete any previous code coverage data 
+   rm -r $reportDirectory -force | Out-Null
+}
+
+$summaryFileName = "summary.xml"
+$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
+$summaryFile = Join-Path $summaryFile $summaryFileName 
+$buildFile = Join-Path $buildRootPath "build.gradle"
+
+# check if code coverage has been enabled
+if($isCoverageEnabled)
+{
+   # Enable code coverage in build file
+   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
+   Write-Verbose "Code coverage is successfully enabled." -Verbose
+}
+else
+{
+    Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
+}
+
 $arguments = "$options $tasks"
 Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
 Invoke-BatchScript -Path $wrapperScript -Arguments $arguments -WorkingFolder $cwd
@@ -101,4 +140,20 @@ else
     Write-Verbose "Option to publish JUnit Test results produced by Gradle build was not selected and is being skipped."
 }
 
+
+# check if code coverage has been enabled
+if($isCoverageEnabled)
+{
+	if(Test-Path $summaryFile)
+	{
+		Write-Verbose "Summary file = $summaryFile" -Verbose
+		Write-Verbose "Report directory = $reportDirectory" -Verbose
+		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext   
+	}
+	else
+	{
+		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
+	}   
+}
 Write-Verbose "Leaving script Gradle.ps1"

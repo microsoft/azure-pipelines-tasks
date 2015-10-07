@@ -175,3 +175,74 @@ function CreateSonarQubeArgs
     return $sb.ToString();
 }
 
+
+function PublishCodeCoverage
+{
+    param(
+          [Boolean]$isCoverageEnabled,
+	      [string]$mavenPOMFile,
+		  [string]$CCReportTask,
+		  [string]$summaryFile,
+		  [string]$reportDirectory,
+		  [string]$codeCoverageTool)
+	
+     # check if code coverage has been enabled
+    if($isCoverageEnabled)
+    {
+       # run report code coverage task which generates code coverage reports.
+       Write-Verbose "Collecting code coverage reports" -Verbose
+       try
+       {
+    		Invoke-Maven -MavenPomFile $mavenPOMFile -Goals $CCReportTask
+       }
+       catch
+       {
+    		Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
+       }
+       
+       if(Test-Path $summaryFile)
+       {
+    		Write-Verbose "Summary file = $summaryFile" -Verbose
+    		Write-Verbose "Report directory = $reportDirectory" -Verbose
+    		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+    		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+       }
+       else
+       {
+    		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
+       }
+    }
+
+}
+
+
+function EnableCodeCoverage
+{
+    param(
+          [Boolean]$isCoverageEnabled,
+		  [string]$reportDirectory,
+	      [string]$mavenPOMFile,
+		  [string]$codeCoverageTool,
+		  [string]$classFilter,
+		  [string]$summaryFileName,
+		  [string]$reportDirectoryName)
+
+     if(Test-Path $reportDirectory)
+     {
+        # delete any previous code coverage data 
+        rm -r $reportDirectory -force | Out-Null
+     }
+     
+     # check if code coverage has been enabled
+     if($isCoverageEnabled)
+     {
+        # Enable code coverage in build file
+        Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
+        Write-Verbose "Code coverage is successfully enabled." -Verbose
+     }
+     else
+     {
+         Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
+     }
+	 
+}

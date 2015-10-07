@@ -1,2 +1,0 @@
-# Ant With CodeCoverage
-<br/>

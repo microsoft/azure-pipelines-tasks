@@ -4,6 +4,8 @@
     [string]$goals,
     [string]$publishJUnitResults,   
     [string]$testResultsFiles, 
+    [string]$codeCoverageTool,
+    [string]$classFilter,
     [string]$javaHomeSelection,
     [string]$jdkVersion,
     [string]$jdkArchitecture,
@@ -22,6 +24,14 @@ Write-Verbose "options = $options"
 Write-Verbose "goals = $goals"
 Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
+
+$isCoverageEnabled = !$codeCoverageTool.equals("None")
+if($isCoverageEnabled -eq $true)
+{
+    Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
+    Write-Verbose "classFilter = $classFilter" -Verbose
+}
+
 Write-Verbose "javaHomeSelection = $javaHomeSelection"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
@@ -46,6 +56,18 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 . ./mavenHelper.ps1
 
+
+$buildRootPath = Split-Path $mavenPOMFile -Parent
+$reportDirectoryName = "CodeCoverage"
+$reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+$summaryFileName = "jacoco.xml"
+$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
+$summaryFile = Join-Path $summaryFile $summaryFileName
+$CCReportTask = "jacoco:report"
+
+# Enable Code Coverage
+EnableCodeCoverage $isCoverageEnabled $reportDirectory $mavenPOMFile $codeCoverageTool $classFilter $summaryFileName $reportDirectoryName
+
 # Use a specific JDK
 ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
 
@@ -55,6 +77,9 @@ Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
 
 # Publish test results
 PublishTestResults $publishJUnitResults $testResultsFiles
+
+# Publish code coverage
+PublishCodeCoverage  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFile $reportDirectory $codeCoverageTool 
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile
