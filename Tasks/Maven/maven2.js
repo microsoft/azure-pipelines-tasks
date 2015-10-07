@@ -84,7 +84,6 @@ function getSonarQubeRunner() {
 
     console.log("SonarQube analysis is enabled");
     var mvnsq;
-    var sqArguments;
     var sqEndpoint = getEndpointDetails("sqConnectedServiceName");
     var sqDbDetailsRequired = tl.getInput('sqDbDetailsRequired', true);
 
@@ -106,7 +105,7 @@ function getSonarQubeRunner() {
 }
 
 function getEndpointDetails(inputFieldName) {
-    var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.0)"
+    var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)"
     if (!tl.getEndpointUrl) {
         throw new Error(errorMessage);
     }
@@ -117,20 +116,50 @@ function getEndpointDetails(inputFieldName) {
     }
 
     hostUrl = tl.getEndpointUrl(genericEndpoint, false);
-    var auth = tl.getEndpointAuthorization(genericEndpoint, false);
-
-    if (auth.scheme != "UsernamePassword") {
-        throw new Error("The authorization scheme " + auth.scheme + " is not supported for a SonarQube endpoint. Please use a username and a password.");
+    if (!hostUrl) {
+        throw new Error(errorMessage);
     }
 
-    hostUsername = auth.parameters.Username;
-    hostPassword = auth.parameters.Password;
+    // Currently the username and the password are required, but in the future they will not be mandatory
+    // - so not validating the values here
+    hostUsername = getAuthParameter(genericEndpoint, 'username');
+    hostPassword = getAuthParameter(genericEndpoint, 'password');
+    tl.debug("hostUsername: " + hostUsername);
 
     return {
         "Url": hostUrl,
         "Username": hostUsername,
         "Password": hostPassword
     };
+}
+
+// The endpoint stores the auth details as JSON. Unfortunately the structure of the JSON has changed through time, namely the keys were sometimes upper-case.
+// To work around this, we can perform case insenstive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
+// See https://github.com/Microsoft/vso-agent/blob/bbabbcab3f96ef0cfdbae5ef8237f9832bef5e9a/src/agent/plugins/release/artifact/jenkinsArtifact.ts for a similar implementation
+function getAuthParameter(endpoint, paramName) {
+
+    var paramValue = null;
+    var auth = tl.getEndpointAuthorization(endpoint, false);
+
+    if (auth.scheme != "UsernamePassword") {
+        throw new Error("The authorization scheme " + auth.scheme + " is not supported for a SonarQube endpoint. Please use a username and a password.");
+    }
+
+    var parameters = Object.getOwnPropertyNames(auth['parameters']);
+
+    var keyName;
+    parameters.some(function (key) {
+
+        if (key.toLowerCase() === paramName.toLowerCase()) {
+            keyName = key;
+
+            return true;
+        }
+    });
+
+    paramValue = auth['parameters'][keyName];
+
+    return paramValue;
 }
 
 function createMavenSQRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword) {
@@ -158,14 +187,12 @@ function createMavenSQRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl,
 
 /*
 Maven task orchestration:
-
 1. Check that maven exists 
 2. Run maven with the user goals. Compilation or test errors will cause this to fail
 3. Always try to publish tests results 
 4. Always try to run the SonarQube analysis if it is enabled. In case the build has failed, the analysis 
 will still succeed but the report will have less data. 
 5. If #2 above failed, exit with an error code to mark the entire step as failed. Same for #4.
-
 */
 
 
