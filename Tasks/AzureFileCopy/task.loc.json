@@ -16,13 +16,28 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 16
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.88.0",
+  "groups": [
+    {
+      "name": "advancedOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedOptions",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
+    {
+      "name": "SourcePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourcePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
+    },
     {
       "name": "ConnectedServiceName",
       "type": "connectedService:Azure",
@@ -32,12 +47,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "SourcePath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.SourcePath",
+      "name": "Destination",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Destination",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
+      "options": {
+        "AzureBlob": "Azure Blob",
+        "AzureVMs": "Azure VMs"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Destination"
     },
     {
       "name": "StorageAccount",
@@ -79,7 +98,7 @@
     },
     {
       "name": "EnvironmentName",
-      "type": "pickList",
+      "type": "string",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
@@ -87,24 +106,21 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "name": "vmsAdminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vmsAdminUserName",
+      "defaultValue": "",
       "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
+      "helpMarkDown": "ms-resource:loc.input.help.vmsAdminUserName",
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "MachineNames",
+      "name": "vmsAdminPassword",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
+      "label": "ms-resource:loc.input.label.vmsAdminPassword",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames",
+      "helpMarkDown": "ms-resource:loc.input.help.vmsAdminPassword",
       "visibleRule": "Destination = AzureVMs"
     },
     {
@@ -117,30 +133,34 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "CleanTargetBeforeCopy",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy",
-      "visibleRule": "Destination = AzureVMs"
-    },
-    {
       "name": "CopyFilesInParallel",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.CopyFilesInParallel",
       "defaultValue": "true",
       "required": false,
+      "groupName": "advancedOptions",
       "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel",
       "visibleRule": "Destination = AzureVMs"
-    }
-  ],
-  "sourceDefinitions": [
+    },
     {
-      "target": "EnvironmentName",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
+      "name": "CleanTargetBeforeCopy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advancedOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "skipCACheck",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipCACheck",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advancedOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
+      "visibleRule": "Destination = AzureVMs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

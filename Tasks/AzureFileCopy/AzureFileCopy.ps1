@@ -8,9 +8,12 @@ param (
     [string]$environmentName,
     [string]$resourceFilteringMethod,
     [string]$machineNames,
+    [string]$vmsAdminUserName,
+    [string]$vmsAdminPassword,
     [string]$targetPath,
     [string]$cleanTargetBeforeCopy,
-    [string]$copyFilesInParallel
+    [string]$copyFilesInParallel,
+    [string]$skipCACheck
 )
 
 Write-Verbose "Starting Azure File Copy Task" -Verbose
@@ -18,66 +21,44 @@ Write-Verbose "Starting Azure File Copy Task" -Verbose
 Write-Verbose "connectedServiceName = $connectedServiceName" -Verbose
 Write-Verbose "sourcePath = $sourcePath" -Verbose
 Write-Verbose "storageAccount = $storageAccount" -Verbose
-Write-Verbose "destination = $destination" -Verbose
+Write-Verbose "destination type = $destination" -Verbose
 Write-Verbose "containerName = $containerName" -Verbose
 Write-Verbose "blobPrefix = $blobPrefix" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
+Write-Verbose "vmsUsername = $vmsUsername" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
-
-# keep machineNames parameter name unchanged due to back compatibility
-$machineFilter = $machineNames
+Write-Verbose "skipCACheck = $skipCACheck" -Verbose
 
 # Constants #
-$defaultWinRMPort = '5986'
-$defaultConnectionProtocolOption = ''
 $defaultSasTokenTimeOutInHours = 2
-
-$useHttpProtocolOption = '-UseHttp'
 $useHttpsProtocolOption = ''
-
 $doSkipCACheckOption = '-SkipCACheck'
 $doNotSkipCACheckOption = ''
-
 $azureFileCopyOperation = 'AzureFileCopy'
 $ErrorActionPreference = 'Stop'
-
 $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
 
+# Load all dependent files for execution
 . ./AzureFileCopyJob.ps1
 
 # Import all the dlls and modules which have cmdlets we need
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
-# Getting resource tag key name for corresponding tag
-$resourceFQDNKeyName = Get-ResourceFQDNTagKey
-$resourceWinRMHttpPortKeyName = Get-ResourceHttpTagKey
-$resourceWinRMHttpsPortKeyName = Get-ResourceHttpsTagKey
-$skipCACheckKeyName = Get-SkipCACheckTagKey
-
-function ThrowError
-{
-    param([string]$errorMessage)
-
-    $readmelink = "http://aka.ms/azurefilecopyreadme"
-    $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
-    throw "$errorMessage $helpMessage"
-}
-
+# Start region Azure Calls(ARM/RDFE) Functions
 function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
 
     try
     {
-        Write-Verbose "[Azure Call](ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+        Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
         $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
-        Write-Verbose "[Azure Call](ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+        Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
 
         $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
     }
@@ -100,10 +81,10 @@ function Get-AzureStorageKeyFromARM
     # get azure storage account resource group name
     $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
-    Write-Verbose "[Azure Call](ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+    Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
     $storageKeyDetails = Get-AzureStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
     $storageKey = $storageKeyDetails.Key1
-    Write-Verbose "[Azure Call](ARM)Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+    Write-Verbose "[Azure Call]Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
 
     return $storageKey
 }
@@ -118,6 +99,306 @@ function Get-AzureStorageKeyFromRDFE
     Write-Verbose "[Azure Call](RDFE)Retrieved storage key successfully for the storage account: $storageAccount" -Verbose
 
     return $storageKey
+}
+
+function Remove-AzureContainer
+{
+    param([string]$containerName,
+          [Microsoft.WindowsAzure.Commands.Common.Storage.AzureStorageContext]$storageContext,
+          [string]$storageAccount)
+
+    Write-Verbose "[Azure Call]Deleting container: $containerName in storage account: $storageAccount" -Verbose
+    Remove-AzureStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
+    Write-Verbose "[Azure Call]Deleted container: $containerName in storage account: $storageAccount" -Verbose
+}
+
+function Get-AzureVMsInResourceGroup
+{
+    param([string]$resourceGroupName)
+
+    try
+    {
+        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName virtual machines type resources"
+        $azureVMResources = Get-AzureVM -ResourceGroupName $resourceGroupName -Verbose
+        Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName virtual machines type resources"
+        Set-Variable -Name azureVMResources -Value $azureVMResources -Scope "Global"
+    }
+    catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException]
+    {
+        Write-Error $_.Exception.InnerException.Message -Verbose
+    }
+    catch
+    {
+        Write-Error $_.Exception.Message -Verbose
+    }
+}
+
+function Get-MachinesFqdnsForLB
+{
+    param([string]$resourceGroupName)
+
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVMResources)
+    {
+        Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
+
+        Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config" -Verbose
+        $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
+        Write-Verbose "[Azure Call]Got LoadBalancer Frontend Ip Config" -Verbose
+
+        #Map the public ip id to the fqdn
+        foreach($publicIp in $publicIPAddressResources)
+        {
+            if([string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn) -eq $false)
+            {
+                $fqdnMap[$publicIp.Id] =  $publicIP.DnsSettings.Fqdn
+            }
+            else
+            {
+                $fqdnMap[$publicIp.Id] =  $publicIP.IpAddress
+            }
+        }
+
+        #Get the NAT rule for a given ip id
+        foreach($config in $frontEndIPConfigs)
+        {
+            $fqdn = $fqdnMap[$config.PublicIpAddress.Id]
+            if([string]::IsNullOrEmpty($fqdn) -eq $false)
+            {
+                $fqdnMap.Remove($config.PublicIpAddress.Id)
+                foreach($rule in $config.InboundNatRules)
+                {
+                    $fqdnMap[$rule.Id] =  $fqdn
+                }
+            }
+        }
+
+        #Find out the NIC, and thus the corresponding machine to which the HAT rule belongs
+        foreach($nic in $networkInterfaceResources)
+        {
+            foreach($ipc in $nic.IpConfigurations)
+            {
+                foreach($rule in $ipc.LoadBalancerInboundNatRules)
+                {
+                    $fqdn = $fqdnMap[$rule.Id]
+                    if([string]::IsNullOrEmpty($fqdn) -eq $false)
+                    {
+                        $fqdnMap.Remove($rule.Id)
+                        if($nic.VirtualMachine)
+                        {
+                            $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
+
+    return $fqdnMap
+}
+
+function GetMachineNameFromId
+{
+    param([string]$resourceGroupName,
+          [System.Collections.Hashtable]$map,
+          [string]$mapParameter,
+          [boolean]$throwOnTotalUnavaialbility)
+    
+    if($map)
+    {
+        $errorCount = 0
+        foreach($vm in $azureVMResources)
+        {
+            $value = $map[$vm.Id]
+            $resourceName = $vm.Name
+
+            if([string]::IsNullOrEmpty($value) -eq $false)
+            {
+                Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
+                $map.Remove($vm.Id)
+                $map[$resourceName] = $value
+            }
+            else
+            {
+                $errorCount = $errorCount + 1
+                Write-Verbose "Unable to find $mapParameter for resource $resourceName" -Verbose
+            }
+        }
+        
+        if($throwOnTotalUnavaialbility -eq $true)
+        {
+            if($errorCount -eq $azureVMResources.Count -and $azureVMResources.Count -ne 0)
+            {
+                throw (Get-LocalizedString -Key "Unable to get {0} for all resources in ResourceGroup : '{1}'" -ArgumentList $mapParameter, $resourceGroupName)
+            }
+            else
+            {
+                if($errorCount -gt 0 -and $errorCount -ne $azureVMResources.Count)
+                {
+                    Write-Warning (Get-LocalizedString -Key "Unable to get {0} for '{1}' resources in ResourceGroup : '{2}'" -ArgumentList $mapParameter, $errorCount, $resourceGroupName)
+                }
+            }
+        }
+
+        return $map
+    }
+}
+
+function Get-MachinesFqdns
+{
+    param([string]$resourceGroupName)
+
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVMResources)
+    {
+        Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
+
+        #Map the ipc to the fqdn
+        foreach($publicIp in $publicIPAddressResources)
+        {
+            if([string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn) -eq $false)
+            {
+                $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
+            }
+            else
+            {
+                $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.IpAddress
+            }
+        }
+
+        #Find out the NIC, and thus the VM corresponding to a given ipc
+        foreach($nic in $networkInterfaceResources)
+        {
+            foreach($ipc in $nic.IpConfigurations)
+            {
+                $fqdn =  $fqdnMap[$ipc.Id]
+                if([string]::IsNullOrEmpty($fqdn) -eq $false)
+                {
+                    $fqdnMap.Remove($ipc.Id)
+                    if($nic.VirtualMachine)
+                    {
+                        $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+                    }
+                }
+            }
+        }
+
+        $fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
+    }
+
+    Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
+
+    return $fqdnMap
+}
+
+function Get-FrontEndPorts
+{
+    param([string]$backEndPort,
+          [System.Collections.Hashtable]$portList)
+
+    if([string]::IsNullOrEmpty($backEndPort) -eq $false -and $networkInterfaceResources -and $loadBalancer -and $azureVMResources)
+    {
+        Write-Verbose "Trying to get front end ports for $backEndPort" -Verbose
+
+        Write-Verbose "[Azure Call]Getting Azure LoadBalancer Inbound NatRule Config" -Verbose
+        $rules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer
+        Write-Verbose "[Azure Call]Got Azure LoadBalancer Inbound NatRule Config" -Verbose
+
+        $filteredRules = $rules | Where-Object {$_.BackendPort -eq $backEndPort}
+
+        #Map front end port to back end ipc
+        foreach($rule in $filteredRules)
+        {
+            if($rule.BackendIPConfiguration)
+            {
+                $portList[$rule.BackendIPConfiguration.Id] = $rule.FrontendPort
+            }
+        }
+
+        #Get the nic, and the corresponding machine id for a given back end ipc
+        foreach($nic in $networkInterfaceResources)
+        {
+            foreach($ipConfig in $nic.IpConfigurations)
+            {
+                $frontEndPort = $portList[$ipConfig.Id]
+                if([string]::IsNullOrEmpty($frontEndPort) -eq $false)
+                {
+                    $portList.Remove($ipConfig.Id)
+                    if($nic.VirtualMachine)
+                    {
+                        $portList[$nic.VirtualMachine.Id] = $frontEndPort
+                    }
+                }
+            }
+        }
+    }
+    
+    Write-Verbose "Got front end ports for $backEndPort" -Verbose
+
+    return $portList
+}
+
+function Get-MachineConnectionInformation
+{
+    param([string]$resourceGroupName)
+    
+    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    {
+        Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
+        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -Verbose
+        Write-Verbose -Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
+        Set-Variable -Name networkInterfaceResources -Value $networkInterfaceResources -Scope "Global"
+
+        Write-Verbose -Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
+        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -Verbose
+        Write-Verbose -Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
+        Set-Variable -Name publicIPAddressResources -Value $publicIPAddressResources -Scope "Global"
+
+        Write-Verbose -Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
+        $lbGroup = Get-AzureResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.Network/loadBalancers" -Verbose
+        Write-Verbose -Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
+
+        $fqdnMap = @{}
+        Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
+
+        $winRmHttpsPortMap = @{}
+        Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
+
+        if($lbGroup.Count -gt 0)
+        {
+            foreach($lb in $lbGroup)
+            {
+                Write-Verbose -Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
+                $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -Verbose
+                Write-Verbose -Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
+                Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
+
+                $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName
+                $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap
+            }
+
+            $fqdnMap = GetMachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
+            $winRmHttpsPortMap = GetMachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
+        }
+        else
+        {
+            $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
+            $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
+        }
+    }
+}
+
+# End region Azure Calls(ARM/RDFE) Functions
+
+# Start region Utilities Functions
+
+function ThrowError
+{
+    param([string]$errorMessage)
+
+    $readmelink = "http://aka.ms/azurefilecopyreadme"
+    $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
+    throw "$errorMessage $helpMessage"
 }
 
 function Validate-AzurePowershellVersion
@@ -136,173 +417,47 @@ function Validate-AzurePowershellVersion
     Write-Verbose -Verbose "Validated the required azure powershell version"
 }
 
-function Remove-AzureContainer
+function Get-AzureVMResourcesProperties
 {
-    param([string]$containerName,
-          [Microsoft.WindowsAzure.Commands.Common.Storage.AzureStorageContext]$storageContext,
-          [string]$storageAccount)
-
-    Write-Verbose "[Azure Call]Deleting container: $containerName in storage account: $storageAccount" -Verbose
-    Remove-AzureStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
-    Write-Verbose "[Azure Call]Deleted container: $containerName in storage account: $storageAccount" -Verbose
-}
-
-function Get-ResourceCredentials
-{
-    param([object]$resource)
-
-    $machineUserName = $resource.Username
-    Write-Verbose "`t Resource Username - $machineUserName" -Verbose
-
-    $machinePassword = $resource.Password
-    $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $machineUserName, $machinePassword
-
-    return $credential
-}
-
-function Get-ResourceConnectionDetails
-{
-    param([object]$resource,
-          [Microsoft.VisualStudio.Services.Client.VssConnection]$connection)
-
-    $resourceProperties = @{}
-    $resourceName = $resource.Name
-    $resourceId = $resource.Id
-
-    Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
-    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -Connection $connection -ResourceId $resourceId
-    Write-Verbose "`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
-    Write-Verbose "`t Resource fqdn - $fqdn" -Verbose
-
-    $winrmPortToUse = ''
-    $protocolToUse = ''
-
-    # check whether https port is defined for resource
-    Write-Verbose "`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
-    $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -Connection $connection -ResourceId $resourceId
-    Write-Verbose "`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
-
-    if ([string]::IsNullOrEmpty($winrmHttpsPort))
-    {
-        Write-Verbose "`t Resource: $resourceName (Id : $resourceId) does not have any winrm https port defined, checking for winrm http port" -Verbose
-
-        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
-        $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -Connection $connection -ResourceId $resourceId
-        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
-
-        # if resource does not have any port defined then, use https port by default
-        if ([string]::IsNullOrEmpty($winrmHttpPort))
-        {
-            Write-Verbose "`t Resource: $resourceName (Id : $resourceId) does not have any winrm http port or https port defined, using https port by default" -Verbose
-            $winrmPortToUse = $defaultWinRMPort
-            $protocolToUse = $defaultConnectionProtocolOption
-        }
-        else
-        {
-            # if resource has winrm http port defined
-            $winrmPortToUse = $winrmHttpPort
-            $protocolToUse = $useHttpProtocolOption
-        }
-    }
-    else
-    {
-        # if resource has winrm https port opened
-        $winrmPortToUse = $winrmHttpsPort
-        $protocolToUse = $useHttpsProtocolOption
-    }
-
-    Write-Verbose "`t Using port: $winrmPortToUse" -Verbose
-
-    $resourceProperties.fqdn = $fqdn
-    $resourceProperties.winrmPort = $winrmPortToUse
-    $resourceProperties.httpProtocolOption = $protocolToUse
-    $resourceProperties.credential = Get-ResourceCredentials -resource $resource
-    $resourceProperties.displayName = $fqdn + ":" + $winrmPortToUse
-
-    return $resourceProperties
-}
-
-function Get-SkipCACheckOption
-{
-    param([string]$environmentName,
-          [Microsoft.VisualStudio.Services.Client.VssConnection]$connection)
-
-    $skipCACheckOption = $doSkipCACheckOption
-
-    # get skipCACheck option from environment
-    Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with key: $skipCACheckKeyName" -Verbose
-    $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -Connection $connection
-    Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with key: $skipCACheckKeyName" -Verbose
-
-    if ($skipCACheckBool -eq "false")
-    {
-        $skipCACheckOption = $doNotSkipCACheckOption
-    }
-
-    return $skipCACheckOption
-}
-
-function Get-ResourcesProperties
-{
-    param([object]$resources,
-          [Microsoft.VisualStudio.Services.Client.VssConnection]$connection)
-
-    $skipCACheckOption = Get-SkipCACheckOption -environmentName $environmentName -connection $connection
-
     [hashtable]$resourcesPropertyBag = @{}
     foreach ($resource in $resources)
     {
         $resourceName = $resource.Name
-        $resourceId = $resource.Id
-        Write-Verbose "Get Resource properties for $resourceName (ResourceId = $resourceId)" -Verbose
+        $resourceFQDN = $fqdnMap[$resourceName]
+        $resourceWinRmHttpsPort = $winRmHttpPortMap[$resourceName]
 
-        # Get other connection details for resource like - Fqdn WinRM Port, Http Protocol, SkipCACheck Option, Resource Credentials
-        $resourceProperties = Get-ResourceConnectionDetails -resource $resource -connection $connection
-        $resourceProperties.skipCACheckOption = $skipCACheckOption
+        $resourceProperties.Name = $resourceName
+        $resourceProperties.fqdn = $resourceFQDN
+        $resourceProperties.winRMHttpsPort = $resourceWinRmHttpsPort
 
-        $resourcesPropertyBag.Add($resourceId, $resourceProperties)
+        $resourcesPropertyBag.Add($resourceName, $resourceProperties)
     }
 
     return $resourcesPropertyBag
 }
 
-function Get-WellFormedTagsList
+function Get-AzureVMsCredentials
 {
-    [CmdletBinding()]
-    Param
-    (
-        [string]$tagsListString
-    )
+    Write-Verbose "`t Azure VMs Admin Username: $vmsAdminUserName" -Verbose
 
-    if([string]::IsNullOrWhiteSpace($tagsListString))
-    {
-        return $null
-    }
+    $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassowrd
 
-    $tagsArray = $tagsListString.Split(';')
-    $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
-    foreach($tag in $tagsArray)
-    {
-        if([string]::IsNullOrWhiteSpace($tag)) {continue}
-        $tagKeyValue = $tag.Split(':')
-        if($tagKeyValue.Length -ne 2)
-        {
-            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
-        }
-
-        if([string]::IsNullOrWhiteSpace($tagKeyValue[0]) -or [string]::IsNullOrWhiteSpace($tagKeyValue[1]))
-        {
-            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
-        }
-
-        $tagTuple = New-Object "System.Tuple[string,string]" ($tagKeyValue[0].Trim(), $tagKeyValue[1].Trim())
-        $tagList.Add($tagTuple) | Out-Null
-    }
-
-    $tagList = [System.Collections.Generic.IEnumerable[Tuple[string,string]]]$tagList
-    return ,$tagList
+    return $azureVmsCredentials
 }
 
+function Get-SkipCACheckOption
+{
+    if ($skipCACheck -eq "false")
+    {
+        return $doNotSkipCACheckOption
+    }
+
+    return $doSkipCACheckOption
+}
+
+# End region Utilities Functions
+
+# TASK MAIN EXECUTION BEGINS #
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
 if ($enableDetailedLoggingString -ne "true")
@@ -400,34 +555,18 @@ $envOperationStatus = 'Passed'
 # copying files to azure vms
 try
 {
-    $connection = Get-VssConnection -TaskContext $distributedTaskContext
-
-    if($resourceFilteringMethod -eq "tags")
+    Get-AzureVMsInResourceGroup -resourceGroupName $environmentName
+    if ($azureVMResources.Count -eq 0)
     {
-        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
-
-        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with tag filter: $wellFormedTagsList" -Verbose
-        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -Connection $connection
-        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with tag filter" -Verbose
-    }
-    else
-    {
-        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with machine filter: $machineFilter" -Verbose
-        $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -Connection $connection
-        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
+        throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
     }
 
-    if ($resources.Count -eq 0)
-    {
-        throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for copy" -ArgumentList $environmentName)
-    }
+    Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
 
-    Write-Verbose "Starting Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $azureFileCopyOperation" -Verbose
-    $envOperationId = Invoke-EnvironmentOperation -EnvironmentName $environmentName -OperationName $azureFileCopyOperation -Connection $connection
-    Write-Verbose "Completed Invoke-EnvironmentOperation cmdlet call on environment name: $environmentName with operation name: $deploymentOperation" -Verbose
-    Write-Verbose "EnvironmentOperationId = $envOperationId" -Verbose
+    $skipCACheckOption = Get-SkipCACheckOption
+    $azureVmsCredentials = Get-AzureVMsCredentials
 
-    $resourcesPropertyBag = Get-ResourcesProperties -resources $resources -connection $connection
+    $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $resources
 
     # create container sas token with full permissions
     Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccount with expiry time: $defaultSasTokenTimeOutInHours hours" -Verbose
@@ -437,26 +576,23 @@ try
     # copies files sequentially
     if ($copyFilesInParallel -eq "false" -or ( $resources.Count -eq 1 ))
     {
-        foreach ($resource in $resources)
+        foreach ($resource in $azureVMResources)
         {
-            $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-            $machine = $resourceProperties.fqdn
-            $displayName = $resourceProperties.displayName
+            $resourceProperties = $azureVMResourcesPropertiesBag.Item($resource.Name)
+            $resourceFQDN = $resourceProperties.fqdn
+            $resourceName = $resourceProperties.Name
+            $resourceWinRmHttpsPort = $resourceProperties.winRMHttpsPort
 
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $displayName)
+            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
-            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
+            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, $cleanTargetBeforeCopy, $resourceWinRmHttpsPort, $useHttpsProtocolOption, $skipCACheckOption, $enableDetailedLoggingString
             $status = $copyResponse.Status
 
-            Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $displayName -deploymentResponse $copyResponse
-            Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+            Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $resourceName -deploymentResponse $copyResponse
+            Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $resourceName, $status)
 
             if ($status -ne "Passed")
             {
-                Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
-                Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status "Failed" -Connection $connection
-                Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: Failed" -Verbose
-
                 Write-Verbose $copyResponse.Error.ToString() -Verbose
                 $errorMessage =  $copyResponse.Error.Message
                 ThrowError -errorMessage $errorMessage
@@ -467,15 +603,16 @@ try
     else
     {
         [hashtable]$Jobs = @{}
-        foreach ($resource in $resources)
+        foreach ($resource in $azureVMResources)
         {
-            $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-            $machine = $resourceProperties.fqdn
-            $displayName = $resourceProperties.displayName
+            $resourceProperties = $azureVMResourcesPropertiesBag.Item($resource.Name)
+            $resourceFQDN = $resourceProperties.fqdn
+            $resourceName = $resourceProperties.Name
+            $resourceWinRmHttpsPort = $resourceProperties.winRMHttpsPort
 
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $displayName)
+            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
-            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $machine, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $resourceProperties.winrmPort, $resourceProperties.httpProtocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString
+            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, $cleanTargetBeforeCopy, $resourceWinRmHttpsPort, $useHttpsProtocolOption, $skipCACheckOption, $enableDetailedLoggingString
             $Jobs.Add($job.Id, $resourceProperties)
         }
 
@@ -490,30 +627,25 @@ try
                     Remove-Job $Job
 
                     $status = $output.Status
-                    $displayName = $Jobs.Item($job.Id).displayName
-                    $resOperationId = $Jobs.Item($job.Id).resOperationId
+                    $resourceName = $Jobs.Item($job.Id).Name
 
-                    Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $displayName -deploymentResponse $output
-                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+                    Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $resourceName -deploymentResponse $output
+                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $resourceName, $status)
 
                     if ($status -ne "Passed")
                     {
                         $envOperationStatus = "Failed"
-                    $errorMessage = ""
-                    if($output.Error -ne $null)
-                    {
-                        $errorMessage = $output.Error.Message
-                    }
-                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $displayName, $errorMessage)
+                        $errorMessage = ""
+                        if($output.Error -ne $null)
+                        {
+                            $errorMessage = $output.Error.Message
+                        }
+                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
                     }
                 }
             }
         }
     }
-
-     Write-Verbose "Starting Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
-     Complete-EnvironmentOperation -EnvironmentName $environmentName -EnvironmentOperationId $envOperationId -Status $envOperationStatus -Connection $connection
-     Write-Verbose "Completed Complete-EnvironmentOperation cmdlet call on environment name: $environmentName with environment operationId: $envOperationId and status: $envOperationStatus" -Verbose
 
     if ($envOperationStatus -ne "Passed")
     {
@@ -522,7 +654,7 @@ try
     }
     else
     {
-        Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in environment: '{1}' successfully" -ArgumentList $sourcePath, $environmentName)
+        Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $environmentName)
     }
 }
 catch
