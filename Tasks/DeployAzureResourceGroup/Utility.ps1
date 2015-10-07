@@ -8,8 +8,23 @@ function Validate-AzurePowershellVersion
     {
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
     }
-
+    
     Write-Verbose -Verbose "Validated the required azure powershell version"
+}
+
+function Does-SwitchAzureModeRequired
+{
+    $currentVersion =  Get-AzureCmdletsVersion
+    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
+    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+
+    if(!$versionCompatible)
+    {
+        Write-Verbose -Verbose "Switch Azure Mode is required"
+        return $true
+    }
+
+    return $false
 }
 
 function Get-SingleFile($files, $pattern)
@@ -69,7 +84,7 @@ function Get-CsmParameterObject
 
         $csmJObject = [Newtonsoft.Json.Linq.JObject]::Parse($csmParameterFileContent)
         $newParametersObject = New-Object System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
-        
+
         if($csmJObject.ContainsKey("parameters") -eq $true)
         {
             $parameters = $csmJObject.GetValue("parameters")
@@ -107,40 +122,13 @@ function Invoke-OperationHelper
         return
     }
 
-    $machineStatus = "Succeeded"
-    if($machines.Count -gt 0)
-    {
-       $passedOperationCount = $machines.Count
-    }
-
     Foreach($machine in $machines)
     {
         $machineName = $machine.Name
-        $error = Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
+        Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
+
         Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
-
-        $errorMessage = [string]::Empty
-        # Determines the status of the operation. Marks the status of machine group operation as 'Failed' if any one of the machine operation fails.
-        if($error.Count -ne 0)
-        {
-            $machineStatus = $status = "Failed"
-            $passedOperationCount--
-
-            if($error[0].Exception)
-            {
-                $errorMessage = $error[0].Exception.Message
-            }
-
-            Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed with error '{2}'" -ArgumentList $operationName, $machine.Name, $errorMessage)
-        }
-        else
-        {
-            $status = "Succeeded"
-            Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
-        }
     }
-
-    Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
 }
 
 function Delete-MachineGroupHelper
@@ -150,34 +138,6 @@ function Delete-MachineGroupHelper
     Write-Verbose "Entered delete resource group helper for resource group $machineGroupName" -Verbose
 
     Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
-}
-
-function Delete-MachinesHelper
-{
-    param([string]$machineGroupName)
-
-    Write-Verbose "Entered delete machines for the resource group $machineGroupName" -Verbose
-
-    $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $machineGroupName
-
-    # If there are no machines corresponding to given machine names or tags then will not delete any machine.
-    if(! $machines -or $machines.Count -eq 0)
-    {
-        Write-Verbose "Resource group $machineGroupName has no machines in it" -Verbose
-        return
-    }
-
-    $passedOperationCount = $machines.Count
-    Foreach($machine in $machines)
-    {
-        $response = Delete-MachineFromProvider -machineGroupName $machineGroupName -machineName $machine.Name 
-        if($response -ne "Succeeded")
-        {
-            $passedOperationCount--
-        }
-    }
-
-    Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
 }
 
 function Invoke-OperationOnProvider
@@ -190,27 +150,26 @@ function Invoke-OperationOnProvider
     Switch ($operationName)
     {
          "Start" {
-             $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
          }
 
          "Stop" {
-             $error = Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
          }
 
          "Restart" {
-             $error = Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+         }
 
-             if($error.Count -eq 0)
-             {
-                $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
-             }
+         "Delete" {
+             Delete-MachineFromProvider -machineGroupName $machineGroupName -machineName $machineName
          }
 
          default {
               throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
          }
     }
-    return $error
 }
 
 # Task fails if operation fails on all the machines
@@ -257,13 +216,8 @@ function Perform-Action
 
     Switch ($Action)
     {
-          { @("Start", "Stop", "Restart") -contains $_ } {
+          { @("Start", "Stop", "Restart", "Delete") -contains $_ } {
              Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $action
-             break
-          }
-
-          "Delete" {
-             Delete-MachinesHelper -machineGroupName $resourceGroupName
              break
           }
 

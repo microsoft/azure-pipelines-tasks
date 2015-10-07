@@ -17,8 +17,7 @@ param(
     [string]$skipCACheck
 )
 
-Write-Verbose "Starting Azure Resource Group Deployment Task" -Verbose
-
+Write-Verbose -Verbose "Starting Azure Resource Group Deployment Task"
 Write-Verbose -Verbose "ConnectedServiceName = $ConnectedServiceName"
 Write-Verbose -Verbose "Action = $action"
 Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
@@ -31,9 +30,20 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 $ErrorActionPreference = "Stop"
 
 . ./Utility.ps1
-. ./AzureResourceManagerHelper.ps1
 
 Validate-AzurePowershellVersion
+
+#Handle-SwitchAzureMode
+$isSwitchAzureModeRequired = Does-SwitchAzureModeRequired
+if($isSwitchAzureModeRequired)
+{
+    Write-Verbose -Verbose "Using Switch-Azure mode"
+
+    Switch-AzureMode AzureResourceManager
+    . ./AzureResourceManagerWrapper.ps1 
+}
+
+. ./AzureResourceManagerHelper.ps1
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()
@@ -57,22 +67,15 @@ if( $action -eq "Create Or Update Resource Group" )
         $csmParametersFileContent = [String]::Empty
     }
 
-    #Get current subscription
-    $currentSubscription = Get-CurrentSubscriptionInformation
-
     $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
 
     # Create azure resource group
-    Switch-AzureMode AzureResourceManager
-
-    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
+    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
 }
 else
 {
-    Switch-AzureMode AzureResourceManager
-
     #Performing action on resource group 
     Perform-Action -action $action -resourceGroupName $resourceGroupName
 }
 
-Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose
+Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
