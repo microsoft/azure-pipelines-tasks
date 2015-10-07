@@ -53,28 +53,10 @@ $overrideParameters = $overrideParameters.Trim()
 
 if( $action -eq "Create Or Update Resource Group" )
 {
-    $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
-
-    #Create csm parameter object
-    $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
-
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
-    {
-        $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
-    }
-    else
-    {
-        $csmParametersFileContent = [String]::Empty
-    }
-
-    $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
-
-    # Create azure resource group
-    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
+    Create-AzureResourceGroupHelper -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
 }
 else
 {
-    #Performing action on resource group 
     Perform-Action -action $action -resourceGroupName $resourceGroupName
 }
 

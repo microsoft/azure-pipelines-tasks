@@ -207,6 +207,35 @@ function Get-CsmAndParameterFiles
     @{"csmFile" = $($csmFile); "csmParametersFile" = $($csmParametersFile)}
 }
 
+function Create-AzureResourceGroupHelper
+{
+    param([string] $csmFile,
+          [string] $csmParametersFile,
+          [string] $resourceGroupName,
+          [string] $location,
+          [string] $overrideParameters,
+          [bool] $isSwitchAzureModeRequired)
+
+    $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
+
+    #Create csm parameter object
+    $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
+
+    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
+    {
+        $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
+    }
+    else
+    {
+        $csmParametersFileContent = [String]::Empty
+    }
+
+    $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
+
+    # Create azure resource group
+    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
+}
+
 function Perform-Action
 {
     param([string]$action,
