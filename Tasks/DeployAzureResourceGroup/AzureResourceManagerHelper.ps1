@@ -28,7 +28,6 @@ function Create-AzureResourceGroup
 
         if (!$csmParametersObject)
         {
-            #$azureCommand = "New-AzureRMResourceGroupDeployment"
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
 
@@ -39,7 +38,6 @@ function Create-AzureResourceGroup
         }
         else
         {
-            #$azureCommand = "New-AzureRMResourceGroupDeployment"
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
 

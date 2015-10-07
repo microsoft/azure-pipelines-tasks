@@ -37,7 +37,7 @@ Validate-AzurePowershellVersion
 $isSwitchAzureModeRequired = Does-SwitchAzureModeRequired
 if($isSwitchAzureModeRequired)
 {
-    Write-Verbose -Verbose "Using Switch-Azure mode"
+    Write-Verbose -Verbose "Using Switch-AzureMode"
 
     Switch-AzureMode AzureResourceManager
     . ./AzureResourceManagerWrapper.ps1 
