@@ -57,18 +57,6 @@
             "helpMarkDown": "Specify a pre-existing storage account. It is also used as an intermediary for copying files to Azure VMs"
         },
         {
-            "name": "Destination",
-            "type": "pickList",
-            "label": "Destination Type",
-            "defaultValue": "",
-            "required": true,
-            "options": {
-                "AzureBlob": "Azure Blob",
-                "AzureVMs": "Azure VMs"
-            },
-            "helpMarkDown": "Select the destination, either Azure Blob or Azure VMs."
-        },
-        {
             "name": "ContainerName",
             "type": "string",
             "label": "Container Name",

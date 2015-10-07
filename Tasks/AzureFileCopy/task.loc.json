@@ -60,18 +60,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
     },
     {
-      "name": "Destination",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.Destination",
-      "defaultValue": "",
-      "required": true,
-      "options": {
-        "AzureBlob": "Azure Blob",
-        "AzureVMs": "Azure VMs"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.Destination"
-    },
-    {
       "name": "ContainerName",
       "type": "string",
       "label": "ms-resource:loc.input.label.ContainerName",
