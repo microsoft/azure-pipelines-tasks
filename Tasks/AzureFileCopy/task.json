@@ -128,7 +128,8 @@
             "label": "Copy in Parallel",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "Setting it to true will copy files in parallel to the target machines."
+            "helpMarkDown": "Setting it to true will copy files in parallel to the target machines.",
+            "visibleRule": "Destination = AzureVMs"
         },
         {
             "name": "CleanTargetBeforeCopy",
@@ -136,7 +137,8 @@
             "label": "Clean Target",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Setting it to true will clean-up the destination folder before copying the files."
+            "helpMarkDown": "Setting it to true will clean-up the destination folder before copying the files.",
+            "visibleRule": "Destination = AzureVMs"
         },
         {
             "name": "skipCACheck",
@@ -144,7 +146,8 @@
             "label": "Test Certificate",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
+            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
+            "visibleRule": "Destination = AzureVMs"
         }
     ],
     "instanceNameFormat": "$(Destination) File Copy",
