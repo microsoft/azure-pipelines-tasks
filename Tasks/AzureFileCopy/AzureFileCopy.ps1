@@ -139,7 +139,7 @@ function Get-MachinesFqdnsForLB
 
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVMResources)
     {
-        Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the resources from resource group: $resourceGroupName" -Verbose
 
         Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config" -Verbose
         $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
@@ -212,7 +212,7 @@ function GetMachineNameFromId
         {
             $value = $map[$vm.Id]
             $resourceName = $vm.Name
-
+			
             if([string]::IsNullOrEmpty($value) -eq $false)
             {
                 Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
@@ -257,7 +257,7 @@ function Get-MachinesFqdns
         foreach($publicIp in $publicIPAddressResources)
         {
             if([string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn) -eq $false)
-            {
+            {			    
                 $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
             }
             else
@@ -283,7 +283,7 @@ function Get-MachinesFqdns
             }
         }
 
-        $fqdnMap = GetMachineNameFromId -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
+        $fqdnMap = GetMachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
     }
 
     Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
@@ -364,7 +364,7 @@ function Get-MachineConnectionInformation
         $winRmHttpsPortMap = @{}
         Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
 
-        if($lbGroup.Count -gt 0)
+        if($lbGroup)
         {
             foreach($lb in $lbGroup)
             {
@@ -419,13 +419,16 @@ function Validate-AzurePowershellVersion
 
 function Get-AzureVMResourcesProperties
 {
+    param([object]$resources)
+
     [hashtable]$resourcesPropertyBag = @{}
     foreach ($resource in $resources)
     {
         $resourceName = $resource.Name
         $resourceFQDN = $fqdnMap[$resourceName]
-        $resourceWinRmHttpsPort = $winRmHttpPortMap[$resourceName]
+        $resourceWinRmHttpsPort = $winRmHttpsPortMap[$resourceName]
 
+        $resourceProperties = @{}
         $resourceProperties.Name = $resourceName
         $resourceProperties.fqdn = $resourceFQDN
         $resourceProperties.winRMHttpsPort = $resourceWinRmHttpsPort
@@ -438,7 +441,7 @@ function Get-AzureVMResourcesProperties
 
 function Get-AzureVMsCredentials
 {
-    Write-Verbose "`t Azure VMs Admin Username: $vmsAdminUserName" -Verbose
+    Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName" -Verbose
 
     $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassowrd
 
@@ -449,9 +452,11 @@ function Get-SkipCACheckOption
 {
     if ($skipCACheck -eq "false")
     {
+        Write-Verbose "Not skipping CA Check" -Verbose
         return $doNotSkipCACheckOption
     }
 
+    Write-Verbose "Skipping CA Check" -Verbose
     return $doSkipCACheckOption
 }
 
@@ -561,12 +566,12 @@ try
         throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
     }
 
-    Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
+    Get-MachineConnectionInformation -resourceGroupName $environmentName
 
     $skipCACheckOption = Get-SkipCACheckOption
     $azureVmsCredentials = Get-AzureVMsCredentials
 
-    $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $resources
+    $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $azureVMResources
 
     # create container sas token with full permissions
     Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccount with expiry time: $defaultSasTokenTimeOutInHours hours" -Verbose
