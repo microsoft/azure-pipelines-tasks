@@ -17,12 +17,10 @@ function Create-AzureResourceGroup
         #So, using the below approach.  
         if($isSwitchAzureModeRequired)
         {
-            Write-Host "Inside isSwitchAzureModeRequired"
             $azureCommand = "New-AzureResourceGroupDeployment"
         }
         else
         {
-            Write-Host "Inside isSwitchAzureModeRequired is false"
             $azureCommand = "New-AzureRMResourceGroupDeployment"
         }
 
@@ -140,9 +138,15 @@ function Create-AzureResourceGroupIfNotExist
     param([string]$resourceGroupName,
     [string]$location)
 
-    Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName"
-    $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
-    Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
+    try
+    {
+        $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlyContinue
+        Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
+    }
+    catch
+    {
+        #TODO: Latest Azure PS module is not honouring SilentlyContinue option
+    }
 
     if(!$azureResourceGroup)
     {
