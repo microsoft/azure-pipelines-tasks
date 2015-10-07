@@ -22,7 +22,13 @@ Write-Verbose -Verbose "ConnectedServiceName = $ConnectedServiceName"
 Write-Verbose -Verbose "Action = $action"
 Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
 Write-Verbose -Verbose "Location = $location"
-Write-Verbose -Verbose "OverrideParameters = $overrideParameters" 
+Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
+
+$resourceGroupName = $resourceGroupName.Trim()
+$location = $location.Trim()
+$csmFile = $csmFile.Trim()
+$csmParametersFile = $csmParametersFile.Trim()
+$overrideParameters = $overrideParameters.Trim()
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
@@ -30,7 +36,6 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 $ErrorActionPreference = "Stop"
 
 . ./Utility.ps1
-
 Validate-AzurePowershellVersion
 
 #Handle-SwitchAzureMode
@@ -44,12 +49,6 @@ if($isSwitchAzureModeRequired)
 }
 
 . ./AzureResourceManagerHelper.ps1
-
-$resourceGroupName = $resourceGroupName.Trim()
-$location = $location.Trim()
-$csmFile = $csmFile.Trim()
-$csmParametersFile = $csmParametersFile.Trim()
-$overrideParameters = $overrideParameters.Trim()
 
 if( $action -eq "Create Or Update Resource Group" )
 {
