@@ -22,13 +22,6 @@
     "azureps"
   ],
   "minimumAgentVersion": "1.88.0",
-  "groups": [
-    {
-      "name": "advancedOptions",
-      "displayName": "ms-resource:loc.group.displayName.advancedOptions",
-      "isExpanded": true
-    }
-  ],
   "inputs": [
     {
       "name": "SourcePath",
@@ -110,7 +103,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.vmsAdminUserName",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.vmsAdminUserName",
       "visibleRule": "Destination = AzureVMs"
     },
@@ -119,7 +112,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.vmsAdminPassword",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.vmsAdminPassword",
       "visibleRule": "Destination = AzureVMs"
     },
@@ -138,7 +131,6 @@
       "label": "ms-resource:loc.input.label.CopyFilesInParallel",
       "defaultValue": "true",
       "required": false,
-      "groupName": "advancedOptions",
       "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel"
     },
     {
@@ -147,7 +139,6 @@
       "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
       "defaultValue": "false",
       "required": false,
-      "groupName": "advancedOptions",
       "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy"
     },
     {
@@ -156,7 +147,6 @@
       "label": "ms-resource:loc.input.label.skipCACheck",
       "defaultValue": "true",
       "required": false,
-      "groupName": "advancedOptions",
       "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
     }
   ],

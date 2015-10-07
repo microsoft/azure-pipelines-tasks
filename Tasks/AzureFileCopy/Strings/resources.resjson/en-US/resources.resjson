@@ -6,7 +6,6 @@
   "loc.helpMarkDown": "[More Information](http://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copy files to Azure blob or VM(s)",
   "loc.instanceNameFormat": "$(Destination) File Copy",
-  "loc.group.displayName.advancedOptions": "Advanced Options",
   "loc.input.label.SourcePath": "Source",
   "loc.input.help.SourcePath": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file.",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",

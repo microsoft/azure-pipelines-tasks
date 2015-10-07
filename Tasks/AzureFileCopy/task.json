@@ -19,13 +19,6 @@
         "azureps"
     ],
     "minimumAgentVersion": "1.88.0",
-    "groups": [
-        {
-            "name": "advancedOptions",
-            "displayName": "Advanced Options",
-            "isExpanded": true
-        }
-    ],
     "inputs": [
         {
             "name": "SourcePath",
@@ -107,7 +100,7 @@
             "type": "string",
             "label": "Admin Login",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Administrator Username of the VMs.",
             "visibleRule": "Destination = AzureVMs"
         },
@@ -116,7 +109,7 @@
             "type": "string",
             "label": "Password",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Administrator Password of the VMs.",
             "visibleRule": "Destination = AzureVMs"
         },
@@ -135,7 +128,6 @@
             "label": "Copy in Parallel",
             "defaultValue": "true",
             "required": false,
-            "groupName": "advancedOptions",
             "helpMarkDown": "Setting it to true will copy files in parallel to the target machines."
         },
         {
@@ -144,7 +136,6 @@
             "label": "Clean Target",
             "defaultValue": "false",
             "required": false,
-            "groupName": "advancedOptions",
             "helpMarkDown": "Setting it to true will clean-up the destination folder before copying the files."
         },
         {
@@ -153,7 +144,6 @@
             "label": "Test Certificate",
             "defaultValue": "true",
             "required": false,
-            "groupName": "advancedOptions",
             "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
         }
     ],
