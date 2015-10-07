@@ -139,8 +139,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "advancedOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel",
-      "visibleRule": "Destination = AzureVMs"
+      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel"
     },
     {
       "name": "CleanTargetBeforeCopy",
@@ -149,8 +148,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "advancedOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy",
-      "visibleRule": "Destination = AzureVMs"
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy"
     },
     {
       "name": "skipCACheck",
@@ -159,8 +157,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "advancedOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
-      "visibleRule": "Destination = AzureVMs"
+      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
