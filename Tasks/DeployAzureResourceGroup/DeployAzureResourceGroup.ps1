@@ -39,10 +39,10 @@ $ErrorActionPreference = "Stop"
 Validate-AzurePowershellVersion
 
 #Handle-SwitchAzureMode
-$isSwitchAzureModeRequired = Does-SwitchAzureModeRequired
+$isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
 if($isSwitchAzureModeRequired)
 {
-    Write-Verbose -Verbose "Using Switch-AzureMode"
+    Write-Verbose -Verbose "Using Switch-AzureMode AzureResourceManager"
 
     Switch-AzureMode AzureResourceManager
     . ./AzureResourceManagerWrapper.ps1 

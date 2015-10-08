@@ -38,12 +38,12 @@ function New-AzureRMResourceGroup
 
 function Remove-AzureRMResourceGroup
 {
-    param([string]$ResourceGroupName,
+    param([string]$Name,
           [string]$ResourceType,
           [string]$ErrorAction)
 
     Write-Verbose -Verbose "Inside Remove-AzureRMResourceGroup"
-    Remove-AzureResourceGroup -ResourceGroupName $ResourceGroupName -Force -ErrorAction $ErrorAction -Verbose
+    Remove-AzureResourceGroup -Name $Name -Force -ErrorAction $ErrorAction -Verbose
 }
 
 function Remove-AzureRMVM

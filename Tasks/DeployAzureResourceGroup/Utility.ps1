@@ -12,7 +12,7 @@ function Validate-AzurePowershellVersion
     Write-Verbose -Verbose "Validated the required azure powershell version"
 }
 
-function Does-SwitchAzureModeRequired
+function Is-SwitchAzureModeRequired
 {
     $currentVersion =  Get-AzureCmdletsVersion
     $minimumAzureVersion = New-Object System.Version(0, 9, 9)
@@ -109,23 +109,23 @@ function Get-CsmParameterObject
 
 function Invoke-OperationHelper
 {
-     param([string]$machineGroupName,
+     param([string]$resourceGroupName,
            [string]$operationName)
 
-    Write-Verbose "Entered perform action $operationName on machines for resource group $machineGroupName" -Verbose
+    Write-Verbose "Entered perform action $operationName on machines for resource group $resourceGroupName" -Verbose
 
-    $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $machineGroupName
+    $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $resourceGroupName
 
     if(! $machines)
     {
-        Write-Verbose "Resource group $machineGroupName has no machines in it" -Verbose
+        Write-Verbose "Resource group $resourceGroupName has no machines in it" -Verbose
         return
     }
 
     Foreach($machine in $machines)
     {
         $machineName = $machine.Name
-        Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
+        Invoke-OperationOnProvider -resourceGroupName $resourceGroupName -machineName $machine.Name -operationName $operationName
 
         Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
     }
@@ -133,16 +133,16 @@ function Invoke-OperationHelper
 
 function Delete-MachineGroupHelper
 {
-    param([string]$machineGroupName)
+    param([string]$resourceGroupName)
 
-    Write-Verbose "Entered delete resource group helper for resource group $machineGroupName" -Verbose
+    Write-Verbose "Entered delete resource group helper for resource group $resourceGroupName" -Verbose
 
-    Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
+    Delete-MachineGroupFromProvider -resourceGroupName $resourceGroupName
 }
 
 function Invoke-OperationOnProvider
 {
-    param([string]$machineGroupName,
+    param([string]$resourceGroupName,
           [string]$machineName,
           [string]$operationName)
 
@@ -150,39 +150,26 @@ function Invoke-OperationOnProvider
     Switch ($operationName)
     {
          "Start" {
-             Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
          }
 
          "Stop" {
-             Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
          }
 
          "Restart" {
-             Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
-             Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
+             Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
          }
 
          "Delete" {
-             Delete-MachineFromProvider -machineGroupName $machineGroupName -machineName $machineName
+             Delete-MachineFromProvider -resourceGroupName $resourceGroupName -machineName $machineName
          }
 
          default {
               throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
          }
     }
-}
-
-# Task fails if operation fails on all the machines
-function Throw-ExceptionIfOperationFailesOnAllMachine
-{
-   param([string]$passedOperationCount,
-         [string]$operationName,
-         [string]$machineGroupName)
-
-  if(($passedOperationCount -ne $null) -and ($passedOperationCount -eq 0))
-  {
-        throw ( Get-LocalizedString -Key "Operation '{0}' failed on the machines in '{1}'" -ArgumentList $operationName, $machineGroupName )
-  }
 }
 
 function Get-CsmAndParameterFiles
@@ -246,12 +233,12 @@ function Perform-Action
     Switch ($Action)
     {
           { @("Start", "Stop", "Restart", "Delete") -contains $_ } {
-             Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $action
+             Invoke-OperationHelper -resourceGroupName $resourceGroupName -operationName $action
              break
           }
 
           "DeleteRG" {
-             Delete-MachineGroupHelper -machineGroupName $resourceGroupName
+             Delete-MachineGroupHelper -resourceGroupName $resourceGroupName
              break
           }
 

@@ -201,37 +201,37 @@ function Get-AzureMachinesInResourceGroup
 
 function Delete-MachineGroupFromProvider
 {
-    param([string]$machineGroupName)
+    param([string]$resourceGroupName)
 
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group {0}" -ArgumentList $machineGroupName)
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group {0}" -ArgumentList $resourceGroupName)
 
-    Remove-AzureRMResourceGroup -ResourceGroupName $machineGroupName -Force -ErrorAction Stop -Verbose
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}' from Azure provider" -ArgumentList $machineGroupName)
+    Remove-AzureRMResourceGroup -Name $resourceGroupName -Force -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}' from Azure provider" -ArgumentList $resourceGroupName)
 }
 
 function Delete-MachineFromProvider
 {
-    param([string]$machineGroupName,
+    param([string]$resourceGroupName,
           [string]$machineName)
 
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting machine '{0}'" -ArgumentList $machineName)
-    $removeResponse = Remove-AzureRMVM -Name $machineName -ResourceGroupName $machineGroupName -Force -ErrorAction Stop -Verbose
+    Remove-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
 }
 
 function Start-MachineInProvider
 {
-    param([string]$machineGroupName,
+    param([string]$resourceGroupName,
           [string]$machineName)
 
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
-    Start-AzureRMVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction Stop -Verbose
+    Start-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
 }
 
 function Stop-MachineInProvider
 {
-    param([string]$machineGroupName,
+    param([string]$resourceGroupName,
           [string]$machineName)
 
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
-    Stop-AzureRMVM -Name $machineName -ResourceGroupName $machineGroupName -Force -ErrorAction Stop -Verbose
+    Stop-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
 }
