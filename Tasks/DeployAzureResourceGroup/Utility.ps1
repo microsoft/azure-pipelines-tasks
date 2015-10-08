@@ -12,21 +12,6 @@ function Validate-AzurePowershellVersion
     Write-Verbose -Verbose "Validated the required azure powershell version"
 }
 
-function Is-SwitchAzureModeRequired
-{
-    $currentVersion =  Get-AzureCmdletsVersion
-    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
-
-    if(!$versionCompatible)
-    {
-        Write-Verbose -Verbose "Switch Azure Mode is required"
-        return $true
-    }
-
-    return $false
-}
-
 function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])

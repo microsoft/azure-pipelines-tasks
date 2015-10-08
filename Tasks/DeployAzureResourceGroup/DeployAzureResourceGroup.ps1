@@ -36,17 +36,8 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 $ErrorActionPreference = "Stop"
 
 . ./Utility.ps1
+
 Validate-AzurePowershellVersion
-
-#Handle-SwitchAzureMode
-$isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
-if($isSwitchAzureModeRequired)
-{
-    Write-Verbose -Verbose "Using Switch-AzureMode AzureResourceManager"
-
-    Switch-AzureMode AzureResourceManager
-    . ./AzureResourceManagerWrapper.ps1 
-}
 
 . ./AzureResourceManagerHelper.ps1
 

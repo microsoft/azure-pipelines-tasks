@@ -13,16 +13,7 @@ function Create-AzureResourceGroup
         $startTime = Get-Date
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
-        #TODO: Have an issue with passing override parameters to the wrapper.
-        #So, using the below approach.  
-        if($isSwitchAzureModeRequired)
-        {
-            $azureCommand = "New-AzureResourceGroupDeployment"
-        }
-        else
-        {
-            $azureCommand = "New-AzureRMResourceGroupDeployment"
-        }
+        $azureCommand = "New-AzureRMResourceGroupDeployment"        
 
         if (!$csmParametersObject)
         {
@@ -145,7 +136,8 @@ function Create-AzureResourceGroupIfNotExist
     }
     catch
     {
-        #TODO: Latest Azure PS module is not honouring SilentlyContinue option
+        #TODO: Latest Azure PS module is not honouring SilentlyContinue option. 
+        #Currently, execution stop if the Resource Group does not exists.
     }
 
     if(!$azureResourceGroup)
