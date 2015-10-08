@@ -10,9 +10,9 @@
                   ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 2
     },
     "demands" : [
         "xcode"
@@ -20,28 +20,17 @@
     "instanceNameFormat": "Xcode $(actions)",
      "groups": [
         {
+            "name":"sign",
+            "displayName":"Signing & Provisioning",
+            "isExpanded":true            
+        },
+        {
             "name":"advanced",
             "displayName":"Advanced",
             "isExpanded":false
         }
     ],
     "inputs": [
-        { 
-            "name": "xcWorkspacePath", 
-            "type": "filePath", 
-            "label": "Workspace Path", 
-            "defaultValue":"", 
-            "required":true, 
-            "helpMarkDown": "Relative path from repo root where xcworkspace folder exists." 
-        },
-        { 
-            "name": "scheme", 
-            "type": "string", 
-            "label": "Scheme", 
-            "defaultValue":"", 
-            "required":true,
-            "helpMarkDown": "Scheme name in Xcode.  *Must be a shared scheme* (shared checkbox under managed schemes in Xcode)" 
-        },
         { 
             "name": "actions", 
             "type": "string", 
@@ -63,16 +52,166 @@
             "label": "SDK", 
             "defaultValue":"$(SDK)", 
             "required":true,
-            "helpMarkDown": "Build an Xcode project or workspace against the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs."
+            "helpMarkDown": "Build an Xcode project or workspace against the specified SDK.  Run *xcodebuild -showsdks* to see the valid list of SDKs."
+        },
+        { 
+            "name": "xcWorkspacePath", 
+            "type": "filePath", 
+            "label": "Workspace Path", 
+            "defaultValue":"*.xcodeproj/project.xcworkspace", 
+            "required":false, 
+            "helpMarkDown": "Optional relative path from repo root where xcworkspace folder exists. Scheme must also be specified if value provided. Omit if you intend to use the -target flag under Advanced Arguments." 
+        },
+        { 
+            "name": "scheme", 
+            "type": "string", 
+            "label": "Scheme", 
+            "required":false,
+            "helpMarkDown": "Optional scheme name in Xcode. *Must be a shared scheme* (shared checkbox under managed schemes in Xcode). **Required if Workspace is specified.**" 
+        },
+        { 
+            "name": "packageApp", 
+            "type": "boolean", 
+            "label": "Create App Package", 
+            "defaultValue":true, 
+            "required":true,
+            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
+        },
+        { 
+            "name": "signMethod", 
+            "type": "radio", 
+            "label": "Override Using", 
+            "required":false,
+            "groupName":"sign",
+            "defaultValue": "file",
+            "helpMarkDown": "Indicates that the build should use different signing and/or mobile provisioning settings than are present in the workspace. Leave fields blank if you do not wish to override.",
+            "options": {
+                "file": "File Contents",
+                "id": "Identifiers"
+            }
+        },       
+        { 
+            "name": "iosSigningIdentity", 
+            "type": "string", 
+            "label": "Signing Identity", 
+            "required":false,
+            "helpMarkDown": "Optional signing identity override that should be used to sign the build. Defaults to Xcode Project setting. You may need to select Unlock Default Keychain if you use this option.",
+            "groupName":"sign",
+            "visibleRule": "signMethod = id"
+        },
+        { 
+            "name": "unlockDefaultKeychain", 
+            "type": "boolean", 
+            "label": "Unlock Default Keychain", 
+            "defaultValue":false,
+            "required": true,
+            "helpMarkDown": "Resolve \"User interaction is not allowed\" errors by unlocking the default keychain.",
+            "groupName":"sign",
+            "visibleRule": "signMethod = id"
+        },
+        { 
+            "name": "defaultKeychainPassword", 
+            "type": "string", 
+            "label": "Default Keychain Password", 
+            "required": false,
+            "helpMarkDown": "Password to unlock the default keychain when this option is set.",
+            "groupName":"sign",
+            "visibleRule": "signMethod = id"
+        },
+        { 
+            "name": "provProfileUuid", 
+            "type": "string", 
+            "label": "Provisioning Profile UUID", 
+            "required":false,
+            "helpMarkDown": "Optional UUID of an installed provisioning profile to be used for this build. Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
+            "groupName":"sign",
+            "visibleRule": "signMethod = id"
+        },
+        { 
+            "name": "p12", 
+            "type": "filePath", 
+            "label": "P12 Certificate File", 
+            "required":false,
+            "helpMarkDown": "Optional relative path to a PKCS12 formatted p12 certificate file containing a signing certificate to be used for this build.",
+            "groupName":"sign",
+            "visibleRule": "signMethod = file"
+        },
+        { 
+            "name": "p12pwd", 
+            "type": "string", 
+            "label": "P12 Password", 
+            "required":false,
+            "helpMarkDown": "Password to P12 Certificate File if specified. Use a Build Variable to encrypt.",
+            "groupName":"sign",
+            "visibleRule": "signMethod = file"
+        },
+        { 
+            "name": "provProfile", 
+            "type": "filePath", 
+            "label": "Provisioning Profile File", 
+            "required":false,
+            "helpMarkDown": "Optional relative path to file containing provisioning profile override to be used for this build. Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
+            "groupName":"sign",
+            "visibleRule": "signMethod = file"
+        },
+        { 
+            "name": "removeProfile", 
+            "type": "boolean", 
+            "label": "Remove Profile After Build", 
+            "defaultValue":false, 
+            "required":false,
+            "helpMarkDown": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
+            "groupName":"sign",
+            "visibleRule": "signMethod = file"
+        },
+        { 
+            "name": "args", 
+            "type": "string", 
+            "label": "Arguments", 
+            "required":false,
+            "helpMarkDown": "Additional command line arguments that should be used to build. Useful if you want to use -target or -project instead of specifying a Workspace and Scheme.",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working Directory", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Working directory for build runs. Defaults to the root of the repository.",
+            "groupName":"advanced"
         },
         { 
             "name": "outputPattern", 
             "type": "string", 
-            "label": 
-            "Output", 
+            "label": "Output Directory", 
             "defaultValue":"output/$(SDK)/$(Configuration)", 
             "required":true,
             "helpMarkDown": "Relative path where build output (binaries) will be placed.",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "xcodeDeveloperDir", 
+            "type": "string", 
+            "label": "Xcode Developer Path", 
+            "required":false,
+            "helpMarkDown": "Optional path to Xcode Developer folder if not the system default. For use when multiple versions of Xcode are installed on a system. Ex: /Applications/Xcode 7.app/Contents/Developer",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "useXctool", 
+            "type": "boolean", 
+            "label": "Use xctool", 
+            "required":false,
+            "helpMarkDown": "Use xctool instead of xcodebuild. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details.",
+            "groupName":"advanced"
+        },
+        { 
+            "name": "xctoolReporter", 
+            "type": "string", 
+            "label": "xctool Test Reporter Format", 
+            "required":false,
+            "helpMarkDown": "Test reporter format to use when \"test\" action is specified and \"Use xctool\" is checked. Specify \"junit:output-file-path-here.xml\" to generate a file format compatible with the Publish Test Results task. When specified, \"plain\" is automatically added as well. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details.",
             "groupName":"advanced"
         }
     ],
