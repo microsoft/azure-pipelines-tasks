@@ -87,8 +87,10 @@ function determineProfile(input) {
 					}
 					
 					// return exec of copy command
+					var userProfilesPath = path.join(process.env['HOME'], 'Library', 'MobileDevice', 'Provisioning Profiles'); 
+					tl.mkdirP(userProfilesPath); // Path may not exist if Xcode has not been run yet.
 					var copyProvProfile = new tl.ToolRunner(tl.which('cp'), true);
-					copyProvProfile.arg(['-f', profilePath, process.env['HOME'] + '/Library/MobileDevice/Provisioning Profiles/' + foundUuid + '.mobileprovision']);
+					copyProvProfile.arg(['-f', profilePath, path.join(userProfilesPath, foundUuid + '.mobileprovision')]);
 					
 					var uuid;
 					if(input.provProfileUuid) {
