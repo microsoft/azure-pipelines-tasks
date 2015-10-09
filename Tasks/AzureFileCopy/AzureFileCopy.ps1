@@ -69,6 +69,26 @@ function ThrowError
     throw "$errorMessage $helpMessage"
 }
 
+function Does-RequireSwitchAzureMode
+{
+    $azureVersion = Get-AzureCmdletsVersion
+
+    $versionRequiring = New-Object -TypeName System.Version -ArgumentList "0.9.9"
+
+    $result = Get-AzureVersionComparison -AzureVersion $azureVersion -CompareVersion $versionRequiring
+	
+	if(!$result)
+	{
+	    Write-Verbose "Switch Azure mode is required." -Verbose
+	}
+	else
+	{
+	    Write-Verbose "Switch Azure mode is not required." -Verbose
+	}
+
+    return !$result
+}
+
 function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
@@ -76,7 +96,7 @@ function Get-AzureStorageAccountResourceGroupName
     try
     {
         Write-Verbose "[Azure Call](ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
-        $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
+        $azureStorageAccountResourceDetails = Get-AzureRMResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
         Write-Verbose "[Azure Call](ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
 
         $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
@@ -101,7 +121,7 @@ function Get-AzureStorageKeyFromARM
     $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
     Write-Verbose "[Azure Call](ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
-    $storageKeyDetails = Get-AzureStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
+    $storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
     $storageKey = $storageKeyDetails.Key1
     Write-Verbose "[Azure Call](ARM)Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
 
@@ -143,7 +163,7 @@ function Remove-AzureContainer
           [string]$storageAccount)
 
     Write-Verbose "[Azure Call]Deleting container: $containerName in storage account: $storageAccount" -Verbose
-    Remove-AzureStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
+    Remove-AzureRMStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
     Write-Verbose "[Azure Call]Deleted container: $containerName in storage account: $storageAccount" -Verbose
 }
 
@@ -314,38 +334,58 @@ if ($enableDetailedLoggingString -ne "true")
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
+$isSwitchAzureModeRequierd = Does-RequireSwitchAzureMode
+
+if($isSwitchAzureModeRequierd)
+{
+    Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
+    . ./AzureResourceManagerWrapper.ps1
+}
+
 # try to get storage key from RDFE, if not exists will try from ARM endpoint
 $storageAccount = $storageAccount.Trim()
 try
 {
-    Switch-AzureMode AzureServiceManagement
+    if($isSwitchAzureModeRequierd)
+	{
+	    Write-Verbose "Switching Azure mode to AzureServiceManagement." -Verbose
+	    Switch-AzureMode AzureServiceManagement
+	}
 
     # getting storage key from RDFE    
     $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
+	
+	Write-Verbose "RDFE call succeeded. Loading ARM Wrapper." -Verbose
+	. ./AzureResourceManagerWrapper.ps1
 }
-catch [Hyak.Common.CloudException]
+catch [Hyak.Common.CloudException], [System.ApplicationException]
 {
     $errorMsg = $_.Exception.Message.ToString()
-    Write-Verbose "[Azure Call](RDFE) $errorMsg" -Verbose
+	
+    Write-Verbose "[Azure Call](RDFE) 123 $errorMsg" -Verbose
 
     # checking azure powershell version to make calls to ARM endpoint
     Validate-AzurePowershellVersion
 
-    Switch-AzureMode AzureResourceManager
+    if($isSwitchAzureModeRequierd)
+	{
+	    Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
+	    Switch-AzureMode AzureResourceManager
+	}
 
     # getting storage account key from ARM endpoint
     $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
 }
 
 # creating storage context to be used while creating container, sas token, deleting container
-$storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
+$storageContext = New-AzureRMStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
 # creating temporary container for uploading files
 if ([string]::IsNullOrEmpty($containerName))
 {
     $containerName = [guid]::NewGuid().ToString();
     Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccount" -Verbose
-    $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container
+    $container = New-AzureRMStorageContainer -Name $containerName -Context $storageContext -Permission Container
     Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccount" -Verbose
 }
 
@@ -431,7 +471,7 @@ try
 
     # create container sas token with full permissions
     Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccount with expiry time: $defaultSasTokenTimeOutInHours hours" -Verbose
-    $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours) -Context $storageContext -Permission rwdl
+    $containerSasToken = New-AzureRMStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours) -Context $storageContext -Permission rwdl
     Write-Verbose "[Azure Call]Generated SasToken: $containerSasToken successfully for container: $containerName in storage: $storageAccount" -Verbose
 
     # copies files sequentially
