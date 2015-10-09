@@ -163,7 +163,7 @@ function Remove-AzureContainer
           [string]$storageAccount)
 
     Write-Verbose "[Azure Call]Deleting container: $containerName in storage account: $storageAccount" -Verbose
-    Remove-AzureRMStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
+    Remove-AzureStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
     Write-Verbose "[Azure Call]Deleted container: $containerName in storage account: $storageAccount" -Verbose
 }
 
@@ -378,14 +378,14 @@ catch [Hyak.Common.CloudException], [System.ApplicationException]
 }
 
 # creating storage context to be used while creating container, sas token, deleting container
-$storageContext = New-AzureRMStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
+$storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
 # creating temporary container for uploading files
 if ([string]::IsNullOrEmpty($containerName))
 {
     $containerName = [guid]::NewGuid().ToString();
     Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccount" -Verbose
-    $container = New-AzureRMStorageContainer -Name $containerName -Context $storageContext -Permission Container
+    $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container
     Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccount" -Verbose
 }
 
@@ -471,7 +471,7 @@ try
 
     # create container sas token with full permissions
     Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccount with expiry time: $defaultSasTokenTimeOutInHours hours" -Verbose
-    $containerSasToken = New-AzureRMStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours) -Context $storageContext -Permission rwdl
+    $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours) -Context $storageContext -Permission rwdl
     Write-Verbose "[Azure Call]Generated SasToken: $containerSasToken successfully for container: $containerName in storage: $storageAccount" -Verbose
 
     # copies files sequentially
