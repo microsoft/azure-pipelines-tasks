@@ -14,7 +14,7 @@ function Create-AzureResourceGroup
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
         #TODO: Have an issue with passing override parameters to the wrapper.
-        #So, using the below approach.
+        #So, using the below approach.  
         if($isSwitchAzureModeRequired)
         {
             $azureCommand = "New-AzureResourceGroupDeployment"
@@ -22,7 +22,7 @@ function Create-AzureResourceGroup
         else
         {
             $azureCommand = "New-AzureRMResourceGroupDeployment"
-        }
+        }      
 
         if (!$csmParametersObject)
         {
@@ -140,6 +140,7 @@ function Create-AzureResourceGroupIfNotExist
 
     try
     {
+        Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName"
         $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlyContinue
         Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
     }
@@ -204,10 +205,9 @@ function Delete-MachineGroupFromProvider
 {
     param([string]$resourceGroupName)
 
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group {0}" -ArgumentList $resourceGroupName)
-
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group '{0}'" -ArgumentList $resourceGroupName)
     Remove-AzureRMResourceGroup -Name $resourceGroupName -Force -ErrorAction Stop -Verbose
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}' from Azure provider" -ArgumentList $resourceGroupName)
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}'" -ArgumentList $resourceGroupName)
 }
 
 function Delete-MachineFromProvider
@@ -217,6 +217,7 @@ function Delete-MachineFromProvider
 
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting machine '{0}'" -ArgumentList $machineName)
     $response = Remove-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
 
     return $response
 }
@@ -228,6 +229,7 @@ function Start-MachineInProvider
 
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
     $response = Start-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Started machine '{0}' from Azure provider" -ArgumentList $machineName)
 
     return $response
 }
@@ -239,6 +241,7 @@ function Stop-MachineInProvider
 
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
     $response = Stop-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopped machine '{0}' from Azure provider" -ArgumentList $machineName)
 
     return $response
 }

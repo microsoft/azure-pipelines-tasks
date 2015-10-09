@@ -152,11 +152,15 @@ function Invoke-OperationHelper
 
         if($response.Status -ne "Succeeded")
         {
-            Write-Error (Get-LocalizedString -Key "[Azure Resource Manager]Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
+            Write-Error (Get-LocalizedString -Key "Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
             throw $response.Error
         }
+        else
+        {
+            Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
+        }
         
-        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
+        Write-Verbose "Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
     }
 }
 
@@ -166,7 +170,7 @@ function Invoke-OperationOnProvider
           [string]$machineName,
           [string]$operationName)
     
-    # Performes the operation on provider based on the operation name.
+    # Performs the operation on provider based on the operation name.
     Switch ($operationName)
     {
          "Start" {
@@ -177,13 +181,13 @@ function Invoke-OperationOnProvider
              $response = Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
          }
 
-         "Restart" {
-             $response = Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
+         "Restart" {            
+             $response = Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName             
 
              if($response.Status -eq "Succeeded")
              {
                 $response = Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
-             }
+             }         
          }
 
          "Delete" {
@@ -192,7 +196,7 @@ function Invoke-OperationOnProvider
 
          default {
               throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
-         }
+         }         
     }
 
     $response
