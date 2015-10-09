@@ -5,7 +5,7 @@
           [string]$ErrorAction)
 
     Write-Verbose -Verbose "Inside Get-AzureRMResource"
-    Get-AzureResource -ResourceType $ResourceType -ResourceGroupName $ResourceGroupName -ErrorAction $ErrorAction -OutputObjectFormat New
+    Get-AzureResource -ResourceType $ResourceType -ResourceGroupName $ResourceGroupName -ErrorAction $ErrorAction
 }
 
 function Get-AzureRMResourceGroup

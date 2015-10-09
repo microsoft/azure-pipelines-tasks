@@ -6,8 +6,7 @@ function Validate-AzurePowershellVersion
 
     if(!$versionCompatible)
     {
-        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
-    }
+        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "http://aka.ms/azps")    }
 
     Write-Verbose -Verbose "Validated the required azure powershell version"
 }
@@ -23,7 +22,12 @@ function Is-SwitchAzureModeRequired
         Write-Verbose -Verbose "Switch Azure Mode is required"
         return $true
     }
-
+    
+    if(!(Get-Module -Name "AzureRM" -ListAvailable))
+    {
+        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
+    }
+       
     return $false
 }
 
@@ -112,8 +116,6 @@ function Perform-Action
     param([string]$action,
           [string]$resourceGroupName)
 
-    $providerName = "Azure"
-
     Switch ($Action)
     {
           { @("Start", "Stop", "Restart", "Delete") -contains $_ } {
@@ -126,7 +128,7 @@ function Perform-Action
              break
           }
 
-         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, $providerName) }
+         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, "Azure") }
     }
 }
 

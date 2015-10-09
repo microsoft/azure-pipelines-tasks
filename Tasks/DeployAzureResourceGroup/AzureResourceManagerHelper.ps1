@@ -13,8 +13,8 @@ function Create-AzureResourceGroup
         $startTime = Get-Date
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
-        #TODO: Have an issue with passing override parameters to the wrapper.
-        #So, using the below approach.  
+        #TODO: Have an issue with passing override parameters and error variable to the wrapper.
+        #So, using the below approach. 
         if($isSwitchAzureModeRequired)
         {
             $azureCommand = "New-AzureResourceGroupDeployment"
@@ -146,8 +146,7 @@ function Create-AzureResourceGroupIfNotExist
     }
     catch
     {
-        #TODO: Latest Azure PS module is not honouring SilentlyContinue option. 
-        #Currently, execution stop if the Resource Group does not exists.
+        #Ignoring the exception
     }
 
     if(!$azureResourceGroup)
@@ -186,7 +185,7 @@ function Get-AzureMachinesInResourceGroup
     try
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName virtual machines type resources"
-        $azureResourceGroupVMResources = Get-AzureRMResource -ResourceType "Microsoft.Compute/virtualMachines" -ResourceGroupName $resourceGroupName -ErrorAction Stop -OutputObjectFormat New
+        $azureResourceGroupVMResources = Get-AzureRMResource -ResourceType "Microsoft.Compute/virtualMachines" -ResourceGroupName $resourceGroupName -ErrorAction Stop
         Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName virtual machines type resources"
     }
     catch [Microsoft.Azure.Commands.ResourceManager.Cmdlets.Entities.ErrorResponses.ErrorResponseMessageException]
