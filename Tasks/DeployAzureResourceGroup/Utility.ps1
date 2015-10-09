@@ -12,6 +12,21 @@ function Validate-AzurePowershellVersion
     Write-Verbose -Verbose "Validated the required azure powershell version"
 }
 
+function Is-SwitchAzureModeRequired
+{
+    $currentVersion =  Get-AzureCmdletsVersion
+    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
+    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+
+    if(!$versionCompatible)
+    {
+        Write-Verbose -Verbose "Switch Azure Mode is required"
+        return $true
+    }
+
+    return $false
+}
+
 function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
@@ -92,6 +107,29 @@ function Get-CsmParameterObject
     }
 }
 
+function Perform-Action
+{
+    param([string]$action,
+          [string]$resourceGroupName)
+
+    $providerName = "Azure"
+
+    Switch ($Action)
+    {
+          { @("Start", "Stop", "Restart", "Delete") -contains $_ } {
+             Invoke-OperationHelper -resourceGroupName $resourceGroupName -operationName $action
+             break
+          }
+
+          "DeleteRG" {
+             Delete-MachineGroupHelper -resourceGroupName $resourceGroupName
+             break
+          }
+
+         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, $providerName) }
+    }
+}
+
 function Invoke-OperationHelper
 {
      param([string]$resourceGroupName,
@@ -110,10 +148,54 @@ function Invoke-OperationHelper
     Foreach($machine in $machines)
     {
         $machineName = $machine.Name
-        Invoke-OperationOnProvider -resourceGroupName $resourceGroupName -machineName $machine.Name -operationName $operationName
+        $response = Invoke-OperationOnProvider -resourceGroupName $resourceGroupName -machineName $machine.Name -operationName $operationName
 
+        if($response.Status -ne "Succeeded")
+        {
+            Write-Error (Get-LocalizedString -Key "[Azure Resource Manager]Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
+            throw $response.Error
+        }
+        
         Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
     }
+}
+
+function Invoke-OperationOnProvider
+{
+    param([string]$resourceGroupName,
+          [string]$machineName,
+          [string]$operationName)
+    
+    # Performes the operation on provider based on the operation name.
+    Switch ($operationName)
+    {
+         "Start" {
+             $response = Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
+         }
+
+         "Stop" {
+             $response = Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
+         }
+
+         "Restart" {
+             $response = Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
+
+             if($response.Status -eq "Succeeded")
+             {
+                $response = Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
+             }
+         }
+
+         "Delete" {
+             $response = Delete-MachineFromProvider -resourceGroupName $resourceGroupName -machineName $machineName
+         }
+
+         default {
+              throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
+         }
+    }
+
+    $response
 }
 
 function Delete-MachineGroupHelper
@@ -123,38 +205,6 @@ function Delete-MachineGroupHelper
     Write-Verbose "Entered delete resource group helper for resource group $resourceGroupName" -Verbose
 
     Delete-MachineGroupFromProvider -resourceGroupName $resourceGroupName
-}
-
-function Invoke-OperationOnProvider
-{
-    param([string]$resourceGroupName,
-          [string]$machineName,
-          [string]$operationName)
-
-    # Performes the operation on provider based on the operation name.
-    Switch ($operationName)
-    {
-         "Start" {
-             Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
-         }
-
-         "Stop" {
-             Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
-         }
-
-         "Restart" {
-             Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
-             Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
-         }
-
-         "Delete" {
-             Delete-MachineFromProvider -resourceGroupName $resourceGroupName -machineName $machineName
-         }
-
-         default {
-              throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
-         }
-    }
 }
 
 function Get-CsmAndParameterFiles
@@ -206,27 +256,4 @@ function Create-AzureResourceGroupHelper
 
     # Create azure resource group
     $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
-}
-
-function Perform-Action
-{
-    param([string]$action,
-          [string]$resourceGroupName)
-
-    $providerName = "Azure"
-
-    Switch ($Action)
-    {
-          { @("Start", "Stop", "Restart", "Delete") -contains $_ } {
-             Invoke-OperationHelper -resourceGroupName $resourceGroupName -operationName $action
-             break
-          }
-
-          "DeleteRG" {
-             Delete-MachineGroupHelper -resourceGroupName $resourceGroupName
-             break
-          }
-
-         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, $providerName) }
-    }
 }

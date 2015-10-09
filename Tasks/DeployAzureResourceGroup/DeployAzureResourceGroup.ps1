@@ -39,6 +39,15 @@ $ErrorActionPreference = "Stop"
 
 Validate-AzurePowershellVersion
 
+#Handle-SwitchAzureMode
+$isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
+
+if($isSwitchAzureModeRequired)
+{
+    Switch-AzureMode AzureResourceManager
+    . ./AzureResourceManagerWrapper.ps1
+}
+
 . ./AzureResourceManagerHelper.ps1
 
 if( $action -eq "Create Or Update Resource Group" )
