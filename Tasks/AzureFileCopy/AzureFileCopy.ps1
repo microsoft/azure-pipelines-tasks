@@ -443,7 +443,7 @@ function Get-AzureVMsCredentials
 {
     Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName" -Verbose
 
-    $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassowrd
+    $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassword
 
     return $azureVmsCredentials
 }
