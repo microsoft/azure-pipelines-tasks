@@ -358,7 +358,7 @@ try
 	Write-Verbose "RDFE call succeeded. Loading ARM Wrapper." -Verbose
 	. ./AzureResourceManagerWrapper.ps1
 }
-catch [Hyak.Common.CloudException], [System.ApplicationException]
+catch [Hyak.Common.CloudException], [System.ApplicationException], [System.Management.Automation.CommandNotFoundException]
 {
     $errorMsg = $_.Exception.Message.ToString()
 	
