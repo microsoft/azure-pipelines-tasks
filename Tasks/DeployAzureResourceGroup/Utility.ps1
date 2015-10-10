@@ -6,10 +6,29 @@ function Validate-AzurePowershellVersion
 
     if(!$versionCompatible)
     {
-        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
-    }
+        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "http://aka.ms/azps")    }
 
     Write-Verbose -Verbose "Validated the required azure powershell version"
+}
+
+function Is-SwitchAzureModeRequired
+{
+    $currentVersion =  Get-AzureCmdletsVersion
+    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
+    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+
+    if(!$versionCompatible)
+    {
+        Write-Verbose -Verbose "Switch Azure Mode is required"
+        return $true
+    }
+    
+    if(!(Get-Module -Name "AzureRM" -ListAvailable))
+    {
+        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
+    }
+       
+    return $false
 }
 
 function Get-SingleFile($files, $pattern)
@@ -69,7 +88,7 @@ function Get-CsmParameterObject
 
         $csmJObject = [Newtonsoft.Json.Linq.JObject]::Parse($csmParameterFileContent)
         $newParametersObject = New-Object System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
-        
+
         if($csmJObject.ContainsKey("parameters") -eq $true)
         {
             $parameters = $csmJObject.GetValue("parameters")
@@ -92,138 +111,106 @@ function Get-CsmParameterObject
     }
 }
 
+function Perform-Action
+{
+    param([string]$action,
+          [string]$resourceGroupName)
+
+    Switch ($Action)
+    {
+          { @("Start", "Stop", "Restart", "Delete") -contains $_ } {
+             Invoke-OperationHelper -resourceGroupName $resourceGroupName -operationName $action
+             break
+          }
+
+          "DeleteRG" {
+             Delete-MachineGroupHelper -resourceGroupName $resourceGroupName
+             break
+          }
+
+         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, "Azure") }
+    }
+}
+
 function Invoke-OperationHelper
 {
-     param([string]$machineGroupName,
+     param([string]$resourceGroupName,
            [string]$operationName)
 
-    Write-Verbose "Entered perform action $operationName on machines for resource group $machineGroupName" -Verbose
+    Write-Verbose "Entered perform action $operationName on machines for resource group $resourceGroupName" -Verbose
 
-    $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $machineGroupName
+    $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $resourceGroupName
 
     if(! $machines)
     {
-        Write-Verbose "Resource group $machineGroupName has no machines in it" -Verbose
+        Write-Verbose "Resource group $resourceGroupName has no machines in it" -Verbose
         return
-    }
-
-    $machineStatus = "Succeeded"
-    if($machines.Count -gt 0)
-    {
-       $passedOperationCount = $machines.Count
     }
 
     Foreach($machine in $machines)
     {
         $machineName = $machine.Name
-        $error = Invoke-OperationOnProvider -machineGroupName $machineGroupName -machineName $machine.Name -operationName $operationName
-        Write-Verbose "[Azure Resource Manager]Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
+        $response = Invoke-OperationOnProvider -resourceGroupName $resourceGroupName -machineName $machine.Name -operationName $operationName
 
-        $errorMessage = [string]::Empty
-        # Determines the status of the operation. Marks the status of machine group operation as 'Failed' if any one of the machine operation fails.
-        if($error.Count -ne 0)
+        if($response.Status -ne "Succeeded")
         {
-            $machineStatus = $status = "Failed"
-            $passedOperationCount--
-
-            if($error[0].Exception)
-            {
-                $errorMessage = $error[0].Exception.Message
-            }
-
-            Write-Warning(Get-LocalizedString -Key "Operation '{0}' on machine '{1}' failed with error '{2}'" -ArgumentList $operationName, $machine.Name, $errorMessage)
+            Write-Error (Get-LocalizedString -Key "Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
+            throw $response.Error
         }
         else
         {
-            $status = "Succeeded"
             Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
         }
+        
+        Write-Verbose "Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
     }
-
-    Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
-}
-
-function Delete-MachineGroupHelper
-{
-    param([string]$machineGroupName)
-
-    Write-Verbose "Entered delete resource group helper for resource group $machineGroupName" -Verbose
-
-    Delete-MachineGroupFromProvider -machineGroupName $MachineGroupName
-}
-
-function Delete-MachinesHelper
-{
-    param([string]$machineGroupName)
-
-    Write-Verbose "Entered delete machines for the resource group $machineGroupName" -Verbose
-
-    $machines = Get-AzureMachinesInResourceGroup -resourceGroupName $machineGroupName
-
-    # If there are no machines corresponding to given machine names or tags then will not delete any machine.
-    if(! $machines -or $machines.Count -eq 0)
-    {
-        Write-Verbose "Resource group $machineGroupName has no machines in it" -Verbose
-        return
-    }
-
-    $passedOperationCount = $machines.Count
-    Foreach($machine in $machines)
-    {
-        $response = Delete-MachineFromProvider -machineGroupName $machineGroupName -machineName $machine.Name 
-        if($response -ne "Succeeded")
-        {
-            $passedOperationCount--
-        }
-    }
-
-    Throw-ExceptionIfOperationFailesOnAllMachine -passedOperationCount $passedOperationCount -operationName $operationName -machineGroupName $machineGroupName
 }
 
 function Invoke-OperationOnProvider
 {
-    param([string]$machineGroupName,
+    param([string]$resourceGroupName,
           [string]$machineName,
           [string]$operationName)
-
-    # Performes the operation on provider based on the operation name.
+    
+    # Performs the operation on provider based on the operation name.
     Switch ($operationName)
     {
          "Start" {
-             $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             $response = Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
          }
 
          "Stop" {
-             $error = Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+             $response = Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
          }
 
-         "Restart" {
-             $error = Stop-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
+         "Restart" {            
+             $response = Stop-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName             
 
-             if($error.Count -eq 0)
+             if($response.Status -eq "Succeeded")
              {
-                $error = Start-MachineInProvider -machineGroupName $machineGroupName -machineName $machineName
-             }
+                $response = Start-MachineInProvider -resourceGroupName $resourceGroupName -machineName $machineName
+             }         
+         }
+
+         "Delete" {
+             $response = Delete-MachineFromProvider -resourceGroupName $resourceGroupName -machineName $machineName
          }
 
          default {
               throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
-         }
+         }         
     }
-    return $error
+
+    $response
 }
 
-# Task fails if operation fails on all the machines
-function Throw-ExceptionIfOperationFailesOnAllMachine
+function Delete-MachineGroupHelper
 {
-   param([string]$passedOperationCount,
-         [string]$operationName,
-         [string]$machineGroupName)
+    param([string]$resourceGroupName)
 
-  if(($passedOperationCount -ne $null) -and ($passedOperationCount -eq 0))
-  {
-        throw ( Get-LocalizedString -Key "Operation '{0}' failed on the machines in '{1}'" -ArgumentList $operationName, $machineGroupName )
-  }
+    Write-Verbose "Entered delete resource group helper for resource group $resourceGroupName" -Verbose
+
+    Delete-MachineGroupFromProvider -resourceGroupName $resourceGroupName
 }
 
 function Get-CsmAndParameterFiles
@@ -248,30 +235,31 @@ function Get-CsmAndParameterFiles
     @{"csmFile" = $($csmFile); "csmParametersFile" = $($csmParametersFile)}
 }
 
-function Perform-Action
+function Create-AzureResourceGroupHelper
 {
-    param([string]$action,
-          [string]$resourceGroupName)
+    param([string] $csmFile,
+          [string] $csmParametersFile,
+          [string] $resourceGroupName,
+          [string] $location,
+          [string] $overrideParameters,
+          [bool] $isSwitchAzureModeRequired)
 
-    $providerName = "Azure"
+    $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 
-    Switch ($Action)
+    #Create csm parameter object
+    $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
+
+    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
     {
-          { @("Start", "Stop", "Restart") -contains $_ } {
-             Invoke-OperationHelper -machineGroupName $resourceGroupName -operationName $action
-             break
-          }
-
-          "Delete" {
-             Delete-MachinesHelper -machineGroupName $resourceGroupName
-             break
-          }
-
-          "DeleteRG" {
-             Delete-MachineGroupHelper -machineGroupName $resourceGroupName
-             break
-          }
-
-         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, $providerName) }
+        $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
     }
+    else
+    {
+        $csmParametersFileContent = [String]::Empty
+    }
+
+    $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
+
+    # Create azure resource group
+    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
 }
