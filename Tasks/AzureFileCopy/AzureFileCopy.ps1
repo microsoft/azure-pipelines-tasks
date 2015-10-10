@@ -73,9 +73,9 @@ function Does-RequireSwitchAzureMode
 {
     $azureVersion = Get-AzureCmdletsVersion
 
-    $versionRequiring = New-Object -TypeName System.Version -ArgumentList "0.9.9"
+    $versionToCompare = New-Object -TypeName System.Version -ArgumentList "0.9.9"
 
-    $result = Get-AzureVersionComparison -AzureVersion $azureVersion -CompareVersion $versionRequiring
+    $result = Get-AzureVersionComparison -AzureVersion $azureVersion -CompareVersion $versionToCompare
 	
 	if(!$result)
 	{
@@ -334,9 +334,9 @@ if ($enableDetailedLoggingString -ne "true")
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
-$isSwitchAzureModeRequierd = Does-RequireSwitchAzureMode
+$isSwitchAzureModeRequired = Does-RequireSwitchAzureMode
 
-if($isSwitchAzureModeRequierd)
+if($isSwitchAzureModeRequired)
 {
     Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
     . ./AzureResourceManagerWrapper.ps1
@@ -346,7 +346,7 @@ if($isSwitchAzureModeRequierd)
 $storageAccount = $storageAccount.Trim()
 try
 {
-    if($isSwitchAzureModeRequierd)
+    if($isSwitchAzureModeRequired)
 	{
 	    Write-Verbose "Switching Azure mode to AzureServiceManagement." -Verbose
 	    Switch-AzureMode AzureServiceManagement
@@ -362,12 +362,12 @@ catch [Hyak.Common.CloudException], [System.ApplicationException]
 {
     $errorMsg = $_.Exception.Message.ToString()
 	
-    Write-Verbose "[Azure Call](RDFE) 123 $errorMsg" -Verbose
+    Write-Verbose "[Azure Call](RDFE) $errorMsg" -Verbose
 
     # checking azure powershell version to make calls to ARM endpoint
     Validate-AzurePowershellVersion
 
-    if($isSwitchAzureModeRequierd)
+    if($isSwitchAzureModeRequired)
 	{
 	    Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
 	    Switch-AzureMode AzureResourceManager
