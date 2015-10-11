@@ -1,2 +1,0 @@
-# Maven With CodeCoverage
-<br/>
