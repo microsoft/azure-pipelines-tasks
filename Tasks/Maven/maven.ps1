@@ -58,7 +58,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 
 $buildRootPath = Split-Path $mavenPOMFile -Parent
-$reportDirectoryName = "CodeCoverage"
+$reportDirectoryName = [guid]::NewGuid()
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $summaryFileName = "jacoco.xml"
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
@@ -80,6 +80,12 @@ PublishTestResults $publishJUnitResults $testResultsFiles
 
 # Publish code coverage
 PublishCodeCoverage  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFile $reportDirectory $codeCoverageTool 
+
+if(Test-Path $reportDirectory)
+{
+    # delete any previous code coverage data 
+    rm -r $reportDirectory -force | Out-Null
+}
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile

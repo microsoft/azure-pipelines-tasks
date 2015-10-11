@@ -81,14 +81,8 @@ if ($jdkPath)
 }
 
 $buildRootPath = Split-Path $antBuildFile -Parent
-$reportDirectoryName = "CodeCoverage"
+$reportDirectoryName = [guid]::NewGuid()
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
-
-if(Test-Path $reportDirectory)
-{
-   # delete any previous code coverage data 
-   rm -r $reportDirectory -force | Out-Null
-}
 
 $summaryFileName = "summary.xml"
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
@@ -156,6 +150,12 @@ if($isCoverageEnabled)
    {
 		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
    }
+}
+
+if(Test-Path $reportDirectory)
+{
+   # delete any previous code coverage data 
+   rm -r $reportDirectory -force | Out-Null
 }
 
 Write-Verbose "Leaving script Ant.ps1"

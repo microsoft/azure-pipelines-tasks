@@ -227,11 +227,6 @@ function EnableCodeCoverage
 		  [string]$summaryFileName,
 		  [string]$reportDirectoryName)
 
-     if(Test-Path $reportDirectory)
-     {
-        # delete any previous code coverage data 
-        rm -r $reportDirectory -force | Out-Null
-     }
      
      # check if code coverage has been enabled
      if($isCoverageEnabled)
