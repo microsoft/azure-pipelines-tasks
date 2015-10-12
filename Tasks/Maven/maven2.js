@@ -169,22 +169,21 @@ will still succeed but the report will have less data.
 */
 
 
-var runFailed = false;
+var userRunFailed = false;
+var sqRunFailed = false;
 
 mvnv.exec()
 .fail(function (err) {
     console.error("Maven is not installed on the agent");
-    tl.exit(1);
+    tl.exit(1);  // tl.exit sets the step result but does not stop execution
+    process.exit(1);
 })
 .then(function (code) {
     return mvnb.exec(); // run Maven with the user specified goals
 })
 .fail(function (err) {
     console.error(err.message);
-    runFailed = true; // record the error, but do not exit
-})
-.fin(function () {
-    publishTestResults(publishJUnitResults, testResultsFiles); // publish test results even if tests fail, causing Maven to fail
+    userRunFailed = true; // record the error and continue
 })
 .then(function (code) {
     mvnsq = getSonarQubeRunner();
@@ -198,12 +197,16 @@ mvnv.exec()
 .fail(function (err) {
     console.error(err.message);
     console.error("SonarQube analysis failed");
-    tl.exit(1)
+    sqRunFailed = true;
 })
-.then(function (code) {
-    if (runFailed) {
-        tl.exit(1); // exit with a non-zero code to mark the entire task as having failed
+.then(function () {
+    // publish test results even if tests fail, causing Maven to fail;
+    publishTestResults(publishJUnitResults, testResultsFiles);
+    if (userRunFailed || sqRunFailed) {
+        tl.exit(1); // mark task failure
     } else {
-        tl.exit(code);
+        tl.exit(0); // mark task success
     }
-});
+
+    // do not force an exit as publishing results is async and it won't have finished 
+})
