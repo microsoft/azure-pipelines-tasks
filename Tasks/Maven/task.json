@@ -16,9 +16,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
-    "minimumAgentVersion": "1.83.0",
+   "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
@@ -26,7 +26,11 @@
             "displayName": "JUnit Test Results",
             "isExpanded": true
         },
-
+        {
+            "name": "codeCoverage",
+            "displayName": "Code Coverage",
+            "isExpanded": true
+        },
         {
             "name": "advanced",
             "displayName": "Advanced",
@@ -78,7 +82,30 @@
             "required": true,
             "groupName": "junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
-        },     
+        },  
+        {
+            "name": "codeCoverageTool",
+            "type": "pickList",
+            "label": "CodeCoverage Tool",
+            "required": false,
+            "groupName": "codeCoverage",
+            "defaultValue": "None",
+            "helpMarkDown": "Select the code coverage tool.",
+            "options": {
+                "None": "None",
+                "JaCoCo": "JaCoCo"
+            }
+        },
+        {
+            "name": "classFilter",
+            "type": "string",
+            "label": "Class Inclusion/Exclusion Filters",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html.",
+            "visibleRule": "codeCoverageTool = JaCoCo"
+        },   
         {
             "name":"javaHomeSelection",
             "type":"radio",

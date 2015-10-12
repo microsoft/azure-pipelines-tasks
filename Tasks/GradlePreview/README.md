@@ -1,2 +1,0 @@
-# Gradle With CodeCoverage
-<br/>

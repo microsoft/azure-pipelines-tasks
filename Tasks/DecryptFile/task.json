@@ -1,0 +1,76 @@
+﻿{
+    "id": "7C6A6b71-4355-4AFC-A274-480EAB5678E9",
+    "name": "DecryptFile",
+    "friendlyName": "Decrypt File (OpenSSL)",
+    "description": "A thin utility task for file decryption using OpenSSL.",
+    "category": "Utility",
+    "visibility": [
+                  "Build",
+                  "Release"
+                  ],    
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+    ],
+    "instanceNameFormat": "Decrypt $(inFile)",
+    "inputs": [
+        { 
+            "name": "cipher", 
+            "type": "string", 
+            "label": "Cypher", 
+            "defaultValue": "des3", 
+            "required": true,
+            "helpMarkDown": "Encryption cypher to use. See [cypher suite names](http://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values."
+        },
+        { 
+            "name": "inFile", 
+            "type": "filePath", 
+            "label": "Encrypted File", 
+            "required": true,
+            "helpMarkDown": "Relative path of file to decrypt."
+        },
+        { 
+            "name": "passphrase", 
+            "type": "string", 
+            "label": "Passphrase", 
+            "required": true,
+            "helpMarkDown": "Passphrase to use for decryption. **Use a Variable to encrypt the passphrase.**"
+        },
+        { 
+            "name": "outFile", 
+            "type": "filePath", 
+            "label": "Decrypted File Path", 
+            "required": false,
+            "helpMarkDown": "Optional filename for decrypted file. Defaults to the Encrypted File with a \".out\" extension"
+        },
+        { 
+            "name": "cwd", 
+            "type": "filePath", 
+            "label": "Working Directory", 
+            "defaultValue": "", 
+            "required": false,          
+            "helpMarkDown": "Working directory for decryption. Defaults to the root of the repository.",
+            "groupName":"advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "decrypt.js",
+            "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\decrypt.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }         
+    }
+}

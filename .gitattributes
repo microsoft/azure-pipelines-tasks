@@ -3,6 +3,9 @@
 ###############################################################################
 *           text=auto
 
+# Shell scripts should always use line feed not crlf
+*.sh text eol=lf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #

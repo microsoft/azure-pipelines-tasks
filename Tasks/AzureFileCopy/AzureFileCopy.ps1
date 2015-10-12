@@ -49,16 +49,50 @@ $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
-# Start region Azure Calls(ARM/RDFE) Functions
+# Getting resource tag key name for corresponding tag
+$resourceFQDNKeyName = Get-ResourceFQDNTagKey
+$resourceWinRMHttpPortKeyName = Get-ResourceHttpTagKey
+$resourceWinRMHttpsPortKeyName = Get-ResourceHttpsTagKey
+$skipCACheckKeyName = Get-SkipCACheckTagKey
+
+function ThrowError
+{
+    param([string]$errorMessage)
+
+    $readmelink = "http://aka.ms/azurefilecopyreadme"
+    $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
+    throw "$errorMessage $helpMessage"
+}
+
+function Does-RequireSwitchAzureMode
+{
+    $azureVersion = Get-AzureCmdletsVersion
+
+    $versionToCompare = New-Object -TypeName System.Version -ArgumentList "0.9.9"
+
+    $result = Get-AzureVersionComparison -AzureVersion $azureVersion -CompareVersion $versionToCompare
+	
+	if(!$result)
+	{
+	    Write-Verbose "Switch Azure mode is required." -Verbose
+	}
+	else
+	{
+	    Write-Verbose "Switch Azure mode is not required." -Verbose
+	}
+
+    return !$result
+}
+
 function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
 
     try
     {
-        Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
-        $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
-        Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+        Write-Verbose "[Azure Call](ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
+        $azureStorageAccountResourceDetails = Get-AzureRMResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
+        Write-Verbose "[Azure Call](ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
 
         $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
     }
@@ -81,8 +115,8 @@ function Get-AzureStorageKeyFromARM
     # get azure storage account resource group name
     $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
-    Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
-    $storageKeyDetails = Get-AzureStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
+    Write-Verbose "[Azure Call](ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+    $storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
     $storageKey = $storageKeyDetails.Key1
     Write-Verbose "[Azure Call]Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
 
@@ -151,7 +185,7 @@ function Get-MachinesFqdnsForLB
             if([string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn) -eq $false)
             {
                 $fqdnMap[$publicIp.Id] =  $publicIP.DnsSettings.Fqdn
-            }
+}
             else
             {
                 $fqdnMap[$publicIp.Id] =  $publicIP.IpAddress
@@ -160,7 +194,7 @@ function Get-MachinesFqdnsForLB
 
         #Get the NAT rule for a given ip id
         foreach($config in $frontEndIPConfigs)
-        {
+{
             $fqdn = $fqdnMap[$config.PublicIpAddress.Id]
             if([string]::IsNullOrEmpty($fqdn) -eq $false)
             {
@@ -204,15 +238,15 @@ function GetMachineNameFromId
           [System.Collections.Hashtable]$map,
           [string]$mapParameter,
           [boolean]$throwOnTotalUnavaialbility)
-    
+
     if($map)
     {
         $errorCount = 0
         foreach($vm in $azureVMResources)
-        {
+    {
             $value = $map[$vm.Id]
             $resourceName = $vm.Name
-			
+
             if([string]::IsNullOrEmpty($value) -eq $false)
             {
                 Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
@@ -225,15 +259,15 @@ function GetMachineNameFromId
                 Write-Verbose "Unable to find $mapParameter for resource $resourceName" -Verbose
             }
         }
-        
+
         if($throwOnTotalUnavaialbility -eq $true)
         {
             if($errorCount -eq $azureVMResources.Count -and $azureVMResources.Count -ne 0)
-            {
+        {
                 throw (Get-LocalizedString -Key "Unable to get {0} for all resources in ResourceGroup : '{1}'" -ArgumentList $mapParameter, $resourceGroupName)
-            }
-            else
-            {
+        }
+        else
+        {
                 if($errorCount -gt 0 -and $errorCount -ne $azureVMResources.Count)
                 {
                     Write-Warning (Get-LocalizedString -Key "Unable to get {0} for '{1}' resources in ResourceGroup : '{2}'" -ArgumentList $mapParameter, $errorCount, $resourceGroupName)
@@ -243,7 +277,7 @@ function GetMachineNameFromId
 
         return $map
     }
-}
+        }
 
 function Get-MachinesFqdns
 {
@@ -259,9 +293,9 @@ function Get-MachinesFqdns
             if([string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn) -eq $false)
             {			    
                 $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
-            }
-            else
-            {
+    }
+    else
+    {
                 $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.IpAddress
             }
         }
@@ -281,7 +315,7 @@ function Get-MachinesFqdns
                     }
                 }
             }
-        }
+    }
 
         $fqdnMap = GetMachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
     }
@@ -297,7 +331,7 @@ function Get-FrontEndPorts
           [System.Collections.Hashtable]$portList)
 
     if([string]::IsNullOrEmpty($backEndPort) -eq $false -and $networkInterfaceResources -and $loadBalancer -and $azureVMResources)
-    {
+{
         Write-Verbose "Trying to get front end ports for $backEndPort" -Verbose
 
         Write-Verbose "[Azure Call]Getting Azure LoadBalancer Inbound NatRule Config" -Verbose
@@ -308,11 +342,11 @@ function Get-FrontEndPorts
 
         #Map front end port to back end ipc
         foreach($rule in $filteredRules)
-        {
+    {
             if($rule.BackendIPConfiguration)
             {
                 $portList[$rule.BackendIPConfiguration.Id] = $rule.FrontendPort
-            }
+    }
         }
 
         #Get the nic, and the corresponding machine id for a given back end ipc
@@ -327,12 +361,12 @@ function Get-FrontEndPorts
                     if($nic.VirtualMachine)
                     {
                         $portList[$nic.VirtualMachine.Id] = $frontEndPort
-                    }
+}
                 }
             }
         }
     }
-    
+
     Write-Verbose "Got front end ports for $backEndPort" -Verbose
 
     return $portList
@@ -341,7 +375,7 @@ function Get-FrontEndPorts
 function Get-MachineConnectionInformation
 {
     param([string]$resourceGroupName)
-    
+
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
         Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
@@ -365,7 +399,7 @@ function Get-MachineConnectionInformation
         Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
 
         if($lbGroup)
-        {
+    {
             foreach($lb in $lbGroup)
             {
                 Write-Verbose -Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
@@ -379,7 +413,7 @@ function Get-MachineConnectionInformation
 
             $fqdnMap = GetMachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
             $winRmHttpsPortMap = GetMachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
-        }
+    }
         else
         {
             $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
@@ -415,15 +449,15 @@ function Validate-AzurePowershellVersion
     }
 
     Write-Verbose -Verbose "Validated the required azure powershell version"
-}
+    }
 
 function Get-AzureVMResourcesProperties
-{
+    {
     param([object]$resources)
 
     [hashtable]$resourcesPropertyBag = @{}
     foreach ($resource in $resources)
-    {
+        {
         $resourceName = $resource.Name
         $resourceFQDN = $fqdnMap[$resourceName]
         $resourceWinRmHttpsPort = $winRmHttpsPortMap[$resourceName]
@@ -437,16 +471,16 @@ function Get-AzureVMResourcesProperties
     }
 
     return $resourcesPropertyBag
-}
+        }
 
 function Get-AzureVMsCredentials
-{
+        {
     Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName" -Verbose
 
     $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassword
 
     return $azureVmsCredentials
-}
+        }
 
 function Get-SkipCACheckOption
 {
@@ -474,24 +508,44 @@ if ($enableDetailedLoggingString -ne "true")
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
+$isSwitchAzureModeRequired = Does-RequireSwitchAzureMode
+
+if($isSwitchAzureModeRequired)
+{
+    Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
+    . ./AzureResourceManagerWrapper.ps1
+}
+
 # try to get storage key from RDFE, if not exists will try from ARM endpoint
 $storageAccount = $storageAccount.Trim()
 try
 {
+    if($isSwitchAzureModeRequired)
+	{
+	    Write-Verbose "Switching Azure mode to AzureServiceManagement." -Verbose
     Switch-AzureMode AzureServiceManagement
+	}
 
     # getting storage key from RDFE    
     $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
+	
+	Write-Verbose "RDFE call succeeded. Loading ARM Wrapper." -Verbose
+	. ./AzureResourceManagerWrapper.ps1
 }
-catch [Hyak.Common.CloudException]
+catch [Hyak.Common.CloudException], [System.ApplicationException], [System.Management.Automation.CommandNotFoundException]
 {
     $errorMsg = $_.Exception.Message.ToString()
+	
     Write-Verbose "[Azure Call](RDFE) $errorMsg" -Verbose
 
     # checking azure powershell version to make calls to ARM endpoint
     Validate-AzurePowershellVersion
 
+    if($isSwitchAzureModeRequired)
+	{
+	    Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
     Switch-AzureMode AzureResourceManager
+	}
 
     # getting storage account key from ARM endpoint
     $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
@@ -640,11 +694,11 @@ try
                     if ($status -ne "Passed")
                     {
                         $envOperationStatus = "Failed"
-                        $errorMessage = ""
-                        if($output.Error -ne $null)
-                        {
-                            $errorMessage = $output.Error.Message
-                        }
+                    $errorMessage = ""
+                    if($output.Error -ne $null)
+                    {
+                        $errorMessage = $output.Error.Message
+                    }
                         Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
                     }
                 }
