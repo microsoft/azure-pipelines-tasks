@@ -69,6 +69,26 @@ function ThrowError
     throw "$errorMessage $helpMessage"
 }
 
+function Does-RequireSwitchAzureMode
+{
+    $azureVersion = Get-AzureCmdletsVersion
+
+    $versionToCompare = New-Object -TypeName System.Version -ArgumentList "0.9.9"
+
+    $result = Get-AzureVersionComparison -AzureVersion $azureVersion -CompareVersion $versionToCompare
+	
+	if(!$result)
+	{
+	    Write-Verbose "Switch Azure mode is required." -Verbose
+	}
+	else
+	{
+	    Write-Verbose "Switch Azure mode is not required." -Verbose
+	}
+
+    return !$result
+}
+
 function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
@@ -76,7 +96,7 @@ function Get-AzureStorageAccountResourceGroupName
     try
     {
         Write-Verbose "[Azure Call](ARM)Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
-        $azureStorageAccountResourceDetails = Get-AzureResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
+        $azureStorageAccountResourceDetails = Get-AzureRMResource -ResourceName $storageAccountName | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
         Write-Verbose "[Azure Call](ARM)Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
 
         $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
@@ -101,7 +121,7 @@ function Get-AzureStorageKeyFromARM
     $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
     Write-Verbose "[Azure Call](ARM)Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
-    $storageKeyDetails = Get-AzureStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
+    $storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccount 
     $storageKey = $storageKeyDetails.Key1
     Write-Verbose "[Azure Call](ARM)Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
 
@@ -314,24 +334,44 @@ if ($enableDetailedLoggingString -ne "true")
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
+$isSwitchAzureModeRequired = Does-RequireSwitchAzureMode
+
+if($isSwitchAzureModeRequired)
+{
+    Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
+    . ./AzureResourceManagerWrapper.ps1
+}
+
 # try to get storage key from RDFE, if not exists will try from ARM endpoint
 $storageAccount = $storageAccount.Trim()
 try
 {
-    Switch-AzureMode AzureServiceManagement
+    if($isSwitchAzureModeRequired)
+	{
+	    Write-Verbose "Switching Azure mode to AzureServiceManagement." -Verbose
+	    Switch-AzureMode AzureServiceManagement
+	}
 
     # getting storage key from RDFE    
     $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
+	
+	Write-Verbose "RDFE call succeeded. Loading ARM Wrapper." -Verbose
+	. ./AzureResourceManagerWrapper.ps1
 }
-catch [Hyak.Common.CloudException]
+catch [Hyak.Common.CloudException], [System.ApplicationException], [System.Management.Automation.CommandNotFoundException]
 {
     $errorMsg = $_.Exception.Message.ToString()
+	
     Write-Verbose "[Azure Call](RDFE) $errorMsg" -Verbose
 
     # checking azure powershell version to make calls to ARM endpoint
     Validate-AzurePowershellVersion
 
-    Switch-AzureMode AzureResourceManager
+    if($isSwitchAzureModeRequired)
+	{
+	    Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
+	    Switch-AzureMode AzureResourceManager
+	}
 
     # getting storage account key from ARM endpoint
     $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
