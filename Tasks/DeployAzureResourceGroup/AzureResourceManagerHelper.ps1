@@ -4,7 +4,8 @@ function Create-AzureResourceGroup
           [System.Collections.Hashtable]$csmParametersObject,
           [string]$resourceGroupName,
           [string]$location,
-          [string]$overrideParameters)
+          [string]$overrideParameters,
+          [bool] $isSwitchAzureModeRequired)
 
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
     {
@@ -12,22 +13,35 @@ function Create-AzureResourceGroup
         $startTime = Get-Date
         Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
-        if (!$csmParametersObject)
+        #TODO: Have an issue with passing override parameters and error variable to the wrapper.
+        #So, using the below approach. 
+        if($isSwitchAzureModeRequired)
         {
             $azureCommand = "New-AzureResourceGroupDeployment"
+        }
+        else
+        {
+            $azureCommand = "New-AzureRMResourceGroupDeployment"
+        }      
+
+        if (!$csmParametersObject)
+        {
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+
             Write-Verbose -Verbose "$finalCommand"
             Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
+
             Invoke-Expression -Command $finalCommand
         }
         else
         {
-            $azureCommand = "New-AzureResourceGroupDeployment"
             $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
+
             Write-Verbose -Verbose "$finalCommand"
             Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
+
             Invoke-Expression -Command $finalCommand
         }
 
@@ -64,13 +78,6 @@ function Create-AzureResourceGroup
     }
 }
 
-function Get-CurrentSubscriptionInformation
-{
-    $subscription = Get-AzureSubscription -Current -Verbose -ErrorAction Stop
-
-    return $subscription
-}
-
 function Get-MachineLogs
 {
     param([string]$resourceGroupName)
@@ -78,7 +85,7 @@ function Get-MachineLogs
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group $resourceGroupName"
-        $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
+        $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
         Write-Verbose -Verbose "[Azure Resource Manager]Got resource group $resourceGroupName"
         Set-Variable -Name azureResourceGroup -Value $azureResourceGroup -Scope "Global"
 
@@ -88,7 +95,7 @@ function Get-MachineLogs
         {
             $name = $resource.Name
             Write-Verbose -Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
-            $vmInstanceView = Get-AzureVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
+            $vmInstanceView = Get-AzureRMVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
             Write-Verbose -Verbose "[Azure Resource Manager]Got VM $name from resource group $resourceGroupName"
 
             Write-Verbose -Verbose "Machine $name status:"
@@ -131,13 +138,22 @@ function Create-AzureResourceGroupIfNotExist
     param([string]$resourceGroupName,
     [string]$location)
 
-    $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlycontinue
+    try
+    {
+        Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName"
+        $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlyContinue
+        Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
+    }
+    catch
+    {
+        #Ignoring the exception
+    }
 
     if(!$azureResourceGroup)
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
 
-        $response = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+        $response = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
 
         Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
     }
@@ -169,7 +185,7 @@ function Get-AzureMachinesInResourceGroup
     try
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName virtual machines type resources"
-        $azureResourceGroupVMResources = Get-AzureResource -ResourceType "Microsoft.Compute/virtualMachines" -ResourceGroupName $resourceGroupName -ErrorAction Stop
+        $azureResourceGroupVMResources = Get-AzureRMResource -ResourceType "Microsoft.Compute/virtualMachines" -ResourceGroupName $resourceGroupName -ErrorAction Stop
         Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName virtual machines type resources"
     }
     catch [Microsoft.Azure.Commands.ResourceManager.Cmdlets.Entities.ErrorResponses.ErrorResponseMessageException]
@@ -186,70 +202,45 @@ function Get-AzureMachinesInResourceGroup
 
 function Delete-MachineGroupFromProvider
 {
-    param([string]$machineGroupName)
+    param([string]$resourceGroupName)
 
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group {0}" -ArgumentList $machineGroupName)
-
-    Remove-AzureResourceGroup -ResourceGroupName $machineGroupName -Force -ErrorAction Stop -Verbose
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}' from Azure provider" -ArgumentList $machineGroupName)
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group '{0}'" -ArgumentList $resourceGroupName)
+    Remove-AzureRMResourceGroup -Name $resourceGroupName -Force -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}'" -ArgumentList $resourceGroupName)
 }
 
 function Delete-MachineFromProvider
 {
-    param([string]$machineGroupName,
+    param([string]$resourceGroupName,
           [string]$machineName)
 
-    $errorVariable=@()
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting machine '{0}'" -ArgumentList $machineName)
-    $removeResponse = Remove-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -Force -ErrorAction SilentlyContinue -ErrorVariable errorVariable -Verbose
+    $response = Remove-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
 
-    if($errorVariable.Count -eq 0)
-    {
-         Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
-         return "Succeeded"
-    }
-    else
-    {
-         Write-Warning(Get-LocalizedString -Key "[Azure Resource Manager]Deletion of machine '{0}' failed in Azure with error '{1}'" -ArgumentList $machineName, $errorVariable)
-         return "Failed"
-    }
+    return $response
 }
 
 function Start-MachineInProvider
 {
-    param([string]$machineGroupName,
+    param([string]$resourceGroupName,
           [string]$machineName)
 
-    $errorVariable=@()
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
+    $response = Start-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Started machine '{0}' from Azure provider" -ArgumentList $machineName)
 
-    Start-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable | Out-Null
-
-    return $errorVariable
+    return $response
 }
 
 function Stop-MachineInProvider
 {
-    param([string]$machineGroupName,
+    param([string]$resourceGroupName,
           [string]$machineName)
 
-    $errorVariable=@()
     Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
+    $response = Stop-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
+    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopped machine '{0}' from Azure provider" -ArgumentList $machineName)
 
-    Stop-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable -Force | Out-Null
-
-    return $errorVariable
-}
-
-function Restart-MachineInProvider
-{
-    param([string]$machineGroupName,
-          [string]$machineName)
-
-    $errorVariable=@()
-    Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Restarting machine '{0}'" -ArgumentList $machineName)
-
-    Restart-AzureVM -Name $machineName -ResourceGroupName $machineGroupName -ErrorAction SilentlyContinue -ErrorVariable errorVariable | Out-Null
-
-    return $errorVariable
+    return $response
 }
