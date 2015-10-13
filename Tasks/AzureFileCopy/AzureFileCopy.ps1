@@ -40,7 +40,7 @@ $azureFileCopyOperation = 'AzureFileCopy'
 
 # Load all dependent files for execution
 . ./AzureFileCopyJob.ps1
-. ./Utitlity.ps1
+. ./Utility.ps1
 . ./AzureResourceManagerHelper.ps1
 
 # Import all the dlls and modules which have cmdlets we need
