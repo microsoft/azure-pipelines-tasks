@@ -9,7 +9,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Preview",
     "Build"
   ],
   "author": "Microsoft Corporation",
