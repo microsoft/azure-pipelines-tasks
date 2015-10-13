@@ -5,9 +5,9 @@
     [string]$publishJUnitResults,   
     [string]$testResultsFiles, 
     [string]$codeCoverageTool,
-    [string]$classFilesDirectory,
+    [string]$classfilesDirectories,
     [string]$classFilter,
-    [string]$srcDirectory,
+    [string]$srcDirectories,
     [string]$javaHomeSelection,
     [string]$jdkVersion,
     [string]$jdkArchitecture,
@@ -29,9 +29,9 @@ $isCoverageEnabled = !$codeCoverageTool.equals("None")
 if($isCoverageEnabled)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" 
-    Write-Verbose "classFilesDirectory = $classFilesDirectory" 
+    Write-Verbose "classFilesDirectories = $classfilesDirectories" 
     Write-Verbose "classFilter = $classFilter" 
-    Write-Verbose "srcDirectory = $srcDirectory" 
+    Write-Verbose "srcDirectories = $srcDirectories" 
 }
 #Verify Ant build file is specified
 if(!$antBuildFile)
@@ -93,7 +93,7 @@ $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SourceDirectory $srcDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
+   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classfilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
    Write-Verbose "code coverage is successfully enabled." -Verbose
 }
 else
