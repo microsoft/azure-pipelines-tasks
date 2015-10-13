@@ -6,7 +6,7 @@
     [string]$testResultsFiles, 
     [string]$codeCoverageTool,
     [string]$classFilter,
-	[string]$classfilesDirectories,
+	[string]$classFilesDirectories,
 	[string]$srcDirectories,
     [string]$javaHomeSelection,
     [string]$jdkVersion,
@@ -32,7 +32,7 @@ if($isCoverageEnabled -eq $true)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
     Write-Verbose "classFilter = $classFilter" -Verbose
-	Write-Verbose "classFilesDirectories = $classfilesDirectories" 
+	Write-Verbose "classFilesDirectories = $classFilesDirectories" 
 	Write-Verbose "srcDirectories = $srcDirectories" 
 }
 
@@ -70,7 +70,7 @@ $summaryFile = Join-Path $summaryFile $summaryFileName
 $CCReportTask = "jacoco:report"
 
 # Enable Code Coverage
-EnableCodeCoverage $isCoverageEnabled $reportDirectory $mavenPOMFile $codeCoverageTool $classFilter $classfilesDirectories $srcDirectories $summaryFileName $reportDirectoryName
+EnableCodeCoverage $isCoverageEnabled $reportDirectory $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileName $reportDirectoryName
 
 # Use a specific JDK
 ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath

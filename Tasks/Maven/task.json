@@ -107,7 +107,7 @@
             "visibleRule": "codeCoverageTool = JaCoCo"
         }, 
         {
-            "name": "classfilesDirectories",
+            "name": "classFilesDirectories",
             "type": "string",
             "label": "Class Files Directories",
             "required": false,

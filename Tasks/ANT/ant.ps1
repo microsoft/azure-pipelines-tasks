@@ -5,7 +5,7 @@
     [string]$publishJUnitResults,   
     [string]$testResultsFiles, 
     [string]$codeCoverageTool,
-    [string]$classfilesDirectories,
+    [string]$classFilesDirectories,
     [string]$classFilter,
     [string]$srcDirectories,
     [string]$javaHomeSelection,
@@ -93,7 +93,7 @@ $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classfilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
+   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
    Write-Verbose "code coverage is successfully enabled." -Verbose
 }
 else

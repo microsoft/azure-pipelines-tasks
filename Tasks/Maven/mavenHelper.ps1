@@ -224,7 +224,7 @@ function EnableCodeCoverage
 	      [string]$mavenPOMFile,
 		  [string]$codeCoverageTool,
 		  [string]$classFilter,
-		  [string]$classfilesDirectories,
+		  [string]$classFilesDirectories,
 	      [string]$srcDirectories,
 		  [string]$summaryFileName,
 		  [string]$reportDirectoryName)
@@ -234,7 +234,7 @@ function EnableCodeCoverage
      if($isCoverageEnabled)
      {
         # Enable code coverage in build file
-        Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classfilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
+        Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
         Write-Verbose "Code coverage is successfully enabled." -Verbose
      }
      else

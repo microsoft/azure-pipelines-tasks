@@ -91,7 +91,7 @@
             }
         },        
         {
-            "name": "classfilesDirectories",
+            "name": "classFilesDirectories",
             "type": "string",
             "label": "Class Files Directories",
             "defaultValue": ".",

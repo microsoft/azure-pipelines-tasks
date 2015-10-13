@@ -95,13 +95,13 @@
       }
     },
     {
-      "name": "classfilesDirectories",
+      "name": "classFilesDirectories",
       "type": "string",
-      "label": "ms-resource:loc.input.label.classfilesDirectories",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
       "defaultValue": ".",
       "required": true,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectories",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {

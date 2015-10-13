@@ -110,12 +110,12 @@
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
-      "name": "classfilesDirectories",
+      "name": "classFilesDirectories",
       "type": "string",
-      "label": "ms-resource:loc.input.label.classfilesDirectories",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
       "required": false,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectories",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
