@@ -70,7 +70,7 @@ function Get-AzureVMsInResourceGroup
     try
     {
         Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName virtual machines type resources"
-        $azureVMResources = Get-AzureVM -ResourceGroupName $resourceGroupName -Verbose
+        $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -Verbose
         Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName virtual machines type resources"
         Set-Variable -Name azureVMResources -Value $azureVMResources -Scope "Global"
     }
@@ -95,7 +95,7 @@ function Get-MachinesFqdnsForLB
         Write-Verbose "Trying to get FQDN for the resources from resource group: $resourceGroupName" -Verbose
 
         Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config" -Verbose
-        $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
+        $frontEndIPConfigs = Get-AzureRMLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
         Write-Verbose "[Azure Call]Got LoadBalancer Frontend Ip Config" -Verbose
 
         #Map the public ip id to the fqdn
@@ -253,7 +253,7 @@ function Get-FrontEndPorts
         Write-Verbose "Trying to get front end ports for $backEndPort" -Verbose
 
         Write-Verbose "[Azure Call]Getting Azure LoadBalancer Inbound NatRule Config" -Verbose
-        $rules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer
+        $rules = Get-AzureRMLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer
         Write-Verbose "[Azure Call]Got Azure LoadBalancer Inbound NatRule Config" -Verbose
 
         $filteredRules = $rules | Where-Object {$_.BackendPort -eq $backEndPort}
@@ -297,17 +297,17 @@ function Get-MachineConnectionInformation
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
         Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
-        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -Verbose
+        $networkInterfaceResources = Get-AzureRMNetworkInterface -ResourceGroupName $resourceGroupName -Verbose
         Write-Verbose -Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         Set-Variable -Name networkInterfaceResources -Value $networkInterfaceResources -Scope "Global"
 
         Write-Verbose -Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
-        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -Verbose
+        $publicIPAddressResources = Get-AzureRMPublicIpAddress -ResourceGroupName $resourceGroupName -Verbose
         Write-Verbose -Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
         Set-Variable -Name publicIPAddressResources -Value $publicIPAddressResources -Scope "Global"
 
         Write-Verbose -Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
-        $lbGroup = Get-AzureResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.Network/loadBalancers" -Verbose
+        $lbGroup = Get-AzureRMResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.Network/loadBalancers" -Verbose
         Write-Verbose -Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
         $fqdnMap = @{}
@@ -321,7 +321,7 @@ function Get-MachineConnectionInformation
             foreach($lb in $lbGroup)
             {
                 Write-Verbose -Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
-                $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -Verbose
+                $loadBalancer = Get-AzureRMLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -Verbose
                 Write-Verbose -Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
                 Set-Variable -Name loadBalancer -Value $loadBalancer -Scope "Global"
 
