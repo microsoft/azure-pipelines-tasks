@@ -184,21 +184,38 @@ function PublishCodeCoverage
 		  [string]$CCReportTask,
 		  [string]$summaryFile,
 		  [string]$reportDirectory,
-		  [string]$codeCoverageTool)
+		  [string]$codeCoverageTool,
+		  [string]$reportPOMFile)
 	
      # check if code coverage has been enabled
     if($isCoverageEnabled)
     {
        # run report code coverage task which generates code coverage reports.
        Write-Verbose "Collecting code coverage reports" -Verbose
-       try
-       {
-    		Invoke-Maven -MavenPomFile $mavenPOMFile -Goals $CCReportTask
-       }
-       catch
-       {
-    		Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
-       }
+    	if(Test-Path $reportPOMFile)
+		{
+			try
+			{
+				#multi module project
+				Invoke-Maven -MavenPomFile $reportPOMFile -Goals "clean verify"
+			}
+			catch
+			{
+				Write-Warning "Failed to collect code coverage. ANT is required to generate code coverage reports for multi module project. Or there might be no tests." -Verbose
+			}
+		}
+		else
+		{
+			try
+			{
+				Invoke-Maven -MavenPomFile $mavenPOMFile -Goals $CCReportTask
+			}
+			catch
+			{
+				Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
+			}
+		}
+       
        
        if(Test-Path $summaryFile)
        {
@@ -227,14 +244,21 @@ function EnableCodeCoverage
 		  [string]$classFilesDirectories,
 	      [string]$srcDirectories,
 		  [string]$summaryFileName,
-		  [string]$reportDirectoryName)
+		  [string]$reportDirectoryName,
+		  [string]$reportPOMFile)
 
      
      # check if code coverage has been enabled
      if($isCoverageEnabled)
      {
+		if(Test-Path $reportPOMFile)
+		{
+			# delete any previous reportPOMFile
+			rm $reportPOMFile -force | Out-Null
+		}
+		
         # Enable code coverage in build file
-        Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
+        Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ReportBuildFile $reportPOMFile -ErrorAction Stop
         Write-Verbose "Code coverage is successfully enabled." -Verbose
      }
      else

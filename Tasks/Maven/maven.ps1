@@ -63,6 +63,8 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 $buildRootPath = Split-Path $mavenPOMFile -Parent
 $reportDirectoryName = [guid]::NewGuid()
+$reportPOMFileName = [guid]::NewGuid().tostring() + ".xml"
+$reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $summaryFileName = "jacoco.xml"
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
@@ -70,7 +72,7 @@ $summaryFile = Join-Path $summaryFile $summaryFileName
 $CCReportTask = "jacoco:report"
 
 # Enable Code Coverage
-EnableCodeCoverage $isCoverageEnabled $reportDirectory $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileName $reportDirectoryName
+EnableCodeCoverage $isCoverageEnabled $reportDirectory $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileName  $reportDirectory $reportPOMFile
 
 # Use a specific JDK
 ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
@@ -83,12 +85,17 @@ Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals
 PublishTestResults $publishJUnitResults $testResultsFiles
 
 # Publish code coverage
-PublishCodeCoverage  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFile $reportDirectory $codeCoverageTool 
+PublishCodeCoverage  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFile $reportDirectory $codeCoverageTool $reportPOMFile
 
 if(Test-Path $reportDirectory)
 {
     # delete any previous code coverage data 
     rm -r $reportDirectory -force | Out-Null
+}
+if(Test-Path $reportPOMFile)
+{
+    # delete any previous code coverage data 
+    rm $reportPOMFile -force | Out-Null
 }
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
