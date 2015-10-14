@@ -17,23 +17,12 @@ param(
     [string]$skipCACheck
 )
 
-Write-Verbose "Starting Azure Resource Group Deployment Task" -Verbose
-
+Write-Verbose -Verbose "Starting Azure Resource Group Deployment Task"
 Write-Verbose -Verbose "ConnectedServiceName = $ConnectedServiceName"
 Write-Verbose -Verbose "Action = $action"
 Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
 Write-Verbose -Verbose "Location = $location"
-Write-Verbose -Verbose "OverrideParameters = $overrideParameters" 
-
-import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
-import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
-
-$ErrorActionPreference = "Stop"
-
-. ./Utility.ps1
-. ./AzureResourceManagerHelper.ps1
-
-Validate-AzurePowershellVersion
+Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()
@@ -41,38 +30,33 @@ $csmFile = $csmFile.Trim()
 $csmParametersFile = $csmParametersFile.Trim()
 $overrideParameters = $overrideParameters.Trim()
 
+import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
+import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
+
+$ErrorActionPreference = "Stop"
+
+. ./Utility.ps1
+
+Validate-AzurePowershellVersion
+
+#Handle-SwitchAzureMode
+$isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
+
+if($isSwitchAzureModeRequired)
+{
+    Switch-AzureMode AzureResourceManager
+    . ./AzureResourceManagerWrapper.ps1
+}
+
+. ./AzureResourceManagerHelper.ps1
+
 if( $action -eq "Create Or Update Resource Group" )
 {
-    $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
-
-    #Create csm parameter object
-    $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
-
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
-    {
-        $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
-    }
-    else
-    {
-        $csmParametersFileContent = [String]::Empty
-    }
-
-    #Get current subscription
-    $currentSubscription = Get-CurrentSubscriptionInformation
-
-    $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
-
-    # Create azure resource group
-    Switch-AzureMode AzureResourceManager
-
-    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
+    Create-AzureResourceGroupHelper -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
 }
 else
 {
-    Switch-AzureMode AzureResourceManager
-
-    #Performing action on resource group 
     Perform-Action -action $action -resourceGroupName $resourceGroupName
 }
 
-Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose
+Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"

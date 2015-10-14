@@ -16,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 25
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.89.1",
   "inputs": [
     {
       "name": "ConnectedServiceName",
