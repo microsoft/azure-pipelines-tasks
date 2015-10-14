@@ -51,7 +51,7 @@
     {
       "name": "StorageAccount",
       "type": "string",
-      "label": "Intermediary Storage Account",
+      "label": "Storage Account",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Specify a pre-existing storage account. It is also used as an intermediary for copying files to Azure VMs"

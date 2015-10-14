@@ -12,7 +12,7 @@
   "loc.input.help.ConnectedServiceName": "Azure subscription to target for copying the files.",
   "loc.input.label.Destination": "Destination Type",
   "loc.input.help.Destination": "Select the destination, either Azure Blob or Azure VMs.",
-  "loc.input.label.StorageAccount": "Intermediary Storage Account",
+  "loc.input.label.StorageAccount": "Storage Account",
   "loc.input.help.StorageAccount": "Specify a pre-existing storage account. It is also used as an intermediary for copying files to Azure VMs",
   "loc.input.label.ContainerName": "Container Name",
   "loc.input.help.ContainerName": "Name of the Container for uploading the files. Default is to create a container automatically.",
