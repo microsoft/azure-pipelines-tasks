@@ -142,6 +142,11 @@ foreach ($sf in $solutionFiles)
 {
     if ($nugetPath -and $nugetRestore)
     {
+        if ($env:NUGET_EXTENSIONS_PATH)
+        {
+            Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
+        }
+
         $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
         Write-Verbose "Running nuget package restore for $slnFolder"
         Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" -NonInteractive" -WorkingFolder $slnFolder
