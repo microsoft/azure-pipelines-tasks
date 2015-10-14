@@ -1,3 +1,5 @@
+# Corresponding ARM calls for azure calls(latest ARM) used by AzureFileCopy Task supported till 0.9.8 version #
+
 function Get-AzureRMResource
 {
     param([string]$ResourceName)

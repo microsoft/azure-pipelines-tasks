@@ -1,3 +1,5 @@
+# Azure Calls(RDFE/ARM) performed to get all the resource information used by AzureFileCopy Task#
+
 $ErrorActionPreference = 'Stop'
 $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
 

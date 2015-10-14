@@ -1,3 +1,5 @@
+# Utility Functions used by AzureFileCopy.ps1 (other than azure calls) #
+
 $ErrorActionPreference = 'Stop'
 $doSkipCACheckOption = '-SkipCACheck'
 $doNotSkipCACheckOption = ''

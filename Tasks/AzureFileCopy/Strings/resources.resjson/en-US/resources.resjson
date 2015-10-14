@@ -19,7 +19,7 @@
   "loc.input.label.BlobPrefix": "Blob Prefix",
   "loc.input.help.BlobPrefix": "Useful for filtering files, for example, append build number to all the blobs to download files from that build only.",
   "loc.input.label.EnvironmentName": "Resource Group",
-  "loc.input.help.EnvironmentName": "Name of the target Resource Group for copying files to. Applicable only for Azure virtual machines.",
+  "loc.input.help.EnvironmentName": "Name of the target Resource Group for copying files to.",
   "loc.input.label.vmsAdminUserName": "Admin Login",
   "loc.input.help.vmsAdminUserName": "Administrator Username of the VMs.",
   "loc.input.label.vmsAdminPassword": "Password",

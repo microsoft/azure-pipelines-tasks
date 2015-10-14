@@ -80,7 +80,7 @@
       "label": "Resource Group",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the target Resource Group for copying files to. Applicable only for Azure virtual machines.",
+      "helpMarkDown": "Name of the target Resource Group for copying files to.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
