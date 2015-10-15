@@ -1,4 +1,4 @@
-# Azure Calls(RDFE/ARM) performed to get all the resource information used by AzureFileCopy Task#
+# Azure Calls(RDFE/ARM) performed to get all the resource information used by AzureFileCopy Task #
 
 $ErrorActionPreference = 'Stop'
 $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
@@ -153,7 +153,7 @@ function Get-MachinesFqdnsForLB
     return $fqdnMap
 }
 
-function GetMachineNameFromId
+function Get-MachineNameFromId
 {
     param([string]$resourceGroupName,
           [System.Collections.Hashtable]$map,
@@ -237,7 +237,7 @@ function Get-MachinesFqdns
             }
         }
 
-        $fqdnMap = GetMachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
+        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
     }
 
     Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
@@ -331,8 +331,8 @@ function Get-MachineConnectionInformation
                 $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap
             }
 
-            $fqdnMap = GetMachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
-            $winRmHttpsPortMap = GetMachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
+            $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
+            $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -ThrowOnTotalUnavaialbility $false
         }
         else
         {
