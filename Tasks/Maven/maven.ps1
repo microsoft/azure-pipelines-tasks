@@ -6,18 +6,18 @@
     [string]$testResultsFiles, 
     [string]$codeCoverageTool,
     [string]$classFilter,
-	[string]$classFilesDirectories,
-	[string]$srcDirectories,
+    [string]$classFilesDirectories,
+    [string]$srcDirectories,
     [string]$javaHomeSelection,
     [string]$jdkVersion,
     [string]$jdkArchitecture,
     [string]$jdkUserInputPath, 
-	[string]$sqAnalysisEnabled, 
+    [string]$sqAnalysisEnabled, 
     [string]$sqConnectedServiceName, 
     [string]$sqDbDetailsRequired,
     [string]$sqDbUrl,
-	[string]$sqDbUsername,
-	[string]$sqDbPassword
+    [string]$sqDbUsername,
+    [string]$sqDbPassword
 )
 
 Write-Verbose 'Entering Maven.ps1'

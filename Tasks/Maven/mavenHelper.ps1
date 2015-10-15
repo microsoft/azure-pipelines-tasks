@@ -190,32 +190,24 @@ function PublishCodeCoverage
      # check if code coverage has been enabled
     if($isCoverageEnabled)
     {
-       # run report code coverage task which generates code coverage reports.
-       Write-Verbose "Collecting code coverage reports" -Verbose
-    	if(Test-Path $reportPOMFile)
+		# run report code coverage task which generates code coverage reports.
+		Write-Verbose "Collecting code coverage reports" -Verbose
+		try
 		{
-			try
+			if(Test-Path $reportPOMFile)
 			{
 				#multi module project
 				Invoke-Maven -MavenPomFile $reportPOMFile -Goals "clean verify"
 			}
-			catch
-			{
-				Write-Warning "Failed to collect code coverage. ANT is required to generate code coverage reports for multi module project. Or there might be no tests." -Verbose
-			}
-		}
-		else
-		{
-			try
+			else
 			{
 				Invoke-Maven -MavenPomFile $mavenPOMFile -Goals $CCReportTask
 			}
-			catch
-			{
-				Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
-			}
+        }
+		catch
+		{
+			Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
 		}
-       
        
        if(Test-Path $summaryFile)
        {
