@@ -6,8 +6,17 @@ function Get-AzureRMResource
           [string]$ResourceGroupName,
           [string]$ResourceType)
 
-    Write-Verbose -Verbose "Inside Get-AzureRMResource(ResourceName, ResourceGroupName, ResourceType)"
-    $azureResource = Get-AzureResource -ResourceName $ResourceName -ResourceGroupName $ResourceGroupName -ResourceType $ResourceType -Verbose
+    if([string]::IsNullOrEmpty($ResourceGroupName))
+    {
+        Write-Verbose -Verbose "Inside Get-AzureRMResource(ResourceName)"
+        $azureResource = Get-AzureResource -ResourceName $ResourceName -Verbose
+    }
+    else
+    {
+        Write-Verbose -Verbose "Inside Get-AzureRMResource(ResourceGroupName, ResourceType)"
+        $azureResource = Get-AzureResource -ResourceGroupName $ResourceGroupName -ResourceType $ResourceType -Verbose
+    }
+
     return $azureResource
 }
 
