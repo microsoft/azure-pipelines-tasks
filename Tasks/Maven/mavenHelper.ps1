@@ -197,7 +197,7 @@ function PublishCodeCoverage
 			if(Test-Path $reportPOMFile)
 			{
 				#multi module project
-				Invoke-Maven -MavenPomFile $reportPOMFile -Goals "clean verify"
+				Invoke-Maven -MavenPomFile $reportPOMFile -Goals "verify"
 			}
 			else
 			{
