@@ -112,7 +112,7 @@
             "label": "Class Files Directories",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi module project. Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer https://dzone.com/articles/jacoco-maven-multi-module",
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },	
         {
@@ -122,7 +122,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi module project. Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer https://dzone.com/articles/jacoco-maven-multi-module",
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },		
         {
