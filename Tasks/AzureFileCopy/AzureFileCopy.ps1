@@ -41,7 +41,6 @@ $azureFileCopyOperation = 'AzureFileCopy'
 # Load all dependent files for execution
 . ./AzureFileCopyJob.ps1
 . ./AzureUtility.ps1
-. ./AzureResourceManagerLegacyProvider.ps1
 . ./Utility.ps1
 
 # Import all the dlls and modules which have cmdlets we need
@@ -64,7 +63,7 @@ $isSwitchAzureModeRequired = Does-RequireSwitchAzureMode
 if($isSwitchAzureModeRequired)
 {
     Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
-    . ./AzureResourceManagerWrapper.ps1
+    . ./AzureResourceManagerLegacyProvider.ps1
 }
 
 # try to get storage key from RDFE, if not exists will try from ARM endpoint
