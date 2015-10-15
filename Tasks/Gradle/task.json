@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "demands" : [
         "java"
@@ -99,9 +99,9 @@
             }
         },
         {
-            "name": "classfilesDirectory",
+            "name": "classfilesDirectories",
             "type": "string",
-            "label": "Class Files Directory",
+            "label": "Class Files Directories",
             "defaultValue": "build/classes/main",
             "required": true,
             "groupName": "codeCoverage",

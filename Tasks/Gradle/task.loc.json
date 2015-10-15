@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "demands": [
     "java"
@@ -102,13 +102,13 @@
       }
     },
     {
-      "name": "classfilesDirectory",
+      "name": "classfilesDirectories",
       "type": "string",
-      "label": "ms-resource:loc.input.label.classfilesDirectory",
+      "label": "ms-resource:loc.input.label.classfilesDirectories",
       "defaultValue": "build/classes/main",
       "required": true,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectories",
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
