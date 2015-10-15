@@ -72,7 +72,7 @@ $summaryFile = Join-Path $summaryFile $summaryFileName
 $CCReportTask = "jacoco:report"
 
 # Enable Code Coverage
-EnableCodeCoverage $isCoverageEnabled $reportDirectory $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileName  $reportDirectory $reportPOMFile
+EnableCodeCoverage $isCoverageEnabled $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileName $reportDirectory $reportPOMFile
 
 # Use a specific JDK
 ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
