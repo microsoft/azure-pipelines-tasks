@@ -46,6 +46,7 @@ $azureFileCopyOperation = 'AzureFileCopy'
 # Import all the dlls and modules which have cmdlets we need
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
