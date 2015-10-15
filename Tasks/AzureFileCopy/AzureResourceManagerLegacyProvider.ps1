@@ -2,10 +2,12 @@
 
 function Get-AzureRMResource
 {
-    param([string]$ResourceName)
+    param([string]$ResourceName,
+          [string]$ResourceGroupName,
+          [string]$ResourceType)
 
-    Write-Verbose -Verbose "Inside Get-AzureRMResource(ResourceName)"
-    $azureResource = Get-AzureResource -ResourceName $ResourceName
+    Write-Verbose -Verbose "Inside Get-AzureRMResource(ResourceName, ResourceGroupName, ResourceType)"
+    $azureResource = Get-AzureResource -ResourceName $ResourceName -ResourceGroupName $ResourceGroupName -ResourceType $ResourceType -Verbose
     return $azureResource
 }
 
@@ -44,16 +46,6 @@ function Get-AzureRMPublicIpAddress
     Write-Verbose -Verbose "Inside Get-AzureRMPublicIpAddress(ResourceGroupName)"
     $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $ResourceGroupName -Verbose
     return $publicIPAddressResources
-}
-
-function Get-AzureRMResource
-{
-    param([string]$ResourceGroupName,
-          [string]$ResourceType)
-
-    Write-Verbose -Verbose "Inside Get-AzureRMResource(ResourceGroupName, ResourceType)"
-    $azureResource = Get-AzureResource -ResourceGroupName $ResourceGroupName -ResourceType $ResourceType -Verbose
-    return $azureResource
 }
 
 function Get-AzureRMLoadBalancer
