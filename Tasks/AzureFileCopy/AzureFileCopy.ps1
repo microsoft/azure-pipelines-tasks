@@ -42,6 +42,7 @@ $azureFileCopyOperation = 'AzureFileCopy'
 . ./AzureFileCopyJob.ps1
 . ./AzureUtility.ps1
 . ./AzureResourceManagerLegacyProvider.ps1
+. ./Utility.ps1
 
 # Import all the dlls and modules which have cmdlets we need
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
