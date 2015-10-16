@@ -9,14 +9,13 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Preview",
     "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -30,7 +29,8 @@
       "defaultValue": "JaCoCo",
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
-        "JaCoCo": "JaCoCo"
+        "JaCoCo": "JaCoCo",
+        "Cobertura": "Cobertura"
       }
     },
     {

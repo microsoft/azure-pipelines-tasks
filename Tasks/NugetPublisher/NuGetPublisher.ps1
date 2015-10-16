@@ -87,6 +87,11 @@ foreach ($packageFile in $packagesToPush)
 
 foreach ($packageFile in $packagesToPush)
 {
+    if ($env:NUGET_EXTENSIONS_PATH)
+    {
+        Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
+    }
+
     $argsUpload = "push $packageFile -s $nugetServer $nugetServerKey"
     if($nuGetAdditionalArgs)
     {
