@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 14
+    "Patch": 15
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -107,6 +107,25 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "classFilesDirectories",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "srcDirectories",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.srcDirectories",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {

@@ -184,23 +184,33 @@ function PublishCodeCoverage
 		  [string]$CCReportTask,
 		  [string]$summaryFile,
 		  [string]$reportDirectory,
-		  [string]$codeCoverageTool)
+		  [string]$codeCoverageTool,
+		  [string]$reportPOMFile)
 	
      # check if code coverage has been enabled
     if($isCoverageEnabled)
     {
-       # run report code coverage task which generates code coverage reports.
-       Write-Verbose "Collecting code coverage reports" -Verbose
-       try
-       {
-    		Invoke-Maven -MavenPomFile $mavenPOMFile -Goals $CCReportTask
-       }
-       catch
-       {
-    		Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
-       }
+		# run report code coverage task which generates code coverage reports.
+		$reportsGenerationFailed = $false
+		Write-Verbose "Collecting code coverage reports" -Verbose
+		try
+		{
+			if(Test-Path $reportPOMFile)
+			{
+				#multi module project
+				Invoke-Maven -MavenPomFile $reportPOMFile -Goals "verify"
+			}
+			else
+			{
+				Invoke-Maven -MavenPomFile $mavenPOMFile -Goals $CCReportTask
+			}
+        }
+		catch
+		{
+			$reportsGenerationFailed = $true
+		}
        
-       if(Test-Path $summaryFile)
+       if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
        {
     		Write-Verbose "Summary file = $summaryFile" -Verbose
     		Write-Verbose "Report directory = $reportDirectory" -Verbose
@@ -209,7 +219,7 @@ function PublishCodeCoverage
        }
        else
        {
-    		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
+    		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests." -Verbose
        }
     }
 
@@ -220,19 +230,27 @@ function EnableCodeCoverage
 {
     param(
           [Boolean]$isCoverageEnabled,
-		  [string]$reportDirectory,
 	      [string]$mavenPOMFile,
 		  [string]$codeCoverageTool,
 		  [string]$classFilter,
+		  [string]$classFilesDirectories,
+	      [string]$srcDirectories,
 		  [string]$summaryFileName,
-		  [string]$reportDirectoryName)
+		  [string]$reportDirectory,
+		  [string]$reportPOMFile)
 
      
      # check if code coverage has been enabled
      if($isCoverageEnabled)
      {
+		if(Test-Path $reportPOMFile)
+		{
+			# delete any previous reportPOMFile
+			rm $reportPOMFile -force | Out-Null
+		}
+		
         # Enable code coverage in build file
-        Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
+        Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -ReportBuildFile $reportPOMFile -ErrorAction Stop
         Write-Verbose "Code coverage is successfully enabled." -Verbose
      }
      else

@@ -5,9 +5,9 @@
     [string]$publishJUnitResults,   
     [string]$testResultsFiles, 
     [string]$codeCoverageTool,
-    [string]$classFilesDirectory,
+    [string]$classFilesDirectories,
     [string]$classFilter,
-    [string]$srcDirectory,
+    [string]$srcDirectories,
     [string]$javaHomeSelection,
     [string]$jdkVersion,
     [string]$jdkArchitecture,
@@ -29,9 +29,9 @@ $isCoverageEnabled = !$codeCoverageTool.equals("None")
 if($isCoverageEnabled)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" 
-    Write-Verbose "classFilesDirectory = $classFilesDirectory" 
+    Write-Verbose "classFilesDirectories = $classfilesDirectories" 
     Write-Verbose "classFilter = $classFilter" 
-    Write-Verbose "srcDirectory = $srcDirectory" 
+    Write-Verbose "srcDirectories = $srcDirectories" 
 }
 #Verify Ant build file is specified
 if(!$antBuildFile)
@@ -93,7 +93,7 @@ $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SourceDirectory $srcDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
+   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
    Write-Verbose "code coverage is successfully enabled." -Verbose
 }
 else
@@ -129,6 +129,7 @@ else
 if($isCoverageEnabled)
 {
    # run report code coverage task which generates code coverage reports.
+   $reportsGenerationFailed = $false
    Write-Verbose "Collecting code coverage reports" -Verbose
    try
    {
@@ -136,10 +137,10 @@ if($isCoverageEnabled)
    }
    catch
    {
-		Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
+		$reportsGenerationFailed = $true
    }
    
-   if(Test-Path $summaryFile)
+   if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
    {
 		Write-Verbose "Summary file = $summaryFile" -Verbose
 		Write-Verbose "Report directory = $reportDirectory" -Verbose
@@ -148,7 +149,7 @@ if($isCoverageEnabled)
    }
    else
    {
-		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
+		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests." -Verbose
    }
 }
 

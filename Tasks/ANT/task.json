@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "demands" : [
         "ant"
@@ -91,9 +91,9 @@
             }
         },        
         {
-            "name": "classfilesDirectory",
+            "name": "classFilesDirectories",
             "type": "string",
-            "label": "Class Files Directory",
+            "label": "Class Files Directories",
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
@@ -111,13 +111,13 @@
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
-            "name": "srcDirectory",
+            "name": "srcDirectories",
             "type": "string",
-            "label": "Source Files Directory",
+            "label": "Source Files Directories",
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Specify source directory for code coverage reports to include highlighted source code. For example, src. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
+            "helpMarkDown": "Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {

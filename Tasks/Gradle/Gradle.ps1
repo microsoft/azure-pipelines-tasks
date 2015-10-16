@@ -6,7 +6,7 @@ param(
     [string]$publishJUnitResults,   
     [string]$testResultsFiles, 
     [string]$codeCoverageTool,
-    [string]$classFilesDirectory,
+    [string]$classFilesDirectories,
     [string]$classFilter,
     [string]$javaHomeSelection,
     [string]$jdkVersion,      # JDK version
@@ -101,7 +101,7 @@ $buildFile = Join-Path $buildRootPath "build.gradle"
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectory $classFilesDirectory -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
+   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
