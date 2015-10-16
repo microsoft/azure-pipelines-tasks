@@ -129,17 +129,18 @@ else
 if($isCoverageEnabled)
 {
    # run report code coverage task which generates code coverage reports.
+   $reportsGenerationFailed = $false
    Write-Verbose "Collecting code coverage reports" -Verbose
    try
    {
-		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
+		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 		
    }
    catch
    {
-		Write-Warning "Failed to collect code coverage. There might be no tests." -Verbose
+		$reportsGenerationFailed = $true
    }
    
-   if(Test-Path $summaryFile)
+   if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
    {
 		Write-Verbose "Summary file = $summaryFile" -Verbose
 		Write-Verbose "Report directory = $reportDirectory" -Verbose
@@ -148,7 +149,7 @@ if($isCoverageEnabled)
    }
    else
    {
-		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
+		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests." -Verbose
    }
 }
 
