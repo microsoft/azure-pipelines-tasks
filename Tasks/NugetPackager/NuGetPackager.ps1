@@ -134,6 +134,11 @@ foreach ($fileToPackage in $foundFiles)
         throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
     }
     
+    if ($env:NUGET_EXTENSIONS_PATH)
+    {
+        Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
+    }
+
     Write-Host "Invoking nuget with $argsPack on $slnFolder"
     Invoke-Tool -Path $nugetPath -Arguments "$argsPack" -WorkingFolder $slnFolder
 }
