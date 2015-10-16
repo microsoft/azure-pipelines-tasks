@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 12
   },
   "demands": [
     "ant"
@@ -95,13 +95,13 @@
       }
     },
     {
-      "name": "classfilesDirectory",
+      "name": "classFilesDirectories",
       "type": "string",
-      "label": "ms-resource:loc.input.label.classfilesDirectory",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
       "defaultValue": ".",
       "required": true,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
@@ -115,13 +115,13 @@
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
-      "name": "srcDirectory",
+      "name": "srcDirectories",
       "type": "string",
-      "label": "ms-resource:loc.input.label.srcDirectory",
+      "label": "ms-resource:loc.input.label.srcDirectories",
       "defaultValue": "",
       "required": false,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.srcDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
