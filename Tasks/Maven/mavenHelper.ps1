@@ -210,7 +210,7 @@ function PublishCodeCoverage
 			$reportsGenerationFailed = $true
 		}
        
-       if(-not $reportsGenerationFailed -and Test-Path $summaryFile)
+       if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
        {
     		Write-Verbose "Summary file = $summaryFile" -Verbose
     		Write-Verbose "Report directory = $reportDirectory" -Verbose
