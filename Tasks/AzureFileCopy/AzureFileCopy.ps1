@@ -37,6 +37,7 @@ Write-Verbose "skipCACheck = $skipCACheck" -Verbose
 $defaultSasTokenTimeOutInHours = 2
 $useHttpsProtocolOption = ''
 $azureFileCopyOperation = 'AzureFileCopy'
+$ErrorActionPreference = 'Stop'
 
 # Load all dependent files for execution
 . ./AzureFileCopyJob.ps1
