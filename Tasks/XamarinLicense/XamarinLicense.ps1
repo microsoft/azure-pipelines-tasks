@@ -12,7 +12,7 @@ Write-Verbose "email = $email"
 Write-Verbose "activateAndroid = $activateAndroid"
 Write-Verbose "timeout = $timeout"
 
-$activateAndroidLicense = Convert-String $activateAndroid Boolean
+$activateAndroidLicense = [System.Convert]::ToBoolean($activateAndroid)
 Write-Verbose "activateAndroid (converted) = $activateAndroidLicense"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
