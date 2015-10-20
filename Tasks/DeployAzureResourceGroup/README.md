@@ -19,8 +19,8 @@ Note that this tasks creates or updates a resource group using [resource manager
 For Azure MSDN accounts, one can either use a [Service Principal](http://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409) or a work account. It's easy to create a work account as shown below:
 
 1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the account in VSO:
-  - ooAdd the Active Directory account to the co-administrators in the subscription. Go to the Settings and then click on administrators and add the account as a co-admin like, [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com)
-  - ooLogin to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
+  - Add the Active Directory account to the co-administrators in the subscription. Go to the Settings and then click on administrators and add the account as a co-admin like, [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com)
+  - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
 2. Add that user and password in the service connections in the VSO and deployments will work with that account.
 
 ##### Azure PowerShell
@@ -49,7 +49,7 @@ _NOTE: Follow the Azure Naming guidelines while specifying parameters, few impor
 	| Azure KeyVault       | 3-24   | case-insensitive | alphanumeric                                                                          | Yes             |
 	| Azure DNS Name       | 3-63   | lowercase        | alphanumeric and hyphens                                                              | Yes             |
 
-- Override Template Parameters: The Override template parameters is used to override the parameters, like –storageAcctName azurerg –Username $(vmusername) –azureKeyVaultName $(fabrikamFibre).
+- Override Template Parameters: The Override template parameters is used to override the parameters, like -storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre).
 
 ### Setting up a virtual machine for WinRM HTTPS using Azure Templates:
 
