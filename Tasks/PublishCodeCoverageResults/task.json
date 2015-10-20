@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands" : [
     ],
@@ -37,7 +37,7 @@
             "label": "Summary File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path of code coverage summary file, which has code coverage statistics like line, method, class coverage. For example, $(Build.Repository.LocalPath)\\jacoco\\jacoco.xml"
+            "helpMarkDown": "Path of code coverage summary file, which has code coverage statistics like line, method, class coverage. For example, $(Build.Repository.LocalPath)\\CodeCoverage\\Summary.xml"
         },
         {
             "name": "reportDirectory",
@@ -45,7 +45,7 @@
             "label": "Report Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path of code coverage report directory. The report directory is published as an artifact against the build. For example, $(Build.Repository.LocalPath)\\jacoco"
+            "helpMarkDown": "Path of code coverage report directory. The report directory is published as an artifact against the build. For example, $(Build.Repository.LocalPath)\\CodeCoverageReport"
         },
         {
             "name": "additionalCodeCoverageFiles",
