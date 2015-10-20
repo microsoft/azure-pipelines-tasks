@@ -15,10 +15,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.91.0",
   "inputs": [
     {
       "name": "CopyRoot",
@@ -71,7 +71,10 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\PublishBuildArtifacts.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
     },
     "Node": {
       "target": "publishBuildArtifacts.js",
