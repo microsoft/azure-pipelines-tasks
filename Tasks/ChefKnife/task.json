@@ -16,7 +16,8 @@
         "Patch": 3
     },
     "demands" : [
-        "Chef"
+        "Chef",
+		"PowerShell"
     ],
     "minimumAgentVersion": "1.83.0",
     "inputs": [

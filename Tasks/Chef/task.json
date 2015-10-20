@@ -18,7 +18,8 @@
     },
     "demands" : [
         "Chef",
-        "KnifeReporting"
+        "KnifeReporting",
+		"PowerShell"
     ],
     "minimumAgentVersion": "1.83.0",
     "inputs": [
