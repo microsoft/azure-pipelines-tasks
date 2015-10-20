@@ -154,14 +154,12 @@ else {
             // upload or copy
             if (artifactType === "container") {
                 data["containerfolder"] = artifactName;
-                data["localpath"] = stagingFolder;
-                tl.command("artifact.upload", data, "Uploading artifact");
+                tl.command("artifact.upload", data, stagingFolder);
             }
             else if (artifactType === "filepath") {
                 tl.mkdirP(targetPath);
                 tl.cp("-Rf", stagingFolder, targetPath);
-                data["artifactlocation"] = targetPath;
-                tl.command("artifact.associate", data, "Associating artifact");
+                tl.command("artifact.associate", data, targetPath);
             }
         }
         catch (err) {
