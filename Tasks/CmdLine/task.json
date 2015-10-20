@@ -22,7 +22,6 @@
       "isExpanded": false
     }
     ],
-    "minimumAgentVersion": "1.91.0",
     "inputs": [
         { 
             "name": "filename", 
