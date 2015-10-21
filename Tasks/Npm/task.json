@@ -1,7 +1,7 @@
 {
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
-    "name": "NpmRunner",
-    "friendlyName": "npm runner",
+    "name": "Npm",
+    "friendlyName": "npm",
     "description": "Run a npm command",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
@@ -53,11 +53,11 @@
     ],
     "execution": {
         "Node": {
-            "target": "npmrunner.js",
+            "target": "npm.js",
             "argumentFormat": ""
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\NpmRunner.ps1",
+            "target": "$(currentDirectory)\\Npm.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(cwd)"
         }

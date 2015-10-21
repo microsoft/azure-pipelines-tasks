@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
-  "name": "NpmRunner",
+  "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -56,11 +56,11 @@
   ],
   "execution": {
     "Node": {
-      "target": "npmrunner.js",
+      "target": "npm.js",
       "argumentFormat": ""
     },
     "PowerShell": {
-      "target": "$(currentDirectory)\\NpmRunner.ps1",
+      "target": "$(currentDirectory)\\Npm.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(cwd)"
     }

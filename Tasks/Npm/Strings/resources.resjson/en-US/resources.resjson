@@ -2,7 +2,7 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "npm runner",
+  "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "Run a npm command",
   "loc.instanceNameFormat": "npm $(command)",
