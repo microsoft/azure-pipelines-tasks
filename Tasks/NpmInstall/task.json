@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 4
     },
     "demands" : [
         "npm"
@@ -22,14 +22,22 @@
             "isExpanded":false
         }
     ],    
-    "instanceNameFormat": "npm install $(arguments)",
+    "instanceNameFormat": "npm $(command)",
     "inputs": [
+        {
+            "name": "command",
+            "type": "string",
+            "label": "Command",
+            "defaultValue":"install",
+            "helpMarkDown": "npm command to run. [More Information](https://docs.npmjs.com/).",
+            "required":true
+        },
         {
             "name": "arguments",
             "type": "string",
             "label": "Arguments",
             "defaultValue":"",
-            "helpMarkDown": "Additional arguments passed to npm install.",
+            "helpMarkDown": "Additional arguments passed to npm.",
             "required":false,
             "groupName":"advanced"
         },
@@ -39,7 +47,7 @@
             "label": "Working Directory",
             "defaultValue":"",
             "required":false,
-            "helpMarkDown": "Current working directory where npm install is run.  Defaults to the root of the repo.",
+            "helpMarkDown": "Current working directory where npm command is run.  Defaults to the root of the repo.",
             "groupName":"advanced"
         }
     ],
