@@ -48,7 +48,7 @@ Write-Host "Slot= $Slot"
 Write-Host "AdditionalArguments= $AdditionalArguments"
 
 #Find the package to deploy
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Azure"
 
 Write-Host "packageFile= Find-Files -SearchPattern $Package"
 $packageFile = Find-Files -SearchPattern $Package
