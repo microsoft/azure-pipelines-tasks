@@ -68,13 +68,13 @@
       }
     },
     {
-      "name": "TestCert",
+      "name": "TestCertificate",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.TestCert",
+      "label": "ms-resource:loc.input.label.TestCertificate",
       "defaultValue": "false",
       "visibleRule": "Protocol = HTTPS",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.TestCert"
+      "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
     },
     {
       "name": "ResourceFilteringMethod",

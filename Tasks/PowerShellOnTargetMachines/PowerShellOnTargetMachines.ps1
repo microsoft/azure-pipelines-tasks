@@ -3,7 +3,7 @@ param (
     [string]$adminUserName,
     [string]$adminPassword,
     [string]$protocol,
-    [string]$testCert,
+    [string]$testCertificate,
     [string]$resourceFilteringMethod,
     [string]$machineNames,
     [string]$scriptPath,
@@ -17,7 +17,7 @@ Write-Verbose "Entering script PowerShellOnTargetMachines.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
 Write-Verbose "adminUserName = $adminUserName" -Verbose
 Write-Verbose "protocol = $protocol" -Verbose
-Write-Verbose "testCert = $testCert" -Verbose
+Write-Verbose "testCertificate = $testCertificate" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "scriptPath = $scriptPath" -Verbose
@@ -269,7 +269,7 @@ function Get-WellFormedTagsList
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName" -Verbose
-Register-Environment -EnvironmentName $environmentName -MachineList $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -SkipCACheck ([bool]::Parse($testCert)) -Connection $connection -TaskContext $distributedTaskContext
+Register-Environment -EnvironmentName $environmentName -MachineList $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ([bool]::Parse($testCertificate)) -Connection $connection -TaskContext $distributedTaskContext
 Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
 if($resourceFilteringMethod -eq "tags")
