@@ -1,15 +1,15 @@
 {
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
-    "name": "NpmInstall",
-    "friendlyName": "npm install",
-    "description": "Install npm packages",
+    "name": "NpmRunner",
+    "friendlyName": "npm runner",
+    "description": "Run a npm command",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 4
+        "Minor": 2,
+        "Patch": 0
     },
     "demands" : [
         "npm"
@@ -53,11 +53,11 @@
     ],
     "execution": {
         "Node": {
-            "target": "npminstall.js",
+            "target": "npmrunner.js",
             "argumentFormat": ""
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\NpmInstall.ps1",
+            "target": "$(currentDirectory)\\NpmRunner.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(cwd)"
         }
