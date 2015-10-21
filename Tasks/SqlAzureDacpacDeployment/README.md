@@ -10,7 +10,7 @@ The task is used to deploy Azure SQL Database to an existing Azure SQL Server, a
 - Rollback on Failure - If true, then the upgrade is rolled back if errors are encountered.
 - Backup Database Before Changes - If true, a backup of the database is taken prior to applying the changes.
 
-_NOTE: Currently, the Azure SQL Database Deployment task works only for **RDFE endpoints**. Support for ARM endpoints would be enabled shortly._
+_NOTE: Currently, the Azure SQL Database Deployment task works only for **RDFE endpoints**._
 
 ## Contact Information
 
