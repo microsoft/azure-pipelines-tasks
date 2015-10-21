@@ -14,9 +14,12 @@
 	 "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "minimumAgentVersion": "1.82.0",
+    "demands": [
+	            "PowerShell"
+    ],
     "inputs": [
         {
             "name": "DockerEndpoint",
