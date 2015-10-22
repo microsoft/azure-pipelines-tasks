@@ -459,7 +459,6 @@ try {
             break
         }
         'TfsVersionControl' {
-            # TODO: WHERE DOES THE distributedTaskContext VARIABLE COME FROM? GLOBAL SCOPE? AGENT SETS THIS?
             $serviceEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $env:BUILD_REPOSITORY_NAME
             [hashtable]$splat = @{
                 'Name' = 'Get-TfsClientCredentials'
@@ -487,10 +486,11 @@ try {
             $workspace = $versionControlServer.TryGetWorkspace($sourcesRootPath)
             if (!$workspace) {
                 Write-Verbose "Unable to determine workspace from source folder: $sourcesRootPath"
+                Write-Verbose "Attempting to resolve workspace recursively from locally cached info."
                 $workspaceInfos = [Microsoft.TeamFoundation.VersionControl.Client.Workstation]::Current.GetLocalWorkspaceInfoRecursively($sourcesRootPath);
                 if ($workspaceInfos) {
                     foreach ($workspaceInfo in $workspaceInfos) {
-                        Write-Verbose "Attempting to determine workspace from workspace info. Server URI: $($workspaceInfo.ServerUri) ; Name: $($workspaceInfo.Name) ; Owner Name: $($workspaceInfo.OwnerName)"
+                        Write-Verbose "Cached workspace info discovered. Server URI: $($workspaceInfo.ServerUri) ; Name: $($workspaceInfo.Name) ; Owner Name: $($workspaceInfo.OwnerName)"
                         try {
                             $workspace = $versionControlServer.GetWorkspace($workspaceInfo)
                             break
@@ -498,6 +498,17 @@ try {
                             Write-Verbose "Determination failed. Exception: $_"
                         }
                     }
+                }
+            }
+
+            if ((!$workspace) -and $env:BUILD_REPOSITORY_TFVC_WORKSPACE) {
+                Write-Verbose "Attempting to resolve workspace by name: $env:BUILD_REPOSITORY_TFVC_WORKSPACE"
+                try {
+                    $workspace = $versionControlServer.GetWorkspace($env:BUILD_REPOSITORY_TFVC_WORKSPACE, '.')
+                } catch [Microsoft.TeamFoundation.VersionControl.Client.WorkspaceNotFoundException] {
+                    Write-Verbose "Workspace not found."
+                } catch {
+                    Write-Verbose "Determination failed. Exception: $_"
                 }
             }
 
