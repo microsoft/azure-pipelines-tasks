@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "demands" : [
         "ant"
@@ -75,7 +75,8 @@
             "defaultValue": "**/TEST-*.xml",
             "required": true,
             "groupName":"junitTestResults",
-            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
+            "visibleRule": "publishJUnitResults = true"
         },   
 	    {
             "name": "codeCoverageTool",
