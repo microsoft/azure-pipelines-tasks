@@ -65,14 +65,15 @@
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Protocol"
     },
     {
       "name": "TestCertificate",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.TestCertificate",
       "defaultValue": "false",
-      "visibleRule": "Protocol = HTTPS",
+      "visibleRule": "Protocol = Https",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
     },
