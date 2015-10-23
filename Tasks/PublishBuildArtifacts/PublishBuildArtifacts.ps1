@@ -31,6 +31,15 @@ $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
 $teamProjectId = Get-TaskVariable $distributedTaskContext "system.teamProjectId"
 $stagingFolder = Get-TaskVariable $distributedTaskContext "build.artifactstagingdirectory"
 
+if ($CopyRoot -eq $stagingFolder)
+{
+    Write-Verbose "Copy root matches the copy target. Discarding copy patterns."
+    # This is a total hack because the parameter binding for the Copy-BuildArtifacts cmdlet
+    # complains if the value is an empty string. In order to fix this without breaking
+    # backwards compatibility with older agents, need to hack it.
+    $Contents = "`n"
+}
+
 # gather files into staging folder
 Write-Host (Get-LocalizedString -Key "Preparing artifact content in staging folder {0}..." -ArgumentList $stagingFolder)
 $artifactStagingFolder = Copy-BuildArtifact $distributedTaskContext $CopyRoot $stagingFolder $ArtifactName $Contents
