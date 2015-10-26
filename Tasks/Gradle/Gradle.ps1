@@ -42,6 +42,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 # Verify wrapperScript is set and is not a container
 if(!$wrapperScript -or !(Test-Path -Path $wrapperScript -PathType Leaf)) 
 {
+    Write-Host "##vso[task.logissue type=error;code=005001;]"
     throw "Please specify the Gradle wrapper script."
 }
 
@@ -121,6 +122,7 @@ if($publishJUnitResultsFromAntBuild)
     $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
     if (!$matchingTestResultsFiles)
     {
+        Write-Host "##vso[task.logissue type=warning;code=005002;]"
         Write-Host "No JUnit test results files were found matching pattern '$testResultsFiles', so publishing JUnit test results is being skipped."
     }
     else
@@ -147,7 +149,8 @@ if($isCoverageEnabled)
 	}
 	else
 	{
-		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage." -Verbose
+        Write-Host "##vso[task.logissue type=warning;code=005003;]"
+		Write-Warning "No code coverage found to publish. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details." -Verbose
 	}   
 }
 

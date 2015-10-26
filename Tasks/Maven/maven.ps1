@@ -50,6 +50,7 @@ Write-Verbose "dbUsername = $sqDbUsername"
 # Verify Maven POM file is specified
 if(!$mavenPOMFile)
 {
+    Write-Host "##vso[task.logissue type=error;code=004001;]"
     throw "Maven POM file is not specified"
 }
 
