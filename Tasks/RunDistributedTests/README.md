@@ -95,7 +95,7 @@ If this is not the case, testagent should be manually downloaded from official m
 	
 	d.	Configuring Testagent and running tests as a non-admin/service account is not supported.
 	
-	e.	Running tests for Universal Windows Platform apps is not supported. Please use Visual Studio Test task for running these tests 
+	e.	Running tests for Universal Windows Platform apps is not supported. Please use Visual Studio Test task for running these tests.
 
 ### Here is a list of other tasks that can be used with this task in the Build-Deploy-Test (BDT) workflow:
 
