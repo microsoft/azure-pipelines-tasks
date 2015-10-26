@@ -37,7 +37,7 @@ For example, FullyQualifiedName~Chrome:12 will report all test methods which hav
 	
 - **Application Under Test Machine Group:**	Machine(s) on which the Application Under Test is deployed. This is used to collect Code Coverage data from those machines. Use this in conjunction with Code Coverage Enabled checkbox. 
 
-- **Test Adapters:**	There is no explicit field to specify Test Adapter path in the task. Directories under <foo> are automatically searched for any test adapters. If your adapters are in a different directory structure, use a runsettings file with TestAdaptersPaths as described at https://msdn.microsoft.com/en-us/library/jj635153.aspx
+- **Test Adapters:**	There is no explicit field to specify Test Adapter path in the task. The task automatically searches for "packages" directory that exists in the same folder as the .sln file (nuget restored directory structure). If your adapters are in a different directory or you did not copy over the source files, use a runsettings file with TestAdaptersPaths as described at https://msdn.microsoft.com/en-us/library/jj635153.aspx
 
 
 ### Scenarios Supported
