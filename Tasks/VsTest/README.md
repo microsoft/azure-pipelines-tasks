@@ -10,7 +10,7 @@ VSTest task can be used to run tests on Build agent machines. Using the appropri
 	*	Multiple paths can be specified separated by a semicolon
 	*	Paths are relative to the Sources Directory
 
-For example, `**\commontests\*test*.dll; **\frontendtests\*test*.dll;-:**\obj\**`
+For example, `**\commontests\*test*.dll; **\frontendtests\*test*.dll;-:**\obj\**` or `$(Build.SourcesDirectory)\Tests\*tests*.dll;-:$(Build.SourcesDirectory)\Tests\Integrationtests.dll`
 
 Include patterns start with ‘+:’, and exclude patterns with ‘-:’ (Default is include). For Javascript tests, this will point to .js files containing the tests
 
