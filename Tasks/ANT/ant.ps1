@@ -36,6 +36,7 @@ if($isCoverageEnabled)
 #Verify Ant build file is specified
 if(!$antBuildFile)
 {
+    Write-Host "##vso[task.logissue type=error;code=006001;]"
     throw "Ant build file is not specified"
 }
 
@@ -94,7 +95,7 @@ if($isCoverageEnabled)
 {
    # Enable code coverage in build file
    Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
-   Write-Verbose "code coverage is successfully enabled." -Verbose
+   Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
 {
@@ -112,6 +113,7 @@ if($publishJUnitResultsFromAntBuild)
     $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
     if (!$matchingTestResultsFiles)
     {
+        Write-Host "##vso[task.logissue type=warning;code=006002;]"
         Write-Host "No JUnit test results files were found matching pattern '$testResultsFiles', so publishing JUnit test results is being skipped."
     }
     else
@@ -149,7 +151,8 @@ if($isCoverageEnabled)
    }
    else
    {
-		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests." -Verbose
+        Write-Host "##vso[task.logissue type=warning;code=006003;]"
+		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
    }
 }
 
