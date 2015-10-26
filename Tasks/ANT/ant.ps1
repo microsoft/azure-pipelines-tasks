@@ -152,7 +152,7 @@ if($isCoverageEnabled)
    else
    {
         Write-Host "##vso[task.logissue type=warning;code=006003;]"
-		Write-Warning "No code coverage found to publish. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
+		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
    }
 }
 
