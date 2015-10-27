@@ -7,12 +7,12 @@ function ValidateSourceFile([string] $sourcePath)
 {
    if(! (Test-Path -Path $sourcePath))
    {
-        throw "Test agent source path '{0}' is not accessible to the test machine. Please check if the file exists and that test machine has access to that machine" -f $sourcePath
+        throw (Get-LocalizedString -Key "Test agent source path '{0}' is not accessible to the test machine. Please check if the file exists and that test machine has access to that machine" -f $sourcePath)
    }
    
    if((Get-Item $sourcePath) -is [System.IO.DirectoryInfo])
    {
-        throw "Provide the source path of test agent including the installation file. Given path is '{0}'" -f $sourcePath
+        throw (Get-LocalizedString -Key "Provide the source path of test agent including the installation file. Given path is '{0}'" -f $sourcePath)
    }
 }
 
@@ -54,7 +54,7 @@ foreach($sourcePath in $source)
         $robocopyExitCode = $LASTEXITCODE 
         if($robocopyExitCode -eq 0x10)
         {
-            throw "Robocopy failed to copy from $sourceDirectory to $destinationDirectory. Failed with a exit code $robocopyExitCode."
+            throw (Get-LocalizedString -Key "Robocopy failed to copy from $sourceDirectory to $destinationDirectory. Failed with a exit code $robocopyExitCode.")
         }
     }
 }
