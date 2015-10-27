@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [ 
   ], 
@@ -80,7 +80,8 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\PublishTestResults.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms" : ["windows"]
     },
     "Node": {
             "target": "PublishTestResults.js",
