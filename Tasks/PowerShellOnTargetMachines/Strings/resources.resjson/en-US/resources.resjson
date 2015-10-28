@@ -17,7 +17,7 @@
   "loc.input.label.Protocol": "Protocol",
   "loc.input.help.Protocol": "Whether WinRM connections or over HTTP or HTTPS. Defaulted to HTTPS.",
   "loc.input.label.TestCertificate": "Test Certificate",
-  "loc.input.help.TestCertificate": "Whether to use certificate based authentication.",
+  "loc.input.help.TestCertificate": "Setting it to true doesn't validate the certificate.",
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
   "loc.input.label.MachineNames": "Filter Criteria",
   "loc.input.help.MachineNames": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",

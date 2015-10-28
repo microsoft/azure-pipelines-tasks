@@ -15,7 +15,7 @@
     "Minor": 0,
     "Patch": 14
   },
-  "minimumAgentVersion": "1.89.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "deployment",
@@ -70,10 +70,10 @@
       "name": "TestCertificate",
       "type": "boolean",
       "label": "Test Certificate",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "visibleRule": "Protocol = Https",
       "required": false,
-      "helpMarkDown": "Whether to use certificate based authentication."
+      "helpMarkDown": "Setting it to true doesn't validate the certificate."
     },
     {
       "name": "ResourceFilteringMethod",

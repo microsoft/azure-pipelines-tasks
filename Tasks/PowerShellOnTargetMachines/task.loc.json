@@ -18,7 +18,7 @@
     "Minor": 0,
     "Patch": 14
   },
-  "minimumAgentVersion": "1.89.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "deployment",
@@ -72,7 +72,7 @@
       "name": "TestCertificate",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.TestCertificate",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "visibleRule": "Protocol = Https",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
