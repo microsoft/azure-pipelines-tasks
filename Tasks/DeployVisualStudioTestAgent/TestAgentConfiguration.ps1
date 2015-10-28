@@ -169,7 +169,7 @@ function Get-TestAgentConfiguration
 	    $runningAsProcessUsingConfig = ($configOut.CommandOutput | Select-String -Quiet -SimpleMatch "This test agent is running as an interactive process.") -eq $True
         $runningAsProcessUsingReg = !([string]::IsNullOrEmpty($testAgentType) -or $testAgentType.Equals("AsService"))
 		
-	    $runningAsProcess = $runningAsProcessUsingConfig | $runningAsProcessUsingReg
+	    $runningAsProcess = $runningAsProcessUsingConfig -or $runningAsProcessUsingReg
 		
         $outputLines = $configOut.CommandOutput.Split("`n`r")
 
