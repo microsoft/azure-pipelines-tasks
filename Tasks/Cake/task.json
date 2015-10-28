@@ -1,0 +1,69 @@
+{
+  "id": "b88ea9a0-7d6e-11e5-b5de-d57d652482f7",
+  "name": "Cake",
+  "friendlyName": "Cake",
+  "description": "Build with Cake",
+  "author": "Patrik Svensson",
+  "helpMarkDown": "[More Information about Cake](http://cakebuild.net)",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "Cake $(message)",
+  "inputs": [
+    {
+      "name": "script",
+      "type": "filePath",
+      "label": "Cake Script",
+      "defaultValue":"build.cake",
+      "helpMarkDown": "The build script to execute.",
+      "required":true
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "label": "Target",
+      "defaultValue":"Default",
+      "helpMarkDown": "The build script target to run.",
+      "required":true
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "Verbosity",
+      "defaultValue":"Verbose",
+      "helpMarkDown": "Specifies the amount of information to be displayed.",
+      "required":true,
+      "options": {
+        "Quiet": "Quiet",
+        "Minimal": "Minimal",
+        "Normal": "Normal",
+        "Verbose": "Verbose",
+        "Diagnostic": "Diagnostic"
+      }
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "Cake Arguments",
+      "defaultValue":"",
+      "helpMarkDown": "Additional arguments passed to Cake.",
+      "required":false
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Cake.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
