@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 37
+    "Patch": 38
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -33,11 +33,32 @@
       "required": true
     },
     {
+      "name": "nuGetFeedType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.nuGetFeedType",
+      "required": true,
+      "defaultValue": "external",
+      "options": {
+        "external": "External NuGet Feed",
+        "internal": "Internal NuGet Feed"
+      }
+    },
+    {
       "name": "connectedServiceName",
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName",
+      "visibleRule": "nuGetFeedType = external"
+    },
+    {
+      "name": "feedName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feedName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.feedName",
+      "visibleRule": "nuGetFeedType = internal"
     },
     {
       "name": "nuGetAdditionalArgs",
