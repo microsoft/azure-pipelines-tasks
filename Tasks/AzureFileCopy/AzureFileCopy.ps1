@@ -40,14 +40,14 @@ $azureFileCopyOperation = 'AzureFileCopy'
 $ErrorActionPreference = 'Stop'
 
 # Load all dependent files for execution
-. ./AzureFileCopyJob.ps1
-. ./AzureUtility.ps1
-. ./Utility.ps1
+Import-Module ./AzureFileCopyJob.ps1 -Force
+Import-Module ./AzureUtility.ps1 -Force
+Import-Module ./Utility.ps1 -Force
 
 # Import all the dlls and modules which have cmdlets we need
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
@@ -65,7 +65,7 @@ $isSwitchAzureModeRequired = Does-RequireSwitchAzureMode
 if($isSwitchAzureModeRequired)
 {
     Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
-    . ./AzureResourceManagerLegacyProvider.ps1
+    Import-Module ./AzureResourceManagerLegacyProvider.ps1 -Force
 }
 
 # try to get storage key from RDFE, if not exists will try from ARM endpoint
