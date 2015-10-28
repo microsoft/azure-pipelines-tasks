@@ -916,7 +916,7 @@ function ConfigureTestAgent
     }
     else
     {
-        throw "TestAgent Configuration failed with exit code {0}. Error code : {1}" -f $LASTEXITCODE, $retCode
+        throw ("TestAgent Configuration failed with exit code {0}. Error code : {1}" -f $LASTEXITCODE, $retCode)
     }
 
     return $retCode;
