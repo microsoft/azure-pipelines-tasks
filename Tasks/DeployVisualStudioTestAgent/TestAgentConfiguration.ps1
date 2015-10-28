@@ -2,11 +2,22 @@
 {
 	$Version = Locate-TestVersion
 	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
+	
 	if (-not (Test-Path $testAgentPath))
 	{
 		$testAgentPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
 	}
-	$testAgentServiceConfig = (Get-ItemProperty $testAgentPath).AgentRunMode 
+	
+	if (-not (Test-Path $testAgentPath))
+	{
+		return $null
+	}
+	
+	$testAgentServiceConfig = (Get-ItemProperty $testAgentPath).AgentRunMode -ErrorAction SilentlyContinue
+	if (($testAgentServiceConfig -eq $null) -or ($testAgentServiceConfig.Length -eq 0))
+    {
+		return $null
+	}
 	return $testAgentServiceConfig
 }
 
@@ -156,7 +167,7 @@ function Get-TestAgentConfiguration
 	    $testAgentType = Get-TestAgentType($TestAgentVersion)
 		
 	    $runningAsProcessUsingConfig = ($configOut.CommandOutput | Select-String -Quiet -SimpleMatch "This test agent is running as an interactive process.") -eq $True
-        $runningAsProcessUsingReg = !$testAgentType.Equals("AsService")
+        $runningAsProcessUsingReg = !([string]::IsNullOrEmpty($testAgentType) -or $testAgentType.Equals("AsService"))
 		
 	    $runningAsProcess = $runningAsProcessUsingConfig | $runningAsProcessUsingReg
 		
