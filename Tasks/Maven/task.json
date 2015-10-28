@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 18
     },
    "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -81,7 +81,8 @@
             "defaultValue": "**/TEST-*.xml",
             "required": true,
             "groupName": "junitTestResults",
-            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
+            "visibleRule": "publishJUnitResults = true"
         },  
         {
             "name": "codeCoverageTool",
@@ -105,7 +106,26 @@
             "groupName": "codeCoverage",
             "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html.",
             "visibleRule": "codeCoverageTool = JaCoCo"
-        },   
+        }, 
+        {
+            "name": "classFilesDirectories",
+            "type": "string",
+            "label": "Class Files Directories",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
+            "visibleRule": "codeCoverageTool = JaCoCo"
+        },	
+        {
+            "name": "srcDirectories",
+            "type": "string",
+            "label": "Source Files Directories",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
+            "visibleRule": "codeCoverageTool = JaCoCo"
+        },		
         {
             "name":"javaHomeSelection",
             "type":"radio",
@@ -222,7 +242,8 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\maven.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": "$(currentDirectory)",
+            "platforms" : ["windows"]
         }
     }
 }

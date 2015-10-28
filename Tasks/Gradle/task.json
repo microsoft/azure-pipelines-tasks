@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 13
     },
     "demands" : [
         "java"
@@ -83,7 +83,8 @@
             "defaultValue": "**/TEST-*.xml",
             "required": true,
             "groupName":"junitTestResults",
-            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
+            "visibleRule": "publishJUnitResults = true"
         },
 	   {
             "name": "codeCoverageTool",
@@ -99,9 +100,9 @@
             }
         },
         {
-            "name": "classfilesDirectory",
+            "name": "classFilesDirectories",
             "type": "string",
-            "label": "Class Files Directory",
+            "label": "Class Files Directories",
             "defaultValue": "build/classes/main",
             "required": true,
             "groupName": "codeCoverage",
@@ -176,7 +177,8 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\gradle.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": "$(currentDirectory)",
+            "platforms" : ["windows"]
         },
         "Node": {
             "target": "gradle2.js",

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "groups": [
     {
@@ -63,7 +63,7 @@
             "target": "$(filename)",
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
-            "failOnStandardError": "$(failOnStandardError)"
+            "platforms" : ["windows"]
         },
         "Node": {
             "target": "cmdLine2.js",

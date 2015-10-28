@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 13
   },
   "demands": [
     "java"
@@ -86,7 +86,8 @@
       "defaultValue": "**/TEST-*.xml",
       "required": true,
       "groupName": "junitTestResults",
-      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
+      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
+      "visibleRule": "publishJUnitResults = true"
     },
     {
       "name": "codeCoverageTool",
@@ -102,13 +103,13 @@
       }
     },
     {
-      "name": "classfilesDirectory",
+      "name": "classFilesDirectories",
       "type": "string",
-      "label": "ms-resource:loc.input.label.classfilesDirectory",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
       "defaultValue": "build/classes/main",
       "required": true,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classfilesDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
@@ -179,7 +180,10 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\gradle.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
     },
     "Node": {
       "target": "gradle2.js",

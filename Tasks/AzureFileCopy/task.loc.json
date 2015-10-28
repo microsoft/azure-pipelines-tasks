@@ -16,21 +16,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.90.0",
   "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
-      "label": "ms-resource:loc.input.label.ConnectedServiceName",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
-    },
     {
       "name": "SourcePath",
       "type": "filePath",
@@ -40,12 +32,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
     },
     {
-      "name": "StorageAccount",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.StorageAccount",
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "Destination",
@@ -58,6 +50,14 @@
         "AzureVMs": "Azure VMs"
       },
       "helpMarkDown": "ms-resource:loc.input.help.Destination"
+    },
+    {
+      "name": "StorageAccount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
     },
     {
       "name": "ContainerName",
@@ -79,7 +79,7 @@
     },
     {
       "name": "EnvironmentName",
-      "type": "pickList",
+      "type": "string",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
@@ -87,24 +87,21 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
+      "name": "vmsAdminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vmsAdminUserName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.vmsAdminUserName",
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "MachineNames",
+      "name": "vmsAdminPassword",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
+      "label": "ms-resource:loc.input.label.vmsAdminPassword",
       "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.vmsAdminPassword",
       "visibleRule": "Destination = AzureVMs"
     },
     {
@@ -117,6 +114,15 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
+      "name": "CopyFilesInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CopyFilesInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
       "name": "CleanTargetBeforeCopy",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
@@ -126,21 +132,13 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "CopyFilesInParallel",
+      "name": "skipCACheck",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.CopyFilesInParallel",
+      "label": "ms-resource:loc.input.label.skipCACheck",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel",
+      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
       "visibleRule": "Destination = AzureVMs"
-    }
-  ],
-  "sourceDefinitions": [
-    {
-      "target": "EnvironmentName",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

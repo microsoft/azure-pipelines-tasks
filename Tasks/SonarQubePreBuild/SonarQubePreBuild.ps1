@@ -37,6 +37,8 @@ $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQu
 # Set the path as context variable so that the post-test task will be able to read it and not compute it again;
 # Also, if the variable is not set, the post-test task will know that the pre-build task did not execute
 SetTaskContextVariable "MsBuild.SonarQube.BootstrapperPath" $bootstrapperPath
+# Expose MsBuild.SonarQube.ProjectUri, if any of the following tasks needs it
+SetTaskContextVariable "MsBuild.SonarQube.ProjectUri" "$($serviceEndpoint.Url)/dashboard/index?id=$($projectKey)"
 
 StoreSensitiveParametersInTaskContext $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUsername $dbPassword
 $arguments = CreateCommandLineArgs $projectKey $projectName $projectVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUrl $dbUsername $dbPassword $cmdLineArgs $configFile

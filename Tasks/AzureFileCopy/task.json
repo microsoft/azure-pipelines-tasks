@@ -13,21 +13,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.90.0",
   "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
-      "label": "Azure Subscription",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Azure subscription to target for copying the files."
-    },
     {
       "name": "SourcePath",
       "type": "filePath",
@@ -37,24 +29,32 @@
       "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file."
     },
     {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "Azure Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure subscription to target for copying the files."
+    },
+    {
+      "name": "Destination",
+      "type": "pickList",
+      "label": "Destination Type",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "AzureBlob": "Azure Blob",
+        "AzureVMs": "Azure VMs"
+       },
+      "helpMarkDown": "Select the destination, either Azure Blob or Azure VMs."
+    },
+    {
       "name": "StorageAccount",
       "type": "string",
       "label": "Storage Account",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Specify a pre-existing storage account. It is also used as an intermediary for copying files to Azure VMs"
-    },
-    {
-      "name": "Destination",
-      "type": "pickList",
-      "label": "Destination",
-      "defaultValue": "",
-      "required": true,
-      "options": {
-        "AzureBlob": "Azure Blob",
-        "AzureVMs": "Azure VMs"
-      },
-      "helpMarkDown": "Select the destination, either Azure Blob or Azure VMs."
     },
     {
       "name": "ContainerName",
@@ -76,32 +76,29 @@
     },
     {
       "name": "EnvironmentName",
-      "type": "pickList",
-      "label": "Machine Group",
+      "type": "string",
+      "label": "Resource Group",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the target Machine Group for copying files to. Applicable only for Azure virtual machines.",
+      "helpMarkDown": "Name of the target Resource Group for copying files to.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name":"ResourceFilteringMethod",
-      "type":"radio",
-      "label":"Select Machines By",
-      "required":false,
-      "defaultValue":"machineNames",
-      "options": {
-         "machineNames":"Machine Names",
-         "tags":"Tags"
-       },
-      "visibleRule": "Destination = AzureVMs"
-    },
-    {
-      "name": "MachineNames",
+      "name": "vmsAdminUserName",
       "type": "string",
-      "label": "Filter Criteria",
+      "label": "Admin Login",
       "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Provide a list of machine names like MyMachine1, MyMachine2 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group.",
+      "required": true,
+      "helpMarkDown": "Administrator Username of the VMs.",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "vmsAdminPassword",
+      "type": "string",
+      "label": "Password",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Administrator Password of the VMs.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
@@ -114,6 +111,15 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
+      "name": "CopyFilesInParallel",
+      "type": "boolean",
+      "label": "Copy in Parallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Setting it to true will copy files in parallel to the target machines.",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
       "name": "CleanTargetBeforeCopy",
       "type": "boolean",
       "label": "Clean Target",
@@ -123,21 +129,13 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "CopyFilesInParallel",
+      "name": "skipCACheck",
       "type": "boolean",
-      "label": "Copy Files in Parallel",
+      "label": "Test Certificate",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "Setting it to true will copy files in parallel to the target machines.",
+      "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
       "visibleRule": "Destination = AzureVMs"
-    }
-  ],
-  "sourceDefinitions": [
-    {
-      "target": "EnvironmentName",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "$(Destination) File Copy",

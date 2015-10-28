@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 15
     },
     "demands" : [
         "ant"
@@ -75,7 +75,8 @@
             "defaultValue": "**/TEST-*.xml",
             "required": true,
             "groupName":"junitTestResults",
-            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
+            "visibleRule": "publishJUnitResults = true"
         },   
 	    {
             "name": "codeCoverageTool",
@@ -91,9 +92,9 @@
             }
         },        
         {
-            "name": "classfilesDirectory",
+            "name": "classFilesDirectories",
             "type": "string",
-            "label": "Class Files Directory",
+            "label": "Class Files Directories",
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
@@ -111,13 +112,13 @@
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
-            "name": "srcDirectory",
+            "name": "srcDirectories",
             "type": "string",
-            "label": "Source Files Directory",
+            "label": "Source Files Directories",
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Specify source directory for code coverage reports to include highlighted source code. For example, src. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
+            "helpMarkDown": "Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
@@ -181,7 +182,8 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\ant.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": "$(currentDirectory)",
+            "platforms" : ["windows"]
         }
     }
 }
