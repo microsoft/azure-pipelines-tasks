@@ -14,12 +14,17 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
     ],
     "minimumAgentVersion": "1.88.0",
     "groups": [
+		    {
+		      "name": "deployment",
+		      "displayName": "Deployment",
+		      "isExpanded": true
+		    },
         {
             "name": "target",
             "displayName": "Target",
@@ -32,39 +37,78 @@
         }
     ],
     "inputs": [
-        {
-            "name": "EnvironmentName",
-            "type": "pickList",
-            "label": "Machine Group",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the target Machine Group, where the database deployment task will be run. For Azure Resource Groups, type-in the name of the Resource Group."
+            {
+		      "name": "EnvironmentName",
+		      "type": "multiLine",
+		      "label": "Machines",
+		      "defaultValue": "",
+		      "required": true,
+		      "helpMarkDown": "Enter the comma seperated list of machines for deployment."
+		    },
+		    {
+			    "name": "AdminUserName",
+			    "type": "string",
+			    "label": "Admin Login",
+			    "defaultValue": "",
+			    "required": false,
+			    "helpMarkDown": "Provide administrator user name for connecting to target machine."
+		    },
+		    {
+			    "name": "AdminPassword",
+			    "type": "string",
+			    "label": "Password",
+			    "defaultValue": "",
+			    "required": false,
+			    "helpMarkDown": "Provide administrator user password for connecting to target machine."
+		    },
+		    {
+          "name": "Protocol",
+          "type": "radio",
+          "label": "Protocol",
+          "required": false,
+          "defaultValue": "",
+          "options": {
+            "Http": "HTTP",
+            "Https": "HTTPS"
+          }
         },
         {
-            "name": "ResourceFilteringMethod",
-            "type": "radio",
-            "label": "Select Machines By",
-            "required": false,
-            "defaultValue": "machineNames",
-            "options": {
-                "machineNames": "Machine Names",
-                "tags": "Tags"
-            },
-            "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
+          "name": "TestCert",
+          "type": "boolean",
+          "label": "Test Certificate",
+          "defaultValue": "false",
+          "visibleRule": "Protocol = Https",
+          "required": false,
+          "helpMarkDown": "Setting it to true will connect to target machine using test certificate."
         },
         {
-            "name": "MachineFilter",
-            "type": "string",
-            "label": "Deploy to Machines",
-            "required": false,
-            "defaultValue": "",
-            "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
+          "name": "ResourceFilteringMethod",
+          "type": "radio",
+          "label": "Select Machines By",
+          "required": false,
+          "defaultValue": "machineNames",
+          "visibleRule": "Protocol = Invalid",
+          "options": {
+            "machineNames": "Machine Names",
+            "tags": "Tags"
+          },
+          "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
+        },
+        {
+          "name": "MachineFilter",
+          "type": "string",
+          "label": "Deploy to Machines",
+          "required": false,
+          "defaultValue": "",
+          "visibleRule": "Protocol = Invalid",
+          "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
         },
         {
             "name": "DacpacFile",
             "type": "string",
             "label": "DACPAC File",
             "required": true,
+		      	"groupName": "deployment",
             "defaultValue": "",
             "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported like $env:windir, $env:systemroot, like, $env:windir\\FabrikamFibre\\Web."
         },
@@ -160,14 +204,6 @@
             "helpMarkDown": "Setting it to true will run the database deployment task in-parallel on the target machines."
         }
     ],
-    "sourceDefinitions": [ 
-     { 
-         "target": "EnvironmentName", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
-     } 
-    ], 
     "instanceNameFormat": "Deploy SQL DACPAC: $(DacpacFile)",
     "execution": {
         "PowerShell": {
