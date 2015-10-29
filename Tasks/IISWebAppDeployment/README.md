@@ -1,40 +1,40 @@
 # IIS Web Application Deployment
 
-# Overview
+## Overview
 
 The task is used to deploy a web application or a website to IIS web server and to create or update websites and application pools, and the underlying technologies used by the task is [Web Deploy](http://www.iis.net/downloads/microsoft/web-deploy) and [AppCmd.exe](http://www.iis.net/learn/get-started/getting-started-with-iis/getting-started-with-appcmdexe). Web Deploy packages the web application content, configuration and any other artifacts like registry, GAC assemblies etc. that can be used deployment. If the package needs to be redeployed to a different environment, configuration values within the package can be parameterized during deployment without requiring modifications to the packages themselves. Web deploy works with IIS 7, IIS 7.5, IIS 8, and IIS 8.5. AppCmd.exe is the single command line tool for managing IIS 7 and above. It exposes all key server management functionality through a set of intuitive management objects that can be manipulated from the command line or from scripts.
 
 The task runs on the target machine(s) and it is important to have the pre-requisites, as described below, installed on the machine(s). The flow is that the automation agent when executing the task, connects to the target machine using the Windows Remote Management (WinRM), and then launches a bootstrap service, which in turn invokes the PowerShell scripts to locate the msdeploy.exe on the machine, and deploys the web application using the msdeploy.exe.
 
-# Contact Information
+## Contact Information
 
 Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, if you would like to share feedback about the task and the new features that you would like to see in it, then do send an email to the alias.
 
-# Pre-requisites for the task
+## Pre-requisites for the task
 
 The following pre-requisites need to be setup for the task to work properly.
 
-## Web Deploy
+### Web Deploy
 
 Web Deploy (msdeploy.exe) is used to deploy the web application on the IIS server, and needs to be installed on the target machines, and can be easily done so using [Microsoft Web Platform Installer](http://www.microsoft.com/web/gallery/install.aspx?appid=wdeploynosmo). Note that the link will open Web PI with the Web Deploy showing-up ready to install. The WebDeploy 3.5 needs to be installed without the bundled SQL support and using the default settings. There is no need to choose any custom settings while installing web deploy. After installation the Web Deploy is available at C:\Program Files (x86)\IIS\Microsoft Web Deploy V3. The task [PowerShell on Target Machines](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/PowerShellOnTargetMachines) can be used to deploy Web Deploy to Azure virtual machines or domain-joined/workgroup machines.
 
 AppCmd.exe is an in-built command line tool of IIS and does not need to be separately installed. It is used to create or update websites and application pools.
 
-## IIS Web Server
+### IIS Web Server
 
 There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. The task creates or updates websites and application pools, and deploys IIS web applications but does not install or configure IIS web server on the machines.
 
-## Pre-existing Machine Groups
+### Pre-existing Machine Groups
 
 If the web application is being deployed on pre-existing machines (physical or virtual machines) then a machine group has to be created in the Machines Hub. There is a manage link next to the Machine Group parameter of the task. Click on the link to navigate to the Machines Hub and create a machine group. Note that the IP Address or the FDQN of Azure virtual machines can be also added in the machine group. The difference between using the domain-joined/workgroup machines and the Azure virtual machines is that copying files to them uses separate tasks wiz. [Windows Machine File Copy](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/WindowsMachineFileCopy) for the domain-joined/workgroup machines and [Azure File Copy](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/AzureFileCopy) for the Azure virtual machines. Note that the IIS Web Application Deployment task expects the web application's package zip files to be available on the machines or on a UNC path that is accessible by the machine administrator's login. Prior to using the IIS Web Application Deployment task ensure that the zip files are available for the deployment by copying them to the machines using the Windows Machine File Copy or the Azure File Copy tasks.
 
-## Azure Resource Groups
+### Azure Resource Groups
 
 To use dynamically deployed Azure virtual machines, use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task to deploy the virtual machines in a Resource Group and then the name of the Resource Group can be typed in the Machine Group parameter of the IIS Web Application Deployment task. As described above, copy the web application's package zip files to the virtual machines in the Azure Resource Group using the [Azure File Copy](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/AzureFileCopy) task.
 
 _NOTE: Currently existing Azure Resource Groups, classic (v1) or Azure Resource Manager (v2), cannot be used in the Build or Release Management definitions. Ability to select existing Resource Groups and to use the virtual machine resources in them to deploy applications to is coming soon._
 
-## Windows Remote Management (WinRM) Setup
+### Windows Remote Management (WinRM) Setup
 
 The IIS Web Application Deployment task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426(v=vs.85).aspx) (WinRM) to access domain-joined/workgroup machines or Azure virtual machines. WinRM is Microsoft's implementation of  [WS-Management Protocol](https://msdn.microsoft.com/en-us/library/aa384470(v=vs.85).aspx) that is firewall-friendly and provides a common way for systems to access and exchange management information across on-premises or Cloud IT infrastructure. The automation agent that runs the IIS Web Application Deployment task uses WinRM to communicate with the target machines. It is important to setup WinRM properly on the target machines else the deployment tasks will fail. The configuration of WinRM is described in detail on the MSDN [site](https://msdn.microsoft.com/en-us/library/aa384372(v=vs.85).aspx). For the target machines the following will ensure that the WinRM has been setup properly on them:
 
@@ -116,13 +116,13 @@ The IIS Web Application Deployment task uses the [Windows Remote Management](htt
 </tr>
 </table>
 
-# Parameters of the task
+## Parameters of the task
 
 The task can be used to deploy a web application to an existing website in the IIS web server using web deploy, and it can be also used for creating new IIS website and application pools, or to update existing ones. The task has three sections and the parameters of the different sections are described in detail below. The parameters listed with a \* are required parameters for the task.
 
 The task first creates/updates the application pool, then creates/updates the websites, then applies the additional App.Cmd.exe commands, and then deploys the web application to the website using the web deploy. The application pool, website, and the additional AppCmd.exe sections are optional and if none of them are provided, then the task directly deploys the web application to the IIS website.
 
-## Deploy IIS Web Application
+### Deploy IIS Web Application
 This section of the task is used to deploy the web application to an existing IIS website and uses Web Deploy to do so.
 
   - *Machine Group\*:** The task runs in the target machine to deploy the web application. For this purpose, a target machine group has to be selected in this parameter. The dropdown will populate the pre-existing machine groups that have been created in the Machines Hub. To create a new machine group, or to edit/delete an existing one, click on the Manage link next to the machine group parameter. The link will open the Machines hub in a new tab. To use Azure virtual machines that have been created using the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task, manually type-in the name of the Resource Group in this parameter.
@@ -132,7 +132,7 @@ This section of the task is used to deploy the web application to an existing II
   - **Web Deploy Parameters File:** The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment. The parameter takes in the location of the parameter file on the target machines or on a UNC path.
   - **Override Parameters:** Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. The format followed here is same as that for [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDepoy.exe. For example, name="IIS Web Application Name", value="Fabrikam" ApplicationPath="Default Web Site/MyApplication"
  
-## Website
+### Website
 The section of the task is used to create a new IIS website or to update an existing one by using the IIS Server's AppCmd.exe command line tool. For more information about the parameters see the [websites](https://technet.microsoft.com/library/hh831681.aspx#Add_Site) page on MSDN.
  
   - **Create or Update Website:** Select this option to create a new website or to update an existing one.
@@ -150,7 +150,7 @@ The section of the task is used to create a new IIS website or to update an exis
   - **Server Name Indication Required:** Determines whether the website requires Server Name Indication (SNI). SNI extends the SSL and TLS protocols to indicate what host name the client is attempting to connect to. It allows multiple secure websites with different certificates to use the same IP address. The checkbox is displayed when the binding type is HTTPS. This parameter only works with IIS 8 and later versions of IIS. If SNI is selected, then host name should be also specified
   - **SSL Certificate Thumbprint:** Thumbprint of the Secure Socket Layer certificate that the website is going to use. The certificate should be already installed on the machine and present under the Local Computer, Personal store. 
   
-## Application Pool
+### Application Pool
 The section is used to create a new IIS application pool or to update an existing one by using the IIS Server's AppCmd.exe command line tool. For more information about the parameters see the [application pools](https://technet.microsoft.com/library/hh831797.aspx) page on MSDN.
 
   - **Create or Update Application Pool:** Select this option to create a new application pool or to update an existing one.
@@ -159,13 +159,13 @@ The section is used to create a new IIS application pool or to update an existin
   - **Managed Pipeline Mode\*:** Managed pipeline mode specifies how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in the Integrated mode.
   - **Identity\*:** Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.
 
-## Advanced
+### Advanced
 The section provides for advanced options.
 
   - **Additional AppCmd.exe Commands:** Additional [AppCmd.exe](https://technet.microsoft.com/en-us/library/cc732107(v=ws.10).aspx) commands to set website or application pool properties. For more than one command use line separator, for example, set config /section:applicationPools /[name='Fabrikam'].autoStart:false add site /name:fabrikam /bindings:http/\*:85: fabrikam.com. ** **
   - **Deploy in Parallel:** Setting it to true will run the database deployment task in-parallel on the target machines.
 
-# Known Issues
+## Known Issues
 
   - The IIS Web Application Deployment task does not provide support for Web Deploy manifest files and has not been tested and verified for ASP.NET 5 and MVC 6 web application. Please send us feedback for the task and for the support for manifest files, ASP.NET 5/MVC 6 we applications at RM\_Customer\_Queries at microsoft dot com.
   - The Override Parameters can take only one parameter based on the [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDepoy.exe
