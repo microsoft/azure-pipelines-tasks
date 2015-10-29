@@ -13,13 +13,14 @@
 		return $null
 	}
 	
-	$testAgentServiceConfig = (Get-ItemProperty $testAgentPath).AgentRunMode -ErrorAction SilentlyContinue
+	$testAgentServiceConfig = (Get-ItemProperty $testAgentPath -ErrorAction SilentlyContinue).AgentRunMode
 	if (($testAgentServiceConfig -eq $null) -or ($testAgentServiceConfig.Length -eq 0))
     {
 		return $null
 	}
 	return $testAgentServiceConfig
 }
+
 
 function Locate-TestVersion()
 {
