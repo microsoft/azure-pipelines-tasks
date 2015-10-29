@@ -16,10 +16,15 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
+    {
+      "name": "deployment",
+      "displayName": "ms-resource:loc.group.displayName.deployment",
+      "isExpanded": true
+    },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
@@ -29,11 +34,48 @@
   "inputs": [
     {
       "name": "EnvironmentName",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
+    },
+    {
+      "name": "AdminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminUserName"
+    },
+    {
+      "name": "AdminPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminPassword"
+    },
+    {
+      "name": "Protocol",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.Protocol",
+      "required": false,
+      "defaultValue": "",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Protocol"
+    },
+    {
+      "name": "TestCertificate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TestCertificate",
+      "defaultValue": "true",
+      "visibleRule": "Protocol = Https",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
     },
     {
       "name": "ResourceFilteringMethod",
@@ -41,6 +83,7 @@
       "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
       "required": false,
       "defaultValue": "machineNames",
+      "visibleRule": "Protocol = Invalid",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
@@ -52,6 +95,7 @@
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
+      "visibleRule": "Protocol = Invalid",
       "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {
@@ -59,6 +103,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.ScriptPath",
       "defaultValue": "",
+      "groupName": "deployment",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ScriptPath"
     },
@@ -67,6 +112,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
+      "groupName": "deployment",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
     },
@@ -75,8 +121,18 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.InitializationScriptPath",
       "defaultValue": "",
+      "groupName": "deployment",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.InitializationScriptPath"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SessionVariables",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.SessionVariables"
     },
     {
       "name": "RunPowershellInParallel",
@@ -86,23 +142,6 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel"
-    },
-    {
-      "name": "SessionVariables",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.SessionVariables",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.SessionVariables"
-    }
-  ],
-  "sourceDefinitions": [
-    {
-      "target": "EnvironmentName",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
