@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 24
   },
   "demands": [
     "vstest"
@@ -75,6 +75,14 @@
       "required": false,
       "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080"      
     },
+    {
+      "name": "publishResultsEnabled",
+      "type": "boolean",
+      "label": "Publish to VSO/TFS",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Select this option to publish test results to VSO/TFS. Each test result file will be published as a test run in VSO/TFS."
+    }, 
     {
       "name": "codeCoverageEnabled",
       "type": "boolean",

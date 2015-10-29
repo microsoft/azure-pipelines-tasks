@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 24
   },
   "demands": [
     "vstest"
@@ -77,6 +77,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideTestrunParameters"
+    },
+    {
+      "name": "publishResultsEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishResultsEnabled",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishResultsEnabled"
     },
     {
       "name": "codeCoverageEnabled",
