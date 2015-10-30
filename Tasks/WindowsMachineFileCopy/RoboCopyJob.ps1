@@ -124,7 +124,7 @@ param (
 
     if($machineShare)
     {
-        $command = "net use $machineShare"
+        $command = "net use `"$machineShare`""
         if($userName)
         {
             $command += " /user:`"$userName`" `"$password`""
@@ -154,7 +154,7 @@ param (
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
 
-        $command = "robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $robocopyParameters"                
+        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
         Invoke-Expression $command        
         
         if ($LASTEXITCODE -ge 8)
