@@ -1,6 +1,6 @@
 ﻿param (
     [string]$environmentName,
-	[string]$adminUserName,
+    [string]$adminUserName,
     [string]$adminPassword,
     [string]$protocol,
     [string]$testCertificate,
@@ -17,9 +17,6 @@
     [string]$additionalArguments,
     [string]$deployInParallel    
     )
-
-	 # Constants #
-$defaultTestCertificateValue = "true"
 
 Write-Verbose "Entering script DeployToSqlServer.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
@@ -42,12 +39,6 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDeployment"
-
-# If testCertificate option is not set, set it to default 
-if([string]::IsNullOrEmpty($testCertificate))
-{
-	$testCertificate = $defaultTestCertificateValue
-}
 
 $ErrorActionPreference = 'Stop'
 

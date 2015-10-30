@@ -20,7 +20,7 @@
     "Patch": 3
   },
   "demands": [],
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "deployment",
@@ -77,16 +77,17 @@
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WinRMProtocol"
     },
     {
-      "name": "TestCert",
+      "name": "TestCertificate",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.TestCert",
-      "defaultValue": "false",
+      "label": "ms-resource:loc.input.label.TestCertificate",
+      "defaultValue": "true",
       "visibleRule": "WinRMProtocol = Https",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.TestCert"
+      "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
     },
     {
       "name": "ResourceFilteringMethod",

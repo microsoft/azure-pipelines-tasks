@@ -1,6 +1,6 @@
 ﻿param (
     [string]$environmentName,
-	[string]$adminUserName,
+    [string]$adminUserName,
     [string]$adminPassword,
     [string]$winrmProtocol,
     [string]$testCertificate,
@@ -36,8 +36,6 @@
 
 Write-Verbose "Entering script DeployIISWebApp.ps1" -Verbose
 
- # Constants #
-$defaultTestCertificateValue = "true"
 $hostName = [string]::Empty
 
 if($protocol -eq "http")
@@ -51,12 +49,6 @@ elseif($serverNameIndication -eq "true")
 else
 {
     $hostName = $hostNameWithOutSNI
-}
-
-# If testCertificate option is not set, set it to default 
-if([string]::IsNullOrEmpty($testCertificate))
-{
-	$testCertificate = $defaultTestCertificateValue
 }
 
 Write-Verbose "environmentName = $environmentName" -Verbose

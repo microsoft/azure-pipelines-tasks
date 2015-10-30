@@ -18,7 +18,7 @@
   },
   "demands": [
   ],
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "deployment",
@@ -75,13 +75,14 @@
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
-      }
+      },
+      "helpMarkDown": "Whether WinRM connections or over HTTP or HTTPS. Defaulted to HTTPS."
     },
     {
-      "name": "TestCert",
+      "name": "TestCertificate",
       "type": "boolean",
       "label": "Test Certificate",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "visibleRule": "WinRMProtocol = Https",
       "required": false,
       "helpMarkDown": "Setting it to true will connect to target machine using test certificate."
