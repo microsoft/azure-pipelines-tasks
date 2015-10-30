@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 37
+        "Patch": 38
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -30,11 +30,32 @@
             "required":true
         },
         {
+            "name":"nuGetFeedType",
+            "type":"radio",
+            "label":"Feed type",
+            "required":true,
+            "defaultValue":"external",
+            "options": {
+                "external":"External NuGet Feed",
+                "internal":"Internal NuGet Feed"
+            }   
+        },
+        {
             "name": "connectedServiceName",
             "type": "connectedService:Generic",
             "label": "NuGet Server Endpoint",
             "required": true,
-            "helpMarkDown": "The NuGet server generic endpoint, set the key 'Password/Token Key' field to your NuGet API key"
+            "helpMarkDown": "The NuGet server generic endpoint, set the key 'Password/Token Key' field to your NuGet API key.",
+            "visibleRule": "nuGetFeedType = external"
+        },
+        {
+            "name": "feedName",
+            "type": "string",
+            "label": "Internal Feed URL",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The URL of a NuGet feed hosted in this account.",
+            "visibleRule": "nuGetFeedType = internal"
         },
         {
             "name": "nuGetAdditionalArgs",
