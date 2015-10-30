@@ -582,7 +582,7 @@ function Create-And-Update-AppPool
         Create-AppPool -appPoolName $appPoolName
     }
 
-    Update-AppPool -appPoolName $appPoolName -clrVersion $clrVerion -pipeLineMode $pipeLineMode -identity $identity -userName $userName -password $password
+    Update-AppPool -appPoolName $appPoolName -clrVersion $clrVersion -pipeLineMode $pipeLineMode -identity $identity -userName $userName -password $password
 }
 
 function Execute-Main
@@ -591,7 +591,7 @@ function Execute-Main
 
     if(-not (IsInputNullOrEmpty -str $AppPoolName))
     {
-        Create-And-Update-AppPool -appPoolName $AppPoolName -clrVerion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
+        Create-And-Update-AppPool -appPoolName $AppPoolName -clrVersion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
     }
 
     if(-not (IsInputNullOrEmpty -str $WebSiteName))
