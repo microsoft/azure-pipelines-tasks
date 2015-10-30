@@ -88,6 +88,16 @@
       "visibleRule": "publishJUnitResults = true"
     },
     {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
       "name": "codeCoverageTool",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",

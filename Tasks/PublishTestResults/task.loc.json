@@ -59,6 +59,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.mergeTestResults"
     },
     {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
+    },
+    {
       "name": "platform",
       "type": "string",
       "label": "ms-resource:loc.input.label.platform",

@@ -7,6 +7,7 @@ param(
     [string]$pathtoCustomTestAdapters,
     [string]$overrideTestrunParameters,
     [string]$otherConsoleOptions,
+    [string]$testRunTitle,
     [string]$platform,
     [string]$configuration
 )
@@ -76,7 +77,7 @@ if($testAssemblyFiles)
 
     if($resultFiles) 
     {
-        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
     }
     else
     {

@@ -55,6 +55,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "To merge results from all test results files to one test run in TFS/VSO, check this option. To create a test run for each test results file, uncheck this option."
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "Test Run Title",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Provide a name for the Test Run."
     },  
     {
       "name": "platform",

@@ -21,8 +21,18 @@
   "minimumAgentVersion": "1.89.0",
   "groups": [
     {
-      "name": "advanced",
-      "displayName": "Advanced",
+      "name": "executionOptions",
+      "displayName": "Execution Options",
+      "isExpanded": true
+    },
+    {
+      "name": "advancedExecutionOptions",
+      "displayName": "Advanced Execution Options",
+      "isExpanded": false
+    },
+    {
+      "name": "reportingOptions",
+      "displayName": "Reporting Options",
       "isExpanded": false
     }
   ],
@@ -33,7 +43,8 @@
       "label": "Test Assembly",
       "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
       "required": true,
-      "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj."
+      "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj.",
+      "groupName": "executionOptions"
     },
     {
       "name": "testFiltercriteria",
@@ -41,23 +52,8 @@
       "label": "Test Filter criteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: Priority=1|Name=MyTestMethod"
-    },
-    {
-      "name": "platform", 
-      "type": "string", 
-      "label": "Platform", 
-      "defaultValue":"", 
-      "required":false,
-      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here."
-    },
-    {
-      "name": "configuration", 
-      "type": "string", 
-      "label": "Configuration", 
-      "defaultValue":"", 
-      "required":false, 
-      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here."
+      "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: Priority=1|Name=MyTestMethod",
+      "groupName": "executionOptions"
     },
     {
       "name": "runSettingsFile",
@@ -65,7 +61,8 @@
       "label": "Run Settings File",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to runsettings file to use with the tests. Use $(Build.SourcesDirectory) to access the Project folder."
+      "helpMarkDown": "Path to runsettings file to use with the tests. Use $(Build.SourcesDirectory) to access the Project folder.",
+      "groupName": "executionOptions"
     },
     {
       "name": "overrideTestrunParameters",
@@ -73,7 +70,8 @@
       "label": "Override TestRun Parameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080"      
+      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+      "groupName": "executionOptions"      
     },
     {
       "name": "codeCoverageEnabled",
@@ -81,16 +79,17 @@
       "label": "Code Coverage Enabled",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "Collect code coverage information from the Test run."
-    },    
-    {
+      "helpMarkDown": "Collect code coverage information from the Test run.",
+      "groupName": "executionOptions"
+    },
+        {
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "VSTest version",
       "defaultValue": "14.0",
       "required": false,
       "helpMarkDown": "The version of VSTest to use.",
-      "groupName":"advanced",
+      "groupName":"advancedExecutionOptions",
       "options": {
                 "latest":  "Latest",
                 "14.0": "Visual Studio 2015",
@@ -104,7 +103,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
-      "groupName":"advanced"
+      "groupName":"advancedExecutionOptions"
     },
     {
       "name": "otherConsoleOptions",
@@ -113,7 +112,34 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
-      "groupName": "advanced"
+      "groupName": "advancedExecutionOptions"
+    },
+    {
+      "name": "testRunTitle", 
+      "type": "string", 
+      "label": "Test Run Title", 
+      "defaultValue":"", 
+      "required":false,
+      "helpMarkDown": "Provide a name for the Test Run.",
+      "groupName":  "reportingOptions"
+    },
+    {
+      "name": "platform", 
+      "type": "string", 
+      "label": "Platform", 
+      "defaultValue":"", 
+      "required":false,
+      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+      "groupName":  "reportingOptions"
+    },
+    {
+      "name": "configuration", 
+      "type": "string", 
+      "label": "Configuration", 
+      "defaultValue":"", 
+      "required":false,
+      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+      "groupName":  "reportingOptions"
     }
   ],
   "instanceNameFormat": "Test Assemblies $(testAssembly)",
