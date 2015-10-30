@@ -48,7 +48,10 @@ function ThrowError
 
 function Get-ResourceConnectionDetails
 {
-    param([object]$resource)
+    param(
+        [string]$envName,
+        [object]$resource
+        )
 
     $resourceProperties = @{}
 
@@ -56,7 +59,7 @@ function Get-ResourceConnectionDetails
     $resourceId = $resource.Id
 
     Write-Verbose "`t`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
-    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId -ErrorAction Stop
+    $fqdn = Get-EnvironmentProperty -EnvironmentName $envName -Key $resourceFQDNKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId -ErrorAction Stop
     Write-Verbose "`t`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
 
     Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose	
@@ -69,7 +72,10 @@ function Get-ResourceConnectionDetails
 
 function Get-ResourcesProperties
 {
-    param([object]$resources)    
+    param(
+        [string]$envName,
+        [object]$resources
+        )    
 
     [hashtable]$resourcesPropertyBag = @{}
 
@@ -81,7 +87,7 @@ function Get-ResourcesProperties
 
         # Get other connection details for resource like - fqdn wirmport, http protocol, skipCACheckOption, resource credentials
 
-        $resourceProperties = Get-ResourceConnectionDetails -resource $resource        
+        $resourceProperties = Get-ResourceConnectionDetails -envName $envName -resource $resource        
         
         $resourcesPropertyBag.Add($resourceId, $resourceProperties)
     }
@@ -166,74 +172,82 @@ function Validate-DestinationPath(
 Validate-SourcePath $sourcePath
 Validate-DestinationPath $targetPath $environmentName
 
-$connection = Get-VssConnection -TaskContext $distributedTaskContext
-
-Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName" -Verbose
-$environment = Register-Environment -EnvironmentName $environmentName -MachineList $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext -CreateBasic
-Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
-
-if($resourceFilteringMethod -eq "tags")
+if([string]::IsNullOrWhiteSpace($environmentName))
 {
-    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
+    Write-Verbose "No environment found. Copying to destination." -Verbose
 
-    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with tag filter: $wellFormedTagsList" -Verbose
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -TaskContext $distributedTaskContext
-    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with tag filter" -Verbose
-}
-else
-{
-    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with machine filter: $machineFilter" -Verbose
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -TaskContext $distributedTaskContext
-    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
-}
-
-$resourcesPropertyBag = Get-ResourcesProperties -resources $resources
-
-if( $resources.Count -eq 0 )
-{
     Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
-
-    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
-}
-elseif($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ))
-{
-    foreach($resource in $resources)
-    {
-        $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-        $machine = $resourceProperties.fqdn        
-
-        Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
-
-        Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
-    } 
+    $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $adminUserName, $adminPassword
+    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 }
 else
 {
-    [hashtable]$Jobs = @{} 
 
-    foreach($resource in $resources)
+    $connection = Get-VssConnection -TaskContext $distributedTaskContext
+
+    Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName" -Verbose
+    $environment = Register-Environment -EnvironmentName $environmentName -MachineList $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext
+    Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
+
+    $fetchedEnvironmentName = $($environment.Name)
+
+    if($resourceFilteringMethod -eq "tags")
     {
-        $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
+        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
 
-        $machine = $resourceProperties.fqdn        
-
-        Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
-
-        $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
-
-        $Jobs.Add($job.Id, $resourceProperties)
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName with tag filter: $wellFormedTagsList" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -TagFilter $wellFormedTagsList -TaskContext $distributedTaskContext
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName with tag filter" -Verbose
+    }
+    else
+    {
+        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName with machine filter: $machineFilter" -Verbose
+        $resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -ResourceFilter $machineFilter -TaskContext $distributedTaskContext
+        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName with machine filter" -Verbose
     }
 
-    While (Get-Job)
+    $resourcesPropertyBag = Get-ResourcesProperties -envName $fetchedEnvironmentName -resources $resources
+
+    if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ))
     {
-         Start-Sleep 10 
-         foreach($job in Get-Job)
-         {
-             if($job.State -ne "Running")
-             {
-                 $output = Receive-Job -Id $job.Id
-                 Remove-Job $Job                 
-             } 
+        foreach($resource in $resources)
+        {
+            $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
+            $machine = $resourceProperties.fqdn        
+
+            Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
+
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
+        } 
+    }
+    else
+    {
+        [hashtable]$Jobs = @{} 
+
+        foreach($resource in $resources)
+        {
+            $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
+
+            $machine = $resourceProperties.fqdn        
+
+            Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
+
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
+
+            $Jobs.Add($job.Id, $resourceProperties)
+        }
+
+        While (Get-Job)
+        {
+            Start-Sleep 10 
+            foreach($job in Get-Job)
+            {
+                if($job.State -ne "Running")
+                {
+                    Receive-Job -Id $job.Id
+                    Remove-Job $Job                 
+                } 
+            }
         }
     }
 }
