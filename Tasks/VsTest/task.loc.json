@@ -79,12 +79,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.overrideTestrunParameters"
     },
     {
-      "name": "publishResultsEnabled",
+      "name": "publishRunAttachments",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.publishResultsEnabled",
+      "label": "ms-resource:loc.input.label.publishRunAttachments",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.publishResultsEnabled"
+      "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments"
     },
     {
       "name": "codeCoverageEnabled",

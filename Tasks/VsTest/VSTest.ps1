@@ -9,7 +9,7 @@ param(
     [string]$otherConsoleOptions,
     [string]$platform,
     [string]$configuration,
-    [string]$publishResultsEnabled
+    [string]$publishRunAttachments
 )
 
 Write-Verbose "Entering script VSTestConsole.ps1"
@@ -76,18 +76,17 @@ if($testAssemblyFiles)
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
     $publishResultsOption = Convert-String $publishResultsEnabled Boolean
-    if($publishResultsOption) 
+
+    if($resultFiles)
     {
-        if($resultFiles)
-        {
-            Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
-        }
-        else
-        {
-            Write-Host "##vso[task.logissue type=warning;code=002003;]"
-            Write-Warning "No results found to publish."
-        }
+        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishRunAttachments
     }
+    else
+    {
+        Write-Host "##vso[task.logissue type=warning;code=002003;]"
+        Write-Warning "No results found to publish."
+    }
+    
 }
 else
 {

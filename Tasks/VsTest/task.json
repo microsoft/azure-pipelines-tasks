@@ -76,12 +76,12 @@
       "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080"      
     },
     {
-      "name": "publishResultsEnabled",
+      "name": "publishRunAttachments",
       "type": "boolean",
-      "label": "Publish to VSO/TFS",
+      "label": "Upload Test Attachments",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "Select this option to publish test results to VSO/TFS. Each test result file will be published as a test run in VSO/TFS."
+      "helpMarkDown": "Opt in/out of publishing test run level attachments."
     }, 
     {
       "name": "codeCoverageEnabled",
