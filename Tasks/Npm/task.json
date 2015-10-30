@@ -1,15 +1,15 @@
 {
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
-    "name": "NpmInstall",
-    "friendlyName": "npm install",
-    "description": "Install npm packages",
+    "name": "Npm",
+    "friendlyName": "npm",
+    "description": "Run a npm command",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 3
+        "Minor": 2,
+        "Patch": 0
     },
     "demands" : [
         "npm"
@@ -22,14 +22,22 @@
             "isExpanded":false
         }
     ],    
-    "instanceNameFormat": "npm install $(arguments)",
+    "instanceNameFormat": "npm $(command)",
     "inputs": [
+        {
+            "name": "command",
+            "type": "string",
+            "label": "Command",
+            "defaultValue":"install",
+            "helpMarkDown": "npm command to run. [More Information](https://docs.npmjs.com/).",
+            "required":true
+        },
         {
             "name": "arguments",
             "type": "string",
             "label": "Arguments",
             "defaultValue":"",
-            "helpMarkDown": "Additional arguments passed to npm install.",
+            "helpMarkDown": "Additional arguments passed to npm.",
             "required":false,
             "groupName":"advanced"
         },
@@ -39,17 +47,17 @@
             "label": "Working Directory",
             "defaultValue":"",
             "required":false,
-            "helpMarkDown": "Current working directory where npm install is run.  Defaults to the root of the repo.",
+            "helpMarkDown": "Current working directory where npm command is run.  Defaults to the root of the repo.",
             "groupName":"advanced"
         }
     ],
     "execution": {
         "Node": {
-            "target": "npminstall.js",
+            "target": "npm.js",
             "argumentFormat": ""
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\NpmInstall.ps1",
+            "target": "$(currentDirectory)\\Npm.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(cwd)"
         }

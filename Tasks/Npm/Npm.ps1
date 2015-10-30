@@ -1,4 +1,5 @@
 param(
+    [string]$command,
     [string]$arguments,
     [string]$cwd
 )
@@ -13,6 +14,11 @@ foreach($key in $PSBoundParameters.Keys)
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
     
+if (!$command)
+{
+    $command = "install"
+}
+    
 $npm = Get-Command -Name npm -ErrorAction Ignore
 
 if(!$npm)
@@ -24,7 +30,7 @@ Write-Verbose $npm.Path
 
 Set-Location $cwd
 
-$npmArgs = " install"
+$npmArgs = " " + $command
 
 if($arguments)
 {

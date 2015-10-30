@@ -1,0 +1,16 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "npm",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Run a npm command",
+  "loc.instanceNameFormat": "npm $(command)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.command": "Command",
+  "loc.input.help.command": "npm command to run. [More Information](https://docs.npmjs.com/).",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Additional arguments passed to npm.",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory where npm command is run.  Defaults to the root of the repo."
+}
