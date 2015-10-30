@@ -53,8 +53,16 @@
             "required": false,
             "helpMarkDown": "Optionally supply the path to NuGet.exe",
             "groupName": "advanced"
+        },
+        {
+            "name": "nuGetSources",
+            "type": "string",
+            "label": "NuGet sources",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply a list of packages sources separated by semicolons to use for the restore of NuGet packages. If empty default package sources will be used.",
+			"groupName": "advanced"
         }
-
     ],
     "execution": {
         "PowerShell": {

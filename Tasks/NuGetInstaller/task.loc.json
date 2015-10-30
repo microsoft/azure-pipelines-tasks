@@ -56,6 +56,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
       "groupName": "advanced"
+    },
+    {
+      "name": "nuGetSources",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nuGetSources",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetSources",
+      "groupName": "advanced"
     }
   ],
   "execution": {

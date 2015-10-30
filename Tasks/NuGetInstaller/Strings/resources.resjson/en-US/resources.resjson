@@ -14,5 +14,7 @@
   "loc.input.label.nuGetRestoreArgs": "NuGet Arguments",
   "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Path to NuGet.exe",
-  "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
+  "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe",
+  "loc.input.label.nuGetSources": "NuGet sources",
+  "loc.input.help.nuGetSources": "Optionally supply a list of packages sources separated by semicolons to use for the restore of NuGet packages. If empty default package sources will be used."
 }
