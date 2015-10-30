@@ -51,7 +51,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 					remove-item $testAgentFile -force | Out-Null
 					# we have retried once .Now fail with appropriate message
 					Write-Verbose -Verbose "Retried to install Test Agent"
-					throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
+					throw (Get-LocalizedString -Key "The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 				}
 				else
 				{
@@ -64,19 +64,19 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 			catch
 			{
 				Write-Verbose -Verbose "Error occured while retrying the Test Agent installation"
-				throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
+				throw (Get-LocalizedString -Key "The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 			}
 		}
 
 		if($exitCode -eq 2147205120)
 		{
 			# pending windows update.
-			throw ("Pending windows update. The return code {0} was not expected during installation of Test Agent. Install windows update and try again." -f $exitCode.ToString())
+			throw (Get-LocalizedString -Key "Pending windows update. The return code {0} was not expected during installation of Test Agent. Install windows update and try again." -f $exitCode.ToString())
 		}
 
 		if(-not ($exitCode -eq 0 -or $exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641))
 		{
-			throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
+			throw (Get-LocalizedString -Key "The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 		}
 
 		if($exitCode -eq 3010 -or $exitCode -eq 3015 -or $exitCode -eq 1641)
@@ -95,7 +95,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
    		}
 		else
 		{
-			throw "Look up in registry failed. Test agent failed to install."
+			throw (Get-LocalizedString -Key "Look up in registry failed. Test agent failed to install.")
 		}
 	}
 	
