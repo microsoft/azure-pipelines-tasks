@@ -1,20 +1,50 @@
-﻿function Locate-TestVersionAndVsRoot([string] $Version)
+﻿function Get-TestAgentType([string] $Version)
+{
+	$Version = Locate-TestVersion
+	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
+	
+	if (-not (Test-Path $testAgentPath))
+	{
+		$testAgentPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
+	}
+	
+	if (-not (Test-Path $testAgentPath))
+	{
+		return $null
+	}
+	
+	$testAgentServiceConfig = (Get-ItemProperty $testAgentPath -ErrorAction SilentlyContinue).AgentRunMode
+	if (($testAgentServiceConfig -eq $null) -or ($testAgentServiceConfig.Length -eq 0))
+    {
+		return $null
+	}
+	return $testAgentServiceConfig
+}
+
+
+function Locate-TestVersion()
+{
+	#Find the latest version
+	$regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
+	if (-not (Test-Path $regPath))
+	{
+		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
+	}
+	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()}
+	$Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
+
+	if ([string]::IsNullOrWhiteSpace($Version))
+	{
+		return $null
+	}
+	return $Version
+}
+
+function Locate-TestVersionAndVsRoot([string] $Version)
 {
     if ([string]::IsNullOrWhiteSpace($Version))
     {
-        #Find the latest version
-        $regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
-        if (-not (Test-Path $regPath))
-        {
-            $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
-        }
-        $keys = Get-Item $regPath | %{$_.GetSubKeyNames()}
-        $Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
-
-        if ([string]::IsNullOrWhiteSpace($Version))
-        {
-            return $null
-        }
+        $Version = Locate-TestVersion
     }
 
     # Lookup the install location
@@ -134,9 +164,14 @@ function Get-TestAgentConfiguration
     else
     {
         Write-Verbose "Parsing configuration output" -Verbose
-
-        # Use -Quiet for simple true/false output
-        $runningAsProcess = ($configOut.CommandOutput | Select-String -Quiet -SimpleMatch "This test agent is running as an interactive process.") -eq $True
+		
+	    $testAgentType = Get-TestAgentType($TestAgentVersion)
+		
+	    $runningAsProcessUsingConfig = ($configOut.CommandOutput | Select-String -Quiet -SimpleMatch "This test agent is running as an interactive process.") -eq $True
+        $runningAsProcessUsingReg = !([string]::IsNullOrEmpty($testAgentType) -or $testAgentType.Equals("AsService"))
+		
+	    $runningAsProcess = $runningAsProcessUsingConfig -or $runningAsProcessUsingReg
+		
         $outputLines = $configOut.CommandOutput.Split("`n`r")
 
         foreach ($line in $outputLines)

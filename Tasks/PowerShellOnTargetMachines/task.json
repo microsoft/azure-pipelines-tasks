@@ -1,113 +1,153 @@
 {
-    "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
-    "name": "PowerShellOnTargetMachines",
-    "friendlyName": "PowerShell on Target Machines",
-    "description": "Execute PowerShell scripts on remote machine(s)",
-    "helpMarkDown": "[More Information](http://aka.ms/powershellontargetmachinesreadme)",
-    "category": "Deploy",
-    "visibility": [
-                "Build",
-                "Release"
-                  ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 13
+  "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
+  "name": "PowerShellOnTargetMachines",
+  "friendlyName": "PowerShell on Target Machines",
+  "description": "Execute PowerShell scripts on remote machine(s)",
+  "helpMarkDown": "[More Information](http://aka.ms/powershellontargetmachinesreadme)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 14
+  },
+  "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "deployment",
+      "displayName": "Deployment",
+      "isExpanded": true
     },
-    "minimumAgentVersion": "1.88.0",
-    "groups": [
-        {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "EnvironmentName",
-            "type": "pickList",
-            "label": "Machine Group",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Name of the Machine Group for deploying application."
-        },
-        {
-            "name":"ResourceFilteringMethod",
-            "type":"radio",
-            "label":"Select Machines By",
-            "required":false,
-            "defaultValue":"machineNames",
-            "options": {
-                "machineNames":"Machine Names",
-                "tags":"Tags"
-            }
-        },
-        {
-            "name": "MachineNames",
-            "type": "string",
-            "label": "Filter Criteria",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
-        },
-        {
-            "name": "ScriptPath",
-            "type": "string",
-            "label": "PowerShell Script",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\Website.ps1"
-        },
-        {
-            "name": "ScriptArguments",
-            "type": "string",
-            "label": "Script Arguments",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Arguments for the PowerShell script. Can be ordinal parameters or named parameters like -testParam test"
-        },
-        {
-            "name": "InitializationScriptPath",
-            "type": "string",
-            "label": "Initialization Script",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Location of the data script for DSC on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1"
-        },
-        {
-            "name": "RunPowershellInParallel",
-            "type": "boolean",
-            "label": "Run PowerShell in Parallel",
-            "defaultValue": "true",
-            "required": false,
-            "groupName":"advanced",
-            "helpMarkDown": "Setting it to true will run powershell scripts in parallel on the target machines."
-        },
-	    {
-            "name": "SessionVariables",
-            "type": "multiLine",
-            "label": "Session Variables",
-            "defaultValue": "",
-            "required": false,
-	        "groupName":"advanced",
-            "helpMarkDown": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\""
-        }
-    ],
-    "sourceDefinitions": [ 
-     { 
-         "target": "EnvironmentName", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
-     } 
-    ], 
-    "instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
-	 "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\PowerShellOnTargetMachines.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
-        }
+    {
+      "name": "advanced",
+      "displayName": "Advanced Options",
+      "isExpanded": false
     }
+
+  ],
+  "inputs": [
+    {
+      "name": "EnvironmentName",
+      "type": "multiLine",
+      "label": "Machines",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Provide a list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the protocol. Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986"
+    },
+    {
+      "name": "AdminUserName",
+      "type": "string",
+      "label": "Admin Login",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Administrator login for target machines."
+    },
+    {
+      "name": "AdminPassword",
+      "type": "string",
+      "label": "Password",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Administrator password for target machines."
+    },
+    {
+      "name": "Protocol",
+      "type": "radio",
+      "label": "Protocol",
+      "required": false,
+      "defaultValue": "",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "Whether WinRM connections or over HTTP or HTTPS. Defaulted to HTTPS."
+    },
+    {
+      "name": "TestCertificate",
+      "type": "boolean",
+      "label": "Test Certificate",
+      "defaultValue": "true",
+      "visibleRule": "Protocol = Https",
+      "required": false,
+      "helpMarkDown": "Setting it to true doesn't validate the certificate."
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "Select Machines By",
+      "required": false,
+      "defaultValue": "machineNames",
+      "visibleRule": "Protocol = Invalid",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      }
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "Filter Criteria",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "Protocol = Invalid",
+      "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group."
+    },
+    {
+      "name": "ScriptPath",
+      "type": "string",
+      "label": "PowerShell Script",
+      "defaultValue": "",
+      "groupName": "deployment",
+      "required": true,
+      "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\Website.ps1"
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "Script Arguments",
+      "defaultValue": "",
+      "groupName": "deployment",
+      "required": false,
+      "helpMarkDown": "Arguments for the PowerShell script. Can be ordinal parameters or named parameters like -testParam test"
+    },
+    {
+      "name": "InitializationScriptPath",
+      "type": "string",
+      "label": "Initialization Script",
+      "defaultValue": "",
+      "groupName": "deployment",
+      "required": false,
+      "helpMarkDown": "Location of the data script for DSC on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "Session Variables",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deployment",
+      "helpMarkDown": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\""
+    },
+    {
+      "name": "RunPowershellInParallel",
+      "type": "boolean",
+      "label": "Run PowerShell in Parallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Setting it to true will run powershell scripts in parallel on the target machines."
+    }
+  ],
+  "instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\PowerShellOnTargetMachines.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
 }

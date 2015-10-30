@@ -20,7 +20,7 @@ function Get-AzureStorageAccountResourceGroupName
         if ([string]::IsNullOrEmpty($azureResourceGroupName) -eq $true)
         {
             Write-Verbose "(ARM)Storage account: $storageAccountName not found" -Verbose
-            Throw (Get-LocalizedString -Key "Storage acccout: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
+            Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
         }
     }
 
