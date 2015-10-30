@@ -5,7 +5,9 @@ param (
     [string]$targetPath,
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
-    [string]$additionalArguments
+	[string]$winRMPort,
+	[string]$httpProtocolOption,
+	[string]$skipCACheckOption
     )
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
@@ -19,14 +21,14 @@ param (
     }
 
 	$cleanTargetPathOption = ''
-   if($cleanTargetBeforeCopy -eq "true")
+    if($cleanTargetBeforeCopy -eq "true")
     {
 		$cleanTargetPathOption = '-CleanTargetPath'
     }
 
     Write-Verbose "Initiating copy on $fqdn " -Verbose
 
-   	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -AdditionalParameters `$additionalArguments $cleanTargetPathOption"	
+   	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"	
 		
 	[scriptblock]$copyFilesToTargetMachineBlock = [scriptblock]::Create($copyFilesToTargetMachineBlockString)
 	

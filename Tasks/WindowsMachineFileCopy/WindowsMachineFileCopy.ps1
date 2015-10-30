@@ -21,7 +21,7 @@ Write-Verbose "targetPath = $targetPath" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 
-. ./WindowsMachineFileCopyJob.ps1
+. ./RoboCopyJob.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -125,10 +125,51 @@ function Get-WellFormedTagsList
     return ,$tagList
 }
 
+function Validate-Null(
+    [string]$value,
+    [string]$variableName
+    )
+{
+    $value = $value.Trim()    
+    if(-not $value)
+    {
+        ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList $variableName)
+    }
+}
+
+function Validate-SourcePath(
+    [string]$value
+    )
+{
+    Validate-Null -value $value -variableName "sourcePath"
+
+    if(-not (Test-Path $value))
+    {
+        ThrowError -errorMessage (Get-LocalizedString -Key "Source path '{0}' does not exist." -ArgumentList $value)
+    }
+}
+
+function Validate-DestinationPath(
+    [string]$value,
+    [string]$environmentName
+    )
+{
+    Validate-Null -value $value -variableName "targetPath"
+
+    if($environmentName -and $value.StartsWith("`$env:"))
+    {
+        ThrowError -errorMessage (Get-LocalizedString -Key "Remote destination path '{0}' cannot contain environment variables." -ArgumentList $value)
+    }
+}
+
+
+Validate-SourcePath $sourcePath
+Validate-DestinationPath $targetPath $environmentName
+
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName" -Verbose
-$environment = Register-Environment -EnvironmentName $environmentName -MachineList $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext
+$environment = Register-Environment -EnvironmentName $environmentName -MachineList $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext -CreateBasic
 Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
 if($resourceFilteringMethod -eq "tags")
@@ -146,36 +187,26 @@ else
     Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
 }
 
-Write-Verbose "envOperationId = $envOperationId" -Verbose
-
 $resourcesPropertyBag = Get-ResourcesProperties -resources $resources
 
-if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
+if( $resources.Count -eq 0 )
+{
+    Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
+
+    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
+}
+elseif($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ))
 {
     foreach($resource in $resources)
     {
         $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-
         $machine = $resourceProperties.fqdn        
 
         Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-        $copyResponse = Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
-       
-        $status = $copyResponse.Status
-        Write-ResponseLogs -operationName "copy" -fqdn $machine -deploymentResponse $copyResponse
-        
-        Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $machine, $status)		
-
-        if($status -ne "Passed")
-        {
-            Write-Verbose $copyResponse.Error.ToString() -Verbose
-            $errorMessage =  $copyResponse.Error.Message
-            ThrowError -errorMessage $errorMessage
-        }
+        Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
     } 
 }
-
 else
 {
     [hashtable]$Jobs = @{} 
@@ -201,35 +232,10 @@ else
              if($job.State -ne "Running")
              {
                  $output = Receive-Job -Id $job.Id
-                 Remove-Job $Job
-                 $status = $output.Status
-
-                 $displayName = $Jobs.Item($job.Id).fqdn
-                 $resOperationId = $Jobs.Item($job.Id).resOperationId
-
-                 Write-ResponseLogs -operationName "copy" -fqdn $displayName -deploymentResponse $output
-
-                 Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
-
-                 if($status -ne "Passed")
-                 {
-                    $envOperationStatus = "Failed"
-                    $errorMessage = ""
-                    if($output.Error -ne $null)
-                    {
-                        $errorMessage = $output.Error.Message
-                    }
-                    Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $displayName, $errorMessage)
-                 }
-              } 
+                 Remove-Job $Job                 
+             } 
         }
     }
-}
-
-if($envOperationStatus -ne "Passed")
-{
-    $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
-    ThrowError -errorMessage $errorMessage
 }
 
 Write-Verbose "Leaving script WindowsMachineFileCopy.ps1" -Verbose
