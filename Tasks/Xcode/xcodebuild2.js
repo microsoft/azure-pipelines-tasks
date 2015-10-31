@@ -85,7 +85,7 @@ function processInputs() {
 	xcb.arg(tl.getInput('configuration', true));
 	// Args: Add optional workspace flag
 	var workspace = tl.getPathInput('xcWorkspacePath', false, false);
-	if(workspace) {
+	if(workspace && workspace !== buildSourceDirectory) {
 		if(fs.existsSync(workspace) && fs.lstatSync(workspace).isDirectory()) {
 			var workspaceFile = glob.sync(workspace);
 			if(workspaceFile && workspaceFile.length > 0) {
