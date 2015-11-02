@@ -1,7 +1,7 @@
 ﻿{
   "id": "2B921C43-1BAD-4C9F-A20F-FA1A3143503D",
   "name": "SwapCloudServiceDeploymentSlots",
-  "friendlyName": "Swap Azure Cloud Service Deployment Slots",
+  "friendlyName": "Swap Cloud Service Deployment Slots",
   "description": "Swap the staging and production slot of an Azure Cloud Service",
   "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/README.md)",
   "category": "Deploy",

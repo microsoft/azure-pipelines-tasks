@@ -43,8 +43,9 @@ function Test-Instances {
         [object]$instances
     )
     $readyStatus = "ReadyRole"
-    $instances | foreach {
-        if ($_.InstanceStatus -ne $readyStatus)
+
+    foreach($instance in $instances) {
+        if ($instance.InstanceStatus -ne $readyStatus)
         {
             return $false
         }
