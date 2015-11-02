@@ -21,7 +21,7 @@
   },
   "minimumAgentVersion": "1.82.0",
   "demands": [
-    "PowerShell"
+    "DotNetFramework"
   ],
   "inputs": [
     {

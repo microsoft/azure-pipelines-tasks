@@ -19,7 +19,7 @@
     "demands" : [
         "Chef",
         "KnifeReporting",
-	    	"PowerShell"
+        "DotNetFramework"
     ],
     "minimumAgentVersion": "1.83.0",
     "inputs": [
