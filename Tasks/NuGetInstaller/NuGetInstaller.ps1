@@ -1,5 +1,6 @@
 param(
     [string]$solution,
+    [string]$nugetConfigPath,
     [ValidateSet("Restore", "Install")]
     [string]$restoreMode = "Restore",
     [string]$excludeVersion, # Support for excludeVersion has been deprecated.
@@ -8,15 +9,17 @@ param(
     [string]$nuGetPath
 )
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
+. $PSScriptRoot\VsoNuGetHelper.ps1
+
 Write-Verbose "Entering script $MyInvocation.MyCommand.Name"
 Write-Verbose "Parameter Values"
 foreach($key in $PSBoundParameters.Keys)
 {
     Write-Verbose ($key + ' = ' + $PSBoundParameters[$key])
 }
-
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 if(!$solution)
 {
@@ -62,15 +65,40 @@ if(!$nuGetPath)
     $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
 }
 
-if($nuGetRestoreArgs)
-{
-    $args = ($args + " " + $nuGetRestoreArgs);
-}
-
-
 if (-not $nugetPath)
 {
     throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
+}
+
+if($nuGetRestoreArgs)
+{
+    if($nuGetRestoreArgs.ToLowerInvariant().Contains("-configfile"))
+    {
+        Write-Warning (Get-LocalizedString -Key "ConfigFile was passed as a command line parameter, which may be ignored in certain parts of this task. Please specify the config file in the build definition instead.")
+    }
+
+    $args = ($args + " " + $nuGetRestoreArgs);
+}
+
+if($nugetConfigPath -and ($nugetConfigPath -ne $env:Build_SourcesDirectory))
+{
+    $args = "$args -configfile `"$tempNuGetConfigPath`""
+
+    $endpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
+    if($endpoint.Authorization.Scheme -eq 'OAuth')
+    {
+        Write-Verbose "Getting credentials for $($endpoint)"
+        $accessToken = $endpoint.Authorization.Parameters['AccessToken']
+    }
+    else
+    {
+        Write-Warning (Get-LocalizedString -Key "Could not determine credentials to use for NuGet")
+        $accessToken = ""
+    }
+
+    $nugetConfig = [xml](Get-Content $nugetConfigPath)
+
+    SetCredentialsNuGetConfigAndSaveTemp $nugetConfig $accessToken
 }
 
 if ($env:NUGET_EXTENSIONS_PATH)

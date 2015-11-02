@@ -37,6 +37,9 @@ For example, FullyQualifiedName~Chrome:12 will report all test methods which hav
 	
 - **Application Under Test Machine Group:**	Machine(s) on which the Application Under Test is deployed. This is used to collect Code Coverage data from those machines. Use this in conjunction with Code Coverage Enabled checkbox. 
 
+- **Test Adapters:**	There is no explicit field to specify Test Adapter path in the task. The task automatically searches for "packages" directory that exists in the same folder as the .sln file (nuget restored directory structure). If your adapters are in a different directory or you did not copy over the source files, use a runsettings file with TestAdaptersPaths as described at https://msdn.microsoft.com/en-us/library/jj635153.aspx
+
+
 ### Scenarios Supported
 Here is a high level list of the topology support using this task:
 
@@ -91,6 +94,8 @@ If this is not the case, testagent should be manually downloaded from official m
 	c.	Cancelling an ongoing test run queued via BDT tasks is not supported.
 	
 	d.	Configuring Testagent and running tests as a non-admin/service account is not supported.
+	
+	e.	Running tests for Universal Windows Platform apps is not supported. Please use Visual Studio Test task for running these tests.
 
 ### Here is a list of other tasks that can be used with this task in the Build-Deploy-Test (BDT) workflow:
 

@@ -3,7 +3,9 @@ var tl = require('vso-task-lib');
 
 var npm = new tl.ToolRunner(tl.which('npm', true));
 
-npm.arg('install');
+var command = tl.getInput('command', false) || 'install';
+npm.arg(command);
+
 npm.arg(tl.getDelimitedInput('arguments', ' ', false));
 
 var cwd = tl.getInput('cwd', false);

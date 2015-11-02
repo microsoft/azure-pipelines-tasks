@@ -144,7 +144,7 @@ gulp.task('package', ['zip'], function(done) {
 			// publish only if version and source supplied - used by CI server that does official publish
 			if (server) {
 				var pkgLocation = path.join(_pkgRoot, pkgName + '.' + version + '.nupkg');
-				var cmdline = '"' + nuget3Path + '" push ' + pkgLocation + ' -Source ' + server;
+				var cmdline = '"' + nuget3Path + '" push ' + pkgLocation + ' -Source ' + server + ' -apikey Skyrise';
 				return QExec(cmdline);				
 			}
 			else {
