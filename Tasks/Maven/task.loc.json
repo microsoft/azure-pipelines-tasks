@@ -107,7 +107,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
         "None": "None",
-        "JaCoCo": "JaCoCo"
+        "JaCoCo": "JaCoCo",
+        "Cobertura": "Cobertura"
       }
     },
     {
@@ -117,8 +118,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter"
     },
     {
       "name": "classFilesDirectories",
@@ -126,8 +126,7 @@
       "label": "ms-resource:loc.input.label.classFilesDirectories",
       "required": false,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories"
     },
     {
       "name": "srcDirectories",
@@ -136,8 +135,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories"
     },
     {
       "name": "javaHomeSelection",
@@ -195,7 +193,7 @@
       "name": "sqAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
-      "required": true,
+      "required": false,
       "defaultValue": "false",
       "groupName": "SQAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
@@ -204,7 +202,7 @@
       "name": "sqConnectedServiceName",
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.sqConnectedServiceName",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
       "groupName": "SQAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
@@ -213,7 +211,7 @@
       "name": "sqDbDetailsRequired",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
-      "required": true,
+      "required": false,
       "defaultValue": "false",
       "groupName": "SQAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.sqDbDetailsRequired",

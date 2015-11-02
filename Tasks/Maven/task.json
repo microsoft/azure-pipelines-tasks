@@ -104,7 +104,8 @@
             "helpMarkDown": "Select the code coverage tool.",
             "options": {
                 "None": "None",
-                "JaCoCo": "JaCoCo"
+              "JaCoCo": "JaCoCo",
+              "Cobertura": "Cobertura"
             }
         },
         {
@@ -114,8 +115,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html.",
-            "visibleRule": "codeCoverageTool = JaCoCo"
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html."
         }, 
         {
             "name": "classFilesDirectories",
@@ -123,8 +123,7 @@
             "label": "Class Files Directories",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
-            "visibleRule": "codeCoverageTool = JaCoCo"
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html"
         },	
         {
             "name": "srcDirectories",
@@ -133,8 +132,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
-            "visibleRule": "codeCoverageTool = JaCoCo"
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html"
         },		
         {
             "name":"javaHomeSelection",
@@ -192,7 +190,7 @@
             "name": "sqAnalysisEnabled",
             "type": "boolean",
             "label": "Run SonarQube Analysis",
-            "required": true,
+            "required": false,
             "defaultValue": "false",
             "groupName": "SQAnalysis",
             "helpMarkDown": "Run a [SonarQube](http://www.sonarqube.org/) analysis after executing the current goals. 'install' or 'package' goals should be executed first."
@@ -201,7 +199,7 @@
             "name": "sqConnectedServiceName",
             "type": "connectedService:Generic",
             "label": "SonarQube Endpoint",
-            "required": true,
+            "required": false,
             "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
             "groupName": "SQAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
@@ -210,7 +208,7 @@
             "name": "sqDbDetailsRequired",
             "type": "boolean",
             "label": "The SonarQube server version is lower than 5.2",
-            "required": true,
+            "required": false,
             "defaultValue": "false",
             "groupName": "SQAnalysis",
             "helpMarkDown": "If using a SonarQube server 5.1 or lower you need to specify the database connection details.",
