@@ -1,179 +1,216 @@
 {
-    "id": "70A3A82D-4A3C-4A09-8D30-A793739DC94F",
-    "name": "SqlServerDacpacDeployment",
-    "friendlyName": "SQL Server Database Deployment",
-    "description": "Deploy SQL Server Database using DACPAC",
-    "helpMarkDown": "[More Information](http://aka.ms/sqlserverdacpackreadme)",
-    "category": "Deploy",
-    "visibility": [
-        "Preview",
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 3
+  "id": "70A3A82D-4A3C-4A09-8D30-A793739DC94F",
+  "name": "SqlServerDacpacDeployment",
+  "friendlyName": "SQL Server Database Deployment",
+  "description": "Deploy SQL Server Database using DACPAC",
+  "helpMarkDown": "[More Information](http://aka.ms/sqlserverdacpackreadme)",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 4
+  },
+  "demands": [
+  ],
+  "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "deployment",
+      "displayName": "Deployment",
+      "isExpanded": true
     },
-    "demands": [
-    ],
-    "minimumAgentVersion": "1.88.0",
-    "groups": [
-        {
-            "name": "target",
-            "displayName": "Target",
-            "isExpanded": true
-        },
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "EnvironmentName",
-            "type": "pickList",
-            "label": "Machine Group",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the target Machine Group, where the database deployment task will be run. For Azure Resource Groups, type-in the name of the Resource Group."
-        },
-        {
-            "name": "ResourceFilteringMethod",
-            "type": "radio",
-            "label": "Select Machines By",
-            "required": false,
-            "defaultValue": "machineNames",
-            "options": {
-                "machineNames": "Machine Names",
-                "tags": "Tags"
-            },
-            "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
-        },
-        {
-            "name": "MachineFilter",
-            "type": "string",
-            "label": "Deploy to Machines",
-            "required": false,
-            "defaultValue": "",
-            "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
-        },
-        {
-            "name": "DacpacFile",
-            "type": "string",
-            "label": "DACPAC File",
-            "required": true,
-            "defaultValue": "",
-            "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported like $env:windir, $env:systemroot, like, $env:windir\\FabrikamFibre\\Web."
-        },
-        {
-            "name": "TargetMethod",
-            "type": "pickList",
-            "label": "Specify SQL Using",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "server",
-            "options": {
-                "server": "Server",
-                "connectionString": "Connection String",
-                "publishProfile": "Publish Profile"
-            },
-            "helpMarkDown": "Select the option to connect to the target SQL Server Database. The options are to provide SQL Server Database details, or a SQL Server connection string, or a Publish profile XML file."
-        },
-        {
-            "name": "ServerName",
-            "type": "string",
-            "label": "Server Name",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "localhost",
-            "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "Provide the SQL Server name like, machinename\\FabriakmSQL,1433 or localhost or .\\SQL2012R2. Specifying localhost will connect to the Default SQL Server instance on the machine."
-        },
-        {
-            "name": "DatabaseName",
-            "type": "string",
-            "label": "Database Name",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "Provide the name of the SQL Server database."
-        },
-        {
-            "name": "SqlUsername",
-            "type": "string",
-            "label": "SQL Username",
-            "required": false,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "If the SQL Server login is specified, it will be used to connect to the SQL Server. The default is Integrated Authentication and uses the machine administrator's credentials."
-        },
-        {
-            "name": "SqlPassword",
-            "type": "string",
-            "label": "SQL Password",
-            "required": false,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "TargetMethod = server",
-            "helpMarkDown": "If SQL Server login user name is specified, then provide the SQL Server password. The default is Integrated Authentication and uses the machine administrator's credentials."
-        },
-        {
-            "name": "ConnectionString",
-            "type": "multiLine",
-            "label": "Connection String",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "TargetMethod = connectionString",
-            "helpMarkDown": "Specify the SQL Server connection string like \"Server=localhost;Database=Fabrikam;User ID=sqluser;Password=password;\"."
-        },
-        {
-            "name": "PublishProfile",
-            "type": "string",
-            "label": "Publish Profile",
-            "required": false,
-            "groupName": "target",
-            "defaultValue": "",
-            "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database creation or upgrades. Specify the path to the Publish profile XML file on the target machine or on a UNC share that is accessible by the machine administrator’s credentials."
-        },
-        {
-            "name": "AdditionalArguments",
-            "type": "multiLine",
-            "label": "Additional Arguments",
-            "required": false,
-            "groupName": "target",
-            "defaultValue": "",
-            "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when creating or updating the SQL Server database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided)."
-        },
-        {
-            "name": "DeployInParallel",
-            "type": "boolean",
-            "label": "Deploy in Parallel",
-            "defaultValue": "true",
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "Setting it to true will run the database deployment task in-parallel on the target machines."
-        }
-    ],
-    "sourceDefinitions": [ 
-     { 
-         "target": "EnvironmentName", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
-     } 
-    ], 
-    "instanceNameFormat": "Deploy SQL DACPAC: $(DacpacFile)",
-    "execution": {
-        "PowerShell": {
-        "target": "$(currentDirectory)\\DeployToSqlServer.ps1",
-        "argumentFormat": "",
-        "workingDirectory": "$(currentDirectory)"
-        }
+    {
+      "name": "target",
+      "displayName": "Target",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "EnvironmentName",
+      "type": "multiLine",
+      "label": "Machines",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Enter the comma seperated list of machines for deployment."
+    },
+    {
+      "name": "AdminUserName",
+      "type": "string",
+      "label": "Admin Login",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Provide administrator user name for connecting to target machine."
+    },
+    {
+      "name": "AdminPassword",
+      "type": "string",
+      "label": "Password",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Provide administrator user password for connecting to target machine."
+    },
+    {
+      "name": "Protocol",
+      "type": "radio",
+      "label": "Protocol",
+      "required": false,
+      "defaultValue": "",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "Whether WinRM connections or over HTTP or HTTPS. Defaulted to HTTPS."
+    },
+    {
+      "name": "TestCertificate",
+      "type": "boolean",
+      "label": "Test Certificate",
+      "defaultValue": "true",
+      "visibleRule": "Protocol = Https",
+      "required": false,
+      "helpMarkDown": "Setting it to true will connect to target machine using test certificate."
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "Select Machines By",
+      "required": false,
+      "defaultValue": "machineNames",
+      "visibleRule": "Protocol = Invalid",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
+    },
+    {
+      "name": "MachineFilter",
+      "type": "string",
+      "label": "Deploy to Machines",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "Protocol = Invalid",
+      "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
+    },
+    {
+      "name": "DacpacFile",
+      "type": "string",
+      "label": "DACPAC File",
+      "required": true,
+      "groupName": "deployment",
+      "defaultValue": "",
+      "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported like $env:windir, $env:systemroot, like, $env:windir\\FabrikamFibre\\Web."
+    },
+    {
+      "name": "TargetMethod",
+      "type": "pickList",
+      "label": "Specify SQL Using",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "server",
+      "options": {
+        "server": "Server",
+        "connectionString": "Connection String",
+        "publishProfile": "Publish Profile"
+      },
+      "helpMarkDown": "Select the option to connect to the target SQL Server Database. The options are to provide SQL Server Database details, or a SQL Server connection string, or a Publish profile XML file."
+    },
+    {
+      "name": "ServerName",
+      "type": "string",
+      "label": "Server Name",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "localhost",
+      "visibleRule": "TargetMethod = server",
+      "helpMarkDown": "Provide the SQL Server name like, machinename\\FabriakmSQL,1433 or localhost or .\\SQL2012R2. Specifying localhost will connect to the Default SQL Server instance on the machine."
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "Database Name",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "TargetMethod = server",
+      "helpMarkDown": "Provide the name of the SQL Server database."
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "SQL Username",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "TargetMethod = server",
+      "helpMarkDown": "If the SQL Server login is specified, it will be used to connect to the SQL Server. The default is Integrated Authentication and uses the machine administrator's credentials."
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "SQL Password",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "TargetMethod = server",
+      "helpMarkDown": "If SQL Server login user name is specified, then provide the SQL Server password. The default is Integrated Authentication and uses the machine administrator's credentials."
+    },
+    {
+      "name": "ConnectionString",
+      "type": "multiLine",
+      "label": "Connection String",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "TargetMethod = connectionString",
+      "helpMarkDown": "Specify the SQL Server connection string like \"Server=localhost;Database=Fabrikam;User ID=sqluser;Password=password;\"."
+    },
+    {
+      "name": "PublishProfile",
+      "type": "string",
+      "label": "Publish Profile",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database creation or upgrades. Specify the path to the Publish profile XML file on the target machine or on a UNC share that is accessible by the machine administrator’s credentials."
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "Additional Arguments",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when creating or updating the SQL Server database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided)."
+    },
+    {
+      "name": "DeployInParallel",
+      "type": "boolean",
+      "label": "Deploy in Parallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Setting it to true will run the database deployment task in-parallel on the target machines."
+    }
+  ],
+  "instanceNameFormat": "Deploy SQL DACPAC: $(DacpacFile)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\DeployToSqlServer.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
 }
