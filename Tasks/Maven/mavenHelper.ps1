@@ -42,7 +42,8 @@ function ConfigureJDK
 function PublishTestResults
 {
 	param([string]$publishJUnitResults,
-		  [string]$testResultsFiles)
+		  [string]$testResultsFiles,
+		  [string]$testRunTitle)
 
 	$publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
 
@@ -57,7 +58,7 @@ function PublishTestResults
 		else
 		{
 			Write-Verbose "Calling Publish-TestResults"
-			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
 		}    
 	}
 	else

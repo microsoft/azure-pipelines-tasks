@@ -7,6 +7,7 @@ param(
     [string]$pathtoCustomTestAdapters,
     [string]$overrideTestrunParameters,
     [string]$otherConsoleOptions,
+    [string]$testRunTitle,
     [string]$platform,
     [string]$configuration,
     [string]$publishRunAttachments
@@ -75,11 +76,11 @@ if($testAssemblyFiles)
 
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
-    $publishResultsOption = Convert-String $publishResultsEnabled Boolean
+    $publishResultsOption = Convert-String $publishRunAttachments Boolean
 
     if($resultFiles)
     {
-        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishRunAttachments
+        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle  -PublishRunLevelAttachments $publishResultsOption
     }
     else
     {
