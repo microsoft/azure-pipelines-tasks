@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
-  "name": "NpmInstall",
+  "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 3
+    "Minor": 2,
+    "Patch": 0
   },
   "demands": [
     "npm"
@@ -27,6 +27,14 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
+    {
+      "name": "command",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "install",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "required": true
+    },
     {
       "name": "arguments",
       "type": "string",
@@ -48,11 +56,11 @@
   ],
   "execution": {
     "Node": {
-      "target": "npminstall.js",
+      "target": "npm.js",
       "argumentFormat": ""
     },
     "PowerShell": {
-      "target": "$(currentDirectory)\\NpmInstall.ps1",
+      "target": "$(currentDirectory)\\Npm.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(cwd)"
     }
