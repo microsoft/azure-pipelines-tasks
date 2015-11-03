@@ -261,5 +261,41 @@ function Create-AzureResourceGroupHelper
     $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
 
     # Create azure resource group
-    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
+    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired        
+}
+
+function Instantiate-Environment
+{
+    param([string]$resourceGroupName,
+          [string]$outputVariable)    
+
+    $connection = Get-VssConnection -TaskContext $distributedTaskContext
+
+    $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $resourceGroupName
+    if ($azureVMResources.Count -ne 0)
+    {
+        Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
+        $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $azureVMResources
+
+        $resources = @()
+        foreach ($resource in $azureVMResources)
+        {
+            $resourceProperties = $azureVMResourcesPropertiesBag.Item($resource.Name)
+            $resourceFQDN = $resourceProperties.fqdn            
+            $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
+
+            $machineSpec = $resourceFQDN + ":" + $resourceWinRMHttpsPort
+            $resources += $machineSpec
+        }
+
+        $machineSpecification = $resources -join ","
+
+        Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
+        $environment = Register-Environment -EnvironmentName $outputVariable -MachineList $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext
+        Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
+    }
+    else
+    {
+        Write-Verbose -Verbose "No VMs found in resource group $resourceGroupName. Skipping registering environment."
+    }
 }
