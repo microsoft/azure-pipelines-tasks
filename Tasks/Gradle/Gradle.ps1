@@ -107,10 +107,6 @@ $singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
-   #Write-Error "cwd $cwd" 
-   #Write-Error "build $buildFile"
-   #Write-Error "wrapper $wrapperScript"
-   #Write-Error "wsitem $wrapperScriptItem"
    # Enable code coverage in build file
    Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -SingleModule $singlemodule -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose
