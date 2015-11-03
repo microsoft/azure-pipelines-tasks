@@ -163,10 +163,12 @@ The section is used to create a new IIS application pool or to update an existin
 The section provides for advanced options.
 
   - **Additional AppCmd.exe Commands:** Additional [AppCmd.exe](https://technet.microsoft.com/en-us/library/cc732107(v=ws.10).aspx) commands to set website or application pool properties. For more than one command use line separator. For example:
-      ````c
+  
+      ```c
       set config /section:applicationPools /[name='Fabrikam'].autoStart:false 
 	  add site /name:fabrikam /bindings:http/\*:85: fabrikam.com. 
-      ````
+      ```
+	  
   - **Deploy in Parallel:** Setting it to true will run the database deployment task in-parallel on the target machines.
 
 ## Known Issues
