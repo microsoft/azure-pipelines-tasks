@@ -50,4 +50,4 @@ Tasks will be create a nuget package in the _package directory.  This is only us
 
 ## Tests
 Tests should be run with changes.  Ideally, new tests are added for your change.  
-[Read here](docs/runningtests.md)
+[Read here](runningtests.md)
