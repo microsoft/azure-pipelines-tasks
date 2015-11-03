@@ -1,0 +1,20 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Copy Files",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.description": "Copy files from source folder to target folder using minimatch patterns (The minimatch patterns will only match file paths, not folder paths)",
+  "loc.instanceNameFormat": "Copy Files to: $(TargetFolder)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.SourceFolder": "Source Folder",
+  "loc.input.help.SourceFolder": "Source folder to apply copy patterns to",
+  "loc.input.label.Contents": "Contents",
+  "loc.input.help.Contents": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.TargetFolder": "Target Folder",
+  "loc.input.help.TargetFolder": "Target folder files will copy to",
+  "loc.input.label.CleanTargetFolder": "Clean Target Folder",
+  "loc.input.help.CleanTargetFolder": "Delete all existing files in target folder before copy.",
+  "loc.input.label.OverWrite": "Over Write",
+  "loc.input.help.OverWrite": "Replace existing file in target folder"
+}
