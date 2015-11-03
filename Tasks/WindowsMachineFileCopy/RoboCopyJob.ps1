@@ -13,12 +13,7 @@ param (
     $numOfThreads = 4
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
-    $targetPath = $targetPath.Trim().TrimEnd('\', '/')
-    if($credential)
-    {
-        $userName = $($credential.UserName)
-        $password = $($credential.Password)    
-    }
+    $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
 
     $isFileCopy = Test-Path -Path $sourcePath -PathType Leaf
     $doCleanUp = $cleanTargetBeforeCopy -eq "true"
@@ -48,7 +43,33 @@ param (
         $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
         $failMessage = "Copying failed for resource : $fqdn"
         throw "$failMessage`n$errorMessage`n$helpMessage"
-    }        
+    }
+    
+    function Validate-Null(
+        [string]$value,
+        [string]$variableName
+        )
+    {
+        $value = $value.Trim()    
+        if(-not $value)
+        {
+            ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList $variableName)
+        }
+    }
+    
+    function Validate-Credential(
+        [object]$credential)
+    {
+        if($credential)
+        {
+            Validate-Null $credential.UserName "Username"
+            Validate-Null $credential.Password "Password"                        
+        }
+        else
+        {
+            ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList "credential")
+        }   
+    }
     
     function Replace-First(
         [string]$text,
@@ -121,6 +142,10 @@ param (
     
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
+    
+    Validate-Credential $credential
+    $userName = $($credential.UserName)
+    $password = $($credential.Password) 
 
     if($machineShare)
     {
