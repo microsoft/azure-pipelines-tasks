@@ -13,6 +13,8 @@
   "loc.input.help.testResultsFiles": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
   "loc.input.label.mergeTestResults": "Merge Test Results",
   "loc.input.help.mergeTestResults": "To merge results from all test results files to one test run in TFS/VSO, check this option. To create a test run for each test results file, uncheck this option.",
+  "loc.input.label.testRunTitle": "Test Run Title",
+  "loc.input.help.testRunTitle": "Provide a name for the Test Run.",
   "loc.input.label.platform": "Platform",
   "loc.input.help.platform": "Platform for which the tests were run.",
   "loc.input.label.configuration": "Configuration",
