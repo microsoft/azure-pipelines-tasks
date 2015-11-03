@@ -49,13 +49,13 @@ gulp.task('compileTasks', function (cb) {
 
 gulp.task('compile', ['compileTasks', 'compileTests']);
 
-gulp.task('build', ['clean', 'compile'], function () {
+gulp.task('build', ['clean', 'compileTasks'], function () {
 	shell.mkdir('-p', _buildRoot);
 	return gulp.src(path.join(__dirname, 'Tasks', '**/task.json'))
         .pipe(pkgm.PackageTask(_buildRoot));
 });
 
-gulp.task('test', function () {
+gulp.task('test', ['compileTests'], function () {
 	var suitePath = path.join(_testRoot, '*.js');
 	if (options.suite !== '*') {
 		suitePath = path.join(_testRoot, options.suite + '.js');

@@ -22,9 +22,9 @@ var utilPath = function(name: string) {
 console.log();
 var outputPath = utilPath('output');
 var basePath = utilPath('baselines');
-var xcodePath = taskPath('Xcode');
+var gulpPath = taskPath('Gulp');
 
-describe('iOS Suite', function() {
+describe('Gulp Suite', function() {
 
 	before((done) => {
 		// init here
@@ -35,25 +35,21 @@ describe('iOS Suite', function() {
 		
 	});
 
-	it('Xcode with Workspace', (done) => {
+	it('Gulp with gulpfile', (done) => {
 		this.timeout(500);
 
 		assert(true, 'true is true');
 		
-		var completed = false;
-		var taskRunner = new trm.TaskRunner(xcodePath);
-		taskRunner.on('completed', (step) => {
-			completed = true;
-		});
-
+		var taskRunner = new trm.TaskRunner(gulpPath);
+		taskRunner.setInput('gulpFile', 'gulpfile.js');
+		taskRunner.setInput('cwd', 'fake/wd');
 		taskRunner.run()
 		.then((result) => {
-			assert(completed, 'completed');
 			assert(true, 'baselines match');
 			done();
 		})
 		.fail((err) => {
 			done(err);
 		});
-	})
+	})	
 });
