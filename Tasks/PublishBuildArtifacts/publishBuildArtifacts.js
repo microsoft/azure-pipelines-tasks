@@ -46,7 +46,8 @@ function _getCommonLocalPath(path1, path2) {
 function isSubItem(item, parent) {
     item = path.normalize(item);
     parent = path.normalize(parent);
-    return item.substring(0, parent.length) == parent && (item.length == parent.length || (parent.length > 0 && parent[parent.length - 1] === path.sep) || (item[parent.length] === path.sep));
+    return item.substring(0, parent.length) == parent
+        && (item.length == parent.length || (parent.length > 0 && parent[parent.length - 1] === path.sep) || (item[parent.length] === path.sep));
 }
 function getFolderDepth(fullPath) {
     if (!fullPath) {
@@ -97,16 +98,13 @@ else {
         var map = {};
         for (var i = 0; i < contents.length; i++) {
             var pattern = contents[i].trim();
-            if (pattern.length == 0) {
-                continue;
-            }
             tl.debug('Matching ' + pattern);
             var realPattern = path.join(findRoot, pattern);
             tl.debug('Actual pattern: ' + realPattern);
             // in debug mode, output some match candidates
             tl.debug('Listing a few potential candidates...');
-            for (var k = 0; k < 10 && k < allFiles.length; k++) {
-                tl.debug('  ' + allFiles[k]);
+            for (var i = 0; i < 10 && i < allFiles.length; i++) {
+                tl.debug('  ' + allFiles[i]);
             }
             // let minimatch do the actual filtering
             var matches = tl.match(allFiles, realPattern, { matchBase: true });
@@ -139,7 +137,9 @@ else {
             files.forEach(function (file) {
                 var stagingPath = stagingFolder;
                 if (useCommonRoot) {
-                    var relativePath = file.substring(commonRoot.length).replace(/^\\/g, "").replace(/^\//g, "");
+                    var relativePath = file.substring(commonRoot.length)
+                        .replace(/^\\/g, "")
+                        .replace(/^\//g, "");
                     stagingPath = path.dirname(path.join(stagingFolder, relativePath));
                 }
                 if (!createdFolders[stagingPath]) {
