@@ -13,6 +13,12 @@ param(
     [string]$publishRunAttachments
 )
 
+    
+Function CmdletHasMember($memberName) {
+    $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
+    return $publishParameters
+}
+
 Write-Verbose "Entering script VSTestConsole.ps1"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
@@ -80,43 +86,34 @@ if($testAssemblyFiles)
 
     if($resultFiles)
     {
-	# Remove the below hack once the min agent version is updated to S91 or above
-
-	$publishParameters = Get-Help Publish-TestResults
-	if($publishParameters -Match 'RunTitle')
-	{
-		if($publishParameters -Match 'PublishRunLevelAttachments')
-		{
-			Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
-		}
-		else
-		{
-			if($publishResultsOption)
-			{
-				Write-Warning "Please update the build agent to be able to opt out of test result publish"
-			}
-			Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
-		}
-	}
-	else
-	{
-		if($testRunTitle)
-		{
-			Write-Warning "Please update the build agent to be able to use the custom run title feature"
-		}		
-		if($publishParameters -Match 'PublishRunLevelAttachments')
-		{
-			 -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
-		}
-		else
-		{
-			if($publishResultsOption)
-			{
-				Write-Warning "Please update the build agent to be able to opt out of test result publish"
-			}
-			Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
-		}		
-	}
+        # Remove the below hack once the min agent version is updated to S91 or above
+    
+        $runTitleMemberExists = CmdletHasMember "RunTitle"
+        $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
+        if($runTitleMemberExists)
+        {
+            if($publishRunLevelAttachmentsExists)
+            {
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
+            }
+            else
+            {
+                Write-Warning "Update the build agent to be able to opt out of test result publish"
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
+            }
+        }
+        else
+        {
+            if($publishRunLevelAttachmentsExists)		
+            {
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
+            }
+            else
+            {
+                Write-Warning "Update the build agent to be able to opt out of test result publish"
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+            }		
+        }
     }
     else
     {
