@@ -21,7 +21,7 @@ param (
     }
 
 	$cleanTargetPathOption = ''
-    if($cleanTargetBeforeCopy -eq "true")
+   if($cleanTargetBeforeCopy -eq "true")
     {
 		$cleanTargetPathOption = '-CleanTargetPath'
     }

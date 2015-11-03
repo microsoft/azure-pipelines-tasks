@@ -6,11 +6,7 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments
-    )        
-
-    $retryCount = 5
-    $retryIntervalInSecond = 30
-    $numOfThreads = 4
+    )    
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
@@ -118,8 +114,7 @@ param (
                 $robocopyParameters += " /E"
             }
         }       
-
-        $robocopyParameters += " /R:$retryCount /W:$retryIntervalInSecond /MT:$numOfThreads $additionalArguments"
+        
         return $robocopyParameters.Trim()
     }
 

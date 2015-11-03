@@ -62,7 +62,7 @@
             "label": "Destination Folder",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Local Path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web."
+            "helpMarkDown": "Local Path on the target machines or an accessible UNC path for copying the files from the source."
         },
         {
             "name": "CleanTargetBeforeCopy",
