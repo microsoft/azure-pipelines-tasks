@@ -17,12 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [
     "Chef",
     "KnifeReporting",
-    "PowerShell"
+    "DotNetFramework"
   ],
   "minimumAgentVersion": "1.83.0",
   "inputs": [
