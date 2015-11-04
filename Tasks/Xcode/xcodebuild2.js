@@ -84,15 +84,20 @@ function processInputs() {
 	xcb.arg('-configuration');
 	xcb.arg(tl.getInput('configuration', true));
 	// Args: Add optional workspace flag
-	var workspace = tl.getPathInput('xcWorkspacePath', false, false)
-	if(workspace && (!fs.existsSync(workspace) || !fs.lstatSync(workspace).isDirectory())) {
-		var workspaceFile = glob.sync(workspace);
-		if(workspaceFile && workspaceFile.length > 0) {
-			tl.debug("Found " + workspaceFile.length + ' workspaces matching.')
-			xcb.arg('-workspace');
-			xcb.arg('"' + workspaceFile[0] + '"');				
-		} else {
-			console.error('No workspaces found matching ' + workspace);
+	var workspace = tl.getPathInput('xcWorkspacePath', false, false);
+	if(workspace && workspace !== buildSourceDirectory) {
+		if(fs.existsSync(workspace) && fs.lstatSync(workspace).isDirectory()) {
+			var workspaceFile = glob.sync(workspace);
+			if(workspaceFile && workspaceFile.length > 0) {
+				tl.debug("Found " + workspaceFile.length + ' workspaces matching.')
+				xcb.arg('-workspace');
+				xcb.arg('"' + workspaceFile[0] + '"');				
+			} else {
+				console.error('No workspaces found matching ' + workspace);
+			}
+		}
+		else {
+			console.error('Workspace specified but it does not exist or is not a directory');
 		}
 	} else {
 		tl.debug('No workspace path specified in task.');
