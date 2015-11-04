@@ -11,33 +11,55 @@ var fs = require('fs');
 var semver = require('semver');
 var Q = require('q');
 var exec = require('child_process').exec;
-var ts = require('gulp-typescript');
+var tsc = require('gulp-tsc');
+var mocha = require('gulp-mocha');
+
+var mopts = {
+  boolean: 'ci',
+  string: 'suite',
+  default: { ci: false, suite: 'L0.*' }
+};
+
+var options = minimist(process.argv.slice(2), mopts);
 
 var _buildRoot = path.join(__dirname, '_build', 'Tasks');
+var _testRoot = path.join(__dirname, '_build', 'Tests');
 var _pkgRoot = path.join(__dirname, '_package');
 var _oldPkg = path.join(__dirname, 'Package');
 var _wkRoot = path.join(__dirname, '_working');
 
 gulp.task('clean', function (cb) {
-	del([_buildRoot, _pkgRoot, _wkRoot, _oldPkg],cb);
+	del([_buildRoot, _testRoot, _pkgRoot, _wkRoot, _oldPkg],cb);
 });
 
-gulp.task('compile', function (cb) {
+gulp.task('compileTests', function (cb) {
+	var testsPath = path.join(__dirname, 'Tests', '*.ts');
+	return gulp.src([testsPath, 'definitions/*.d.ts'])
+		.pipe(tsc())
+		.pipe(gulp.dest(_testRoot));
+});
+
+// compile tasks inline
+gulp.task('compileTasks', function (cb) {
 	var tasksPath = path.join(__dirname, 'Tasks', '**/*.ts');
-	var tsResult = gulp.src([tasksPath, 'definitions/*.d.ts'])
-		.pipe(ts({
-		   declarationFiles: false,
-		   noExternalResolve: true,
-		   'module': 'commonjs'
-		}));
-		
-	return tsResult.js.pipe(gulp.dest(path.join(__dirname, 'Tasks')));
+	return gulp.src([tasksPath, 'definitions/*.d.ts'])
+		.pipe(tsc())
+		.pipe(gulp.dest(path.join(__dirname, 'Tasks')));
 });
 
-gulp.task('build', ['clean', 'compile'], function () {
+gulp.task('compile', ['compileTasks', 'compileTests']);
+
+gulp.task('build', ['clean', 'compileTasks'], function () {
 	shell.mkdir('-p', _buildRoot);
 	return gulp.src(path.join(__dirname, 'Tasks', '**/task.json'))
         .pipe(pkgm.PackageTask(_buildRoot));
+});
+
+gulp.task('test', ['compileTests'], function () {
+	var suitePath = path.join(_testRoot, options.suite + '.js');
+
+	return gulp.src([suitePath])
+		.pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !options.ci }));
 });
 
 gulp.task('default', ['build']);

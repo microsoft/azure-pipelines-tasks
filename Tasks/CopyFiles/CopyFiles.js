@@ -47,7 +47,8 @@ function _getCommonLocalPath(path1, path2) {
 function isSubItem(item, parent) {
     item = path.normalize(item);
     parent = path.normalize(parent);
-    return item.substring(0, parent.length) == parent && (item.length == parent.length || (parent.length > 0 && parent[parent.length - 1] === path.sep) || (item[parent.length] === path.sep));
+    return item.substring(0, parent.length) == parent
+        && (item.length == parent.length || (parent.length > 0 && parent[parent.length - 1] === path.sep) || (item[parent.length] === path.sep));
 }
 function getFolderDepth(fullPath) {
     if (!fullPath) {
@@ -102,6 +103,7 @@ for (var i = 0; i < contents.length; i++) {
 var files = [];
 var allPaths = tl.find(sourceFolder);
 var allFiles = [];
+// remove folder path
 for (var i = 0; i < allPaths.length; i++) {
     if (!fs.statSync(allPaths[i]).isDirectory()) {
         allFiles.push(allPaths[i]);
@@ -111,6 +113,7 @@ if (includeContents && allFiles && includeContents.length > 0 && allFiles.length
     tl.debug("allFiles contains " + allFiles.length + " files");
     // a map to eliminate duplicates
     var map = {};
+    // apply include filter
     for (var i = 0; i < includeContents.length; i++) {
         var pattern = includeContents[i];
         tl.debug('Include matching ' + pattern);
@@ -125,6 +128,7 @@ if (includeContents && allFiles && includeContents.length > 0 && allFiles.length
             }
         }
     }
+    // apply exclude filter
     for (var i = 0; i < excludeContents.length; i++) {
         var pattern = excludeContents[i];
         tl.debug('Exclude matching ' + pattern);
@@ -165,9 +169,13 @@ if (files.length > 0) {
     try {
         var createdFolders = {};
         files.forEach(function (file) {
-            var relativePath = file.substring(sourceFolder.length).replace(/^\\/g, "").replace(/^\//g, "");
+            var relativePath = file.substring(sourceFolder.length)
+                .replace(/^\\/g, "")
+                .replace(/^\//g, "");
             if (useCommonRoot) {
-                relativePath = file.substring(commonRoot.length).replace(/^\\/g, "").replace(/^\//g, "");
+                relativePath = file.substring(commonRoot.length)
+                    .replace(/^\\/g, "")
+                    .replace(/^\//g, "");
             }
             var targetPath = path.join(targetFolder, relativePath);
             var targetDir = path.dirname(targetPath);
