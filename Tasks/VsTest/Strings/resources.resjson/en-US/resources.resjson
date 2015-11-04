@@ -17,8 +17,6 @@
   "loc.input.help.runSettingsFile": "Path to runsettings file to use with the tests. Use $(Build.SourcesDirectory) to access the Project folder.",
   "loc.input.label.overrideTestrunParameters": "Override TestRun Parameters",
   "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
-  "loc.input.label.publishRunAttachments": "Upload Test Attachments",
-  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments.",
   "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
   "loc.input.help.codeCoverageEnabled": "Collect code coverage information from the Test run.",
   "loc.input.label.vsTestVersion": "VSTest version",
@@ -32,5 +30,7 @@
   "loc.input.label.platform": "Platform",
   "loc.input.help.platform": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
   "loc.input.label.configuration": "Configuration",
-  "loc.input.help.configuration": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here."
+  "loc.input.help.configuration": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+  "loc.input.label.publishRunAttachments": "Upload Test Attachments",
+  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments."
 }

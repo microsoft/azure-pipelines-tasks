@@ -77,14 +77,6 @@
       "groupName": "executionOptions"
     },
     {
-      "name": "publishRunAttachments",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.publishRunAttachments",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments"
-    },
-    {
       "name": "codeCoverageEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.codeCoverageEnabled",
@@ -150,6 +142,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.configuration",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "publishRunAttachments",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishRunAttachments",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
     }
   ],

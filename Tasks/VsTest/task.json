@@ -72,15 +72,7 @@
       "required": false,
       "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
       "groupName": "executionOptions"      
-    },
-    {
-      "name": "publishRunAttachments",
-      "type": "boolean",
-      "label": "Upload Test Attachments",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "Opt in/out of publishing test run level attachments."
-    }, 
+    },     
     {
       "name": "codeCoverageEnabled",
       "type": "boolean",
@@ -147,6 +139,15 @@
       "defaultValue":"", 
       "required":false,
       "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+      "groupName":  "reportingOptions"
+    },
+    {
+      "name": "publishRunAttachments",
+      "type": "boolean",
+      "label": "Upload Test Attachments",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Opt in/out of publishing test run level attachments.",
       "groupName":  "reportingOptions"
     }
   ],
