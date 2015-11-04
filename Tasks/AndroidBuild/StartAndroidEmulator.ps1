@@ -89,7 +89,7 @@ if ($createAvdChecked)
 
     # Create an emulator device
     # Exit code always returns 0. Assume success and if this failed, we will report failure later on
-    $createAvdCmd = "& $androidbat create avd --name `"$avdName`" --target $avdTarget --device `"$avdDevice`" --abi $avdAbi $avdOptionalArgs"
+    $createAvdCmd = "& `"$androidbat`" create avd --name `"$avdName`" --target $avdTarget --device `"$avdDevice`" --abi $avdAbi $avdOptionalArgs"
 
     if ($avdForceOverwriteChecked) 
     {
