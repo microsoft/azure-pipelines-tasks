@@ -16,9 +16,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
-   "minimumAgentVersion": "1.89.0",
+   "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
@@ -82,6 +82,16 @@
             "required": true,
             "groupName": "junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
+            "visibleRule": "publishJUnitResults = true"
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test Run Title",
+            "defaultValue": "",
+            "required": false,
+            "groupName":"junitTestResults",
+            "helpMarkDown": "Provide a name for the Test Run.",
             "visibleRule": "publishJUnitResults = true"
         },  
         {

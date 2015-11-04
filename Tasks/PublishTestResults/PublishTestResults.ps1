@@ -2,6 +2,7 @@ param(
     [string]$testRunner,    
     [string]$testResultsFiles,
     [string]$mergeTestResults,
+    [string]$testRunTitle,
     [string]$platform,
     [string]$configuration
 )
@@ -47,7 +48,7 @@ else
 {
     $mergeResults = Convert-String $mergeTestResults Boolean
     Write-Verbose "Calling Publish-TestResults"
-    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
 }
 
 Write-Verbose "Leaving script PublishTestResults.ps1"

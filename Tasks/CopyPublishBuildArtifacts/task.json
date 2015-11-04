@@ -1,8 +1,8 @@
 ﻿{
-  "id": "2FF763A7-CE83-4E1F-BC89-0AE63477CEBE",
-  "name": "PublishBuildArtifacts",
-  "friendlyName": "Publish Build Artifacts",
-  "description": "Publish Build artifacts to the server or a file share",
+  "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
+  "name": "CopyPublishBuildArtifacts",
+  "friendlyName": "Copy and Publish Build Artifacts",
+  "description": "Copy Build artifacts to staging folder then publish Build artifacts to the server or a file share using minimatch patterns",
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
   "category": "Build",
   "visibility": [
@@ -12,19 +12,27 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 10
   },
   "demands": [
   ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "1.83.0",
   "inputs": [
     {
-      "name": "ArtifactContents",
+      "name": "CopyRoot",
       "type": "filePath",
-      "label": "Artifact Contents",
+      "label": "Copy Root",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Root folder to apply copy patterns to.  Empty is the root of the repo.  Use variables if build steps building outside the repo. Example: $(agent.builddirectory)"
+    },  
+    {
+      "name": "Contents",
+      "type": "multiLine",
+      "label": "Contents",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Folder containing files that you want to include in the artifact"
+      "helpMarkDown": "File or folder paths to include as part of the artifact.  Supports multiple lines or minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=613725)"
     },
     {
       "name": "ArtifactName",
@@ -56,10 +64,16 @@
       "visibleRule": "ArtifactType = FilePath"
     }
   ],
-  "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
-  "execution": {    
+  "instanceNameFormat": "Copy Publish Artifact: $(ArtifactName)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\CopyPublishBuildArtifacts.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)",
+      "platforms" : ["windows"]
+    },
     "Node": {
-      "target": "publishBuildArtifacts.js",
+      "target": "copyPublishBuildArtifacts.js",
       "argumentFormat": ""            
     }
   }

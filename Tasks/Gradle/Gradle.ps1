@@ -4,7 +4,8 @@ param(
     [string]$options,         # Gradle options
     [string]$tasks,           # Gradle tasks
     [string]$publishJUnitResults,   
-    [string]$testResultsFiles, 
+    [string]$testResultsFiles,
+    [string]$testRunTitle, 
     [string]$codeCoverageTool,
     [string]$classFilesDirectories,
     [string]$classFilter,
@@ -128,7 +129,7 @@ if($publishJUnitResultsFromAntBuild)
     else
     {
         Write-Verbose "Calling Publish-TestResults"
-        Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+        Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
     }    
 }
 else

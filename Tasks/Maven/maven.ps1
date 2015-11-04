@@ -3,7 +3,8 @@
     [string]$options,
     [string]$goals,
     [string]$publishJUnitResults,   
-    [string]$testResultsFiles, 
+    [string]$testResultsFiles,
+    [string]$testRunTitle, 
     [string]$codeCoverageTool,
     [string]$classFilter,
     [string]$classFilesDirectories,
@@ -83,7 +84,7 @@ Write-Host "Running Maven..."
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 
 # Publish test results
-PublishTestResults $publishJUnitResults $testResultsFiles
+PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
 
 # Publish code coverage
 PublishCodeCoverage  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFile $reportDirectory $codeCoverageTool $reportPOMFile
