@@ -1,4 +1,4 @@
-#Azure File Cpy
+#Azure File Copy
 
 ### Overview
 
@@ -34,7 +34,14 @@ The task needs the Azure PowerShell version 0.9.8.1 (released on 13th Oct 2015) 
 
 **Azure Virtual Machines**
 
-The task can only copy files to the Azure Virtual Machines that are created using the [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) APIs or through the [new Azure portal](https://portal.azure.com/). Note that for For copying the files to VMs, they are first copied to an automatically generated container in athe Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs.When copying the files from the blob container to the Azure VMs, Windows Remote Management (WinRM) HTTPS protocol is used. This requires that the WinRM HTTPS service is properly setup on the VMs and a certificate is also installed on the VMs.
+The task can only copy files to the Azure Virtual Machines that are created using the [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) APIs or through the [new Azure portal](https://portal.azure.com/). For copying the files to VMs, they are first copied to an automatically generated container in the  Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs. The valid combination of Azure service connections and storage accounts for copying to a Azure is as given below:
+
+| **Storage Account Type** | **Azure Service Connections in VSO/TFS** | **Azure Virtual Machines** |
+| --- | --- | -- |
+| [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts | The Azure Virtual machines created using the Resource Manager APIs |
+
+
+When copying the files from the blob container to the Azure VMs, Windows Remote Management (WinRM) HTTPS protocol is used. This requires that the WinRM HTTPS service is properly setup on the VMs and a certificate is also installed on the VMs.
 
 To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the deployment task.
 
