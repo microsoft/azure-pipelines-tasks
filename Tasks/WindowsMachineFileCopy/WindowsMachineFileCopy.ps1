@@ -187,7 +187,7 @@ else
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
     Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName" -Verbose
-    $environment = Register-Environment -EnvironmentName $environmentName -MachineList $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext
+    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
     $fetchedEnvironmentName = $environment.Name
