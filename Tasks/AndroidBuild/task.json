@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7 
     },
     "demands" : [
 	    "AndroidSDK"
@@ -107,6 +107,7 @@
             "defaultValue": false,
             "required": false,
             "visibleRule": "createAvd = true",
+            "helpMarkDown": "Passing --force to 'android create avd' command.",
             "groupName":"avdOptions"
         },
         {
