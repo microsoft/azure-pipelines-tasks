@@ -16,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 16
   },
   "demands": [
     "ant"
   ],
-  "minimumAgentVersion": "1.89.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "junitTestResults",
@@ -80,6 +80,16 @@
       "required": true,
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
       "visibleRule": "publishJUnitResults = true"
     },
     {

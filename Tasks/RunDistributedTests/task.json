@@ -13,25 +13,25 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "demands": [
     ],
-    "minimumAgentVersion": "1.88.0",
+    "minimumAgentVersion": "1.91.0",
     "groups": [
         {
-            "name": "testMachineGroups",
-            "displayName": "Test Machine Group",
+            "name": "setupOptions",
+            "displayName": "Setup Options",
             "isExpanded": true
         },
         {
-            "name": "testSettings",
-            "displayName": "Test Settings",
+            "name": "executionOptions",
+            "displayName": "Execution Options",
             "isExpanded": true
         },
         {
-            "name": "advanced",
-            "displayName": "Advanced",
+            "name": "reportingOptions",
+            "displayName": "Reporting Options",
             "isExpanded": false
         }
     ],
@@ -43,7 +43,7 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
-            "groupName": "testMachineGroups"
+            "groupName": "setupOptions"
         },
         {
             "name": "dropLocation",
@@ -52,7 +52,7 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
-            "groupName": "testSettings"
+            "groupName": "setupOptions"
         },
         {
             "name": "sourcefilters",
@@ -61,7 +61,7 @@
             "defaultValue": "**\\*test*.dll",
             "required": true,
             "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, '**\\*test*.dll;' for all dlls containing 'test' in their name.",
-            "groupName": "testSettings"
+            "groupName": "executionOptions"
         },
         {
             "name": "testFilterCriteria",
@@ -70,26 +70,8 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally specify the test case filter criteria. For example, 'Owner=james&Priority=1'.",
-            "groupName": "testSettings"
+            "groupName": "executionOptions"
         },
-        {
- 	          "name": "platform", 
-	          "type": "string", 
-	          "label": "Platform", 
-	          "defaultValue":"", 
-	          "required":false,
-              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
-	          "groupName": "testSettings"
-	      },
-	      {
-	          "name": "configuration", 
-	          "type": "string", 
-	          "label": "Configuration", 
-	          "defaultValue":"", 
-	          "required":false,
-              "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
-	          "groupName": "testSettings"
-	      },
         {
             "name": "runSettingsFile",
             "type": "filePath",
@@ -97,7 +79,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path to runsettings file to use with the tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder.",
-            "groupName": "testSettings"
+            "groupName": "executionOptions"
         },
         {
             "name": "overrideRunParams",
@@ -106,16 +88,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080.",
-            "groupName": "testSettings"
-        },
-        {
-            "name": "testConfigurations",
-            "type": "string",
-            "label": "Test Configurations",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
-            "groupName": "testSettings"
+            "groupName": "executionOptions"
         },
         {
             "name": "codeCoverageEnabled",
@@ -124,8 +97,47 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Whether code coverage needs to be enabled.",
-            "groupName": "advanced"
+            "groupName": "executionOptions"
         },
+        {
+ 	          "name": "testRunTitle", 
+	          "type": "string", 
+	          "label": "Test Run Title", 
+	          "defaultValue":"", 
+	          "required":false,
+              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+	          "groupName": "reportingOptions"
+	      },
+        {
+ 	          "name": "platform", 
+	          "type": "string", 
+	          "label": "Platform", 
+	          "defaultValue":"", 
+	          "required":false,
+              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+	          "groupName": "reportingOptions"
+	      },
+	      {
+	          "name": "configuration", 
+	          "type": "string", 
+	          "label": "Configuration", 
+	          "defaultValue":"", 
+	          "required":false,
+              "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+	          "groupName": "reportingOptions"
+	      },
+        
+        
+        {
+            "name": "testConfigurations",
+            "type": "string",
+            "label": "Test Configurations",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
+            "groupName": "reportingOptions"
+        },
+
         {
             "name": "autMachineGroup",
             "type": "pickList",
@@ -133,7 +145,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
-            "groupName": "advanced"
+            "groupName": "reportingOptions"
         }
     ],
     "sourceDefinitions": [ 
