@@ -17,10 +17,11 @@ var mocha = require('gulp-mocha');
 var mopts = {
   boolean: 'ci',
   string: 'suite',
-  default: { ci: false, suite: 'L0.*' }
+  default: { ci: false, suite: '**' }
 };
 
 var options = minimist(process.argv.slice(2), mopts);
+
 
 var _buildRoot = path.join(__dirname, '_build', 'Tasks');
 var _testRoot = path.join(__dirname, '_build', 'Tests');
@@ -33,7 +34,7 @@ gulp.task('clean', function (cb) {
 });
 
 gulp.task('compileTests', function (cb) {
-	var testsPath = path.join(__dirname, 'Tests', '*.ts');
+	var testsPath = path.join(__dirname, 'Tests', '**/*.ts');
 	return gulp.src([testsPath, 'definitions/*.d.ts'])
 		.pipe(tsc())
 		.pipe(gulp.dest(_testRoot));
@@ -56,7 +57,7 @@ gulp.task('build', ['clean', 'compileTasks'], function () {
 });
 
 gulp.task('test', ['compileTests'], function () {
-	var suitePath = path.join(_testRoot, options.suite + '.js');
+	var suitePath = path.join(_testRoot, options.suite + '/_suite.js');
 
 	return gulp.src([suitePath])
 		.pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !options.ci }));

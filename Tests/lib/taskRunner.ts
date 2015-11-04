@@ -8,13 +8,13 @@ import path = require('path');
 var shell = require('shelljs');
 
 export class TaskRunner extends events.EventEmitter {
-	constructor(taskPath: string) {
+	constructor(name: string) {
 		super();
 		this._inputs = {};
-		this._taskPath = taskPath;
+		this._name = name;
 	}
 	
-	private _taskPath: string;
+	private _name: string;
 	private _inputs: any;
 	private _task: any;
 	
@@ -25,12 +25,14 @@ export class TaskRunner extends events.EventEmitter {
 	public run(): Q.Promise<void> {
 		this.emit('starting');
 		var defer = Q.defer<void>();
+
+		var taskPath = path.join(__dirname, '..', '..', 'Tasks', this._name);
 		
-		if (!fs.existsSync(this._taskPath)) {
-			throw (new Error('Did you build with "gulp"? Task does not exist: ' + this._taskPath));
+		if (!fs.existsSync(taskPath)) {
+			throw (new Error('Did you build with "gulp"? Task does not exist: ' + taskPath));
 		}
 		
-		var jsonPath = path.join(this._taskPath, 'task.json');
+		var jsonPath = path.join(taskPath, 'task.json');
 		if (!fs.existsSync(jsonPath)) {
 			throw (new Error('Task json does not exist: ' + jsonPath));
 		}
@@ -39,9 +41,6 @@ export class TaskRunner extends events.EventEmitter {
 		this._task = JSON.parse(json);
 		
 		this._tryRunNode()
-		.then(() => {
-			return this._tryRunPS();	
-		})
 		.then(() => {
 			this.emit('completed');
 			defer.resolve(null);
@@ -66,26 +65,6 @@ export class TaskRunner extends events.EventEmitter {
 		else {
 			defer.resolve(null);
 		}		
-		
-		return <Q.Promise<void>>defer.promise;
-	}
-	
-	private _tryRunPS(): Q.Promise<void> {
-		var defer = Q.defer<void>();
-		
-		var psExecution = this._task.execution['PowerShell'];
-		//console.log(JSON.stringify(psExecution, null, 2));
-		
-		if (psExecution) {
-			//console.log(psExecution.target);
-			setTimeout(() => {
-				console.log('Running: ' + psExecution.target);
-				defer.resolve(null);				
-			}, 10);			
-		}
-		else {
-			defer.resolve(null);
-		}
 		
 		return <Q.Promise<void>>defer.promise;
 	}	
