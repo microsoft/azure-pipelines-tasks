@@ -100,7 +100,7 @@ if($testAssemblyFiles)
             {
                 if(!$publishResultsOption)
                 {
-                    Write-Warning "Update the build agent to be able to opt out of test result publish"		    	
+                    Write-Warning "Update the build agent to be able to opt out of test run attachment upload."
                 }
                 Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
             }
@@ -109,7 +109,7 @@ if($testAssemblyFiles)
         {
 	    if($testRunTitle)
 	    {
-		Write-Warning "Update the build agent to be able to use the custom run title feature"
+		Write-Warning "Update the build agent to be able to use the custom run title feature."
 	    }
             if($publishRunLevelAttachmentsExists)		
             {
@@ -119,7 +119,7 @@ if($testAssemblyFiles)
             {
                 if(!$publishResultsOption)
                 {
-                    Write-Warning "Update the build agent to be able to opt out of test result publish"		    	
+                    Write-Warning "Update the build agent to be able to opt out of test run attachment upload."
                 }
                 Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
             }		
