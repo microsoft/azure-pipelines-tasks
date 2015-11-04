@@ -98,7 +98,10 @@ if($testAssemblyFiles)
             }
             else
             {
-                Write-Warning "Update the build agent to be able to opt out of test result publish"
+                if(!$publishResultsOption)
+                {
+                    Write-Warning "Update the build agent to be able to opt out of test result publish"		    	
+                }
                 Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
             }
         }
@@ -114,7 +117,10 @@ if($testAssemblyFiles)
             }
             else
             {
-                Write-Warning "Update the build agent to be able to opt out of test result publish"
+                if(!$publishResultsOption)
+                {
+                    Write-Warning "Update the build agent to be able to opt out of test result publish"		    	
+                }
                 Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
             }		
         }
