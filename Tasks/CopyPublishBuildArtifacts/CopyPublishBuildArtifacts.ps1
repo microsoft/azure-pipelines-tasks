@@ -26,6 +26,7 @@ Write-Verbose "TargetPath = $TargetPath"
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
 $teamProjectId = Get-TaskVariable $distributedTaskContext "system.teamProjectId"
