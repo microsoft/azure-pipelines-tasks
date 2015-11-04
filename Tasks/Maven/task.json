@@ -115,7 +115,8 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html."
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html.",
+			"visibleRule": "codeCoverageTool != None"
         }, 
         {
             "name": "classFilesDirectories",
@@ -123,7 +124,8 @@
             "label": "Class Files Directories",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html"
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
+			"visibleRule": "codeCoverageTool != None"
         },	
         {
             "name": "srcDirectories",
@@ -132,7 +134,8 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html"
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
+			"visibleRule": "codeCoverageTool != None"
         },		
         {
             "name":"javaHomeSelection",
@@ -190,7 +193,7 @@
             "name": "sqAnalysisEnabled",
             "type": "boolean",
             "label": "Run SonarQube Analysis",
-            "required": false,
+            "required": true,
             "defaultValue": "false",
             "groupName": "SQAnalysis",
             "helpMarkDown": "Run a [SonarQube](http://www.sonarqube.org/) analysis after executing the current goals. 'install' or 'package' goals should be executed first."
@@ -199,7 +202,7 @@
             "name": "sqConnectedServiceName",
             "type": "connectedService:Generic",
             "label": "SonarQube Endpoint",
-            "required": false,
+            "required": true,
             "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
             "groupName": "SQAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
@@ -208,7 +211,7 @@
             "name": "sqDbDetailsRequired",
             "type": "boolean",
             "label": "The SonarQube server version is lower than 5.2",
-            "required": false,
+            "required": true,
             "defaultValue": "false",
             "groupName": "SQAnalysis",
             "helpMarkDown": "If using a SonarQube server 5.1 or lower you need to specify the database connection details.",

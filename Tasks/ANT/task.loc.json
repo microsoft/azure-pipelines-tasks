@@ -102,7 +102,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
         "None": "None",
-        "JaCoCo": "JaCoCo"
+        "JaCoCo": "JaCoCo",
+        "Cobertura": "Cobertura"
       }
     },
     {
@@ -113,7 +114,7 @@
       "required": true,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "classFilter",
@@ -123,7 +124,7 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilter",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "srcDirectories",
@@ -133,7 +134,7 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "javaHomeSelection",
