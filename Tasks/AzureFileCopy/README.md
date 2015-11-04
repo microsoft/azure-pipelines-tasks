@@ -10,14 +10,13 @@ Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are 
 
 ### Prerequisite for the task
 
-* **Azure Subscription**
+**Azure Subscription**
 
 To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Online using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. Select Azure from the Add New Service Connection dropdown. Fill in the required details from the Azure account, and select credentials, or certificate, or service principal for authentication. The credentials have to be a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported. For using Service Principal, follow the steps listed in the link [here](http://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 
 The task supports both the [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) storage account and the newer [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) storage account. The classic and the resource manager APIs support different authentication type, and depending upon the storage account the Azure connect has to be appropriately setup in Visual Studio Online (VSO) or Team Foundation Server (TFS). The following table lists the storage accounts and the service connections that with them. To identify whether a storage account is based on the classic APIs or the resource manager APIs, log into [https://portal.azure.com/](https://portal.azure.com/) and browse for storage accounts (classic) or storage accounts.
 
-| **Storage Account Type**     |     **Azure Service Connections in VSO/TFS** |
-| --- | --- |
+| **Storage Account Type** | **Azure Service Connections in VSO/TFS** |
 | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts |
 | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Certificate or credentials based on work accounts |
 
@@ -28,11 +27,11 @@ For Azure MSDN accounts, in addition to the certificates and the Service Princip
   - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
 2. Add that user and password in the service connections in the VSO and deployments will work with that account.
 
-* **Azure PowerShell**
+**Azure PowerShell**
 
 The task needs the Azure PowerShell version 0.9.8.1 (released on 13th Oct 2015) or a later version to be installed on the automation agent, and that can be done easily using the [Web Platform Installer](https://www.microsoft.com/web/downloads/platform.aspx).
 
-* **Azure Virtual Machines**
+**Azure Virtual Machines**
 
 The task can only copy files to the Azure Virtual Machines that are created using the [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) APIs or through the [new Azure portal](https://portal.azure.com/). Note that for For copying the files to VMs, they are first copied to an automatically generated container in athe Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs.When copying the files from the blob container to the Azure VMs, Windows Remote Management (WinRM) HTTPS protocol is used. This requires that the WinRM HTTPS service is properly setup on the VMs and a certificate is also installed on the VMs.
 
