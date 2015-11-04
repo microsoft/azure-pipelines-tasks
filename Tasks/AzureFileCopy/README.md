@@ -65,7 +65,7 @@ The parameters of the task are described in details, including examples, to show
 
  * **Admin Login**: Administrator Username for all the Azure VMs in the Resource Group.
 
- * **Password**: Administrator Username’s password for all the Azure VMs in the Resource Group.
+ * **Password**: Administrator Username password for all the Azure VMs in the Resource Group.
 
  * **Destination Folder**: The folder in the Azure VMs where the files will be copied to. Environment variables are also supported like $env:windir, $env:systemroot etc. An example of the destination folder is $env:windir\FabrikamFibre\Web or c:\FabrikamFibre. 
 
