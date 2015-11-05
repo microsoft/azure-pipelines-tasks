@@ -112,13 +112,13 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
         Write-Verbose "SonarQube server version:$sqServerVersion"
 
         #strip out '-SNAPSHOT' if it is present in version (developer versions of SonarQube might return version in this format: 5.2-SNAPSHOT)
-        $sqServerVersion = $sqServerVersion.ToUpper().Replace("-SNAPSHOT", "")
+        $sqServerVersion = ([string]$sqServerVersion).split("-")[0]
 
         $sqVersion = New-Object -TypeName System.Version -ArgumentList $sqServerVersion
         $sqVersion5dot2 = New-Object -TypeName System.Version -ArgumentList "5.2"
 
         #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+. -ge below calls the overloaded operator in System.Version class
-        if ($sqServerVersion -ge $sqVersion5dot2)
+        if ($sqVersion -ge $sqVersion5dot2)
         {
             $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=issues" + " " + "/d:sonar.report.export.path=sonar-report.json"
         }
