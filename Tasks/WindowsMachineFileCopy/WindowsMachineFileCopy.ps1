@@ -95,43 +95,6 @@ function Get-ResourcesProperties
     return $resourcesPropertyBag
 }
 
-function Get-WellFormedTagsList
-{
-    [CmdletBinding()]
-    Param
-    (
-        [string]$tagsListString
-    )
-
-    if([string]::IsNullOrWhiteSpace($tagsListString))
-    {
-        return $null
-    }
-
-    $tagsArray = $tagsListString.Split(';')
-    $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
-    foreach($tag in $tagsArray)
-    {
-        if([string]::IsNullOrWhiteSpace($tag)) {continue}
-        $tagKeyValue = $tag.Split(':')
-        if($tagKeyValue.Length -ne 2)
-        {
-            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
-        }
-
-        if([string]::IsNullOrWhiteSpace($tagKeyValue[0]) -or [string]::IsNullOrWhiteSpace($tagKeyValue[1]))
-        {
-            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
-        }
-
-        $tagTuple = New-Object "System.Tuple[string,string]" ($tagKeyValue[0].Trim(), $tagKeyValue[1].Trim())
-        $tagList.Add($tagTuple) | Out-Null
-    }
-
-    $tagList = [System.Collections.Generic.IEnumerable[Tuple[string,string]]]$tagList
-    return ,$tagList
-}
-
 function Validate-Null(
     [string]$value,
     [string]$variableName
@@ -186,25 +149,19 @@ else
 
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-    Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName" -Verbose
-    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext
+    Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter" -Verbose
+    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
     $fetchedEnvironmentName = $environment.Name
 
-    if($resourceFilteringMethod -eq "tags")
-    {
-        $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
+    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName" -Verbose
+    $resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -TaskContext $distributedTaskContext
+    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName" -Verbose
 
-        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName with tag filter: $wellFormedTagsList" -Verbose
-        $resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -TagFilter $wellFormedTagsList -TaskContext $distributedTaskContext
-        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName with tag filter" -Verbose
-    }
-    else
+    if ($resources.Count -eq 0)
     {
-        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName with machine filter: $machineFilter" -Verbose
-        $resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -ResourceFilter $machineFilter -TaskContext $distributedTaskContext
-        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName with machine filter" -Verbose
+         throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for deployment" -ArgumentList $environmentName)
     }
 
     $resourcesPropertyBag = Get-ResourcesProperties -envName $fetchedEnvironmentName -resources $resources
