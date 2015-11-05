@@ -86,16 +86,31 @@ $buildRootPath = Split-Path $antBuildFile -Parent
 $reportDirectoryName = [guid]::NewGuid()
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
-$summaryFileName = "summary.xml"
+if($isCoverageEnabled)
+{
+	if ($codeCoverageTool.equals("Cobertura"))
+	{
+		$summaryFileName = "coverage.xml"
+	}
+	ElseIf ($codeCoverageTool.equals("JaCoCo"))
+	{
+		$summaryFileName = "summary.xml"
+	}
+}
+
+
+
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
 $summaryFile = Join-Path $summaryFile $summaryFileName
 # ensuring unique code coverage report task name by using guid
 $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
+# ensuring unique instrumentation task name by using guid
+$CCInstrumentTask = "CodeCoverageInstrument_" + [guid]::NewGuid()
 
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
+   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -CCInstrumentTask $CCInstrumentTask -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
@@ -103,7 +118,7 @@ else
     Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
 }	
 
-Write-Verbose "Running Ant..."
+Write-Verbose "Running Ant..." -Verbose
 Invoke-Ant -AntBuildFile $antBuildFile -Options $options -Targets $targets
 
 # Publish test results files
@@ -131,30 +146,47 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
-   # run report code coverage task which generates code coverage reports.
-   $reportsGenerationFailed = $false
-   Write-Verbose "Collecting code coverage reports" -Verbose
-   try
-   {
-		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
-   }
-   catch
-   {
-		$reportsGenerationFailed = $true
-   }
+	   # run instrumentation task required for cobertura code coverage tool
+	   if ($codeCoverageTool.equals("Cobertura"))
+	   {
+		   # run instrument task which instruments the classes to be covered for report generation
+		   $instrumentationFailed = $false
+		   Write-Verbose "Instrumenting classes for Code Coverage Report generation" -Verbose
+		   try
+		   {
+			   Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCInstrumentTask      
+		   }
+		   catch
+		   {
+			   $instrumentationFailed = $true
+		   }   
+	   }
    
-   if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
-   {
+       # run report code coverage task which generates code coverage reports.
+	   $reportsGenerationFailed = $false
+	   Write-Verbose "Collecting code coverage reports" -Verbose
+	   try
+	   {
+			Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
+	   }
+	   catch
+	   {
+			$reportsGenerationFailed = $true
+	   }
+	   
+	
+	if(-not $reportsGenerationFailed -and (Test-Path $summaryFile) -and -not $instrumentationFailed)
+	{
 		Write-Verbose "Summary file = $summaryFile" -Verbose
 		Write-Verbose "Report directory = $reportDirectory" -Verbose
 		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
 		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
-   }
-   else
-   {
-        Write-Host "##vso[task.logissue type=warning;code=006003;]"
+	}
+	else
+	{
+		Write-Host "##vso[task.logissue type=warning;code=006003;]"
 		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
-   }
+	}
 }
 
 if(Test-Path $reportDirectory)

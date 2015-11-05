@@ -14,7 +14,8 @@ param(
     [string]$vmCreds,
     [string]$vmUserName,
     [string]$vmPassword,
-    [string]$skipCACheck
+    [string]$skipCACheck,
+    [string]$outputVariable
 )
 
 Write-Verbose -Verbose "Starting Azure Resource Group Deployment Task"
@@ -23,12 +24,14 @@ Write-Verbose -Verbose "Action = $action"
 Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
 Write-Verbose -Verbose "Location = $location"
 Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
+Write-Verbose -Verbose "OutputVariable = $outputVariable"
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()
 $csmFile = $csmFile.Trim()
 $csmParametersFile = $csmParametersFile.Trim()
 $overrideParameters = $overrideParameters.Trim()
+$outputVariable = $outputVariable.Trim()
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
@@ -36,6 +39,7 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 $ErrorActionPreference = "Stop"
 
 . ./Utility.ps1
+Import-Module ./AzureUtility.ps1 -Force
 
 Validate-AzurePowershellVersion
 
@@ -57,6 +61,11 @@ if( $action -eq "Create Or Update Resource Group" )
 else
 {
     Perform-Action -action $action -resourceGroupName $resourceGroupName
+}
+
+if( $action -eq "Create Or Update Resource Group" -and -not [string]::IsNullOrEmpty($outputVariable))
+{
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
 }
 
 Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"

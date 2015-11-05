@@ -20,7 +20,7 @@
   "loc.input.label.testRunTitle": "Test Run Title",
   "loc.input.help.testRunTitle": "Provide a name for the Test Run.",
   "loc.input.label.codeCoverageTool": "Code Coverage Tool",
-  "loc.input.help.codeCoverageTool": "Select the code coverage tool. Please make sure jacocoant.jar is available in lib folder of Ant installation.",
+  "loc.input.help.codeCoverageTool": "Select the code coverage tool. For JaCoCo, please make sure jacocoant.jar is available in lib folder of Ant installation. For cobertura, set up an environment variable COBERTURA_HOME pointing to the cobertura jars location.",
   "loc.input.label.classFilesDirectories": "Class Files Directories",
   "loc.input.help.classFilesDirectories": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
   "loc.input.label.classFilter": "Class Inclusion/Exclusion Filters",
