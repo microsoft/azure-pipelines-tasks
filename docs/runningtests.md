@@ -49,7 +49,7 @@ gulp test --suite L0/*
 
 Run the L0 gulp tests
 ```bash
-gulp test --suite L0/gulp
+gulp test --suite L0/Gulp
 ```
 
 Run all gulp tests

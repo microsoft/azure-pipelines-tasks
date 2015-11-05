@@ -25,19 +25,29 @@ var options = minimist(process.argv.slice(2), mopts);
 
 var _buildRoot = path.join(__dirname, '_build', 'Tasks');
 var _testRoot = path.join(__dirname, '_build', 'Tests');
+var _testTemp = path.join(_testRoot, 'Temp');
 var _pkgRoot = path.join(__dirname, '_package');
 var _oldPkg = path.join(__dirname, 'Package');
 var _wkRoot = path.join(__dirname, '_working');
 
 gulp.task('clean', function (cb) {
-	del([_buildRoot, _testRoot, _pkgRoot, _wkRoot, _oldPkg],cb);
+	del([_buildRoot, _pkgRoot, _wkRoot, _oldPkg],cb);
 });
 
-gulp.task('compileTests', function (cb) {
+gulp.task('cleanTests', function (cb) {
+	del([_testRoot],cb);
+});
+
+gulp.task('compileTests', ['cleanTests'], function (cb) {
 	var testsPath = path.join(__dirname, 'Tests', '**/*.ts');
 	return gulp.src([testsPath, 'definitions/*.d.ts'])
 		.pipe(tsc())
 		.pipe(gulp.dest(_testRoot));
+});
+
+gulp.task('testResources', ['compileTests'], function (cb) {
+	return gulp.src(['Tests/lib/**/*'])
+		.pipe(gulp.dest(path.join(_testRoot, 'lib')));
 });
 
 // compile tasks inline
@@ -56,7 +66,11 @@ gulp.task('build', ['clean', 'compileTasks'], function () {
         .pipe(pkgm.PackageTask(_buildRoot));
 });
 
-gulp.task('test', ['compileTests'], function () {
+gulp.task('test', ['testResources'], function () {
+	process.env['TASK_TEST_TEMP'] = _testTemp;
+	shell.rm('-rf', _testTemp);
+	shell.mkdir('-p', _testTemp);
+
 	var suitePath = path.join(_testRoot, options.suite + '/_suite.js');
 
 	return gulp.src([suitePath])
