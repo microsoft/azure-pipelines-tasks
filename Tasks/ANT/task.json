@@ -99,7 +99,7 @@
             "options": {
                 "None": "None",
                 "JaCoCo": "JaCoCo",
-				        "Cobertura": "Cobertura"
+		"Cobertura": "Cobertura"
             }
         },        
         {
