@@ -51,7 +51,17 @@ elseif ($ArtifactType -ieq "filepath")
     if ((Test-Path $TargetPath) -eq 0)
     {
         Write-Host (Get-LocalizedString -Key 'Creating target path {0}...' -ArgumentList $TargetPath)
-        MD $TargetPath
+        try
+        {
+            MD $TargetPath -ErrorAction Stop
+        }
+        catch [System.IO.IOException]
+        {
+            if ((Test-Path $TargetPath) -eq 0)
+            {
+                throw $_
+            }
+        }
     }
 
     Write-Host (Get-LocalizedString -Key 'Copying artifact content to {0}...' -ArgumentList $TargetPath)
