@@ -22,6 +22,7 @@
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "The ABI to use for the Android Virtual Device (AVD).",
   "loc.input.label.avdForce": "Overwrite Existing AVD",
+  "loc.input.help.avdForce": "Passing --force to 'android create avd' command.",
   "loc.input.label.avdOptionalArgs": "Create AVD Optional Arguments",
   "loc.input.help.avdOptionalArgs": "Additional arguments passed to 'android create avd'.",
   "loc.input.label.startEmulator": "Start and Stop Android Emulator",
