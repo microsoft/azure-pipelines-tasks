@@ -44,10 +44,11 @@ When copying the files from the blob container to the Azure VMs, Windows Remote 
 
 To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the deployment task.
 
-If a VM has been created from the new Azure portal then they are already setup for WinRM HTTPS. If theVMs have been created without opening the WinRM HTTPS ports then follow the steps below to setup the machine for WinRM HTTPS:
+If the VMs have been created without opening the WinRM HTTPS ports then follow the steps below to setup the machine for WinRM HTTPS:
 
-- In the target machine, the WinRM HTTPS port (default 5986) should be open in the Firewall. Disable [UAC remote restrictions](https://support.microsoft.com/en-us/kb/951016) and the credentialsshould be in the format of username like vmuser, where vmuser is the admin user of the VM..
+- In the target machine, the WinRM HTTPS port (default 5986) should be open in the Firewall. Disable [UAC remote restrictions](https://support.microsoft.com/en-us/kb/951016) and the credentials should be in the format of username like vmuser, where vmuser is the admin user of the VM..
 - The trusted certificate should be installed in the Automation agent, and if the trusted certificate is not installed in the Automation agent, then ensure that the Test Certificate option is selected in the task for the application deployment to work.
+- For more guidance refer this [blog](http://blogs.msdn.com/b/muthus_blog/archive/2015/11/04/pre-requisites-for-using-azure-vms-in-winrm-based-tasks-in-build-and-rm-workflows.aspx).
 
 ### Parameters of the task:
 
