@@ -87,7 +87,34 @@ function Get-ResourceWinRmConfig
     $environment = Get-Environment -environmentName $environmentName -TaskContext $distributedTaskContext
     Write-Verbose "Completed Get-Environment cmdlet call on environment name: $environmentName" -Verbose
 
-    if($environment.Provider -ne $null)      #  For standerd environment provider will be null
+    if($protocol -eq "HTTPS")
+    {
+        $protocolToUse = $useHttpsProtocolOption
+    
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
+        $winrmPortToUse = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId (Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
+    
+        if([string]::IsNullOrWhiteSpace($winrmPortToUse))
+        {
+            throw(Get-LocalizedString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTPS", $resourceName)
+        }
+    }
+    elseif($protocol -eq "HTTP")
+    {
+        $protocolToUse = $useHttpProtocolOption
+        
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
+        $winrmPortToUse = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
+    
+        if([string]::IsNullOrWhiteSpace($winrmPortToUse))
+        {
+            throw(Get-LocalizedString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTP", $resourceName)
+        }
+    }
+
+    elseif($environment.Provider -ne $null)      #  For standerd environment provider will be null
     {
         Write-Verbose "`t Environment is not standerd environment. Https port has higher precedence" -Verbose
 
