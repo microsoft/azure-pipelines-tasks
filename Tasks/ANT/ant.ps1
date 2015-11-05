@@ -91,12 +91,21 @@ $summaryFile = Join-Path $buildRootPath $reportDirectoryName
 $summaryFile = Join-Path $summaryFile $summaryFileName
 # ensuring unique code coverage report task name by using guid
 $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
+$reportBuildFileName = [guid]::NewGuid().tostring() + ".xml"
+$reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
 
 if($isCoverageEnabled)
 {
-   # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ErrorAction Stop
-   Write-Verbose "Code coverage is successfully enabled." -Verbose
+   try
+   {
+		# Enable code coverage in build file
+		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
+		Write-Verbose "Code coverage is successfully enabled." -Verbose
+   }
+   catch
+   {
+		Write-Warning "Enabling code coverage failed. Check the build logs for errors" -Verbose
+   }
 }
 else
 {
@@ -136,7 +145,7 @@ if($isCoverageEnabled)
    Write-Verbose "Collecting code coverage reports" -Verbose
    try
    {
-		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
+		Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask 
    }
    catch
    {
@@ -161,6 +170,12 @@ if(Test-Path $reportDirectory)
 {
    # delete any previous code coverage data 
    rm -r $reportDirectory -force | Out-Null
+}
+
+if(Test-Path $reportBuildFile)
+{
+   # delete any previous code coverage data 
+   rm -r $reportBuildFile -force | Out-Null
 }
 
 Write-Verbose "Leaving script Ant.ps1"
