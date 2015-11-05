@@ -46,7 +46,7 @@ To dynamically deploy Azure resource groups with virtual machines in them use th
 
 If the VMs have been created without opening the WinRM HTTPS ports then follow the steps below to setup the machine for WinRM HTTPS:
 
-- In the target machine, the WinRM HTTPS port (default 5986) should be open in the Firewall. Disable [UAC remote restrictions](https://support.microsoft.com/en-us/kb/951016) and the credentials should be in the format of username like vmuser, where vmuser is the admin user of the VM..
+- In the target machine, the WinRM HTTPS port (default 5986) should be open in the Firewall. Disable [UAC remote restrictions](https://support.microsoft.com/en-us/kb/951016) and the credentials should be in the format of username like vmuser, where vmuser is the admin user of the VM.
 - The trusted certificate should be installed in the Automation agent, and if the trusted certificate is not installed in the Automation agent, then ensure that the Test Certificate option is selected in the task for the application deployment to work.
 - For more guidance refer this [blog](http://blogs.msdn.com/b/muthus_blog/archive/2015/11/04/pre-requisites-for-using-azure-vms-in-winrm-based-tasks-in-build-and-rm-workflows.aspx).
 
