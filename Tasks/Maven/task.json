@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 19
+        "Patch": 20
     },
    "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -104,8 +104,8 @@
             "helpMarkDown": "Select the code coverage tool.",
             "options": {
                 "None": "None",
-              "JaCoCo": "JaCoCo",
-              "Cobertura": "Cobertura"
+                "JaCoCo": "JaCoCo",
+                "Cobertura": "Cobertura"
             }
         },
         {
@@ -116,7 +116,7 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html.",
-			"visibleRule": "codeCoverageTool != None"
+			      "visibleRule": "codeCoverageTool != None"
         }, 
         {
             "name": "classFilesDirectories",
@@ -125,7 +125,7 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
-			"visibleRule": "codeCoverageTool != None"
+			      "visibleRule": "codeCoverageTool = JaCoCo"
         },	
         {
             "name": "srcDirectories",
@@ -135,8 +135,8 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
-			"visibleRule": "codeCoverageTool != None"
-        },		
+			      "visibleRule": "codeCoverageTool != None"
+        },	
         {
             "name":"javaHomeSelection",
             "type":"radio",

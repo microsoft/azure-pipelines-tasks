@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 17
     },
     "demands" : [
         "ant"
@@ -95,11 +95,11 @@
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "None",
-            "helpMarkDown": "Select the code coverage tool. Please make sure jacocoant.jar is available in lib folder of Ant installation.",
+            "helpMarkDown": "Select the code coverage tool. For JaCoCo, please make sure jacocoant.jar is available in lib folder of Ant installation. For cobertura, set up an environment variable COBERTURA_HOME pointing to the cobertura jars location.",
             "options": {
                 "None": "None",
                 "JaCoCo": "JaCoCo",
-				"Cobertura": "Cobertura"
+				        "Cobertura": "Cobertura"
             }
         },        
         {

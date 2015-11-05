@@ -86,12 +86,22 @@ $buildRootPath = Split-Path $antBuildFile -Parent
 $reportDirectoryName = [guid]::NewGuid()
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
-$summaryFileName = "summary.xml"
-$summaryFileNameCobertura = "coverage.xml"
+if($isCoverageEnabled)
+{
+	if ($codeCoverageTool.equals("Cobertura"))
+	{
+		$summaryFileName = "coverage.xml"
+	}
+	ElseIf ($codeCoverageTool.equals("JaCoCo"))
+	{
+		$summaryFileName = "summary.xml"
+	}
+}
+
+
+
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
 $summaryFile = Join-Path $summaryFile $summaryFileName
-$summaryFileCobertura = Join-Path $buildRootPath $reportDirectoryName
-$summaryFileCobertura = Join-Path $summaryFileCobertura $summaryFileNameCobertura
 # ensuring unique code coverage report task name by using guid
 $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 # ensuring unique instrumentation task name by using guid
@@ -164,37 +174,19 @@ if($isCoverageEnabled)
 			$reportsGenerationFailed = $true
 	   }
 	   
-	if ($codeCoverageTool.equals("Cobertura"))
-	{
-	   if(-not $reportsGenerationFailed -and (Test-Path $summaryFileCobertura) -and -not $instrumentationFailed)
-	   {
-			Write-Verbose "Summary file = $summaryFile" -Verbose
-			Write-Verbose "Report directory = $reportDirectory" -Verbose
-			Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-			Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileCobertura -ReportDirectory $reportDirectory -Context $distributedTaskContext    
-	   }
-	   else
-	   {
-			Write-Host "##vso[task.logissue type=warning;code=006003;]"
-			Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
-	   }
-	}
 	
-    ElseIf ($codeCoverageTool.equals("JaCoCo"))
-	{  
-	   if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
-	   {
-			Write-Verbose "Summary file = $summaryFile" -Verbose
-			Write-Verbose "Report directory = $reportDirectory" -Verbose
-			Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-			Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
-	   }
-	   else
-	   {
-			Write-Host "##vso[task.logissue type=warning;code=006003;]"
-			Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
-	   }
-   }
+	if(-not $reportsGenerationFailed -and (Test-Path $summaryFile) -and -not $instrumentationFailed)
+	{
+		Write-Verbose "Summary file = $summaryFile" -Verbose
+		Write-Verbose "Report directory = $reportDirectory" -Verbose
+		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+	}
+	else
+	{
+		Write-Host "##vso[task.logissue type=warning;code=006003;]"
+		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
+	}
 }
 
 if(Test-Path $reportDirectory)
