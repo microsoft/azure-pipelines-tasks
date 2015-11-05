@@ -6,6 +6,7 @@
   "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Deploy, start, stop, delete Azure Resource Groups",
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
+  "loc.group.displayName.output": "Output",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure subscription for the deployment. Supported Azure service connections are of the authentication type of Credentials or Service Principals.",
   "loc.input.label.action": "Action",
@@ -19,5 +20,7 @@
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.help.csmParametersFile": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template.",
   "loc.input.label.overrideParameters": "Override Template Parameters",
-  "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format like, <br>–storageName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)"
+  "loc.input.help.overrideParameters": "Specify the template parameters to be overridden in the format like, <br>–storageName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)",
+  "loc.input.label.outputVariable": "Resource Group",
+  "loc.input.help.outputVariable": "Resource group object is returned upon successful execution. You can refer to this by the value provided here."
 }
