@@ -38,7 +38,7 @@
             "label": "Machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName)"
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName)"
         },
         {
             "name": "AdminUserName",
