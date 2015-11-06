@@ -9,15 +9,15 @@
   "loc.group.displayName.deployment": "Deployment",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.EnvironmentName": "Machines",
-  "loc.input.help.EnvironmentName": "Provide a list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the protocol. Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986",
+  "loc.input.help.EnvironmentName": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986",
   "loc.input.label.AdminUserName": "Admin Login",
-  "loc.input.help.AdminUserName": "Administrator login for target machines.",
+  "loc.input.help.AdminUserName": "Administrator login for the target machines.",
   "loc.input.label.AdminPassword": "Password",
-  "loc.input.help.AdminPassword": "Administrator password for target machines.",
+  "loc.input.help.AdminPassword": "Administrator password for the target machines.",
   "loc.input.label.Protocol": "Protocol",
-  "loc.input.help.Protocol": "Whether WinRM connections or over HTTP or HTTPS. Defaulted to HTTPS.",
+  "loc.input.help.Protocol": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
   "loc.input.label.TestCertificate": "Test Certificate",
-  "loc.input.help.TestCertificate": "Setting it to true doesn't validate the certificate.",
+  "loc.input.help.TestCertificate": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.",
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
   "loc.input.label.MachineNames": "Filter Criteria",
   "loc.input.help.MachineNames": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
@@ -30,5 +30,5 @@
   "loc.input.label.SessionVariables": "Session Variables",
   "loc.input.help.SessionVariables": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\"",
   "loc.input.label.RunPowershellInParallel": "Run PowerShell in Parallel",
-  "loc.input.help.RunPowershellInParallel": "Setting it to true will run powershell scripts in parallel on the target machines."
+  "loc.input.help.RunPowershellInParallel": "Setting it to true will run the PowerShell scripts in parallel on the target machines."
 }

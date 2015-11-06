@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
   ],
@@ -48,7 +48,7 @@
       "label": "Machines",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Enter the comma seperated list of machines for deployment."
+      "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986"
     },
     {
       "name": "AdminUserName",
@@ -56,7 +56,7 @@
       "label": "Admin Login",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide administrator user name for connecting to target machine."
+      "helpMarkDown": "Administrator login for the target machines."
     },
     {
       "name": "AdminPassword",
@@ -64,7 +64,7 @@
       "label": "Password",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide administrator user password for connecting to target machine."
+      "helpMarkDown": "Administrator password for the target machines."
     },
     {
       "name": "WinRMProtocol",
@@ -76,7 +76,7 @@
         "Http": "HTTP",
         "Https": "HTTPS"
       },
-      "helpMarkDown": "Whether WinRM connections or over HTTP or HTTPS. Defaulted to HTTPS."
+      "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS."
     },
     {
       "name": "TestCertificate",
@@ -85,7 +85,7 @@
       "defaultValue": "true",
       "visibleRule": "WinRMProtocol = Https",
       "required": false,
-      "helpMarkDown": "Setting it to true will connect to target machine using test certificate."
+      "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol."
     },
     {
       "name": "ResourceFilteringMethod",
