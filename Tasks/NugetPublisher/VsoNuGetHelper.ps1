@@ -1,6 +1,12 @@
 Add-Type -AssemblyName System.Security
 
-$nuGetTempDirectory = Join-Path $Env:AGENT_BUILDDIRECTORY "NuGet\"
+$baseDirectory = $Env:AGENT_BUILDDIRECTORY
+if($baseDirectory -eq $null)
+{
+    $baseDirectory = $Env:AGENT_RELEASEDIRECTORY
+}
+
+$nuGetTempDirectory = Join-Path $baseDirectory "NuGet\"
 $tempNuGetConfigPath = Join-Path $nuGetTempDirectory "newNuGet.config"
 
 function SaveTempNuGetConfig
