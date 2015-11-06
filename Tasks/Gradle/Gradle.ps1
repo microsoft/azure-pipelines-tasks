@@ -89,20 +89,30 @@ if ($jdkPath)
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
-$buildRootPath = Split-Path $wrapperScript -Parent
+$buildRootPath = $cwd
+$wrapperDirectory = Split-Path $wrapperScript -Parent
 $reportDirectoryName = [guid]::NewGuid()
+$reportDirectoryNameCobertura = "build\reports\cobertura"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+$reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
 
-$summaryFileName = "summary.xml"
-$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
-$summaryFile = Join-Path $summaryFile $summaryFileName 
+$summaryFileNameJacoco = "summary.xml"
+$summaryFileNameCobertura = "coverage.xml"
+$summaryFileJacoco = Join-Path $buildRootPath $reportDirectoryName 
+$summaryFileJacoco = Join-Path $summaryFile $summaryFileNameJacoco 
+$summaryFileCobertura = Join-Path $reportDirectoryCobertura $summaryFileNameCobertura
 $buildFile = Join-Path $buildRootPath "build.gradle"
+
+# check if project is multi module gradle build or not
+$subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}
+Write-Verbose "subprojects: $subprojects"
+$singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
 
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
+   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileNameJacoco -ReportDirectory $reportDirectoryName -IsSingleModule $singlemodule -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
@@ -110,7 +120,23 @@ else
     Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
 }
 
-$arguments = "$options $tasks"
+
+if($isCoverageEnabled)
+{
+	if($singlemodule)
+	{
+		$arguments = "$options $tasks jacocoTestReport"
+	}
+	else
+	{
+		$arguments = "$options $tasks jacocoRootReport"
+	}
+}
+else
+{
+	$arguments = "$options $tasks"
+}
+
 Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
 Invoke-BatchScript -Path $wrapperScript -Arguments $arguments -WorkingFolder $cwd
 
@@ -140,18 +166,37 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
-	if(Test-Path $summaryFile)
+
+	if ($codeCoverageTool.equals("JaCoCo"))
 	{
-		Write-Verbose "Summary file = $summaryFile" -Verbose
-		Write-Verbose "Report directory = $reportDirectory" -Verbose
-		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext   
+		if(Test-Path $summaryFileJacoco)
+		{
+			Write-Verbose "Summary file = $summaryFile" -Verbose
+			Write-Verbose "Report directory = $reportDirectory" -Verbose
+			Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+			Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileJacoco -ReportDirectory $reportDirectory -Context $distributedTaskContext   
+		}
+		else
+		{
+			Write-Host "##vso[task.logissue type=warning;code=005003;]"
+			Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details." -Verbose
+		}  
 	}
-	else
-	{
-        Write-Host "##vso[task.logissue type=warning;code=005003;]"
-		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details." -Verbose
-	}   
+	ElseIf ($codeCoverageTool.equals("Cobertura"))
+	{	
+		if(Test-Path $summaryFileCobertura)
+		{
+			Write-Verbose "Summary file = $summaryFile" -Verbose
+			Write-Verbose "Report directory = $reportDirectory" -Verbose
+			Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+			Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFileCobertura -ReportDirectory $reportDirectoryCobertura -Context $distributedTaskContext   
+		}
+		else
+		{
+			Write-Host "##vso[task.logissue type=warning;code=005003;]"
+			Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details." -Verbose
+		}  
+	}
 }
 
 if(Test-Path $reportDirectory)
@@ -160,5 +205,10 @@ if(Test-Path $reportDirectory)
    rm -r $reportDirectory -force | Out-Null
 }
 
+if(Test-Path $reportDirectoryCobertura)
+{
+   # delete any code coverage data 
+   rm -r $reportDirectoryCobertura -force | Out-Null
+}
 
 Write-Verbose "Leaving script Gradle.ps1"
