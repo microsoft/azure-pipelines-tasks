@@ -17,7 +17,7 @@
     "demands" : [
         "java"
     ],
-    "minimumAgentVersion": "1.89.0",
+    "minimumAgentVersion": "1.91.0",
     "groups": [
         {
             "name":"junitTestResults",
@@ -84,6 +84,16 @@
             "required": true,
             "groupName":"junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
+            "visibleRule": "publishJUnitResults = true"
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test Run Title",
+            "defaultValue": "",
+            "required": false,
+            "groupName":"junitTestResults",
+            "helpMarkDown": "Provide a name for the Test Run.",
             "visibleRule": "publishJUnitResults = true"
         },
 	   {

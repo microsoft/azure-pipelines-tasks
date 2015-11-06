@@ -1,5 +1,9 @@
 ﻿param (
     [string]$environmentName,
+    [string]$adminUserName,
+    [string]$adminPassword,
+    [string]$winrmProtocol,
+    [string]$testCertificate,
     [string]$resourceFilteringMethod,
     [string]$machineFilter,
     [string]$webDeployPackage,
@@ -48,6 +52,9 @@ else
 }
 
 Write-Verbose "environmentName = $environmentName" -Verbose
+Write-Verbose "adminUserName = $adminUserName" -Verbose
+Write-Verbose "winrm protocol to connect to machine  = $winrmProtocol" -Verbose
+Write-Verbose "testCertificate = $testCertificate" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "webDeployPackage = $webDeployPackage" -Verbose
@@ -105,11 +112,11 @@ $errorMessage = [string]::Empty
 
 if($resourceFilteringMethod -eq "tags")
 {
-    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlockContent $msDeployOnTargetMachinesBlock -scriptArguments $scriptArgs -runPowershellInParallel $deployInParallel
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlockContent $msDeployOnTargetMachinesBlock -scriptArguments $scriptArgs -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
 }
 else
 {
-    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlockContent $msDeployOnTargetMachinesBlock -scriptArguments $scriptArgs -runPowershellInParallel $deployInParallel
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlockContent $msDeployOnTargetMachinesBlock -scriptArguments $scriptArgs -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
 }
 
 if(-not [string]::IsNullOrEmpty($errorMessage))

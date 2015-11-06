@@ -16,10 +16,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "advanced",
@@ -39,7 +39,7 @@
         "JUnit": "JUnit",
         "VSTest": "VSTest",
         "NUnit": "NUnit",
-        "XUnit": "XUnit V2"
+        "XUnit": "XUnit"
       }
     },
     {
@@ -57,6 +57,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mergeTestResults"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
     },
     {
       "name": "platform",

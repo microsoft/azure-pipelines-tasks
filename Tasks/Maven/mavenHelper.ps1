@@ -42,7 +42,8 @@ function ConfigureJDK
 function PublishTestResults
 {
 	param([string]$publishJUnitResults,
-		  [string]$testResultsFiles)
+		  [string]$testResultsFiles,
+		  [string]$testRunTitle)
 
 	$publishJUnitResultsFromAntBuild = Convert-String $publishJUnitResults Boolean
 
@@ -57,7 +58,7 @@ function PublishTestResults
 		else
 		{
 			Write-Verbose "Calling Publish-TestResults"
-			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
 		}    
 	}
 	else
@@ -176,7 +177,7 @@ function CreateSonarQubeArgs
 }
 
 
-function PublishCodeCoverage
+function PublishCodeCoverageJacoco
 {
     param(
           [Boolean]$isCoverageEnabled,
@@ -211,6 +212,33 @@ function PublishCodeCoverage
 		}
        
        if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
+       {
+    		Write-Verbose "Summary file = $summaryFile" -Verbose
+    		Write-Verbose "Report directory = $reportDirectory" -Verbose
+    		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+    		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+       }
+       else
+       {
+    		Write-Warning "No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests." -Verbose
+       }
+    }
+
+}
+
+function PublishCodeCoverageCobertura
+{
+    param(
+          [Boolean]$isCoverageEnabled,
+	      [string]$mavenPOMFile,
+		  [string]$summaryFile,
+		  [string]$reportDirectory,
+		  [string]$codeCoverageTool)
+	
+     # check if code coverage has been enabled
+    if($isCoverageEnabled)
+    {       
+       if(Test-Path $summaryFile)
        {
     		Write-Verbose "Summary file = $summaryFile" -Verbose
     		Write-Verbose "Report directory = $reportDirectory" -Verbose

@@ -16,9 +16,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 14
   },
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "advanced",
@@ -37,30 +37,27 @@
     },
     {
       "name": "EnvironmentName",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
     },
     {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      }
-    },
-    {
-      "name": "MachineNames",
+      "name": "AdminUserName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
+      "label": "ms-resource:loc.input.label.AdminUserName",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
+      "helpMarkDown": "ms-resource:loc.input.help.AdminUserName"
+    },
+    {
+      "name": "AdminPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminPassword"
     },
     {
       "name": "TargetPath",
@@ -76,6 +73,7 @@
       "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
       "defaultValue": "false",
       "required": false,
+      "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy"
     },
     {
@@ -86,14 +84,38 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel"
-    }
-  ],
-  "sourceDefinitions": [
+    },
     {
-      "target": "EnvironmentName",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "groupName": "advanced",
+      "visibleRule": "CopyFilesInParallel = Invalid",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      }
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineNames",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "visibleRule": "CopyFilesInParallel = Invalid",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

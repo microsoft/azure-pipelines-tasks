@@ -7,9 +7,17 @@ param(
     [string]$pathtoCustomTestAdapters,
     [string]$overrideTestrunParameters,
     [string]$otherConsoleOptions,
+    [string]$testRunTitle,
     [string]$platform,
-    [string]$configuration
+    [string]$configuration,
+    [string]$publishRunAttachments
 )
+
+    
+Function CmdletHasMember($memberName) {
+    $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
+    return $publishParameters
+}
 
 Write-Verbose "Entering script VSTestConsole.ps1"
 
@@ -74,15 +82,55 @@ if($testAssemblyFiles)
 
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
-    if($resultFiles) 
+    $publishResultsOption = Convert-String $publishRunAttachments Boolean
+
+    if($resultFiles)
     {
-        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+        # Remove the below hack once the min agent version is updated to S91 or above
+    
+        $runTitleMemberExists = CmdletHasMember "RunTitle"
+        $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
+        if($runTitleMemberExists)
+        {
+            if($publishRunLevelAttachmentsExists)
+            {
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
+            }
+            else
+            {
+                if(!$publishResultsOption)
+                {
+                    Write-Warning "Update the build agent to be able to opt out of test run attachment upload."
+                }
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
+            }
+        }
+        else
+        {
+	    if($testRunTitle)
+	    {
+		Write-Warning "Update the build agent to be able to use the custom run title feature."
+	    }
+            if($publishRunLevelAttachmentsExists)		
+            {
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
+            }
+            else
+            {
+                if(!$publishResultsOption)
+                {
+                    Write-Warning "Update the build agent to be able to opt out of test run attachment upload."
+                }
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+            }		
+        }
     }
     else
     {
         Write-Host "##vso[task.logissue type=warning;code=002003;]"
         Write-Warning "No results found to publish."
     }
+    
 }
 else
 {

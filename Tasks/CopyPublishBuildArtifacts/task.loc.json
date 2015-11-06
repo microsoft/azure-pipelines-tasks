@@ -1,0 +1,84 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
+  "name": "CopyPublishBuildArtifacts",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 11
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.83.0",
+  "inputs": [
+    {
+      "name": "CopyRoot",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.CopyRoot",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CopyRoot"
+    },
+    {
+      "name": "Contents",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Contents",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Contents"
+    },
+    {
+      "name": "ArtifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ArtifactName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ArtifactName"
+    },
+    {
+      "name": "ArtifactType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ArtifactType",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ArtifactType",
+      "options": {
+        "Container": "Server",
+        "FilePath": "File share"
+      }
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPath",
+      "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
+      "visibleRule": "ArtifactType = FilePath"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\CopyPublishBuildArtifacts.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node": {
+      "target": "copyPublishBuildArtifacts.js",
+      "argumentFormat": ""
+    }
+  }
+}

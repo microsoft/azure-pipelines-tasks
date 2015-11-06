@@ -1,5 +1,9 @@
 ﻿param (
     [string]$environmentName,
+    [string]$adminUserName,
+    [string]$adminPassword,
+    [string]$protocol,
+    [string]$testCertificate,
     [string]$resourceFilteringMethod,
     [string]$machineFilter,
     [string]$dacpacFile,
@@ -16,6 +20,9 @@
 
 Write-Verbose "Entering script DeployToSqlServer.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
+Write-Verbose "adminUserName = $adminUserName" -Verbose
+Write-Verbose "winrm protocol to connect to machine  = $protocol" -Verbose
+Write-Verbose "testCertificate = $testCertificate" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "dacpacFile = $dacpacFile" -Verbose
@@ -49,11 +56,11 @@ Write-Output ( Get-LocalizedString -Key "Starting deployment of Sql Dacpac File 
 
 if($resourceFilteringMethod -eq "tags")
 {
-    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $protocol -testCertificate $testCertificate
 }
 else
 {
-    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $protocol -testCertificate $testCertificate 
 }
 
 if(-not [string]::IsNullOrEmpty($errorMessage))

@@ -87,7 +87,34 @@ function Get-ResourceWinRmConfig
     $environment = Get-Environment -environmentName $environmentName -TaskContext $distributedTaskContext
     Write-Verbose "Completed Get-Environment cmdlet call on environment name: $environmentName" -Verbose
 
-    if($environment.Provider -ne $null)      #  For standerd environment provider will be null
+    if($protocol -eq "HTTPS")
+    {
+        $protocolToUse = $useHttpsProtocolOption
+    
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
+        $winrmPortToUse = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId (Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
+    
+        if([string]::IsNullOrWhiteSpace($winrmPortToUse))
+        {
+            throw(Get-LocalizedString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTPS", $resourceName)
+        }
+    }
+    elseif($protocol -eq "HTTP")
+    {
+        $protocolToUse = $useHttpProtocolOption
+        
+        Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
+        $winrmPortToUse = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+        Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
+    
+        if([string]::IsNullOrWhiteSpace($winrmPortToUse))
+        {
+            throw(Get-LocalizedString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTP", $resourceName)
+        }
+    }
+
+    elseif($environment.Provider -ne $null)      #  For standerd environment provider will be null
     {
         Write-Verbose "`t Environment is not standerd environment. Https port has higher precedence" -Verbose
 
@@ -229,63 +256,14 @@ function Get-ResourcesProperties
     return $resourcesPropertyBag
 }
 
-function Get-WellFormedTagsList
-{
-    [CmdletBinding()]
-    Param
-    (
-        [string]$tagsListString
-    )
-
-    if([string]::IsNullOrWhiteSpace($tagsListString))
-    {
-        return $null
-    }
-
-    $tagsArray = $tagsListString.Split(';')
-    $tagList = New-Object 'System.Collections.Generic.List[Tuple[string,string]]'
-    foreach($tag in $tagsArray)
-    {
-        if([string]::IsNullOrWhiteSpace($tag)) {continue}
-        $tagKeyValue = $tag.Split(':')
-        if($tagKeyValue.Length -ne 2)
-        {
-            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
-        }
-
-        if([string]::IsNullOrWhiteSpace($tagKeyValue[0]) -or [string]::IsNullOrWhiteSpace($tagKeyValue[1]))
-        {
-            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
-        }
-
-        $tagTuple = New-Object "System.Tuple[string,string]" ($tagKeyValue[0].Trim(), $tagKeyValue[1].Trim())
-        $tagList.Add($tagTuple) | Out-Null
-    }
-
-    $tagList = [System.Collections.Generic.IEnumerable[Tuple[string,string]]]$tagList
-    return ,$tagList
-}
-
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName" -Verbose
-$environment = Register-Environment -EnvironmentName $environmentName -MachineList $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext
+Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter" -Verbose
+$environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter
 Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
-if($resourceFilteringMethod -eq "tags")
-{
-    $wellFormedTagsList = Get-WellFormedTagsList -tagsListString $machineFilter
-    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with tag filter: $wellFormedTagsList" -Verbose
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TagFilter $wellFormedTagsList -TaskContext $distributedTaskContext
-    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with tag filter" -Verbose
-}
-else
-{
-    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName with machine filter: $machineFilter" -Verbose
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -ResourceFilter $machineFilter -TaskContext $distributedTaskContext
-    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $environmentName with machine filter" -Verbose
-}
-
+Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName" -Verbose
+$resources = Get-EnvironmentResources -EnvironmentName $environmentName -TaskContext $distributedTaskContext
 if ($resources.Count -eq 0)
 {
     throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for deployment" -ArgumentList $environmentName)

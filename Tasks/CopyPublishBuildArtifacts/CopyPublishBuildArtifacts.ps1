@@ -26,6 +26,7 @@ Write-Verbose "TargetPath = $TargetPath"
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
 $teamProjectId = Get-TaskVariable $distributedTaskContext "system.teamProjectId"
@@ -50,7 +51,17 @@ elseif ($ArtifactType -ieq "filepath")
     if ((Test-Path $TargetPath) -eq 0)
     {
         Write-Host (Get-LocalizedString -Key 'Creating target path {0}...' -ArgumentList $TargetPath)
-        MD $TargetPath
+        try
+        {
+            MD $TargetPath -ErrorAction Stop
+        }
+        catch [System.IO.IOException]
+        {
+            if ((Test-Path $TargetPath) -eq 0)
+            {
+                throw $_
+            }
+        }
     }
 
     Write-Host (Get-LocalizedString -Key 'Copying artifact content to {0}...' -ArgumentList $TargetPath)

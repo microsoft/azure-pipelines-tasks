@@ -3,7 +3,8 @@
     [string]$options,
     [string]$goals,
     [string]$publishJUnitResults,   
-    [string]$testResultsFiles, 
+    [string]$testResultsFiles,
+    [string]$testRunTitle, 
     [string]$codeCoverageTool,
     [string]$classFilter,
     [string]$classFilesDirectories,
@@ -64,16 +65,23 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 $buildRootPath = Split-Path $mavenPOMFile -Parent
 $reportDirectoryName = [guid]::NewGuid()
+$reportDirectoryNameCobertura = "target\site\cobertura"
 $reportPOMFileName = [guid]::NewGuid().tostring() + ".xml"
 $reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
-$summaryFileName = "jacoco.xml"
-$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
-$summaryFile = Join-Path $summaryFile $summaryFileName
+$reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
+$summaryFileNameJacoco = "jacoco.xml"
+$summaryFileNameCobertura = "coverage.xml"
+$summaryFileJacoco = Join-Path $buildRootPath $reportDirectoryName
+$summaryFileJacoco = Join-Path $summaryFileJacoco $summaryFileNameJacoco
+$summaryFileCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
+$summaryFileCobertura = Join-Path $summaryFileCobertura $summaryFileNameCobertura
 $CCReportTask = "jacoco:report"
 
+Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
+
 # Enable Code Coverage
-EnableCodeCoverage $isCoverageEnabled $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileName $reportDirectory $reportPOMFile
+EnableCodeCoverage $isCoverageEnabled $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileNameJacoco $reportDirectory $reportPOMFile
 
 # Use a specific JDK
 ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
@@ -83,16 +91,31 @@ Write-Host "Running Maven..."
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 
 # Publish test results
-PublishTestResults $publishJUnitResults $testResultsFiles
+PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
 
-# Publish code coverage
-PublishCodeCoverage  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFile $reportDirectory $codeCoverageTool $reportPOMFile
+if ($codeCoverageTool.equals("JaCoCo"))
+{
+	# Publish code coverage for Jacoco
+	PublishCodeCoverageJacoco  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFileJacoco $reportDirectory $codeCoverageTool $reportPOMFile
+}
+ElseIf ($codeCoverageTool.equals("Cobertura"))
+{
+	# Publish code coverage for Jacoco
+	PublishCodeCoverageCobertura  $isCoverageEnabled $mavenPOMFile $summaryFileCobertura $reportDirectoryCobertura $codeCoverageTool
+}
 
 if(Test-Path $reportDirectory)
 {
     # delete any previous code coverage data 
     rm -r $reportDirectory -force | Out-Null
 }
+
+if(Test-Path $reportDirectoryCobertura)
+{
+    # delete any previous code coverage data from Cobertura
+    rm -r $reportDirectoryCobertura -force | Out-Null
+}
+
 if(Test-Path $reportPOMFile)
 {
     # delete any previous code coverage data 

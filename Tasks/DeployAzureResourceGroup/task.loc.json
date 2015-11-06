@@ -16,12 +16,19 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 27
+    "Patch": 29
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.90.0",
+  "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -99,6 +106,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
+      "name": "outputVariable",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputVariable",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     }
   ],
   "sourceDefinitions": [
