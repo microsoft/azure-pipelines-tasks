@@ -9,7 +9,7 @@
   "loc.group.displayName.deployment": "Deployment",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.EnvironmentName": "Machines",
-  "loc.input.help.EnvironmentName": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986",
+  "loc.input.help.EnvironmentName": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(CreatedByAzureRGTask)",
   "loc.input.label.AdminUserName": "Admin Login",
   "loc.input.help.AdminUserName": "Administrator login for the target machines.",
   "loc.input.label.AdminPassword": "Password",
