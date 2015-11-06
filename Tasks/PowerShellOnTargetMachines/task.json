@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 18
   },
   "minimumAgentVersion": "1.91.0",
   "groups": [
@@ -36,7 +36,7 @@
       "label": "Machines",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Provide a list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the protocol. Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986"
+      "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName)"
     },
     {
       "name": "AdminUserName",
@@ -44,7 +44,7 @@
       "label": "Admin Login",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Administrator login for target machines."
+      "helpMarkDown": "Administrator login for the target machines."
     },
     {
       "name": "AdminPassword",
@@ -52,7 +52,7 @@
       "label": "Password",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Administrator password for target machines."
+      "helpMarkDown": "Administrator password for the target machines."
     },
     {
       "name": "Protocol",
@@ -64,7 +64,7 @@
         "Http": "HTTP",
         "Https": "HTTPS"
       },
-      "helpMarkDown": "Whether WinRM connections or over HTTP or HTTPS. Defaulted to HTTPS."
+      "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS."
     },
     {
       "name": "TestCertificate",
@@ -73,7 +73,7 @@
       "defaultValue": "true",
       "visibleRule": "Protocol = Https",
       "required": false,
-      "helpMarkDown": "Setting it to true doesn't validate the certificate."
+      "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol."
     },
     {
       "name": "ResourceFilteringMethod",
@@ -139,7 +139,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Setting it to true will run powershell scripts in parallel on the target machines."
+      "helpMarkDown": "Setting it to true will run the PowerShell scripts in parallel on the target machines."
     }
   ],
   "instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
