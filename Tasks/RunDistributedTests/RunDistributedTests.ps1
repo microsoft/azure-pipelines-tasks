@@ -3,6 +3,7 @@ param(
     [string]$dropLocation,
     [string]$sourcefilters,
     [string]$testFilterCriteria,
+    [string]$testRunTitle,
     [string]$platform,
     [string]$configuration,
     [string]$runSettingsFile,
@@ -40,6 +41,6 @@ Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
 
 
 Write-Verbose "Calling Invoke-RunDistributedTests"
-Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation 
+Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle 
 
 Write-Verbose "Leaving script RunDistributedTests.ps1"

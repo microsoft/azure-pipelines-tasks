@@ -13,11 +13,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [ 
   ], 
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name":"advanced",
@@ -37,7 +37,7 @@
           "JUnit":"JUnit",
           "VSTest":"VSTest",
           "NUnit":"NUnit",
-          "XUnit":"XUnit V2"
+          "XUnit":"XUnit"
       }
     },
     {
@@ -55,6 +55,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "To merge results from all test results files to one test run in TFS/VSO, check this option. To create a test run for each test results file, uncheck this option."
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "Test Run Title",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Provide a name for the Test Run."
     },  
     {
       "name": "platform",

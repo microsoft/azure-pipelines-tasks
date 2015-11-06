@@ -16,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 18
   },
   "demands": [
     "ant"
   ],
-  "minimumAgentVersion": "1.89.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "junitTestResults",
@@ -83,6 +83,16 @@
       "visibleRule": "publishJUnitResults = true"
     },
     {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
       "name": "codeCoverageTool",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
@@ -92,7 +102,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
         "None": "None",
-        "JaCoCo": "JaCoCo"
+        "JaCoCo": "JaCoCo",
+        "Cobertura": "Cobertura"
       }
     },
     {
@@ -103,7 +114,7 @@
       "required": true,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "classFilter",
@@ -113,7 +124,7 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilter",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "srcDirectories",
@@ -123,7 +134,7 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
-      "visibleRule": "codeCoverageTool = JaCoCo"
+      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "javaHomeSelection",

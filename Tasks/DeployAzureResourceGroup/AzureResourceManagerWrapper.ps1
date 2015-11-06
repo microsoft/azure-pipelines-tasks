@@ -1,11 +1,36 @@
 ﻿function Get-AzureRMResource
 {
-    param([string]$ResourceType,
+    param([string]$ResourceName,
+          [string]$ResourceType,
           [string]$ResourceGroupName,
-          [string]$ErrorAction)
-
+          [string]$ErrorAction,
+          [switch]$Verbose)
+            
     Write-Verbose -Verbose "Inside Get-AzureRMResource"
-    Get-AzureResource -ResourceType $ResourceType -ResourceGroupName $ResourceGroupName -ErrorAction $ErrorAction
+    $arguments = @{ }
+
+    if($ResourceName)
+    {
+        $arguments.Add("ResourceName", $ResourceName)
+    }
+    if($ResourceType)
+    {
+        $arguments.Add("ResourceType", $ResourceType)
+    }
+    if($ResourceGroupName)
+    {
+        $arguments.Add("ResourceGroupName", $ResourceGroupName)
+    }
+    if($ErrorAction)
+    {
+        $arguments.Add("ErrorAction", $ErrorAction)
+    }
+    if($Verbose.IsPresent)
+    {
+        $arguments.Add("Verbose", $true)
+    }
+
+    Get-AzureResource @arguments
 }
 
 function Get-AzureRMResourceGroup
@@ -20,10 +45,30 @@ function Get-AzureRMVM
 {
     param([string]$Name,
           [string]$ResourceGroupName,
-          [string]$ErrorAction)
+          [string]$ErrorAction,
+          [switch]$Status,
+          [switch]$Verbose)
 
     Write-Verbose -Verbose "Inside Get-AzureRMVM"
-    Get-AzureVM -Name $Name -ResourceGroupName $ResourceGroupName -Status -Verbose -ErrorAction $ErrorAction
+    $arguments = @{ "ResourceGroupName" = $ResourceGroupName; }
+    if($Name)
+    {
+        $arguments.Add("Name", $Name)
+    }
+    if($ErrorAction)
+    {
+        $arguments.Add("ErrorAction", $ErrorAction)
+    }
+    if($Verbose.IsPresent)
+    {
+        $arguments.Add("Verbose", $true)
+    }
+    if($Status.IsPresent)
+    {
+        $arguments.Add("Status", $true)
+    }
+
+    Get-AzureVM @arguments
 }
 
 function New-AzureRMResourceGroup
@@ -80,4 +125,50 @@ function Stop-AzureRMVM
     $response = Stop-azureVM -Name $Name -ResourceGroupName $ResourceGroupName -Force -ErrorAction $ErrorAction -Verbose
 
     $response
+}
+
+function Get-AzureRMNetworkInterface
+{
+    param([string]$ResourceGroupName)
+
+    Write-Verbose -Verbose "Inside Get-AzureRMNetworkInterface(ResourceGroupName)"
+    $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $ResourceGroupName -Verbose
+    return $networkInterfaceResources
+}
+
+function Get-AzureRMPublicIpAddress
+{
+    param([string]$ResourceGroupName)
+
+    Write-Verbose -Verbose "Inside Get-AzureRMPublicIpAddress(ResourceGroupName)"
+    $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $ResourceGroupName -Verbose
+    return $publicIPAddressResources
+}
+
+function Get-AzureRMLoadBalancer
+{
+    param([string]$Name,
+          [string]$ResourceGroupName)
+
+    Write-Verbose -Verbose "Inside Get-AzureRMLoadBalancer(Name, ResourceGroupName)"
+    $loadBalancer = Get-AzureLoadBalancer -Name $Name -ResourceGroupName $ResourceGroupName -Verbose
+    return $loadBalancer
+}
+
+function Get-AzureRMLoadBalancerFrontendIpConfig
+{
+    param([object]$LoadBalancer)
+
+    Write-Verbose -Verbose "Inside Get-AzureLoadBalancerFrontendIpConfig(LoadBalancer)"
+    $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $LoadBalancer -Verbose
+    return $frontEndIPConfigs
+}
+
+function Get-AzureRMLoadBalancerInboundNatRuleConfig
+{
+    param([object]$LoadBalancer)
+
+    Write-Verbose -Verbose "Inside Get-AzureLoadBalancerInboundNatRuleConfig(LoadBalancer)"
+    $rules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $LoadBalancer -Verbose
+    return $rules
 }

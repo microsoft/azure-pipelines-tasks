@@ -46,7 +46,8 @@ function _getCommonLocalPath(path1, path2) {
 function isSubItem(item, parent) {
     item = path.normalize(item);
     parent = path.normalize(parent);
-    return item.substring(0, parent.length) == parent && (item.length == parent.length || (parent.length > 0 && parent[parent.length - 1] === path.sep) || (item[parent.length] === path.sep));
+    return item.substring(0, parent.length) == parent
+        && (item.length == parent.length || (parent.length > 0 && parent[parent.length - 1] === path.sep) || (item[parent.length] === path.sep));
 }
 function getFolderDepth(fullPath) {
     if (!fullPath) {
@@ -136,7 +137,9 @@ else {
             files.forEach(function (file) {
                 var stagingPath = stagingFolder;
                 if (useCommonRoot) {
-                    var relativePath = file.substring(commonRoot.length).replace(/^\\/g, "").replace(/^\//g, "");
+                    var relativePath = file.substring(commonRoot.length)
+                        .replace(/^\\/g, "")
+                        .replace(/^\//g, "");
                     stagingPath = path.dirname(path.join(stagingFolder, relativePath));
                 }
                 if (!createdFolders[stagingPath]) {
