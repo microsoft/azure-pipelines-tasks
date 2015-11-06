@@ -90,7 +90,8 @@ if ($jdkPath)
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
-$buildRootPath = Split-Path $wrapperScript -Parent
+$buildRootPath = $cwd
+$wrapperDirectory = Split-Path $wrapperScript -Parent
 $reportDirectoryName = [guid]::NewGuid()
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
@@ -99,11 +100,16 @@ $summaryFile = Join-Path $buildRootPath $reportDirectoryName
 $summaryFile = Join-Path $summaryFile $summaryFileName 
 $buildFile = Join-Path $buildRootPath "build.gradle"
 
+# check if project is multi module gradle build or not
+$subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}
+Write-Verbose "subprojects: $subprojects"
+$singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
+
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -ErrorAction Stop
+   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -IsMultiModule !$singlemodule -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
@@ -111,7 +117,23 @@ else
     Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
 }
 
-$arguments = "$options $tasks"
+
+if($isCoverageEnabled)
+{
+	if($singlemodule)
+	{
+		$arguments = "$options $tasks jacocoTestReport"
+	}
+	else
+	{
+		$arguments = "$options $tasks jacocoRootReport"
+	}
+}
+else
+{
+	$arguments = "$options $tasks"
+}
+
 Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
 Invoke-BatchScript -Path $wrapperScript -Arguments $arguments -WorkingFolder $cwd
 
