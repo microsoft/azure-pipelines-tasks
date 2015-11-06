@@ -22,5 +22,5 @@
   "loc.input.label.overrideParameters": "Override Template Parameters",
   "loc.input.help.overrideParameters": "Specify the template parameters to override like, <br>–storageName fabrikam –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre).",
   "loc.input.label.outputVariable": "Resource Group",
-  "loc.input.help.outputVariable": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications."
+  "loc.input.help.outputVariable": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create or Update."
 }
