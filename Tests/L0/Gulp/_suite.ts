@@ -33,7 +33,6 @@ describe('Gulp Suite', function() {
 			//assert(tr.cwd === '/fake/wd');
 			console.log(tr.invokedToolCount);
             assert(tr.ran('/fake/bin/gulp gulpfile.js'), 'it should have run gulp');
-
             assert(tr.invokedToolCount == 1, 'should have only run gulp');
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');

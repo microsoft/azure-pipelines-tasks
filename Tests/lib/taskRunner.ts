@@ -69,7 +69,6 @@ export class TaskRunner extends events.EventEmitter {
 	// stderr/out
 	//
 	public stdErrContained(text: string): boolean {
-		console.log('strErrContained? ' + this.stderr.indexOf(text));
 		return this.stderr.indexOf(text) >= 0;
 	}
 
