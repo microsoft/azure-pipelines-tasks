@@ -289,6 +289,11 @@ function Get-AzureVMResourcesProperties
         $resourceName = $resource.Name
         $resourceFQDN = $fqdnMap[$resourceName]
         $resourceWinRmHttpsPort = $winRmHttpsPortMap[$resourceName]
+        if([string]::IsNullOrWhiteSpace($resourceWinRmHttpsPort))
+        {
+            Write-Verbose -Verbose "Defaulting WinRmHttpsPort of $resourceName to 5986"
+            $resourceWinRmHttpsPort = "5986"
+        }
 
         $resourceProperties = @{}
         $resourceProperties.Name = $resourceName
