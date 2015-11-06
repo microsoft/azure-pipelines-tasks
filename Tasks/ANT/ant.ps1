@@ -94,7 +94,7 @@ if($isCoverageEnabled)
 	}
 	ElseIf ($codeCoverageTool.equals("JaCoCo"))
 	{
-$summaryFileName = "summary.xml"
+		$summaryFileName = "summary.xml"
 	}
 }
 
@@ -114,20 +114,20 @@ if($isCoverageEnabled)
 {
    try
    {
-		# Enable code coverage in build file
-		if ($codeCoverageTool.equals("Cobertura"))
-		{
-			Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -CCInstrumentTask $CCInstrumentTask 
-		}
-		else
-		{
-			Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
-		}
-		Write-Verbose "Code coverage is successfully enabled." -Verbose
-}
+	# Enable code coverage in build file
+	if ($codeCoverageTool.equals("Cobertura"))
+	{
+		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -CCInstrumentTask $CCInstrumentTask 
+	}
+	else
+	{
+		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
+	}
+	Write-Verbose "Code coverage is successfully enabled." -Verbose
+   }
    catch
    {
-		Write-Warning "Enabling code coverage failed. Check the build logs for errors" -Verbose
+	Write-Warning "Enabling code coverage failed. Check the build logs for errors" -Verbose
    }
 }
 else
@@ -184,33 +184,33 @@ if($isCoverageEnabled)
    Write-Verbose "Collecting code coverage reports" -Verbose
    try
    {
-		if ($codeCoverageTool.equals("Cobertura"))
-		{
-			Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
-		}
-		else
-		{
-			Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
-		}
+	if ($codeCoverageTool.equals("Cobertura"))
+	{
+		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
+	}
+	else
+	{
+		Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
+	}
    }
    catch
    {
-		$reportsGenerationFailed = $true
+	$reportsGenerationFailed = $true
    }
    
 	
 	if(-not $reportsGenerationFailed -and (Test-Path $summaryFile) -and -not $instrumentationFailed)
-   {
+   	{
 		Write-Verbose "Summary file = $summaryFile" -Verbose
 		Write-Verbose "Report directory = $reportDirectory" -Verbose
 		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
 		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
-   }
-   else
-   {
-        Write-Host "##vso[task.logissue type=warning;code=006003;]"
+   	}
+   	else
+   	{
+        	Write-Host "##vso[task.logissue type=warning;code=006003;]"
 		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
-   }
+   	}
 }
 
 if(Test-Path $reportDirectory)
