@@ -120,6 +120,9 @@ else {
         var map = {};
         for (var i: number = 0; i < contents.length; i++) {
             var pattern = contents[i].trim();
+            if (pattern.length == 0) {
+                continue;
+            }
             tl.debug('Matching ' + pattern);
 
             var realPattern = path.join(findRoot, pattern);
@@ -127,8 +130,8 @@ else {
 
             // in debug mode, output some match candidates
             tl.debug('Listing a few potential candidates...')
-            for (var i = 0; i < 10 && i < allFiles.length; i++) {
-                tl.debug('  ' + allFiles[i]);
+            for (var k = 0; k < 10 && k < allFiles.length; k++) {
+                tl.debug('  ' + allFiles[k]);
             }
 
             // let minimatch do the actual filtering
