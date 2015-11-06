@@ -2,8 +2,8 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "id": "89A3A82D-4B3E-4A09-8D40-A793849DC94F",
-  "name": "IISWebAppDeployment",
+  "id": "f154054c-1a50-45bc-9758-943d205517df",
+  "name": "IISWebAppDeploymentAent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -85,7 +85,7 @@
     },
     {
       "name": "OverRideParams",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.OverRideParams",
       "required": false,
       "defaultValue": "",
