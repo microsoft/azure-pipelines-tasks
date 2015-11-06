@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "demands" : [
         "java"
@@ -80,7 +80,7 @@
             "name": "testResultsFiles",
             "type": "filePath",
             "label": "Test Results Files",
-            "defaultValue": "**/TEST-*.xml",
+            "defaultValue": "**/build/test-results/TEST-*.xml",
             "required": true,
             "groupName":"junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
@@ -113,7 +113,7 @@
             "name": "classFilesDirectories",
             "type": "string",
             "label": "Class Files Directories",
-            "defaultValue": "build/classes/main",
+            "defaultValue": "build/classes/main/",
             "required": true,
             "groupName": "codeCoverage",
             "helpMarkDown": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer https://docs.gradle.org/current/userguide/jacoco_plugin.html.",
