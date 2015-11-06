@@ -17,18 +17,22 @@ var TaskResult = exports.TaskResult;
 var _outStream = process.stdout;
 var _errStream = process.stderr;
 function _writeError(str) {
-    _errStream.write(str + os.EOL);
+    console.error(str);
 }
+
 function _writeLine(str) {
-    _outStream.write(str + os.EOL);
+    console.log(str);
 }
+
 function setStdStream(stdStream) {
     _outStream = stdStream;
 }
+
 exports.setStdStream = setStdStream;
 function setErrStream(errStream) {
     _errStream = errStream;
 }
+
 exports.setErrStream = setErrStream;
 // back compat: should use setResult
 function exit(code) {
@@ -42,6 +46,7 @@ function setResult(result, message) {
     command('task.complete', { 'result': TaskResult[result] }, message);
 }
 exports.setResult = setResult;
+
 //-----------------------------------------------------
 // Input Helpers
 //-----------------------------------------------------
@@ -51,6 +56,7 @@ function getVariable(name) {
     return varval;
 }
 exports.getVariable = getVariable;
+
 function setVariable(name, val) {
     if (!name) {
         _writeError('name required: ' + name);
@@ -62,6 +68,7 @@ function setVariable(name, val) {
     command('task.setvariable', { 'variable': name || '' }, varValue);
 }
 exports.setVariable = setVariable;
+
 function getInput(name, required) {
     var inval = process.env['INPUT_' + name.replace(' ', '_').toUpperCase()];
     if (required && !inval) {
@@ -72,6 +79,7 @@ function getInput(name, required) {
     return inval;
 }
 exports.getInput = getInput;
+
 function getDelimitedInput(name, delim, required) {
     var inval = getInput(name, required);
     if (!inval) {
@@ -80,6 +88,7 @@ function getDelimitedInput(name, delim, required) {
     return inval.split(delim);
 }
 exports.getDelimitedInput = getDelimitedInput;
+
 function getPathInput(name, required, check) {
     var inval = process.env['INPUT_' + name.replace(' ', '_').toUpperCase()];
     if (required && !inval) {
@@ -93,6 +102,7 @@ function getPathInput(name, required, check) {
     return inval;
 }
 exports.getPathInput = getPathInput;
+
 //-----------------------------------------------------
 // Endpoint Helpers
 //-----------------------------------------------------
@@ -124,6 +134,7 @@ function getEndpointAuthorization(id, optional) {
     return auth;
 }
 exports.getEndpointAuthorization = getEndpointAuthorization;
+
 //-----------------------------------------------------
 // Cmd Helpers
 //-----------------------------------------------------
@@ -132,18 +143,22 @@ function command(command, properties, message) {
     _writeLine(taskCmd.toString());
 }
 exports.command = command;
+
 function warning(message) {
     command('task.issue', { 'type': 'warning' }, message);
 }
 exports.warning = warning;
+
 function error(message) {
     command('task.issue', { 'type': 'error' }, message);
 }
 exports.error = error;
+
 function debug(message) {
     command('task.debug', null, message);
 }
 exports.debug = debug;
+
 var _argStringToArray = function (argString) {
     var args = argString.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g);
     for (var i = 0; i < args.length; i++) {
@@ -152,28 +167,36 @@ var _argStringToArray = function (argString) {
     return args;
 };
 function cd(path) {
-    shell.cd(path);
+    console.log('CWD:' + path);
 }
 exports.cd = cd;
+
+var pstack = [];
+function _peekStack() {
+    if (pstack.length > 0) {
+        var last
+        console.log('CWD:' + pstack[pstack.length - 1]);
+    }
+}
+
 function pushd(path) {
-    shell.pushd(path);
+    pstack.push(path);
 }
 exports.pushd = pushd;
+
 function popd() {
-    shell.popd();
+    pstack.pop();
 }
 exports.popd = popd;
+
 //------------------------------------------------
 // Validation Helpers
 //------------------------------------------------
 function checkPath(p, name) {
-    debug('check path : ' + p);
-    if (!p || !fs.existsSync(p)) {
-        console.error('invalid ' + name + ': ' + p);
-        exit(1);
-    }
+    console.log('check path : ' + p);
 }
 exports.checkPath = checkPath;
+
 //-----------------------------------------------------
 // Shell/File I/O Helpers
 // Abstract these away so we can
@@ -182,44 +205,43 @@ exports.checkPath = checkPath;
 // - have option to switch internal impl (shelljs now)
 //-----------------------------------------------------
 function mkdirP(p) {
-    if (!shell.test('-d', p)) {
-        debug('creating path: ' + p);
-        shell.mkdir('-p', p);
-        if (shell.error()) {
-            console.error(shell.error());
-            exit(1);
-        }
-    }
-    else {
-        debug('path exists: ' + p);
-    }
+    console.log('MKDIR:' + p);
 }
 exports.mkdirP = mkdirP;
+
 function which(tool, check) {
-    var toolPath = shell.which(tool);
-    if (check) {
-        checkPath(toolPath, tool);
+    console.log('WHICH TOOL: ' + tool);
+    var toolPath = process.env['TASK_TEST_WHICH_' + tool.toUpperCase()];
+    if (!toolPath) {
+        console.log('toolPath is null');
     }
-    debug(tool + '=' + toolPath);
+
+    console.log('toolPath: ' + toolPath + ' ' + check);
+    if (check && !toolPath) {
+        _writeError('Required tool not found: ' + tool);
+        exit(1);
+    }
+
     return toolPath;
 }
 exports.which = which;
+
 function cp(options, source, dest) {
-    shell.cp(options, source, dest);
+    console.log('CP:' + source + '->' + dest);
 }
 exports.cp = cp;
+
 function find(findPath) {
-    var matches = shell.find(findPath);
-    debug('find ' + findPath);
-    debug(matches.length + ' matches.');
-    return matches;
+    // TODO: mock out when needed
+    var matches = [];
 }
 exports.find = find;
+
 function rmRF(path) {
-    debug('rm -rf ' + path);
-    shell.rm('-rf', path);
+    console.log('RM:' + path);
 }
 exports.rmRF = rmRF;
+
 //-----------------------------------------------------
 // Test Publisher
 //-----------------------------------------------------
@@ -246,6 +268,7 @@ var TestPublisher = (function () {
     return TestPublisher;
 })();
 exports.TestPublisher = TestPublisher;
+
 //-----------------------------------------------------
 // Tools
 //-----------------------------------------------------
@@ -253,17 +276,23 @@ exports.TaskCommand = tcm.TaskCommand;
 exports.commandFromString = tcm.commandFromString;
 exports.ToolRunner = trm.ToolRunner;
 trm.debug = debug;
+
 //-----------------------------------------------------
 // Matching helpers
 //-----------------------------------------------------
+
+// TODO: mock out when needed
+
 function match(list, pattern, options) {
     return minimatch.match(list, pattern, options);
 }
 exports.match = match;
+
 function matchFile(list, pattern, options) {
     return minimatch(list, pattern, options);
 }
 exports.matchFile = matchFile;
+
 function filter(pattern, options) {
     return minimatch.filter(pattern, options);
 }

@@ -31,10 +31,12 @@ describe('Gulp Suite', function() {
 		tr.run()
 		.then((result) => {
 			//assert(tr.cwd === '/fake/wd');
+			console.log(tr.invokedToolCount);
             assert(tr.ran('/fake/bin/gulp gulpfile.js'), 'it should have run gulp');
+
             assert(tr.invokedToolCount == 1, 'should have only run gulp');
 			assert(tr.resultWasSet, 'task should have set a result');
-			assert(tr.stdErrLineCount == 0, 'should not have written to stderr');
+			assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
 			done();
 		})
@@ -57,7 +59,8 @@ describe('Gulp Suite', function() {
 		tr.run()
 		.then((result) => {
             assert(tr.failed, 'should have failed');
-            assert(tr.stdErrContained('Gulp not installed'), 'should have said gulp not installed');
+            var expectedErr = 'Required tool not found: gulp';
+            assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.invokedToolCount == 0, 'should not have run gulp');
 			done();

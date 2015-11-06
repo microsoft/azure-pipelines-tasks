@@ -55,13 +55,22 @@ var ToolRunner = (function (_super) {
     ToolRunner.prototype.exec = function (options) {
         var _this = this;
         var defer = Q.defer();
+
+        console.log(this.toolPath);
+        console.log(typeof this.toolPath);
+
+        if (!this.toolPath) {
+            console.log('!!!!!!!!!!!!!');
+            defer.resolve(null);
+            return defer.promise;
+        }
+
         this._debug('exec tool: ' + this.toolPath);
+
         this._debug('Arguments:');
         this.args.forEach(function (arg) {
             _this._debug('   ' + arg);
         });
-
-        
 
         var cmdString = this.toolPath;
         var argString = this.args.join(' ') || '';
@@ -74,7 +83,8 @@ var ToolRunner = (function (_super) {
         var success = process.env['TASK_TEST_FAIL'] ? false : true;
         _this._debug('success:' + success);
 
-        var code = Number(process.env['TASK_TEST_RC']);
+        var code = Number(process.env['TASK_TEST_RC'] || 0);
+        console.log('RRRCCCC:' + code);
         _this._debug('rc:' + code);
         
         if (success) {
