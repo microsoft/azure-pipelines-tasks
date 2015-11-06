@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [
     "AndroidSDK"
@@ -52,7 +52,7 @@
       "name": "gradleArguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.gradleArguments",
-      "defaultValue": "",
+      "defaultValue": "build",
       "required": false
     },
     {
