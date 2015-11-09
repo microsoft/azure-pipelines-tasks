@@ -20,7 +20,7 @@
   "demands": [
     "java"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.89.0",
   "groups": [
     {
       "name": "junitTestResults",
