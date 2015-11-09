@@ -90,12 +90,22 @@ if ($jdkPath)
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
+if($codeCoverageTool.equals("Jacoco"))
+{
+    $summaryFileName = "summary.xml"
+    $reportingTaskName = "jacocoTestReport"
+}
+else if($codeCoverageTool.equals("Cobertura"))
+{
+    $summaryFileName = "coverage.xml"
+    $reportingTaskName = "cobertura"
+}
+
 $buildRootPath = $cwd
 $wrapperDirectory = Split-Path $wrapperScript -Parent
 $reportDirectoryName = [guid]::NewGuid()
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
-$summaryFileName = "summary.xml"
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
 $summaryFile = Join-Path $summaryFile $summaryFileName 
 $buildFile = Join-Path $buildRootPath "build.gradle"
@@ -122,11 +132,11 @@ if($isCoverageEnabled)
 {
 	if($singlemodule)
 	{
-		$arguments = "$options $tasks jacocoTestReport"
+		$arguments = "$options $tasks $reportingTaskName"
 	}
 	else
 	{
-		$arguments = "$options $tasks jacocoRootReport"
+		$arguments = "$options $tasks $reportingTaskName"
 	}
 }
 else
