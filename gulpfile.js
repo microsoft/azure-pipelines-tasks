@@ -45,10 +45,17 @@ gulp.task('compileTests', ['cleanTests'], function (cb) {
 		.pipe(gulp.dest(_testRoot));
 });
 
-gulp.task('testResources', ['compileTests'], function (cb) {
+gulp.task('ps1tests', ['compileTests'], function (cb) {
+	return gulp.src(['Tests/**/*.ps1'])
+		.pipe(gulp.dest(_testRoot));
+});
+
+gulp.task('testLib', ['compileTests'], function (cb) {
 	return gulp.src(['Tests/lib/**/*'])
 		.pipe(gulp.dest(path.join(_testRoot, 'lib')));
 });
+
+gulp.task('testResources', ['testLib', 'ps1tests']);
 
 // compile tasks inline
 gulp.task('compileTasks', function (cb) {

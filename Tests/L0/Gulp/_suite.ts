@@ -5,10 +5,12 @@
 import Q = require('q');
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
+import psm = require('../../lib/psRunner');
 import path = require('path');
 
 describe('Gulp Suite', function() {
-
+    this.timeout(10000);
+	
 	before((done) => {
 		// init here
 		done();
@@ -19,8 +21,6 @@ describe('Gulp Suite', function() {
 	});
 
 	it('runs a gulpfile with cwd', (done) => {
-		this.timeout(500);
-
 		assert(true, 'true is true');
 		
 		var tr = new trm.TaskRunner('Gulp');
@@ -29,7 +29,7 @@ describe('Gulp Suite', function() {
 		tr.setInput('gulpFile', 'gulpfile.js');
 		tr.setInput('cwd', 'fake/wd');
 		tr.run()
-		.then((result) => {
+		.then(() => {
 			//assert(tr.cwd === '/fake/wd');
 			console.log(tr.invokedToolCount);
             assert(tr.ran('/fake/bin/gulp gulpfile.js'), 'it should have run gulp');
@@ -45,8 +45,6 @@ describe('Gulp Suite', function() {
 	})	
 
 	it('errors if gulp not found', (done) => {
-		this.timeout(500);
-
 		assert(true, 'true is true');
 		
 		var tr = new trm.TaskRunner('Gulp');
@@ -56,7 +54,7 @@ describe('Gulp Suite', function() {
 		tr.setInput('gulpFile', 'gulpfile.js');
 		tr.setInput('cwd', 'fake/wd');
 		tr.run()
-		.then((result) => {
+		.then(() => {
             assert(tr.failed, 'should have failed');
             var expectedErr = 'Required tool not found: gulp';
             assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
@@ -69,4 +67,8 @@ describe('Gulp Suite', function() {
 		});
 	})
 
+	it('Handles ps1 arguments', (done) => {
+		psm.runPS(path.join(__dirname, 'Gulptask.Arguments.ps1'), done);
+	})
+	
 });
