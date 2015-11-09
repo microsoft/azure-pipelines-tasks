@@ -95,7 +95,7 @@ if($codeCoverageTool.equals("Jacoco"))
     $summaryFileName = "summary.xml"
     $reportingTaskName = "jacocoTestReport"
 }
-elseif($codeCoverageTool.equals("Cobertura"))
+else if($codeCoverageTool.equals("Cobertura"))
 {
     $summaryFileName = "coverage.xml"
     $reportingTaskName = "cobertura"
