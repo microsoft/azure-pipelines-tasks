@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 15
   },
   "demands": [
     "java"
@@ -109,8 +109,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
         "None": "None",
-        "JaCoCo": "JaCoCo",
-        "Cobertura": "Cobertura"
+        "JaCoCo": "JaCoCo"
       }
     },
     {
@@ -121,7 +120,7 @@
       "required": true,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
-      "visibleRule": "codeCoverageTool != None"
+      "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
       "name": "classFilter",
@@ -131,7 +130,7 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilter",
-      "visibleRule": "codeCoverageTool != None"
+      "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
       "name": "javaHomeSelection",

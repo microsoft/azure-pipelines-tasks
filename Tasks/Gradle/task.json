@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 15
     },
     "demands" : [
         "java"
@@ -106,8 +106,7 @@
             "helpMarkDown": "Select the code coverage tool.",
             "options": {
                 "None": "None",
-                "JaCoCo": "JaCoCo",
-                "Cobertura": "Cobertura"
+                "JaCoCo": "JaCoCo"
             }
         },
         {
@@ -118,7 +117,7 @@
             "required": true,
             "groupName": "codeCoverage",
             "helpMarkDown": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer https://docs.gradle.org/current/userguide/jacoco_plugin.html.",
-            "visibleRule": "codeCoverageTool != None"
+            "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
             "name": "classFilter",
@@ -128,7 +127,7 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer https://docs.gradle.org/current/userguide/jacoco_plugin.html.",
-            "visibleRule": "codeCoverageTool != None"
+            "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
             "name":"javaHomeSelection",
