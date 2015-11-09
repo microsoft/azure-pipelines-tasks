@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "demands": [
     "java"
@@ -179,7 +179,10 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\gradle.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
     },
     "Node": {
       "target": "gradle2.js",
