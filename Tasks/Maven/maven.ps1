@@ -91,7 +91,12 @@ Write-Host "Running Maven..."
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 
 # Publish test results
-PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
+if([string]::IsNullOrEmpty($testRunTitle)) {
+	PublishTestResults $publishJUnitResults $testResultsFiles
+} else {
+	PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle		
+}
+
 
 if ($codeCoverageTool.equals("JaCoCo"))
 {
