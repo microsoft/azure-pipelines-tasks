@@ -7,6 +7,10 @@ import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import psm = require('../../lib/psRunner');
 import path = require('path');
+var shell = require('shelljs');
+
+var ps = shell.which('powershell');
+console.log(ps);
 
 describe('Gulp Suite', function() {
     this.timeout(10000);
@@ -67,8 +71,10 @@ describe('Gulp Suite', function() {
 		});
 	})
 
-	it('Handles ps1 arguments', (done) => {
-		psm.runPS(path.join(__dirname, 'Gulptask.Arguments.ps1'), done);
-	})
-	
+	if (ps) {
+		it('Handles ps1 arguments', (done) => {
+			psm.runPS(path.join(__dirname, 'Gulptask.Arguments.ps1'), done);
+		})		
+	}
+
 });
