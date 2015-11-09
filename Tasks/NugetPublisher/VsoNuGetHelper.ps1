@@ -144,14 +144,15 @@ function SetCredentialsNuGetConfigAndSaveTemp
             continue
         }
 
-        if($credentialsSection.SelectSingleNode([string]$nugetSource.key) -ne $null)
+        [string]$encodedSource = [System.Xml.XmlConvert]::EncodeLocalName([string]$nugetSource.key)
+        if($credentialsSection.SelectSingleNode($encodedSource) -ne $null)
         {
-            $credentials = $credentialsSection.SelectSingleNode([string]$nugetSource.key)
+            $credentials = $credentialsSection.SelectSingleNode($encodedSource)
             foreach($section in $credentials.SelectNodes("add"))
             {
                 if([string]::Equals(([System.Xml.XmlNode]$section).Attributes["key"].Value, "password", "InvariantCultureIgnoreCase"))
                 {
-                    Write-Verbose "Setting new credential for $([string]$nugetSource.key)"
+                    Write-Verbose "Setting new credential for $encodedSource"
                     $encryptedPassword = EncryptNuGetPassword $accessToken
                     ([System.Xml.XmlNode]$section).Attributes["value"].Value = $encryptedPassword
                 }
@@ -159,8 +160,8 @@ function SetCredentialsNuGetConfigAndSaveTemp
         }
         else
         {
-            Write-Host (Get-LocalizedString -Key "Setting credentials for {0}" -ArgumentList $nugetSource.key)
-            SetNewCredentialElement $nugetConfig $credentialsSection $nugetSource.key $accessToken   
+            Write-Host (Get-LocalizedString -Key "Setting credentials for {0}" -ArgumentList $([string]$nugetSource.key))
+            SetNewCredentialElement $nugetConfig $credentialsSection $encodedSource $accessToken   
         }
     }
 
