@@ -3,6 +3,7 @@
 /// <reference path="../../definitions/vso-task-lib.d.ts" />
 
 import fs = require('fs');
+import path = require('path');
 import Q = require('q');
 var tl = require("vso-task-lib");
 
@@ -36,9 +37,9 @@ else {
             tl.command("artifact.upload", data, artifactContents);
         }
         else if (artifactType === "filepath") {
-            tl.mkdirP(targetPath);
-            tl.cp("-Rf", artifactContents, targetPath);
- 
+            var artifactPath: string = path.join(targetPath, artifactName);
+            tl.mkdirP(artifactPath);
+            tl.cp("-Rf", path.join(artifactContents, "*"), artifactPath);
             tl.command("artifact.associate", data, targetPath);
         }
     }
