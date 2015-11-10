@@ -89,8 +89,6 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDeployment"
 
-$overRideParams = $overRideParams.Replace('"', '''')
-
 $webDeployPackage = $webDeployPackage.Trim('"', ' ')
 $webDeployParamFile = $webDeployParamFile.Trim('"', ' ')
 $webSiteName = $webSiteName.Trim('"', ' ')
@@ -101,6 +99,14 @@ $appPoolName = $appPoolName.Trim('"', ' ')
 $appPoolUsername = $appPoolUsername.Trim()
 
 $appCmdCommands = $appCmdCommands.Replace('"', '`"')
+
+if([string]::IsNullOrWhiteSpace($overRideParams) -and ![string]::IsNullOrWhiteSpace($webSiteName))
+{
+    Write-Verbose "Adding override params to ensure deployment happens on $webSiteName" -Verbose
+    $overRideParams = [string]::Format('name="IIS Web Application Name",value="{0}"', $webSiteName)
+}
+
+$overRideParams = $overRideParams.Replace('"', '''')
 
 $msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
 $scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`""
