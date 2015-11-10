@@ -160,12 +160,14 @@ else {
             // upload or copy
             if (artifactType === "container") {
                 data["containerfolder"] = artifactName;
+                // add localpath to ##vso command's properties for back compat of old Xplat agent
                 data["localpath"] = stagingFolder;
                 tl.command("artifact.upload", data, stagingFolder);
             }
             else if (artifactType === "filepath") {
                 tl.mkdirP(targetPath);
                 tl.cp("-Rf", stagingFolder, targetPath);
+                // add artifactlocation to ##vso command's properties for back compat of old Xplat agent
                 data["artifactlocation"] = targetPath;
                 tl.command("artifact.associate", data, targetPath);
             }
