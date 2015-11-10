@@ -90,6 +90,16 @@ if ($jdkPath)
     Write-Verbose "JAVA_HOME set to $env:JAVA_HOME"
 }
 
+$buildRootPath = $cwd
+$wrapperDirectory = Split-Path $wrapperScript -Parent
+$reportDirectoryName = [guid]::NewGuid()
+$reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+
+# check if project is multi module gradle build or not
+$subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}
+Write-Verbose "subprojects: $subprojects"
+$singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
+
 if($codeCoverageTool.equals("Jacoco"))
 {
     $summaryFileName = "summary.xml"
@@ -109,19 +119,9 @@ elseif($codeCoverageTool.equals("Cobertura"))
     $reportingTaskName = "cobertura"
 }
 
-$buildRootPath = $cwd
-$wrapperDirectory = Split-Path $wrapperScript -Parent
-$reportDirectoryName = [guid]::NewGuid()
-$reportDirectory = Join-Path $buildRootPath $reportDirectoryName
-
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
 $summaryFile = Join-Path $summaryFile $summaryFileName 
 $buildFile = Join-Path $buildRootPath "build.gradle"
-
-# check if project is multi module gradle build or not
-$subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}
-Write-Verbose "subprojects: $subprojects"
-$singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
 
 # check if code coverage has been enabled
 if($isCoverageEnabled)
