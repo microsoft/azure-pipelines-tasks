@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [
   ],
@@ -43,7 +43,7 @@
       "label": "Machines",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Enter the comma seperated list of machines for deployment."
+      "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName)"
     },
     {
       "name": "AdminUserName",
@@ -51,7 +51,7 @@
       "label": "Admin Login",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide administrator user name for connecting to target machine."
+      "helpMarkDown": "Administrator login for the target machines."
     },
     {
       "name": "AdminPassword",
@@ -59,7 +59,7 @@
       "label": "Password",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide administrator user password for connecting to target machine."
+      "helpMarkDown": "Administrator password for the target machines."
     },
     {
       "name": "Protocol",
@@ -71,7 +71,7 @@
         "Http": "HTTP",
         "Https": "HTTPS"
       },
-      "helpMarkDown": "Whether WinRM connections or over HTTP or HTTPS. Defaulted to HTTPS."
+      "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS."
     },
     {
       "name": "TestCertificate",
@@ -80,7 +80,7 @@
       "defaultValue": "true",
       "visibleRule": "Protocol = Https",
       "required": false,
-      "helpMarkDown": "Setting it to true will connect to target machine using test certificate."
+      "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol."
     },
     {
       "name": "ResourceFilteringMethod",
@@ -184,7 +184,7 @@
       "required": false,
       "groupName": "target",
       "defaultValue": "",
-      "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database creation or upgrades. Specify the path to the Publish profile XML file on the target machine or on a UNC share that is accessible by the machine administrator’s credentials."
+      "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database creation or upgrades. Specify the path to the Publish profile XML file on the target machine or on a UNC share that is accessible by the machine administrator's credentials."
     },
     {
       "name": "AdditionalArguments",

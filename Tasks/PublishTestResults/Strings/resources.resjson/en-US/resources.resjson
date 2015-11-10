@@ -18,5 +18,7 @@
   "loc.input.label.platform": "Platform",
   "loc.input.help.platform": "Platform for which the tests were run.",
   "loc.input.label.configuration": "Configuration",
-  "loc.input.help.configuration": "Configuration for which the tests were run."
+  "loc.input.help.configuration": "Configuration for which the tests were run.",
+  "loc.input.label.publishRunAttachments": "Upload Test Attachments",
+  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments."
 }

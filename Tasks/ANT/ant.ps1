@@ -4,7 +4,7 @@
     [string]$targets,
     [string]$publishJUnitResults,   
     [string]$testResultsFiles,
-    [string]$testRunTitle, 
+    [string]$testRunTitle,
     [string]$codeCoverageTool,
     [string]$classFilesDirectories,
     [string]$classFilter,
@@ -107,11 +107,28 @@ $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 # ensuring unique instrumentation task name by using guid
 $CCInstrumentTask = "CodeCoverageInstrument_" + [guid]::NewGuid()
 
+$reportBuildFileName = [guid]::NewGuid().tostring() + ".xml"
+$reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
+
 if($isCoverageEnabled)
 {
-   # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -CCInstrumentTask $CCInstrumentTask -ErrorAction Stop
-   Write-Verbose "Code coverage is successfully enabled." -Verbose
+   try
+   {
+	# Enable code coverage in build file
+	if ($codeCoverageTool.equals("Cobertura"))
+	{
+		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask -CCInstrumentTask $CCInstrumentTask 
+	}
+	else
+	{
+		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
+	}
+	Write-Verbose "Code coverage is successfully enabled." -Verbose
+   }
+   catch
+   {
+	Write-Warning "Enabling code coverage failed. Check the build logs for errors" -Verbose
+   }
 }
 else
 {
@@ -162,37 +179,50 @@ if($isCoverageEnabled)
 		   }   
 	   }
    
-       # run report code coverage task which generates code coverage reports.
-	   $reportsGenerationFailed = $false
-	   Write-Verbose "Collecting code coverage reports" -Verbose
-	   try
-	   {
-			Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
-	   }
-	   catch
-	   {
-			$reportsGenerationFailed = $true
-	   }
-	   
+   # run report code coverage task which generates code coverage reports.
+   $reportsGenerationFailed = $false
+   Write-Verbose "Collecting code coverage reports" -Verbose
+   try
+   {
+	if ($codeCoverageTool.equals("Cobertura"))
+	{
+		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
+	}
+	else
+	{
+		Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
+	}
+   }
+   catch
+   {
+	$reportsGenerationFailed = $true
+   }
+   
 	
 	if(-not $reportsGenerationFailed -and (Test-Path $summaryFile) -and -not $instrumentationFailed)
-	{
+   	{
 		Write-Verbose "Summary file = $summaryFile" -Verbose
 		Write-Verbose "Report directory = $reportDirectory" -Verbose
 		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
 		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
-	}
-	else
-	{
-		Write-Host "##vso[task.logissue type=warning;code=006003;]"
+   	}
+   	else
+   	{
+        	Write-Host "##vso[task.logissue type=warning;code=006003;]"
 		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
-	}
+   	}
 }
 
 if(Test-Path $reportDirectory)
 {
    # delete any previous code coverage data 
    rm -r $reportDirectory -force | Out-Null
+}
+
+if(Test-Path $reportBuildFile)
+{
+   # delete any previous code coverage report build file
+   rm -r $reportBuildFile -force | Out-Null
 }
 
 Write-Verbose "Leaving script Ant.ps1"

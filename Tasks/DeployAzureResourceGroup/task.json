@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 28
+        "Patch": 29
     },
     "demands": [
         "azureps"
@@ -33,7 +33,7 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure subscription for the deployment. Supported Azure service connections are of the authentication type of Credentials or Service Principals."
+            "helpMarkDown": "Select the Azure subscription for the deployment. Only the supported Azure service connections are displayed and they are of the authentication type of Credentials or Service Principals."
         },
         {
             "name": "action", 
@@ -64,7 +64,7 @@
             "label": "Location",
             "defaultValue": "East US",
             "required": true,
-            "helpMarkDown": "Location for deploying the resource group. If an existing resource group is updated, then this will be ignored.",
+            "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
             "options": {
                 "East Asia": "East Asia",
                 "East US": "East US",
@@ -83,7 +83,7 @@
             "label": "Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information on templates see - http://aka.ms/azuretemplates.",
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates.",
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
@@ -92,7 +92,7 @@
             "label": "Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the path for the parameters file corresponding to the Azure Resource Manager Template.",
+            "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager Template.",
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
@@ -101,7 +101,7 @@
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to be overridden in the format like, <br>–storageName azurerg –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre)",
+            "helpMarkDown": "Specify the template parameters to override like, <br>–storageName fabrikam –adminUsername $(vmusername) –azureKeyVaultName $(fabrikamFibre).",
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
@@ -111,7 +111,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "output",
-            "helpMarkDown": "Resource group object is returned upon successful execution. You can refer to this by the value provided here."
+            "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create or Update."
         }
     ],
     "sourceDefinitions": [

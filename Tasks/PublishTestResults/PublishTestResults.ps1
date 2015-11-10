@@ -4,7 +4,8 @@ param(
     [string]$mergeTestResults,
     [string]$testRunTitle,
     [string]$platform,
-    [string]$configuration
+    [string]$configuration,
+    [string]$publishRunAttachments
 )
 
 Write-Verbose "Entering script PublishTestResults.ps1"
@@ -46,9 +47,10 @@ if (!$matchingTestResultsFiles)
 }
 else
 {
+    $publishResultsOption = Convert-String $publishRunAttachments Boolean
     $mergeResults = Convert-String $mergeTestResults Boolean
     Write-Verbose "Calling Publish-TestResults"
-    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
+    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
 }
 
 Write-Verbose "Leaving script PublishTestResults.ps1"
