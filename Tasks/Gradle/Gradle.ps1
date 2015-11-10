@@ -94,14 +94,14 @@ if($codeCoverageTool.equals("Jacoco"))
 {
     $summaryFileName = "summary.xml"
 
-	if($singlemodule)
-	{
-		$reportingTaskName = "jacocoTestReport"
-	}
-	else
-	{
-		$reportingTaskName = "jacocoRootReport"
-	}
+    if($singlemodule)
+    {
+        $reportingTaskName = "jacocoTestReport"
+    }
+    else
+    {
+        $reportingTaskName = "jacocoRootReport"
+    }
 }
 elseif($codeCoverageTool.equals("Cobertura"))
 {
