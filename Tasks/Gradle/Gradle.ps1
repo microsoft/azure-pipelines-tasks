@@ -162,7 +162,14 @@ if($publishJUnitResultsFromAntBuild)
     else
     {
         Write-Verbose "Calling Publish-TestResults"
-        Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
+        if([string]::IsNullOrWhiteSpace($testRunTitle))
+		{
+			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+		}
+		else
+		{
+			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
+		}
     }    
 }
 else
