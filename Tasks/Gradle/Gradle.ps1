@@ -93,7 +93,15 @@ if ($jdkPath)
 if($codeCoverageTool.equals("Jacoco"))
 {
     $summaryFileName = "summary.xml"
-    $reportingTaskName = "jacocoTestReport"
+
+	if($singlemodule)
+	{
+		$reportingTaskName = "jacocoTestReport"
+	}
+	else
+	{
+		$reportingTaskName = "jacocoRootReport"
+	}
 }
 elseif($codeCoverageTool.equals("Cobertura"))
 {
@@ -130,14 +138,7 @@ else
 
 if($isCoverageEnabled)
 {
-	if($singlemodule)
-	{
-		$arguments = "$options $tasks $reportingTaskName"
-	}
-	else
-	{
-		$arguments = "$options $tasks $reportingTaskName"
-	}
+    $arguments = "$options $tasks $reportingTaskName"
 }
 else
 {
