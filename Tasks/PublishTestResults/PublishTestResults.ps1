@@ -52,7 +52,7 @@ else
     Write-Verbose "Calling Publish-TestResults"
     if([string]::IsNullOrWhiteSpace($testRunTitle))
 	{
-		if([string]::IsNullOrWhiteSpace($publishResultsOption))
+		if(!$publishResultsOption)
 		{
 			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
 		}
@@ -63,7 +63,7 @@ else
 	}
 	else
 	{
-		if([string]::IsNullOrWhiteSpace($publishResultsOption))
+		if(!$publishResultsOption)
 		{
 			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
 		}
