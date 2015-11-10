@@ -95,15 +95,33 @@ $wrapperDirectory = Split-Path $wrapperScript -Parent
 $reportDirectoryName = [guid]::NewGuid()
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
-$summaryFileName = "summary.xml"
-$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
-$summaryFile = Join-Path $summaryFile $summaryFileName 
-$buildFile = Join-Path $buildRootPath "build.gradle"
-
 # check if project is multi module gradle build or not
 $subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}
 Write-Verbose "subprojects: $subprojects"
 $singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
+
+if($codeCoverageTool.equals("Jacoco"))
+{
+    $summaryFileName = "summary.xml"
+
+    if($singlemodule)
+    {
+        $reportingTaskName = "jacocoTestReport"
+    }
+    else
+    {
+        $reportingTaskName = "jacocoRootReport"
+    }
+}
+elseif($codeCoverageTool.equals("Cobertura"))
+{
+    $summaryFileName = "coverage.xml"
+    $reportingTaskName = "cobertura"
+}
+
+$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
+$summaryFile = Join-Path $summaryFile $summaryFileName 
+$buildFile = Join-Path $buildRootPath "build.gradle"
 
 # check if code coverage has been enabled
 if($isCoverageEnabled)
@@ -120,14 +138,7 @@ else
 
 if($isCoverageEnabled)
 {
-	if($singlemodule)
-	{
-		$arguments = "$options $tasks jacocoTestReport"
-	}
-	else
-	{
-		$arguments = "$options $tasks jacocoRootReport"
-	}
+    $arguments = "$options $tasks $reportingTaskName"
 }
 else
 {
