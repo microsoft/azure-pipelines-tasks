@@ -3,7 +3,11 @@ param()
 
 Write-Verbose "Loading test helpers."
 $PSModuleAutoloadingPreference = 'None'
-Import-Module 'Microsoft.PowerShell.Management' -Verbose:$false
+if (!(Get-Module | Where-Object { $_.Name -eq 'Microsoft.PowerShell.Management' })) {
+    Write-Verbose "Importing module: Microsoft.PowerShell.Management"
+    Import-Module 'Microsoft.PowerShell.Management' -Verbose:$false
+}
+
 [hashtable]$mocks = @{ }
 
 function Assert-AreEqual {
