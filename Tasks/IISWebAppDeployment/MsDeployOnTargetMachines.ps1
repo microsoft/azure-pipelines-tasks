@@ -194,7 +194,7 @@ function Does-WebSiteExists
 {
     param([string] $siteName)
 
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $appCmdArgs = [string]::Format(' list site /name:{0}',$siteName)
     $command = "`"$appCmdPath`" $appCmdArgs"
     Write-Verbose "Checking webSite exists. Running Command : $command"
@@ -222,7 +222,7 @@ function Does-BindingExists
         [string]$assignDupBindings
     )
     
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $appCmdArgs = [string]::Format(' list sites')
     $command = "`"$appCmdPath`" $appCmdArgs"
 
@@ -268,7 +268,7 @@ function Does-AppPoolExists
         [string]$appPoolName
     )
 
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $appCmdArgs = [string]::Format(' list apppool /name:{0}',$appPoolName)
     $command = "`"$appCmdPath`" $appCmdArgs"
 
@@ -395,7 +395,7 @@ function Create-WebSite
     [string]$physicalPath
     )
 
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $appCmdArgs = [string]::Format(' add site /name:{0} /physicalPath:{1}',$siteName, $physicalPath)
     $command = "`"$appCmdPath`" $appCmdArgs"       
     
@@ -409,7 +409,7 @@ function Create-AppPool
         [string]$appPoolName
     )
 
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $appCmdArgs = [string]::Format(' add apppool /name:{0}', $appPoolName)
     $command = "`"$appCmdPath`" $appCmdArgs"
     
@@ -424,7 +424,7 @@ function Run-AdditionalCommands
     )
 
     $appCmdCommands = $additionalCommands.Trim('"').Split([System.Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
 
     foreach($appCmdCommand in $appCmdCommands)
     {
@@ -489,7 +489,7 @@ function Update-WebSite
         $appCmdArgs = [string]::Format("{0} /+bindings.[protocol='{1}',bindingInformation='{2}:{3}:{4}']", $appCmdArgs, $protocol, $ipAddress, $port, $hostname)
     }
         
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $command = "`"$appCmdPath`" $appCmdArgs"
     
     Write-Verbose "Updating WebSite Properties. Running Command : $command" -Verbose
@@ -529,7 +529,7 @@ function Update-AppPool
         $appCmdArgs = [string]::Format('{0} /[name=''{1}''].processModel.identityType:{2}', $appCmdArgs, $appPoolName, $identity)
     }    
         
-    $appCmdPath, $iisVerision = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+    $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
     $command = "`"$appCmdPath`" $appCmdArgs"
     
     Write-Verbose "Updating Application Pool Properties. Running Command : $command" -Verbose
@@ -582,7 +582,7 @@ function Create-And-Update-AppPool
         Create-AppPool -appPoolName $appPoolName
     }
 
-    Update-AppPool -appPoolName $appPoolName -clrVersion $clrVerion -pipeLineMode $pipeLineMode -identity $identity -userName $userName -password $password
+    Update-AppPool -appPoolName $appPoolName -clrVersion $clrVersion -pipeLineMode $pipeLineMode -identity $identity -userName $userName -password $password
 }
 
 function Execute-Main
@@ -591,7 +591,7 @@ function Execute-Main
 
     if(-not (IsInputNullOrEmpty -str $AppPoolName))
     {
-        Create-And-Update-AppPool -appPoolName $AppPoolName -clrVerion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
+        Create-And-Update-AppPool -appPoolName $AppPoolName -clrVersion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
     }
 
     if(-not (IsInputNullOrEmpty -str $WebSiteName))
