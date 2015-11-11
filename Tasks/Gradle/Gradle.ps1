@@ -109,7 +109,7 @@ $singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
 if($isCoverageEnabled)
 {
    # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -IsMultiModule !$singlemodule -ErrorAction Stop
+   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -IsMultiModule (!$singlemodule) -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose
 }
 else
@@ -151,7 +151,7 @@ if($publishJUnitResultsFromAntBuild)
     else
     {
         Write-Verbose "Calling Publish-TestResults"
-		if([string]::IsNullOrEmpty($testRunTitle)) {
+		if([string]::IsNullOrWhiteSpace($testRunTitle)) {
 			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
 		} else {
 			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle

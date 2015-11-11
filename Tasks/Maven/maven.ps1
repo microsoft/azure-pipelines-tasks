@@ -91,7 +91,7 @@ Write-Host "Running Maven..."
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 
 # Publish test results
-if([string]::IsNullOrEmpty($testRunTitle)) {
+if([string]::IsNullOrWhiteSpace($testRunTitle)) {
 	PublishTestResults $publishJUnitResults $testResultsFiles
 } else {
 	PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle		
