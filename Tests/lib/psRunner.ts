@@ -52,8 +52,7 @@ export class PSRunner extends events.EventEmitter {
 		var wd = path.dirname(this._psPath);
 		
 		var psPath = shell.which('powershell');	
-		var cmdLine = psPath + ' -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' + this._psPath + '"';
-		
+		var cmdLine = psPath + ' -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Get-Module ; Import-Module \'Microsoft.PowerShell.Management\' ; Import-Module \'Microsoft.PowerShell.Utility\' ; Set-Content -LiteralPath variable:\VerbosePreference -Value "Continue" ; Set-Content -LiteralPath variable:\PSModuleAutoloadingPreference -Value "None" ; & \'' + this._psPath + '\'"';
 		var child = exec(cmdLine, 
 						{ 
 							cwd: wd, 
