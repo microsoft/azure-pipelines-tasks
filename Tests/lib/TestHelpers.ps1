@@ -58,14 +58,14 @@ function Assert-Throws {
 }
 
 function Assert-WasCalled {
-    [cmdletbinding(DefaultParameterSetName = "MatchEvaluator")]
+    [cmdletbinding(DefaultParameterSetName = "ArgumentsEvaluator")]
     param(
         [ValidateNotNullOrEmpty()]
         [Parameter(Position = 1)]
         [string]$Command,
 
-        [Parameter(ParameterSetName = "MatchEvaluator")]
-        [scriptblock]$MatchEvaluator,
+        [Parameter(ParameterSetName = "ArgumentsEvaluator")]
+        [scriptblock]$ArgumentsEvaluator,
 
         [Parameter(ParameterSetName = "Arguments", Position = 2, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
@@ -77,8 +77,8 @@ function Assert-WasCalled {
         Write-Verbose "  Expected arguments: $Arguments"
     }
 
-    if ($MatchEvaluator) {
-        Write-Verbose "  Match evaluator: $($MatchEvaluator.ToString().Trim())"
+    if ($ArgumentsEvaluator) {
+        Write-Verbose "  Match evaluator: $($ArgumentsEvaluator.ToString().Trim())"
     }
 
     $registration = $mocks[$Command]
@@ -86,14 +86,14 @@ function Assert-WasCalled {
         throw "Mock registration not found for command: $Command"
     }
 
-    if (!$MatchEvaluator -and ([object]::ReferenceEquals($Arguments, $null))) {
+    if (!$ArgumentsEvaluator -and ([object]::ReferenceEquals($Arguments, $null))) {
         if (!$registration.Invocations.Length) {
             throw "Assert was-called failed. Command was not called: $Command"
         }
-    } elseif ($MatchEvaluator) {
+    } elseif ($ArgumentsEvaluator) {
         $found = $false
         foreach ($invocation in $registration.Invocations) {
-            if (& $MatchEvaluator @invocation) {
+            if (& $ArgumentsEvaluator @invocation) {
                 $found = $true
             }
         }
@@ -104,7 +104,7 @@ function Assert-WasCalled {
                 Write-Verbose "Discovered registered invocation: $invocation"
             }
 
-            throw "Assert was-called failed. Command was not called according to the specified match evaluator. Command: $Command ; MatchEvaluator: $($MatchEvaluator.ToString().Trim())"
+            throw "Assert was-called failed. Command was not called according to the specified match evaluator. Command: $Command ; ArgumentsEvaluator: $($ArgumentsEvaluator.ToString().Trim())"
         }
     } else {
         $found = $false
@@ -154,7 +154,7 @@ function Compare-ArgumentArrays {
 }
 
 function Register-Mock {
-    [cmdletbinding(DefaultParameterSetName = "MatchEvaluator")]
+    [cmdletbinding(DefaultParameterSetName = "ArgumentsEvaluator")]
     param(
         [ValidateNotNullOrEmpty()]
         [Parameter(Position = 1)]
@@ -163,8 +163,8 @@ function Register-Mock {
         [Parameter(Position = 2)]
         [scriptblock]$Func,
 
-        [Parameter(ParameterSetName = 'MatchEvaluator')]
-        [scriptblock]$MatchEvaluator,
+        [Parameter(ParameterSetName = 'ArgumentsEvaluator')]
+        [scriptblock]$ArgumentsEvaluator,
 
         [Parameter(ParameterSetName = 'Arguments', Position = 3, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
@@ -202,12 +202,12 @@ function Register-Mock {
             foreach ($implementation in $registration.Implementations) {
                 # Attempt to match the implementation.
                 $isMatch = $false
-                if (!$implementation.MatchEvaluator -and ([object]::ReferenceEquals($implementation.Arguments, $null))) {
+                if (!$implementation.ArgumentsEvaluator -and ([object]::ReferenceEquals($implementation.Arguments, $null))) {
                     # Match anything if no match evaluator or arguments specified.
                     $isMatch = $true
-                } elseif ($implementation.MatchEvaluator -and (& $implementation.MatchEvaluator @args)) {
+                } elseif ($implementation.ArgumentsEvaluator -and (& $implementation.ArgumentsEvaluator @args)) {
                     # Match evaluator returned true.
-                    Write-Verbose "Matching implementation found using match evaluator: { $($implementation.MatchEvaluator.ToString().Trim()) }"
+                    Write-Verbose "Matching implementation found using match evaluator: { $($implementation.ArgumentsEvaluator.ToString().Trim()) }"
                     $isMatch = $true
                 } elseif (!([object]::ReferenceEquals($implementation.Arguments, $null)) -and (Compare-ArgumentArrays $implementation.Arguments $args)) {
                     $OFS = " "
@@ -238,7 +238,7 @@ function Register-Mock {
 
     # Check if an implementation is specified.
     $implementation = $null
-    if ((!$Func) -and (!$MatchEvaluator) -and ([object]::ReferenceEquals($Arguments, $null))) {
+    if ((!$Func) -and (!$ArgumentsEvaluator) -and ([object]::ReferenceEquals($Arguments, $null))) {
         Write-Verbose "Stubbing command: $Command"
     } else {
         # Add the implementation to the registration object.
@@ -248,8 +248,8 @@ function Register-Mock {
             Write-Verbose "  Arguments: $Arguments"
         }
 
-        if ($MatchEvaluator) {
-            Write-Verbose "  MatchEvaluator: { $($MatchEvaluator.ToString().Trim()) }"
+        if ($ArgumentsEvaluator) {
+            Write-Verbose "  ArgumentsEvaluator: { $($ArgumentsEvaluator.ToString().Trim()) }"
         }
 
         if ($Func) {
@@ -259,7 +259,7 @@ function Register-Mock {
         $implementation = New-Object -TypeName psobject -Property @{
             'Arguments' = $Arguments
             'Func' = $Func
-            'MatchEvaluator' = $MatchEvaluator
+            'ArgumentsEvaluator' = $ArgumentsEvaluator
         }
         $registration.Implementations += $implementation
     }
