@@ -50,7 +50,28 @@ else
     $publishResultsOption = Convert-String $publishRunAttachments Boolean
     $mergeResults = Convert-String $mergeTestResults Boolean
     Write-Verbose "Calling Publish-TestResults"
-    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
+    if([string]::IsNullOrWhiteSpace($testRunTitle))
+	{
+		if(!$publishResultsOption)
+		{
+			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+		}
+		else 
+		{
+			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
+		}
+	}
+	else
+	{
+		if(!$publishResultsOption)
+		{
+			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
+		}
+		else 
+		{
+			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
+		}
+	}
 }
 
 Write-Verbose "Leaving script PublishTestResults.ps1"
