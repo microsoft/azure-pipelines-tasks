@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\TestHelpers.ps1
+. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\Gulp\Helpers.ps1
 
 # Act.

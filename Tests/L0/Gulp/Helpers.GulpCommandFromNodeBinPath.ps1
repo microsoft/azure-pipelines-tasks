@@ -2,32 +2,13 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\TestHelpers.ps1
+. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\Gulp\Helpers.ps1
 $distributedTaskContext = 'Some distributed task context'
-Register-Stub -Command 'Get-Command'
-Register-Mock -Command 'Get-TaskVariable' -Arguments @(
-        '-Context',
-        $distributedTaskContext
-        '-Name'
-        'Build.SourcesDirectory'
-    ) -Func {
-        'c:\some build sources directory'
-    }
-Register-Mock -Command 'Test-Path' -Arguments @(
-        '-LiteralPath'
-        'c:\some build sources directory\node_modules\.bin\gulp.cmd'
-        '-PathType'
-        'Leaf'
-    ) -Func {
-        $true
-    }
-Register-Mock -Command 'Get-Command' -Arguments @(
-        '-Name'
-        'c:\some build sources directory\node_modules\.bin\gulp.cmd'
-    ) -Func {
-        'Some node bin gulp command'
-    }
+Register-Stub Get-Command
+Register-Mock Get-TaskVariable { 'c:\some build sources directory' } -- -Context $distributedTaskContext -Name 'Build.SourcesDirectory'
+Register-Mock Test-Path { $true } -- -LiteralPath 'c:\some build sources directory\node_modules\.bin\gulp.cmd' -PathType 'Leaf'
+Register-Mock Get-Command { 'Some node bin gulp command' } -- -Name 'c:\some build sources directory\node_modules\.bin\gulp.cmd'
 
 # Act.
 $actual = Get-GulpCommand

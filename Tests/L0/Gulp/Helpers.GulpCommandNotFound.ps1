@@ -2,22 +2,15 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\TestHelpers.ps1
+. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\Gulp\Helpers.ps1
 $distributedTaskContext = 'Some distributed task context'
-Register-Stub -Command 'Get-Command'
-Register-Stub -Command 'Get-TaskVariable'
-Register-Stub -Command 'Join-Path'
-Register-Stub -Command 'Test-Path'
-Register-Stub -Command 'Find-Files'
-Register-Mock -Command 'Get-Command' -Arguments @(
-        '-Name'
-        'gulp'
-        '-ErrorAction'
-        'Stop'
-    ) -Func {
-        throw 'Some error message'
-    }
+Register-Stub Get-Command
+Register-Stub Get-TaskVariable
+Register-Stub Join-Path
+Register-Stub Test-Path
+Register-Stub Find-Files
+Register-Mock Get-Command { throw 'Some error message' } -- -Name 'gulp' -ErrorAction 'Stop'
 
 # Act.
 $exception = $null
