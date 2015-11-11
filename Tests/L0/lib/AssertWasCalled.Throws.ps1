@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\TestHelpers.ps1
+. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 Register-Stub Invoke-SomeCommand
 
 # Act / Assert throws.

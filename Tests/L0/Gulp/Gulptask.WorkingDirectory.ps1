@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\TestHelpers.ps1
+. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 Register-Stub Get-GulpCommand
 Register-Stub Format-ArgumentsParameter
 Register-Mock Get-WorkingDirectoryParameter { 'Some other working directory' } -- -Cwd 'Some working directory'

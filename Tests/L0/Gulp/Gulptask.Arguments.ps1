@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\TestHelpers.ps1
+. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 Register-Stub Get-GulpCommand
 Register-Mock Format-ArgumentsParameter { 'Some formatted arguments' } -- -GulpFile 'Some gulp file' -Targets 'Some targets' -Arguments 'Some arguments'
 Register-Stub Get-WorkingDirectoryParameter

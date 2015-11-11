@@ -1,15 +1,3 @@
-[cmdletbinding()]
-param()
-
-Write-Verbose "Loading test helpers."
-$PSModuleAutoloadingPreference = 'None'
-if (!(Get-Module | Where-Object { $_.Name -eq 'Microsoft.PowerShell.Management' })) {
-    Write-Verbose "Importing module: Microsoft.PowerShell.Management"
-    Import-Module 'Microsoft.PowerShell.Management' -Verbose:$false
-}
-
-[hashtable]$mocks = @{ }
-
 function Assert-AreEqual {
     [cmdletbinding()]
     param(
@@ -128,13 +116,11 @@ function Assert-WasCalled {
 
             $private:evaluatorWrapper = {
                 $private:parameters = $args[0]
-                @( $parameters.Keys | ForEach-Object { ,@( $_, $parameters[$_] ) }) |
-                    ForEach-Object {
-                        Set-Variable -Name $_[0] -Value $_[1] -Scope 1
-                    }
-                & $ParametersEvaluator
+                $ParametersEvaluator.InvokeWithContext(
+                    $null,
+                    (@( $parameters.Keys | ForEach-Object { ,@( $_, $parameters[$_] ) }) | ForEach-Object { Set-Variable -Name $_[0] -Value $_[1] -PassThru }),
+                    $null)
             }
-                
             if (& $evaluatorWrapper $parameters) {
                 $found = $true
             }
@@ -241,7 +227,7 @@ function Register-Mock {
         $mocks[$Command] = $mock
 
         # Define the command.
-        $null = New-Item -Path "function:\script:$Command" -Value {
+        $null = New-Item -Path "function:\global:$Command" -Value {
             param()
 
             # Lookup the mock.
@@ -332,6 +318,3 @@ function Register-Stub {
 
     Register-Mock -Command $Command
 }
-
-# Stub common commands.
-Register-Stub -Command Import-Module

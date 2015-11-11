@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\TestHelpers.ps1
+. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 Register-Stub Invoke-SomeCommand
 Invoke-SomeCommand -Param1 Value1 -Param2 Value2
 
