@@ -58,11 +58,14 @@ function Assert-Throws {
 }
 
 function Assert-WasCalled {
-    [cmdletbinding(DefaultParameterSetName = "ArgumentsEvaluator")]
+    [cmdletbinding(DefaultParameterSetName = "ParametersEvaluator")]
     param(
         [ValidateNotNullOrEmpty()]
         [Parameter(Position = 1)]
         [string]$Command,
+
+        [Parameter(ParameterSetName = "ParametersEvaluator")]
+        [scriptblock]$ParametersEvaluator,
 
         [Parameter(ParameterSetName = "ArgumentsEvaluator")]
         [scriptblock]$ArgumentsEvaluator,
@@ -70,45 +73,100 @@ function Assert-WasCalled {
         [Parameter(ParameterSetName = "Arguments", Position = 2, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
 
-    # Check if the command is already registered.
+    # Verbose logging.
     Write-Verbose "Asserting was-called: $Command"
     if (!([object]::ReferenceEquals($Arguments, $null))) {
         $OFS = " "
         Write-Verbose "  Expected arguments: $Arguments"
+    } elseif ($ParametersEvaluator) {
+        Write-Verbose "  Parameters evaluator: { $($ParametersEvaluator.ToString().Trim()) }"
+    } elseif ($ArgumentsEvaluator) {
+        Write-Verbose "  Arguments evaluator: { $($ArgumentsEvaluator.ToString().Trim()) }"
     }
 
-    if ($ArgumentsEvaluator) {
-        Write-Verbose "  Match evaluator: $($ArgumentsEvaluator.ToString().Trim())"
+    # Sanity check the mock is registered.
+    $private:mock = $mocks[$Command]
+    if (!$mock) {
+        throw "Mock not found for command: $Command"
     }
 
-    $registration = $mocks[$Command]
-    if (!$registration) {
-        throw "Mock registration not found for command: $Command"
-    }
-
-    if (!$ArgumentsEvaluator -and ([object]::ReferenceEquals($Arguments, $null))) {
-        if (!$registration.Invocations.Length) {
+    if (!$ParametersEvaluator -and !$ArgumentsEvaluator -and ([object]::ReferenceEquals($Arguments, $null))) {
+        if (!$mock.Invocations.Length) {
             throw "Assert was-called failed. Command was not called: $Command"
+        }
+    } elseif ($ParametersEvaluator) {
+        $private:found = $false
+        :InvocationLoop foreach ($private:invocation in $mock.Invocations) {
+            if (!$invocation.Length) {
+                continue
+            }
+
+            $private:parameters = @{ }
+            for ($private:i = 0 ; $i -lt $invocation.Count ; $i++) {
+                $private:arg = $invocation[$i]
+                if ($arg -isnot [string] -or $arg -notlike '-?*') {
+                    continue InvocationLoop
+                }
+
+                if ($arg -like '-?*:true') {
+                    $private:parameterName = $arg.Substring(1)
+                    $private:parameterName = $parameterName.Substring(0, $parameterName.Length - ':true'.Length)
+                    $private:parameterValue = $true
+                } elseif ($arg -like '-?*:false') {
+                    $private:parameterName = $arg.Substring(1)
+                    $private:parameterName = $parameterName.Substring(0, $parameterName.Length - ':false'.Length)
+                    $private:parameterValue = $false
+                } elseif (++$i -eq $invocation.Count) {
+                    continue InvocationLoop
+                } else {
+                    $private:parameterName = $arg.Substring(1)
+                    $private:parameterValue = $invocation[$i]
+                }
+
+                $parameters[$parameterName] = $parameterValue
+            }
+
+            $private:evaluatorWrapper = {
+                $private:parameters = $args[0]
+                @( $parameters.Keys | ForEach-Object { ,@( $_, $parameters[$_] ) }) |
+                    ForEach-Object {
+                        Set-Variable -Name $_[0] -Value $_[1] -Scope 1
+                    }
+                & $ParametersEvaluator
+            }
+                
+            if (& $evaluatorWrapper $parameters) {
+                $found = $true
+            }
+        }
+
+        if (!$found) {
+            foreach ($invocation in $mock.Invocations) {
+                $OFS = " "
+                Write-Verbose "Discovered registered invocations: $invocation"
+            }
+
+            throw "Assert was-called failed. Command was not called according to the specified parameters evaluator. Command: $Command; ParametersEvaluator: $($ParametersEvaluator.ToString().Trim())"
         }
     } elseif ($ArgumentsEvaluator) {
         $found = $false
-        foreach ($invocation in $registration.Invocations) {
+        foreach ($invocation in $mock.Invocations) {
             if (& $ArgumentsEvaluator @invocation) {
                 $found = $true
             }
         }
 
         if (!$found) {
-            foreach ($invocation in $registration.Invocations) {
+            foreach ($invocation in $mock.Invocations) {
                 $OFS = " "
                 Write-Verbose "Discovered registered invocation: $invocation"
             }
 
-            throw "Assert was-called failed. Command was not called according to the specified match evaluator. Command: $Command ; ArgumentsEvaluator: $($ArgumentsEvaluator.ToString().Trim())"
+            throw "Assert was-called failed. Command was not called according to the specified arguments evaluator. Command: $Command ; ArgumentsEvaluator: $($ArgumentsEvaluator.ToString().Trim())"
         }
     } else {
         $found = $false
-        foreach ($invocation in $registration.Invocations) {
+        foreach ($invocation in $mock.Invocations) {
             if (Compare-ArgumentArrays $Arguments $invocation) {
                 $found = $true
             }
@@ -116,7 +174,7 @@ function Assert-WasCalled {
 
         if (!$found) {
             $OFS = " "
-            foreach ($invocation in $registration.Invocations) {
+            foreach ($invocation in $mock.Invocations) {
                 Write-Verbose "Discovered registered invocation: $invocation"
             }
 
@@ -170,36 +228,36 @@ function Register-Mock {
         [object[]]$Arguments)
 
     # Check if the command is already registered.
-    $registration = $mocks[$Command]
-    if (!$registration) {
-        # Create the registration object.
-        $registration = New-Object -TypeName psobject -Property @{
+    $mock = $mocks[$Command]
+    if (!$mock) {
+        # Create the mock object.
+        $mock = New-Object -TypeName psobject -Property @{
             'Command' = $Command
             'Implementations' = @( )
             'Invocations' = @( )
         }
 
         # Register the mock.
-        $mocks[$Command] = $registration
+        $mocks[$Command] = $mock
 
         # Define the command.
         $null = New-Item -Path "function:\script:$Command" -Value {
             param()
 
-            # Lookup the registration.
+            # Lookup the mock.
             $commandName = $MyInvocation.InvocationName
             Write-Verbose "Invoking mock command: $commandName"
-            $registration = $mocks[$MyInvocation.InvocationName];
-            if (!$registration) {
-                throw "Unexpected exception. Registration not found for command: $commandName"
+            $mock = $mocks[$MyInvocation.InvocationName];
+            if (!$mock) {
+                throw "Unexpected exception. Mock not found for command: $commandName"
             }
 
             # Record the invocation.
-            $registration.Invocations += ,$args
+            $mock.Invocations += ,$args
 
             # Search for a matching implementation.
             $matchingImplementation = $null
-            foreach ($implementation in $registration.Implementations) {
+            foreach ($implementation in $mock.Implementations) {
                 # Attempt to match the implementation.
                 $isMatch = $false
                 if (!$implementation.ArgumentsEvaluator -and ([object]::ReferenceEquals($implementation.Arguments, $null))) {
@@ -241,7 +299,7 @@ function Register-Mock {
     if ((!$Func) -and (!$ArgumentsEvaluator) -and ([object]::ReferenceEquals($Arguments, $null))) {
         Write-Verbose "Stubbing command: $Command"
     } else {
-        # Add the implementation to the registration object.
+        # Add the implementation to the mock object.
         Write-Verbose "Mocking command: $Command"
         if (!([object]::ReferenceEquals($Arguments, $null))) {
             $OFS = " "
@@ -261,7 +319,7 @@ function Register-Mock {
             'Func' = $Func
             'ArgumentsEvaluator' = $ArgumentsEvaluator
         }
-        $registration.Implementations += $implementation
+        $mock.Implementations += $implementation
     }
 }
 
