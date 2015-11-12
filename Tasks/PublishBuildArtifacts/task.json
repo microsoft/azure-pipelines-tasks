@@ -4,7 +4,7 @@
   "friendlyName": "Publish Build Artifacts",
   "description": "Publish Build artifacts to the server or a file share",
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
-  "category": "Build",
+  "category": "Utility",
   "visibility": [
     "Build"
   ],
