@@ -20,7 +20,7 @@ function CmdletHasMember($memberName) {
     return $publishParameters
 }
 
-function SetRegistryKeyForParallell() {
+function SetRegistryKeyForParallel() {
     # reg add HKCU\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef /v Value /t REG_DWORD /d 1 /f /reg:32
     New-Item -Path HKCU:\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef -Value 1
 }
@@ -31,7 +31,7 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
     if($runInParallelFlag -eq "True")
     {
         # ensure the registry is set
-        #SetRegistryKeyForParallell
+        SetRegistryKeyForParallel
         
         $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
         if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath)) # no file provided so create one and use it for the run
