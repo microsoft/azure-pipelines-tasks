@@ -100,7 +100,7 @@ $subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -
 Write-Verbose "subprojects: $subprojects"
 $singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
 
-if($codeCoverageTool.equals("Jacoco"))
+if($codeCoverageTool.equals("JaCoCo"))
 {
     $summaryFileName = "summary.xml"
 
