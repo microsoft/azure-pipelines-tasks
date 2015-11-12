@@ -7,7 +7,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Build",
+  "category": "Utility",
   "visibility": [
     "Build"
   ],
