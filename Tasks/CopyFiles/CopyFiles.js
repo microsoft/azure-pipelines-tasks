@@ -3,6 +3,7 @@
 /// <reference path="../../definitions/vso-task-lib.d.ts" />
 var path = require('path');
 var fs = require('fs');
+var os = require('os');
 var tl = require("vso-task-lib");
 function getCommonLocalPath(files) {
     if (!files || files.length === 0) {
@@ -113,12 +114,17 @@ if (includeContents && allFiles && includeContents.length > 0 && allFiles.length
     tl.debug("allFiles contains " + allFiles.length + " files");
     // a map to eliminate duplicates
     var map = {};
+    // minimatch options
+    var matchOptions = { matchBase: true };
+    if (os.type().match(/^Win/)) {
+        matchOptions["nocase"] = true;
+    }
     // apply include filter
     for (var i = 0; i < includeContents.length; i++) {
         var pattern = includeContents[i];
         tl.debug('Include matching ' + pattern);
         // let minimatch do the actual filtering
-        var matches = tl.match(allFiles, pattern, { matchBase: true });
+        var matches = tl.match(allFiles, pattern, matchOptions);
         tl.debug('Include matched ' + matches.length + ' files');
         for (var j = 0; j < matches.length; j++) {
             var matchPath = matches[j];
@@ -133,7 +139,7 @@ if (includeContents && allFiles && includeContents.length > 0 && allFiles.length
         var pattern = excludeContents[i];
         tl.debug('Exclude matching ' + pattern);
         // let minimatch do the actual filtering
-        var matches = tl.match(files, pattern, { matchBase: true });
+        var matches = tl.match(files, pattern, matchOptions);
         tl.debug('Exclude matched ' + matches.length + ' files');
         files = [];
         for (var j = 0; j < matches.length; j++) {
