@@ -4,6 +4,7 @@
 
 import path = require('path');
 import fs = require('fs');
+import os = require('os');
 import Q = require('q');
 var tl = require("vso-task-lib");
 
@@ -138,13 +139,20 @@ if (includeContents && allFiles && includeContents.length > 0 && allFiles.length
     // a map to eliminate duplicates
     var map = {};
     
+    // minimatch options
+    var matchOptions = { matchBase: true };
+    if(os.type().match(/^Win/))
+    {
+        matchOptions["nocase"] = true;
+    }
+        
     // apply include filter
     for (var i: number = 0; i < includeContents.length; i++) {
         var pattern = includeContents[i];
         tl.debug('Include matching ' + pattern);        
 
         // let minimatch do the actual filtering
-        var matches: string[] = tl.match(allFiles, pattern, { matchBase: true });
+        var matches: string[] = tl.match(allFiles, pattern, matchOptions);
             
         tl.debug('Include matched ' + matches.length + ' files');
         for (var j: number = 0; j < matches.length; j++) {
@@ -162,7 +170,7 @@ if (includeContents && allFiles && includeContents.length > 0 && allFiles.length
         tl.debug('Exclude matching ' + pattern);
 
         // let minimatch do the actual filtering
-        var matches: string[] = tl.match(files, pattern, { matchBase: true });
+        var matches: string[] = tl.match(files, pattern, matchOptions);
             
         tl.debug('Exclude matched ' + matches.length + ' files');
         files = [];
