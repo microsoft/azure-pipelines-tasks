@@ -118,6 +118,15 @@
       "groupName": "advancedExecutionOptions"
     },
     {
+      "name": "runInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runInParallel",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
+      "groupName": "advancedExecutionOptions"
+    },
+    {
       "name": "testRunTitle",
       "type": "string",
       "label": "ms-resource:loc.input.label.testRunTitle",

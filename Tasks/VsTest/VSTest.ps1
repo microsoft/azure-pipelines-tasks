@@ -10,14 +10,64 @@ param(
     [string]$testRunTitle,
     [string]$platform,
     [string]$configuration,
-    [string]$publishRunAttachments
+    [string]$publishRunAttachments,
+    [string]$runInParallel
 )
 
     
-Function CmdletHasMember($memberName) {
+function CmdletHasMember($memberName) {
     $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
     return $publishParameters
 }
+
+function SetRegistryKeyForParallell() {
+    # reg add HKCU\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef /v Value /t REG_DWORD /d 1 /f /reg:32
+    New-Item -Path HKCU:\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef -Value 1
+}
+
+
+function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePath, $defaultCpuCount) {
+
+    if($runInParallelFlag -eq "True")
+    {
+        # ensure the registry is set
+        #SetRegistryKeyForParallell
+        
+        $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
+        if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath)) # no file provided so create one and use it for the run
+        {
+            $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <MaxCpuCount>0</MaxCpuCount>
+  </RunConfiguration>
+</RunSettings>
+'
+        }
+        else 
+        {
+            $runSettingsForParallel = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
+            $runConfigurationElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration")
+            if($runConfigurationElement.Count -eq 0)
+            {
+                 $runConfigurationElement = $runSettingsForParallel.RunSettings.AppendChild($runSettingsFileXml.CreateElement("RunConfiguration"))
+            }
+
+            $maxCpuCountElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration/MaxCpuCount")
+            if($maxCpuCountElement.Count -eq 0)
+            {
+                 $newMaxCpuCountElement = $runConfigurationElement.AppendChild($runSettingsForParallel.CreateElement("MaxCpuCount"))
+            }    
+        }
+
+        $runSettingsForParallel.RunSettings.RunConfiguration.MaxCpuCount = $defaultCpuCount
+        $tempFile = [io.path]::GetTempFileName()
+        $runSettingsForParallel.Save($tempFile)
+        return $tempFile
+    }
+    return $runSettingsFilePath
+}
+
 
 Write-Verbose "Entering script VSTestConsole.ps1"
 
@@ -77,8 +127,11 @@ if($testAssemblyFiles)
 
     $workingDirectory = $artifactsDirectory
     $testResultsDirectory = $workingDirectory + "\" + "TestResults"
+
+    $defaultCpuCount = "0"    
+    $runSettingsFileWithParallel = SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount
     
-    Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
+    Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
 
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
