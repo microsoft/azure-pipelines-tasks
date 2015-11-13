@@ -34,7 +34,7 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
         SetRegistryKeyForParallel
         
         $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
-        if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -And (-Not [io.path]::HasExtension($runSettingsFilePath))  # no file provided so create one and use it for the run
+        if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -Or (-Not [io.path]::HasExtension($runSettingsFilePath)))  # no file provided so create one and use it for the run
         {
             Write-Verbose "no runsettings file provided"
             $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>
