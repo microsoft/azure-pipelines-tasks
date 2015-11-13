@@ -26,7 +26,7 @@ Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 Write-Verbose "jdkUserInputPath = $jdkUserInputPath"
 
-$isCoverageEnabled = !$codeCoverageTool.equals("None")
+$isCoverageEnabled = !($codeCoverageTool -eq "None")
 if($isCoverageEnabled)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" 
@@ -88,11 +88,11 @@ $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
 if($isCoverageEnabled)
 {
-	if ($codeCoverageTool.equals("Cobertura"))
+	if ($codeCoverageTool -eq "Cobertura")
 	{
 		$summaryFileName = "coverage.xml"
 	}
-	ElseIf ($codeCoverageTool.equals("JaCoCo"))
+	ElseIf ($codeCoverageTool -eq "JaCoCo")
 	{
 		$summaryFileName = "summary.xml"
 	}
@@ -113,7 +113,7 @@ if($isCoverageEnabled)
    try
    {
 	# Enable code coverage in build file
-	if ($codeCoverageTool.equals("Cobertura"))
+	if ($codeCoverageTool -eq "Cobertura")
 	{
 		$coberturaCCFile = Join-Path $buildRootPath "cobertura.cer"
 		if(Test-Path $coberturaCCFile)
