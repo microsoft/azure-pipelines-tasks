@@ -26,7 +26,7 @@ Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 Write-Verbose "jdkUserInputPath = $jdkUserInputPath"
 
-$isCoverageEnabled = !$codeCoverageTool.equals("None")
+$isCoverageEnabled = !($codeCoverageTool -eq "None")
 if($isCoverageEnabled)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" 
@@ -88,11 +88,11 @@ $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
 if($isCoverageEnabled)
 {
-	if ($codeCoverageTool.equals("Cobertura"))
+	if ($codeCoverageTool -eq "Cobertura")
 	{
 		$summaryFileName = "coverage.xml"
 	}
-	ElseIf ($codeCoverageTool.equals("JaCoCo"))
+	ElseIf ($codeCoverageTool -eq "JaCoCo")
 	{
 		$summaryFileName = "summary.xml"
 	}
@@ -107,27 +107,30 @@ $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 
 $reportBuildFileName = [guid]::NewGuid().tostring() + ".xml"
 $reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
-$coberturaCCFile = Join-Path $buildRootPath "cobertura.cer"
 
 if($isCoverageEnabled)
 {
    try
    {
 	# Enable code coverage in build file
-	if ($codeCoverageTool.equals("Cobertura"))
+	if ($codeCoverageTool -eq "Cobertura")
 	{
+		$coberturaCCFile = Join-Path $buildRootPath "cobertura.cer"
 		if(Test-Path $coberturaCCFile)
 		{
 			# delete any previous cobertura code coverage file
 			rm -r $coberturaCCFile -force | Out-Null
 		}
 		
-		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask
+		$instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
+		if(Test-Path $instrumentedClassesDirectory)
+		{
+			# delete any previous cobertura instrumented classes
+			rm -r $instrumentedClassesDirectory -force | Out-Null
+		}
 	}
-	else
-	{
-		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
-	}
+	
+	Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
 	Write-Verbose "Code coverage is successfully enabled." -Verbose
    }
    catch
@@ -181,14 +184,7 @@ if($isCoverageEnabled)
    Write-Verbose "Collecting code coverage reports" -Verbose
    try
    {
-	if ($codeCoverageTool.equals("Cobertura"))
-	{
-		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
-	}
-	else
-	{
-		Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
-	}
+	Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
    }
    catch
    {
