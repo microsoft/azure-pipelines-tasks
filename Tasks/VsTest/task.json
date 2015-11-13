@@ -115,6 +115,15 @@
       "groupName": "advancedExecutionOptions"
     },
     {
+      "name": "runInParallel",
+      "type": "boolean",
+      "label": "Run In Parallel",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "Turn this flag on to enable parallel execution of your tests.",
+      "groupName": "advancedExecutionOptions"
+    },
+    {
       "name": "testRunTitle", 
       "type": "string", 
       "label": "Test Run Title", 

@@ -25,6 +25,8 @@
   "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
   "loc.input.label.otherConsoleOptions": "Other console options",
   "loc.input.help.otherConsoleOptions": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
+  "loc.input.label.runInParallel": "Run In Parallel",
+  "loc.input.help.runInParallel": "Turn this flag on to enable parallel execution of your tests.",
   "loc.input.label.testRunTitle": "Test Run Title",
   "loc.input.help.testRunTitle": "Provide a name for the Test Run.",
   "loc.input.label.platform": "Platform",

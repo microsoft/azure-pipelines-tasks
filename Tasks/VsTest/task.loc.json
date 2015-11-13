@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 25
   },
   "demands": [
     "vstest"
@@ -115,6 +115,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
+      "groupName": "advancedExecutionOptions"
+    },
+    {
+      "name": "runInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runInParallel",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
       "groupName": "advancedExecutionOptions"
     },
     {
