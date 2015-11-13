@@ -21,8 +21,8 @@ function CmdletHasMember($memberName) {
 }
 
 function SetRegistryKeyForParallel() {
-    # reg add HKCU\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef /v Value /t REG_DWORD /d 1 /f /reg:32
-    New-Item -Path HKCU:\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef -Value 1
+    reg add HKCU\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef /v Value /t REG_DWORD /d 1 /f /reg:32
+    # New-Item -Path HKCU:\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef -Value 1 -Force
 }
 
 
