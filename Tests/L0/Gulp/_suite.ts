@@ -72,9 +72,41 @@ describe('Gulp Suite', function() {
 	})
 
 	if (ps) {
-		it('Handles ps1 arguments', (done) => {
-			psm.runPS(path.join(__dirname, 'Gulptask.Arguments.ps1'), done);
-		})		
+		it('passes helper arguments', (done) => {
+			psm.runPS(path.join(__dirname, 'Gulptask.PassesHelperArguments.ps1'), done);
+		})
+
+		it('formats arguments', (done) => {
+			psm.runPS(path.join(__dirname, 'Helpers.Arguments.ps1'), done);
+		})
+
+		it('formats arguments with targets', (done) => {
+			psm.runPS(path.join(__dirname, 'Helpers.ArgumentsWithTargets.ps1'), done);
+		})
+
+		it('gets gulp command from path', (done) => {
+			psm.runPS(path.join(__dirname, 'Helpers.GulpCommand.ps1'), done);
+		})
+
+		it('falls back to gulp command from node bin path', (done) => {
+			psm.runPS(path.join(__dirname, 'Helpers.GulpCommandFromNodeBinPath.ps1'), done);
+		})
+
+		it('falls back to gulp command from sources directory', (done) => {
+			psm.runPS(path.join(__dirname, 'Helpers.GulpCommandFromSourcesDirectory.ps1'), done);
+		})
+
+		it('throws if gulp not found', (done) => {
+			psm.runPS(path.join(__dirname, 'Helpers.GulpCommandNotFound.ps1'), done);
+		})
+
+		it('sets the working directory', (done) => {
+			psm.runPS(path.join(__dirname, 'Helpers.WorkingDirectory.ps1'), done);
+		})
+
+		it('gets the default working directory', (done) => {
+			psm.runPS(path.join(__dirname, 'Helpers.WorkingDirectoryNotSet.ps1'), done);
+		})
 	}
 
 });

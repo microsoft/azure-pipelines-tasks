@@ -26,6 +26,7 @@ Write-Verbose "initializationScriptPath = $initializationScriptPath" -Verbose
 Write-Verbose "runPowershellInParallel = $runPowershellInParallel" -Verbose
 Write-Verbose "sessionVariables = $sessionVariables" -Verbose
 
+. ./Telemetry.ps1
 . ./PowerShellJob.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -53,6 +54,7 @@ $ErrorActionPreference = 'Stop'
 $deploymentOperation = 'Deployment'
 
 $envOperationStatus = "Passed"
+$telemetrySet = $false
 
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
@@ -97,6 +99,7 @@ function Get-ResourceWinRmConfig
     
         if([string]::IsNullOrWhiteSpace($winrmPortToUse))
         {
+            Write-Telemetry "PREREQ_NoWinRMHTTPSPort"
             throw(Get-LocalizedString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTPS", $resourceName)
         }
     }
@@ -110,6 +113,7 @@ function Get-ResourceWinRmConfig
     
         if([string]::IsNullOrWhiteSpace($winrmPortToUse))
         {
+            Write-Telemetry "PREREQ_NoWinRMHTTPPort"
             throw(Get-LocalizedString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTP", $resourceName)
         }
     }
@@ -132,6 +136,7 @@ function Get-ResourceWinRmConfig
 
                if ([string]::IsNullOrEmpty($winrmHttpPort))
                {
+                   Write-Telemetry "PREREQ_NoWinRMHTTPPort"
                    throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "http://aka.ms/azuresetup" )
                }
                else
@@ -166,6 +171,7 @@ function Get-ResourceWinRmConfig
 
                if ([string]::IsNullOrEmpty($winrmHttpsPort))
                {
+                   Write-Telemetry "PREREQ_NoWinRMHTTPSPort"
                    throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "http://aka.ms/azuresetup" )
                }
                else
@@ -256,20 +262,32 @@ function Get-ResourcesProperties
     return $resourcesPropertyBag
 }
 
-$connection = Get-VssConnection -TaskContext $distributedTaskContext
-
-Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter" -Verbose
-$environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter
-Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
-
-Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName" -Verbose
-$resources = Get-EnvironmentResources -EnvironmentName $environmentName -TaskContext $distributedTaskContext
-if ($resources.Count -eq 0)
+try
 {
-    throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for deployment" -ArgumentList $environmentName)
-}
+    $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-$resourcesPropertyBag = Get-ResourcesProperties -resources $resources
+    Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter" -Verbose
+    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter
+    Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
+
+    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName" -Verbose
+    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TaskContext $distributedTaskContext
+    if ($resources.Count -eq 0)
+    {
+        throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for deployment" -ArgumentList $environmentName)
+    }
+
+    $resourcesPropertyBag = Get-ResourcesProperties -resources $resources
+}
+catch
+{
+    if(-not $telemetrySet)
+    {
+        Write-Telemetry "UNKNOWNPREDEP_Error"
+    }
+
+    throw
+}
 
 if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 {
@@ -288,6 +306,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 
         if ($status -ne "Passed")
         {
+            Write-Telemetry "DEPLOYMENT_Failed"
             Write-Verbose $deploymentResponse.Error.ToString() -Verbose
             $errorMessage =  $deploymentResponse.Error.Message
             ThrowError -errorMessage $errorMessage
@@ -340,6 +359,7 @@ else
 
 if($envOperationStatus -ne "Passed")
 {
+    Write-Telemetry "DEPLOYMENT_Failed"
     $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
     ThrowError -errorMessage $errorMessage
 }

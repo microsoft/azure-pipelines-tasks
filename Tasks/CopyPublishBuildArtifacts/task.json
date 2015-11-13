@@ -4,7 +4,7 @@
   "friendlyName": "Copy and Publish Build Artifacts",
   "description": "Copy Build artifacts to staging folder then publish Build artifacts to the server or a file share using minimatch patterns",
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
-  "category": "Build",
+  "category": "Utility",
   "visibility": [
     "Build"
   ],
@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [
   ],

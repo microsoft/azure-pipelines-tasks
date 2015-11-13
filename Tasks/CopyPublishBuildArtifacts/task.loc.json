@@ -7,7 +7,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Build",
+  "category": "Utility",
   "visibility": [
     "Build"
   ],
@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
