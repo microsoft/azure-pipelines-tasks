@@ -64,17 +64,28 @@ function Assert-WasCalled {
         [Parameter(Position = 1)]
         [string]$Command,
 
+        [int]$Times = -1,
+
         [Parameter(ParameterSetName = "ParametersEvaluator")]
         [scriptblock]$ParametersEvaluator,
 
         [Parameter(ParameterSetName = "ArgumentsEvaluator")]
         [scriptblock]$ArgumentsEvaluator,
 
+        [ValidateScript({
+            if (![object]::ReferenceEquals($_, $null)) {
+                return $true
+            }
+
+            throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
+        })]
         [Parameter(ParameterSetName = "Arguments", Position = 2, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
 
     # Verbose logging.
     Write-Verbose "Asserting was-called: $Command"
+    $expectedTimesDescription = if ($Times -lt 0) { "At least once" } else { $Times }
+    Write-Verbose "  Expected times: $expectedTimesDescription"
     if (!([object]::ReferenceEquals($Arguments, $null))) {
         $OFS = " "
         Write-Verbose "  Expected arguments: $Arguments"
@@ -90,25 +101,27 @@ function Assert-WasCalled {
         throw "Mock not found for command: $Command"
     }
 
-    # Test was-called.
-    $found = $false
+    # Count matching invocations.
+    $actualTimes = 0
     foreach ($invocation in $mock.Invocations) {
         if (Test-Invocation -Invocation $invocation -ParametersEvaluator $ParametersEvaluator -ArgumentsEvaluator $ArgumentsEvaluator -Arguments $Arguments) {
-            $found = $true
+            $actualTimes++
         }
     }
 
-    # Throw if not found.
-    if (!$found) {
+    # Throw if number of times invoked does not match the expectation.
+    Write-Verbose "  Actual times: $actualTimes"
+    if (($Times -lt 0 -and $actualTimes -eq 0) -or ($Times -ge 0 -and $Times -ne $actualTimes)) {
         Trace-Invocations -Mock $mock
-        if (!$ParametersEvaluator -and !$ArgumentsEvaluator -and ([object]::ReferenceEquals($Arguments, $null))) {
-            throw "Assert was-called failed. Command was not called: $Command"
-        } elseif ($ParametersEvaluator) {
-            throw "Assert was-called failed. Command was not called according to the specified parameters evaluator. Command: $Command; ParametersEvaluator: $($ParametersEvaluator.ToString().Trim())"
+        $message = "Assert was-called failed. Expected times: $expectedTimesDescription ; Actual times: $actualTimes ; Command: $Command"
+        if ($ParametersEvaluator) {
+            throw "$message ; ParametersEvaluator: { $($ParametersEvaluator.ToString().Trim()) }"
         } elseif ($ArgumentsEvaluator) {
-            throw "Assert was-called failed. Command was not called according to the specified arguments evaluator. Command: $Command ; ArgumentsEvaluator: $($ArgumentsEvaluator.ToString().Trim())"
+            throw "$message ; ArgumentsEvaluator: { $($ArgumentsEvaluator.ToString().Trim()) }"
+        } elseif (!([object]::ReferenceEquals($Arguments, $null))) {
+            throw "$message ; Arguments: $Arguments"
         } else {
-            throw "Assert was-called failed. Command was not called with the specified arguments. Command: $Command ; Arguments: $Arguments"
+            throw $message
         }
     }
 }
@@ -129,6 +142,13 @@ function Register-Mock {
         [Parameter(ParameterSetName = 'ArgumentsEvaluator')]
         [scriptblock]$ArgumentsEvaluator,
 
+        [ValidateScript({
+            if (![object]::ReferenceEquals($_, $null)) {
+                return $true
+            }
+
+            throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
+        })]
         [Parameter(ParameterSetName = 'Arguments', Position = 3, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
 
@@ -225,14 +245,4 @@ function Register-Mock {
         }
         $mock.Implementations += $implementation
     }
-}
-
-function Register-Stub {
-    [cmdletbinding()]
-    param(
-        [ValidateNotNullOrEmpty()]
-        [string]$Command
-    )
-
-    Register-Mock -Command $Command
 }

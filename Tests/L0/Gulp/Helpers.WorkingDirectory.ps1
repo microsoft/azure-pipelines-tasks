@@ -4,7 +4,7 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\Gulp\Helpers.ps1
-Register-Stub Set-Location
+Register-Mock Set-Location
 
 # Act.
 $actual = Get-WorkingDirectoryParameter -Cwd 'Some working directory'

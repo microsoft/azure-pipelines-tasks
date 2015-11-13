@@ -11,4 +11,4 @@ if (!(Get-Module | Where-Object { $_.Name -eq 'Microsoft.PowerShell.Management' 
 Import-Module $PSScriptRoot\TestHelpersModule -Verbose:$false
 
 # Stub common commands.
-Register-Stub -Command Import-Module
+Register-Mock -Command Import-Module
