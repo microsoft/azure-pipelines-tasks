@@ -107,7 +107,6 @@ $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 
 $reportBuildFileName = [guid]::NewGuid().tostring() + ".xml"
 $reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
-$coberturaCCFile = Join-Path $buildRootPath "cobertura.cer"
 
 if($isCoverageEnabled)
 {
@@ -116,18 +115,22 @@ if($isCoverageEnabled)
 	# Enable code coverage in build file
 	if ($codeCoverageTool.equals("Cobertura"))
 	{
+		$coberturaCCFile = Join-Path $buildRootPath "cobertura.cer"
 		if(Test-Path $coberturaCCFile)
 		{
 			# delete any previous cobertura code coverage file
 			rm -r $coberturaCCFile -force | Out-Null
 		}
 		
-		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -CCReportTask $CCReportTask
+		$instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
+		if(Test-Path $instrumentedClassesDirectory)
+		{
+			# delete any previous cobertura instrumented classes
+			rm -r $instrumentedClassesDirectory -force | Out-Null
+		}
 	}
-	else
-	{
-		Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
-	}
+	
+	Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
 	Write-Verbose "Code coverage is successfully enabled." -Verbose
    }
    catch
@@ -181,14 +184,7 @@ if($isCoverageEnabled)
    Write-Verbose "Collecting code coverage reports" -Verbose
    try
    {
-	if ($codeCoverageTool.equals("Cobertura"))
-	{
-		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask 
-	}
-	else
-	{
-		Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
-	}
+	Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
    }
    catch
    {
