@@ -34,8 +34,9 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
         SetRegistryKeyForParallel
         
         $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
-        if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath)) # no file provided so create one and use it for the run
+        if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -And [io.path]::HasExtension($runSettingsFilePath))  # no file provided so create one and use it for the run
         {
+            Write-Verbose "no runsettings file provided"
             $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <RunConfiguration>
@@ -46,6 +47,7 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
         }
         else 
         {
+            Write-Verbose "adding maxcpucount element to runsettings file provided"
             $runSettingsForParallel = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
             $runConfigurationElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration")
             if($runConfigurationElement.Count -eq 0)
@@ -63,6 +65,7 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
         $runSettingsForParallel.RunSettings.RunConfiguration.MaxCpuCount = $defaultCpuCount
         $tempFile = [io.path]::GetTempFileName()
         $runSettingsForParallel.Save($tempFile)
+        Write-Verbose "temporary runsettings file created at $tempFile"
         return $tempFile
     }
     return $runSettingsFilePath
@@ -129,7 +132,7 @@ if($testAssemblyFiles)
     $testResultsDirectory = $workingDirectory + "\" + "TestResults"
 
     $defaultCpuCount = "0"    
-    $runSettingsFileWithParallel = SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount
+    $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
     
     Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
 
