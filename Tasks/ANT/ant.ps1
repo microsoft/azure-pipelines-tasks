@@ -187,7 +187,14 @@ if($isCoverageEnabled)
 	}
 	else
 	{
-		Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
+		if(Test-Path $reportBuildFile)
+		{
+			Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
+		}
+		else
+		{
+			Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask
+		}
 	}
    }
    catch
