@@ -22,7 +22,7 @@ Write-Verbose "options = $options"
 Write-Verbose "tasks = $tasks"
 Write-Verbose "publishJUnitResults = $publishJUnitResults"
 Write-Verbose "testResultsFiles = $testResultsFiles"
-$isCoverageEnabled = !$codeCoverageTool.equals("None")
+$isCoverageEnabled = !($codeCoverageTool -eq "None")
 if($isCoverageEnabled)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" 
@@ -100,7 +100,7 @@ $subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -
 Write-Verbose "subprojects: $subprojects"
 $singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
 
-if($codeCoverageTool.equals("JaCoCo"))
+if($codeCoverageTool -eq "JaCoCo")
 {
     $summaryFileName = "summary.xml"
 
@@ -113,7 +113,7 @@ if($codeCoverageTool.equals("JaCoCo"))
         $reportingTaskName = "jacocoRootReport"
     }
 }
-elseif($codeCoverageTool.equals("Cobertura"))
+elseif($codeCoverageTool -eq "Cobertura")
 {
     $summaryFileName = "coverage.xml"
     $reportingTaskName = "cobertura"
