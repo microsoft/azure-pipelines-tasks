@@ -184,7 +184,15 @@ if($isCoverageEnabled)
    Write-Verbose "Collecting code coverage reports" -Verbose
    try
    {
-	Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
+	if(Test-Path $reportBuildFile)
+	{
+		# This will handle compat between S91 and S92
+		Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
+	}
+	else
+	{
+		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask
+	}
    }
    catch
    {
