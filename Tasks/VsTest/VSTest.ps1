@@ -163,10 +163,11 @@ if($testAssemblyFiles)
         }
         else
         {
-	    if($testRunTitle)
-	    {
-		Write-Warning "Update the build agent to be able to use the custom run title feature."
-	    }
+            if($testRunTitle)
+            {
+                Write-Warning "Update the build agent to be able to use the custom run title feature."
+            }
+            
             if($publishRunLevelAttachmentsExists)		
             {
                 Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
