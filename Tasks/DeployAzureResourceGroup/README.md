@@ -51,6 +51,12 @@ _NOTE: Follow the Azure Naming guidelines while specifying parameters, few impor
 
 - Override Template Parameters: The Override template parameters is used to override the parameters, like -storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre).
 
+### Output variables:
+ Create/update action of the Azure Resource Group task now produces an output variable during execution which can be used to refer to the resource group in subsequent tasks. For example "PowerShell on Target Machine" task can now refer to resource group output variable so that it can execute the powershell script on the target. 
+ 
+ Limitation: Output variable produced during execution will have details about: VM hostname and (public) port only. Credentials to connect to the VM host(s) are to be provided explicitly in the subsequent tasks.
+
+
 ### Setting up a virtual machine for WinRM HTTPS using Azure Templates:
 
 Tasks like Azure File Copy, PowerShell on Target Machines, Visual Studio Test Agent Deployment run on the automation agent machine and copy files or deploy apps to Azure VMs using the WinRM HTTPS protocol. For these tasks to work properly, the WinRM HTTPS port (default port is 5986) needs to be opened and configured properly on the virtual machines. Opening the ports and configuring them with the certificates is done using the Azure templates. The [sample template](http://aka.ms/sampletemplate) uploaded on GitHub shows how to enable the WinRM HTTPS protocol on Azure virtual machines and map them to a Public IP using the Azure resource providers' wiz. Network Interfaces, Load Balancers and Virtual Machines. In addition, it also shows how to specify the Azure Key Vault and its secret, and to download and install the certificate on the virtual machine.
