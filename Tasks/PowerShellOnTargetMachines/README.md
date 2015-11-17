@@ -13,7 +13,7 @@ The task is used run PowerShell on the target machines. The task can run both Po
 * **PowerShell Script**: The location of the PowerShell script on the target machine like c:\FabrikamFibre\Web\deploy.ps1. Environment variables can be also used like $env:windir, $env:systemroot etc. 
 * **Script Arguments**: The arguments needed by the script, if any provided in the following format -applicationPath $(applicationPath) -username $(vmusername) -password $(vmpassword). 
 * **Initialization Script**: The location of the data script that is used by PowerShell-DSC and the location has to be on the target machine. It is advisable to sue arguments in place of the initialization script.  
-* **Session Variables**: Used for setting-up the session variables for the PowerShell scripts and the input is a comma separated list like $varx=valuex, $vary=valuey. This is mostly used for backward compatibility with the earlier versions of Release Management product and tt is advisable to sue arguments in place of the session variables.
+* **Session Variables**: Used for setting-up the session variables for the PowerShell scripts and the input is a comma separated list like $varx=valuex, $vary=valuey. This is mostly used for backward compatibility with the earlier versions of Release Management product and it is advisable to use arguments in place of the session variables.
 * **Advanced Options**: The advanced options provide more fine-grained control on the deployment. 
 * **Run PowerShell in Parallel**: Checking this option will execute the PowerShell in-parallel on all VMs in the Resource Group.  
       
