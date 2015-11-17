@@ -20,6 +20,11 @@ function CmdletHasMember($memberName) {
     return $publishParameters
 }
 
+function IsVisualStudioUpdate1Installed() {
+    # make future proof
+    return Test-Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll"
+}
+
 function SetRegistryKeyForParallel() {
     reg add HKCU\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef /v Value /t REG_DWORD /d 1 /f /reg:32
     # New-Item -Path HKCU:\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef -Value 1 -Force
@@ -36,7 +41,7 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
         $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
         if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -Or (-Not [io.path]::HasExtension($runSettingsFilePath)))  # no file provided so create one and use it for the run
         {
-            Write-Verbose "no runsettings file provided"
+            Write-Verbose "No runsettings file provided"
             $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <RunConfiguration>
@@ -47,7 +52,7 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
         }
         else 
         {
-            Write-Verbose "adding maxcpucount element to runsettings file provided"
+            Write-Verbose "Adding maxcpucount element to runsettings file provided"
             $runSettingsForParallel = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
             $runConfigurationElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration")
             if($runConfigurationElement.Count -eq 0)
@@ -65,7 +70,7 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
         $runSettingsForParallel.RunSettings.RunConfiguration.MaxCpuCount = $defaultCpuCount
         $tempFile = [io.path]::GetTempFileName()
         $runSettingsForParallel.Save($tempFile)
-        Write-Verbose "temporary runsettings file created at $tempFile"
+        Write-Verbose "Temporary runsettings file created at $tempFile"
         return $tempFile
     }
     return $runSettingsFilePath
@@ -132,6 +137,12 @@ if($testAssemblyFiles)
     $testResultsDirectory = $workingDirectory + "\" + "TestResults"
 
     $defaultCpuCount = "0"    
+    if(IsVisualStudioUpdate1Installed)
+    {
+        Write-Warning "Visual Studio 2015 Update 1 or higher is required to run the tests in parallel."
+        $runInParallel = "false"
+    }
+    
     $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
     
     Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
