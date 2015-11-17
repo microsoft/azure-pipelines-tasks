@@ -52,7 +52,7 @@ _NOTE: Follow the Azure Naming guidelines while specifying parameters, few impor
 - Override Template Parameters: The Override template parameters is used to override the parameters, like -storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre).
 
 ### Output variables:
- Create/update action of the Azure Resource Group task now produces an output variable during execution. The output variable can be used to refer to the resource group object in the subsequent tasks. For example "PowerShell on Target Machine" task can now refer to resource group output variable so that it can execute the powershell script on the resource group VM targets. 
+ Create/update action of the Azure Resource Group task now produces an output variable during execution. The output variable can be used to refer to the resource group object in the subsequent tasks. For example "PowerShell on Target Machine" task can now refer to resource group output variable as '$(variableName)' so that it can execute the powershell script on the resource group VM targets. 
  
  Limitation: Output variable produced during execution will have details about VM hostname(s) and (public) ports, if any. Credentials to connect to the VM host(s) are to be provided explicitly in the subsequent tasks.
 
