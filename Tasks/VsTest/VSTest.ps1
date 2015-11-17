@@ -20,24 +20,33 @@ function CmdletHasMember($memberName) {
     return $publishParameters
 }
 
-function IsVisualStudioUpdate1Installed() {
-    # make future proof
-    return Test-Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll"
+function SetRegistryKeyForParallel($vsTestVersion) {
+    $regkey = "HKCU\SOFTWARE\Microsoft\VisualStudio\" + $vsTestVersion + "_Config\FeatureFlags\TestingTools\UnitTesting\Taef"
+    reg add $regkey /v Value /t REG_DWORD /d 1 /f /reg:32
 }
 
-function SetRegistryKeyForParallel() {
-    reg add HKCU\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef /v Value /t REG_DWORD /d 1 /f /reg:32
-    # New-Item -Path HKCU:\SOFTWARE\Microsoft\VisualStudio\14.0_Config\FeatureFlags\TestingTools\UnitTesting\Taef -Value 1 -Force
+function IsVisualStudio2015Update1OrHigherInstalled($vsTestVersion) {
+    $version = [int]($vsTestVersion)
+    if($version -ge 14)
+    {
+        # checking for dll introduced in vs2015 update1
+        # since path of the dll will change in dev15+ using vstestversion>14 as a blanket yes
+        if(Test-Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll" -Or $version -gt 14)
+        {
+            # ensure the registry is set otherwise you need to launch VSIDE
+            SetRegistryKeyForParallel $vsTestVersion
+            
+            return $true
+        }
+    }
+    
+    return $false
 }
-
 
 function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePath, $defaultCpuCount) {
 
     if($runInParallelFlag -eq "True")
-    {
-        # ensure the registry is set
-        SetRegistryKeyForParallel
-        
+    {        
         $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
         if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -Or (-Not [io.path]::HasExtension($runSettingsFilePath)))  # no file provided so create one and use it for the run
         {
@@ -136,13 +145,14 @@ if($testAssemblyFiles)
     $workingDirectory = $artifactsDirectory
     $testResultsDirectory = $workingDirectory + "\" + "TestResults"
 
-    $defaultCpuCount = "0"    
-    if(IsVisualStudioUpdate1Installed)
+    $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion
+    if(-Not $rightVSVersionAvailable)
     {
-        Write-Warning "Visual Studio 2015 Update 1 or higher is required to run the tests in parallel."
+        Write-Warning "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel."
         $runInParallel = "false"
     }
     
+    $defaultCpuCount = "0"    
     $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
     
     Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
