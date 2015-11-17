@@ -4,7 +4,7 @@
 var path = require('path');
 var tl = require("vso-task-lib");
 // content is a folder contain artifacts needs to publish.
-var artifactContents = tl.getPathInput('ArtifactContents');
+var pathtoPublish = tl.getPathInput('PathtoPublish');
 var artifactName = tl.getInput('ArtifactName');
 var artifactType = tl.getInput('ArtifactType');
 // targetPath is used for file shares
@@ -28,13 +28,13 @@ else {
         if (artifactType === "container") {
             data["containerfolder"] = artifactName;
             // add localpath to ##vso command's properties for back compat of old Xplat agent
-            data["localpath"] = artifactContents;
-            tl.command("artifact.upload", data, artifactContents);
+            data["localpath"] = pathtoPublish;
+            tl.command("artifact.upload", data, pathtoPublish);
         }
         else if (artifactType === "filepath") {
             var artifactPath = path.join(targetPath, artifactName);
             tl.mkdirP(artifactPath);
-            tl.cp("-Rf", path.join(artifactContents, "*"), artifactPath);
+            tl.cp("-Rf", path.join(pathtoPublish, "*"), artifactPath);
             // add artifactlocation to ##vso command's properties for back compat of old Xplat agent
             data["artifactlocation"] = targetPath;
             tl.command("artifact.associate", data, targetPath);
