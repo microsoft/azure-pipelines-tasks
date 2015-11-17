@@ -165,6 +165,12 @@ $envOperationStatus = 'Passed'
 # copying files to azure vms
 try
 {
+    if($isSwitchAzureModeRequired)
+    {
+        Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
+        Switch-AzureMode AzureResourceManager
+    }
+     
     $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $environmentName
     if ($azureVMResources.Count -eq 0)
     {
