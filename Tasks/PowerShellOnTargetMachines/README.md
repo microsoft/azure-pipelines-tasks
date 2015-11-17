@@ -5,15 +5,17 @@ The task is used run PowerShell on the target machines. The task can run both Po
 
 ###The different parameters of the task are explained below: 
 
-* **Machine Group**: The name of the Machine Group. 
-* **Select Machines By**: The parameter is used to specify the subset of machines, where the PowerShell will be run and the subset can be specified by the names of the machines or the tags on them.   
-* **Filter Criteria**: If deploying to a subset of machines provide a comma separated list of the machines here, else if using tags then provide the tags in the format Role:Web; OS:win7. The default is to deploy to all the machines in the Machine Group. 
+* **Machines**: Specify comma separated list of machine FQDNs/ip addresses along with port(optional). For example dbserver.fabrikma.com, dbserver_int.fabrikam.com:5986,192.168.34:5986. Port when not specified will be defaulted to WinRM defaults based on the specified protocol. i.e., (*WinRM 2.0*):  The default HTTP port is 5985, and the default HTTPS port is 5986.. Machines field also accepts 'Machine Groups' defined under 'Test' > 'Machines' hub. 
+* **Admin Login**: Domain/Local administrator of the target host. Format: <Domain or hostname> \ <Admin User>
+* **Password**:  Password for the adming login. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.  
+* **Protocol**:  Specifies the protocol that will be used to connect, either HTTP or HTTPS. 
 * **PowerShell Script**: The location of the PowerShell script on the target machine like c:\FabrikamFibre\Web\deploy.ps1. Environment variables can be also used like $env:windir, $env:systemroot etc. 
 * **Script Arguments**: The arguments needed by the script, if any provided in the following format -applicationPath $(applicationPath) -username $(vmusername) -password $(vmpassword). 
-* **Initialization Script**: The location of the data script that is used by PowerShell-DSC and the location has to be on the target machine. It is advisable to sue arguments in place of the initialization script.   
+* **Initialization Script**: The location of the data script that is used by PowerShell-DSC and the location has to be on the target machine. It is advisable to sue arguments in place of the initialization script.  
+* **Session Variables**: Used for setting-up the session variables for the PowerShell scripts and the input is a comma separated list like $varx=valuex, $vary=valuey. This is mostly used for backward compatibility with the earlier versions of Release Management product and tt is advisable to sue arguments in place of the session variables.
 * **Advanced Options**: The advanced options provide more fine-grained control on the deployment. 
- * **Run PowerShell in Parallel**: Checking this option will execute the PowerShell in-parallel on all VMs in the Resource Group.  
- * **Session Variables**: Used for setting-up the session variables for the PowerShell scripts and the input is a comma separated list like $varx=valuex, $vary=valuey. This is mostly used for backward compatibility with the earlier versions of Release Management product and tt is advisable to sue arguments in place of the session variables.      
+* **Run PowerShell in Parallel**: Checking this option will execute the PowerShell in-parallel on all VMs in the Resource Group.  
+      
 
 ### Machine Pre-requisites for the Task :
 
