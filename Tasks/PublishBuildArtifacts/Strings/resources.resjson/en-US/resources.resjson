@@ -3,11 +3,11 @@
 // *******************************************************
 {
   "loc.friendlyName": "Publish Build Artifacts",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=708390)",
   "loc.description": "Publish Build artifacts to the server or a file share",
   "loc.instanceNameFormat": "Publish Artifact: $(ArtifactName)",
-  "loc.input.label.ArtifactContents": "Artifact Contents",
-  "loc.input.help.ArtifactContents": "Folder containing files that you want to include in the artifact",
+  "loc.input.label.PathtoPublish": "Path to Publish",
+  "loc.input.help.PathtoPublish": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root.  Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
   "loc.input.label.ArtifactName": "Artifact Name",
   "loc.input.help.ArtifactName": "The name of the artifact to create.",
   "loc.input.label.ArtifactType": "Artifact Type",
