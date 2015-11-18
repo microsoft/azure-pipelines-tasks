@@ -70,6 +70,7 @@ $reportPOMFileName = [guid]::NewGuid().tostring() + ".xml"
 $reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
+$targetDirectory = Join-Path $buildRootPath "target"
 $summaryFileNameJacoco = "jacoco.xml"
 $summaryFileNameCobertura = "coverage.xml"
 $summaryFileJacoco = Join-Path $buildRootPath $reportDirectoryName
@@ -79,6 +80,15 @@ $summaryFileCobertura = Join-Path $summaryFileCobertura $summaryFileNameCobertur
 $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
+
+if($isCoverageEnabled)
+{
+	if(Test-Path $targetDirectory)
+	{
+		# delete the target directory created by cobertura
+		rm -r $targetDirectory -force | Out-Null
+	}
+}
 
 # Enable Code Coverage
 EnableCodeCoverage $isCoverageEnabled $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileNameJacoco $reportDirectory $reportPOMFile
@@ -128,6 +138,7 @@ if(Test-Path $reportPOMFile)
     # delete any previous code coverage data 
     rm $reportPOMFile -force | Out-Null
 }
+
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile

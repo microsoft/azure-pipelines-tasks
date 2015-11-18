@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 22
+    "Patch": 23
   },
   "minimumAgentVersion": "1.91.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -138,7 +138,7 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
-      "visibleRule": "codeCoverageTool != None"
+      "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
       "name": "javaHomeSelection",
