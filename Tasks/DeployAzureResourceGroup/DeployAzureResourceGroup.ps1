@@ -57,15 +57,23 @@ if($isSwitchAzureModeRequired)
 if( $action -eq "Create Or Update Resource Group" )
 {
     Create-AzureResourceGroupHelper -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
+    if(-not [string]::IsNullOrEmpty($outputVariable))
+    {
+        Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+    }
+}
+elseif( $action -eq "SelectRG")
+{
+    if([string]::IsNullOrEmpty($outputVariable))
+    {
+        throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
+    }
+    
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
 }
 else
 {
     Perform-Action -action $action -resourceGroupName $resourceGroupName
-}
-
-if( $action -eq "Create Or Update Resource Group" -and -not [string]::IsNullOrEmpty($outputVariable))
-{
-    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
 }
 
 Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"

@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 29
+    "Patch": 31
   },
   "demands": [
     "azureps"
@@ -51,7 +51,8 @@
         "Stop": "Stop Virtual Machines",
         "Restart": "Restart Virtual Machines",
         "Delete": "Delete Virtual Machines",
-        "DeleteRG": "Delete Resource Group"
+        "DeleteRG": "Delete Resource Group",
+        "SelectRG": "Select Resource Group"
       }
     },
     {
