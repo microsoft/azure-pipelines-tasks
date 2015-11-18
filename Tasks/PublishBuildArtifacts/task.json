@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 18
   },
   "demands": [
   ],
@@ -24,7 +24,7 @@
       "label": "Path to Publish",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root."
+      "helpMarkDown": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root.  Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
     },
     {
       "name": "ArtifactName",
