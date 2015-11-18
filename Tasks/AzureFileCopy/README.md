@@ -89,3 +89,8 @@ The task can only copy files to the Azure Virtual Machines that are created usin
 ### Earlier Versions
 
 If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/vso-agent-tasks/tree/releases/m90/Tasks/AzureFileCopy/. 
+
+### Supported Azure and AzureRM module versions:
+* Azure module version: [0.9.10](http://www.powershellgallery.com/packages/Azure/0.9.10)
+* AzureRM module version: [1.0.0](http://www.powershellgallery.com/packages/AzureRM/1.0.0)
+ 
