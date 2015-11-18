@@ -6,7 +6,7 @@ function Assert-AreEqual {
         [string]$Message)
 
     Write-Verbose "Asserting are equal. Expected: '$Expected' ; Actual: '$Actual'."
-    if ($Expected -ne $Actual) {
+    if (!(Test-AreEqual $Expected $Actual)) {
         throw ("Assert are equal failed. Expected: '$Expected' ; Actual: '$Actual'. $Message".Trim())
     }
 }
@@ -19,8 +19,21 @@ function Assert-AreNotEqual {
         [string]$Message)
 
     Write-Verbose "Asserting are not equal. Expected: '$NotExpected' ; Actual: '$Actual'."
-    if ($NotExpected -eq $Actual) {
+    if (Test-AreEqual $NotExpected $Actual) {
         throw ("Assert are not equal failed. Not expected: '$NotExpected' ; Actual: '$Actual'. $Message".Trim())
+    }
+}
+
+function Assert-IsGreaterThan {
+    [cmdletbinding()]
+    param(
+        [object]$Expected,
+        [object]$Actual,
+        [string]$Message)
+
+    Write-Verbose "Asserting is greater than. Expected greater than: '$Expected' ; Actual: '$Actual'."
+    if (!($Actual -gt $Expected)) {
+        throw ("Assert is greater than failed. Expected to be greater than: '$Expected' ; Actual: '$Actual'. $Message".Trim())
     }
 }
 
@@ -35,6 +48,27 @@ function Assert-IsNullOrEmpty {
         throw ("Assert is null or empty failed. Actual: '$Actual'. $Message".Trim())
     }
 }
+
+function Assert-Parses {
+    [cmdletbinding()]
+    param(
+        [ValidateNotNullOrEmpty()]
+        [string[]]$Path)
+
+    $parseErrors = $null
+    $fileCount = 0
+    foreach ($file in (Get-ChildItem -Path $Path)) {
+        $fileCount++
+        $null = [System.Management.Automation.PSParser]::Tokenize((Get-Content $file), [ref]$parseErrors)
+        if ($parseErrors) {
+            $OFS = " "
+            throw "Errors parsing file: $($file.FullName) ; Errors: $parseErrors)"
+        }
+    }
+
+    Assert-IsGreaterThan 0 $fileCount "Expected at least one file to parse."
+}
+
 
 function Assert-Throws {
     [cmdletbinding()]
@@ -202,7 +236,6 @@ function Register-Mock {
                         throw "Multiple matching implementations found for command: $commandName"
                     }
 
-                    # Store the matching implementation.
                     $matchingImplementation = $implementation
                 }
             }

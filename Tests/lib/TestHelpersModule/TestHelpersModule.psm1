@@ -9,6 +9,8 @@ Export-ModuleMember -Verbose:$false -Function @(
     'Assert-AreEqual'
     'Assert-AreNotEqual'
     'Assert-IsNullOrEmpty'
+    'Assert-IsGreaterThan'
+    'Assert-Parses'
     'Assert-Throws'
     'Assert-WasCalled'
     'Register-Mock'
