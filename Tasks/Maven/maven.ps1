@@ -81,6 +81,15 @@ $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
 
+if($isCoverageEnabled)
+{
+	if(Test-Path $targetDirectory)
+	{
+		# delete the target directory created by cobertura
+		rm -r $targetDirectory -force | Out-Null
+	}
+}
+
 # Enable Code Coverage
 EnableCodeCoverage $isCoverageEnabled $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileNameJacoco $reportDirectory $reportPOMFile
 
@@ -130,14 +139,6 @@ if(Test-Path $reportPOMFile)
     rm $reportPOMFile -force | Out-Null
 }
 
-if($isCoverageEnabled)
-{
-	if(Test-Path $targetDirectory)
-	{
-		# delete the target directory created by cobertura
-		rm -r $targetDirectory -force | Out-Null
-	}
-}
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile
