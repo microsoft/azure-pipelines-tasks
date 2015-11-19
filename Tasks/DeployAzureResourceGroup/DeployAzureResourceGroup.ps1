@@ -38,8 +38,11 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 
 $ErrorActionPreference = "Stop"
 
-. ./Utility.ps1
-Import-Module ./AzureUtility.ps1 -Force
+if(-not $UnderTestCondition)
+{
+    . ./Utility.ps1
+    Import-Module ./AzureUtility.ps1 -Force
+}
 
 Validate-AzurePowershellVersion
 
