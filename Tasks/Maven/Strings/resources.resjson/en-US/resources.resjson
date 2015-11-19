@@ -37,7 +37,7 @@
   "loc.input.label.jdkArchitecture": "JDK Architecture",
   "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK.",
   "loc.input.label.sqAnalysisEnabled": "Run SonarQube Analysis",
-  "loc.input.help.sqAnalysisEnabled": "Run a [SonarQube](http://www.sonarqube.org/) analysis after executing the current goals. 'install' or 'package' goals should be executed first.",
+  "loc.input.help.sqAnalysisEnabled": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first.",
   "loc.input.label.sqConnectedServiceName": "SonarQube Endpoint",
   "loc.input.help.sqConnectedServiceName": "The endpoint that specifies the SonarQube server to use",
   "loc.input.label.sqDbDetailsRequired": "The SonarQube server version is lower than 5.2",

@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 24
     },
    "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -196,7 +196,7 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "SQAnalysis",
-            "helpMarkDown": "Run a [SonarQube](http://www.sonarqube.org/) analysis after executing the current goals. 'install' or 'package' goals should be executed first."
+            "helpMarkDown": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
         },
         {
             "name": "sqConnectedServiceName",
