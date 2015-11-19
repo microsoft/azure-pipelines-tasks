@@ -4,7 +4,7 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 Register-Mock Invoke-SomeCommand
-Invoke-SomeCommand -Param1 Value1 -Param2 Value2
+Invoke-SomeCommand
 
 # Act / Assert does not throw.
-Assert-WasCalled Invoke-SomeCommand
+Assert-Throws { Assert-WasCalled Invoke-SomeCommand -Times 0 }
