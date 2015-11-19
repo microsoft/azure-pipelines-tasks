@@ -8,6 +8,7 @@ param(
     [string] $symbolsMaximumWaitTime,
     [string] $symbolsFolder,
     [string] $symbolsArtifactName,
+    [string] $indexSources = 'true',
     [string] $treatNotIndexedAsWarning = 'false'
 )
 
@@ -77,10 +78,16 @@ foreach ($pdbFile in $pdbFiles) {
     Write-Verbose "pdbFile = $pdbFile"
 }
 
-Write-Host (Get-LocalizedString -Key "Found {0} symbol files to index." -ArgumentList $pdbFiles.Count)
-
 # Index the sources.
-& $PSScriptRoot\Invoke-IndexSources.ps1 -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:($treatNotIndexedAsWarning -eq 'true')
+if ($indexSources -eq 'true')
+{
+    Write-Host (Get-LocalizedString -Key "Found {0} symbol files to index." -ArgumentList $pdbFiles.Count)
+    & $PSScriptRoot\Invoke-IndexSources.ps1 -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:($treatNotIndexedAsWarning -eq 'true')
+}
+else
+{
+    Write-Verbose "Index sources option set to false"
+}
 
 if ($symbolsPath)
 {

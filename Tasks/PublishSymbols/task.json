@@ -48,6 +48,15 @@
             "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder."
         },
         {
+            "name": "IndexSources",
+            "type": "boolean",
+            "label": "Index sources",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Indicates whether to index the sources or not.",
+            "groupName": "advanced"
+        },
+        {
             "name": "TreatNotIndexedAsWarning",
             "type": "boolean",
             "label": "Warn if not indexed",
