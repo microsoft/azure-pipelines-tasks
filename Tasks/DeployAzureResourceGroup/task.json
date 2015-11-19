@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 31
+        "Patch": 30
     },
     "demands": [
         "azureps"
@@ -44,12 +44,12 @@
             "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
             "options": {
                  "Create Or Update Resource Group": "Create Or Update Resource Group",
+                 "SelectRG": "Select Resource Group",
                  "Start": "Start Virtual Machines",
                  "Stop": "Stop Virtual Machines",
                  "Restart": "Restart Virtual Machines",
                  "Delete": "Delete Virtual Machines",
-                 "DeleteRG": "Delete Resource Group",
-                 "SelectRG": "Select Resource Group"
+                 "DeleteRG": "Delete Resource Group"
                 }
         },
         {
