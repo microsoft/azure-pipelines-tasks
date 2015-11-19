@@ -14,5 +14,7 @@
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Additional arguments passed to gulp.  --gulpfile is not needed since already added via gulpFile input above.",
   "loc.input.label.cwd": "Working Directory",
-  "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located."
+  "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+  "loc.input.label.gulpjs": "gulp.js location",
+  "loc.input.help.gulpjs": "gulp.js to run.  Defaults to the gulp.js under node_modules folder of cwd."
 }
