@@ -60,6 +60,15 @@
             "required":false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
             "groupName":"advanced"
+        },
+        {
+            "name": "gulpjs",
+            "type": "string",
+            "label": "gulp.js location",
+            "defaultValue":"node_modules/gulp/bin/gulp.js",
+            "required":true,
+            "helpMarkDown": "gulp.js to run.  Defaults to the gulp.js under node_modules folder of cwd.",
+            "groupName":"advanced"
         }
     ],
     "execution": {
