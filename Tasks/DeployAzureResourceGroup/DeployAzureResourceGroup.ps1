@@ -65,7 +65,7 @@ if( $action -eq "Create Or Update Resource Group" )
         Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
     }
 }
-elseif( $action -eq "SelectRG")
+elseif( $action -eq "Select Resource Group")
 {
     if([string]::IsNullOrEmpty($outputVariable))
     {
