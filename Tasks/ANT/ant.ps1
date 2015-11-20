@@ -12,7 +12,8 @@
     [string]$javaHomeSelection,
     [string]$jdkVersion,
     [string]$jdkArchitecture,
-    [string]$jdkUserInputPath
+    [string]$jdkUserInputPath,
+    [string]$antHomeUserInputPath
 )
 
 Write-Verbose 'Entering Ant.ps1'
@@ -25,7 +26,8 @@ Write-Verbose "javaHomeSelection = $javaHomeSelection"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 Write-Verbose "jdkUserInputPath = $jdkUserInputPath"
-
+Write-Verbose "antHomeUserInputPath = $antHomeUserInputPath"
+    
 $isCoverageEnabled = !($codeCoverageTool -eq "None")
 if($isCoverageEnabled)
 {
@@ -45,6 +47,23 @@ if(!$antBuildFile)
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
+
+# Determine if ANT_HOME should be set by path provided by user
+if($antHomeUserInputPath)
+{
+    Write-Verbose "Evaluating provided path for ANT_HOME of '$antHomeUserInputPath'"
+    if(Test-Path -LiteralPath $antHomeUserInputPath)
+    {
+        Write-Verbose "Using path from user input to set ANT_HOME"
+        Write-Host "Setting ANT_HOME to $antHomeUserInputPath"
+        $env:ANT_HOME = $antHomeUserInputPath
+        Write-Verbose "ANT_HOME set to $env:ANT_HOME"
+    }
+    else
+    {
+        throw (Get-LocalizedString -Key "The specified ANT_HOME path does not exist. Please provide a valid path.")
+    }
+}
 
 # If JAVA_HOME is being set by choosing a JDK version find the path to that specified version else use the path given by the user
 $jdkPath = $null
