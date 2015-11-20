@@ -10,7 +10,6 @@ $file = "$directory1\Some solution"
 $nuGetPath = 'Some path to NuGet.exe'
 $msBuildLocation = 'Some MSBuild location'
 $msBuildArguments = 'Some MSBuild arguments'
-Register-Mock Get-LocalizedString { $OFS = " " ; "$args" }
 Register-Mock Get-ToolPath
 Register-Mock Invoke-MSBuild
 Register-Mock Invoke-Tool

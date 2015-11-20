@@ -4,7 +4,6 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 Register-Mock Convert-String { [bool]::Parse($args[0]) }
-Register-Mock Get-LocalizedString { $OFS = " " ; "$args" }
 Register-Mock Get-SolutionFiles { 'Some solution 1', 'Some solution 2' } -- -Solution 'Some input solution'
 Register-Mock Write-Warning
 Register-Mock Select-VSVersion

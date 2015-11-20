@@ -1,9 +1,6 @@
 function Assert-AreEqual {
     [cmdletbinding()]
-    param(
-        [object]$Expected,
-        [object]$Actual,
-        [string]$Message)
+    param([object]$Expected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting are equal. Expected: '$Expected' ; Actual: '$Actual'."
     if (!(Test-AreEqual $Expected $Actual)) {
@@ -13,10 +10,7 @@ function Assert-AreEqual {
 
 function Assert-AreNotEqual {
     [cmdletbinding()]
-    param(
-        [object]$NotExpected,
-        [object]$Actual,
-        [string]$Message)
+    param([object]$NotExpected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting are not equal. Expected: '$NotExpected' ; Actual: '$Actual'."
     if (Test-AreEqual $NotExpected $Actual) {
@@ -26,10 +20,7 @@ function Assert-AreNotEqual {
 
 function Assert-IsGreaterThan {
     [cmdletbinding()]
-    param(
-        [object]$Expected,
-        [object]$Actual,
-        [string]$Message)
+    param([object]$Expected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting is greater than. Expected greater than: '$Expected' ; Actual: '$Actual'."
     if (!($Actual -gt $Expected)) {
@@ -37,14 +28,24 @@ function Assert-IsGreaterThan {
     }
 }
 
+function Assert-IsNotNullOrEmpty {
+    [cmdletbinding()]
+    param([object]$Actual, [string]$Message)
+
+    Write-Verbose "Asserting is not null or empty."
+    if (!$Actual) {
+        $OFS = " "
+        throw ("Assert is not null or empty failed. Actual: '$Actual'. $Message".Trim())
+    }
+}
+
 function Assert-IsNullOrEmpty {
     [cmdletbinding()]
-    param(
-        [object]$Actual,
-        [string]$Message)
+    param([object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting is null or empty."
     if ($Actual) {
+        $OFS = " "
         throw ("Assert is null or empty failed. Actual: '$Actual'. $Message".Trim())
     }
 }
@@ -117,15 +118,12 @@ function Assert-WasCalled {
         [Parameter(ParameterSetName = "ArgumentsEvaluator")]
         [scriptblock]$ArgumentsEvaluator,
 
-        [ValidateScript({
-            if (![object]::ReferenceEquals($_, $null)) {
-                return $true
-            }
-
-            throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
-        })]
         [Parameter(ParameterSetName = "Arguments", Position = 2, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
+
+    if ($PSCmdlet.ParameterSetName -eq 'Arguments' -and ([object]::ReferenceEquals($Arguments, $null))) {
+        throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
+    }
 
     # Verbose logging.
     Write-Verbose "Asserting was-called: $Command"
@@ -164,6 +162,7 @@ function Assert-WasCalled {
         } elseif ($ArgumentsEvaluator) {
             throw "$message ; ArgumentsEvaluator: { $($ArgumentsEvaluator.ToString().Trim()) }"
         } elseif (!([object]::ReferenceEquals($Arguments, $null))) {
+            $OFS = " "
             throw "$message ; Arguments: $Arguments"
         } else {
             throw $message
@@ -187,15 +186,12 @@ function Register-Mock {
         [Parameter(ParameterSetName = 'ArgumentsEvaluator')]
         [scriptblock]$ArgumentsEvaluator,
 
-        [ValidateScript({
-            if (![object]::ReferenceEquals($_, $null)) {
-                return $true
-            }
-
-            throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
-        })]
         [Parameter(ParameterSetName = 'Arguments', Position = 3, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
+
+    if ($PSCmdlet.ParameterSetName -eq 'Arguments' -and ([object]::ReferenceEquals($Arguments, $null))) {
+        throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
+    }
 
     # Check if the command is already registered.
     $mock = $mocks[$Command]
@@ -205,7 +201,8 @@ function Register-Mock {
             'Command' = $Command
             'Implementations' = @( )
             'Invocations' = @( )
-            'GlobalFunction' = New-Item -Path "function:\global:$Command" -Value {
+            'GlobalAlias' = New-Alias -Name $Command -Value "global:$Command" -Scope global -PassThru
+            'GlobalFunction' = New-Item -Force -Path "function:\global:$Command" -Value {
                 param()
 
                 # Lookup the mock.
@@ -295,6 +292,7 @@ function Unregister-Mock {
 
     $mock = $mocks[$Command]
     if ($mock) {
+        Remove-Item -LiteralPath "alias:\$($mock.GlobalAlias.Name)"
         Remove-Item -LiteralPath $mock.GlobalFunction.PSPath
         $mocks.Remove($Command)
     }

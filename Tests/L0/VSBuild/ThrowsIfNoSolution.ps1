@@ -4,7 +4,6 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 Register-Mock Convert-String { [bool]::Parse($args[0]) }
-Register-Mock Get-LocalizedString { $OFS = " " ; "$args" }
 
 # Act/Assert.
 $splat = @{

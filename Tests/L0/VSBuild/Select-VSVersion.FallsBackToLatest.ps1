@@ -4,7 +4,6 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\VSBuild\Helpers.ps1
-Register-Mock Get-LocalizedString { $OFS = " " ; "$args" }
 Register-Mock Write-Warning
 Register-Mock Get-VisualStudioPath { } -- -Version 'Some unknown VS version'
 Register-Mock Get-VisualStudioPath { 'Some location' } -- -Version '14.0'

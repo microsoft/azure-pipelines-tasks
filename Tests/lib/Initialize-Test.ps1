@@ -9,6 +9,18 @@ if (!(Get-Module | Where-Object { $_.Name -eq 'Microsoft.PowerShell.Management' 
 }
 
 Import-Module $PSScriptRoot\TestHelpersModule -Verbose:$false
+Register-Mock Import-Module
+function Get-LocalizedString {
+    [cmdletbinding()]
+    param(
+        [parameter(Mandatory = $true)]
+        [string]$Key,
+        
+        [object[]]$ArgumentList)
 
-# Stub common commands.
-Register-Mock -Command Import-Module
+    if (@($ArgumentList).Count -eq 0) { # Workaround for Powershell quirk, passing a single null argument to a list parameter.
+        $ArgumentList = @( $null )
+    }
+
+    ($Key -f $ArgumentList)
+}

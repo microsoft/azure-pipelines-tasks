@@ -1,14 +1,15 @@
 [cmdletbinding()]
 param(
-    [string] $symbolsPath,
-    [string] $searchPattern,
-    [string] $sourceFolder, # Support for sourceFolder has been Deprecated.
-    [string] $symbolsProduct,
-    [string] $symbolsVersion,
-    [string] $symbolsMaximumWaitTime,
-    [string] $symbolsFolder,
-    [string] $symbolsArtifactName,
-    [string] $treatNotIndexedAsWarning = 'false'
+    [string]$SymbolsPath,
+    [string]$SearchPattern,
+    [string]$SourceFolder, # Support for sourceFolder has been Deprecated.
+    [string]$SymbolsProduct,
+    [string]$SymbolsVersion,
+    [string]$SymbolsMaximumWaitTime,
+    [string]$SymbolsFolder,
+    [string]$SymbolsArtifactName,
+    [string]$TreatNotIndexedAsWarning = 'false',
+    [string]$OmitDotSource
 )
 
 Write-Verbose "Entering script $PSCommandPath"
@@ -19,43 +20,49 @@ $PSBoundParameters.Keys |
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
+# Convert Booleans.
+[bool]$OmitDotSource = $OmitDotSource -eq 'true'
+[bool]$TreatNotIndexedAsWarning = $TreatNotIndexedAsWarning -eq 'true'
+
+if (!$OmitDotSource) {
+    . $PSScriptRoot\Helpers.ps1
+}
+
 # Warn if deprecated parameter was used.
-if ($sourceFolder -and ($sourceFolder -ne $env:Build_SourcesDirectory)) {
-    Write-Warning (Get-LocalizedString -Key 'The source folder parameter has been deprecated. Ignoring the value: {0}' -ArgumentList $sourceFolder)
+if ($SourceFolder -and ($SourceFolder -ne $env:Build_SourcesDirectory)) {
+    Write-Warning (Get-LocalizedString -Key 'The source folder parameter has been deprecated. Ignoring the value: {0}' -ArgumentList $SourceFolder)
 }
 
 # Default search pattern.
-if (!$searchPattern) {
-    $searchPattern = "**\bin\**\*.pdb"
-    Write-Verbose "searchPattern not sent to script, defaulting to $searchPattern"
+if (!$SearchPattern) {
+    $SearchPattern = "**\bin\**\*.pdb"
+    Write-Verbose "searchPattern not sent to script, defaulting to $SearchPattern"
 }
 
 # Default symbols product.
-if (!$symbolsProduct) {
-    $symbolsProduct = $env:Build_DefinitionName
-    Write-Verbose "symbolsProduct not sent to script, defaulting to $symbolsProduct"
+if (!$SymbolsProduct) {
+    $SymbolsProduct = $env:Build_DefinitionName
+    Write-Verbose "symbolsProduct not sent to script, defaulting to $SymbolsProduct"
 }
 
 # Default symbols verison.
-if (!$symbolsVersion) {
-    $symbolsVersion = $env:Build_BuildNumber
-    Write-Verbose "symbolsVersion not sent to script, defaulting to $symbolsVersion"
+if (!$SymbolsVersion) {
+    $SymbolsVersion = $env:Build_BuildNumber
+    Write-Verbose "symbolsVersion not sent to script, defaulting to $SymbolsVersion"
 }
 
 # Default max wait time.
 $maxWaitTime = $null
-if (!$symbolsMaximumWaitTime) {
+if (!$SymbolsMaximumWaitTime) {
     $maxWaitTime = [timespan]::FromHours(2)
     Write-Verbose "symbolsMaximumWaitTime not sent to script, using the default maxWaitTime of 2 hours"
-}
-elseif (![Int32]::TryParse($symbolsMaximumWaitTime, [ref] $maxWaitTime)) {
+} elseif (![Int32]::TryParse($SymbolsMaximumWaitTime, [ref] $maxWaitTime)) {
     $maxWaitTime = [timespan]::FromHours(2)
     Write-Verbose "Could not parse symbolsMaximumWaitTime input, using the default maxWaitTime of 2 hours"
-}
-else {
-    # Convert the UI value (in minutes) to milliseconds
+} else {
+    # Convert the UI value (specified in minutes).
     $maxWaitTime = [timespan]::FromMinutes($maxWaitTime)
-    Write-Verbose "Converted symbolsMaximumWaitTime parameter value of $symbolsMaximumWaitTime minutes to $maxWaitTime"
+    Write-Verbose "Converted symbolsMaximumWaitTime parameter value of $SymbolsMaximumWaitTime minutes to $maxWaitTime"
 }
 
 Write-Verbose "maxWaitTime = $maxWaitTime"
@@ -64,15 +71,14 @@ Write-Verbose "maxWaitTime = $maxWaitTime"
 $maxSemaphoreAge = [timespan]::FromDays(1)
 Write-Verbose "maxSemaphoreAge = $maxSemaphoreAge"
 
-# The symbols search folder defaults to source folder. Override if symbolsFolder is passed
-$symbolsSearchFolder = $env:Build_SourcesDirectory
-if ($symbolsFolder) {
-    $symbolsSearchFolder = $symbolsFolder
+# Default symbols folder.
+if (!$SymbolsFolder) {
+    $SymbolsFolder = $env:Build_SourcesDirectory
 }
 
 # Get the PDB file paths.
-Write-Host "Find-Files -SearchPattern $searchPattern -RootFolder $symbolsSearchFolder"
-[string[]]$pdbFiles = Find-Files -SearchPattern $searchPattern -RootFolder $symbolsSearchFolder
+Write-Host "Find-Files -SearchPattern $SearchPattern -RootFolder $SymbolsFolder"
+[string[]]$pdbFiles = Find-Files -SearchPattern $SearchPattern -RootFolder $SymbolsFolder
 foreach ($pdbFile in $pdbFiles) {
     Write-Verbose "pdbFile = $pdbFile"
 }
@@ -80,33 +86,18 @@ foreach ($pdbFile in $pdbFiles) {
 Write-Host (Get-LocalizedString -Key "Found {0} symbol files to index." -ArgumentList $pdbFiles.Count)
 
 # Index the sources.
-& $PSScriptRoot\Invoke-IndexSources.ps1 -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:($treatNotIndexedAsWarning -eq 'true')
+Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
 
-if ($symbolsPath)
-{
+# Publish the symbols.
+if ($SymbolsPath) {
     $utcNow = (Get-Date).ToUniversalTime()
     $semaphoreMessage = "Machine: $env:ComputerName, BuildUri: $env:Build_BuildUri, BuildNumber: $env:Build_BuildNumber, RepositoryName: $env:Build_Repository_Name, RepositoryUri: $env:Build_Repository_Uri, Team Project: $env:System_TeamProject, CollectionUri: $env:System_TeamFoundationCollectionUri at $utcNow UTC"
     Write-Verbose "semaphoreMessage = $semaphoreMessage"
-    [hashtable]$splat = @{
-        'PdbFiles' = $pdbFiles
-        'Share' = $symbolsPath
-        'Product' = $symbolsProduct
-        'Version' = $symbolsVersion
-        'MaximumWaitTime' = $maxWaitTime.TotalMilliseconds
-        'MaximumSemaphoreAge' = $maxSemaphoreAge.TotalMinutes
-        'SemaphoreMessage' = $semaphoreMessage
-        'ArtifactName' = $symbolsArtifactName
-    }
-    [string[]]$printedArgs =
-        $splat.Keys |
-        Where-Object { $_ -ne 'PdbFiles' } |
-        ForEach-Object { "-$_ '$($splat[$_])'" }
-    Write-Host "Invoke-PublishSymbols -PdbFiles [...] $([string]::Join(' ', $printedArgs))"
-    Invoke-PublishSymbols @splat
-}
-else
-{
-    Write-Verbose "symbolsPath was not set on script, publish symbols step was skipped"
+    $OFS = " "
+    Write-Host "Invoke-PublishSymbols -PdbFiles [...] -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $($maxWaitTime.TotalMilliseconds) -MaximumSemaphoreAge $($maxSemaphoreAge.TotalMinutes) -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage"
+    Invoke-PublishSymbols -PdbFiles $pdbFiles -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $maxWaitTime.TotalMilliseconds -MaximumSemaphoreAge $maxSemaphoreAge.TotalMinutes -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage
+} else {
+    Write-Verbose "SymbolsPath was not set on script, publish symbols step was skipped."
 }
 
 Write-Verbose "Leaving script PublishSymbols.ps1"
