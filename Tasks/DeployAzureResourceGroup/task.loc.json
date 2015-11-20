@@ -21,7 +21,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.92.0",
   "groups": [
     {
       "name": "output",
