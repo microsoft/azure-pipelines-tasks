@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 29
+        "Patch": 30
     },
     "demands": [
         "azureps"
@@ -44,6 +44,7 @@
             "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
             "options": {
                  "Create Or Update Resource Group": "Create Or Update Resource Group",
+                 "SelectRG": "Select Resource Group",
                  "Start": "Start Virtual Machines",
                  "Stop": "Stop Virtual Machines",
                  "Restart": "Restart Virtual Machines",
@@ -111,7 +112,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "output",
-            "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create or Update."
+            "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
         }
     ],
     "sourceDefinitions": [

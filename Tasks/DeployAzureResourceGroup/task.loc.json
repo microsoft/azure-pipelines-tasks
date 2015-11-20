@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 29
+    "Patch": 30
   },
   "demands": [
     "azureps"
@@ -47,6 +47,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
         "Create Or Update Resource Group": "Create Or Update Resource Group",
+        "SelectRG": "Select Resource Group",
         "Start": "Start Virtual Machines",
         "Stop": "Stop Virtual Machines",
         "Restart": "Restart Virtual Machines",
