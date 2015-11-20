@@ -9,8 +9,8 @@ import psm = require('../../lib/psRunner');
 import path = require('path');
 var shell = require('shelljs');
 var ps = shell.which('powershell');
-
-describe('MSBuild Suite', function () {
+console.log(ps);
+describe('VSBuild Suite', function () {
     this.timeout(10000);
 
     before((done) => {
@@ -28,14 +28,14 @@ describe('MSBuild Suite', function () {
         it('(Format-MSBuildArguments) adds platform property', (done) => {
             psm.runPS(path.join(__dirname, 'Format-MSBuildArguments.AddsPlatformProperty.ps1'), done);
         })
+        it('(Format-MSBuildArguments) adds VS version property', (done) => {
+            psm.runPS(path.join(__dirname, 'Format-MSBuildArguments.AddsVSVersionProperty.ps1'), done);
+        })
         it('(Get-SolutionFiles) resolves wildcards', (done) => {
             psm.runPS(path.join(__dirname, 'Get-SolutionFiles.ResolvesWildcards.ps1'), done);
         })
         it('(Get-SolutionFiles) returns non-wildcard solution', (done) => {
             psm.runPS(path.join(__dirname, 'Get-SolutionFiles.ReturnsNonWildcardSolution.ps1'), done);
-        })
-        it('(Get-SolutionFiles) throws if no solution', (done) => {
-            psm.runPS(path.join(__dirname, 'Get-SolutionFiles.ThrowsIfNoSolution.ps1'), done);
         })
         it('(Get-SolutionFiles) throws if no solution found', (done) => {
             psm.runPS(path.join(__dirname, 'Get-SolutionFiles.ThrowsIfNoSolutionFound.ps1'), done);
@@ -52,32 +52,41 @@ describe('MSBuild Suite', function () {
         it('(Invoke-BuildTools) skips restore if NuGet not found', (done) => {
             psm.runPS(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfNuGetNotFound.ps1'), done);
         })
+        it('(Select-MSBuildLocation) maps VS versions', (done) => {
+            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.MapsVSVersions.ps1'), done);
+        })
+        it('(Select-MSBuildLocation) throws if MSBuild version not found', (done) => {
+            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ThrowsIfMSBuildVersionNotFound.ps1'), done);
+        })
+        it('(Select-MSBuildLocation) throws if unknown VS version', (done) => {
+            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ThrowsIfUnknownVSVersion.ps1'), done);
+        })
+        it('(Select-VSVersion) falls back to latest', (done) => {
+            psm.runPS(path.join(__dirname, 'Select-VSVersion.FallsBackToLatest.ps1'), done);
+        })
+        it('(Select-VSVersion) finds latest', (done) => {
+            psm.runPS(path.join(__dirname, 'Select-VSVersion.FindsLatest.ps1'), done);
+        })
+        it('(Select-VSVersion) finds preferred', (done) => {
+            psm.runPS(path.join(__dirname, 'Select-VSVersion.FindsPreferred.ps1'), done);
+        })
+        it('(Select-VSVersion) warns if VS not found', (done) => {
+            psm.runPS(path.join(__dirname, 'Select-VSVersion.WarnsIfVSNotFound.ps1'), done);
+        })
         it('passes arguments', (done) => {
             psm.runPS(path.join(__dirname, 'PassesArguments.ps1'), done);
         })
-        it('(Select-MSBuildLocation) defaults method to location if location specified', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.DefaultsMethodToLocationIfLocationSpecified.ps1'), done);
+        it('throws if no solution', (done) => {
+            psm.runPS(path.join(__dirname, 'ThrowsIfNoSolution.ps1'), done);
         })
-        it('(Select-MSBuildLocation) defaults method to version if no location', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.DefaultsMethodToVersionIfNoLocation.ps1'), done);
+        it('warns if MSBuild location specified', (done) => {
+            psm.runPS(path.join(__dirname, 'WarnsIfMSBuildLocationSpecified.ps1'), done);
         })
-        it('(Select-MSBuildLocation) returns latest version', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ReturnsLatestVersion.ps1'), done);
+        it('warns if MSBuild version specified', (done) => {
+            psm.runPS(path.join(__dirname, 'WarnsIfMSBuildVersionSpecified.ps1'), done);
         })
-        it('(Select-MSBuildLocation) returns specified version', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ReturnsSpecifiedVersion.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) returns user-specified location', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ReturnsSpecifiedLocation.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) reverts to latest version if version not found', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.RevertsToLatestVersionIfVersionNotFound.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) reverts to version if no location specified', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.RevertsToVersionIfNoLocationSpecified.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) throws if version not found', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ThrowsIfVersionNotFound.ps1'), done);
+        it('warns if VS location specified', (done) => {
+            psm.runPS(path.join(__dirname, 'WarnsIfVSLocationSpecified.ps1'), done);
         })
     }
 });

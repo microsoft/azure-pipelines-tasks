@@ -14,5 +14,5 @@ Export-ModuleMember -Verbose:$false -Function @(
     'Assert-Throws'
     'Assert-WasCalled'
     'Register-Mock'
-    'Register-Stub'
+    'Unregister-Mock'
 )
