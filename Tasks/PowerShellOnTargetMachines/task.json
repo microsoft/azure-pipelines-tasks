@@ -3,7 +3,7 @@
   "name": "PowerShellOnTargetMachines",
   "friendlyName": "PowerShell on Target Machines",
   "description": "Execute PowerShell scripts on remote machine(s)",
-  "helpMarkDown": "[More Information](http://aka.ms/powershellontargetmachinesreadme)",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?linkid=627414)",
   "category": "Deploy",
   "visibility": [
     "Build",
