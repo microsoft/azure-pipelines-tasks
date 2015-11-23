@@ -34,6 +34,7 @@ tl.debug('optionalArgs: ' + optionalArgs);
 var onError = function (errorMsg) {
     tl.error(errorMsg);
     tl.exit(1);
+    throw errorMsg
 }
 
 // Resolve apps for the specified value or pattern
@@ -119,9 +120,10 @@ var onRunComplete = function() {
             tl.exit(0); // Done submitting all app files
         }
     }
-
-    // Submit next app file
-    submitToTestCloud(appFileIndex);
+    else {
+        // Submit next app file
+        submitToTestCloud(appFileIndex);
+    }
 }
 var onFailedExecution = function (err) {
     runFailures = 'true';
