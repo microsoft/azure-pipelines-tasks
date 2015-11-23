@@ -3,7 +3,7 @@
     "name": "NuGetPackager",
     "friendlyName": "NuGet Packager",
     "description": "Creates nupkg outputs from csproj or nuspec files",
-    "helpMarkDown": " ",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627416)",
     "category": "Package",
     "author": "Lawrence Gripper",
     "version": {
