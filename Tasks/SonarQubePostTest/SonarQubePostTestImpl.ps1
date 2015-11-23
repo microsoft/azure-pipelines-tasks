@@ -36,22 +36,22 @@ function GetMsBuildRunnerPostTestArgs()
 	
       if (![String]::IsNullOrWhiteSpace($serverUsername))
       {
-          [void]$sb.Append(" /d:sonar.login=""$serverUsername""")
+          [void]$sb.Append(" /d:sonar.login=" + (EscapeArg($serverUsername))) 
       }
 	  
       if (![String]::IsNullOrWhiteSpace($serverPassword))
       {
-          [void]$sb.Append(" /d:sonar.password=""$serverPassword""")
+          [void]$sb.Append(" /d:sonar.password=" + (EscapeArg($serverPassword))) 
       }
 	  
-	   if (![String]::IsNullOrWhiteSpace($dbUsername))
+	  if (![String]::IsNullOrWhiteSpace($dbUsername))
       {
-          [void]$sb.Append(" /d:sonar.jdbc.username=""$dbUsername""")
+          [void]$sb.Append(" /d:sonar.jdbc.username=" + (EscapeArg($dbUsername))) 
       }
 	  
       if (![String]::IsNullOrWhiteSpace($dbPassword))
       {
-          [void]$sb.Append(" /d:sonar.jdbc.password=""$dbPassword""")
+          [void]$sb.Append(" /d:sonar.jdbc.password=" + (EscapeArg($dbPassword))) 
       }
 
 	return $sb.ToString();
@@ -103,4 +103,16 @@ function GetTaskContextVariable()
 {
 	param([string][ValidateNotNullOrEmpty()]$varName)
 	return Get-TaskVariable -Context $distributedTaskContext -Name $varName -Global $FALSE
+}
+
+# When passing arguments to a process, the quotes need to be doubled and   
+# the entire string needs to be placed inside quotes to avoid issues with spaces  
+function EscapeArg  
+{  
+    param([string]$argVal)  
+  
+    $argVal = $argVal.Replace('"', '""');  
+    $argVal = '"' + $argVal + '"';  
+  
+    return $argVal;  
 }
