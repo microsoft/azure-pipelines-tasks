@@ -133,6 +133,11 @@ for (var i: number = 0; i < allPaths.length; i++) {
     }
 }
 
+// if we only have exclude filters, we need add a include all filter, so we can have something to exclude.
+if(includeContents.length == 0 && excludeContents.length > 0) {
+    includeContents.push('**');
+}
+
 if (includeContents && allFiles && includeContents.length > 0 && allFiles.length > 0) {
     tl.debug("allFiles contains " + allFiles.length + " files");
 
