@@ -35,6 +35,16 @@ $outputVariable = $outputVariable.Trim()
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+
+function Write-TaskSpecificTelemetry
+{
+    param(
+      [string]$codeKey
+      )
+
+    Write-Telemetry "$codeKey" "94A74903-F93F-4075-884F-DC11F34058B4"
+}
 
 $ErrorActionPreference = "Stop"
 
@@ -69,6 +79,7 @@ elseif( $action -eq "Select Resource Group")
 {
     if([string]::IsNullOrEmpty($outputVariable))
     {
+        Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
         throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
     }
     
