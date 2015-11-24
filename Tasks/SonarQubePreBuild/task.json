@@ -103,7 +103,7 @@
             "type": "string",
             "label": "Additional Settings",
             "required": false,
-            "helpMarkDown": "Space separated settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://go.microsoft.com/fwlink/?LinkID=624390)",
+            "helpMarkDown": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](http://go.microsoft.com/fwlink/?LinkID=624390).",
             "groupName": "advanced"
         },
         {
