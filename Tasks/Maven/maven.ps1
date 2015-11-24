@@ -21,6 +21,11 @@
     [string]$sqDbPassword
 )
 
+Function CmdletHasMember($memberName) {
+    $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
+    return $publishParameters
+}
+
 Write-Verbose 'Entering Maven.ps1'
 Write-Verbose "mavenPOMFile = $mavenPOMFile"
 Write-Verbose "options = $options"
@@ -91,12 +96,19 @@ Write-Host "Running Maven..."
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 
 # Publish test results
-if([string]::IsNullOrWhiteSpace($testRunTitle)) {
-	PublishTestResults $publishJUnitResults $testResultsFiles
-} else {
-	PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle		
+$runTitleMemberExists = CmdletHasMember "RunTitle"
+if($runTitleMemberExists)
+{
+	PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
 }
-
+else
+{
+	if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+	{
+		Write-Warning "Update the build agent to be able to use the custom run title feature."
+	}
+	PublishTestResults $publishJUnitResults $testResultsFiles
+}
 
 if ($codeCoverageTool.equals("JaCoCo"))
 {
