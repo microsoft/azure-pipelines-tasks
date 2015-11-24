@@ -121,7 +121,7 @@
       "required": true,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
-      "visibleRule": "codeCoverageTool != None"
+      "visibleRule": false
     },
     {
       "name": "classFilter",
