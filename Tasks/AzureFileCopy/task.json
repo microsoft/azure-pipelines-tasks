@@ -102,13 +102,21 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "TargetPath",
-      "type": "string",
-      "label": "Destination Folder",
+        "name": "TargetPath",
+        "type": "string",
+        "label": "Destination Folder",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
+        "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "Additional Arguments",
+      "required": false,
       "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
-      "visibleRule": "Destination = AzureVMs"
+      "helpMarkDown": "Additional AzCopy.exe arguments that will be applied when uploading to blob or downloading to VM like, /MT."
     },
     {
       "name": "CopyFilesInParallel",

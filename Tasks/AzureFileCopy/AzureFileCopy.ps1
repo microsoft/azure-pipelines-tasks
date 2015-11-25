@@ -11,6 +11,7 @@ param (
     [string]$vmsAdminUserName,
     [string]$vmsAdminPassword,
     [string]$targetPath,
+    [string]$additionalArguments,
     [string]$cleanTargetBeforeCopy,
     [string]$copyFilesInParallel,
     [string]$skipCACheck
@@ -119,7 +120,7 @@ $sourcePath = $sourcePath.Trim('"')
 try
 {
     Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccount, $containerName, $blobPrefix)
-    $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccount -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation
+    $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccount -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments
 }
 catch
 {
@@ -200,7 +201,7 @@ try
 
             Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
-            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $useHttpsProtocolOption, $skipCACheckOption, $enableDetailedLoggingString
+            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $useHttpsProtocolOption, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
             $status = $copyResponse.Status
 
             Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $resourceName -deploymentResponse $copyResponse
@@ -227,7 +228,7 @@ try
 
             Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
-            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $useHttpsProtocolOption, $skipCACheckOption, $enableDetailedLoggingString
+            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $useHttpsProtocolOption, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
             $Jobs.Add($job.Id, $resourceProperties)
         }
 

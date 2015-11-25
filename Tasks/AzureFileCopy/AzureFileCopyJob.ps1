@@ -11,7 +11,8 @@ param (
     [string]$winRMPort,
     [string]$httpProtocolOption,
     [string]$skipCACheckOption,
-    [string]$enableDetailedLogging
+    [string]$enableDetailedLogging,
+    [string]$additionalArguments
     )
 
     Write-Verbose "fqdn = $fqdn" -Verbose
@@ -50,7 +51,7 @@ param (
 
     Write-Verbose "Initiating copy on $fqdn " -Verbose
 
-    [String]$copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
+    [String]$copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -AdditionalArguments `$additionalArguments -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
     [scriptblock]$copyToAzureMachinesBlock = [scriptblock]::Create($copyToAzureMachinesBlockString)
 
     $copyResponse = Invoke-Command -ScriptBlock $copyToAzureMachinesBlock
