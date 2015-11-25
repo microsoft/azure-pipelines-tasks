@@ -57,14 +57,23 @@ else
     Write-Verbose "Calling Publish-TestResults"
         
     $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
-	if([string]::IsNullOrWhiteSpace($testRunTitle))
+    $runTitleMemberExists = CmdletHasMember "RunTitle"
+	if(!($runTitleMemberExists))
 	{
+		if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+		{
+			Write-Warning "Update the build agent to be able to use the custom run title feature."
+		}
 		if($publishRunLevelAttachmentsExists)
 		{
 			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
 		}
 		else 
 		{
+			if(!$publishResultsOption)
+			{
+			    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+			}
 			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
 		}
 	}
@@ -76,6 +85,10 @@ else
 		}
 		else 
 		{
+			if(!$publishResultsOption)
+			{
+			    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+			}
 			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
 		}
 	}

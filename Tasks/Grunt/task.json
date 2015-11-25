@@ -3,7 +3,7 @@
     "name": "Grunt",
     "friendlyName": "Grunt",
     "description": "The JavaScript Task Runner",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613721)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627413)",
     "category": "Build",
     "visibility": [
                 "Build"

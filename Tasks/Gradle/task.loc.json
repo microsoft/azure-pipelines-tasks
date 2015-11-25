@@ -15,12 +15,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [
     "java"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.89.0",
   "groups": [
     {
       "name": "junitTestResults",
@@ -121,7 +121,7 @@
       "required": true,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
-      "visibleRule": "codeCoverageTool != None"
+      "visibleRule": "codeCoverageTool = false"
     },
     {
       "name": "classFilter",

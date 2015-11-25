@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 23
     },
     "demands" : [
         "ant"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "1.89.0",
     "groups": [
         {
             "name":"junitTestResults",
@@ -51,7 +51,8 @@
             "type": "string", 
             "label": "Options", 
             "defaultValue":"", 
-            "required":false 
+            "required":false,
+            "helpMarkDown": "Provide any options to pass to the Ant command line.  You can provide your own properties (for example, ***-DmyProperty=myPropertyValue***) and also use built-in variables (for example, ***-DcollectionId=$(system.collectionId)***).  Alternatively, the built-in variables are already set as environment variables during the build and can be passed directly (for example, ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***)."
         },
         { 
             "name": "targets", 
@@ -131,6 +132,15 @@
             "groupName": "codeCoverage",
             "helpMarkDown": "Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
             "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name":"antHomeUserInputPath",
+            "type":"string",
+            "label":"Set ANT_HOME Path",
+            "required":false,
+            "groupName":"advanced",
+            "defaultValue":"",
+            "helpMarkDown": "If set, overrides any existing ANT_HOME environment variable with the given path."
         },
         {
              "name":"javaHomeSelection",
