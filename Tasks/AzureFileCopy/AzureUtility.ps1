@@ -101,7 +101,7 @@ function Get-AzureRMVMsInResourceGroup
 
         Set-Variable -Name azureRMVMResources -Value $azureRMVMResources -Scope "Global"
     }
-    catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException], [System.MissingMethodException]
+    catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException], [System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
     {
         Write-Verbose $_.Exception.Message -Verbose
         throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $resourceGroupName)
