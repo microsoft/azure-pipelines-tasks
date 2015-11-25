@@ -26,6 +26,8 @@
   "loc.input.help.vmsAdminPassword": "Administrator Password of the VMs.",
   "loc.input.label.TargetPath": "Destination Folder",
   "loc.input.help.TargetPath": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
+  "loc.input.label.AdditionalArguments": "Additional Arguments",
+  "loc.input.help.AdditionalArguments": "Additional AzCopy.exe arguments that will be applied when uploading to blob or downloading to VM like, /MT.",
   "loc.input.label.CopyFilesInParallel": "Copy in Parallel",
   "loc.input.help.CopyFilesInParallel": "Setting it to true will copy files in parallel to the target machines.",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
