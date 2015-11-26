@@ -16,6 +16,11 @@
     [string]$antHomeUserInputPath
 )
 
+Function CmdletHasMember($memberName) {
+    $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
+    return $publishParameters
+}
+
 Write-Verbose 'Entering Ant.ps1'
 Write-Verbose "antBuildFile = $antBuildFile"
 Write-Verbose "options = $options"
@@ -179,14 +184,19 @@ if($publishJUnitResultsFromAntBuild)
     else
     {
         Write-Verbose "Calling Publish-TestResults"
-        if([string]::IsNullOrWhiteSpace($testRunTitle))
+	$runTitleMemberExists = CmdletHasMember "RunTitle"
+	if($runTitleMemberExists)
+	{
+		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
+	}
+	else
+	{
+		if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
 		{
-			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+			Write-Warning "Update the build agent to be able to use the custom run title feature."
 		}
-		else
-		{
-			Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
-		}
+		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+	}
     }    
 }
 else
