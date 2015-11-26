@@ -165,19 +165,34 @@ $envOperationStatus = 'Passed'
 # copying files to azure vms
 try
 {
+    Initialize-GlobalMaps
+    
     if($isSwitchAzureModeRequired)
     {
-        Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
-        Switch-AzureMode AzureResourceManager
-    }
-     
-    $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $environmentName
-    if ($azureVMResources.Count -eq 0)
-    {
-        throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
+        Write-Verbose "Switching Azure mode to AzureServiceManagement" -Verbose
+        Switch-AzureMode AzureServiceManagement
     }
 
-    Get-MachineConnectionInformation -resourceGroupName $environmentName
+    $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $environmentName
+    Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName
+    
+    if($azureVMResources.Count -eq 0)
+    {
+        if($isSwitchAzureModeRequired)
+        {
+            Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
+            Switch-AzureMode AzureResourceManager
+        }
+
+        $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $environmentName
+        if ($azureVMResources.Count -eq 0)
+        {
+            throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
+        }
+
+        Get-MachineConnectionInformationForRMVms -resourceGroupName $environmentName
+    }
+
     $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $azureVMResources
 
     $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
@@ -250,11 +265,11 @@ try
                     if ($status -ne "Passed")
                     {
                         $envOperationStatus = "Failed"
-                    $errorMessage = ""
-                    if($output.Error -ne $null)
-                    {
-                        $errorMessage = $output.Error.Message
-                    }
+                        $errorMessage = ""
+                        if($output.Error -ne $null)
+                        {
+                            $errorMessage = $output.Error.Message
+                        }
                         Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
                     }
                 }
