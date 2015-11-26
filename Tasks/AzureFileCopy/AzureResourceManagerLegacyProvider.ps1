@@ -35,7 +35,7 @@ function Get-AzureRMVM
     param([string]$ResourceGroupName)
 
     Write-Verbose -Verbose "Inside Get-AzureRMVM(ResourceGroupName)"
-    $azureVMResources = Get-AzureVM -ResourceGroupName $ResourceGroupName -Verbose
+    $azureVMResources = Get-AzureVM -ResourceGroupName $ResourceGroupName
     return $azureVMResources
 }
 
