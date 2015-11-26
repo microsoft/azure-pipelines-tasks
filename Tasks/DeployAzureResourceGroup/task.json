@@ -29,7 +29,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "type": "connectedService:Azure:UsernamePassword,ServicePrincipal",
+            "type": "connectedService:Azure",
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
@@ -115,14 +115,6 @@
             "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
         }
     ],
-    "sourceDefinitions": [
-    {
-        "target": "resourceGroupName",
-        "endpoint": "https://management.core.windows.net/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-        "selector": "jsonpath:$.value[*].name",
-        "authKey": "$(ConnectedServiceName)"
-    }
-  ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "execution": {
     "AzurePowerShell": {
