@@ -30,6 +30,7 @@ Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineNames = $machineNames" -Verbose
 Write-Verbose "vmsAdminUserName = $vmsAdminUserName" -Verbose
 Write-Verbose "targetPath = $targetPath" -Verbose
+Write-Verbose "additionalArguments = $additionalArguments" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 Write-Verbose "skipCACheck = $skipCACheck" -Verbose

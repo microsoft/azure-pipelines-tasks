@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [
     "azureps"
@@ -116,7 +116,7 @@
       "label": "Additional Arguments",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "Additional AzCopy.exe arguments that will be applied when uploading to blob or downloading to VM like, /MT."
+      "helpMarkDown": "Additional AzCopy.exe arguments that will be applied when uploading to blob or uploading to VM like, /MT."
     },
     {
       "name": "CopyFilesInParallel",

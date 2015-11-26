@@ -26,6 +26,7 @@ param (
     Write-Verbose "httpProtocolOption = $httpProtocolOption" -Verbose
     Write-Verbose "skipCACheckOption = $skipCACheckOption" -Verbose
     Write-Verbose "enableDetailedLogging = $enableDetailedLogging" -Verbose
+    Write-Verbose "additionalArguments = $additionalArguments" -Verbose
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
         [void][reflection.assembly]::LoadFrom( $_.FullName )
