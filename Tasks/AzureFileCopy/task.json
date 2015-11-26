@@ -102,13 +102,13 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-        "name": "TargetPath",
-        "type": "string",
-        "label": "Destination Folder",
-        "defaultValue": "",
-        "required": true,
-        "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
-        "visibleRule": "Destination = AzureVMs"
+      "name": "TargetPath",
+      "type": "string",
+      "label": "Destination Folder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
+      "visibleRule": "Destination = AzureVMs"
     },
     {
       "name": "AdditionalArguments",
