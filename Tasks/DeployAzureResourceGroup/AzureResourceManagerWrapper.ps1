@@ -59,10 +59,6 @@ function Get-AzureRMVM
     {
         $arguments.Add("ErrorAction", $ErrorAction)
     }
-    if($Verbose.IsPresent)
-    {
-        $arguments.Add("Verbose", $true)
-    }
     if($Status.IsPresent)
     {
         $arguments.Add("Status", $true)

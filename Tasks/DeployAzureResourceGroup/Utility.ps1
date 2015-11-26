@@ -271,35 +271,52 @@ function Instantiate-Environment
 
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-    $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $resourceGroupName
-    if ($azureVMResources.Count -ne 0)
+    if($isSwitchAzureModeRequired)
     {
-        Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
-        $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $azureVMResources
+        Write-Verbose "Switching Azure mode to AzureServiceManagement" -Verbose
+        Switch-AzureMode AzureServiceManagement
+    }
 
-        $resources = @()
-        foreach ($resource in $azureVMResources)
+    $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $resourceGroupName
+    Get-MachineConnectionInformationForClassicVms -resourceGroupName $resourceGroupName
+
+    if($azureVMResources.Count -eq 0)
+    {
+        if($isSwitchAzureModeRequired)
         {
-            $resourceProperties = $azureVMResourcesPropertiesBag.Item($resource.Name)
-            $resourceFQDN = $resourceProperties.fqdn            
-            $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
-
-            $machineSpec = $resourceFQDN + ":" + $resourceWinRMHttpsPort
-            $resources += $machineSpec
+            Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
+            Switch-AzureMode AzureResourceManager
         }
 
-        $machineSpecification = $resources -join ","
+        $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $resourceGroupName
+        if ($azureVMResources.Count -eq 0)
+        {
+            throw (Get-LocalizedString -Key "No VMs found in resource group: '{0}'. Could not register environment in the output variable: '{1}'" -ArgumentList $resourceGroupName, $outputVariable)
+        }
 
-        Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
-        $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext
-        Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
-
-        Write-Verbose "Adding environment $outputVariable to output variables" -Verbose
-        Set-TaskVariable -Variable $outputVariable -Value $outputVariable
-        Write-Verbose "Added the environmnent $outputVariable to output variable" -Verbose
+        Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
     }
-    else
+
+    $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $azureVMResources
+
+    $resources = @()
+    foreach ($resource in $azureVMResources)
     {
-        Write-Verbose -Verbose "No VMs found in resource group $resourceGroupName. Skipping registering environment."
+        $resourceProperties = $azureVMResourcesPropertiesBag.Item($resource.Name)
+        $resourceFQDN = $resourceProperties.fqdn            
+        $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
+
+        $machineSpec = $resourceFQDN + ":" + $resourceWinRMHttpsPort
+        $resources += $machineSpec
     }
+
+    $machineSpecification = $resources -join ","
+
+    Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
+    $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext
+    Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
+
+    Write-Verbose "Adding environment $outputVariable to output variables" -Verbose
+    Set-TaskVariable -Variable $outputVariable -Value $outputVariable
+    Write-Verbose "Added the environmnent $outputVariable to output variable" -Verbose
 }
