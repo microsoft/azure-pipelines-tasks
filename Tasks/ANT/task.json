@@ -100,7 +100,7 @@
             "options": {
                 "None": "None",
                 "JaCoCo": "JaCoCo",
-		"Cobertura": "Cobertura"
+                "Cobertura": "Cobertura"
             }
         },        
         {
@@ -110,7 +110,7 @@
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
+            "helpMarkDown": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. This path is relative to the location of ANT build.xml directory. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html for Jacoco and https://github.com/cobertura/cobertura/wiki/Ant-Task-Reference for Cobertura.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -120,7 +120,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html for Jacoco and https://github.com/cobertura/cobertura/wiki/Ant-Task-Reference for Cobertura.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -130,7 +130,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
+            "helpMarkDown": "Specify source directories for code coverage reports to include highlighted source code. This path is relative to the location of ANT build.xml directory. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html for Jacoco and https://github.com/cobertura/cobertura/wiki/Ant-Task-Reference for Cobertura.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
