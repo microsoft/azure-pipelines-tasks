@@ -28,8 +28,8 @@ Write-Verbose -Verbose "OutputVariable = $outputVariable"
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()
-$csmFile = $csmFile.Trim()
-$csmParametersFile = $csmParametersFile.Trim()
+$csmFile = $csmFile.Trim('"', ' ')
+$csmParametersFile = $csmParametersFile.Trim('"', ' ')
 $overrideParameters = $overrideParameters.Trim()
 $outputVariable = $outputVariable.Trim()
 
