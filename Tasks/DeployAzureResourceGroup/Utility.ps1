@@ -277,8 +277,8 @@ function Instantiate-Environment
         Switch-AzureMode AzureServiceManagement
     }
 
-    $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $environmentName
-    Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName
+    $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $resourceGroupName
+    Get-MachineConnectionInformationForClassicVms -resourceGroupName $resourceGroupName
 
     if($azureVMResources.Count -eq 0)
     {
@@ -288,13 +288,13 @@ function Instantiate-Environment
             Switch-AzureMode AzureResourceManager
         }
 
-        $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $environmentName
+        $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $resourceGroupName
         if ($azureVMResources.Count -eq 0)
         {
             throw (Get-LocalizedString -Key "No VMs found in resource group: '{0}'. Could not register environment in the output variable: '{1}'" -ArgumentList $resourceGroupName, $outputVariable)
         }
 
-        Get-MachineConnectionInformation -resourceGroupName $environmentName
+        Get-MachineConnectionInformation -resourceGroupName $resourceGroupName
     }
 
     $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $azureVMResources
