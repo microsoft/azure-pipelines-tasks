@@ -32,7 +32,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "connectedService:Azure:UsernamePassword,ServicePrincipal",
+      "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
@@ -116,14 +116,6 @@
       "defaultValue": "",
       "groupName": "output",
       "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
-    }
-  ],
-  "sourceDefinitions": [
-    {
-      "target": "resourceGroupName",
-      "endpoint": "https://management.core.windows.net/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "$(ConnectedServiceName)"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
