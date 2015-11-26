@@ -80,6 +80,12 @@ if( $action -eq "Select Resource Group")
     return
 }
 
+$serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
+if ($serviceEndpoint.Authorization.Scheme -eq 'Certificate')
+{
+    throw (Get-LocalizedString -Key "Certificate based authentication only works with the 'Select Resource Group' action. Please select an Azure subscription with either Credential or SPN based authentication.")
+}
+
 if($isSwitchAzureModeRequired)
 {
     Switch-AzureMode AzureResourceManager
