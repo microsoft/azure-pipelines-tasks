@@ -126,6 +126,7 @@ $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 
 $reportBuildFileName = [guid]::NewGuid().tostring() + ".xml"
 $reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
+$instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
 
 if($isCoverageEnabled)
 {
@@ -141,7 +142,6 @@ if($isCoverageEnabled)
 			rm -r $coberturaCCFile -force | Out-Null
 		}
 		
-		$instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
 		if(Test-Path $instrumentedClassesDirectory)
 		{
 			# delete any previous cobertura instrumented classes
@@ -243,6 +243,12 @@ if(Test-Path $reportBuildFile)
 {
    # delete any previous code coverage report build file
    rm -r $reportBuildFile -force | Out-Null
+}
+
+if(Test-Path $instrumentedClassesDirectory)
+{
+   # delete any previous instrumented classes directory
+   rm -r $instrumentedClassesDirectory -force | Out-Null
 }
 
 Write-Verbose "Leaving script Ant.ps1"
