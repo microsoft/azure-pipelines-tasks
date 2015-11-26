@@ -108,7 +108,6 @@ function Get-AzureRMVMsInResourceGroup
     }
     catch
     {
-        Write-Error $_.Exception.Message -Verbose
         throw
     }
 
