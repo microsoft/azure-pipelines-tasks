@@ -16,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.90.0",
+  "minimumAgentVersion": "1.92.0",
   "inputs": [
     {
       "name": "SourcePath",
@@ -112,6 +112,14 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
       "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
       "name": "CopyFilesInParallel",
