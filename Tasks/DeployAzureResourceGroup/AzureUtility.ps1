@@ -2,24 +2,34 @@
 
 $ErrorActionPreference = 'Stop'
 
+function Initialize-GlobalMaps
+{
+    $fqdnMap = @{}
+        Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
+
+    $winRmHttpsPortMap = @{}
+    Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
+}
+
 function Get-AzureVMsInResourceGroup
 {
     param([string]$resourceGroupName)
 
     try
     {
-        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName virtual machines type resources"
+        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
         $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -Verbose
-        Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName virtual machines type resources"
+        Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName RM virtual machines type resources"
         Set-Variable -Name azureVMResources -Value $azureVMResources -Scope "Global"
     }
-    catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException]
+    catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
     {
-        Write-Error $_.Exception.InnerException.Message -Verbose
+        Write-Verbose $_.Exception.Message -Verbose
+        throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $resourceGroupName)
     }
     catch
     {
-        Write-Error $_.Exception.Message -Verbose
+        throw
     }
 
     return $azureVMResources
@@ -31,7 +41,7 @@ function Get-MachinesFqdnsForLB
 
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVMResources)
     {
-        Write-Verbose "Trying to get FQDN for the resources from resource group: $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the RM azureVM resources from resource group: $resourceGroupName" -Verbose
 
         Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config" -Verbose
         $frontEndIPConfigs = Get-AzureRMLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
@@ -85,7 +95,7 @@ function Get-MachinesFqdnsForLB
         }
     }
 
-    Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the RM azureVM resources from resource Group $resourceGroupName" -Verbose
 
     return $fqdnMap
 }
@@ -142,7 +152,7 @@ function Get-MachinesFqdns
 
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $azureVMResources)
     {
-        Write-Verbose "Trying to get FQDN for the resources from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the RM azureVM resources from resource Group $resourceGroupName" -Verbose
 
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -177,7 +187,7 @@ function Get-MachinesFqdns
         $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -ThrowOnTotalUnavaialbility $true
     }
 
-    Write-Verbose "Got FQDN for the resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the RM azureVM resources from resource Group $resourceGroupName" -Verbose
 
     return $fqdnMap
 }
@@ -249,12 +259,6 @@ function Get-MachineConnectionInformation
         $lbGroup = Get-AzureRMResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.Network/loadBalancers" -Verbose
         Write-Verbose -Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
-        $fqdnMap = @{}
-        Set-Variable -Name fqdnMap -Value $fqdnMap -Scope "Global"
-
-        $winRmHttpsPortMap = @{}
-        Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
-
         if($lbGroup)
         {
             foreach($lb in $lbGroup)
@@ -276,6 +280,51 @@ function Get-MachineConnectionInformation
             $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName
             $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
         }
+    }
+}
+
+function Get-AzureClassicVMsInResourceGroup
+{
+    param([string]$resourceGroupName)
+
+    Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
+    $azureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+    Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName classic virtual machines type resources"
+
+    Set-Variable -Name azureClassicVMResources -Value $azureClassicVMResources -Scope "Global"
+
+    return $azureClassicVMResources
+}
+
+function Get-MachineConnectionInformationForClassicVms
+{
+    param([string]$resourceGroupName)
+
+    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $azureClassicVMResources)
+    {
+        Write-Verbose -Verbose "Trying to get FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
+
+        foreach($azureClassicVm in $azureClassicVMResources)
+        {
+            $resourceName = $azureClassicVm.Name
+
+            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            $azureClassicVMDetails = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -Verbose
+            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            
+            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
+            $azureClassicVMEndpoint = $azureClassicVMDetails | Get-AzureEndpoint -Name PowerShell
+            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
+
+            $fqdnUri = [System.Uri]$azureClassicVMDetails.DNSName
+            $fqdnMap[$resourceName] = $fqdnUri.Host
+            Write-Verbose -Verbose "FQDN value for resource $resourceName is $($fqdnUri.Host)"
+
+            $winRmHttpsPortMap[$resourceName] = $azureClassicVMEndpoint.Port
+            Write-Verbose -Verbose "WinRM HTTPS Port for resource $resourceName is $($azureClassicVMEndpoint.Port)"
+        }
+
+        Write-Verbose -Verbose "Got FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
     }
 }
 
