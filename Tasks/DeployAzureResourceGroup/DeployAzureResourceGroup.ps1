@@ -54,18 +54,42 @@ if(-not $UnderTestCondition)
     Import-Module ./AzureUtility.ps1 -Force
 }
 
+Initialize-GlobalMaps
+
 Validate-AzurePowershellVersion
 
 #Handle-SwitchAzureMode
 $isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
 
+. ./AzureResourceManagerHelper.ps1
+
 if($isSwitchAzureModeRequired)
 {
-    Switch-AzureMode AzureResourceManager
     . ./AzureResourceManagerWrapper.ps1
 }
 
-. ./AzureResourceManagerHelper.ps1
+if( $action -eq "Select Resource Group")
+{
+    if([string]::IsNullOrEmpty($outputVariable))
+    {
+        Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
+        throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
+    }
+    
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+    return
+}
+
+$serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
+if ($serviceEndpoint.Authorization.Scheme -eq 'Certificate')
+{
+    throw (Get-LocalizedString -Key "Certificate based authentication only works with the 'Select Resource Group' action. Please select an Azure subscription with either Credential or SPN based authentication.")
+}
+
+if($isSwitchAzureModeRequired)
+{
+    Switch-AzureMode AzureResourceManager
+}
 
 if( $action -eq "Create Or Update Resource Group" )
 {
@@ -75,16 +99,7 @@ if( $action -eq "Create Or Update Resource Group" )
         Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
     }
 }
-elseif( $action -eq "Select Resource Group")
-{
-    if([string]::IsNullOrEmpty($outputVariable))
-    {
-        Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
-        throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
-    }
-    
-    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
-}
+
 else
 {
     Perform-Action -action $action -resourceGroupName $resourceGroupName
