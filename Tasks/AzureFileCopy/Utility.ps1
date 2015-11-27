@@ -4,6 +4,15 @@ $ErrorActionPreference = 'Stop'
 $doSkipCACheckOption = '-SkipCACheck'
 $doNotSkipCACheckOption = ''
 
+function Write-TaskSpecificTelemetry
+{
+    param(
+      [string]$codeKey
+      )
+
+    Write-Telemetry "$codeKey" "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43"
+}
+
 function Does-RequireSwitchAzureMode
 {
     $azureVersion = Get-AzureCmdletsVersion
@@ -43,6 +52,7 @@ function Validate-AzurePowershellVersion
     
     if(!$versionCompatible)
     {
+        Write-TaskSpecificTelemetry "PREREQ_AzurePowerShellVersion"
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
     }
 

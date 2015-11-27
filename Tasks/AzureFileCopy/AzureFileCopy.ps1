@@ -40,6 +40,7 @@ $defaultSasTokenTimeOutInHours = 2
 $useHttpsProtocolOption = ''
 $azureFileCopyOperation = 'AzureFileCopy'
 $ErrorActionPreference = 'Stop'
+$telemetrySet = $false
 
 # Load all dependent files for execution
 Import-Module ./AzureFileCopyJob.ps1 -Force
@@ -134,6 +135,7 @@ catch
     Write-Verbose $_.Exception.ToString() -Verbose
     $error = $_.Exception.Message
     $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+    Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
     ThrowError -errorMessage $errorMessage
 }
 finally
@@ -148,6 +150,7 @@ finally
 
         $error = $uploadResponse.Error
         $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
+        Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
         ThrowError -errorMessage $errorMessage
     }
     elseif ($uploadResponse.Status -eq "Succeeded")
@@ -189,6 +192,7 @@ try
         $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $environmentName
         if ($azureVMResources.Count -eq 0)
         {
+            Write-TaskSpecificTelemetry "PREREQ_NoResources"
             throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
         }
 
@@ -227,6 +231,7 @@ try
             {
                 Write-Verbose $copyResponse.Error.ToString() -Verbose
                 $errorMessage =  $copyResponse.Error.Message
+                Write-TaskSpecificTelemetry "AZUREFILECOPY_Failed"
                 ThrowError -errorMessage $errorMessage
             }
         }
@@ -282,6 +287,7 @@ try
     if ($envOperationStatus -ne "Passed")
     {
         $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
+        Write-TaskSpecificTelemetry "AZUREFILECOPY_Failed"
         ThrowError -errorMessage $errorMessage
     }
     else
@@ -292,6 +298,7 @@ try
 catch
 {
     Write-Verbose $_.Exception.ToString() -Verbose
+    Write-TaskSpecificTelemetry "AZUREFILECOPY_Failed"
     throw
 }
 finally
