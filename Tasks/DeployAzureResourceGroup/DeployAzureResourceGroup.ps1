@@ -114,10 +114,6 @@ try
 }
 catch
 {
-    if(-not $telemetrySet)
-    {
-        Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
-    }
-
+    Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
     throw
 }

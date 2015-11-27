@@ -53,6 +53,7 @@ function Create-AzureResourceGroup
 
             if($deploymentError)
             {
+                Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
                 Set-Variable -Name deploymentError -Value $deploymentError -Scope "Global"
 
                 foreach($error in $deploymentError)
