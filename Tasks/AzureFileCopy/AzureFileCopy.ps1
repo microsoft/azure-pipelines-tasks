@@ -42,79 +42,91 @@ $azureFileCopyOperation = 'AzureFileCopy'
 $ErrorActionPreference = 'Stop'
 $telemetrySet = $false
 
-# Load all dependent files for execution
-Import-Module ./AzureFileCopyJob.ps1 -Force
-Import-Module ./AzureUtility.ps1 -Force
-Import-Module ./Utility.ps1 -Force
-
-# Import all the dlls and modules which have cmdlets we need
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
-
-# enabling detailed logging only when system.debug is true
-$enableDetailedLoggingString = $env:system_debug
-if ($enableDetailedLoggingString -ne "true")
-{
-    $enableDetailedLoggingString = "false"
-}
-
-# azcopy location on automation agent
-$agentHomeDir = $env:AGENT_HOMEDIRECTORY
-$azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
-
-$isSwitchAzureModeRequired = Does-RequireSwitchAzureMode
-
-if($isSwitchAzureModeRequired)
-{
-    Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
-    Import-Module ./AzureResourceManagerLegacyProvider.ps1 -Force
-}
-
-# try to get storage key from RDFE, if not exists will try from ARM endpoint
-$storageAccount = $storageAccount.Trim()
 try
-{
-    if($isSwitchAzureModeRequired)
+{ 
+    # Load all dependent files for execution
+    Import-Module ./AzureFileCopyJob.ps1 -Force
+    Import-Module ./AzureUtility.ps1 -Force
+    Import-Module ./Utility.ps1 -Force
+
+    # Import all the dlls and modules which have cmdlets we need
+    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+
+    # enabling detailed logging only when system.debug is true
+    $enableDetailedLoggingString = $env:system_debug
+    if ($enableDetailedLoggingString -ne "true")
     {
-        Write-Verbose "Switching Azure mode to AzureServiceManagement." -Verbose
-        Switch-AzureMode AzureServiceManagement
+        $enableDetailedLoggingString = "false"
     }
 
-    # getting storage key from RDFE    
-    $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
+    # azcopy location on automation agent
+    $agentHomeDir = $env:AGENT_HOMEDIRECTORY
+    $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
-    Write-Verbose "RDFE call succeeded. Loading ARM Wrapper." -Verbose
-}
-catch [Hyak.Common.CloudException], [System.ApplicationException], [System.Management.Automation.CommandNotFoundException]
-{
-    $errorMsg = $_.Exception.Message.ToString()
-    Write-Verbose "[Azure Call](RDFE) $errorMsg" -Verbose
-
-    # checking azure powershell version to make calls to ARM endpoint
-    Validate-AzurePowershellVersion
+    $isSwitchAzureModeRequired = Does-RequireSwitchAzureMode
 
     if($isSwitchAzureModeRequired)
     {
-        Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
-        Switch-AzureMode AzureResourceManager
+        Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
+        Import-Module ./AzureResourceManagerLegacyProvider.ps1 -Force
     }
 
-    # getting storage account key from ARM endpoint
-    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
+    # try to get storage key from RDFE, if not exists will try from ARM endpoint
+    $storageAccount = $storageAccount.Trim()
+    try
+    {
+        if($isSwitchAzureModeRequired)
+        {
+            Write-Verbose "Switching Azure mode to AzureServiceManagement." -Verbose
+            Switch-AzureMode AzureServiceManagement
+        }
+
+        # getting storage key from RDFE    
+        $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
+
+        Write-Verbose "RDFE call succeeded. Loading ARM Wrapper." -Verbose
+    }
+    catch [Hyak.Common.CloudException], [System.ApplicationException], [System.Management.Automation.CommandNotFoundException]
+    {
+        $errorMsg = $_.Exception.Message.ToString()
+        Write-Verbose "[Azure Call](RDFE) $errorMsg" -Verbose
+
+        # checking azure powershell version to make calls to ARM endpoint
+        Validate-AzurePowershellVersion
+
+        if($isSwitchAzureModeRequired)
+        {
+            Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
+            Switch-AzureMode AzureResourceManager
+        }
+
+        # getting storage account key from ARM endpoint
+        $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
+    }
+
+    # creating storage context to be used while creating container, sas token, deleting container
+    $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
+
+    # creating temporary container for uploading files
+    if ([string]::IsNullOrEmpty($containerName))
+    {
+        $containerName = [guid]::NewGuid().ToString();
+        Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccount" -Verbose
+        $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container
+        Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccount" -Verbose
+    }
 }
-
-# creating storage context to be used while creating container, sas token, deleting container
-$storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
-
-# creating temporary container for uploading files
-if ([string]::IsNullOrEmpty($containerName))
+catch
 {
-    $containerName = [guid]::NewGuid().ToString();
-    Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccount" -Verbose
-    $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container
-    Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccount" -Verbose
+    if(-not $telemetrySet)
+    {
+        Write-TaskSpecificTelemetry "UNKNOWNPREDEP_Error"
+    }
+
+    throw
 }
 
 # uploading files to container
@@ -192,7 +204,7 @@ try
         $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $environmentName
         if ($azureVMResources.Count -eq 0)
         {
-            Write-TaskSpecificTelemetry "PREREQ_NoResources"
+            Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
             throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
         }
 
@@ -231,7 +243,7 @@ try
             {
                 Write-Verbose $copyResponse.Error.ToString() -Verbose
                 $errorMessage =  $copyResponse.Error.Message
-                Write-TaskSpecificTelemetry "AZUREFILECOPY_Failed"
+                Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
                 ThrowError -errorMessage $errorMessage
             }
         }
@@ -287,7 +299,7 @@ try
     if ($envOperationStatus -ne "Passed")
     {
         $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
-        Write-TaskSpecificTelemetry "AZUREFILECOPY_Failed"
+        Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
         ThrowError -errorMessage $errorMessage
     }
     else
@@ -298,7 +310,7 @@ try
 catch
 {
     Write-Verbose $_.Exception.ToString() -Verbose
-    Write-TaskSpecificTelemetry "AZUREFILECOPY_Failed"
+    Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
     throw
 }
 finally
