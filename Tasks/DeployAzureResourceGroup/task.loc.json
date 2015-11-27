@@ -70,6 +70,8 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.location",
       "options": {
+        "Australia East": "Australia East",
+        "Australia Southeast": "Australia Southeast",
         "Brazil South": "Brazil South",
         "Central US": "Central US",
         "East Asia": "East Asia",
