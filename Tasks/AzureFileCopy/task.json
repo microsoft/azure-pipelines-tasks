@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 21
     },
     "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.92.0",
+    "minimumAgentVersion": "1.90.0",
     "inputs": [
         {
             "name": "SourcePath",
@@ -109,14 +109,6 @@
             "required": true,
             "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
             "visibleRule": "Destination = AzureVMs"
-        },
-        {
-            "name": "AdditionalArguments",
-            "type": "multiLine",
-            "label": "Additional Arguments",
-            "required": false,
-            "defaultValue": "",
-            "helpMarkDown": "Additional AzCopy.exe arguments that will be applied when uploading to blob or uploading to VM like, /MT."
         },
         {
             "name": "CopyFilesInParallel",
