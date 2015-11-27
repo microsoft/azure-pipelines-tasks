@@ -49,7 +49,6 @@ function Write-TaskSpecificTelemetry
 
 try
 {
-
     $ErrorActionPreference = "Stop"
 
     if(-not $UnderTestCondition)
