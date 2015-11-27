@@ -1,4 +1,5 @@
 ﻿{
+<<<<<<< HEAD
     "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
     "name": "AzureFileCopy",
     "friendlyName": "Azure File Copy",
@@ -14,6 +15,36 @@
         "Major": 1,
         "Minor": 0,
         "Patch": 22
+=======
+  "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
+  "name": "AzureFileCopy",
+  "friendlyName": "Azure File Copy",
+  "description": "Copy files to Azure blob or VM(s)",
+  "helpMarkDown": "[More Information](http://aka.ms/azurefilecopyreadme)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 23
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.92.0",
+  "inputs": [
+    {
+      "name": "SourcePath",
+      "type": "filePath",
+      "label": "Source",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file."
+>>>>>>> ad51e08... Increasing patch version
     },
     "demands": [
         "azureps"
