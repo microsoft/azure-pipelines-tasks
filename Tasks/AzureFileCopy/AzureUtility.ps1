@@ -22,6 +22,7 @@ function Get-AzureStorageAccountResourceGroupName
         if ([string]::IsNullOrEmpty($azureResourceGroupName) -eq $true)
         {
             Write-Verbose "(ARM)Storage account: $storageAccountName not found" -Verbose
+            Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
             Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
         }
     }
@@ -104,10 +105,12 @@ function Get-AzureRMVMsInResourceGroup
     catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException], [System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
     {
         Write-Verbose $_.Exception.Message -Verbose
+        Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
         throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $resourceGroupName)
     }
     catch
     {
+        Write-TaskSpecificTelemetry "AZUREPLATFORM_UnknownGetRMVMError"
         throw
     }
 
@@ -210,6 +213,7 @@ function Get-MachineNameFromId
         {
             if($errorCount -eq $azureRMVMResources.Count -and $azureRMVMResources.Count -ne 0)
             {
+                Write-TaskSpecificTelemetry "DEPLOYMENT_FetchPropertyFromMap"
                 throw (Get-LocalizedString -Key "Unable to get {0} for all resources in ResourceGroup : '{1}'" -ArgumentList $mapParameter, $resourceGroupName)
             }
             else
