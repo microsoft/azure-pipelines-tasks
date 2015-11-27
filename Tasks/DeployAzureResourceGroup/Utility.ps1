@@ -6,6 +6,7 @@ function Validate-AzurePowershellVersion
 
     if(!$versionCompatible)
     {
+        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVerion"
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "http://aka.ms/azps")    }
 
     Write-Verbose -Verbose "Validated the required azure powershell version"
@@ -25,6 +26,7 @@ function Is-SwitchAzureModeRequired
     
     if(!(Get-Module -Name "AzureRM" -ListAvailable))
     {
+        Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
         throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
     }
        
@@ -35,12 +37,14 @@ function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
     {
+        Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
         throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern '{0}'. There can be only one" -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
+            Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
             throw (Get-LocalizedString -Key "No files were found to deploy with search pattern '{0}'" -ArgumentList $pattern)
         }
 
@@ -69,11 +73,13 @@ function Validate-DeploymentFileAndParameters
 
     if (!(Test-Path -Path $csmFile -PathType Leaf))
     {
+        Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
         throw (Get-LocalizedString -Key "Please specify a complete and a valid template file path")
     }
 
     if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\") -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
     {
+         Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
          throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
     }
 }
@@ -128,7 +134,10 @@ function Perform-Action
              break
           }
 
-         default { throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, "Azure") }
+         default {
+		    Write-TaskSpecificTelemetry "PREREQ_InvalidActionProvided"
+		    throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, "Azure")
+		 }
     }
 }
 
@@ -154,6 +163,7 @@ function Invoke-OperationHelper
 
         if($response.Status -ne "Succeeded")
         {
+		    Write-TaskSpecificTelemetry "DEPLOYMENT_PerformActionFailed"
             Write-Error (Get-LocalizedString -Key "Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
             throw $response.Error
         }
@@ -197,6 +207,7 @@ function Invoke-OperationOnProvider
          }
 
          default {
+              Write-TaskSpecificTelemetry "PREREQ_InvalidActionProvided"
               throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
          }         
     }
@@ -291,6 +302,7 @@ function Instantiate-Environment
         $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $resourceGroupName
         if ($azureVMResources.Count -eq 0)
         {
+		    Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
             throw (Get-LocalizedString -Key "No VMs found in resource group: '{0}'. Could not register environment in the output variable: '{1}'" -ArgumentList $resourceGroupName, $outputVariable)
         }
 
