@@ -127,7 +127,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer https://docs.gradle.org/current/userguide/jacoco_plugin.html for Jacoco and https://plugins.gradle.org/plugin/net.saliman.cobertura for Cobertura.",
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, `+:com.*`,`+:org.*`,`-:my.app*.*`. Refer https://docs.gradle.org/current/userguide/jacoco_plugin.html for Jacoco and https://plugins.gradle.org/plugin/net.saliman.cobertura for Cobertura.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
