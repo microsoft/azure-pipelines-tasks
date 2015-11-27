@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 31
+        "Patch": 32
     },
     "demands": [
         "azureps"
@@ -67,8 +67,18 @@
             "required": true,
             "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
             "options": {
+                "Australia East": "Australia East",
+                "Australia Southeast": "Australia Southeast",
+                "Brazil South": "Brazil South",
+                "Central US": "Central US",
                 "East Asia": "East Asia",
                 "East US": "East US",
+                "East US 2 ": "East US 2 ",
+                "Japan East": "Japan East",
+                "Japan West": "Japan West",
+                "North Central US": "North Central US",
+                "North Europe": "North Europe",
+                "South Central US": "South Central US",
                 "Southeast Asia": "Southeast Asia",
                 "West Europe": "West Europe",
                 "West US": "West US"
