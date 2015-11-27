@@ -67,6 +67,8 @@
             "required": true,
             "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
             "options": {
+                "Australia East": "Australia East",
+                "Australia Southeast": "Australia Southeast",
                 "Brazil South": "Brazil South",
                 "Central US": "Central US",
                 "East Asia": "East Asia",
