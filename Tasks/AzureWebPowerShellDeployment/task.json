@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [
     "azureps"
@@ -43,6 +43,8 @@
       "required": true,
       "helpMarkDown": "Select a region for deployment.",
       "options": {
+        "Australia East": "Australia East",
+        "Australia Southeast": "Australia Southeast",
         "Brazil South": "Brazil South",
         "Central US": "Central US",
         "East Asia": "East Asia",
