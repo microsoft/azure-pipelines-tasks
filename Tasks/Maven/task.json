@@ -115,7 +115,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html for Jacoco and http://www.mojohaus.org/cobertura-maven-plugin/ for Cobertura.",
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, `+:com.*`,`+:org.*`,`-:my.app*.*`. Refer http://www.eclemma.org/jacoco/trunk/doc/maven.html for Jacoco and http://www.mojohaus.org/cobertura-maven-plugin/ for Cobertura.",
             "visibleRule": "codeCoverageTool != None"
         }, 
         {
@@ -124,7 +124,7 @@
             "label": "Class Files Directories",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma seperated list of relative paths from Maven POM file to directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, target/classes,target/testClasses. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify comma seperated list of relative paths from Maven POM file to directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, target/classes,target/testClasses. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
 	    "visibleRule": "codeCoverageTool = JaCoCo"
         },	
         {
@@ -134,9 +134,9 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Comma seperated list of relative paths from Maven POM file to source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
+            "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify comma seperated list of relative paths from Maven POM file to source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html",
 	    "visibleRule": "codeCoverageTool = JaCoCo"
-        },	
+        },
         {
             "name":"javaHomeSelection",
             "type":"radio",
