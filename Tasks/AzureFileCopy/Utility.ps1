@@ -52,7 +52,7 @@ function Validate-AzurePowershellVersion
     
     if(!$versionCompatible)
     {
-        Write-TaskSpecificTelemetry "PREREQ_AzurePowerShellVersion"
+        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVerion"
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
     }
 
