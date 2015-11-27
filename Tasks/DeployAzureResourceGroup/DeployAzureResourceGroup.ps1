@@ -47,16 +47,17 @@ function Write-TaskSpecificTelemetry
     Write-Telemetry "$codeKey" "94A74903-F93F-4075-884F-DC11F34058B4"
 }
 
-$ErrorActionPreference = "Stop"
-
-if(-not $UnderTestCondition)
-{
-    . ./Utility.ps1
-    Import-Module ./AzureUtility.ps1 -Force
-}
-
 try
 {
+
+    $ErrorActionPreference = "Stop"
+
+    if(-not $UnderTestCondition)
+    {
+        . ./Utility.ps1
+        Import-Module ./AzureUtility.ps1 -Force
+    }
+
     Initialize-GlobalMaps
 
     Validate-AzurePowershellVersion
@@ -115,7 +116,7 @@ catch
 {
     if(-not $telemetrySet)
     {
-        Write-TaskSpecificTelemetry "UNKNOWN_Error"
+        Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
     }
 
     throw

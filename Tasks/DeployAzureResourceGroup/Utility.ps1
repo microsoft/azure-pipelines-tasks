@@ -26,6 +26,7 @@ function Is-SwitchAzureModeRequired
     
     if(!(Get-Module -Name "AzureRM" -ListAvailable))
     {
+        Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
         throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
     }
        
@@ -162,7 +163,7 @@ function Invoke-OperationHelper
 
         if($response.Status -ne "Succeeded")
         {
-		    Write-TaskSpecificTelemetry "PERFORMACTION_Failed"
+		    Write-TaskSpecificTelemetry "DEPLOYMENT_PerformActionFailed"
             Write-Error (Get-LocalizedString -Key "Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
             throw $response.Error
         }
@@ -301,7 +302,7 @@ function Instantiate-Environment
         $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $resourceGroupName
         if ($azureVMResources.Count -eq 0)
         {
-		    Write-TaskSpecificTelemetry "PREREQ_NoVMFound"
+		    Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
             throw (Get-LocalizedString -Key "No VMs found in resource group: '{0}'. Could not register environment in the output variable: '{1}'" -ArgumentList $resourceGroupName, $outputVariable)
         }
 
