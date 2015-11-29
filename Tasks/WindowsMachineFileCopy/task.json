@@ -3,7 +3,7 @@
     "name": "WindowsMachineFileCopy",
     "friendlyName": "Windows Machine File Copy",
     "description": "Copy files to remote machine(s)",
-    "helpMarkDown": "[More Information](http://aka.ms/windowsfilecopyreadme)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?linkid=627415)",
     "category": "Deploy",
     "visibility": [
                 "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "minimumAgentVersion": "1.91.0",
     "groups": [

@@ -21,6 +21,11 @@
     [string]$sqDbPassword
 )
 
+Function CmdletHasMember($memberName) {
+    $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
+    return $publishParameters
+}
+
 Write-Verbose 'Entering Maven.ps1'
 Write-Verbose "mavenPOMFile = $mavenPOMFile"
 Write-Verbose "options = $options"
@@ -70,6 +75,7 @@ $reportPOMFileName = [guid]::NewGuid().tostring() + ".xml"
 $reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
+$targetDirectory = Join-Path $buildRootPath "target"
 $summaryFileNameJacoco = "jacoco.xml"
 $summaryFileNameCobertura = "coverage.xml"
 $summaryFileJacoco = Join-Path $buildRootPath $reportDirectoryName
@@ -79,6 +85,15 @@ $summaryFileCobertura = Join-Path $summaryFileCobertura $summaryFileNameCobertur
 $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
+
+if($isCoverageEnabled)
+{
+	if(Test-Path $targetDirectory)
+	{
+		# delete the target directory created by cobertura
+		rm -r $targetDirectory -force | Out-Null
+	}
+}
 
 # Enable Code Coverage
 EnableCodeCoverage $isCoverageEnabled $mavenPOMFile $codeCoverageTool $classFilter $classFilesDirectories $srcDirectories $summaryFileNameJacoco $reportDirectory $reportPOMFile
@@ -91,13 +106,18 @@ Write-Host "Running Maven..."
 Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 
 # Publish test results
-if([string]::IsNullOrWhiteSpace($testRunTitle))
+$runTitleMemberExists = CmdletHasMember "RunTitle"
+if($runTitleMemberExists)
 {
-	PublishTestResults $publishJUnitResults $testResultsFiles
+	PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
 }
 else
 {
-	PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle		
+	if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+	{
+		Write-Warning "Update the build agent to be able to use the custom run title feature."
+	}
+	PublishTestResults $publishJUnitResults $testResultsFiles
 }
 
 if ($codeCoverageTool -eq "JaCoCo")
@@ -128,6 +148,7 @@ if(Test-Path $reportPOMFile)
     # delete any previous code coverage data 
     rm $reportPOMFile -force | Out-Null
 }
+
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile

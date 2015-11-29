@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 25
     },
     "demands" : [
         "ant"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "1.89.0",
     "groups": [
         {
             "name":"junitTestResults",
@@ -51,7 +51,8 @@
             "type": "string", 
             "label": "Options", 
             "defaultValue":"", 
-            "required":false 
+            "required":false,
+            "helpMarkDown": "Provide any options to pass to the Ant command line.  You can provide your own properties (for example, ***-DmyProperty=myPropertyValue***) and also use built-in variables (for example, ***-DcollectionId=$(system.collectionId)***).  Alternatively, the built-in variables are already set as environment variables during the build and can be passed directly (for example, ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***)."
         },
         { 
             "name": "targets", 
@@ -95,11 +96,11 @@
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "None",
-            "helpMarkDown": "Select the code coverage tool. For JaCoCo, please make sure jacocoant.jar is available in lib folder of Ant installation. For cobertura, set up an environment variable COBERTURA_HOME pointing to the cobertura jars location.",
+            "helpMarkDown": "Select the code coverage tool. For on premise agent setup please refer to the more information link below.",
             "options": {
                 "None": "None",
                 "JaCoCo": "JaCoCo",
-		"Cobertura": "Cobertura"
+                "Cobertura": "Cobertura"
             }
         },        
         {
@@ -109,7 +110,7 @@
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of directories containing class files, archive files(jar, war etc.). Directories and archives are searched recursively for class files. Code coverage is reported for class files present in the directories. For example, classes1/Tests,classes2/Tests2. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
+            "helpMarkDown": "Comma separated list of relative paths from ant build file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. For example: target/classes,target/testClasses.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -119,7 +120,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example, +:com.*,+:org.*,-:my.app*.*. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
+            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example: `+:com.*`,`+:org.*`,`-:my.app*.*`.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -129,8 +130,17 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Specify source directories for code coverage reports to include highlighted source code. For example, src/java,src/Test. Refer http://www.eclemma.org/jacoco/trunk/doc/ant.html.",
+            "helpMarkDown": "Comma separated list of relative paths from ant build file to source directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.",
             "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name":"antHomeUserInputPath",
+            "type":"string",
+            "label":"Set ANT_HOME Path",
+            "required":false,
+            "groupName":"advanced",
+            "defaultValue":"",
+            "helpMarkDown": "If set, overrides any existing ANT_HOME environment variable with the given path."
         },
         {
              "name":"javaHomeSelection",

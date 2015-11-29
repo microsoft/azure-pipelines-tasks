@@ -13,6 +13,14 @@ antb.arg(tl.getPathInput('antBuildFile', true, true));
 antb.arg(tl.getDelimitedInput('options', ' ', false));
 antb.arg(tl.getDelimitedInput('targets', ' ', false));
 
+// update ANT_HOME if user specified path manually (not required, but if so, check it)
+var antHomeUserInputPath = tl.getPathInput('antHomeUserInputPath', false, true);
+if (antHomeUserInputPath) {
+    tl.debug('Using path from user input to set ANT_HOME');
+    tl.debug('Set ANT_HOME to ' + antHomeUserInputPath);
+    process.env['ANT_HOME'] = antHomeUserInputPath;
+}
+
 // update JAVA_HOME if user selected specific JDK version or set path manually
 var javaHomeSelection = tl.getInput('javaHomeSelection', true);
 var specifiedJavaHome = null;

@@ -28,44 +28,91 @@ Write-Verbose -Verbose "OutputVariable = $outputVariable"
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()
-$csmFile = $csmFile.Trim()
-$csmParametersFile = $csmParametersFile.Trim()
+$csmFile = $csmFile.Trim('"', ' ')
+$csmParametersFile = $csmParametersFile.Trim('"', ' ')
 $overrideParameters = $overrideParameters.Trim()
 $outputVariable = $outputVariable.Trim()
+$telemetrySet = $false
 
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
-$ErrorActionPreference = "Stop"
-
-. ./Utility.ps1
-Import-Module ./AzureUtility.ps1 -Force
-
-Validate-AzurePowershellVersion
-
-#Handle-SwitchAzureMode
-$isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
-
-if($isSwitchAzureModeRequired)
+function Write-TaskSpecificTelemetry
 {
-    Switch-AzureMode AzureResourceManager
-    . ./AzureResourceManagerWrapper.ps1
+    param(
+      [string]$codeKey
+      )
+
+    Write-Telemetry "$codeKey" "94A74903-F93F-4075-884F-DC11F34058B4"
 }
 
-. ./AzureResourceManagerHelper.ps1
-
-if( $action -eq "Create Or Update Resource Group" )
+try
 {
-    Create-AzureResourceGroupHelper -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
-}
-else
-{
-    Perform-Action -action $action -resourceGroupName $resourceGroupName
-}
+    $ErrorActionPreference = "Stop"
 
-if( $action -eq "Create Or Update Resource Group" -and -not [string]::IsNullOrEmpty($outputVariable))
-{
-    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
-}
+    if(-not $UnderTestCondition)
+    {
+        . ./Utility.ps1
+        Import-Module ./AzureUtility.ps1 -Force
+    }
 
-Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
+    Initialize-GlobalMaps
+
+    Validate-AzurePowershellVersion
+
+    #Handle-SwitchAzureMode
+    $isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
+
+    . ./AzureResourceManagerHelper.ps1
+
+    if($isSwitchAzureModeRequired)
+    {
+    .     ./AzureResourceManagerWrapper.ps1
+    }
+
+    if( $action -eq "Select Resource Group")
+    {
+        if([string]::IsNullOrEmpty($outputVariable))
+        {
+            Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
+            throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
+        }
+    
+        Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+        return
+    }
+
+    $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
+    if ($serviceEndpoint.Authorization.Scheme -eq 'Certificate')
+    {
+        Write-TaskSpecificTelemetry "PREREQ_InvalidServiceConnectionType"
+        throw (Get-LocalizedString -Key "Certificate based authentication only works with the 'Select Resource Group' action. Please select an Azure subscription with either Credential or SPN based authentication.")
+    }
+
+    if($isSwitchAzureModeRequired)
+    {
+        Switch-AzureMode AzureResourceManager
+    }
+
+    if( $action -eq "Create Or Update Resource Group" )
+    {
+        Create-AzureResourceGroupHelper -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
+        if(-not [string]::IsNullOrEmpty($outputVariable))
+        {
+            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+        }
+    }
+
+    else
+    {
+        Perform-Action -action $action -resourceGroupName $resourceGroupName
+    }
+
+    Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
+}
+catch
+{
+    Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
+    throw
+}

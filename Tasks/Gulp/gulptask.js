@@ -1,24 +1,37 @@
+var fs = require('fs');
 var path = require('path');
 var tl = require('vso-task-lib');
 
-var gt = new tl.ToolRunner(tl.which('gulp', true));
+var nt = new tl.ToolRunner(tl.which('node', true));
 
-// optional - no tasks will concat nothing
-gt.arg(tl.getDelimitedInput('targets', ' ', false));
-
-gt.arg('--gulpfile');
 var gulpFile = tl.getPathInput('gulpFile', true);
-gt.arg(gulpFile);
-
-gt.arg(tl.getDelimitedInput('arguments', ' ', false));
-
 var cwd = tl.getInput('cwd', false);
 if (!cwd) {
 	cwd = path.dirname(gulpFile);
 }
+
+var gulpjs = path.resolve(cwd, tl.getInput('gulpjs', true));
+
+tl.debug('check path : ' + gulpjs);
+if(!fs.existsSync(gulpjs)){
+	tl.exit(1);
+	throw ('gulp.js doesn\'t exist at: ' + gulpjs);
+}
+
+nt.arg(gulpjs);
+
+// optional - no tasks will concat nothing
+nt.arg(tl.getDelimitedInput('targets', ' ', false));
+
+nt.arg('--gulpfile');
+
+nt.arg(gulpFile);
+
+nt.arg(tl.getDelimitedInput('arguments', ' ', false));
+
 tl.cd(cwd);
 
-gt.exec()
+nt.exec()
 .then(function(code) {
 	tl.exit(code);
 })

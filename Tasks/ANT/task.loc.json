@@ -16,12 +16,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 25
   },
   "demands": [
     "ant"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.89.0",
   "groups": [
     {
       "name": "junitTestResults",
@@ -54,7 +54,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.options",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.options"
     },
     {
       "name": "targets",
@@ -135,6 +136,15 @@
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
       "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "antHomeUserInputPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.antHomeUserInputPath",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.antHomeUserInputPath"
     },
     {
       "name": "javaHomeSelection",

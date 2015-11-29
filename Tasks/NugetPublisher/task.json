@@ -3,7 +3,7 @@
     "name": "NuGetPublisher",
     "friendlyName": "NuGet Publisher",
     "description": "Uploads nupkg files to a NuGet server",
-    "helpMarkDown": " ",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627417)",
     "category": "Package",
     "author": "Lawrence Gripper",
     "version": {

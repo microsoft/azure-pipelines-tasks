@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "gulp"
@@ -62,6 +62,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "gulpjs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gulpjs",
+      "defaultValue": "node_modules/gulp/bin/gulp.js",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.gulpjs",
       "groupName": "advanced"
     }
   ],

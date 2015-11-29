@@ -15,18 +15,18 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 18
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
   "inputs": [
     {
-      "name": "ArtifactContents",
+      "name": "PathtoPublish",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.ArtifactContents",
+      "label": "ms-resource:loc.input.label.PathtoPublish",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ArtifactContents"
+      "helpMarkDown": "ms-resource:loc.input.help.PathtoPublish"
     },
     {
       "name": "ArtifactName",

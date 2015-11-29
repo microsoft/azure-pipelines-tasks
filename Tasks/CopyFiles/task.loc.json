@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -29,17 +29,17 @@
   "inputs": [
     {
       "name": "SourceFolder",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.SourceFolder",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.SourceFolder"
     },
     {
       "name": "Contents",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.Contents",
-      "defaultValue": "",
+      "defaultValue": "**",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Contents"
     },

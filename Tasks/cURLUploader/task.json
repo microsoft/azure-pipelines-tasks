@@ -3,13 +3,13 @@
     "name": "cURLUploader",
     "friendlyName": "cURL Upload Files",
     "description": "Use cURL to upload files with supported protocols. (FTP, FTPS, SFTP, HTTP, and more)",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627418)",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0 
+        "Patch": 1 
     },
     "demands": [
         "curl"
@@ -77,7 +77,8 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\cURLUploader.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": "$(currentDirectory)",
+            "platforms": ["windows"]
         },
         "Node": {
             "target": "cURLUploader.js",
