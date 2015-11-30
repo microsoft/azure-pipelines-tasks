@@ -1,3 +1,12 @@
+function Write-TaskSpecificTelemetry
+{
+    param(
+      [string]$codeKey
+      )
+
+    Write-Telemetry "$codeKey" "94A74903-F93F-4075-884F-DC11F34058B4"
+}
+
 function Validate-AzurePowershellVersion
 {
     $currentVersion =  Get-AzureCmdletsVersion
