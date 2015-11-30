@@ -38,15 +38,6 @@ import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
 import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
-function Write-TaskSpecificTelemetry
-{
-    param(
-      [string]$codeKey
-      )
-
-    Write-Telemetry "$codeKey" "94A74903-F93F-4075-884F-DC11F34058B4"
-}
-
 try
 {
     $ErrorActionPreference = "Stop"
