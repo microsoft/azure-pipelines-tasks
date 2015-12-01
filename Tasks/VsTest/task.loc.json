@@ -91,7 +91,8 @@
       "label": "ms-resource:loc.input.label.runInParallel",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runInParallel"
+      "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
+      "groupName": "executionOptions"
     },
     {
       "name": "vsTestVersion",

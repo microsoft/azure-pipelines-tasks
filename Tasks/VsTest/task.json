@@ -88,7 +88,8 @@
       "label": "Run In Parallel",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "Turn this flag on to enable parallel execution of your tests."
+      "helpMarkDown": "Enable parallel execution of your tests.",
+      "groupName": "executionOptions"
     },
     {
       "name": "vsTestVersion",

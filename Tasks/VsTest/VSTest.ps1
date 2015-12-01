@@ -31,7 +31,7 @@ function IsVisualStudio2015Update1OrHigherInstalled($vsTestVersion) {
     {
         # checking for dll introduced in vs2015 update1
         # since path of the dll will change in dev15+ using vstestversion>14 as a blanket yes
-        if(Test-Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll" -Or $version -gt 14)
+        if((Test-Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll") -Or ($version -gt 14))
         {
             # ensure the registry is set otherwise you need to launch VSIDE
             SetRegistryKeyForParallel $vsTestVersion
@@ -66,7 +66,7 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
             $runConfigurationElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration")
             if($runConfigurationElement.Count -eq 0)
             {
-                 $runConfigurationElement = $runSettingsForParallel.RunSettings.AppendChild($runSettingsFileXml.CreateElement("RunConfiguration"))
+                 $runConfigurationElement = $runSettingsForParallel.RunSettings.AppendChild($runSettingsForParallel.CreateElement("RunConfiguration"))
             }
 
             $maxCpuCountElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration/MaxCpuCount")
@@ -115,7 +115,7 @@ if(!$sourcesDirectory)
 }
 
 # check for solution pattern
-if ($testAssembly.Contains("*") -or $testAssembly.Contains("?"))
+if ($testAssembly.Contains("*") -Or $testAssembly.Contains("?"))
 {
     Write-Verbose "Pattern found in solution parameter. Calling Find-Files."
     Write-Verbose "Calling Find-Files with pattern: $testAssembly"    
@@ -145,11 +145,14 @@ if($testAssemblyFiles)
     $workingDirectory = $artifactsDirectory
     $testResultsDirectory = $workingDirectory + "\" + "TestResults"
 
-    $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion
-    if(-Not $rightVSVersionAvailable)
+    if($runInParallel -eq "True")
     {
-        Write-Warning "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel."
-        $runInParallel = "false"
+        $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion
+        if(-Not $rightVSVersionAvailable)
+        {
+            Write-Warning "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel."
+            $runInParallel = "false"
+        }
     }
     
     $defaultCpuCount = "0"    
