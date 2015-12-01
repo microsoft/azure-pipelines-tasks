@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "minimumAgentVersion": "1.91.0",
   "groups": [
@@ -78,25 +78,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
     },
     {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      }
-    },
-    {
-      "name": "MachineNames",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
-    },
-    {
       "name": "ScriptPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.ScriptPath",
@@ -140,6 +121,28 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod"
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineNames",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

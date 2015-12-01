@@ -20,10 +20,6 @@
   "loc.input.help.WinRMProtocol": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
   "loc.input.label.TestCertificate": "Test Certificate",
   "loc.input.help.TestCertificate": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.",
-  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
-  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of machines either by providing machine names or tags.",
-  "loc.input.label.MachineFilter": "Deploy to Machines",
-  "loc.input.help.MachineFilter": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group.",
   "loc.input.label.WebDeployPackage": "Web Deploy Package",
   "loc.input.help.WebDeployPackage": "Location of the Web Deploy (MSDeploy) zip file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\WebDeploy\\WebDeployPackage.zip. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported like, $env:windir, $env:systemroot, like, $env:windir\\FabrikamFibre\\Web.",
   "loc.input.label.WebDeployParamFile": "Web Deploy Parameter File",
@@ -77,5 +73,9 @@
   "loc.input.label.AppCmdCommands": "Additional AppCmd.exe Commands",
   "loc.input.help.AppCmdCommands": "Additional AppCmd.exe commands to set website or application pool properties. For more than one command use line separator, e.g., <br/> list apppools <br/> list sites",
   "loc.input.label.DeployInParallel": "Deploy in Parallel",
-  "loc.input.help.DeployInParallel": "Setting it to true will deploy the Web application in-parallel on the target machines."
+  "loc.input.help.DeployInParallel": "Setting it to true will deploy the Web application in-parallel on the target machines.",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of machines either by providing machine names or tags.",
+  "loc.input.label.MachineFilter": "Deploy to Machines",
+  "loc.input.help.MachineFilter": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
 }
