@@ -14,8 +14,9 @@ var gulpjs = path.resolve(cwd, tl.getInput('gulpjs', true));
 
 tl.debug('check path : ' + gulpjs);
 if(!fs.existsSync(gulpjs)){
+	tl.error('gulp.js doesn\'t exist at: ' + gulpjs);
 	tl.exit(1);
-	throw ('gulp.js doesn\'t exist at: ' + gulpjs);
+	process.exit(0);
 }
 
 nt.arg(gulpjs);
