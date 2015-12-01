@@ -83,7 +83,6 @@
       "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
       "required": false,
       "defaultValue": "machineNames",
-      "visibleRule": "Protocol = Invalid",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
@@ -95,7 +94,6 @@
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "Protocol = Invalid",
       "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {

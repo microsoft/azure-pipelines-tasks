@@ -93,7 +93,6 @@
       "label": "Select Machines By",
       "required": false,
       "defaultValue": "machineNames",
-      "visibleRule": "WinRMProtocol = Invalid",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
@@ -106,7 +105,6 @@
       "label": "Deploy to Machines",
       "required": false,
       "defaultValue": "",
-      "visibleRule": "WinRMProtocol = Invalid",
       "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
     },
     {
