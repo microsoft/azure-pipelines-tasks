@@ -10,7 +10,6 @@ import path = require('path');
 var shell = require('shelljs');
 
 var ps = shell.which('powershell');
-console.log(ps);
 
 describe('Test Helpers Suite', function() {
     this.timeout(10000);

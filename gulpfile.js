@@ -14,6 +14,30 @@ var exec = require('child_process').exec;
 var tsc = require('gulp-tsc');
 var mocha = require('gulp-mocha');
 
+/*
+Distinct build, test and Packaging Phases:
+
+Build:
+- validate the task.json for each task
+- generate task.loc.json file and strings file for each task.  allows for hand off to loc.
+- compile .ts --> .js
+- "link" in the vso-task-lib declared in package.json into tasks using node handler
+
+Test:
+- Run Tests (L0, L1) - see docs/runningtests.md
+- copy the mock task-lib to the root of the temp test folder
+- Each test:
+   - copy task to a temp dir.
+   - delete linked copy of task-lib (so it uses the mock one above)
+   - run
+
+Package (only on windows):
+- zip the tasks.
+- if nuget found (windows):
+  - create nuget package
+  - if server url, publish package - this is for our VSO build 
+*/
+
 var mopts = {
   boolean: 'ci',
   string: 'suite',
@@ -21,7 +45,6 @@ var mopts = {
 };
 
 var options = minimist(process.argv.slice(2), mopts);
-
 
 var _buildRoot = path.join(__dirname, '_build', 'Tasks');
 var _testRoot = path.join(__dirname, '_build', 'Tests');
@@ -46,7 +69,7 @@ gulp.task('compileTests', ['cleanTests'], function (cb) {
 });
 
 gulp.task('ps1tests', ['compileTests'], function (cb) {
-	return gulp.src(['Tests/**/*.ps1'])
+	return gulp.src(['Tests/**/*.ps1', 'Tests/**/*.json'])
 		.pipe(gulp.dest(_testRoot));
 });
 
@@ -128,7 +151,7 @@ gulp.task('zip', ['build'], function(done) {
 });
 
 //
-// gulp package --version 1.0.31 --server \\some\nuget\svr\path
+// gulp package --version 1.0.31 [--server <nugetServerLocation>]
 //
 gulp.task('package', ['zip'], function(done) {
 	var nugetPath = shell.which('nuget');
@@ -187,6 +210,13 @@ gulp.task('package', ['zip'], function(done) {
 		.then(function() {
 			// publish only if version and source supplied - used by CI server that does official publish
 			if (server) {
+
+				var nuget3Path = shell.which('nuget3');
+				if (!nuget3Path) {
+					done(new gutil.PluginError('PackageTask', 'nuget3.exe needs to be in the path.  could not find.'));
+					return;
+				}
+								
 				var pkgLocation = path.join(_pkgRoot, pkgName + '.' + version + '.nupkg');
 				var cmdline = '"' + nuget3Path + '" push ' + pkgLocation + ' -Source ' + server + ' -apikey Skyrise';
 				return QExec(cmdline);				

@@ -175,6 +175,23 @@ function packageTask(pkgPath){
 	        	shell.cp('-R', path.join(dirName, '*'), tgtPath);
 	        	shell.rm(path.join(tgtPath, '*.csproj'));
 	        	shell.rm(path.join(tgtPath, '*.md'));
+
+	        	// 'statically link' task-lib
+	        	if (task.execution['Node']) {
+	        		gutil.log('linking task-lib for ' + task.name);
+
+	        		var tskLibSrc = path.join(__dirname, 'node_modules', 'vso-task-lib');
+	        		if (shell.test('-d', tskLibSrc)) {
+	        			new gutil.PluginError('PackageTask', 'vso-task-lib not found: ' + tskLibSrc);
+	        		}
+
+					var libPath = path.join(tgtPath, 'node_modules');
+					if (!shell.test('-d', libPath)) {
+						shell.mkdir('-p', libPath);
+					}
+
+					shell.cp('-R', tskLibSrc, libPath);
+	        	}
 	        	return;        	
 	        })
 	        .then(function() {

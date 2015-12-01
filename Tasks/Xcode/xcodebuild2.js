@@ -6,7 +6,6 @@
 var tl = require('vso-task-lib'),
 	path = require('path'),
 	fs = require('fs'),
-	glob = require('glob'),
 	Q = require ('q'),
 	xcutils = require('./xcode-task-utils.js');
 
@@ -83,25 +82,29 @@ function processInputs() {
 	xcb.arg(sdk);
 	xcb.arg('-configuration');
 	xcb.arg(tl.getInput('configuration', true));
+	
 	// Args: Add optional workspace flag
 	var workspace = tl.getPathInput('xcWorkspacePath', false, false);
-	if(workspace && workspace !== buildSourceDirectory) {
-		if(fs.existsSync(workspace) && fs.lstatSync(workspace).isDirectory()) {
-			var workspaceFile = glob.sync(workspace);
-			if(workspaceFile && workspaceFile.length > 0) {
-				tl.debug("Found " + workspaceFile.length + ' workspaces matching.')
-				xcb.arg('-workspace');
-				xcb.arg('"' + workspaceFile[0] + '"');				
-			} else {
-				console.error('No workspaces found matching ' + workspace);
+	if(tl.filePathSupplied(workspace)) {
+
+		var workspaceMatches = tl.glob(workspace);
+		tl.debug("Found " + workspaceFile.length + ' workspaces matching.');
+
+		if (workspaceMatches.length > 0) {
+			if (workspaceMatches.length > 1) {
+				tl.warning('multiple workspace matches.  using first.');
 			}
-		}
+
+			xcb.arg('-workspace');
+			xcb.arg(workspaceFile[0]);
+		} 
 		else {
 			console.error('Workspace specified but it does not exist or is not a directory');
 		}
 	} else {
 		tl.debug('No workspace path specified in task.');
 	}
+
 	// Args: Add optional scheme flag
 	var scheme = tl.getInput('scheme', false);
 	if(scheme) {

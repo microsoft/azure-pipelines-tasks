@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627413)",
   "loc.description": "The JavaScript Task Runner",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "Advanced",

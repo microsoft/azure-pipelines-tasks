@@ -1,0 +1,34 @@
+{
+    "which": {
+        "gulp": "/usr/local/bin/gulp",
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/node node_modules/gulp/gulp.js --gulpfile gulpfile.js": {
+            "code": 1,
+            "stdout": "gulp output here",
+            "stderr": "gulp failed with this output"
+        }
+    },
+    "checkPath": {
+        "node_modules/gulp/gulp.js": true
+    },        
+    "find": {
+        "/some/path": [
+            "/some/path/one",
+            "/some/path/two"
+        ]
+    },
+    "match": {
+        "some*pattern": [
+            "/some/path/one",
+            "/some/path/two"        
+        ]
+    },
+    "filter": {
+        "some*pattern": [
+            "/some/path/one",
+            "/some/path/two"        
+        ]
+    } 
+}

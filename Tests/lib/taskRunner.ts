@@ -21,7 +21,8 @@ export class TaskRunner extends events.EventEmitter {
 		this._inputs = {};
 		this._name = name;
 		this._taskEnv = {};
-		this.succeeded = false;
+		this._taskEnv['MOCK_RESPONSES'] = process.env['MOCK_RESPONSES'];
+		this.succeeded = true;
 		this.failed = false;
 		this.resultWasSet = false;
 		this.invokedToolCount = 0;
@@ -43,19 +44,6 @@ export class TaskRunner extends events.EventEmitter {
 	private _taskSrcPath: string;
 	private _taskPath: string;
 	private _tempPath: string;
-
-	public registerTool(name: string, toolPath: string): void {
-		var toolVar = 'TASK_TEST_WHICH_' + name.toUpperCase();
-		this._taskEnv[toolVar] = toolPath;
-	}
-
-	public injectFailure() {
-		this._taskEnv['TASK_TEST_FAIL'] = 1;
-	}
-
-	public injectReturnCode(rc: number) {
-		this._taskEnv['TASK_TEST_RC'] = rc;
-	}
 
 	public ran(cmdLine: string): boolean {
 		return true;
@@ -99,6 +87,12 @@ export class TaskRunner extends events.EventEmitter {
 		if (!shell.test('-d', this._taskPath)) {
 			shell.mkdir('-p', this._taskPath);
 			shell.cp('-R', this._taskSrcPath, this._tempPath);
+		}
+
+		// delete it's linked copy of vso-task-lib so it uses the mocked task-lib above
+		var taskLibPath = path.join(this._taskPath, 'node_modules', 'vso-task-lib');
+		if (shell.test('-d', taskLibPath)) {
+			shell.rm('-rf', taskLibPath);
 		}
 
 		var jsonPath = path.join(this._taskPath, 'task.json');
@@ -145,10 +139,12 @@ export class TaskRunner extends events.EventEmitter {
   				if (cmd.command === "task.complete") {
   					if (cmd.properties.result === 'Failed') {
   						this.failed = true;
+  						this.succeeded = false;
   						this.resultWasSet = true;
   					}
   					else if (cmd.properties.result === 'Succeeded') {
   						this.succeeded = true;
+  						this.failed = false;
   						this.resultWasSet = true;
   					}
   				}

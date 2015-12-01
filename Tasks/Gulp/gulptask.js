@@ -10,13 +10,10 @@ if (!cwd) {
 	cwd = path.dirname(gulpFile);
 }
 
-var gulpjs = path.resolve(cwd, tl.getInput('gulpjs', true));
+var gulpjs = tl.getInput('gulpjs', true);
 
 tl.debug('check path : ' + gulpjs);
-if(!fs.existsSync(gulpjs)){
-	tl.exit(1);
-	throw ('gulp.js doesn\'t exist at: ' + gulpjs);
-}
+tl.checkPath(gulpjs, 'gulpjs');
 
 nt.arg(gulpjs);
 
@@ -32,10 +29,6 @@ nt.arg(tl.getDelimitedInput('arguments', ' ', false));
 tl.cd(cwd);
 
 nt.exec()
-.then(function(code) {
-	tl.exit(code);
-})
 .fail(function(err) {
-	tl.debug('taskRunner fail');
-	tl.exit(1);
+    tl.setResult(tl.TaskResult.Failed, err.message);
 })
