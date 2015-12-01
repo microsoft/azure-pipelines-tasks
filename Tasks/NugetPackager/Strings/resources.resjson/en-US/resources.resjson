@@ -3,7 +3,7 @@
 // *******************************************************
 {
   "loc.friendlyName": "NuGet Packager",
-  "loc.helpMarkDown": " ",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627416)",
   "loc.description": "Creates nupkg outputs from csproj or nuspec files",
   "loc.instanceNameFormat": "NuGet Packager $(solution)",
   "loc.group.displayName.advanced": "Advanced",
