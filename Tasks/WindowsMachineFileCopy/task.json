@@ -98,7 +98,6 @@
             "required":false,
             "defaultValue": "machineNames",
             "groupName": "advanced",
-            "visibleRule": "CopyFilesInParallel = Invalid",
             "options": {
                 "machineNames":"Machine Names",
                 "tags":"Tags"
@@ -110,7 +109,6 @@
             "label": "Filter Criteria",
             "defaultValue": "",
             "groupName": "advanced",
-            "visibleRule": "CopyFilesInParallel = Invalid",
             "required": false,
             "helpMarkDown": "Provide a list of machine IP address or FQDN like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group."
         }

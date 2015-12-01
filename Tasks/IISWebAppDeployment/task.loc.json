@@ -95,7 +95,6 @@
       "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
       "required": false,
       "defaultValue": "machineNames",
-      "visibleRule": "WinRMProtocol = Invalid",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
@@ -108,7 +107,6 @@
       "label": "ms-resource:loc.input.label.MachineFilter",
       "required": false,
       "defaultValue": "",
-      "visibleRule": "WinRMProtocol = Invalid",
       "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
     },
     {
