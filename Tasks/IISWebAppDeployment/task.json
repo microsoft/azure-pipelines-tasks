@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 7
   },
   "demands": [
   ],
@@ -86,28 +86,6 @@
       "visibleRule": "WinRMProtocol = Https",
       "required": false,
       "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol."
-    },
-    {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "Select Machines By",
-      "required": false,
-      "defaultValue": "machineNames",
-      "visibleRule": "WinRMProtocol = Invalid",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
-    },
-    {
-      "name": "MachineFilter",
-      "type": "string",
-      "label": "Deploy to Machines",
-      "required": false,
-      "defaultValue": "",
-      "visibleRule": "WinRMProtocol = Invalid",
-      "helpMarkDown": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group."
     },
     {
       "name": "WebDeployPackage",
@@ -403,6 +381,28 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "Setting it to true will deploy the Web application in-parallel on the target machines."
+    },
+	{
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "Select Machines By",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+	  "groupName": "advanced",
+      "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
+    },
+    {
+      "name": "MachineFilter",
+      "type": "string",
+      "label": "Deploy to Machines",
+      "required": false,
+      "defaultValue": "",
+	  "groupName": "advanced",
+      "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
     }
   ],
     "instanceNameFormat": "Deploy IIS App: $(WebDeployPackage)",
