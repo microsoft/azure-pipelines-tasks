@@ -19,10 +19,6 @@
   "loc.input.help.Protocol": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
   "loc.input.label.TestCertificate": "Test Certificate",
   "loc.input.help.TestCertificate": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.",
-  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
-  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of machines either by providing machine names or tags.",
-  "loc.input.label.MachineFilter": "Deploy to Machines",
-  "loc.input.help.MachineFilter": "Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines of the machine/resource group.",
   "loc.input.label.DacpacFile": "DACPAC File",
   "loc.input.help.DacpacFile": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported like $env:windir, $env:systemroot, like, $env:windir\\FabrikamFibre\\Web.",
   "loc.input.label.TargetMethod": "Specify SQL Using",
@@ -42,5 +38,9 @@
   "loc.input.label.AdditionalArguments": "Additional Arguments",
   "loc.input.help.AdditionalArguments": "Additional SqlPackage.exe arguments that will be applied when creating or updating the SQL Server database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
   "loc.input.label.DeployInParallel": "Deploy in Parallel",
-  "loc.input.help.DeployInParallel": "Setting it to true will run the database deployment task in-parallel on the target machines."
+  "loc.input.help.DeployInParallel": "Setting it to true will run the database deployment task in-parallel on the target machines.",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of machines either by providing machine names or tags.",
+  "loc.input.label.MachineFilter": "Deploy to Machines",
+  "loc.input.help.MachineFilter": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
 }

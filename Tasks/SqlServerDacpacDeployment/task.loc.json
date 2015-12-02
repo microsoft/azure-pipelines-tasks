@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -83,28 +83,6 @@
       "visibleRule": "Protocol = Https",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
-    },
-    {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
-      "required": false,
-      "defaultValue": "machineNames",
-      "visibleRule": "Protocol = Invalid",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod"
-    },
-    {
-      "name": "MachineFilter",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.MachineFilter",
-      "required": false,
-      "defaultValue": "",
-      "visibleRule": "Protocol = Invalid",
-      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
     },
     {
       "name": "DacpacFile",
@@ -205,6 +183,28 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.DeployInParallel"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod"
+    },
+    {
+      "name": "MachineFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineFilter",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

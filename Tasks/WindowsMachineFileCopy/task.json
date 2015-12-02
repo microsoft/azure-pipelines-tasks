@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "minimumAgentVersion": "1.91.0",
     "groups": [
@@ -98,7 +98,6 @@
             "required":false,
             "defaultValue": "machineNames",
             "groupName": "advanced",
-            "visibleRule": "CopyFilesInParallel = Invalid",
             "options": {
                 "machineNames":"Machine Names",
                 "tags":"Tags"
@@ -110,9 +109,8 @@
             "label": "Filter Criteria",
             "defaultValue": "",
             "groupName": "advanced",
-            "visibleRule": "CopyFilesInParallel = Invalid",
             "required": false,
-            "helpMarkDown": "Provide a list of machine IP address or FQDN like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. The default is all machines in the machine group."
+            "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
         }
     ],
     "instanceNameFormat": "Copy files $(SourcePath)",

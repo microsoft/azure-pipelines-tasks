@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 14
+    "Patch": 15
   },
   "minimumAgentVersion": "1.91.0",
   "groups": [
@@ -101,7 +101,6 @@
       "required": false,
       "defaultValue": "machineNames",
       "groupName": "advanced",
-      "visibleRule": "CopyFilesInParallel = Invalid",
       "options": {
         "machineNames": "Machine Names",
         "tags": "Tags"
@@ -113,7 +112,6 @@
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "groupName": "advanced",
-      "visibleRule": "CopyFilesInParallel = Invalid",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     }
