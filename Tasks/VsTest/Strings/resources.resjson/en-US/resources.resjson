@@ -19,6 +19,8 @@
   "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
   "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
   "loc.input.help.codeCoverageEnabled": "Collect code coverage information from the Test run.",
+  "loc.input.label.runInParallel": "Run In Parallel",
+  "loc.input.help.runInParallel": "Enable parallel execution of your tests.",
   "loc.input.label.vsTestVersion": "VSTest version",
   "loc.input.help.vsTestVersion": "The version of VSTest to use.",
   "loc.input.label.pathtoCustomTestAdapters": "Path to Custom Test Adapters",

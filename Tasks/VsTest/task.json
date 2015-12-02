@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 25
   },
   "demands": [
     "vstest"
@@ -82,7 +82,16 @@
       "helpMarkDown": "Collect code coverage information from the Test run.",
       "groupName": "executionOptions"
     },
-        {
+    {
+      "name": "runInParallel",
+      "type": "boolean",
+      "label": "Run In Parallel",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "Enable parallel execution of your tests.",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "VSTest version",
