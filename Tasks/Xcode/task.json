@@ -58,7 +58,7 @@
             "name": "xcWorkspacePath", 
             "type": "filePath", 
             "label": "Workspace Path", 
-            "defaultValue":"*.xcodeproj/project.xcworkspace", 
+            "defaultValue":"**/*.xcodeproj/*.xcworkspace", 
             "required":false, 
             "helpMarkDown": "Optional relative path from repo root where xcworkspace folder exists. Scheme must also be specified if value provided. Omit if you intend to use the -target flag under Advanced Arguments." 
         },

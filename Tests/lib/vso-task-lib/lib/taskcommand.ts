@@ -7,17 +7,25 @@
 //    ##vso[task.issue type=warning;]This is the user warning message
 //
 var CMD_PREFIX = '##vso[';
-var TaskCommand = (function () {
-    function TaskCommand(command, properties, message) {
+
+export class TaskCommand {
+    constructor(command, properties, message) {
         if (!command) {
             command = 'missing.command';
         }
+
         this.command = command;
         this.properties = properties;
         this.message = message;
     }
-    TaskCommand.prototype.toString = function () {
+
+    public command: string;
+    public message: string;
+    public properties: {[key: string]: string};
+
+    public toString() {
         var cmdStr = CMD_PREFIX + this.command;
+
         if (this.properties && Object.keys(this.properties).length > 0) {
             cmdStr += ' ';
             for (var key in this.properties) {
@@ -25,17 +33,17 @@ var TaskCommand = (function () {
                     var val = this.properties[key];
                     if (val) {
                         cmdStr += key + '=' + val + ';';
-                    }
+                    }                    
                 }
             }
         }
+
         cmdStr += ']' + this.message;
         return cmdStr;
-    };
-    return TaskCommand;
-})();
-exports.TaskCommand = TaskCommand;
-function commandFromString(commandLine) {
+    }
+}
+
+export function commandFromString(commandLine) {
     var preLen = CMD_PREFIX.length;
     var lbPos = commandLine.indexOf('[');
     var rbPos = commandLine.indexOf(']');
@@ -44,11 +52,14 @@ function commandFromString(commandLine) {
     }
     var cmdInfo = commandLine.substring(lbPos + 1, rbPos);
     var spaceIdx = cmdInfo.indexOf(' ');
+
     var command = cmdInfo;
     var properties = {};
+
     if (spaceIdx > 0) {
         command = cmdInfo.trim().substring(0, spaceIdx);
-        var propSection = cmdInfo.trim().substring(spaceIdx + 1);
+        var propSection = cmdInfo.trim().substring(spaceIdx+1);
+
         var propLines = propSection.split(';');
         propLines.forEach(function (propLine) {
             propLine = propLine.trim();
@@ -61,8 +72,8 @@ function commandFromString(commandLine) {
             }
         });
     }
+
     var msg = commandLine.substring(rbPos + 1);
     var cmd = new TaskCommand(command, properties, msg);
     return cmd;
 }
-exports.commandFromString = commandFromString;

@@ -10,7 +10,10 @@ import path = require('path');
 var shell = require('shelljs');
 
 var ps = shell.which('powershell');
-console.log(ps);
+
+function setResponseFile(name: string) {
+	process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
+}
 
 describe('Gulp Suite', function() {
     this.timeout(10000);
@@ -25,20 +28,21 @@ describe('Gulp Suite', function() {
 	});
 
 	it('runs a gulpfile with cwd', (done) => {
-		assert(true, 'true is true');
+		setResponseFile('gulpGood.json');
 		
 		var tr = new trm.TaskRunner('Gulp');
-		tr.registerTool('gulp', '/fake/bin/gulp');
 
 		tr.setInput('gulpFile', 'gulpfile.js');
 		tr.setInput('cwd', 'fake/wd');
+		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
 			//assert(tr.cwd === '/fake/wd');
-			console.log(tr.invokedToolCount);
             assert(tr.ran('/fake/bin/gulp gulpfile.js'), 'it should have run gulp');
             assert(tr.invokedToolCount == 1, 'should have only run gulp');
-			assert(tr.resultWasSet, 'task should have set a result');
+
+            // success scripts don't necessarily set a result
+			// assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
 			done();
@@ -48,8 +52,34 @@ describe('Gulp Suite', function() {
 		});
 	})	
 
-	it('errors if gulp not found', (done) => {
+	it('fails if gulpjs (req) input not set', (done) => {
 		assert(true, 'true is true');
+
+		setResponseFile('gulpGood.json');
+		
+		var tr = new trm.TaskRunner('Gulp');
+
+		tr.setInput('gulpFile', 'gulpfile.js');
+		tr.setInput('cwd', 'fake/wd');
+		// don't set gulpjs
+
+		tr.run()
+		.then(() => {
+			//assert(tr.cwd === '/fake/wd');
+			assert(tr.resultWasSet, 'task should have set a result');
+			assert(tr.stderr.length > 0, 'should have written to stderr');
+			assert(tr.stdErrContained('Input required: gulpjs'));
+            assert(tr.failed, 'task should have failed');
+            assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
+	it('errors if gulp not found', (done) => {
+		setResponseFile('gulpNoGulpjs.json');
 		
 		var tr = new trm.TaskRunner('Gulp');
 
@@ -60,10 +90,37 @@ describe('Gulp Suite', function() {
 		tr.run()
 		.then(() => {
             assert(tr.failed, 'should have failed');
-            var expectedErr = 'Required tool not found: gulp';
+            var expectedErr = 'Input required: gulpjs';
             assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
             assert(tr.resultWasSet, 'task should have set a result');
-            assert(tr.invokedToolCount == 0, 'should not have run gulp');
+            assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
+	it('fails if gulp fails', (done) => {
+
+		setResponseFile('gulpFails.json');
+		
+		var tr = new trm.TaskRunner('Gulp');
+
+		tr.setInput('gulpFile', 'gulpfile.js');
+		tr.setInput('cwd', 'fake/wd');
+		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
+		tr.run()
+		.then(() => {
+			//assert(tr.cwd === '/fake/wd');
+            assert(tr.ran('/fake/bin/gulp gulpfile.js'), 'it should have run gulp');
+            assert(tr.invokedToolCount == 1, 'should have only run gulp');
+
+            // success scripts don't necessarily set a result
+			var expectedErr = '/usr/local/bin/node failed with return code: 1';
+			assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
+			assert(tr.stderr.length > 0, 'should not have written to stderr');
+            assert(tr.failed, 'task should have failed');
 			done();
 		})
 		.fail((err) => {
