@@ -85,10 +85,10 @@ function processInputs() {
 	
 	// Args: Add optional workspace flag
 	var workspace = tl.getPathInput('xcWorkspacePath', false, false);
-	if(tl.filePathSupplied(workspace)) {
+	if(tl.filePathSupplied('xcWorkspacePath')) {
 
 		var workspaceMatches = tl.glob(workspace);
-		tl.debug("Found " + workspaceFile.length + ' workspaces matching.');
+		tl.debug("Found " + workspaceMatches.length + ' workspaces matching.');
 
 		if (workspaceMatches.length > 0) {
 			if (workspaceMatches.length > 1) {
@@ -96,7 +96,7 @@ function processInputs() {
 			}
 
 			xcb.arg('-workspace');
-			xcb.arg(workspaceFile[0]);
+			xcb.arg(workspaceMatches[0]);
 		} 
 		else {
 			console.error('Workspace specified but it does not exist or is not a directory');
