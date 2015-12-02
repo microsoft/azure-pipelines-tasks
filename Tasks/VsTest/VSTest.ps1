@@ -87,6 +87,18 @@ function SetupRunSettingsFileForParallel($runInParallelFlag, $runSettingsFilePat
 
 
 Write-Verbose "Entering script VSTestConsole.ps1"
+Write-Verbose "vsTestVersion = $vsTestVersion"
+Write-Verbose "testAssembly = $testAssembly"
+Write-Verbose "testFiltercriteria = $testFiltercriteria"
+Write-Verbose "runSettingsFile = $runSettingsFile"
+Write-Verbose "codeCoverageEnabled = $codeCoverageEnabled"
+Write-Verbose "pathtoCustomTestAdapters = $pathtoCustomTestAdapters"
+Write-Verbose "overrideTestrunParameters = $overrideTestrunParameters"
+Write-Verbose "otherConsoleOptions = $otherConsoleOptions"
+Write-Verbose "testRunTitle = $testRunTitle"
+Write-Verbose "platform = $platform"
+Write-Verbose "configuration = $configuration"
+Write-Verbose "publishRunAttachments = $publishRunAttachments"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -94,10 +106,11 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 # Import the Task.TestResults dll that has the cmdlet we need for publishing results
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
+
 if (!$testAssembly)
 {
     Write-Host "##vso[task.logissue type=error;code=002001;]" 
-    throw (Get-LocalizedString -Key "Test assembly parameter not set on script")
+    throw (Get-LocalizedString -Key "No test assembly specified. Provide a test assembly parameter and try again.")
 }
 
 $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
@@ -111,7 +124,7 @@ if(!$sourcesDirectory)
 {
     # If there is still no sources directory, error out immediately.
     Write-Host "##vso[task.logissue type=error;code=002002;]"
-    throw "No source directory found."
+    throw (Get-LocalizedString -Key "No source directory found.")
 }
 
 # check for solution pattern
@@ -209,14 +222,14 @@ if($testAssemblyFiles)
     else
     {
         Write-Host "##vso[task.logissue type=warning;code=002003;]"
-        Write-Warning "No results found to publish."
+        Write-Warning (Get-LocalizedString "No results found to publish.")
     }
     
 }
 else
 {
     Write-Host "##vso[task.logissue type=warning;code=002004;]"
-    Write-Warning "No test assemblies found matching the pattern: $testAssembly"
+    Write-Warning (Get-LocalizedString "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
 }
 
 Write-Verbose "Leaving script VSTestConsole.ps1"
