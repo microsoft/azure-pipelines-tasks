@@ -298,6 +298,11 @@ export function rmRF(path: string): void {
 
 }
 
+export function mv(source: string, dest: string, force: boolean, continueOnError?: boolean): boolean {
+    debug('moving ' + source + ' to ' + dest);
+    return true;
+}
+
 export function glob(pattern: string): string[] {
     debug('glob ' + pattern);
 
