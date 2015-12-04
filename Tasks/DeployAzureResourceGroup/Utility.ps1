@@ -32,13 +32,7 @@ function Is-SwitchAzureModeRequired
         Write-Verbose -Verbose "Switch Azure Mode is required"
         return $true
     }
-    
-    if(!(Get-Module -Name "AzureRM" -ListAvailable))
-    {
-        Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
-        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
-    }
-       
+           
     return $false
 }
 
@@ -95,14 +89,15 @@ function Validate-DeploymentFileAndParameters
 
 function Get-CsmParameterObject
 {
-    param([string]$csmParameterFileContent)
+    param([string]$csmParameterFileContent,
+          [string]$overrideParameters)
 
+	$newParametersObject = New-Object System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
     if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false)
     {
         Write-Verbose "Generating csm parameter object" -Verbose
 
         $csmJObject = [Newtonsoft.Json.Linq.JObject]::Parse($csmParameterFileContent)
-        $newParametersObject = New-Object System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
 
         if($csmJObject.ContainsKey("parameters") -eq $true)
         {
@@ -121,9 +116,33 @@ function Get-CsmParameterObject
         }
 
         Write-Verbose "Generated the parameter object" -Verbose
-
-        return $newParametersObject
+	}
+		
+    if([string]::IsNullOrEmpty($overrideParameters) -eq $false)
+    {
+        Write-Verbose "Overriding parameter objects" -Verbose
+        $overrideParametersList = $overrideParameters.Split(" ")
+        for($i = 0; $i-lt $overrideParametersList.Count ; $i = $i + 2)
+        {
+            $parameterName = ($overrideParametersList[$i]).TrimStart("-")
+            $parameterValue = $overrideParametersList[$i + 1]
+            if($newParametersObject.ContainsKey($parameterName))
+            {
+                $newParametersObject[$parameterName] = $parameterValue
+            }
+            else
+            {
+                $newParametersObject.Add($parameterName, $parameterValue)
+            }
+        }
+        Write-Verbose "Overriding parameter objects completed." -Verbose
     }
+	
+    if($newParametersObject.Count -eq 0)
+    {
+        return $null
+    }
+    return $newParametersObject
 }
 
 function Perform-Action
@@ -278,10 +297,10 @@ function Create-AzureResourceGroupHelper
         $csmParametersFileContent = [String]::Empty
     }
 
-    $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
+    $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent -overrideParameters $overrideParameters
 
     # Create azure resource group
-    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired        
+    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -isSwitchAzureModeRequired $isSwitchAzureModeRequired        
 }
 
 function Instantiate-Environment

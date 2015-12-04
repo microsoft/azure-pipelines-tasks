@@ -4,7 +4,6 @@ function Create-AzureResourceGroup
           [System.Collections.Hashtable]$csmParametersObject,
           [string]$resourceGroupName,
           [string]$location,
-          [string]$overrideParameters,
           [bool] $isSwitchAzureModeRequired)
 
     if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
@@ -26,7 +25,7 @@ function Create-AzureResourceGroup
 
         if (!$csmParametersObject)
         {
-            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
 
             Write-Verbose -Verbose "$finalCommand"
@@ -36,7 +35,7 @@ function Create-AzureResourceGroup
         }
         else
         {
-            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+            $azureCommandArguments = "-Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
             $finalCommand = "`$azureResourceGroupDeployment = $azureCommand $azureCommandArguments"
 
             Write-Verbose -Verbose "$finalCommand"
