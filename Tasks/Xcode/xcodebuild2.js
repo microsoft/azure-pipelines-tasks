@@ -22,15 +22,12 @@ var origXcodeDeveloperDir, out, sdk, appFolders, cwd, publishResults, testResult
 // Store original Xcode developer directory so we can restore it after build completes if its overridden
 var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
 
-
 processInputs() 													// Process inputs to task and create xcv, xcb, import certs, profiles as required
 	.then(function(code) {
 		return xcv.exec();											// Print version of xcodebuild / xctool
 	})			
 	.then(execBuild)                                                // Run main xcodebuild / xctool task
 	.then(function(code) {                                          // publish test results
-		tl.debug('PublishTestResults : ' + publishResults);
-		tl.debug('File To Publish : ' +testResultsFiles);	
 		publishTestResults(publishResults, testResultsFiles);
 		return code;
 	})												
@@ -55,7 +52,6 @@ processInputs() 													// Process inputs to task and create xcv, xcb, impo
 	});
 
 function processInputs() {  
-	tl.debug('Processing Inputs ...');
 	// if output is rooted ($(build.buildDirectory)/output/...), will resolve to fully qualified path, 
 	// else relative to repo root
 	var buildSourceDirectory = tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
