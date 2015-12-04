@@ -32,7 +32,13 @@ function Is-SwitchAzureModeRequired
         Write-Verbose -Verbose "Switch Azure Mode is required"
         return $true
     }
-           
+    
+    if(!(Get-Module -Name "AzureRM" -ListAvailable))
+    {
+        Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
+        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
+    }
+       
     return $false
 }
 
@@ -122,19 +128,58 @@ function Get-CsmParameterObject
     {
         Write-Verbose "Overriding parameter objects" -Verbose
         $overrideParametersList = $overrideParameters.Split(" ")
-        for($i = 0; $i-lt $overrideParametersList.Count ; $i = $i + 2)
+		$i = 0
+        While($i -lt $overrideParametersList.Count)
         {
-            $parameterName = ($overrideParametersList[$i]).TrimStart("-")
+            if([string]::IsNullOrEmpty($overrideParametersList[$i]) -eq $true)
+            {
+                $i = $i + 1
+                continue
+            }
+            $parameterName = $overrideParametersList[$i]
+			if(!$parameterName.StartsWith("-"))
+            {
+			    Write-TaskSpecificTelemetry "PREREQ_InvalidInputFormat"
+                Throw (Get-LocalizedString -Key  "Provided Override parameter format is invalid. Please provide Override parameters in this format: -parame1 value1 -parame2 `"value  with  space`".")
+            }
+			
+			$parameterName = $parameterName.TrimStart("-")
+			
             $parameterValue = $overrideParametersList[$i + 1]
+            $i = $i + 2
+
+			if([string]::IsNullOrEmpty($parameterValue) -eq $true)
+            {
+			    Write-TaskSpecificTelemetry "PREREQ_InvalidInputFormat"
+                Throw (Get-LocalizedString -Key  "Provided Override parameter format is invalid. Please provide Override parameters in this format: -parame1 value1 -parame2 `"value  with  space`".")
+            }
+			if($parameterValue.StartsWith("`""))
+			{
+			    While(!$parameterValue.EndsWith("`"") -and $i -lt $overrideParametersList.Count)
+                {
+					$ParamValueSuffix = $overrideParametersList[$i]
+					$parameterValue = "$parameterValue $ParamValueSuffix"
+					$i = $i + 1
+				}
+				
+				if(!$parameterValue.EndsWith("`""))
+				{
+				    Write-TaskSpecificTelemetry "PREREQ_InvalidInputFormat"
+				    Throw (Get-LocalizedString -Key  "Provided Override parameter format is invalid. Please provide Override parameters in this format: -parame1 value1 -parame2 `"value  with  space`".")
+				}
+			}
+            
+			
             if($newParametersObject.ContainsKey($parameterName))
             {
-                $newParametersObject[$parameterName] = $parameterValue
+                $newParametersObject[$parameterName] = ($parameterValue).Trim("`"")
             }
             else
             {
                 $newParametersObject.Add($parameterName, $parameterValue)
             }
         }
+		
         Write-Verbose "Overriding parameter objects completed." -Verbose
     }
 	
