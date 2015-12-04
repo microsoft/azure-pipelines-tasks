@@ -13,7 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
+<<<<<<< HEAD
         "Patch": 32
+=======
+        "Patch": 35
+>>>>>>> fcb14d3... Adding telemetry functionality in the tasks removing dependency on agent
     },
     "demands": [
         "azureps"
