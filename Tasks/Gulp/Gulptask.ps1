@@ -4,6 +4,7 @@ param(
     [string]$targets,
     [string]$arguments,
     [string]$cwd,
+    [string]$gulpjs,
     [string]$OmitDotSource
 )
 
