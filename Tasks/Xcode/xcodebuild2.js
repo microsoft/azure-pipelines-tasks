@@ -17,16 +17,23 @@ var xcv = null,
 	deleteProvProfile = null;
 
 // Globals
-var origXcodeDeveloperDir, out, sdk, appFolders, cwd;
+var origXcodeDeveloperDir, out, sdk, appFolders, cwd, publishResults, testResultsFiles;
 
 // Store original Xcode developer directory so we can restore it after build completes if its overridden
 var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
+
 
 processInputs() 													// Process inputs to task and create xcv, xcb, import certs, profiles as required
 	.then(function(code) {
 		return xcv.exec();											// Print version of xcodebuild / xctool
 	})			
-	.then(execBuild)												// Run main xcodebuild / xctool task
+	.then(execBuild)                                                // Run main xcodebuild / xctool task
+	.then(function(code) {                                          // publish test results
+		tl.debug('PublishTestResults : ' + publishResults);
+		tl.debug('File To Publish : ' +testResultsFiles);	
+		publishTestResults(publishResults, testResultsFiles);
+		return code;
+	})												
 	.then(packageApps)												// Package apps if configured
 	.then(function(code) {											// On success, exit
 		tl.exit(code);
@@ -48,6 +55,7 @@ processInputs() 													// Process inputs to task and create xcv, xcb, impo
 	});
 
 function processInputs() {  
+	tl.debug('Processing Inputs ...');
 	// if output is rooted ($(build.buildDirectory)/output/...), will resolve to fully qualified path, 
 	// else relative to repo root
 	var buildSourceDirectory = tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
@@ -82,6 +90,10 @@ function processInputs() {
 	xcb.arg(sdk);
 	xcb.arg('-configuration');
 	xcb.arg(tl.getInput('configuration', true));
+	
+	//Test Results publish inputs
+	publishResults = (tl.getInput('publishJUnitResults', true) == "true");
+    testResultsFiles = tl.getInput('xctoolReporter', false).split(":")[1].trim();
 	
 	// Args: Add optional workspace flag
 	var workspace = tl.getPathInput('xcWorkspacePath', false, false);
@@ -220,4 +232,28 @@ function removeExecOutputNoise(input) {
 	var output = input + "";
 	output = output.trim().replace(/[,\n\r\f\v]/gm,'');	
 	return output;
+}
+
+function publishTestResults(publishResults, testResultsFiles) {
+  if(publishResults) {
+    //check for pattern in testResultsFiles
+    if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
+      tl.debug('Pattern found in testResultsFiles parameter');
+      var buildFolder = tl.getVariable('agent.buildDirectory');
+      var allFiles = tl.find(buildFolder);
+      var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
+    }
+    else {
+      tl.debug('No pattern found in testResultsFiles parameter');
+      var matchingTestResultsFiles = [testResultsFiles];
+    }
+
+    if(!matchingTestResultsFiles) {
+      tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');  
+      return Q(0);
+    }
+
+    var tp = new tl.TestPublisher("JUnit");
+    tp.publish(matchingTestResultsFiles, false, "", "");
+  }
 }
