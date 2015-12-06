@@ -42,8 +42,7 @@ if(tl.filePathSupplied(wsPath)) {
     ws = tl.globFirst(wsPath);
     if (!ws) {
         tl.setResult(tl.TaskResult.Failed, 
-                'Workspace specified but it does not exist or is not a directory',
-                true); // exit        
+                'Workspace specified but it does not exist or is not a directory');        
     }
 }
 
@@ -108,7 +107,7 @@ xcv.exec(null)
     }
 })
 .fail((err) => {
-    tl.setResult(tl.TaskResult.Failed, err.message, true);
+    tl.setResult(tl.TaskResult.Failed, err.message);
 })
 
 /*
