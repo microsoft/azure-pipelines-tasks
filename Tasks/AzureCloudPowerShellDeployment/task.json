@@ -6,9 +6,9 @@
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "category": "Deploy",
   "visibility": [
-                "Build",
-                "Release"
-                ],  
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
@@ -89,7 +89,7 @@
       "label": "Append current date and time",
       "defaultValue": "false",
       "required": false,
-	  "helpMarkDown": "Appends current date and time to deployment label"
+      "helpMarkDown": "Appends current date and time to deployment label"
     },
     {
       "name": "AllowUpgrade",
@@ -101,17 +101,18 @@
   ],
   "sourceDefinitions": [
     {
-        "target": "StorageAccount",
-        "endpoint": "https://management.core.windows.net/$(authKey.SubscriptionId)/services/storageservices",
-        "selector": "xpath://ServiceName",
-        "authKey": "$(ConnectedServiceName)"
-    },
-	{
-        "target": "ServiceName",
-        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/hostedservices",
-        "selector": "xpath://ServiceName",
-        "authKey": "$(ConnectedServiceName)"
-	}
+      "target": "StorageAccount",
+      "endpoint": "https://management.core.windows.net/$(authKey.SubscriptionId)/services/storageservices",
+      "selector": "xpath://ServiceName",
+      "authKey": "$(ConnectedServiceName)"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ServiceName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureHostedServiceNames"
+    }
   ],
   "instanceNameFormat": "Azure Deployment: $(CsPkg)",
   "execution": {
