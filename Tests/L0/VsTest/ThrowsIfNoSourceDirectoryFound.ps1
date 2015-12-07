@@ -22,6 +22,7 @@ Assert-Throws {
 		'platform' = 'platform'
 		'configuration' = 'configuration'
 		'publishRunAttachments' = 'publishRunAttachments'
+		'$runInParallel' = '$runInParallel'
 	}
-	& $PSScriptRoot\..\..\..\Tasks\VsTest\VsTest.ps1 $splat
+	& $PSScriptRoot\..\..\..\Tasks\VsTest\VsTest.ps1 @splat
 }
