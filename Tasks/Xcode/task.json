@@ -217,11 +217,11 @@
 		{
             "name":"publishJUnitResults",
             "type":"boolean",
-            "label":"Publish to VSO/TFS",
+            "label":"Publish to VSTS/TFS",
             "required":false,
-            "defaultValue":true,
+            "defaultValue":false,
             "groupName":"advanced",
-            "helpMarkDown":"Select this option to publish JUnit Test results produced above using xctool to VSO/TFS."
+            "helpMarkDown":"Select this option to publish JUnit Test results produced above using xctool to VSTS/TFS."
         }
 	],
     "execution": {

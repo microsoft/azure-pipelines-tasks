@@ -222,7 +222,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
       "required": false,
-      "defaultValue": true,
+      "defaultValue": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
     }
