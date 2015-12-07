@@ -116,7 +116,7 @@
       "label": "Additional Arguments",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "Additional AzCopy.exe arguments that will be applied when uploading to blob or uploading to VM like, /Pattern:*.dll."
+      "helpMarkDown": "Additional AzCopy.exe arguments that will be applied when uploading to blob or uploading to VM like, /NC:10."
     },
     {
       "name": "CopyFilesInParallel",
