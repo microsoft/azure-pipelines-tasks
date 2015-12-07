@@ -31,7 +31,7 @@ var wsPath = tl.getPathInput('xcWorkspacePath', false, false);
 if (tl.filePathSupplied(wsPath)) {
     ws = tl.globFirst(wsPath);
     if (!ws) {
-        tl.setResult(tl.TaskResult.Failed, 'Workspace specified but it does not exist or is not a directory', true); // exit        
+        tl.setResult(tl.TaskResult.Failed, 'Workspace specified but it does not exist or is not a directory');
     }
 }
 var sdk = tl.getInput('sdk', true);
@@ -85,7 +85,7 @@ xcv.exec(null)
     }
 })
     .fail(function (err) {
-    tl.setResult(tl.TaskResult.Failed, err.message, true);
+    tl.setResult(tl.TaskResult.Failed, err.message);
 });
 /*
 function processInputs() {

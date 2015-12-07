@@ -51,6 +51,7 @@ declare module 'vso-task-lib/toolrunner' {
 
 }
 declare module 'vso-task-lib/vsotask' {
+    import fs = require('fs');
     import trm = require('vso-task-lib/toolrunner');
     export enum TaskResult {
         Succeeded = 0,
@@ -62,7 +63,8 @@ declare module 'vso-task-lib/vsotask' {
     export function _writeLine(str: string): void;
     export function setStdStream(stdStream: any): void;
     export function setErrStream(errStream: any): void;
-    export function setResult(result: TaskResult, message: string, exit?: boolean): void;
+    export function setResult(result: TaskResult, message: string): void;
+    export function handlerError(errMsg: string, continueOnError: boolean): void;
     export function exitOnCodeIf(code: any, condition: boolean): void;
     export function exit(code: number): void;
     export function getVariable(name: string): string;
@@ -81,6 +83,9 @@ declare module 'vso-task-lib/vsotask' {
         scheme: string;
     }
     export function getEndpointAuthorization(id: string, optional: boolean): EndpointAuthorization;
+    export interface FsStats extends fs.Stats {
+    }
+    export function stats(path: string): FsStats;
     export function command(command: string, properties: any, message: string): void;
     export function warning(message: string): void;
     export function error(message: string): void;
@@ -89,15 +94,16 @@ declare module 'vso-task-lib/vsotask' {
     export function pushd(path: string): void;
     export function popd(): void;
     export function checkPath(p: string, name: string): void;
-    export function mkdirP(p: any): void;
+    export function mkdirP(p: any): boolean;
     export function which(tool: string, check?: boolean): string;
-    export function cp(options: any, source: string, dest: string): void;
+    export function cp(options: any, source: string, dest: string, continueOnError?: boolean): boolean;
     export function find(findPath: string): string[];
-    export function rmRF(path: string): void;
+    export function rmRF(path: string, continueOnError?: boolean): boolean;
     export function glob(pattern: string): string[];
     export function globFirst(pattern: string): string;
-    export function exec(tool: string, args: string, options?: trm.IExecOptions): Q.Promise<number>;
-    export function execSync(tool: string, args: string, options?: trm.IExecOptions): trm.IExecResult;
+    export function exec(tool: string, args: any, options?: trm.IExecOptions): Q.Promise<number>;
+    export function execSync(tool: string, args: any, options?: trm.IExecOptions): trm.IExecResult;
+    export function createToolRunner(tool: string): trm.ToolRunner;
     export function match(list: any, pattern: any, options: any): string[];
     export function matchFile(list: any, pattern: any, options: any): string[];
     export function filter(pattern: any, options: any): string[];

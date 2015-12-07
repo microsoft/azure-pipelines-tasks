@@ -1,3 +1,49 @@
+# Telemetry
+
+$telemetryCodes = 
+@{
+  "PREREQ_NoWinRMHTTP_Port" = "PREREQ001";
+  "PREREQ_NoWinRMHTTPSPort" = "PREREQ002";
+  "PREREQ_NoResources" = "PREREQ003";
+  "PREREQ_NoOutputVariableForSelectActionInAzureRG" = "PREREQ004";
+  "UNKNOWNPREDEP_Error" = "UNKNOWNPREDEP001";
+  "DEPLOYMENT_Failed" = "DEP001";
+  "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
+  "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
+  "UNKNOWNDEP_Error" = "UNKNOWNDEP_Error";
+  "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
+  "AZUREPLATFORM_UnknownGetRMVMError" = "AZUREPLATFORM_UnknownGetRMVMError";
+  "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
+  "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
+  "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";
+  "PREREQ_InvalidServiceConnectionType" = "PREREQ_InvalidServiceConnectionType";
+  "PREREQ_AzureRMModuleNotFound" = "PREREQ_AzureRMModuleNotFound";
+  "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
+  "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed"
+ }
+
+function Write-Telemetry
+{
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory=$True,Position=1)]
+    [string]$codeKey,
+
+    [Parameter(Mandatory=$True,Position=2)]
+    [string]$taskId
+    )
+  
+  if($telemetrySet)
+  {
+    return
+  }
+
+  $code = $telemetryCodes[$codeKey]
+  $telemetryString = "##vso[task.logissue type=error;code=" + $code + ";TaskId=" + $taskId + ";]"
+  Write-Host $telemetryString
+  $telemetrySet = $true
+}
+
 function Write-TaskSpecificTelemetry
 {
     param(

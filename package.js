@@ -9,6 +9,9 @@ var os = require('os');
 
 var _strRelPath = path.join('Strings', 'resources.resjson', 'en-US');
 
+var _tempPath = path.join(__dirname, '_temp');
+shell.mkdir('-p', _tempPath);
+
 var _divider = '// *******************************************************' + os.EOL;
 var _banner = '' + _divider;
 _banner += '// GENERATED FILE - DO NOT EDIT DIRECTLY' + os.EOL;
@@ -180,17 +183,12 @@ function packageTask(pkgPath){
 	        	if (task.execution['Node']) {
 	        		gutil.log('linking task-lib for ' + task.name);
 
-	        		var tskLibSrc = path.join(__dirname, 'node_modules', 'vso-task-lib');
+	        		var tskLibSrc = path.join(__dirname, '_temp', 'node_modules');
 	        		if (shell.test('-d', tskLibSrc)) {
 	        			new gutil.PluginError('PackageTask', 'vso-task-lib not found: ' + tskLibSrc);
 	        		}
 
-					var libPath = path.join(tgtPath, 'node_modules');
-					if (!shell.test('-d', libPath)) {
-						shell.mkdir('-p', libPath);
-					}
-
-					shell.cp('-R', tskLibSrc, libPath);
+					shell.cp('-R', tskLibSrc, tgtPath);
 	        	}
 	        	return;        	
 	        })
