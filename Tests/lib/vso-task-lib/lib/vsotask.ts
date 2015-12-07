@@ -93,7 +93,7 @@ export function getVariable(name: string): string {
     debug(name + '=' + varval);
 
     var mocked =  mock.getResponse('getVariable', name);
-    return varval || mocked;
+    return mocked || varval;
 }
 
 export function setVariable(name: string, val: string): void {
