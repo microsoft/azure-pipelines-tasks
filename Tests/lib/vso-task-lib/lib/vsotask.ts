@@ -91,7 +91,9 @@ export function exit(code: number): void {
 export function getVariable(name: string): string {
     var varval = process.env[name.replace(/\./g, '_').toUpperCase()];
     debug(name + '=' + varval);
-    return varval;
+
+    var mocked =  mock.getResponse('getVariable', name);
+    return varval || mocked;
 }
 
 export function setVariable(name: string, val: string): void {
