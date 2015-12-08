@@ -4,7 +4,7 @@ $ComponentKeyAndRelativePathCache = @{}
 
 function ConstructComponentKeyAndPathMap($json)
 {
-    foreach ($component in $json.Components)
+    foreach ($component in $json.components)
     {
         if (!$ComponentKeyAndPathMap.ContainsKey($component.key))
         {
@@ -155,7 +155,13 @@ function ProcessSonarCodeAnalysisReport
     $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath $agentBuildDirectory
 
     #read sonar-report.json file as a json object
-    $json = Get-Content -Raw $sonarReportFilePath | ConvertFrom-Json
+    $sonarReportFileContent = Get-Content -Raw $sonarReportFilePath
+    $jsonSer = New-Object -TypeName System.Web.Script.Serialization.JavaScriptSerializer
+    
+    #default value of MaxJsonLength is 2,097,152. Increasing max length by a factor of 10 to handle bigger file sizes
+    $jsonSer.MaxJsonLength = 2097152 * 10
+    $json = $jsonSer.DeserializeObject($sonarReportFileContent)
+
     Write-Verbose "ProcessSonarCodeAnalysisReport: Total issues: $($json.issues.Count)"
 
     ConstructComponentKeyAndPathMap $json
