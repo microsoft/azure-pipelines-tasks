@@ -11,7 +11,7 @@ var shell = require('shelljs');
 var ps = shell.which('powershell');
 
 describe('VsTest Suite', function () {
-    this.timeout(10000);
+    this.timeout(20000);
 
     before((done) => {
         // init here

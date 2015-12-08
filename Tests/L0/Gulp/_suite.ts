@@ -16,7 +16,7 @@ function setResponseFile(name: string) {
 }
 
 describe('Gulp Suite', function() {
-    this.timeout(10000);
+    this.timeout(20000);
 	
 	before((done) => {
 		// init here
