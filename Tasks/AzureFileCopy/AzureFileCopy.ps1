@@ -190,16 +190,20 @@ $envOperationStatus = 'Passed'
 try
 {
     Initialize-GlobalMaps
-    
-    if($isSwitchAzureModeRequired)
+
+    # getting classic resources only for machine based filtering, as tags are not supported for classic resources
+    if($resourceFilteringMethod -eq "machineNames" -or [string]::IsNullOrEmpty($machineNames))
     {
-        Write-Verbose "Switching Azure mode to AzureServiceManagement" -Verbose
-        Switch-AzureMode AzureServiceManagement
+        if($isSwitchAzureModeRequired)
+        {
+            Write-Verbose "Switching Azure mode to AzureServiceManagement" -Verbose
+            Switch-AzureMode AzureServiceManagement
+        }
+
+        $azureVMResources = Get-FilteredAzureClassicVMsInResourceGroup -resourceGroupName $environmentName -machineFilter $machineNames
+        Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName
     }
 
-    $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $environmentName
-    Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName
-    
     if($azureVMResources.Count -eq 0)
     {
         if($isSwitchAzureModeRequired)
@@ -208,11 +212,20 @@ try
             Switch-AzureMode AzureResourceManager
         }
 
-        $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $environmentName
-        if ($azureVMResources.Count -eq 0)
+        $azureVMResources = Get-FilteredAzureRMVMsInResourceGroup -resourceGroupName $environmentName -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
+
+        if([string]::IsNullOrEmpty($machineNames) -and $azureVMResources.Count -eq 0)
         {
             Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
             throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
+        }
+        elseif($resourceFilteringMethod -eq "machineNames" -and $azureVMResources.Count -eq 0)
+        {
+            throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy matching given machine names" -ArgumentList $environmentName)
+        }
+        elseif($resourceFilteringMethod -eq "tags" -and $azureVMResources.Count -eq 0)
+        {
+            throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy matching given tags" -ArgumentList $environmentName)
         }
 
         Get-MachineConnectionInformationForRMVms -resourceGroupName $environmentName

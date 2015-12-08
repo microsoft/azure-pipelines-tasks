@@ -77,28 +77,91 @@ function Initialize-GlobalMaps
     Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
 }
 
-function Get-AzureClassicVMsInResourceGroup
+function Does-AzureResourceMatchesFilterCriteria
 {
-    param([string]$resourceGroupName)
+    param([object]$azureVMResource,
+          [string]$resourceFilteringMethod,
+          [string]$filter)
+
+    # If no filters are provided, by default operations are performed on all azure resources
+    if([string]::IsNullOrEmpty($filter))
+    {
+        return $true
+    }
+
+    # machine name based filtering
+    if($resourceFilteringMethod -eq "machineNames")
+    {
+        $machineFilterArray = $filter.Split(',').Trim()
+        return $machineFilterArray.Contains($azureVMResource.Name)
+    }
+
+    # tag based filtering
+    if($resourceFilteringMethod -eq "tags")
+    {
+        $tagsFilterArray = $tagsFilter.Split(';').Trim()
+        foreach($tag in $tagsFilterArray)
+        {
+            $tagKeyValue = $tags.Split(':').Trim()
+            $tagKey =  $tagKeyValue[0]
+            $tagValue = $tagKeyValue[1]
+
+            if($tagKeyValue.Length -ne 2 -or [string]::IsNullOrWhiteSpace($tagKey) -or [string]::IsNullOrWhiteSpace($tagValue))
+            {
+                throw (Get-LocalizedString -Key 'Please have the tags in this format Tag1:TagValue1;Tag2:TagValue2;Tag3:TagValue3')
+            }
+
+            if($azureVMResource.Tags.Keys.Contains($tagKey) -and $azureVMResource.Tags[$tagKey] -eq $tagValue)
+            {
+                return $true
+            }
+        }
+    }
+}
+
+function Get-FilteredAzureClassicVMsInResourceGroup
+{
+    param([string]$resourceGroupName,
+          [string]$machineFilter)
 
     Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
-    $azureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+    $allAzureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
     Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName classic virtual machines type resources"
+
+    $azureClassicVMResources = @()
+    foreach($azureClassicVMResource in $allAzureClassicVMResources)
+    {
+        if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $allAzureClassicVMResources -resourceFilteringMethod "machineNames" -filter $machineFilter)
+        {
+           $azureClassicVMResources += $azureClassicVMResource
+        }
+    }
 
     Set-Variable -Name azureClassicVMResources -Value $azureClassicVMResources -Scope "Global"
 
     return $azureClassicVMResources
 }
 
-function Get-AzureRMVMsInResourceGroup
+function Get-FilteredAzureRMVMsInResourceGroup
 {
-    param([string]$resourceGroupName)
+    param([string]$resourceGroupName,
+          [string]$resourceFilteringMethod,
+          [string]$filter)
 
     try
     {
         Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
-        $azureRMVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName
+        $allAzureRMVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName
         Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName RM virtual machines type resources"
+
+        $azureRMVMResources = @()
+        foreach($azureRMVMResources in $allAzureRMVMResources)
+        {
+            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $allAzureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            {
+                $azureRMVMResources += $azureRMVMResource
+            }
+        }
 
         Set-Variable -Name azureRMVMResources -Value $azureRMVMResources -Scope "Global"
     }

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 25
   },
   "demands": [
     "azureps"
@@ -81,6 +81,28 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Name of the target Resource Group for copying files to.",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "Select Machines By",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "helpMarkDown": "Optionally, select a subset of virtual machines in resource group either by providing machine names or tags.",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "Filter Criteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Provide a list of virtual machine's name like, ffweb, ffdb, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the virtual machines with the specified tags. The default is to run the task in all virtual machines.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
