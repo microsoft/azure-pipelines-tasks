@@ -1,4 +1,5 @@
 node_modules/
+_temp/
 .vscode
 
 ## Ignore Visual Studio temporary files, build results, and
