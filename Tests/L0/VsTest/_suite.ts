@@ -46,5 +46,17 @@ describe('VsTest Suite', function () {
         it('(RunSettingsForParallel.ReturnsSameFileIfParallelIsTrueAndFileNameNotEmpty) returns same but updated file if parallel flag is true and a runsettings file is provided', (done) => {
             psm.runPS(path.join(__dirname, 'RunSettingsForParallel.ReturnsSameFileIfParallelIsTrueAndFileNameNotEmpty.ps1'), done);
         })
+        it('(NoResultsFile.PrintsWarning) prints a warning if no results file is found', (done) => {
+            psm.runPS(path.join(__dirname, 'NoResultsFile.PrintsWarning.ps1'), done);
+        })
+        it('(NoTestAssemblies.PrintsWarning) prints a warning if no test assemblies are found', (done) => {
+            psm.runPS(path.join(__dirname, 'NoTestAssemblies.PrintsWarning.ps1'), done);
+        })
+        it('(Compat.OptOutOfPublishNotInCmdlet.ProvidedByTask) does not throw if publishattachments is not found in the cmdlet', (done) => {
+            psm.runPS(path.join(__dirname, 'Compat.OptOutOfPublishNotInCmdlet.ProvidedByTask.ps1'), done);
+        })
+        it('(Compat.TestRunTitleNotInCmdlet.ProvidedByTask) does not throw if testrun title is not found in the cmdlet', (done) => {
+            psm.runPS(path.join(__dirname, 'Compat.TestRunTitleNotInCmdlet.ProvidedByTask.ps1'), done);
+        })
     }
 });

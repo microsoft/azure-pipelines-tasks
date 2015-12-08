@@ -1,3 +1,4 @@
+[cmdletbinding()]
 param(
     [string]$vsTestVersion, 
     [string]$testAssembly,
@@ -85,7 +86,7 @@ if($testAssemblyFiles)
     $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
     $workingDirectory = $artifactsDirectory
-    $testResultsDirectory = $workingDirectory + "\" + "TestResults"
+    $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
 
     if($runInParallel -eq "True")
     {
