@@ -141,14 +141,15 @@ function Validate-DeploymentFileAndParameters
 
 function Get-CsmParameterObject
 {
-    param([string]$csmParameterFileContent)
+    param([string]$csmParameterFileContent,
+          [string]$overrideParameters)
 
+	$newParametersObject = New-Object System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
     if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false)
     {
         Write-Verbose "Generating csm parameter object" -Verbose
 
         $csmJObject = [Newtonsoft.Json.Linq.JObject]::Parse($csmParameterFileContent)
-        $newParametersObject = New-Object System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
 
         if($csmJObject.ContainsKey("parameters") -eq $true)
         {
@@ -167,9 +168,72 @@ function Get-CsmParameterObject
         }
 
         Write-Verbose "Generated the parameter object" -Verbose
+	}
+		
+    if([string]::IsNullOrEmpty($overrideParameters) -eq $false)
+    {
+        Write-Verbose "Overriding parameter objects" -Verbose
+        $overrideParametersList = $overrideParameters.Split(" ")
+		$i = 0
+        While($i -lt $overrideParametersList.Count)
+        {
+            if([string]::IsNullOrEmpty($overrideParametersList[$i]) -eq $true)
+            {
+                $i = $i + 1
+                continue
+            }
+            $parameterName = $overrideParametersList[$i]
+			if(!$parameterName.StartsWith("-"))
+            {
+			    Write-TaskSpecificTelemetry "PREREQ_InvalidInputFormat"
+                Throw (Get-LocalizedString -Key  "Provided Override parameter format is invalid. Please provide Override parameters in this format: -parame1 value1 -parame2 `"value  with  space`".")
+            }
+			
+			$parameterName = $parameterName.TrimStart("-")
+			
+            $parameterValue = $overrideParametersList[$i + 1]
+            $i = $i + 2
 
-        return $newParametersObject
+			if([string]::IsNullOrEmpty($parameterValue) -eq $true)
+            {
+			    Write-TaskSpecificTelemetry "PREREQ_InvalidInputFormat"
+                Throw (Get-LocalizedString -Key  "Provided Override parameter format is invalid. Please provide Override parameters in this format: -parame1 value1 -parame2 `"value  with  space`".")
+            }
+			if($parameterValue.StartsWith("`""))
+			{
+			    While(!$parameterValue.EndsWith("`"") -and $i -lt $overrideParametersList.Count)
+                {
+					$ParamValueSuffix = $overrideParametersList[$i]
+					$parameterValue = "$parameterValue $ParamValueSuffix"
+					$i = $i + 1
+				}
+				
+				if(!$parameterValue.EndsWith("`""))
+				{
+				    Write-TaskSpecificTelemetry "PREREQ_InvalidInputFormat"
+				    Throw (Get-LocalizedString -Key  "Provided Override parameter format is invalid. Please provide Override parameters in this format: -parame1 value1 -parame2 `"value  with  space`".")
+				}
+			}
+            
+			
+            if($newParametersObject.ContainsKey($parameterName))
+            {
+                $newParametersObject[$parameterName] = ($parameterValue).Trim("`"")
+            }
+            else
+            {
+                $newParametersObject.Add($parameterName, $parameterValue)
+            }
+        }
+		
+        Write-Verbose "Overriding parameter objects completed." -Verbose
     }
+	
+    if($newParametersObject.Count -eq 0)
+    {
+        return $null
+    }
+    return $newParametersObject
 }
 
 function Perform-Action
@@ -324,10 +388,10 @@ function Create-AzureResourceGroupHelper
         $csmParametersFileContent = [String]::Empty
     }
 
-    $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
+    $parametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent -overrideParameters $overrideParameters
 
     # Create azure resource group
-    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired        
+    $resourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmAndParameterFiles["csmFile"] -csmParametersObject $parametersObject -resourceGroupName $resourceGroupName -location $location -isSwitchAzureModeRequired $isSwitchAzureModeRequired        
 }
 
 function Instantiate-Environment
