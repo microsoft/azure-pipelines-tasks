@@ -53,6 +53,10 @@ if($runTitleMemberExists)
 }
 else
 {
+    if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+    {
+        Write-Warning "Update the build agent to be able to customize your test run title."
+    }
     Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation
 } 
 
