@@ -176,19 +176,42 @@
             "helpMarkDown": "Sets JAVA_HOME to the given path.",
             "visibleRule":"javaHomeSelection = Path"
         },
-        { 
-            "name": "jdkArchitecture", 
-            "type": "pickList", 
-            "label": "JDK Architecture", 
-            "defaultValue": "x86",
-            "required": false,
-            "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
-            "groupName": "advanced",
-            "options": {
-                "x86": "x86",
-                "x64": "x64"
-            }
-        },
+      {
+        "name": "jdkArchitecture",
+        "type": "pickList",
+        "label": "JDK Architecture",
+        "defaultValue": "x86",
+        "required": false,
+        "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+        "groupName": "advanced",
+        "options": {
+          "x86": "x86",
+          "x64": "x64"
+        }
+      },
+      {
+        "name": "mavenVersionSelection",
+        "type": "radio",
+        "label": "Maven Version",
+        "defaultValue": "Default",
+        "required": true,
+        "groupName": "advanced",
+        "helpMarkDown": "Uses either the default Maven version or the version in the specified custom path.",
+        "options": {
+          "Default": "Default",
+          "Path": "Custom Path"
+        }
+      },
+      {
+        "name": "mavenPath",
+        "type": "string",
+        "label": "Maven Path",
+        "required": true,
+        "groupName": "advanced",
+        "defaultValue": "",
+        "helpMarkDown": "Supply the custom path to the Maven binary.",
+        "visibleRule": "mavenVersionSelection = Path"
+      },
         {
             "name": "sqAnalysisEnabled",
             "type": "boolean",

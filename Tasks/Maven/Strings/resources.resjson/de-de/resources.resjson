@@ -20,5 +20,9 @@
   "loc.input.label.jdkUserInputPath": "JDK Path",
   "loc.input.help.jdkUserInputPath": "Sets JAVA_HOME to the given path.",
   "loc.input.label.jdkArchitecture": "JDK-Architektur",
-  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64)."
+  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64).",
+  "loc.input.label.mavenVersionSelection": "Maven-Version",
+  "loc.input.help.mavenVersionSelection": "Verwendet entweder die Standard-Version von Maven im System oder die im angegebenen Pfad.",
+  "loc.input.label.mavenPath": "Pfad zu Maven",
+  "loc.input.help.mavenPath": "Geben Sie den Pfad an, in dem sich das Maven-Binary befindet.",
 }
