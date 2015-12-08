@@ -60,7 +60,6 @@ export class PSRunner extends events.EventEmitter {
 							env: process.env
 						},
 			(err, stdout, stderr) => {
-				console.log('done');
 				if (err !== null) {
 					defer.reject(err);
 					return;
