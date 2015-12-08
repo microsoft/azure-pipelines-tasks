@@ -16,5 +16,9 @@
   "loc.input.label.CleanTargetFolder": "Clean Target Folder",
   "loc.input.help.CleanTargetFolder": "Delete all existing files in target folder before copy",
   "loc.input.label.OverWrite": "Over Write",
-  "loc.input.help.OverWrite": "Replace existing file in target folder"
+  "loc.input.help.OverWrite": "Replace existing file in target folder",
+  "loc.messages.FoundNFiles": "found %d files",
+  "loc.messages.CleaningTargetFolder": "Cleaning target folder: ",
+  "loc.messages.FileAlreadyExistAt": "File %s already exist at %s",
+  "loc.messages.CopyingTo": "Copying %s to %s"
 }

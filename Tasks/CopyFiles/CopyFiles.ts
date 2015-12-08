@@ -1,12 +1,10 @@
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vso-task-lib.d.ts" />
 
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
-import Q = require('q');
-var tl = require("vso-task-lib");
+import tl = require('vso-task-lib/vsotask');
+import util= require('util');
 
 function getCommonLocalPath(files: string[]): string {
     if (!files || files.length === 0) {
@@ -80,9 +78,9 @@ function getFolderDepth(fullPath: string): number {
 }
 
 // contents is a multiline input containing glob patterns
-var contents: string[] = tl.getDelimitedInput('Contents', '\n');
-var sourceFolder: string = tl.getPathInput('SourceFolder');
-var targetFolder: string = tl.getPathInput('TargetFolder');
+var contents: string[] = tl.getDelimitedInput('Contents', '\n', true);
+var sourceFolder: string = tl.getPathInput('SourceFolder', true);
+var targetFolder: string = tl.getPathInput('TargetFolder', true);
 
 var cleanTargetFolderString: string = tl.getInput('CleanTargetFolder');
 var overWriteString: string = tl.getInput('OverWrite');
@@ -190,12 +188,16 @@ else {
 }
 
 // copy the files to the target folder
-console.log("found " + files.length + " files");
+console.log(util.format(tl.loc('FoundNFiles', 'found %d files'), files.length));
 if (files.length > 0) {
+    // dump all files to debug trace.
+    files.forEach((file: string) => {
+        tl.debug('file:' + file + ' will be copied.');
+    })
     
     // clean target folder if requied
     if (cleanTargetFolder) {
-        console.log('Cleaning target folder: ' + targetFolder);
+        console.log(tl.loc('CleaningTargetFolder','Cleaning target folder: ') + targetFolder);
         tl.rmRF(targetFolder); 
     }
     
@@ -240,16 +242,15 @@ if (files.length > 0) {
             var stats = exists && fs.statSync(targetPath);
       
             if (exists && stats.isFile() && !overWrite) {
-                console.log("File " + file + " already exist at " + targetPath);
+                console.log(util.format(tl.loc('FileAlreadyExistAt', 'File %s already exist at %s'), file, targetPath));
             }
             else {
-                console.log("Copying " + file + " to " + targetPath);
+                console.log(util.format(tl.loc('CopyingTo', 'Copying %s to %s'), file, targetPath));
                 tl.cp("-f", file, targetPath);                
             }
         });
     }
     catch (err) {
-        tl.error(err);
-        tl.exit(1);
+        tl.setResult(tl.TaskResult.Failed, err);
     }
 }
