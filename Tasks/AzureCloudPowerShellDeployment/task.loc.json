@@ -108,12 +108,13 @@
       "endpoint": "https://management.core.windows.net/$(authKey.SubscriptionId)/services/storageservices",
       "selector": "xpath://ServiceName",
       "authKey": "$(ConnectedServiceName)"
-    },
+    }
+  ],
+  "dataSourceBindings": [
     {
       "target": "ServiceName",
-      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/hostedservices",
-      "selector": "xpath://ServiceName",
-      "authKey": "$(ConnectedServiceName)"
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureHostedServiceNames"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

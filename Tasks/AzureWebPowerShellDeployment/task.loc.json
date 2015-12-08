@@ -90,12 +90,14 @@
       "required": false
     }
   ],
-  "sourceDefinitions": [
+  "dataSourceBindings": [
     {
       "target": "WebSiteName",
-      "endpoint": "https://management.core.windows.net/$(authKey.SubscriptionId)/services/webspaces/$(WebSiteLocation)Webspace/sites",
-      "selector": "xpath://Site/Name",
-      "authKey": "$(ConnectedServiceName)"
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureWebSiteNames",
+      "parameters": {
+        "WebSiteLocation": "$(WebSiteLocation)"
+      }
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

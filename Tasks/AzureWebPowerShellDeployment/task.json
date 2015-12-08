@@ -6,9 +6,9 @@
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
   "category": "Deploy",
   "visibility": [
-                "Build",
-                "Release"
-                ],
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
@@ -87,12 +87,14 @@
       "required": false
     }
   ],
-  "sourceDefinitions": [
+  "dataSourceBindings": [
     {
-        "target": "WebSiteName",
-        "endpoint": "https://management.core.windows.net/$(authKey.SubscriptionId)/services/webspaces/$(WebSiteLocation)Webspace/sites",
-        "selector": "xpath://Site/Name",
-        "authKey": "$(ConnectedServiceName)"
+      "target": "WebSiteName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureWebSiteNames",
+	  "parameters": {
+		"WebSiteLocation": "$(WebSiteLocation)"
+	  }
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
