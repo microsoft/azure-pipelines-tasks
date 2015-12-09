@@ -34,4 +34,4 @@ The task is used run PowerShell on the target machines. The task can run both Po
 
 ### Known Issues :
 
-Write-Host command is not supported.
+Write-Host command is not supported in PowerShell script.

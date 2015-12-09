@@ -42,12 +42,12 @@ The following parameters are shown when the selected action is to create or upda
 
  *NOTE: Follow the Azure Naming guidelines while specifying parameters, few important one mentioned in below table_
 
-	| Kind                 | Length | Casing           | Valid Chars                                                                           | Globally Unique |
-	|----------------------|--------|------------------|---------------------------------------------------------------------------------------|-----------------|
-	| Storage Account      | 3-24   | lowercase        | alphanumeric                                                                          | Yes             |
-	| Azure Resource Group | 2-64   | case-insensitive | alphanumeric periods, underscores, hyphens and parenthesis and cannot end in a period | No              |
-	| Azure KeyVault       | 3-24   | case-insensitive | alphanumeric                                                                          | Yes             |
-	| Azure DNS Name       | 3-63   | lowercase        | alphanumeric and hyphens                                                              | Yes             |
+|         Kind         | Length | Casing           | Valid Chars                                                                           | Globally Unique |
+|:--------------------:|--------|------------------|---------------------------------------------------------------------------------------|:---------------:|
+| Storage Account      | 3-24   | lowercase        | alphanumeric                                                                          | Yes             |
+| Azure Resource Group | 2-64   | case-insensitive | alphanumeric periods, underscores, hyphens and parenthesis and cannot end in a period | No              |
+| Azure KeyVault       | 3-24   | case-insensitive | alphanumeric                                                                          | Yes             |
+| Azure DNS Name       | 3-63   | lowercase        | alphanumeric and hyphens                                                              | Yes             |
 
  * **Override Template Parameters**: The Override template parameters is used to override the parameters, like -storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre).
 
