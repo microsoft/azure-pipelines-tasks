@@ -7,7 +7,7 @@ Register-Mock Convert-String { [bool]::Parse($args[0]) }
 Register-Mock Get-SolutionFiles { 'Some solution 1', 'Some solution 2' } -- -Solution 'Some input solution'
 Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration'
 Register-Mock Select-MSBuildLocation { 'Some location' } -- -Method 'Some input method' -Location 'Some input location' -Version 'Some input version' -Architecture 'Some input architecture'
-Register-Mock Invoke-BuildTools
+Register-Mock Invoke-BuildTools { 'Some build output' }
 foreach ($clean in @($true, $false)) {
     foreach ($restoreNuGetPackages in @($true, $false)) {
         foreach ($logProjectEvents in @($true, $false)) {
@@ -26,10 +26,10 @@ foreach ($clean in @($true, $false)) {
                 'MSBuildArchitecture' = 'Some input architecture'
                 'OmitDotSource' = 'true'
             }
-            & $PSScriptRoot\..\..\..\Tasks\MSBuild\MSBuild.ps1 @splat
+            $output = & $PSScriptRoot\..\..\..\Tasks\MSBuild\MSBuild.ps1 @splat
 
             # Assert.
-            Assert-WasCalled Select-MSBuildLocation -- -Method 'Some input method' -Location 'Some input location' -Version 'Some input version' -Architecture 'Some input architecture'
+            Assert-AreEqual 'Some build output' $output
             Assert-WasCalled Invoke-BuildTools -- -NuGetRestore: $restoreNuGetPackages -SolutionFiles @('Some solution 1', 'Some solution 2') -MSBuildLocation 'Some location' -MSBuildArguments 'Some formatted arguments' -Clean: $clean -NoTimelineLogger: $(!$logProjectEvents)
         }
     }
