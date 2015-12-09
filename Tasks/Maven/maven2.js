@@ -6,7 +6,7 @@ var mavenVersionSelection = tl.getInput('mavenVersionSelection', true);
 if (mavenVersionSelection == 'Path') {
     tl.debug('Using maven path from user input');
     var mavenPath = tl.getPathInput('mavenPath', true, true);
-    mvntool = path.join(mavenPath, 'mvn');
+    mvntool = path.join(mavenPath, 'bin/mvn');
 } else {
     tl.debug('Using maven from standard system path')
     mvntool = tl.which('mvn', true);

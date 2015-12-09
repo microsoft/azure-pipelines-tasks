@@ -209,7 +209,7 @@
         "required": true,
         "groupName": "advanced",
         "defaultValue": "",
-        "helpMarkDown": "Supply the custom path to the Maven binary.",
+        "helpMarkDown": "Supply the custom path to the Maven installation (e.g., /usr/share/maven)",
         "visibleRule": "mavenVersionSelection = Path"
       },
         {

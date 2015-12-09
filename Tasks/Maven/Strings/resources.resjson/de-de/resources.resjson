@@ -24,5 +24,5 @@
   "loc.input.label.mavenVersionSelection": "Maven-Version",
   "loc.input.help.mavenVersionSelection": "Verwendet entweder die Standard-Version von Maven im System oder die im angegebenen Pfad.",
   "loc.input.label.mavenPath": "Pfad zu Maven",
-  "loc.input.help.mavenPath": "Geben Sie den Pfad an, in dem sich das Maven-Binary befindet.",
+  "loc.input.help.mavenPath": "Geben Sie den Pfad an, in dem sich die Maven-Installation befindet (z.B. /usr/share/maven).",
 }

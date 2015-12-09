@@ -43,8 +43,9 @@ Function GetMavenToolPath() {
 	{
 		throw "Path $mavenPath does not contain a Maven installation"
 	}
-	Write-Verbose "Using Maven executable at $toolPath"
-	return $toolPath
+	Write-Host "Using Maven executable at $($toolPath.FullName)"
+	$env:M2_HOME = $mavenPath
+	return $toolPath.FullName
 }
 
 Write-Verbose 'Entering Maven.ps1'
