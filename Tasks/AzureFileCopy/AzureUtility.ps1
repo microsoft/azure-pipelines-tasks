@@ -99,10 +99,10 @@ function Does-AzureResourceMatchesFilterCriteria
     # tag based filtering
     if($resourceFilteringMethod -eq "tags")
     {
-        $tagsFilterArray = $tagsFilter.Split(';').Trim()
+        $tagsFilterArray = $filter.Split(';').Trim()
         foreach($tag in $tagsFilterArray)
         {
-            $tagKeyValue = $tags.Split(':').Trim()
+            $tagKeyValue = $tag.Split(':').Trim()
             $tagKey =  $tagKeyValue[0]
             $tagValue = $tagKeyValue[1]
 
@@ -130,11 +130,14 @@ function Get-FilteredAzureClassicVMsInResourceGroup
     Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName classic virtual machines type resources"
 
     $azureClassicVMResources = @()
-    foreach($azureClassicVMResource in $allAzureClassicVMResources)
+    if($allAzureClassicVMResources)
     {
-        if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureClassicVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+        foreach($azureClassicVMResource in $allAzureClassicVMResources)
         {
-           $azureClassicVMResources += $azureClassicVMResource
+            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureClassicVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            {
+                $azureClassicVMResources += $azureClassicVMResource
+            }
         }
     }
 
@@ -156,11 +159,14 @@ function Get-FilteredAzureRMVMsInResourceGroup
         Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName RM virtual machines type resources"
 
         $azureRMVMResources = @()
-        foreach($azureRMVMResource in $allAzureRMVMResources)
+        if($allAzureRMVMResources)
         {
-            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureRMVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            foreach($azureRMVMResource in $allAzureRMVMResources)
             {
-                $azureRMVMResources += $azureRMVMResource
+                if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureRMVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+                {
+                    $azureRMVMResources += $azureRMVMResource
+                }
             }
         }
 
