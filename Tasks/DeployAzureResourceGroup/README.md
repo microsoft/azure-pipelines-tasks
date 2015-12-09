@@ -49,7 +49,7 @@ The following parameters are shown when the selected action is to create or upda
 | Azure KeyVault       | 3-24   | case-insensitive | alphanumeric                                                                          | Yes             |
 | Azure DNS Name       | 3-63   | lowercase        | alphanumeric and hyphens                                                              | Yes             |
 
- * **Override Template Parameters**: The Override template parameters is used to override the parameters, like -storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre). To override a secure string like Password please use following formate: -parameterName (ConvertTo-SecureString -String '$(Password)' -AsPlainText -Force).
+ * **Override Template Parameters**: The Override template parameters is used to override the parameters, like -storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre). To override a secure string like Password please use following formate: -Password (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force).
 
 ### Output variables:
  Create/update action of the Azure Resource Group task now produces an output variable during execution. The output variable can be used to refer to the resource group object in the subsequent tasks. For example "PowerShell on Target Machine" task can now refer to resource group output variable as '$(variableName)' so that it can execute the powershell script on the resource group VM targets. 
