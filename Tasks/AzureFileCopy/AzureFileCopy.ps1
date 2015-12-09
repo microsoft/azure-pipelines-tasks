@@ -200,7 +200,7 @@ try
             Switch-AzureMode AzureServiceManagement
         }
 
-        $azureVMResources = Get-FilteredAzureClassicVMsInResourceGroup -resourceGroupName $environmentName -machineFilter $machineNames
+        $azureVMResources = Get-FilteredAzureClassicVMsInResourceGroup -resourceGroupName $environmentName -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
         Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName
     }
 

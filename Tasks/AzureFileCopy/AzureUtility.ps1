@@ -5,7 +5,7 @@ $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
 $ARMVirtualMachinesResourceType = "Microsoft.Compute/virtualMachines"
 $ARMClassicVirtualMachinesResourceType = "Microsoft.ClassicCompute/virtualMachines"
 
-function Get-AzureStorageAccountResourceGroupName
+function Get-eAzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
 
@@ -122,7 +122,8 @@ function Does-AzureResourceMatchesFilterCriteria
 function Get-FilteredAzureClassicVMsInResourceGroup
 {
     param([string]$resourceGroupName,
-          [string]$machineFilter)
+          [string]$resourceFilteringMethod,
+          [string]$filter)
 
     Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
     $allAzureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
@@ -131,7 +132,7 @@ function Get-FilteredAzureClassicVMsInResourceGroup
     $azureClassicVMResources = @()
     foreach($azureClassicVMResource in $allAzureClassicVMResources)
     {
-        if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $allAzureClassicVMResources -resourceFilteringMethod "machineNames" -filter $machineFilter)
+        if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureClassicVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
         {
            $azureClassicVMResources += $azureClassicVMResource
         }
@@ -157,7 +158,7 @@ function Get-FilteredAzureRMVMsInResourceGroup
         $azureRMVMResources = @()
         foreach($azureRMVMResources in $allAzureRMVMResources)
         {
-            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $allAzureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
             {
                 $azureRMVMResources += $azureRMVMResource
             }
