@@ -681,16 +681,20 @@ function EnableTracing
         [String] $TestAgentVersion
     )
 
-    if ($env:processor_architecture -eq "amd64")
+    $configFilePath = Locate-TestVersionAndVsRoot $TestAgentVersion
+    if ([string]::IsNullOrWhiteSpace($configFilePath))
     {
-        $programFilesPath =  ${env:ProgramFiles(x86)}
-    }
-    else
-    {
-        $programFilesPath = ${env:ProgramFiles}
-    }
+        if ($env:processor_architecture -eq "amd64")
+        {
+            $programFilesPath =  ${env:ProgramFiles(x86)}
+        }
+        else
+        {
+            $programFilesPath = ${env:ProgramFiles}
+        }
+        $configFilePath = "$programFilesPath\Microsoft Visual Studio " + $TestAgentVersion + "\Common7\Ide"
+    }    
 
-    $configFilePath = "$programFilesPath\Microsoft Visual Studio " + $TestAgentVersion + "\Common7\Ide"
     $logFilePath = "$env:SystemDrive\DtaLogs"
     $dtaExecutable = "DTAExecutionHost"
     $traceLevel = 4
