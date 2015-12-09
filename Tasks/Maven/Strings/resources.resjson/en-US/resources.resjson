@@ -47,5 +47,11 @@
   "loc.input.label.sqDbUsername": "Db UserName",
   "loc.input.help.sqDbUsername": "SonarQube server 5.1 and lower only. The username for the database user i.e. sonar.jdbc.username.",
   "loc.input.label.sqDbPassword": "Db User Password",
-  "loc.input.help.sqDbPassword": "SonarQube server 5.1 and lower only. The password for the database user i.e. sonar.jdbc.password"
+  "loc.input.help.sqDbPassword": "SonarQube server 5.1 and lower only. The password for the database user i.e. sonar.jdbc.password",
+  "loc.input.label.mavenVersionSelection": "Maven Version",
+  "loc.input.help.mavenVersionSelection": "Uses either the default Maven version or the version in the specified custom path.",
+  "loc.input.label.mavenPath": "Maven Path",
+  "loc.input.help.mavenPath": "Supply the custom path to the Maven installation (e.g., /usr/share/maven).",
+  "loc.input.label.mavenSetM2Home": "Set M2_HOME variable",
+  "loc.input.help.mavenSetM2Home": "Set M2_HOME variable to custom Maven installation path."
 }

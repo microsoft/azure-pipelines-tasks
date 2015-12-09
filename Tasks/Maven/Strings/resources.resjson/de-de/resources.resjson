@@ -25,4 +25,6 @@
   "loc.input.help.mavenVersionSelection": "Verwendet entweder die Standard-Version von Maven im System oder die im angegebenen Pfad.",
   "loc.input.label.mavenPath": "Pfad zu Maven",
   "loc.input.help.mavenPath": "Geben Sie den Pfad an, in dem sich die Maven-Installation befindet (z.B. /usr/share/maven).",
+  "loc.input.label.mavenSetM2Home": "M2_HOME Umgebungsvariable",
+  "loc.input.help.mavenSetM2Home": "Setzt die Umgebungsvariable M2_HOME auf den Pfad zur Maven-Installation."
 }

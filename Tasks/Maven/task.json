@@ -209,7 +209,17 @@
         "required": true,
         "groupName": "advanced",
         "defaultValue": "",
-        "helpMarkDown": "Supply the custom path to the Maven installation (e.g., /usr/share/maven)",
+        "helpMarkDown": "Supply the custom path to the Maven installation (e.g., /usr/share/maven).",
+        "visibleRule": "mavenVersionSelection = Path"
+      },
+      {
+        "name": "mavenSetM2Home",
+        "type": "boolean",
+        "label": "Set M2_HOME variable",
+        "required": true,
+        "defaultValue": "false",
+        "grouName": "advanced",
+        "helpMarkDown": "Set M2_HOME variable to custom Maven installation path.",
         "visibleRule": "mavenVersionSelection = Path"
       },
         {

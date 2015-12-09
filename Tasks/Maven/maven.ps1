@@ -15,6 +15,7 @@
     [string]$jdkUserInputPath, 
 	[string]$mavenVersionSelection,
 	[string]$mavenPath,
+	[string]$mavenSetM2Home,
     [string]$sqAnalysisEnabled, 
     [string]$sqConnectedServiceName, 
     [string]$sqDbDetailsRequired,
@@ -44,7 +45,11 @@ Function GetMavenToolPath() {
 		throw "Path $mavenPath does not contain a Maven installation"
 	}
 	Write-Host "Using Maven executable at $($toolPath.FullName)"
-	$env:M2_HOME = $mavenPath
+	if($mavenSetM2Home -eq $true)
+	{
+		$env:M2_HOME = $mavenPath
+		Write-Host "M2_HOME set to $mavenPath"
+	}
 	return $toolPath.FullName
 }
 
@@ -71,6 +76,7 @@ Write-Verbose "jdkUserInputPath = $jdkUserInputPath"
 
 Write-Verbose "mavenVersionSelection = $mavenVersionSelection"
 Write-Verbose "mavenPath = $mavenPath"
+Write-Verbose "mavenSetM2Home = $mavenSetM2Home"
 
 Write-Verbose "sqAnalysisEnabled = $sqAnalysisEnabled"
 Write-Verbose "connectedServiceName = $sqConnectedServiceName"

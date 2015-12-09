@@ -216,6 +216,16 @@
       "visibleRule": "mavenVersionSelection = Path"
     },
     {
+      "name": "mavenSetM2Home",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mavenSetM2Home",
+      "required": true,
+      "defaultValue": "false",
+      "grouName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenSetM2Home",
+      "visibleRule": "mavenVersionSelection = Path"
+    },
+    {
       "name": "sqAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",

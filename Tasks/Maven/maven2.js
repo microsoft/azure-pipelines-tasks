@@ -7,6 +7,11 @@ if (mavenVersionSelection == 'Path') {
     tl.debug('Using maven path from user input');
     var mavenPath = tl.getPathInput('mavenPath', true, true);
     mvntool = path.join(mavenPath, 'bin/mvn');
+
+    if (tl.getBoolInput('mavenSetM2Home')) {
+        tl.setEnvVar("M2_HOME", mavenPath);
+        tl.debug('M2_HOME set to ' + mavenPath)
+    }
 } else {
     tl.debug('Using maven from standard system path')
     mvntool = tl.which('mvn', true);
