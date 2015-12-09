@@ -16,7 +16,7 @@ To deploy to Azure, an Azure subscription has to be linked to Team Foundation Se
 
 The task supports both the [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) storage account and the newer [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) storage account. The classic and the resource manager APIs support different authentication type, and depending upon the storage account the Azure connect has to be appropriately setup in Visual Studio Online (VSO) or Team Foundation Server (TFS). The following table lists the storage accounts and the service connections that with them. To identify whether a storage account is based on the classic APIs or the resource manager APIs, log into [https://portal.azure.com/](https://portal.azure.com/) and browse for storage accounts (classic) or storage accounts.
 
-| **Storage Account Type** | **Azure Service Connections in VSO/TFS** |
+| **Storage Account Type** | **Azure Service Connections in VSTS/TFS** |
 | --- | --- |
 | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts |
 | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Certificate or credentials based on work accounts |
@@ -36,7 +36,7 @@ The task needs the Azure PowerShell version to be installed on the automation ag
 
 The task can copy files to the Azure Virtual Machines that are created either using the [new azure portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) or through the [azure classic portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/). For copying the files to VMs, they are first copied to an automatically generated container in the  Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs. The valid combination of Azure service connections and storage accounts for copying to a Azure is as given below:
 
-| **Storage Account Type** | **Azure Service Connections in VSO/TFS** | **Azure Virtual Machines** |
+| **Storage Account Type** | **Azure Service Connections in VSTS/TFS** | **Azure Virtual Machines** |
 | --- | --- | --- |
 | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) Azure Virtual machines |
 | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Certificate or credentials based on work accounts | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) Azure Virtual machines |
