@@ -5,7 +5,7 @@ $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
 $ARMVirtualMachinesResourceType = "Microsoft.Compute/virtualMachines"
 $ARMClassicVirtualMachinesResourceType = "Microsoft.ClassicCompute/virtualMachines"
 
-function Get-eAzureStorageAccountResourceGroupName
+function Get-AzureStorageAccountResourceGroupName
 {
     param([string]$storageAccountName)
 
