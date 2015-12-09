@@ -221,7 +221,7 @@
       "label": "ms-resource:loc.input.label.mavenSetM2Home",
       "required": true,
       "defaultValue": "false",
-      "grouName": "advanced",
+      "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.mavenSetM2Home",
       "visibleRule": "mavenVersionSelection = Path"
     },

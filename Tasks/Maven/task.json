@@ -218,7 +218,7 @@
         "label": "Set M2_HOME variable",
         "required": true,
         "defaultValue": "false",
-        "grouName": "advanced",
+        "groupName": "advanced",
         "helpMarkDown": "Set M2_HOME variable to custom Maven installation path.",
         "visibleRule": "mavenVersionSelection = Path"
       },
