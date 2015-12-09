@@ -64,5 +64,9 @@
       "target": "publishBuildArtifacts.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "ArtifactNameNotSpecified": "ms-resource:loc.messages.ArtifactNameNotSpecified",
+    "ArtifactTypeNotSpecified": "ms-resource:loc.messages.ArtifactTypeNotSpecified"
   }
 }

@@ -54,6 +54,7 @@ var LOC_INSTFORMAT = 'loc.instanceNameFormat';
 var LOC_GROUPDISPLAYNAME = 'loc.group.displayName.';
 var LOC_INPUTLABEL = 'loc.input.label.';
 var LOC_INPUTHELP = 'loc.input.help.';
+var LOC_MESSAGES = 'loc.messages.';
 
 var createStrings = function(task, pkgPath, srcPath) {
 	var defer = Q.defer();
@@ -105,6 +106,14 @@ var createStrings = function(task, pkgPath, srcPath) {
 		});
 	}	
 
+	if (task.messages) {
+		for(var key in task.messages) {
+			var messageKey = LOC_MESSAGES + key;
+			strings[messageKey] = task.messages[key];
+			task.messages[key] = 'ms-resource:' + messageKey;
+		}
+	}	
+	
 	//
 	// Write the tasks.json and strings file in package and back to source
 	//

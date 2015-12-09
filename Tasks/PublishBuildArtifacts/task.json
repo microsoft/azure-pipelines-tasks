@@ -62,5 +62,9 @@
       "target": "publishBuildArtifacts.js",
       "argumentFormat": ""            
     }
+  },
+  "messages": {
+    "ArtifactNameNotSpecified" : "Artifact name is not specified.",
+    "ArtifactTypeNotSpecified" : "Artifact type is not specified."
   }
 }
