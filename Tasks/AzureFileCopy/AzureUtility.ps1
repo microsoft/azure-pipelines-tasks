@@ -156,9 +156,9 @@ function Get-FilteredAzureRMVMsInResourceGroup
         Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName RM virtual machines type resources"
 
         $azureRMVMResources = @()
-        foreach($azureRMVMResources in $allAzureRMVMResources)
+        foreach($azureRMVMResource in $allAzureRMVMResources)
         {
-            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureRMVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
             {
                 $azureRMVMResources += $azureRMVMResource
             }
