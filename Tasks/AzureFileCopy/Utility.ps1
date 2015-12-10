@@ -28,9 +28,8 @@ $telemetryCodes =
 
   "DEPLOYMENT_Failed" = "DEP001";
   "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
-  "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";
-  
-  "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed"
+  "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";  
+  "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed";
 
   "FILTERING_IncorrectFormat" = "FILTERING_IncorrectFOrmat";
   "FILTERING_NoVMResources" = "FILTERING_NoVMResources";

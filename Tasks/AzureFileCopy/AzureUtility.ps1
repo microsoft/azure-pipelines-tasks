@@ -113,14 +113,17 @@ function Does-AzureResourceMatchFilterCriteria
             }
 
             $tagValueArray = $tagValues.Split(',').Trim()
-            if($azureVMResource.Tags.Keys.Contains($tagKey))
+            foreach($azureVMResourceTag in $azureVMResource.Tags.GetEnumerator())
             {
-                $azureVMTagValueArray = $azureVMResource.Tags[$tagKey].Split(",").Trim()
-                foreach($tagValue in $tagValueArray)
-                {
-                    if($azureVMTagValueArray -contains $tagValue)
+                if($azureVMResourceTag.Key -contains $tagKey)
+                {                    
+                    $azureVMTagValueArray = $azureVMResourceTag.Value.Split(",").Trim()
+                    foreach($tagValue in $tagValueArray)
                     {
-                        return $true
+                        if($azureVMTagValueArray -contains $tagValue)
+                        {
+                            return $true
+                        }
                     }
                 }
             }
@@ -136,7 +139,7 @@ function Get-FilteredAzureClassicVMsInResourceGroup
           [string]$resourceFilteringMethod,
           [string]$filter)
     
-    Write-Verbose -Verbose "Filtering azureClassicVM resources with filtering option:$resourceFilteringMethod and filters:$filter"
+    Write-Verbose -Verbose "Filtering azureClassicVM resources with filtering option:'$resourceFilteringMethod' and filters:'$filter'"
 
     $azureClassicVMResources = @()
     if($allAzureClassicVMResources)
@@ -186,7 +189,7 @@ function Get-AzureClassicVMsInResourceGroup
 
     Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
     $allAzureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
-    Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName classic virtual machines type resources"
+    Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName classic virtual machines type resource is $($allAzureClassicVMResources.Count)"
 
     return $allAzureClassicVMResources
 }
@@ -199,7 +202,7 @@ function Get-AzureRMVMsInResourceGroup
     {
         Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
         $allAzureRMVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName
-        Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName RM virtual machines type resources"
+        Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($allAzureRMVMResources.Count)"
     }
     catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException], [System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
     {
