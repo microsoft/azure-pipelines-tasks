@@ -12,20 +12,27 @@ $telemetryCodes =
   "PREREQ_NoWinRMHTTPSPort" = "PREREQ002";
   "PREREQ_NoResources" = "PREREQ003";
   "PREREQ_NoOutputVariableForSelectActionInAzureRG" = "PREREQ004";
-  "UNKNOWNPREDEP_Error" = "UNKNOWNPREDEP001";
-  "DEPLOYMENT_Failed" = "DEP001";
-  "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
-  "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
-  "UNKNOWNDEP_Error" = "UNKNOWNDEP_Error";
-  "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
-  "AZUREPLATFORM_UnknownGetRMVMError" = "AZUREPLATFORM_UnknownGetRMVMError";
-  "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
-  "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
-  "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";
   "PREREQ_InvalidServiceConnectionType" = "PREREQ_InvalidServiceConnectionType";
   "PREREQ_AzureRMModuleNotFound" = "PREREQ_AzureRMModuleNotFound";
   "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
+  "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
+  "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
+  "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
+
+  "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
+  "AZUREPLATFORM_UnknownGetRMVMError" = "AZUREPLATFORM_UnknownGetRMVMError";
+
+  "UNKNOWNPREDEP_Error" = "UNKNOWNPREDEP001";
+  "UNKNOWNDEP_Error" = "UNKNOWNDEP_Error";
+
+  "DEPLOYMENT_Failed" = "DEP001";
+  "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
+  "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";
+  
   "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed"
+
+  "FILTERING_IncorrectFormat" = "FILTERING_IncorrectFOrmat";
+  "FILTERING_NoVMResources" = "FILTERING_NoVMResources";
  }
 
 function Write-Telemetry
