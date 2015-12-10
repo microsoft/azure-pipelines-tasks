@@ -18,6 +18,7 @@ $telemetryCodes =
   "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
   "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
   "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
+  "PREREQ_NoRGOrVMResources" = "PREREQ_NoRGOrVMResources"
 
   "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
   "AZUREPLATFORM_UnknownGetRMVMError" = "AZUREPLATFORM_UnknownGetRMVMError";

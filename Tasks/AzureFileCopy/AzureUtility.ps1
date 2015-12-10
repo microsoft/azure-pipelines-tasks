@@ -77,7 +77,7 @@ function Initialize-GlobalMaps
     Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
 }
 
-function Does-AzureResourceMatchesFilterCriteria
+function Does-AzureResourceMatchFilterCriteria
 {
     param([object]$azureVMResource,
           [string]$resourceFilteringMethod,
@@ -143,7 +143,7 @@ function Get-FilteredAzureClassicVMsInResourceGroup
     {
         foreach($azureClassicVMResource in $allAzureClassicVMResources)
         {
-            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureClassicVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            if(Does-AzureResourceMatchFilterCriteria -azureVMResource $azureClassicVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
             {
                 Write-Verbose -Verbose "azureClassicVM with name: $($azureClassicVMResource.Name) matches filter criteria"
                 $azureClassicVMResources += $azureClassicVMResource
@@ -168,7 +168,7 @@ function Get-FilteredAzureRMVMsInResourceGroup
     {
         foreach($azureRMVMResource in $allAzureRMVMResources)
         {
-            if(Does-AzureResourceMatchesFilterCriteria -azureVMResource $azureRMVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            if(Does-AzureResourceMatchFilterCriteria -azureVMResource $azureRMVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
             {
                 Write-Verbose -Verbose "azureRMVM with name: $($azureRMVMResource.Name) matches filter criteria"
                 $azureRMVMResources += $azureRMVMResource
@@ -204,7 +204,7 @@ function Get-AzureRMVMsInResourceGroup
     catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException], [System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
     {
         Write-Verbose $_.Exception.Message -Verbose
-        Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
+        Write-TaskSpecificTelemetry "PREREQ_NoRGOrVMResources"
         throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $resourceGroupName)
     }
     catch
