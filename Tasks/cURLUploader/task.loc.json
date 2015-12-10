@@ -80,7 +80,10 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\cURLUploader.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
     },
     "Node": {
       "target": "cURLUploader.js",
