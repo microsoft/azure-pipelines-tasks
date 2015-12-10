@@ -226,7 +226,7 @@ try
             else
             {
                 Write-TaskSpecificTelemetry "FILTERING_NoVMResources"
-                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy matching '$resourceFilteringMethod' based filtering with filters: '$machineNames'" -ArgumentList $environmentName)
+                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy matching '{1}' based filtering with filters '{2}'" -ArgumentList $environmentName, $resourceFilteringMethod, $machineNames)
             }
         }
 

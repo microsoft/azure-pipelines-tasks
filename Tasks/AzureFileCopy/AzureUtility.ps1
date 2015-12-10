@@ -104,20 +104,30 @@ function Does-AzureResourceMatchesFilterCriteria
         {
             $tagKeyValue = $tag.Split(':').Trim()
             $tagKey =  $tagKeyValue[0]
-            $tagValue = $tagKeyValue[1]
+            $tagValues = $tagKeyValue[1]
 
-            if($tagKeyValue.Length -ne 2 -or [string]::IsNullOrWhiteSpace($tagKey) -or [string]::IsNullOrWhiteSpace($tagValue))
+            if($tagKeyValue.Length -ne 2 -or [string]::IsNullOrWhiteSpace($tagKey) -or [string]::IsNullOrWhiteSpace($tagValues))
             {
                 Write-TaskSpecificTelemetry "FILTERING_IncorrectFormat"
-                throw (Get-LocalizedString -Key 'Please have the tags in this format Tag1:TagValue1;Tag2:TagValue2;Tag3:TagValue3')
+                throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
             }
 
-            if($azureVMResource.Tags.Keys.Contains($tagKey) -and $azureVMResource.Tags[$tagKey] -eq $tagValue)
+            $tagValueArray = $tagValues.Split(',').Trim()
+            if($azureVMResource.Tags.Keys.Contains($tagKey))
             {
-                return $true
+                $azureVMTagValueArray = $azureVMResource.Tags[$tagKey].Split(",").Trim()
+                foreach($tagValue in $tagValueArray)
+                {
+                    if($azureVMTagValueArray -contains $tagValue)
+                    {
+                        return $true
+                    }
+                }
             }
         }
     }
+
+    return $false
 }
 
 function Get-FilteredAzureClassicVMsInResourceGroup
