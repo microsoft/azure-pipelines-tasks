@@ -1,4 +1,4 @@
-var tl = require('vso-task-lib');
+var tl = require('vso-task-lib/vsotask');
 var path = require('path');
 
 // Define error handler
@@ -52,7 +52,7 @@ if (!curlPath) {
 }
 
 // Prepare curl upload command line
-var curlRunner = new tl.ToolRunner('curl');
+var curlRunner = tl.createToolRunner('curl');
 
 // Resolve files for the specified value or pattern
 if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
