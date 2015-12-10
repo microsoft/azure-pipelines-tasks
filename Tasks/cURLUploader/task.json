@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1 
+        "Patch": 2 
     },
     "demands": [
         "curl"
@@ -77,8 +77,7 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\cURLUploader.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": ["windows"]
+            "workingDirectory": "$(currentDirectory)"
         },
         "Node": {
             "target": "cURLUploader.js",

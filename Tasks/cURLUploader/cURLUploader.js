@@ -51,15 +51,18 @@ if (!curlPath) {
     onError('curl was not found in the path.');
 }
 
+// Prepare curl upload command line
+var curlRunner = new tl.ToolRunner('curl');
+
 // Resolve files for the specified value or pattern
 if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
     // No pattern found, check literal path to a single file
-    tl._checkPath(filesPattern);
+    tl.checkPath(filesPattern);
 
     // Use the specified single file
     var uploadFiles = filesPattern;
-}
-else {
+
+} else {
     // Find app files matching the specified pattern
     tl.debug('Matching glob pattern: ' + filesPattern);
 
@@ -81,16 +84,20 @@ else {
         onError('No matching files were found with search pattern: ' + filesPattern);
     }
 
-    var uploadFiles = '{"' + uploadFilesList.join('","') + '"}'
+    var uploadFiles = '{' + uploadFilesList.join(',') + '}'
 }
-tl.debug("upload files: " + uploadFiles);
+tl.debug("uploading file(s): " + uploadFiles);
 
+curlRunner.arg('-T')
+// arrayify the arg so vso-task-lib does not try to break args at space
+// this is required for any file input that could potentially contain spaces
+curlRunner.arg([uploadFiles]);
 
-// Prepare curl upload command line
-var curlRunner = new tl.ToolRunner('curl');
+curlRunner.arg(url);
 
 if (redirectStderr === 'true') {
-    curlRunner.arg('--stderr -');
+    curlRunner.arg('--stderr');
+    curlRunner.arg('-');
 }
 
 if (options) {
@@ -100,23 +107,18 @@ if (options) {
 if (username || password) {
     var userPassCombo = "";
     if (username) {
-        userPassCombo += '"' + username + '"';
+        userPassCombo += username;
     }
 
     userPassCombo += ":";
 
     if (password) {
-        userPassCombo += '"' + password + '"';
+        userPassCombo += password;
     }
 
     curlRunner.arg('-u');
     curlRunner.arg(userPassCombo);
 }
-
-curlRunner.arg('-T')
-curlRunner.arg(uploadFiles);
-
-curlRunner.arg(url);
 
 // Execute build
 curlRunner.exec()
