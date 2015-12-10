@@ -13,6 +13,9 @@
     [string]$jdkVersion,
     [string]$jdkArchitecture,
     [string]$jdkUserInputPath, 
+    [string]$mavenVersionSelection,
+    [string]$mavenPath,
+    [string]$mavenSetM2Home,
     [string]$sqAnalysisEnabled, 
     [string]$sqConnectedServiceName, 
     [string]$sqDbDetailsRequired,
@@ -24,6 +27,30 @@
 Function CmdletHasMember($memberName) {
     $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
     return $publishParameters
+}
+
+Function GetMavenToolPath() {
+	if(!$mavenPath -or -not (Test-Path $mavenPath))
+	{
+		throw "Maven path not specified or does not exist"
+	}
+	# The Maven bin path should contain either mvn.cmd (Maven 3) or mvn.bat (Maven 2)
+	$toolPath = gci -Path "$mavenPath" -Filter "mvn.cmd" -Recurse | select -First 1
+	if(!$toolPath)
+	{
+		$toolPath = gci -Path "$mavenPath" -Filter "mvn.bat" -Recurse | select -First 1
+	}
+	if(!$toolPath)
+	{
+		throw "Path $mavenPath does not contain a Maven installation"
+	}
+	Write-Host "Using Maven executable at $($toolPath.FullName)"
+	if($mavenSetM2Home -eq $true)
+	{
+		$env:M2_HOME = $mavenPath
+		Write-Host "M2_HOME set to $mavenPath"
+	}
+	return $toolPath.FullName
 }
 
 Write-Verbose 'Entering Maven.ps1'
@@ -46,6 +73,10 @@ Write-Verbose "javaHomeSelection = $javaHomeSelection"
 Write-Verbose "jdkVersion = $jdkVersion"
 Write-Verbose "jdkArchitecture = $jdkArchitecture"
 Write-Verbose "jdkUserInputPath = $jdkUserInputPath"
+
+Write-Verbose "mavenVersionSelection = $mavenVersionSelection"
+Write-Verbose "mavenPath = $mavenPath"
+Write-Verbose "mavenSetM2Home = $mavenSetM2Home"
 
 Write-Verbose "sqAnalysisEnabled = $sqAnalysisEnabled"
 Write-Verbose "connectedServiceName = $sqConnectedServiceName"
@@ -103,7 +134,15 @@ ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
 
 # Invoke MVN
 Write-Host "Running Maven..."
-Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
+if($mavenVersionSelection -eq "Default")
+{
+	Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
+}
+else
+{
+	$mavenToolPath = GetMavenToolPath
+	Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals -ToolPath $mavenToolPath
+}
 
 # Publish test results
 $runTitleMemberExists = CmdletHasMember "RunTitle"
