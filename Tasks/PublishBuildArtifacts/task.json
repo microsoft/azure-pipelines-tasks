@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [
   ],
@@ -58,6 +58,11 @@
   ],
   "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "execution": {    
+    "PowerShell": {
+      "target": "$(currentDirectory)\\PublishBuildArtifacts.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    },
     "Node": {
       "target": "publishBuildArtifacts.js",
       "argumentFormat": ""            
