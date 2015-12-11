@@ -33,6 +33,7 @@ $telemetryCodes =
 
   "FILTERING_IncorrectFormat" = "FILTERING_IncorrectFOrmat";
   "FILTERING_NoVMResources" = "FILTERING_NoVMResources";
+  "FILTERING_VMResourcesNotPresentInRG" = "FILTERING_VMResourcesNotPresentInRG"
  }
 
 function Write-Telemetry

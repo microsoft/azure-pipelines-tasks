@@ -77,7 +77,7 @@ function Initialize-GlobalMaps
     Set-Variable -Name winRmHttpsPortMap -Value $winRmHttpsPortMap -Scope "Global"
 }
 
-function Does-AzureResourceMatchFilterCriteria
+function Does-AzureVMMatchFilterCriteria
 {
     param([object]$azureVMResource,
           [string]$resourceFilteringMethod,
@@ -89,41 +89,30 @@ function Does-AzureResourceMatchFilterCriteria
         return $true
     }
 
-    # machine name based filtering
-    if($resourceFilteringMethod -eq "machineNames")
-    {        
-        $machineFilterArray = $filter.Split(',').Trim()
-        return ($machineFilterArray -contains $azureVMResource.Name)
-    }
-
-    # tag based filtering
-    if($resourceFilteringMethod -eq "tags")
+    $tagsFilterArray = $filter.Split(';').Trim()
+    foreach($tag in $tagsFilterArray)
     {
-        $tagsFilterArray = $filter.Split(';').Trim()
-        foreach($tag in $tagsFilterArray)
+        $tagKeyValue = $tag.Split(':').Trim()
+        $tagKey =  $tagKeyValue[0]
+        $tagValues = $tagKeyValue[1]
+
+        if($tagKeyValue.Length -ne 2 -or [string]::IsNullOrWhiteSpace($tagKey) -or [string]::IsNullOrWhiteSpace($tagValues))
         {
-            $tagKeyValue = $tag.Split(':').Trim()
-            $tagKey =  $tagKeyValue[0]
-            $tagValues = $tagKeyValue[1]
+            Write-TaskSpecificTelemetry "FILTERING_IncorrectFormat"
+            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+        }
 
-            if($tagKeyValue.Length -ne 2 -or [string]::IsNullOrWhiteSpace($tagKey) -or [string]::IsNullOrWhiteSpace($tagValues))
-            {
-                Write-TaskSpecificTelemetry "FILTERING_IncorrectFormat"
-                throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
-            }
-
-            $tagValueArray = $tagValues.Split(',').Trim()
-            foreach($azureVMResourceTag in $azureVMResource.Tags.GetEnumerator())
-            {
-                if($azureVMResourceTag.Key -contains $tagKey)
-                {                    
-                    $azureVMTagValueArray = $azureVMResourceTag.Value.Split(",").Trim()
-                    foreach($tagValue in $tagValueArray)
+        $tagValueArray = $tagValues.Split(',').Trim()
+        foreach($azureVMResourceTag in $azureVMResource.Tags.GetEnumerator())
+        {
+            if($azureVMResourceTag.Key -contains $tagKey)
+            {                    
+                $azureVMTagValueArray = $azureVMResourceTag.Value.Split(",").Trim()
+                foreach($tagValue in $tagValueArray)
+                {
+                    if($azureVMTagValueArray -contains $tagValue)
                     {
-                        if($azureVMTagValueArray -contains $tagValue)
-                        {
-                            return $true
-                        }
+                        return $true
                     }
                 }
             }
@@ -133,6 +122,75 @@ function Does-AzureResourceMatchFilterCriteria
     return $false
 }
 
+function Get-TagBasedFilteredAzureVMs
+{
+    param([object]$azureVMResources,
+          [string]$filter)
+
+    $filteredAzureVMResources = @()
+    if($azureVMResources)
+    {
+        foreach($azureVMResource in $azureVMResources)
+        {
+            if(Does-AzureVMMatchFilterCriteria -azureVMResource $azureVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            {
+                Write-Verbose -Verbose "azureVM with name: $($azureVMResource.Name) matches filter criteria"
+                $filteredAzureVMResources += $azureVMResource
+            }
+        }
+    }
+
+    return $filteredAzureVMResources
+}
+
+function Get-MachineBasedFilteredAzureVMs
+{
+    param([object]$azureVMResources,
+          [string]$filter)
+
+    $filteredAzureVMResources = @()
+    
+    $machineFilterArray = $filter.Split(',').Trim()
+    foreach($machine in $machineFilterArray)
+    {
+        $azureVMResource = $azureVMResources | Where-Object {$_.Name -contains $machine}
+        if($azureVMResource)
+        {
+            $filteredAzureVMResources += $azureVMResource
+        }
+        else
+        {
+            $commaSeparatedMachinesNotPresentInRG += ($(if($commaSeparatedMachinesNotPresentInRG){", "}) + $machine)
+        }
+    }
+
+    if($commaSeparatedMachinesNotPresentInRG -ne $null)
+    {
+        Write-TaskSpecificTelemetry "FILTERING_VMResourcesNotPresentInRG"
+        throw (Get-LocalizedString -Key "Unable to find the following machines in the resource group : {0}. Provide the exact same machine name present in the resource group. Use comma to separate multiple machine names." -ArgumentList $commaSeparatedMachinesNotPresentInRG)
+    }
+
+    return $filteredAzureVMResources
+}
+
+function Get-FilteredAzureVMsInResourceGroup
+{
+    param([object]$azureVMResources,
+          [string]$resourceFilteringMethod,
+          [string]$filter)
+
+    if($resourceFilteringMethod -eq "tags" -or [string]::IsNullOrEmpty($filter))
+    {
+        $filteredAzureVMResources = Get-TagBasedFilteredAzureVMs -azureVMResources $azureVMResources -filter $filter
+    }
+    else
+    {
+        $filteredAzureVMResources = Get-MachineBasedFilteredAzureVMs -azureVMResources $azureVMResources -filter $filter
+    }
+
+    return $filteredAzureVMResources
+}
+
 function Get-FilteredAzureClassicVMsInResourceGroup
 {
     param([object]$allAzureClassicVMResources,
@@ -140,19 +198,7 @@ function Get-FilteredAzureClassicVMsInResourceGroup
           [string]$filter)
     
     Write-Verbose -Verbose "Filtering azureClassicVM resources with filtering option:'$resourceFilteringMethod' and filters:'$filter'"
-
-    $azureClassicVMResources = @()
-    if($allAzureClassicVMResources)
-    {
-        foreach($azureClassicVMResource in $allAzureClassicVMResources)
-        {
-            if(Does-AzureResourceMatchFilterCriteria -azureVMResource $azureClassicVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
-            {
-                Write-Verbose -Verbose "azureClassicVM with name: $($azureClassicVMResource.Name) matches filter criteria"
-                $azureClassicVMResources += $azureClassicVMResource
-            }
-        }
-    }
+    $azureClassicVMResources = Get-FilteredAzureVMsInResourceGroup -azureVMResources $allAzureClassicVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $filter
 
     Set-Variable -Name azureClassicVMResources -Value $azureClassicVMResources -Scope "Global"
     return $azureClassicVMResources
@@ -165,19 +211,7 @@ function Get-FilteredAzureRMVMsInResourceGroup
           [string]$filter)
 
     Write-Verbose -Verbose "Filtering azureRMVM resources with filtering option:$resourceFilteringMethod and filters:$filter"
-
-    $azureRMVMResources = @()
-    if($allAzureRMVMResources)
-    {
-        foreach($azureRMVMResource in $allAzureRMVMResources)
-        {
-            if(Does-AzureResourceMatchFilterCriteria -azureVMResource $azureRMVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
-            {
-                Write-Verbose -Verbose "azureRMVM with name: $($azureRMVMResource.Name) matches filter criteria"
-                $azureRMVMResources += $azureRMVMResource
-            }
-        }   
-    }
+    $azureRMVMResources = Get-FilteredAzureVMsInResourceGroup -azureVMResources $allAzureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $filter
 
     Set-Variable -Name azureRMVMResources -Value $azureRMVMResources -Scope "Global"
     return $azureRMVMResources
