@@ -149,25 +149,27 @@ function Get-MachineBasedFilteredAzureVMs
           [string]$filter)
 
     $filteredAzureVMResources = @()
-    
-    $machineFilterArray = $filter.Split(',').Trim()
-    foreach($machine in $machineFilterArray)
+    if($azureVMResources)
     {
-        $azureVMResource = $azureVMResources | Where-Object {$_.Name -contains $machine}
-        if($azureVMResource)
+        $machineFilterArray = $filter.Split(',').Trim()
+        foreach($machine in $machineFilterArray)
         {
-            $filteredAzureVMResources += $azureVMResource
+            $azureVMResource = $azureVMResources | Where-Object {$_.Name -contains $machine}
+            if($azureVMResource)
+            {
+                $filteredAzureVMResources += $azureVMResource
+            }
+            else
+            {
+                $commaSeparatedMachinesNotPresentInRG += ($(if($commaSeparatedMachinesNotPresentInRG){", "}) + $machine)
+            }
         }
-        else
-        {
-            $commaSeparatedMachinesNotPresentInRG += ($(if($commaSeparatedMachinesNotPresentInRG){", "}) + $machine)
-        }
-    }
 
-    if($commaSeparatedMachinesNotPresentInRG -ne $null)
-    {
-        Write-TaskSpecificTelemetry "FILTERING_VMResourcesNotPresentInRG"
-        throw (Get-LocalizedString -Key "Unable to find the following machines in the resource group : {0}. Provide the exact same machine name present in the resource group. Use comma to separate multiple machine names." -ArgumentList $commaSeparatedMachinesNotPresentInRG)
+        if($commaSeparatedMachinesNotPresentInRG -ne $null)
+        {
+            Write-TaskSpecificTelemetry "FILTERING_VMResourcesNotPresentInRG"
+            throw (Get-LocalizedString -Key "Unable to find the following machines in the resource group : {0}. Provide the exact same machine name present in the resource group. Use comma to separate multiple machine names." -ArgumentList $commaSeparatedMachinesNotPresentInRG)
+        }
     }
 
     return $filteredAzureVMResources
