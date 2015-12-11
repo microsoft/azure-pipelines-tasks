@@ -169,7 +169,7 @@ function Get-MachineBasedFilteredAzureVMs
 
         if($commaSeparatedMachinesNotPresentInRG -ne $null)
         {
-            Write-TaskSpecificTelemetry "FILTERING_VMResourcesNotPresentInRG"
+            Write-TaskSpecificTelemetry "FILTERING_MachinesNotPresentInRG"
             throw (Get-LocalizedString -Key "Unable to find the following machines in the resource group : {0}. Provide the exact same machine name present in the resource group. Use comma to separate multiple machine names." -ArgumentList $commaSeparatedMachinesNotPresentInRG)
         }
     }
