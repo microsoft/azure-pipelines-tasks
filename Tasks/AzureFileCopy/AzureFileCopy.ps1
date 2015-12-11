@@ -197,15 +197,11 @@ try
         Switch-AzureMode AzureServiceManagement
     }
 
-    $allAzureClassicVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $environmentName
-
     $machineNames = $machineNames.Trim()
-    # getting classic resources only for machine based filtering, as tags are not supported for classic resources
-    if($resourceFilteringMethod -eq "machineNames" -or [string]::IsNullOrEmpty($machineNames))
-    {
-        $azureVMResources = Get-FilteredAzureClassicVMsInResourceGroup -allAzureClassicVMResources $allAzureClassicVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
-        Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName 
-    }
+
+    $allAzureClassicVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $environmentName
+    $azureVMResources = Get-FilteredAzureClassicVMsInResourceGroup -allAzureClassicVMResources $allAzureClassicVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
+    Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName 
 
     # Fallbacking on RM resources if authentication is not Cert
     $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
@@ -215,6 +211,7 @@ try
     {
         if($isAuthenticationTypeCertificate -eq $false)
         {
+            Write-Verbose "Trying to find RM resources since there are no classic resources in resource group: $environmentName" -Verbose
             if($isSwitchAzureModeRequired)
             {
                 Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose

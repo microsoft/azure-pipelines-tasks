@@ -103,16 +103,20 @@ function Does-AzureVMMatchFilterCriteria
         }
 
         $tagValueArray = $tagValues.Split(',').Trim()
-        foreach($azureVMResourceTag in $azureVMResource.Tags.GetEnumerator())
+
+        if($azureVMResource.Tags)
         {
-            if($azureVMResourceTag.Key -contains $tagKey)
-            {                    
-                $azureVMTagValueArray = $azureVMResourceTag.Value.Split(",").Trim()
-                foreach($tagValue in $tagValueArray)
-                {
-                    if($azureVMTagValueArray -contains $tagValue)
+            foreach($azureVMResourceTag in $azureVMResource.Tags.GetEnumerator())
+            {
+                if($azureVMResourceTag.Key -contains $tagKey)
+                {                    
+                    $azureVMTagValueArray = $azureVMResourceTag.Value.Split(",").Trim()
+                    foreach($tagValue in $tagValueArray)
                     {
-                        return $true
+                        if($azureVMTagValueArray -contains $tagValue)
+                        {
+                            return $true
+                        }
                     }
                 }
             }
