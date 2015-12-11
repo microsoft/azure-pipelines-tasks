@@ -152,6 +152,8 @@ function Get-MachineBasedFilteredAzureVMs
     if($azureVMResources)
     {
         $machineFilterArray = $filter.Split(',').Trim()
+        $machineFilterArray = $machineFilterArray | % {$_.ToLower()} | Select -Uniq
+
         foreach($machine in $machineFilterArray)
         {
             $azureVMResource = $azureVMResources | Where-Object {$_.Name -contains $machine}
