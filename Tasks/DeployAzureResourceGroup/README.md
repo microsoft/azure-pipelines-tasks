@@ -31,9 +31,14 @@ The task needs the Azure PowerShell version 0.9.0 or later to be installed on th
 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task:
 
- * **Azure Subscription***: Select the Azure Subscription where the Resource Group will be created/updated, or where the resource group is located for starting/stopping/restarting/deleting virtual machines in it, or for deleting the resource group. This is a drop down of the Azure service connections that have been added in the Services tab and only shows the connections that have been created using the Service Principal or the credentials.
- * **Action***: Select the action to be performed on the resource group. The options are to create a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)). Other actions are to start, restart, stop, or delete virtual machines in a resource group, or to delete a resource group and all resources in it.
- * **Resource Group***: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
+ * **Azure Subscription**\*: Select the Azure Subscription where the Resource Group will be created/updated, or where the resource group is located for starting/stopping/restarting/deleting virtual machines in it, or for deleting the resource group. This is a drop down of the Azure service connections that have been added in the Services tab and only shows the connections that have been created using the Service Principal or the credentials.
+ * **Action**\*: Select the action to be performed on the resource group. Following actions are available:
+
+    - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
+    - Select Resource Group: reads the Resource Group information from Azure and creates an Output Variable with the VMs in the Resource Group. Read more about Output Variables [here](#output-variables).
+    - Start, Stop, Restart, Delete Virtual Machines
+    - Delete Resource Group
+ * **Resource Group**\*: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
 
 The following parameters are shown when the selected action is to create or update a resource group:
 
