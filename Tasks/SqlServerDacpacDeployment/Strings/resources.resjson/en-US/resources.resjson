@@ -14,7 +14,7 @@
   "loc.input.label.AdminUserName": "Admin Login",
   "loc.input.help.AdminUserName": "Administrator login for the target machines.",
   "loc.input.label.AdminPassword": "Password",
-  "loc.input.help.AdminPassword": "Administrator password for the target machines.",
+  "loc.input.help.AdminPassword": "Administrator password for the target machines.<br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it. ",
   "loc.input.label.Protocol": "Protocol",
   "loc.input.help.Protocol": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
   "loc.input.label.TestCertificate": "Test Certificate",
