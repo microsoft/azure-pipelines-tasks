@@ -66,7 +66,7 @@ The parameters of the task are described in details, including examples, to show
 
  * **Select Machines By**: The parameter is used to copy the files to a subset of VMs and the subset can be specified by the hostname of the VMs or the tags on them. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.
 
- * **Filter Criteria**: If copying to a subset of VMs provide a comma separated list of the VMs hostname like ffweb, ffdb1, ffdb2, else if using tags then provide the tags in the format Role:Web, DB; OS:win7. The default is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44; &#58; &#59;
+ * **Filter Criteria**: If copying to a subset of VMs provide a comma separated list of the VMs hostname like ffweb, ffdb1, ffdb2, else if using tags then provide the tags in the format Role:Web, DB; OS:win7. The default is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44;(comma) &#58;(colon) &#59;(semicolon)
 
  * **Admin Login**: Administrator Username for all the Azure VMs in the Resource Group.
 
@@ -90,9 +90,9 @@ The parameters of the task are described in details, including examples, to show
  * **Blob Destination** Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
  * **VM Destination** Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
 
- ### Known Limitations :
+### Known Limitations :
 
-If resource group contains both [resource manager]((https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/)) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
+If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/)) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
 
 ### Earlier Versions
 
