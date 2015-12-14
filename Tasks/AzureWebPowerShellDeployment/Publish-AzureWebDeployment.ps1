@@ -133,7 +133,7 @@ if($azureWebSite) {
         details = $buildUrl       
     })
     
-    $url = [string]::Format("https://{0}.scm.azurewebsites.net/deployments/{1}",$WebSiteName,$deploymentId)
+    $url = [string]::Format("https://{0}.scm.azurewebsites.net/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($WebSiteName),[System.Web.HttpUtility]::UrlEncode($deploymentId))
 
     Write-Verbose "Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
     Write-Host "Updating deployment status"
