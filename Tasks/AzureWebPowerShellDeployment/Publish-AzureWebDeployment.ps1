@@ -20,7 +20,8 @@ param
     $AdditionalArguments
 )
 
-# Import the Task.Common dll that has all the cmdlets we need for Build
+# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 function Get-SingleFile($files, $pattern)
@@ -47,9 +48,6 @@ Write-Host "Package= $Package"
 Write-Host "Slot= $Slot"
 Write-Host "AdditionalArguments= $AdditionalArguments"
 
-#Find the package to deploy
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-
 Write-Host "packageFile= Find-Files -SearchPattern $Package"
 $packageFile = Find-Files -SearchPattern $Package
 Write-Host "packageFile= $packageFile"
@@ -63,12 +61,12 @@ if($WebSiteLocation)
 {
     if ($Slot)
     {
-        Write-Host "Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue"
+        Write-Host "Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError"
         $azureWebSite = Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError
     }
     else
     {
-        Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue"
+        Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError"
         $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError
     }
     
@@ -95,14 +93,67 @@ if($WebSiteLocation)
 $azureCommand = "Publish-AzureWebsiteProject"
 if ($Slot)
 {
-    $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" -Slot `"$Slot`" $AdditionalArguments"
+    $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" -Slot `"$Slot`" $AdditionalArguments -ErrorVariable publishAzureWebsiteError"
 }
 else
 {
-    $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments"
+    $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments -ErrorVariable publishAzureWebSiteError"
 }
 $finalCommand = "$azureCommand $azureCommandArguments"
 Write-Host "$finalCommand"
 Invoke-Expression -Command $finalCommand
+
+#Update Deployment status - https://github.com/projectkudu/kudu/wiki/REST-API#deployment
+
+if($azureWebSite) {
+    
+    $status = 3 #failed
+    if(!$publishAzureWebsiteError) {
+        $status = 4 #succeeded
+    }
+
+    $username = $azureWebSite.PublishingUsername
+    $securePwd = ConvertTo-SecureString $azureWebSite.PublishingPassword -AsPlainText -Force
+    $credential = New-Object System.Management.Automation.PSCredential ($username, $securePwd)
+    
+    $author = Get-TaskVariable $distributedTaskContext "build.sourceVersionAuthor"
+    $deploymentId = Get-TaskVariable $distributedTaskContext "build.sourceVersion" #let's use commitId as unique deploymentId
+    $message = Get-TaskVariable $distributedTaskContext "build.sourceVersionMessage"
+    $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
+    
+    $collectionUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
+    $teamproject = "$env:SYSTEM_TEAMPROJECTID"
+    $buildUrl = [string]::Format("{0}/{1}/_build#buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildId)
+    
+    $body = ConvertTo-Json (New-Object -TypeName psobject -Property @{
+        status = $status
+        message = $message
+        author = $author
+        deployer = 'VSTS'
+        details = $buildUrl       
+    })
+    
+    $url = [string]::Format("https://{0}.scm.azurewebsites.net/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($WebSiteName),[System.Web.HttpUtility]::UrlEncode($deploymentId))
+
+    Write-Verbose "Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
+    Write-Host "Updating deployment status"
+    try {
+        Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType "application/json" -UserAgent "myuseragent"
+    } 
+    catch {
+        Write-Verbose $_.Exception.ToString()        
+        $response = $_.Exception.Response
+        $responseStream =  $response.GetResponseStream()
+        $streamReader = New-Object System.IO.StreamReader($responseStream)
+        $streamReader.BaseStream.Position = 0
+        $streamReader.DiscardBufferedData()
+        $responseBody = $streamReader.ReadToEnd()
+        $streamReader.Close()
+        Write-Warning "Cannot update deployment status for $WebSiteName - $responseBody"        
+    }
+}
+else {
+     Write-Warning "Cannot get azurewebsite, deployment status is not updated"
+}
 
 Write-Verbose "Leaving script Publish-AzureWebDeployment.ps1"
