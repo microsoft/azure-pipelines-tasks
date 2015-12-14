@@ -232,12 +232,12 @@ try
             elseif([string]::IsNullOrEmpty($machineNames) -or ($allAzureClassicVMResources.Count -eq 0 -and $allAzureRMVMResources.Count -eq 0))
             {
                 Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
-                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
+                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy." -ArgumentList $environmentName)
             }
             else
             {
                 Write-TaskSpecificTelemetry "FILTERING_NoVMResources"
-                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy matching '{1}' based filtering with filters '{2}'" -ArgumentList $environmentName, $resourceFilteringMethod, $machineNames)
+                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' with the following {1} '{2}'." -ArgumentList $environmentName, $resourceFilteringMethod, $machineNames)
             }
         }
 

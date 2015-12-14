@@ -93,7 +93,7 @@
         "machineNames": "Machine Names",
         "tags": "Tags"
       },
-      "helpMarkDown": "Optionally, select a subset of virtual machines in resource group either by providing machine names or tags.",
+      "helpMarkDown": "Optionally, select a subset of VMs in resource group either by providing VMs hostname or tags.[Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
@@ -102,7 +102,7 @@
       "label": "Filter Criteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide a list of virtual machine's name like, ffweb, ffdb, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the virtual machines with the specified tags. The default is to run the task in all virtual machines.",
+      "helpMarkDown": "Provide a list of VMs hostname like ffweb, ffdb, or tags like Role:DB, Web; OS:Win8.1. Note the delimiters used for tags are &#44;,&#59; and &#59;. If multiple tags are provided, then the task will run in all the VMs with the specified tags. The default is to run the task in all the VMs.",
       "visibleRule": "Destination = AzureVMs"
     },
     {

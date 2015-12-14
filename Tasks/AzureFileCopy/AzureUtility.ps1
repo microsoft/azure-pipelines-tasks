@@ -99,7 +99,7 @@ function Does-AzureVMMatchFilterCriteria
         if($tagKeyValue.Length -ne 2 -or [string]::IsNullOrWhiteSpace($tagKey) -or [string]::IsNullOrWhiteSpace($tagValues))
         {
             Write-TaskSpecificTelemetry "FILTERING_IncorrectFormat"
-            throw (Get-LocalizedString -Key 'Please have the tags in this format Role:Web,Db;Tag2:TagValue2;Tag3:TagValue3')
+            throw (Get-LocalizedString -Key "Tags have been incorrectly specified. They have to be in the format Role:Web,DB;Location:East US;Dept.:Finance,HR")
         }
 
         $tagValueArray = $tagValues.Split(',').Trim()
@@ -174,7 +174,7 @@ function Get-MachineBasedFilteredAzureVMs
         if($commaSeparatedMachinesNotPresentInRG -ne $null)
         {
             Write-TaskSpecificTelemetry "FILTERING_MachinesNotPresentInRG"
-            throw (Get-LocalizedString -Key "Unable to find the following machines in the resource group : {0}. Provide the exact same machine name present in the resource group. Use comma to separate multiple machine names." -ArgumentList $commaSeparatedMachinesNotPresentInRG)
+            throw (Get-LocalizedString -Key "The following machines either do not exist in the resource group or their names have not been specified correctly: {0}. Provide the exact same machine names present in the resource group. Use comma to separate multiple machine names." -ArgumentList $commaSeparatedMachinesNotPresentInRG)
         }
     }
 
