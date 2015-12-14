@@ -24,6 +24,8 @@ param
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
+try { [system.web.httputility] } catch { add-type -AssemblyName system.web }
+
 function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
