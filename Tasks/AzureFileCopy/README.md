@@ -66,7 +66,7 @@ The parameters of the task are described in details, including examples, to show
 
  * **Select Machines By**: The parameter is used to copy the files to a subset of VMs and the subset can be specified by the hostname of the VMs or the tags on them. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.
 
- * **Filter Criteria**: If copying to a subset of VMs provide a comma separated list of the VMs hostname like ffweb, ffdb1, ffdb2, else if using tags then provide the tags in the format Role:Web, DB; OS:win7. The default is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44 &#59 &#59
+ * **Filter Criteria**: If copying to a subset of VMs provide a comma separated list of the VMs hostname like ffweb, ffdb1, ffdb2, else if using tags then provide the tags in the format Role:Web, DB; OS:win7. The default is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44; &#58; &#59;
 
  * **Admin Login**: Administrator Username for all the Azure VMs in the Resource Group.
 
