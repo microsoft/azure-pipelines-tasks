@@ -31,7 +31,7 @@ $telemetryCodes =
   "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";  
   "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed";
 
-  "FILTERING_IncorrectFormat" = "FILTERING_IncorrectFOrmat";
+  "FILTERING_IncorrectFormat" = "FILTERING_IncorrectFormat";
   "FILTERING_NoVMResources" = "FILTERING_NoVMResources";
   "FILTERING_MachinesNotPresentInRG" = "FILTERING_MachinesNotPresentInRG"
  }

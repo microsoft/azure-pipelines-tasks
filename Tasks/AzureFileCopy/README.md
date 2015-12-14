@@ -38,8 +38,8 @@ The task can copy files to the Azure Virtual Machines that are created either us
 
 | **Storage Account Type** | **Azure Service Connections in VSO/TFS** | **Azure Virtual Machines** |
 | --- | --- | --- |
-| [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts | The Azure Virtual machines created using the new azure portal |
-| [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Certificate or credentials based on work accounts | The Azure Virtual machines created using the classic azure portal |
+| [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) Azure Virtual machines |
+| [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Certificate or credentials based on work accounts | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) Azure Virtual machines |
 When copying the files from the blob container to the Azure VMs, Windows Remote Management (WinRM) HTTPS protocol is used. This requires that the WinRM HTTPS service is properly setup on the VMs and a certificate is also installed on the VMs.
 
 To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the deployment task.
@@ -64,9 +64,9 @@ The parameters of the task are described in details, including examples, to show
 
  * **Resource Group**: Name of the resource group that contains the Azure VMs.
 
- * **Select Machines By**: The parameter is used to copy the files to a subset of VMs and the subset can be specified by the hostname of the VMs or the tags on them. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.
+ * **Select Machines By**: The parameter is used to copy the files to a subset of VMs and the subset can be specified by the host name of the VMs or the tags on them. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.
 
- * **Filter Criteria**: If copying to a subset of VMs provide a comma separated list of the VMs hostname like ffweb, ffdb1, ffdb2, else if using tags then provide the tags in the format Role:Web, DB; OS:win7. The default is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon).
+ * **Filter Criteria**: If copying to a subset of VMs provide a comma separated list of the VMs host name like ffweb, ffdb1, ffdb2, else if using tags then provide the tags in the format Role:Web, DB; OS:win7. The default is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon).
 
  * **Admin Login**: Administrator Username for all the Azure VMs in the Resource Group.
 
