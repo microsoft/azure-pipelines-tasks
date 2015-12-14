@@ -34,12 +34,12 @@ The task needs the Azure PowerShell version 0.9.8.1 (released on 13th Oct 2015) 
 
 **Azure Virtual Machines**
 
-The task can only copy files to the Azure Virtual Machines that are created using the [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) APIs or through the [new Azure portal](https://portal.azure.com/). For copying the files to VMs, they are first copied to an automatically generated container in the  Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs. The valid combination of Azure service connections and storage accounts for copying to a Azure is as given below:
+The task can copy files to the Azure Virtual Machines that are created either using the [new azure portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) or through the [azure classic portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/). For copying the files to VMs, they are first copied to an automatically generated container in the  Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs. The valid combination of Azure service connections and storage accounts for copying to a Azure is as given below:
 
 | **Storage Account Type** | **Azure Service Connections in VSO/TFS** | **Azure Virtual Machines** |
 | --- | --- | --- |
-| [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts | The Azure Virtual machines created using the Resource Manager APIs |
-
+| [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) Azure Virtual machines |
+| [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Certificate or credentials based on work accounts | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) Azure Virtual machines |
 When copying the files from the blob container to the Azure VMs, Windows Remote Management (WinRM) HTTPS protocol is used. This requires that the WinRM HTTPS service is properly setup on the VMs and a certificate is also installed on the VMs.
 
 To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the deployment task.
@@ -62,7 +62,11 @@ The parameters of the task are described in details, including examples, to show
 
 * **Destination**: The target for copying the files and is either an Azure blob or VMs. The section below details the parameters that need to be filled-out if the target is Azure VMs. 
 
- * **Resource Group**: Name of the resource group that contains the Azure VMs. 
+ * **Resource Group**: Name of the resource group that contains the Azure VMs.
+
+ * **Select Machines By**: The parameter is used to copy the files to a subset of VMs and the subset can be specified by the host name of the VMs or the tags on them. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.
+
+ * **Filter Criteria**: If you are copying to a subset of VMs using machine names filter, you can provide a comma separated list of the VM host names for example, ffweb, ffdb1, ffdb2. If you are using tags then you can specify tags in the format “<Key1>:<Value1>, <Key2>:<Value2>” for example, role:web, db; OS:win7. The default behaviour is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon).
 
  * **Admin Login**: Administrator Username for all the Azure VMs in the Resource Group.
 
@@ -82,9 +86,13 @@ The parameters of the task are described in details, including examples, to show
 
  * **Blob Prefix**: A prefix for the Blobs that can be used to filter the blobs like appending the Build number to the blobs, so that all the blobs with the same build number can be downloaded from the Container.
 
-### Known Issues :
+* **Additional Arguments**: Additional [AzCopy.exe](https://azure.microsoft.com/en-us/documentation/articles/storage-use-azcopy/) arguments that will be applied for uploading to blob and same will be applied for downloading while copy to VM.
+ * **Blob Destination** Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
+ * **VM Destination** Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
 
-The task can only copy files to the Azure Virtual Machines that are created using the resource manager APIs or through the new Azure portal. The copy to Azure VMs does not work with VMs created using the classic APIs.
+### Known Limitations :
+
+If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
 
 ### Earlier Versions
 
@@ -93,4 +101,3 @@ If you want to work with earlier version of this task, please refer README.cmd p
 ### Supported Azure and AzureRM module versions:
 * Azure module version: [0.9.10](http://www.powershellgallery.com/packages/Azure/0.9.10)
 * AzureRM module version: [1.0.0](http://www.powershellgallery.com/packages/AzureRM/1.0.0)
- 
