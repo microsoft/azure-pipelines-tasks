@@ -98,7 +98,7 @@
       "label": "Password",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Administrator Password of the VMs.",
+      "helpMarkDown": "Administrator Password of the VMs. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.",
       "visibleRule": "Destination = AzureVMs"
     },
     {
