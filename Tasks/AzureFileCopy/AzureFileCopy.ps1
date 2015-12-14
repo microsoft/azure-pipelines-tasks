@@ -190,29 +190,55 @@ $envOperationStatus = 'Passed'
 try
 {
     Initialize-GlobalMaps
-    
+
     if($isSwitchAzureModeRequired)
     {
         Write-Verbose "Switching Azure mode to AzureServiceManagement" -Verbose
         Switch-AzureMode AzureServiceManagement
     }
 
-    $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $environmentName
-    Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName
-    
+    $machineNames = $machineNames.Trim()
+
+    $allAzureClassicVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $environmentName
+    $azureVMResources = Get-FilteredAzureClassicVMsInResourceGroup -allAzureClassicVMResources $allAzureClassicVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
+    Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName 
+
+    # Fallbacking on RM resources if authentication is not Cert
+    $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
+    $isAuthenticationTypeCertificate = $serviceEndpoint.Authorization.Scheme -eq "Certificate"
+
     if($azureVMResources.Count -eq 0)
     {
-        if($isSwitchAzureModeRequired)
+        if($isAuthenticationTypeCertificate -eq $false)
         {
-            Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
-            Switch-AzureMode AzureResourceManager
-        }
+            Write-Verbose "Trying to find RM resources since there are no classic resources in resource group: $environmentName" -Verbose
+            if($isSwitchAzureModeRequired)
+            {
+                Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
+                Switch-AzureMode AzureResourceManager
+            }
 
-        $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $environmentName
-        if ($azureVMResources.Count -eq 0)
+            $allAzureRMVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $environmentName
+            $azureVMResources = Get-FilteredAzureRMVMsInResourceGroup -allAzureRMVMResources $allAzureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
+        }
+        
+        if($azureVMResources.Count -eq 0)
         {
-            Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
-            throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy" -ArgumentList $environmentName)
+            if($isAuthenticationTypeCertificate -and $allAzureClassicVMResources.Count -eq 0)
+            {
+                Write-TaskSpecificTelemetry "PREREQ_NoRGOrVMResources"
+                throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $environmentName)
+            }
+            elseif([string]::IsNullOrEmpty($machineNames) -or ($allAzureClassicVMResources.Count -eq 0 -and $allAzureRMVMResources.Count -eq 0))
+            {
+                Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
+                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy." -ArgumentList $environmentName)
+            }
+            else
+            {
+                Write-TaskSpecificTelemetry "FILTERING_NoVMResources"
+                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' with the following {1} '{2}'." -ArgumentList $environmentName, $resourceFilteringMethod, $machineNames)
+            }
         }
 
         Get-MachineConnectionInformationForRMVms -resourceGroupName $environmentName
