@@ -11,11 +11,11 @@ var artifactType = tl.getInput('ArtifactType');
 var targetPath = tl.getInput('TargetPath');
 if (!artifactName) {
     // nothing to do
-    tl.warning('Artifact name is not specified.');
+    tl.warning(tl.loc('ArtifactNameNotSpecified', 'Artifact name is not specified.'));
 }
 else if (!artifactType) {
     // nothing to do
-    tl.warning('Artifact type is not specified.');
+    tl.warning(tl.loc('ArtifactTypeNotSpecified', 'Artifact type is not specified.'));
 }
 else {
     artifactType = artifactType.toLowerCase();

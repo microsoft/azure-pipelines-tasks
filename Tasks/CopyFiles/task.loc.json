@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -76,5 +76,11 @@
       "target": "copyFiles.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
+    "CleaningTargetFolder": "ms-resource:loc.messages.CleaningTargetFolder",
+    "FileAlreadyExistAt": "ms-resource:loc.messages.FileAlreadyExistAt",
+    "CopyingTo": "ms-resource:loc.messages.CopyingTo"
   }
 }

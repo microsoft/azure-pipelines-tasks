@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 21
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -64,5 +64,9 @@
       "target": "publishBuildArtifacts.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "ArtifactNameNotSpecified": "ms-resource:loc.messages.ArtifactNameNotSpecified",
+    "ArtifactTypeNotSpecified": "ms-resource:loc.messages.ArtifactTypeNotSpecified"
   }
 }

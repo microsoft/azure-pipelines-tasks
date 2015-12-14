@@ -91,7 +91,9 @@ export function exit(code: number): void {
 export function getVariable(name: string): string {
     var varval = process.env[name.replace(/\./g, '_').toUpperCase()];
     debug(name + '=' + varval);
-    return varval;
+
+    var mocked =  mock.getResponse('getVariable', name);
+    return mocked || varval;
 }
 
 export function setVariable(name: string, val: string): void {
@@ -335,7 +337,7 @@ export function globFirst(pattern: string): string {
 //-----------------------------------------------------
 export function exec(tool: string, args:any, options?:trm.IExecOptions): Q.Promise<number> {
     var toolPath = which(tool, true);
-    var tr: trm.ToolRunner = new trm.ToolRunner(toolPath);
+    var tr: trm.ToolRunner = createToolRunner(toolPath);
     if (args) {
         tr.arg(args);
     }
@@ -344,12 +346,21 @@ export function exec(tool: string, args:any, options?:trm.IExecOptions): Q.Promi
 
 export function execSync(tool: string, args:any, options?:trm.IExecOptions): trm.IExecResult {
     var toolPath = which(tool, true);
-    var tr: trm.ToolRunner = new trm.ToolRunner(toolPath);
+    var tr: trm.ToolRunner = createToolRunner(toolPath);
     if (args) {
         tr.arg(args);
     }
         
     return tr.execSync(options);    
+}
+
+export function createToolRunner(tool: string) {
+    var tr: trm.ToolRunner = new trm.ToolRunner(tool);
+    tr.on('debug', (message: string) => {
+        debug(message);
+    })
+
+    return tr;
 }
 
 //-----------------------------------------------------

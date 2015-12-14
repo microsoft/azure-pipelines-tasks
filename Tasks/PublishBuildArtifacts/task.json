@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 21
   },
   "demands": [
   ],
@@ -62,5 +62,9 @@
       "target": "publishBuildArtifacts.js",
       "argumentFormat": ""            
     }
+  },
+  "messages": {
+    "ArtifactNameNotSpecified" : "Artifact name is not specified.",
+    "ArtifactTypeNotSpecified" : "Artifact type is not specified."
   }
 }

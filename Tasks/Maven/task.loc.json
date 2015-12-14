@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 26
+    "Patch": 27
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -191,6 +191,39 @@
         "x86": "x86",
         "x64": "x64"
       }
+    },
+    {
+      "name": "mavenVersionSelection",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.mavenVersionSelection",
+      "defaultValue": "Default",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenVersionSelection",
+      "options": {
+        "Default": "Default",
+        "Path": "Custom Path"
+      }
+    },
+    {
+      "name": "mavenPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.mavenPath",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenPath",
+      "visibleRule": "mavenVersionSelection = Path"
+    },
+    {
+      "name": "mavenSetM2Home",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mavenSetM2Home",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenSetM2Home",
+      "visibleRule": "mavenVersionSelection = Path"
     },
     {
       "name": "sqAnalysisEnabled",

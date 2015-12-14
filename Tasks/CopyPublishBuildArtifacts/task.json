@@ -73,7 +73,7 @@
       "platforms" : ["windows"]
     },
     "Node": {
-      "target": "copyPublishBuildArtifacts.js",
+      "target": "CopyPublishBuildArtifacts.js",
       "argumentFormat": ""            
     }
   }

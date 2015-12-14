@@ -5,7 +5,6 @@ param()
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\MSBuild\Helpers.ps1
 Register-Mock Write-Warning
-Register-Mock Get-LocalizedString { $OFS = " " ; "$args" }
 Register-Mock Get-MSBuildLocation { 'Some resolved location' } -- -Version '' -Architecture 'Some architecture'
 
 # Act.

@@ -1,9 +1,6 @@
 function Assert-AreEqual {
     [cmdletbinding()]
-    param(
-        [object]$Expected,
-        [object]$Actual,
-        [string]$Message)
+    param([object]$Expected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting are equal. Expected: '$Expected' ; Actual: '$Actual'."
     if (!(Test-AreEqual $Expected $Actual)) {
@@ -13,10 +10,7 @@ function Assert-AreEqual {
 
 function Assert-AreNotEqual {
     [cmdletbinding()]
-    param(
-        [object]$NotExpected,
-        [object]$Actual,
-        [string]$Message)
+    param([object]$NotExpected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting are not equal. Expected: '$NotExpected' ; Actual: '$Actual'."
     if (Test-AreEqual $NotExpected $Actual) {
@@ -26,10 +20,7 @@ function Assert-AreNotEqual {
 
 function Assert-IsGreaterThan {
     [cmdletbinding()]
-    param(
-        [object]$Expected,
-        [object]$Actual,
-        [string]$Message)
+    param([object]$Expected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting is greater than. Expected greater than: '$Expected' ; Actual: '$Actual'."
     if (!($Actual -gt $Expected)) {
@@ -37,14 +28,24 @@ function Assert-IsGreaterThan {
     }
 }
 
+function Assert-IsNotNullOrEmpty {
+    [cmdletbinding()]
+    param([object]$Actual, [string]$Message)
+
+    Write-Verbose "Asserting is not null or empty."
+    if (!$Actual) {
+        $OFS = " "
+        throw ("Assert is not null or empty failed. Actual: '$Actual'. $Message".Trim())
+    }
+}
+
 function Assert-IsNullOrEmpty {
     [cmdletbinding()]
-    param(
-        [object]$Actual,
-        [string]$Message)
+    param([object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting is null or empty."
     if ($Actual) {
+        $OFS = " "
         throw ("Assert is null or empty failed. Actual: '$Actual'. $Message".Trim())
     }
 }
@@ -74,15 +75,26 @@ function Assert-Throws {
     [cmdletbinding()]
     param(
         [ValidateNotNull()]
-        [Parameter(Mandatory= $true)]
-        [scriptblock]$ScriptBlock)
+        [Parameter(Mandatory = $true)]
+        [scriptblock]$ScriptBlock,
+        
+        [Parameter()]
+        [string]$MessagePattern)
 
     Write-Verbose "Asserting script block should throw: {$ScriptBlock}"
     $didThrow = $false
     try {
         & $ScriptBlock
     } catch {
-        Write-Verbose "Success. Caught exception: $($_.Exception.Message)"
+        $message = $_.Exception.Message
+        if ($MessagePattern -and $message -notlike $MessagePattern) {
+            throw "Actual exception message does not match expected pattern. Expected: $MessagePattern ; Actual: $message"
+        } elseif ($MessagePattern) {
+            Write-Verbose "Success. Matched exception message. Pattern: $MessagePattern ; Message: $message"
+        } else {
+            Write-Verbose "Success. Caught exception: $message"
+        }
+
         $didThrow = $true
     }
 
@@ -106,15 +118,12 @@ function Assert-WasCalled {
         [Parameter(ParameterSetName = "ArgumentsEvaluator")]
         [scriptblock]$ArgumentsEvaluator,
 
-        [ValidateScript({
-            if (![object]::ReferenceEquals($_, $null)) {
-                return $true
-            }
-
-            throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
-        })]
         [Parameter(ParameterSetName = "Arguments", Position = 2, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
+
+    if ($PSCmdlet.ParameterSetName -eq 'Arguments' -and ([object]::ReferenceEquals($Arguments, $null))) {
+        throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
+    }
 
     # Verbose logging.
     Write-Verbose "Asserting was-called: $Command"
@@ -153,6 +162,7 @@ function Assert-WasCalled {
         } elseif ($ArgumentsEvaluator) {
             throw "$message ; ArgumentsEvaluator: { $($ArgumentsEvaluator.ToString().Trim()) }"
         } elseif (!([object]::ReferenceEquals($Arguments, $null))) {
+            $OFS = " "
             throw "$message ; Arguments: $Arguments"
         } else {
             throw $message
@@ -176,78 +186,72 @@ function Register-Mock {
         [Parameter(ParameterSetName = 'ArgumentsEvaluator')]
         [scriptblock]$ArgumentsEvaluator,
 
-        [ValidateScript({
-            if (![object]::ReferenceEquals($_, $null)) {
-                return $true
-            }
-
-            throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
-        })]
         [Parameter(ParameterSetName = 'Arguments', Position = 3, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
+
+    if ($PSCmdlet.ParameterSetName -eq 'Arguments' -and ([object]::ReferenceEquals($Arguments, $null))) {
+        throw "Arguments cannot be null. Specify an empty array instead or use a different parameter set."
+    }
 
     # Check if the command is already registered.
     $mock = $mocks[$Command]
     if (!$mock) {
-        # Create the mock object.
-        $mock = New-Object -TypeName psobject -Property @{
+        # Create the mock.
+        $mocks[$Command] = New-Object -TypeName psobject -Property @{
             'Command' = $Command
             'Implementations' = @( )
             'Invocations' = @( )
-        }
+            'GlobalAlias' = New-Alias -Name $Command -Value "global:$Command" -Scope global -PassThru
+            'GlobalFunction' = New-Item -Force -Path "function:\global:$Command" -Value {
+                param()
 
-        # Register the mock.
-        $mocks[$Command] = $mock
+                # Lookup the mock.
+                $commandName = $MyInvocation.InvocationName
+                Write-Verbose "Invoking mock command: $commandName"
+                $OFS = " "
+                Write-Verbose "  Arguments: $args"
+                $mock = $mocks[$MyInvocation.InvocationName];
+                if (!$mock) {
+                    throw "Unexpected exception. Mock not found for command: $commandName"
+                }
 
-        # Define the command.
-        $null = New-Item -Path "function:\global:$Command" -Value {
-            param()
+                # Record the invocation.
+                $mock.Invocations += ,$args
 
-            # Lookup the mock.
-            $commandName = $MyInvocation.InvocationName
-            Write-Verbose "Invoking mock command: $commandName"
-            $OFS = " "
-            Write-Verbose "  Arguments: $args"
-            $mock = $mocks[$MyInvocation.InvocationName];
-            if (!$mock) {
-                throw "Unexpected exception. Mock not found for command: $commandName"
-            }
+                # Search for a matching implementation.
+                $matchingImplementation = $null
+                foreach ($implementation in $mock.Implementations) {
+                    # Attempt to match the implementation.
+                    if (Test-Invocation -Invocation $args -ParametersEvaluator $implementation.ParametersEvaluator -ArgumentsEvaluator $implementation.ArgumentsEvaluator -Arguments $implementation.Arguments) {
+                        # Verbose logging.
+                        if ($implementation.ParametersEvaluator) {
+                            Write-Verbose "Matching implementation found using parameters evaluator: { $($implementation.ParametersEvaluator.ToString().Trim()) }"
+                        } elseif ($implementation.ArgumentsEvaluator) {
+                            Write-Verbose "Matching implementation found using arguments evaluator: { $($implementation.ArgumentsEvaluator.ToString().Trim()) }"
+                        } elseif (!([object]::ReferenceEquals($implementation.Arguments, $null))) {
+                            $OFS = " "
+                            Write-Verbose "Matching implementation found using arguments: $($implementation.Arguments)"
+                        }
 
-            # Record the invocation.
-            $mock.Invocations += ,$args
+                        # Validate multiple matches not found.
+                        if ($matchingImplementation) {
+                            throw "Multiple matching implementations found for command: $commandName"
+                        }
 
-            # Search for a matching implementation.
-            $matchingImplementation = $null
-            foreach ($implementation in $mock.Implementations) {
-                # Attempt to match the implementation.
-                if (Test-Invocation -Invocation $args -ParametersEvaluator $implementation.ParametersEvaluator -ArgumentsEvaluator $implementation.ArgumentsEvaluator -Arguments $implementation.Arguments) {
-                    # Verbose logging.
-                    if ($implementation.ParametersEvaluator) {
-                        Write-Verbose "Matching implementation found using parameters evaluator: { $($implementation.ParametersEvaluator.ToString().Trim()) }"
-                    } elseif ($implementation.ArgumentsEvaluator) {
-                        Write-Verbose "Matching implementation found using arguments evaluator: { $($implementation.ArgumentsEvaluator.ToString().Trim()) }"
-                    } elseif (!([object]::ReferenceEquals($implementation.Arguments, $null))) {
-                        $OFS = " "
-                        Write-Verbose "Matching implementation found using arguments: $($implementation.Arguments)"
+                        $matchingImplementation = $implementation
                     }
+                }
 
-                    # Validate multiple matches not found.
-                    if ($matchingImplementation) {
-                        throw "Multiple matching implementations found for command: $commandName"
-                    }
-
-                    $matchingImplementation = $implementation
+                # Invoke the matching implementation.
+                if (($matchingImplementation -eq $null) -or ($matchingImplementation.Func -eq $null)) {
+                    Write-Verbose "Command is stubbed."
+                } else {
+                    Write-Verbose "Invoking Func: { $($matchingImplementation.Func.ToString().Trim()) }"
+                    & $matchingImplementation.Func @args
                 }
             }
-
-            # Invoke the matching implementation.
-            if (($matchingImplementation -eq $null) -or ($matchingImplementation.Func -eq $null)) {
-                Write-Verbose "Command is stubbed."
-            } else {
-                Write-Verbose "Invoking Func: { $($matchingImplementation.Func.ToString().Trim()) }"
-                & $matchingImplementation.Func @args
-            }
         }
+        $mock = $mocks[$Command]
     }
 
     # Check if an implementation is specified.
@@ -277,5 +281,19 @@ function Register-Mock {
             'ParametersEvaluator' = $ParametersEvaluator
         }
         $mock.Implementations += $implementation
+    }
+}
+
+function Unregister-Mock {
+    [cmdletbinding()]
+    param(
+        [ValidateNotNullOrEmpty()]
+        [string]$Command)
+
+    $mock = $mocks[$Command]
+    if ($mock) {
+        Remove-Item -LiteralPath "alias:\$($mock.GlobalAlias.Name)"
+        Remove-Item -LiteralPath $mock.GlobalFunction.PSPath
+        $mocks.Remove($Command)
     }
 }

@@ -31,5 +31,9 @@
             "/some/path/one",
             "/some/path/two"        
         ]
-    } 
+    },
+    "getVariable": {
+        "someVar1": "value1",
+        "someVar2": "value2"
+    }
 }

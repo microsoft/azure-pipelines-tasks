@@ -1,6 +1,22 @@
 var tl = require('vso-task-lib');
+var path = require('path');
 
-var mvntool = tl.which('mvn', true);
+var mvntool = '';
+var mavenVersionSelection = tl.getInput('mavenVersionSelection', true);
+if (mavenVersionSelection == 'Path') {
+    tl.debug('Using maven path from user input');
+    var mavenPath = tl.getPathInput('mavenPath', true, true);
+    mvntool = path.join(mavenPath, 'bin/mvn');
+
+    if (tl.getBoolInput('mavenSetM2Home')) {
+        tl.setEnvVar("M2_HOME", mavenPath);
+        tl.debug('M2_HOME set to ' + mavenPath)
+    }
+} else {
+    tl.debug('Using maven from standard system path')
+    mvntool = tl.which('mvn', true);
+}
+tl.debug('Maven binary: ' + mvntool);
 
 var mavenPOMFile = tl.getPathInput('mavenPOMFile', true, true);
 var mavenOptions = tl.getDelimitedInput('options', ' ', false);
