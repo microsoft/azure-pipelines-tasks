@@ -92,7 +92,7 @@ The parameters of the task are described in details, including examples, to show
 
 ### Known Limitations :
 
-If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/)) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
+If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
 
 ### Earlier Versions
 
