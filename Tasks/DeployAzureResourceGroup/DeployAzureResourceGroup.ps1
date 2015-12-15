@@ -33,34 +33,21 @@ $csmParametersFile = $csmParametersFile.Trim('"', ' ')
 $overrideParameters = $overrideParameters.Trim()
 $outputVariable = $outputVariable.Trim()
 $telemetrySet = $false
+$ErrorActionPreference = "Stop"
 
-import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
-import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
 try
 {
-    $ErrorActionPreference = "Stop"
-
-    if(-not $UnderTestCondition)
-    {
-        . ./Utility.ps1
-        Import-Module ./AzureUtility.ps1 -Force
-    }
-
-    Initialize-GlobalMaps
+    . ./Utility.ps1
 
     Validate-AzurePowershellVersion
 
-    #Handle-SwitchAzureMode
-    $isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
-
-    . ./AzureResourceManagerHelper.ps1
-
-    if($isSwitchAzureModeRequired)
-    {
-    .     ./AzureResourceManagerWrapper.ps1
-    }
+    $azureUtility = Get-AzureUtility
+    Write-Verbose -Verbose "Loading $azureUtility"
+    . ./$azureUtility
 
     if( $action -eq "Select Resource Group")
     {
@@ -69,7 +56,7 @@ try
             Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
             throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
         }
-    
+
         Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
         return
     }
@@ -81,20 +68,14 @@ try
         throw (Get-LocalizedString -Key "Certificate based authentication only works with the 'Select Resource Group' action. Please select an Azure subscription with either Credential or SPN based authentication.")
     }
 
-    if($isSwitchAzureModeRequired)
-    {
-        Switch-AzureMode AzureResourceManager
-    }
-
     if( $action -eq "Create Or Update Resource Group" )
     {
-        Create-AzureResourceGroupHelper -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
+        Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
         if(-not [string]::IsNullOrEmpty($outputVariable))
         {
             Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
         }
     }
-
     else
     {
         Perform-Action -action $action -resourceGroupName $resourceGroupName
