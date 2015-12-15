@@ -1,0 +1,49 @@
+{
+    "getVariable": {
+        "JAVA_HOME": "/fake/java/home",
+        "ANDROID_HOME": "/fake/android/home"
+    },
+    "exec": {
+        "/fake/java/home/bin/jarsigner -keystore /some/store -storepass pass1 -keypass pass2 -signedjar /some/path/a.apk /some/path/a.apk.unsigned somealias": {
+            "code": 0,
+            "stdout": "jarsigner output here"
+        },
+        "/fake/java/home/bin/jarsigner -keystore /some/store -storepass pass1 -keypass pass2 -signedjar /some/path/b.apk /some/path/b.apk.unsigned somealias": {
+            "code": 0,
+            "stdout": "jarsigner output here"
+        },
+         "/fake/android/home/sdk1/zipalign -v 4 /some/path/a.apk.unaligned /some/path/a.apk": {
+            "code": 0,
+            "stdout": "zipalign output here"
+        },
+        "/fake/android/home/sdk1/zipalign -v 4 /some/path/b.apk.unaligned /some/path/b.apk": {
+            "code": 0,
+            "stdout": "zipalign output here"
+        }
+    },
+    "checkPath": {
+        "/some/path/a.apk": true,
+        "/some/path/b.apk": true
+    },
+    "find": {
+        "/some/path": [
+            "/some/path/a.apk",
+            "/some/path/b.apk",
+            "/some/path/notapkfile"
+        ],
+        "/fake/android/home": [
+            "/fake/android/home/sdk1",
+            "/fake/android/home/sdk2"
+        ]
+    },
+    "match": {
+        "/some/path/*.apk": [
+            "/some/path/a.apk",
+            "/some/path/b.apk"
+        ],
+        "zipalign*": [
+            "/fake/android/home/sdk1/zipalign",
+            "/fake/android/home/sdk2/zipalign"       
+        ]
+    }
+}

@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B9",
     "name": "AndroidSigning",
     "friendlyName": "Android Signing",
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5 
     },
     "demands": [
         "JDK",
@@ -119,6 +119,10 @@
             "target": "$(currentDirectory)\\AndroidSigning.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
+        },
+        "Node": {
+            "target": "AndroidSigning.js",
+            "argumentFormat": ""
         }
     }
 }

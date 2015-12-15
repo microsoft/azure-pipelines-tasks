@@ -1,0 +1,31 @@
+{
+    "getVariable": {
+        "JAVA_HOME": "/fake/java/home",
+        "ANDROID_HOME": "/fake/android/home"
+    },
+    "exec": {
+        "/fake/java/home/bin/jarsigner -keystore /some/store -storepass pass1 -keypass pass2 -signedjar /some/fake.apk /some/fake.apk.unsigned somealias": {
+            "code": 0,
+            "stdout": "jarsigner output here"
+        },
+         "/fake/android/home/sdk1/zipalign -v 4 /some/fake.apk.unaligned /some/fake.apk": {
+            "code": 0,
+            "stdout": "zipalign output here"
+        }
+    },
+    "checkPath": {
+        "/some/fake.apk": true
+    },
+    "find": {
+        "/fake/android/home": [
+            "/fake/android/home/sdk1",
+            "/fake/android/home/sdk2"
+        ]
+    },
+    "match": {
+        "zipalign*": [
+            "/fake/android/home/sdk1/zipalign",
+            "/fake/android/home/sdk2/zipalign"       
+        ]
+    }
+}
