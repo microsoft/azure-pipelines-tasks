@@ -115,6 +115,11 @@ param (
             }
         }       
         
+        if (-not [string]::IsNullOrWhiteSpace($additionalArguments))
+        {
+            $robocopyParameters += " $additionalArguments"
+        }
+
         return $robocopyParameters.Trim()
     }
 
