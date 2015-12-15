@@ -12,7 +12,7 @@ $returnedFilePath = SetupRunSettingsFileForParallel "true" $runSettingsFilePath 
 Assert-AreNotEqual $runSettingsFilePath $returnedFilePath
 
 $fileExists = Test-Path $returnedFilePath
-Assert-IsTrue $fileExists
+Assert-AreEqual $true $fileExists
 
 #cleanup
 if($fileExists){

@@ -3,9 +3,8 @@ param()
 
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 
-$called=$false
 $testAssembly='**\testAssembly.dll'
-Register-Mock Get-LocalizedString { $called=$true } -- -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly
+Register-Mock Get-LocalizedString {  } -- -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly
 Register-Mock Get-LocalizedString 
 Register-Mock Write-Warning
 
@@ -41,4 +40,3 @@ Assert-WasCalled Find-Files -Times 1
 Assert-WasCalled Publish-TestResults -Times 0
 Assert-WasCalled Invoke-VsTest -Times 0
 Assert-WasCalled Get-LocalizedString -Times 1
-Assert-IsTrue $called
