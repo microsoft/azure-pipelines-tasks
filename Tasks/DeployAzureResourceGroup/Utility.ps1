@@ -163,7 +163,7 @@ function Get-CsmParameterObject
         foreach($key in $parametersObject.Keys)
         {
             $parameterValue = $parametersObject[$key] -as [Newtonsoft.Json.Linq.JObject]
-            $newParametersObject.Add($key, $parameterValue["value"].ToString())
+            $newParametersObject.Add($key, $parameterValue["value"])
         }
 
         Write-Verbose "Generated the parameter object" -Verbose
