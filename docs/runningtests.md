@@ -81,4 +81,6 @@ We will be starting and favor writing and running L0 tests.  After L0s are writt
 
 The point of the tests is to test to task script and it's arcs.  It is a non-goal to test the externals.
 
- 
+# Test output
+
+Set the environment variable TASK_TEST_TRACE to 1 for STDOUT to be printed from the test.
