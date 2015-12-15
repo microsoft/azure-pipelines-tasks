@@ -1,6 +1,6 @@
 param
 (
-    [Parameter(Mandatory=$true, HelpMessage="Enter Azure Subscription name")]
+    [Parameter(Mandatory=$true, HelpMessage="Enter Azure Subscription name. You need to be Subscription Admin to execute the script")]
     [string] $subscriptionName,
 
     [Parameter(Mandatory=$true, HelpMessage="Provide a password for SPN application that you would create")]
