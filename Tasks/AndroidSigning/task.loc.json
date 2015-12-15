@@ -121,10 +121,7 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\AndroidSigning.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
+      "workingDirectory": "$(currentDirectory)"
     },
     "Node": {
       "target": "AndroidSigning.js",
