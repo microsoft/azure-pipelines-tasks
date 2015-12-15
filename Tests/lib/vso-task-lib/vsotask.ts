@@ -1,8 +1,10 @@
+/// <reference path="../../../../definitions/node.d.ts" />
 
 var Q = require('q');
 var path = require('path');
 var os = require('os');
 
+import fs = require('fs');
 import tcm = require('./taskcommand');
 import trm = require('./toolrunner');
 import mock = require('./mock');
@@ -220,6 +222,92 @@ export function getEndpointAuthorization(id: string, optional: boolean): Endpoin
 }
 
 //-----------------------------------------------------
+// Fs Helpers
+//-----------------------------------------------------
+export class FsStats implements fs.Stats {
+    private m_isFile;
+    private m_isDirectory;
+    private m_isBlockDevice;
+    private m_isCharacterDevice;
+    private m_isSymbolicLink;
+    private m_isFIFO;
+    private m_isSocket;
+    
+    dev: number;
+    ino: number;
+    mode: number;
+    nlink: number;
+    uid: number;
+    gid: number;
+    rdev: number;
+    size: number;
+    blksize: number;
+    blocks: number;
+    atime: Date;
+    mtime: Date;
+    ctime: Date;
+        
+    setAnswers(mockResponses) {
+        this.m_isFile = mockResponses['isFile'];
+        this.m_isDirectory = mockResponses['isDirectory'];
+        this.m_isBlockDevice = mockResponses['isBlockDevice'];
+        this.m_isCharacterDevice = mockResponses['isCharacterDevice'];
+        this.m_isSymbolicLink = mockResponses['isSymbolicLink'];
+        this.m_isFIFO = mockResponses['isFIFO'];
+        this.m_isSocket = mockResponses['isSocket'];  
+        
+        this.dev = mockResponses['dev'];
+        this.ino = mockResponses['ino'];
+        this.mode = mockResponses['mode'];
+        this.nlink = mockResponses['nlink'];
+        this.uid = mockResponses['uid'];
+        this.gid = mockResponses['gid'];
+        this.rdev = mockResponses['rdev'];   
+        this.size = mockResponses['size'];
+        this.blksize = mockResponses['blksize'];
+        this.blocks = mockResponses['blocks'];
+        this.atime = mockResponses['atime'];
+        this.mtime = mockResponses['mtime'];
+        this.ctime = mockResponses['ctime'];
+        this.m_isSocket = mockResponses['isSocket'];         
+    }
+    
+    isFile(): boolean {
+        return this.m_isFile;
+    }
+    
+    isDirectory(): boolean {
+        return this.m_isDirectory;
+    }
+    
+    isBlockDevice(): boolean {
+        return this.m_isBlockDevice;
+    }
+    
+    isCharacterDevice(): boolean {
+        return this.m_isCharacterDevice;
+    }
+    
+    isSymbolicLink(): boolean {
+        return this.m_isSymbolicLink;
+    }
+    
+    isFIFO(): boolean {
+        return this.m_isFIFO;
+    }
+    
+    isSocket(): boolean {
+        return this.m_isSocket;
+    }
+}
+
+export function stats(path: string): FsStats {
+    var fsStats = new FsStats();
+    fsStats.setAnswers(mock.getResponse('stats', path));
+    return fsStats;
+}
+
+//-----------------------------------------------------
 // Cmd Helpers
 //-----------------------------------------------------
 export function command(command: string, properties, message: string) {
@@ -295,7 +383,10 @@ export function find(findPath: string): string[] {
 }
 
 export function rmRF(path: string): void {
-
+    var response = mock.getResponse('rmRF', path);
+    if (!response['success']) {
+        setResult(1, response['message'], true);
+    }
 }
 
 export function mv(source: string, dest: string, force: boolean, continueOnError?: boolean): boolean {
