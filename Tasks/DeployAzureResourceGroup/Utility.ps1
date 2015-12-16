@@ -337,7 +337,7 @@ function Perform-Action
     Switch ($Action)
     {
         { @("Start", "Stop", "Restart", "Delete") -contains $_ } {
-            Invoke-OperationOnResourcegroup -resourceGroupName $resourceGroupName -operationName $action
+            Invoke-OperationOnResourceGroup -resourceGroupName $resourceGroupName -operationName $action
             break
         }
 
@@ -353,7 +353,7 @@ function Perform-Action
     }
 }
 
-function Invoke-OperationOnResourcegroup
+function Invoke-OperationOnResourceGroup
 {
      param([string]$resourceGroupName,
            [string]$operationName)
