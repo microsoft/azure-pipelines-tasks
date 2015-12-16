@@ -1,4 +1,4 @@
-/// <reference path="../../../../definitions/node.d.ts" />
+/// <reference path="../../../definitions/node.d.ts" />
 
 var Q = require('q');
 var path = require('path');
