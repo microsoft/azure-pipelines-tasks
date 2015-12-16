@@ -4,7 +4,7 @@ function Create-AzureResourceGroupIfNotExist
 {
     param([string]$resourceGroupName,
           [string]$location)
-
+as
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
         try

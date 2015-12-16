@@ -5,6 +5,7 @@ function Create-AzureResourceGroupIfNotExist
     param([string]$resourceGroupName,
           [string]$location)
 
+    Switch-AzureMode AzureResourceManager
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
         try
@@ -37,7 +38,6 @@ function Deploy-AzureResourceGroup
           [string]$overrideParameters)
 
     Switch-AzureMode AzureResourceManager
-
     Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
 
     if (!$csmParametersObject)
@@ -60,7 +60,6 @@ function Get-AllVMInstanceView
     param([string]$resourceGroupName)
 
     Switch-AzureMode AzureResourceManager
-
     $VmInstanceViews = @{}
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
@@ -172,10 +171,9 @@ function Get-AzureRMResourceGroupResourcesDetails
     param([string]$resourceGroupName,
           [object]$azureRMVMResources)
 
+    Switch-AzureMode AzureResourceManager
     [hashtable]$ResourcesDetails = @{}
     [hashtable]$LoadBalancerDetails = @{}
-
-    Switch-AzureMode AzureResourceManager
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $azureRMVMResources)
     {
         Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
@@ -241,6 +239,7 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
     param([string]$resourceGroupName,
           [object]$azureClassicVMResources)
 
+    Switch-AzureMode AzureServiceManagement
     [hashtable]$classicVMsDetails = @{}
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $azureClassicVMResources)
     {
