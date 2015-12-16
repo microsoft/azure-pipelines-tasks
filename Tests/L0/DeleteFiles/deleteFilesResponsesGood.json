@@ -1,0 +1,40 @@
+{
+    "rmRF": {
+        "/someDir/someOtherDir": {
+            "success": true,
+            "message": "success"
+        },
+        "/someDir/someOtherDir2": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "find": {
+        "/someDir": [
+            "/someDir/someOtherDir",
+            "/someDir/someOtherDir2"
+        ]
+    },
+    "stats": {
+        "/someDir/someOtherDir": {
+            "isDirectory": true
+        },
+        "/someDir/someOtherDir2": {
+            "isDirectory": false
+        }
+    },
+    "match": {
+        "\\someDir\\someOtherDir": [
+              "/someDir/someOtherDir"
+        ],
+        "/someDir/someOtherDir": [
+              "/someDir/someOtherDir"
+        ],
+        "\\someDir\\someOtherDir2": [
+              "/someDir/someOtherDir2"
+        ],
+        "/someDir/someOtherDir2": [
+              "/someDir/someOtherDir2"
+        ]
+    }
+}
