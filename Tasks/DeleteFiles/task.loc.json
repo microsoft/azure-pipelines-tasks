@@ -18,7 +18,7 @@
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "1.93.0",
+  "minimumAgentVersion": "1.92.0",
   "inputs": [
     {
       "name": "SourceFolder",
@@ -32,8 +32,8 @@
       "name": "Contents",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.Contents",
-      "defaultValue": "",
-      "required": false,
+      "defaultValue": "myFileShare",
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Contents"
     }
   ],

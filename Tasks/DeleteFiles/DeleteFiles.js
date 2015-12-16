@@ -7,8 +7,6 @@ var contents = tl.getDelimitedInput('Contents', '\n');
 var sourceFolder = tl.getPathInput('SourceFolder');
 // include filter
 var includeContents = [];
-// exclude filter
-var excludeContents = [];
 for (var i = 0; i < contents.length; i++) {
     var pattern = contents[i].trim();
     tl.debug('include content pattern: ' + pattern);
