@@ -90,11 +90,11 @@ function Get-AzureUtility
 
 function Create-AzureResourceGroup
 {
-    param([string] $csmFile,
-          [string] $csmParametersFile,
-          [string] $resourceGroupName,
-          [string] $location,
-          [string] $overrideParameters)
+    param([string]$csmFile,
+          [string]$csmParametersFile,
+          [string]$resourceGroupName,
+          [string]$location,
+          [string]$overrideParameters)
 
     $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 
@@ -117,8 +117,6 @@ function Create-AzureResourceGroup
     {
         # Create azure resource group
         Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
-        $startTime = Get-Date
-        Set-Variable -Name startTime -Value $startTime -Scope "Global"
 
         # Deploying CSM Template
         $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersObject $csmParametersObject -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters
@@ -129,13 +127,11 @@ function Create-AzureResourceGroup
         if ($azureResourceGroupDeployment)
         {
             Write-Verbose -Verbose "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
-            Set-Variable -Name azureResourceGroupDeployment -Value $azureResourceGroupDeployment -Scope "Global"
             Get-MachineLogs -ResourceGroupName $resourceGroupName
 
             if($deploymentError)
             {
                 Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
-                Set-Variable -Name deploymentError -Value $deploymentError -Scope "Global"
 
                 foreach($error in $deploymentError)
                 {
@@ -166,11 +162,11 @@ function Get-MachineLogs
 
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
-        $VmInstanceViews = Get-AllVmInstanceView -ResourceGroupName $resourceGroupName
+        $VmInstanceViews = Get-AllVMInstanceView -ResourceGroupName $resourceGroupName
 
         foreach($vmName in $VmInstanceViews.Keys)
         {
-            vmInstanceView = $VmInstanceViews[$vmName]
+            $vmInstanceView = $VmInstanceViews[$vmName]
 
             Write-Verbose -Verbose "Machine $vmName status:"
             foreach($status in $vmInstanceView.Statuses)
@@ -313,8 +309,8 @@ function Print-OperationLog
 
 function Get-CsmAndParameterFiles
 {
-    param([string] $csmFile,
-          [string] $csmParametersFile)
+    param([string]$csmFile,
+          [string]$csmParametersFile)
 
     #Find the matching deployment definition File
     $csmFile = Get-File $csmFile
@@ -364,7 +360,7 @@ function Invoke-OperationOnResourcegroup
 
     Write-Verbose "Entered perform action $operationName on machines for resource group $resourceGroupName" -Verbose
 
-    $machines = Get-AzureVMsInResourceGroup -resourceGroupName $resourceGroupName
+    $machines = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
 
     if(! $machines)
     {
@@ -438,10 +434,12 @@ function Instantiate-Environment
 
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-    $azureVMsDetails = Get-AzureClassicVMsDetailsInResourceGroup -resourceGroupName $resourceGroupName
+    $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $resourceGroupName
+    $azureVMsDetails = Get-AzureClassicVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureClassicVMResources $azureVMResources
     if($azureVMsDetails.Count -eq 0)
     {
-        $azureVMsDetails = Get-AzureVMsDetailsInResourceGroup -resourceGroupName $resourceGroupName	
+        $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
+        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources
     }
 
     if ($azureVMsDetails.Count -eq 0)
@@ -454,11 +452,14 @@ function Instantiate-Environment
     foreach ($resource in $azureVMsDetails.Keys)
     {
         $resourceProperties = $azureVMsDetails[$resource]
-        $resourceFQDN = $resourceProperties.fqdn            
+        $resourceFQDN = $resourceProperties.fqdn
         $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
 
-        $machineSpec = $resourceFQDN + ":" + $resourceWinRMHttpsPort
-        $resources += $machineSpec
+        if([string]::IsNullOrEmpty($resourceFQDN) -eq $false)
+        {
+            $machineSpec = $resourceFQDN + ":" + $resourceWinRMHttpsPort
+            $resources += $machineSpec
+        }
     }
 
     $machineSpecification = $resources -join ","
@@ -511,7 +512,7 @@ function Get-MachinesFqdnsForLB
             }
         }
 
-        #Find out the NIC, and thus the corresponding machine to which the HAT rule belongs
+        #Find out the NIC, and thus the corresponding machine to which the NAT rule belongs
         foreach($nic in $networkInterfaceResources)
         {
             foreach($ipc in $nic.IpConfigurations)
@@ -542,8 +543,7 @@ function Get-FrontEndPorts
     param([string]$backEndPort,
           [System.Collections.Hashtable]$portList,
           [Object]$networkInterfaceResources,
-          [Object]$inboundRules
-          )
+          [Object]$inboundRules)
 
     if([string]::IsNullOrEmpty($backEndPort) -eq $false -and $networkInterfaceResources -and $inboundRules)
     {
@@ -588,13 +588,13 @@ function Get-MachineNameFromId
     param([string]$resourceGroupName,
           [System.Collections.Hashtable]$map,
           [string]$mapParameter,
-          [Object]$azureVMResources,
+          [Object]$azureRMVMResources,
           [boolean]$throwOnTotalUnavaialbility)
 
     if($map)
     {
         $errorCount = 0
-        foreach($vm in $azureVMResources)
+        foreach($vm in $azureRMVMResources)
         {
             $value = $map[$vm.Id]
             $resourceName = $vm.Name
@@ -613,13 +613,13 @@ function Get-MachineNameFromId
 
         if($throwOnTotalUnavaialbility -eq $true)
         {
-            if($errorCount -eq $azureVMResources.Count -and $azureVMResources.Count -ne 0)
+            if($errorCount -eq $azureRMVMResources.Count -and $azureRMVMResources.Count -ne 0)
             {
                 throw (Get-LocalizedString -Key "Unable to get {0} for all resources in ResourceGroup : '{1}'" -ArgumentList $mapParameter, $resourceGroupName)
             }
             else
             {
-                if($errorCount -gt 0 -and $errorCount -ne $azureVMResources.Count)
+                if($errorCount -gt 0 -and $errorCount -ne $azureRMVMResources.Count)
                 {
                     Write-Warning (Get-LocalizedString -Key "Unable to get {0} for '{1}' resources in ResourceGroup : '{2}'" -ArgumentList $mapParameter, $errorCount, $resourceGroupName)
                 }
@@ -635,12 +635,12 @@ function Get-MachinesFqdns
     param([string]$resourceGroupName,
           [Object]$publicIPAddressResources,
           [Object]$networkInterfaceResources,
-          [Object]$azureVMResources,
+          [Object]$azureRMVMResources,
           [System.Collections.Hashtable]$fqdnMap)
 
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources)
     {
-        Write-Verbose "Trying to get FQDN for the RM azureVM resources from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
 
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -672,25 +672,27 @@ function Get-MachinesFqdns
             }
         }
 
-        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureVMResources $azureVMResources -ThrowOnTotalUnavaialbility $true
+        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
     }
 
-    Write-Verbose "Got FQDN for the RM azureVM resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
 
     return $fqdnMap
 }
 
-function Get-AzureVMsDetailsInResourceGroup
+function Get-AzureRMVMsConnectionDetailsInResourceGroup
 {
-    param([string]$resourceGroupName)
+    param([string]$resourceGroupName,
+          [object]$azureRMVMResources)
 
-    [hashtable]$fqdnMap = @{};
+    [hashtable]$fqdnMap = @{}
     [hashtable]$winRmHttpsPortMap = @{}
     [hashtable]$vmResourcesDetails = @{}
 
     if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
-        $ResourcesDetails = Get-AzureVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName	
+        $ResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+        $ResourcesDetails.Add("$azureRMVMResources", $azureRMVMResources)
 
         $azureVMResources = $ResourcesDetails["azureVMResources"]
         $networkInterfaceResources = $ResourcesDetails["networkInterfaceResources"]	
@@ -701,24 +703,24 @@ function Get-AzureVMsDetailsInResourceGroup
         {
             foreach($lbName in $loadBalancerResources.Keys)
             {
-                $lbDetails = $loadBalancerResources[$lbName]			 
-                $frontEndIPConfigs = $lbDetails["frontEndIPConfigs"]			 
+                $lbDetails = $loadBalancerResources[$lbName]
+                $frontEndIPConfigs = $lbDetails["frontEndIPConfigs"]
                 $inboundRules = $lbDetails["inboundRules"]
 
                 $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -frontEndIPConfigs $frontEndIPConfigs -fqdnMap $fqdnMap
                 $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap -networkInterfaceResources $networkInterfaceResources -inboundRules $inboundRules
             }
 
-            $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureVMResources $azureVMResources -ThrowOnTotalUnavaialbility $true
-            $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureVMResources $azureVMResources -ThrowOnTotalUnavaialbility $false
+            $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
+            $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $false
         }
         else
         {
-            $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureVMResources $azureVMResources -fqdnMap $fqdnMap
+            $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap
             $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
         }
 
-        foreach ($resource in $azureVMResources)
+        foreach ($resource in $azureRMVMResources)
         {
             $resourceName = $resource.Name
             $resourceFQDN = $fqdnMap[$resourceName]

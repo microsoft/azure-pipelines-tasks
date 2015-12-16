@@ -35,19 +35,21 @@ $outputVariable = $outputVariable.Trim()
 $telemetrySet = $false
 $ErrorActionPreference = "Stop"
 
+# Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
+# Load all dependent files for execution
+Import-Module ./Utility.ps1 -Force
+
 try
 {
-    . ./Utility.ps1
-
     Validate-AzurePowershellVersion
 
     $azureUtility = Get-AzureUtility
     Write-Verbose -Verbose "Loading $azureUtility"
-    . ./$azureUtility
+    Import-Module ./$azureUtility -Force
 
     if( $action -eq "Select Resource Group")
     {

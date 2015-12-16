@@ -1,8 +1,9 @@
 # This file implements IAzureUtility for Azure PowerShell version >= 1.0.0
+
 function Create-AzureResourceGroupIfNotExist
 {
     param([string]$resourceGroupName,
-    [string]$location)
+          [string]$location)
 
     if([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
@@ -33,7 +34,7 @@ function Deploy-AzureResourceGroup
           [string]$resourceGroupName,
           [string]$overrideParameters)
 
-    Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"      
+    Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
 
     if (!$csmParametersObject)
     {
@@ -49,7 +50,7 @@ function Deploy-AzureResourceGroup
     @{"azureResourceGroupDeployment" = $($azureResourceGroupDeployment); "deploymentError" = $($deploymentError)}
 }
 
-function Get-AllVmInstanceView
+function Get-AllVMInstanceView
 {
     param([string]$resourceGroupName)
 
@@ -59,7 +60,6 @@ function Get-AllVmInstanceView
         Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group $resourceGroupName"
         $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
         Write-Verbose -Verbose "[Azure Resource Manager]Got resource group $resourceGroupName"
-        Set-Variable -Name azureResourceGroup -Value $azureResourceGroup -Scope "Global"
 
         $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
@@ -73,32 +73,6 @@ function Get-AllVmInstanceView
         }
     }
     return $VmInstanceViews
-}
-
-function Get-AzureVMsInResourceGroup
-{
-    param([string]$resourceGroupName)
-
-    If([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
-    {
-        try
-        {
-            Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
-            $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -Verbose
-            Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName RM virtual machines type resources"
-        }
-        catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
-        {
-            Write-Verbose $_.Exception.Message -Verbose
-            throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $resourceGroupName)
-        }
-        catch
-        {
-            throw
-        }
-
-        return $azureVMResources
-    }
 }
 
 function Start-Machine
@@ -155,59 +129,40 @@ function Delete-ResourceGroup
     }
 }
 
-function Get-AzureClassicVMsDetailsInResourceGroup
+function Get-AzureRMVMsInResourceGroup
 {
     param([string]$resourceGroupName)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    If([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
     {
-        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
-        $azureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
-        Write-Verbose -Verbose "[Azure Call]Got resource group:$resourceGroupName classic virtual machines type resources"
-    }
-    
-    [hashtable]$classicVMsDestails = @{}
-    if($azureClassicVMResources)
-    {
-        Write-Verbose -Verbose "Trying to get FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
-        foreach($azureClassicVm in $azureClassicVMResources)
+        try
         {
-            $resourceName = $azureClassicVm.Name
-
-            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
-            $azureClassicVM = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -Verbose
-            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
-            
-            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
-            $azureClassicVMEndpoint = $azureClassicVM | Get-AzureEndpoint -Name PowerShell
-            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
-
-            $fqdnUri = [System.Uri]$azureClassicVM.DNSName
-            $resourceFQDN = $fqdnUri.Host
-            $resourceWinRmHttpsPort = $azureClassicVMEndpoint.Port
-            Write-Verbose -Verbose "FQDN value for resource $resourceName is $resourceFQDN"
-            Write-Verbose -Verbose "WinRM HTTPS Port for resource $resourceName is $resourceWinRmHttpsPort"
-            $resourceProperties = @{}
-            $resourceProperties.Name = $resourceName
-            $resourceProperties.fqdn = $resourceFQDN
-            $resourceProperties.winRMHttpsPort = $resourceWinRmHttpsPort
-            $classicVMsDestails.Add($resourceName, $resourceProperties)
+            Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
+            $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -Verbose
+            Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
         }
-    }
+        catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
+        {
+            Write-Verbose $_.Exception.Message -Verbose
+            throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $resourceGroupName)
+        }
+        catch
+        {
+            throw
+        }
 
-    return $classicVMsDestails
+        return $azureVMResources
+    }
 }
 
-function Get-AzureVMsConnectionDetailsInResourceGroup
+function Get-AzureRMResourceGroupResourcesDetails
 {
-    param([string]$resourceGroupName)
+    param([string]$resourceGroupName,
+          [object]$azureRMVMResources)
 
     [hashtable]$ResourcesDetails = @{}
-    [hashtable]$LoadBalancerDestails = @{}
-
-    $azureVMResources = Get-AzureVMsInResourceGroup -resourceGroupName $resourceGroupName
-    $ResourcesDetails.Add("azureVMResources", $azureVMResources)
-    if($azureVMResources)
+    [hashtable]$LoadBalancerDetails = @{}
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $azureRMVMResources)
     {
         Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
         $networkInterfaceResources = Get-AzureRMNetworkInterface -ResourceGroupName $resourceGroupName -Verbose
@@ -242,11 +197,63 @@ function Get-AzureVMsConnectionDetailsInResourceGroup
 
                 $lbDetails.Add("frontEndIPConfigs", $frontEndIPConfigs)
                 $lbDetails.Add("inboundRules", $inboundRules)
-                $LoadBalancerDestails.Add($lb.Name, $lbDetails)
+                $LoadBalancerDetails.Add($lb.Name, $lbDetails)
             }
-            $ResourcesDetails.Add("loadBalancerResources", $LoadBalancerDestails)
+            $ResourcesDetails.Add("loadBalancerResources", $LoadBalancerDetails)
         }
     }
 
     return $ResourcesDetails
+}
+
+function Get-AzureClassicVMsInResourceGroup
+{
+    param([string]$resourceGroupName)
+
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    {
+        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
+        $azureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+        Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName classic virtual machines type resource is $($azureClassicVMResources.Count)"
+    }
+
+    return $azureClassicVMResources
+}
+
+function Get-AzureClassicVMsConnectionDetailsInResourceGroup
+{
+    param([string]$resourceGroupName,
+          [object]$azureClassicVMResources)
+
+    [hashtable]$classicVMsDetails = @{}
+    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $azureClassicVMResources)
+    {
+        Write-Verbose -Verbose "Trying to get FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
+        foreach($azureClassicVm in $azureClassicVMResources)
+        {
+            $resourceName = $azureClassicVm.Name
+
+            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            $azureClassicVM = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -Verbose
+            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            
+            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
+            $azureClassicVMEndpoint = $azureClassicVM | Get-AzureEndpoint -Name PowerShell
+            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
+
+            $fqdnUri = [System.Uri]$azureClassicVM.DNSName
+            $resourceFQDN = $fqdnUri.Host
+            $resourceWinRmHttpsPort = $azureClassicVMEndpoint.Port
+            Write-Verbose -Verbose "FQDN value for resource $resourceName is $resourceFQDN"
+            Write-Verbose -Verbose "WinRM HTTPS Port for resource $resourceName is $resourceWinRmHttpsPort"
+
+            $resourceProperties = @{}
+            $resourceProperties.Name = $resourceName
+            $resourceProperties.fqdn = $resourceFQDN
+            $resourceProperties.winRMHttpsPort = $resourceWinRmHttpsPort
+            $classicVMsDetails.Add($resourceName, $resourceProperties)
+        }
+    }
+
+    return $classicVMsDetails
 }
