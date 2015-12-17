@@ -13,12 +13,19 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 18
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.90.0",
+  "groups": [
+    {
+      "name": "newServiceAdvancedOptions",
+      "displayName": "Advanced Options For Creating New Service",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -45,11 +52,14 @@
     },
     {
       "name": "ServiceLocation",
-      "type": "string",
+      "type": "pickList",
       "label": "Service Location",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
+      "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "CsPkg",
@@ -97,6 +107,27 @@
       "label": "Allow Upgrade",
       "defaultValue": "true",
       "required": true
+    },
+    {
+      "name": "NewServiceAdditionalArguments",
+      "type": "string",
+      "label": "Additional Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
+      "groupName": "newServiceAdvancedOptions"
+    },
+    {
+      "name": "NewServiceAffinityGroup",
+      "type": "pickList",
+      "label": "AffinityGroup",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "While creating new service, this affinity group will be considered instead of using service location.",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "EditableOptions": "True"
+      }
     }
   ],
   "sourceDefinitions": [
@@ -112,6 +143,16 @@
       "target": "ServiceName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureHostedServiceNames"
+    },
+    {
+      "target": "ServiceLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "NewServiceAffinityGroup",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureAffinityGroups"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(CsPkg)",
