@@ -33,47 +33,29 @@ $csmParametersFile = $csmParametersFile.Trim('"', ' ')
 $overrideParameters = $overrideParameters.Trim()
 $outputVariable = $outputVariable.Trim()
 $telemetrySet = $false
+$ErrorActionPreference = "Stop"
 
-import-module Microsoft.TeamFoundation.DistributedTask.Task.Internal
-import-module Microsoft.TeamFoundation.DistributedTask.Task.Common
+# Import all the dlls and modules which have cmdlets we need
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
-try
+# Load all dependent files for execution
+Import-Module ./Utility.ps1 -Force
+
+function Handle-SelectResourceGroupAction
 {
-    $ErrorActionPreference = "Stop"
-
-    if(-not $UnderTestCondition)
+    if([string]::IsNullOrEmpty($outputVariable))
     {
-        . ./Utility.ps1
-        Import-Module ./AzureUtility.ps1 -Force
+        Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
+        throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
     }
 
-    Initialize-GlobalMaps
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+}
 
-    Validate-AzurePowershellVersion
-
-    #Handle-SwitchAzureMode
-    $isSwitchAzureModeRequired = Is-SwitchAzureModeRequired
-
-    . ./AzureResourceManagerHelper.ps1
-
-    if($isSwitchAzureModeRequired)
-    {
-    .     ./AzureResourceManagerWrapper.ps1
-    }
-
-    if( $action -eq "Select Resource Group")
-    {
-        if([string]::IsNullOrEmpty($outputVariable))
-        {
-            Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
-            throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
-        }
-    
-        Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
-        return
-    }
-
+function Handle-ResourceGroupLifeCycleOperations
+{
     $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
     if ($serviceEndpoint.Authorization.Scheme -eq 'Certificate')
     {
@@ -81,23 +63,39 @@ try
         throw (Get-LocalizedString -Key "Certificate based authentication only works with the 'Select Resource Group' action. Please select an Azure subscription with either Credential or SPN based authentication.")
     }
 
-    if($isSwitchAzureModeRequired)
-    {
-        Switch-AzureMode AzureResourceManager
-    }
-
     if( $action -eq "Create Or Update Resource Group" )
     {
-        Create-AzureResourceGroupHelper -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -isSwitchAzureModeRequired $isSwitchAzureModeRequired
+        Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
         if(-not [string]::IsNullOrEmpty($outputVariable))
         {
             Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
         }
     }
-
     else
     {
         Perform-Action -action $action -resourceGroupName $resourceGroupName
+    }
+}
+
+try
+{
+    Validate-AzurePowerShellVersion
+
+    $azureUtility = Get-AzureUtility
+    Write-Verbose -Verbose "Loading $azureUtility"
+    Import-Module ./$azureUtility -Force
+
+    switch ($action)
+    {
+        "Select Resource Group" {
+            Handle-SelectResourceGroupAction
+            break
+        }
+
+        default {
+            Handle-ResourceGroupLifeCycleOperations
+            break
+        }
     }
 
     Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
