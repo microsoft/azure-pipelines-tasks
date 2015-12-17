@@ -115,7 +115,7 @@ function Create-AzureResourceGroup
     #Create csm parameter object
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
 
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
+    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
     {
         $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
     }
@@ -261,7 +261,7 @@ function Validate-DeploymentFileAndParameters
         throw (Get-LocalizedString -Key "Please specify a complete and a valid template file path")
     }
 
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\") -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
+    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
     {
          Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
          throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
@@ -330,8 +330,8 @@ function Get-CsmAndParameterFiles
     $csmFile = Get-File $csmFile
     Write-Verbose -Verbose "deploymentDefinitionFile = $csmFile"
 
-    # csmParametersFile value would be  BUILD_SOURCESDIRECTORY when left empty in UI.
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
+    # csmParametersFile value would be  SYSTEM_DEFAULTWORKINGDIRECTORY when left empty in UI.
+    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
     {
         #Find the matching deployment definition Parameter File
         $csmParametersFile = Get-File $csmParametersFile
