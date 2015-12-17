@@ -43,26 +43,19 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal
 # Load all dependent files for execution
 Import-Module ./Utility.ps1 -Force
 
-try
+function Handle-SelectResourceGroupAction
 {
-    Validate-AzurePowershellVersion
-
-    $azureUtility = Get-AzureUtility
-    Write-Verbose -Verbose "Loading $azureUtility"
-    Import-Module ./$azureUtility -Force
-
-    if( $action -eq "Select Resource Group")
+    if([string]::IsNullOrEmpty($outputVariable))
     {
-        if([string]::IsNullOrEmpty($outputVariable))
-        {
-            Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
-            throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
-        }
-
-        Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
-        return
+        Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
+        throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
     }
 
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+}
+
+function Handle-ResourceGroupLifeCycleOperations
+{
     $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
     if ($serviceEndpoint.Authorization.Scheme -eq 'Certificate')
     {
@@ -81,6 +74,28 @@ try
     else
     {
         Perform-Action -action $action -resourceGroupName $resourceGroupName
+    }
+}
+
+try
+{
+    Validate-AzurePowerShellVersion
+
+    $azureUtility = Get-AzureUtility
+    Write-Verbose -Verbose "Loading $azureUtility"
+    Import-Module ./$azureUtility -Force
+
+    switch ($action)
+    {
+        "Select Resource Group" {
+            Handle-SelectResourceGroupAction
+            break
+        }
+
+        default {
+            Handle-ResourceGroupLifeCycleOperations
+            break
+        }
     }
 
     Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"

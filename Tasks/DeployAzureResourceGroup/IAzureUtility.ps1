@@ -6,7 +6,7 @@ function Create-AzureResourceGroupIfNotExist
 }
 
 # Deploy $csmFile template on ResourceGroup $resourceGroupName.
-# Return  hash with following format: @{"azureResourceGroupDeployment" = $($azureResourceGroupDeployment); "deploymentError" = $($deploymentError)}
+# Return hash table with following format: @{"azureResourceGroupDeployment" = $($azureResourceGroupDeployment); "deploymentError" = $($deploymentError)}
 # Where $azureResourceGroupDeployment is deploymentResponse and $deploymentError is deployment error.	
 function Deploy-AzureResourceGroup
 {

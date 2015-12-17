@@ -1,4 +1,4 @@
-# Telemetry
+# Telemetr
 $telemetryCodes =
 @{
   "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
@@ -54,7 +54,7 @@ function Write-TaskSpecificTelemetry
     Write-Telemetry "$codeKey" "94A74903-F93F-4075-884F-DC11F34058B4"
 }
 
-function Validate-AzurePowershellVersion
+function Validate-AzurePowerShellVersion
 {
     $currentVersion =  Get-AzureCmdletsVersion
     $minimumAzureVersion = New-Object System.Version(0, 9, 0)
@@ -69,6 +69,15 @@ function Validate-AzurePowershellVersion
     Write-Verbose -Verbose "Validated the required azure powershell version"
 }
 
+function Check-AzureRMInstalled
+{
+    if(!(Get-Module -Name "AzureRM" -ListAvailable))
+    {
+        Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
+        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
+    }
+}
+
 function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
@@ -76,16 +85,21 @@ function Get-AzureUtility
     $minimumAzureVersion = New-Object System.Version(0, 9, 9)
     $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
 
+    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
+
     if(!$versionCompatible)
     {
-        Write-Verbose -Verbose "Required AzureUtility: AzureUtilityLTE9.8.ps1"
-        return "AzureUtilityLTE9.8.ps1"
+        $azureUtilityRequiredVersion = $azureUtilityOldVersion
     }
     else
     {
-        Write-Verbose -Verbose "Required AzureUtility: AzureUtilityGTE1.0.ps1"
-        return "AzureUtilityGTE1.0.ps1"
+        Check-AzureRMInstalled
+        $azureUtilityRequiredVersion = $azureUtilityNewVersion
     }
+
+    Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
+    return $azureUtilityRequiredVersion
 }
 
 function Create-AzureResourceGroup
@@ -113,7 +127,7 @@ function Create-AzureResourceGroup
     $csmParametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
     $csmFile = $csmAndParameterFiles["csmFile"]
 
-    if([string]::IsNullOrEmpty($csmFile) -eq $false -and [string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($location) -eq $false)
+    if(-not [string]::IsNullOrEmpty($csmFile) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($location))
     {
         # Create azure resource group
         Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
@@ -160,7 +174,7 @@ function Get-MachineLogs
 {
     param([string]$resourceGroupName)
 
-    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    if (-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         $VmInstanceViews = Get-AllVMInstanceView -ResourceGroupName $resourceGroupName
 
@@ -258,7 +272,7 @@ function Get-CsmParameterObject
 {
     param([string]$csmParameterFileContent)
 
-    if ([string]::IsNullOrEmpty($csmParameterFileContent) -eq $false)
+    if (-not [string]::IsNullOrEmpty($csmParameterFileContent))
     {
         Write-Verbose "Generating csm parameter object" -Verbose
 
@@ -294,13 +308,13 @@ function Print-OperationLog
     if($log)
     {
         $status = $log.DisplayStatus
-        if([string]::IsNullOrEmpty($status) -eq $false)
+        if(-not [string]::IsNullOrEmpty($status))
         {
             Write-Verbose -Verbose "Status: $status"
         }
 
         $message = $log.Message
-        if([string]::IsNullOrEmpty($message) -eq $false)
+        if(-not [string]::IsNullOrEmpty($message))
         {
             Write-Verbose -Verbose "Message: $message"
         }
@@ -455,7 +469,7 @@ function Instantiate-Environment
         $resourceFQDN = $resourceProperties.fqdn
         $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
 
-        if([string]::IsNullOrEmpty($resourceFQDN) -eq $false)
+        if(-not [string]::IsNullOrEmpty($resourceFQDN))
         {
             $machineSpec = $resourceFQDN + ":" + $resourceWinRMHttpsPort
             $resources += $machineSpec
@@ -481,14 +495,14 @@ function Get-MachinesFqdnsForLB
           [Object]$frontEndIPConfigs,
           [System.Collections.Hashtable]$fqdnMap)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources -and $frontEndIPConfigs)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $publicIPAddressResources -and $networkInterfaceResources -and $frontEndIPConfigs)
     {
         Write-Verbose "Trying to get FQDN for the RM azureVM resources from resource group: $resourceGroupName" -Verbose
 
         #Map the public ip id to the fqdn
         foreach($publicIp in $publicIPAddressResources)
         {
-            if([string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn) -eq $false)
+            if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
             {
                 $fqdnMap[$publicIp.Id] =  $publicIP.DnsSettings.Fqdn
             }
@@ -502,7 +516,7 @@ function Get-MachinesFqdnsForLB
         foreach($config in $frontEndIPConfigs)
         {
             $fqdn = $fqdnMap[$config.PublicIpAddress.Id]
-            if([string]::IsNullOrEmpty($fqdn) -eq $false)
+            if(-not [string]::IsNullOrEmpty($fqdn))
             {
                 $fqdnMap.Remove($config.PublicIpAddress.Id)
                 foreach($rule in $config.InboundNatRules)
@@ -520,7 +534,7 @@ function Get-MachinesFqdnsForLB
                 foreach($rule in $ipc.LoadBalancerInboundNatRules)
                 {
                     $fqdn = $fqdnMap[$rule.Id]
-                    if([string]::IsNullOrEmpty($fqdn) -eq $false)
+                    if(-not [string]::IsNullOrEmpty($fqdn))
                     {
                         $fqdnMap.Remove($rule.Id)
                         if($nic.VirtualMachine)
@@ -545,7 +559,7 @@ function Get-FrontEndPorts
           [Object]$networkInterfaceResources,
           [Object]$inboundRules)
 
-    if([string]::IsNullOrEmpty($backEndPort) -eq $false -and $networkInterfaceResources -and $inboundRules)
+    if(-not [string]::IsNullOrEmpty($backEndPort) -and $networkInterfaceResources -and $inboundRules)
     {
         Write-Verbose "Trying to get front end ports for $backEndPort" -Verbose
 
@@ -566,7 +580,7 @@ function Get-FrontEndPorts
             foreach($ipConfig in $nic.IpConfigurations)
             {
                 $frontEndPort = $portList[$ipConfig.Id]
-                if([string]::IsNullOrEmpty($frontEndPort) -eq $false)
+                if(-not [string]::IsNullOrEmpty($frontEndPort))
                 {
                     $portList.Remove($ipConfig.Id)
                     if($nic.VirtualMachine)
@@ -598,7 +612,7 @@ function Get-MachineNameFromId
         {
             $value = $map[$vm.Id]
             $resourceName = $vm.Name
-            if([string]::IsNullOrEmpty($value) -eq $false)
+            if(-not [string]::IsNullOrEmpty($value))
             {
                 Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
                 $map.Remove($vm.Id)
@@ -638,14 +652,14 @@ function Get-MachinesFqdns
           [Object]$azureRMVMResources,
           [System.Collections.Hashtable]$fqdnMap)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $publicIPAddressResources -and $networkInterfaceResources)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName)-and $publicIPAddressResources -and $networkInterfaceResources)
     {
         Write-Verbose "Trying to get FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
 
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)
         {
-            if([string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn) -eq $false)
+            if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
             {
                 $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
             }
@@ -661,7 +675,7 @@ function Get-MachinesFqdns
             foreach($ipc in $nic.IpConfigurations)
             {
                 $fqdn =  $fqdnMap[$ipc.Id]
-                if([string]::IsNullOrEmpty($fqdn) -eq $false)
+                if(-not [string]::IsNullOrEmpty($fqdn))
                 {
                     $fqdnMap.Remove($ipc.Id)
                     if($nic.VirtualMachine)
@@ -689,7 +703,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     [hashtable]$winRmHttpsPortMap = @{}
     [hashtable]$vmResourcesDetails = @{}
 
-    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    if (-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         $ResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
         $ResourcesDetails.Add("$azureRMVMResources", $azureRMVMResources)

@@ -5,7 +5,7 @@ function Create-AzureResourceGroupIfNotExist
     param([string]$resourceGroupName,
           [string]$location)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         try
         {
@@ -19,7 +19,7 @@ function Create-AzureResourceGroupIfNotExist
         }
     }
 
-    if(!$azureResourceGroup -and [string]::IsNullOrEmpty($location) -eq $false)
+    if(!$azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
         $response = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
@@ -55,7 +55,7 @@ function Get-AllVMInstanceView
     param([string]$resourceGroupName)
 
     $VmInstanceViews = @{}
-    if ([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    if (-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group $resourceGroupName"
         $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
@@ -63,13 +63,16 @@ function Get-AllVMInstanceView
 
         $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
 
-        foreach($resource in $azureResourceGroupResources)
+        if($azureResourceGroupResources)
         {
-            $name = $resource.Name
-            Write-Verbose -Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
-            $vmInstanceView = Get-AzureRMVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
-            Write-Verbose -Verbose "[Azure Resource Manager]Got VM $name from resource group $resourceGroupName"
-            $VmInstanceViews.Add($name, $vmInstanceView)
+            foreach($resource in $azureResourceGroupResources)
+            {
+                $name = $resource.Name
+                Write-Verbose -Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
+                $vmInstanceView = Get-AzureRMVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
+                Write-Verbose -Verbose "[Azure Resource Manager]Got VM $name from resource group $resourceGroupName"
+                $VmInstanceViews.Add($name, $vmInstanceView)
+            }
         }
     }
     return $VmInstanceViews
@@ -80,7 +83,7 @@ function Start-Machine
     param([string]$resourceGroupName,
           [string]$machineName)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($machineName) -eq $false)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
         Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
         $response = Start-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
@@ -94,7 +97,7 @@ function Stop-Machine
     param([string]$resourceGroupName,
           [string]$machineName)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($machineName) -eq $false)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
         Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
         $response = Stop-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
@@ -108,7 +111,7 @@ function Delete-Machine
     param([string]$resourceGroupName,
           [string]$machineName)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and [string]::IsNullOrEmpty($machineName) -eq $false)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
         Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting machine '{0}'" -ArgumentList $machineName)
         $response = Remove-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
@@ -121,7 +124,7 @@ function Delete-ResourceGroup
 {
     param([string]$resourceGroupName)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group '{0}'" -ArgumentList $resourceGroupName)
         Remove-AzureRMResourceGroup -Name $resourceGroupName -Force -ErrorAction Stop -Verbose
@@ -133,7 +136,7 @@ function Get-AzureRMVMsInResourceGroup
 {
     param([string]$resourceGroupName)
 
-    If([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    If(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         try
         {
@@ -162,7 +165,7 @@ function Get-AzureRMResourceGroupResourcesDetails
 
     [hashtable]$ResourcesDetails = @{}
     [hashtable]$LoadBalancerDetails = @{}
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $azureRMVMResources)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
         Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
         $networkInterfaceResources = Get-AzureRMNetworkInterface -ResourceGroupName $resourceGroupName -Verbose
@@ -210,7 +213,7 @@ function Get-AzureClassicVMsInResourceGroup
 {
     param([string]$resourceGroupName)
 
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
         $azureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
@@ -226,7 +229,7 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
           [object]$azureClassicVMResources)
 
     [hashtable]$classicVMsDetails = @{}
-    if([string]::IsNullOrEmpty($resourceGroupName) -eq $false -and $azureClassicVMResources)
+    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureClassicVMResources)
     {
         Write-Verbose -Verbose "Trying to get FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
         foreach($azureClassicVm in $azureClassicVMResources)
