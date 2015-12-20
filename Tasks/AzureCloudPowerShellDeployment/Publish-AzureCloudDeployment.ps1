@@ -29,7 +29,10 @@ param
     $AppendDateTimeToLabel,
 
     [String] [Parameter(Mandatory = $true)]
-    $AllowUpgrade
+    $AllowUpgrade,
+	
+	[String]
+	$DeploymentLabel
 )
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
@@ -187,6 +190,7 @@ Write-Host "Slot= $Slot"
 Write-Host "DeploymentLabel= $DeploymentLabel"
 Write-Host "AppendDateTimeToLabel= $AppendDateTimeToLabel"
 Write-Host "AllowUpgrade= $AllowUpgrade"
+Write-Host "DeploymentLabel= $DeploymentLabel"
 
 $allowUpgrade = Convert-String $AllowUpgrade Boolean
 
@@ -233,7 +237,7 @@ if (!$azureDeployment)
 	{
 		Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
 		$azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
-	}
+} 
 } 
 elseif ($allowUpgrade -eq $true)
 {
@@ -247,7 +251,7 @@ elseif ($allowUpgrade -eq $true)
 	{
 		Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
 		$azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
-	}
+}
 }
 else
 {
@@ -263,7 +267,7 @@ else
 	{
 		Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
 		$azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
-	}
+}
 }
 
 Write-Verbose "Leaving script Publish-AzureCloudDeployment.ps1"

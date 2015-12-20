@@ -98,6 +98,14 @@
       "defaultValue": "true",
       "required": true
     }
+	{
+      "name": "DeploymentLabel",
+      "type": "string",
+      "label": "An optional deployment label",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "An optional deployment label which will be displayed in the azure portal"
+    },
   ],
   "sourceDefinitions": [
     {
