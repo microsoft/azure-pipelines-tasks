@@ -41,7 +41,7 @@
       "label": "Web App Location",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Select a region for deployment.",     
+      "helpMarkDown": "Select a region for deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",     
       "properties": {
         "EditableOptions": "True"
       }
