@@ -320,7 +320,7 @@ try
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
     Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter" -Verbose
-    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter
+    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter -DoNotPersist
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName" -Verbose
