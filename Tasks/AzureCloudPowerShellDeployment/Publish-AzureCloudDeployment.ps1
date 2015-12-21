@@ -226,7 +226,7 @@ if (!$azureService)
          $azureService += " -Location `"$ServiceLocation`""
     }
     else {
-        Write-Error "Either AffinityGroup or ServiceLocation must be specified"
+        throw "Either AffinityGroup or ServiceLocation must be specified"
     }
     $azureService += " $NewServiceAdditionalArguments"
     Write-Host "$azureService"
