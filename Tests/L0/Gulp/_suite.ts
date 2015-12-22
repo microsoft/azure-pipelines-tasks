@@ -31,7 +31,12 @@ describe('Gulp Suite', function() {
 		
 		var tr = new trm.TaskRunner('Gulp');
 		tr.setInput('gulpFile', 'gulpfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
@@ -52,15 +57,20 @@ describe('Gulp Suite', function() {
 		
 		var tr = new trm.TaskRunner('Gulp');
 		tr.setInput('gulpFile', 'gulpfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
 			if(os.type().match(/^Win/)) {
-        		assert(tr.ran('/usr/local/bin/node fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js'), 'it should have run gulp');
+        		assert(tr.ran('/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js'), 'it should have run gulp');
     		}
 			else {
-				assert(tr.ran('/usr/local/bin/node fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js'), 'it should have run gulp');
+				assert(tr.ran('/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js'), 'it should have run gulp');
 			}
 
             assert(tr.invokedToolCount == 1, 'should have only run gulp');
@@ -78,7 +88,12 @@ describe('Gulp Suite', function() {
 		setResponseFile('gulpGlobalGood.json');
 		
 		var tr = new trm.TaskRunner('Gulp');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
@@ -119,7 +134,12 @@ describe('Gulp Suite', function() {
 		
 		var tr = new trm.TaskRunner('Gulp');
 		tr.setInput('gulpFile', 'gulpfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		// don't set gulpjs
 		tr.run()
 		.then(() => {
@@ -142,7 +162,12 @@ describe('Gulp Suite', function() {
 		var tr = new trm.TaskRunner('Gulp');
 
 		tr.setInput('gulpFile', 'gulpfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');		
 		tr.run()
 		.then(() => {
@@ -163,7 +188,12 @@ describe('Gulp Suite', function() {
 		
 		var tr = new trm.TaskRunner('Gulp');
 		tr.setInput('gulpFile', 'gulpfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
@@ -184,7 +214,12 @@ describe('Gulp Suite', function() {
 		
 		var tr = new trm.TaskRunner('Gulp');
 		tr.setInput('gulpFile', 'gulpfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {

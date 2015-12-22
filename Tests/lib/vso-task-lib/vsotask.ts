@@ -53,9 +53,9 @@ export function setErrStream(errStream): void {
 // Results and Exiting
 //-----------------------------------------------------
 
-export function setResult(result: TaskResult, message: string): void {    
+export function setResult(result: TaskResult, message: string): void {
     debug('task result: ' + TaskResult[result]);
-    command('task.complete', {'result': TaskResult[result]}, message);
+    command('task.complete', { 'result': TaskResult[result] }, message);
 
     if (result == TaskResult.Failed) {
         _writeError(message);
@@ -63,7 +63,7 @@ export function setResult(result: TaskResult, message: string): void {
 
     if (result == TaskResult.Failed) {
         process.exit(0);
-    }   
+    }
 }
 
 //
@@ -90,32 +90,32 @@ export function exit(code: number): void {
 // Loc Helpers
 //-----------------------------------------------------
 var locStringCache: {
-    [key:string]:string
+    [key: string]: string
 } = {};
 var resourceFile: string;
 var libResourceFileLoaded: boolean = false;
 
 function loadLocStrings(resourceFile: string): any {
     var locStrings: {
-        [key:string]:string
+        [key: string]: string
     } = {};
-    
-    if(resourceFile && fs.existsSync(resourceFile)) {
+
+    if (resourceFile && fs.existsSync(resourceFile)) {
         debug('load loc strings from: ' + resourceFile);
-        var resourceJson= require(resourceFile);
-        
-        if(resourceJson && resourceJson.hasOwnProperty('messages')) {     
-            for(var key in resourceJson.messages) {
-                if(typeof(resourceJson.messages[key]) === 'object') {
-                    if(resourceJson.messages[key].loc && resourceJson.messages[key].loc.toString().length > 0) {
-                     locStrings[key] = resourceJson.messages[key].loc.toString();     
+        var resourceJson = require(resourceFile);
+
+        if (resourceJson && resourceJson.hasOwnProperty('messages')) {
+            for (var key in resourceJson.messages) {
+                if (typeof (resourceJson.messages[key]) === 'object') {
+                    if (resourceJson.messages[key].loc && resourceJson.messages[key].loc.toString().length > 0) {
+                        locStrings[key] = resourceJson.messages[key].loc.toString();
                     }
-                    else if (resourceJson.messages[key].fallback){
+                    else if (resourceJson.messages[key].fallback) {
                         locStrings[key] = resourceJson.messages[key].fallback.toString();
                     }
                 }
-                else if(typeof(resourceJson.messages[key]) === 'string') {
-                    locStrings[key] = resourceJson.messages[key];    
+                else if (typeof (resourceJson.messages[key]) === 'string') {
+                    locStrings[key] = resourceJson.messages[key];
                 }
             }
         }
@@ -125,17 +125,17 @@ function loadLocStrings(resourceFile: string): any {
 }
 
 export function setResourcePath(path: string): void {
-    if(process.env['TASKLIB_INPROC_UNITS']) {
+    if (process.env['TASKLIB_INPROC_UNITS']) {
         resourceFile = null;
         libResourceFileLoaded = false;
         locStringCache = {};
     }
-    if(!resourceFile) {
+    if (!resourceFile) {
         resourceFile = path;
         debug('set resource file to: ' + resourceFile);
-        
+
         var locStrs = loadLocStrings(resourceFile);
-        for(var key in locStrs) {
+        for (var key in locStrs) {
             debug('cache loc string: ' + key);
             locStringCache[key] = locStrs[key];
         }
@@ -147,40 +147,40 @@ export function setResourcePath(path: string): void {
 }
 
 export function loc(key: string, ...param: any[]): string {
-    if(!libResourceFileLoaded) {
+    if (!libResourceFileLoaded) {
         // merge loc strings from vso-task-lib.
         var libResourceFile = path.join(__dirname, 'lib.json');
         var libLocStrs = loadLocStrings(libResourceFile);
-        for(var libKey in libLocStrs) {
+        for (var libKey in libLocStrs) {
             debug('cache vso-task-lib loc string: ' + libKey);
             locStringCache[libKey] = libLocStrs[libKey];
         }
-        
+
         libResourceFileLoaded = true;
     }
 
     var locString;;
-    if(locStringCache.hasOwnProperty(key)) {
+    if (locStringCache.hasOwnProperty(key)) {
         locString = locStringCache[key];
     }
     else {
-        if(!resourceFile) {
+        if (!resourceFile) {
             warning('resource file haven\'t been set, can\'t find loc string for key: ' + key);
         }
         else {
-            warning('can\'t find loc string for key: ' + key);    
+            warning('can\'t find loc string for key: ' + key);
         }
-        
+
         locString = key;
     }
-    
-    if(param.length > 0) {
-        return util.format.apply(this, [locString].concat(param));    
+
+    if (param.length > 0) {
+        return util.format.apply(this, [locString].concat(param));
     }
     else {
         return locString;
     }
-    
+
 }
 
 //-----------------------------------------------------
@@ -190,7 +190,7 @@ export function getVariable(name: string): string {
     var varval = process.env[name.replace(/\./g, '_').toUpperCase()];
     debug(name + '=' + varval);
 
-    var mocked =  mock.getResponse('getVariable', name);
+    var mocked = mock.getResponse('getVariable', name);
     return mocked || varval;
 }
 
@@ -203,7 +203,7 @@ export function setVariable(name: string, val: string): void {
     var varValue = val || '';
     process.env[name.replace(/\./g, '_').toUpperCase()] = varValue;
     debug('set ' + name + '=' + varValue);
-    command('task.setvariable', {'variable': name || ''}, varValue);
+    command('task.setvariable', { 'variable': name || '' }, varValue);
 }
 
 export function getInput(name: string, required?: boolean): string {
@@ -214,10 +214,10 @@ export function getInput(name: string, required?: boolean): string {
     }
 
     debug(name + '=' + inval);
-    return inval;    
+    return inval;
 }
 
-export function getBoolInput(name: string, required?:boolean): boolean {
+export function getBoolInput(name: string, required?: boolean): boolean {
     return getInput(name, required) == "true";
 }
 
@@ -235,7 +235,7 @@ export function getDelimitedInput(name: string, delim: string, required?: boolea
     var inval = getInput(name, required);
     if (!inval) {
         return [];
-    }    
+    }
     return inval.split(delim);
 }
 
@@ -255,15 +255,15 @@ export function getPathInput(name: string, required?: boolean, check?: boolean):
         if (check) {
             checkPath(inval, name);
         }
-    
+
         if (inval.indexOf(' ') > 0) {
             if (!startsWith(inval, '"')) {
                 inval = '"' + inval;
             }
-            
+
             if (!endsWith(inval, '"')) {
                 inval += '"';
-            } 
+            }
         }
     } else if (required) {
         setResult(TaskResult.Failed, 'Input required: ' + name); // exit
@@ -286,7 +286,7 @@ export function getEndpointUrl(id: string, optional: boolean): string {
     }
 
     debug(id + '=' + urlval);
-    return urlval;    
+    return urlval;
 }
 
 // TODO: should go away when task lib 
@@ -328,7 +328,7 @@ export class FsStats implements fs.Stats {
     private m_isSymbolicLink: boolean;
     private m_isFIFO: boolean;
     private m_isSocket: boolean;
-    
+
     dev: number;
     ino: number;
     mode: number;
@@ -342,7 +342,7 @@ export class FsStats implements fs.Stats {
     atime: Date;
     mtime: Date;
     ctime: Date;
-        
+
     setAnswers(mockResponses) {
         this.m_isFile = mockResponses['isFile'] || false;
         this.m_isDirectory = mockResponses['isDirectory'] || false;
@@ -351,47 +351,47 @@ export class FsStats implements fs.Stats {
         this.m_isSymbolicLink = mockResponses['isSymbolicLink'] || false;
         this.m_isFIFO = mockResponses['isFIFO'] || false;
         this.m_isSocket = mockResponses['isSocket'] || false;
-        
+
         this.dev = mockResponses['dev'];
         this.ino = mockResponses['ino'];
         this.mode = mockResponses['mode'];
         this.nlink = mockResponses['nlink'];
         this.uid = mockResponses['uid'];
         this.gid = mockResponses['gid'];
-        this.rdev = mockResponses['rdev'];   
+        this.rdev = mockResponses['rdev'];
         this.size = mockResponses['size'];
         this.blksize = mockResponses['blksize'];
         this.blocks = mockResponses['blocks'];
         this.atime = mockResponses['atime'];
         this.mtime = mockResponses['mtime'];
         this.ctime = mockResponses['ctime'];
-        this.m_isSocket = mockResponses['isSocket'];         
+        this.m_isSocket = mockResponses['isSocket'];
     }
-    
+
     isFile(): boolean {
         return this.m_isFile;
     }
-    
+
     isDirectory(): boolean {
         return this.m_isDirectory;
     }
-    
+
     isBlockDevice(): boolean {
         return this.m_isBlockDevice;
     }
-    
+
     isCharacterDevice(): boolean {
         return this.m_isCharacterDevice;
     }
-    
+
     isSymbolicLink(): boolean {
         return this.m_isSymbolicLink;
     }
-    
+
     isFIFO(): boolean {
         return this.m_isFIFO;
     }
-    
+
     isSocket(): boolean {
         return this.m_isSocket;
     }
@@ -399,7 +399,7 @@ export class FsStats implements fs.Stats {
 
 export function stats(path: string): FsStats {
     var fsStats = new FsStats();
-    fsStats.setAnswers(mock.getResponse('stats', path) || {} );
+    fsStats.setAnswers(mock.getResponse('stats', path) || {});
     return fsStats;
 }
 
@@ -416,11 +416,11 @@ export function command(command: string, properties, message: string) {
 }
 
 export function warning(message: string): void {
-    command('task.issue', {'type': 'warning'}, message);
+    command('task.issue', { 'type': 'warning' }, message);
 }
 
 export function error(message: string): void {
-    command('task.issue', {'type': 'error'}, message);
+    command('task.issue', { 'type': 'error' }, message);
 }
 
 export function debug(message: string): void {
@@ -505,9 +505,9 @@ export function glob(pattern: string): string[] {
         var m = Math.min(matches.length, 10);
         debug('matches:');
         if (m == 10) {
-            debug('listing first 10 matches as samples');    
+            debug('listing first 10 matches as samples');
         }
-        
+
         for (var i = 0; i < m; i++) {
             debug(matches[i]);
         }
@@ -532,23 +532,23 @@ export function globFirst(pattern: string): string {
 //-----------------------------------------------------
 // Exec convenience wrapper
 //-----------------------------------------------------
-export function exec(tool: string, args:any, options?:trm.IExecOptions): Q.Promise<number> {
+export function exec(tool: string, args: any, options?: trm.IExecOptions): Q.Promise<number> {
     var toolPath = which(tool, true);
     var tr: trm.ToolRunner = createToolRunner(toolPath);
     if (args) {
         tr.arg(args);
     }
-    return tr.exec(options);    
+    return tr.exec(options);
 }
 
-export function execSync(tool: string, args:any, options?:trm.IExecOptions): trm.IExecResult {
+export function execSync(tool: string, args: any, options?: trm.IExecOptions): trm.IExecResult {
     var toolPath = which(tool, true);
     var tr: trm.ToolRunner = createToolRunner(toolPath);
     if (args) {
         tr.arg(args);
     }
-        
-    return tr.execSync(options);    
+
+    return tr.execSync(options);
 }
 
 export function createToolRunner(tool: string) {
@@ -580,30 +580,30 @@ export function filter(pattern, options): string[] {
 //-----------------------------------------------------
 export class TestPublisher {
     constructor(testRunner) {
-        this.testRunner = testRunner;        
+        this.testRunner = testRunner;
     }
 
     public testRunner: string;
 
     public publish(resultFiles, mergeResults, platform, config) {
-        
-        if(mergeResults == 'true') {
+
+        if (mergeResults == 'true') {
             _writeLine("Merging test results from multiple files to one test run is not supported on this version of build agent for OSX/Linux, each test result file will be published as a separate test run in VSO/TFS.");
         }
-        
-        var properties = <{[key: string]: string}>{};
+
+        var properties = <{ [key: string]: string }>{};
         properties['type'] = this.testRunner;
-        
-        if(platform) {
+
+        if (platform) {
             properties['platform'] = platform;
         }
 
-        if(config) {
+        if (config) {
             properties['config'] = config;
         }
 
-        for(var i = 0; i < resultFiles.length; i ++) {            
-            command('results.publish',  properties, resultFiles[i]);
+        for (var i = 0; i < resultFiles.length; i++) {
+            command('results.publish', properties, resultFiles[i]);
         }
     }
 }

@@ -5,8 +5,8 @@ import os = require('os');
 import tl = require('vso-task-lib/vsotask');
 
 // contents is a multiline input containing glob patterns
-var contents: string[] = tl.getDelimitedInput('Contents', '\n');
-var sourceFolder = tl.getPathInput('SourceFolder');
+var contents: string[] = tl.getDelimitedInput('Contents', '\n', true);
+var sourceFolder = tl.getPathInput('SourceFolder', true, true);
 
 // include filter
 var includeContents = [];
@@ -41,7 +41,7 @@ for (var i = 0; i < allPaths.length; i++) {
 }
 allFiles = allFiles.concat(allFolders);
 
-if (includeContents && allFiles && includeContents.length > 0 && allFiles.length > 0) {
+if (includeContents.length > 0 && allFiles.length > 0) {
     tl.debug("allFiles contains " + allFiles.length + " files");
     // a map to eliminate duplicates
     var map = {};

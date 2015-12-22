@@ -15,10 +15,11 @@ var gulp = tl.which('gulp', false);
 
 tl.debug('check path : ' + gulp);
 if(!tl.exist(gulp)) {
+	tl.debug('not found global installed gulp, try to find gulp locally.');
 	var gt = tl.createToolRunner(tl.which('node', true));
 
 	var gulpjs = tl.getInput('gulpjs', true);
-	gulpjs = path.join(cwd, gulpjs);
+	gulpjs = path.resolve(cwd, gulpjs);
 
 	tl.debug('check path : ' + gulpjs);
 	if(!tl.exist(gulpjs)) {

@@ -31,7 +31,12 @@ describe('Grunt Suite', function() {
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
 		tr.run()
 		.then(() => {
@@ -52,15 +57,20 @@ describe('Grunt Suite', function() {
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
 		tr.run()
 		.then(() => {
 			if(os.type().match(/^Win/)) {
-        		assert(tr.ran('/usr/local/bin/node fake\\wd\\node_modules\\grunt-cli\\bin\\grunt --gruntfile gruntfile.js'), 'it should have run grunt');
+        		assert(tr.ran('/usr/local/bin/node c:\\fake\\wd\\node_modules\\grunt-cli\\bin\\grunt --gruntfile gruntfile.js'), 'it should have run grunt');
     		}
 			else {
-				assert(tr.ran('/usr/local/bin/node fake/wd/node_modules/grunt-cli/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
+				assert(tr.ran('/usr/local/bin/node /fake/wd/node_modules/grunt-cli/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
 			}
             
             assert(tr.invokedToolCount == 1, 'should have only run grunt');
@@ -79,7 +89,12 @@ describe('Grunt Suite', function() {
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
 		tr.run()
 		.then(() => {
@@ -100,7 +115,12 @@ describe('Grunt Suite', function() {
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
 		tr.run()
 		.then(() => {
@@ -121,7 +141,12 @@ describe('Grunt Suite', function() {
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('targets', 'build test');
 		tr.setInput('arguments', '-v');
 		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
@@ -167,7 +192,12 @@ describe('Grunt Suite', function() {
 		setResponseFile('gruntGlobalGood.json');
 		
 		var tr = new trm.TaskRunner('Grunt');
-		tr.setInput('cwd', 'fake/wd');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
 		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
 		tr.run()
 		.then(() => {

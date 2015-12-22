@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [
   ],
@@ -64,8 +64,6 @@
     }
   },
   "messages": {
-    "ArtifactNameNotSpecified" : "Artifact name is not specified.",
-    "ArtifactTypeNotSpecified" : "Artifact type is not specified.",
     "PublishBuildArtifactsFailed" : "Publish build artifacts failed with error: %s" 
   }
 }

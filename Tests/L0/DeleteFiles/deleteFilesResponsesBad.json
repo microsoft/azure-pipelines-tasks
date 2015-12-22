@@ -22,5 +22,8 @@
         "/lockedDir/otherLockedDir": [
               "/lockedDir/otherLockedDir"
         ]
+    },
+    "checkPath" : {
+        "/lockedDir": true
     }
 }

@@ -15,10 +15,11 @@ var grunt = tl.which('grunt', false);
 
 tl.debug('check path : ' + grunt);
 if(!tl.exist(grunt)) {
+	tl.debug('not found global installed grunt-cli, try to find grunt-cli locally.');	
 	var gt = tl.createToolRunner(tl.which('node', true));	
 	
 	var gtcli = tl.getInput('gruntCli', true);
-	gtcli = path.join(cwd, gtcli);
+	gtcli = path.resolve(cwd, gtcli);
 	
 	tl.debug('check path : ' + gtcli);
 	if(!tl.exist(gtcli)) {

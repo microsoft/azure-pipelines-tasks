@@ -14,7 +14,5 @@
   "loc.input.help.ArtifactType": "The type of the artifact to create.",
   "loc.input.label.TargetPath": "Path",
   "loc.input.help.TargetPath": "The file share to which to copy the files",
-  "loc.messages.ArtifactNameNotSpecified": "Artifact name is not specified.",
-  "loc.messages.ArtifactTypeNotSpecified": "Artifact type is not specified.",
   "loc.messages.PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s"
 }

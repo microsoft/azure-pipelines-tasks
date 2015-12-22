@@ -12,9 +12,9 @@ import shell = require('shelljs');
 import tcm = require('vso-task-lib/taskcommand');
 
 function debug(message) {
-    //if (process.env['TASK_TEST_TRACE']) {
+    if (process.env['TASK_TEST_TRACE']) {
         console.log(message);
-    //}
+    }
 }
 
 export class TaskRunner extends events.EventEmitter {
@@ -113,7 +113,7 @@ export class TaskRunner extends events.EventEmitter {
 		}
 		
 		var json = fs.readFileSync(jsonPath).toString();
-		this._task = require(jsonPath);
+		this._task = JSON.parse(json);
 		
 		this._tryRunNode()
 		.then(() => {
