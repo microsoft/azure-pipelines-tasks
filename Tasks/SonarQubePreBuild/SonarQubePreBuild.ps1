@@ -31,7 +31,7 @@ $cmdLineArgs = UpdateArgsForPullRequestAnalysis $cmdLineArgs $serviceEndpoint
 Write-Verbose -Verbose $cmdLineArgs
 
 $currentDir = (Get-Item -Path ".\" -Verbose).FullName
-$bootstrapperDir = [System.IO.Path]::Combine($currentDir, "MSBuild.SonarQube.Runner-1.0.1") # the MSBuild.SonarQube.Runner is version specific
+$bootstrapperDir = [System.IO.Path]::Combine($currentDir, "MSBuild.SonarQube.Runner-1.1") # the MSBuild.SonarQube.Runner is version specific
 $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQube.Runner.exe")
 
 # Set the path as context variable so that the post-test task will be able to read it and not compute it again;
