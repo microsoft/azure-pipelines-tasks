@@ -1,10 +1,10 @@
 /// <reference path="../../../definitions/node.d.ts" />
 
-var Q = require('q');
-var path = require('path');
-var os = require('os');
-
+import Q = require('q');
+import path = require('path');
 import fs = require('fs');
+import os = require('os');
+import util = require('util');
 import tcm = require('./taskcommand');
 import trm = require('./toolrunner');
 import mock = require('./mock');
@@ -53,7 +53,7 @@ export function setErrStream(errStream): void {
 // Results and Exiting
 //-----------------------------------------------------
 
-export function setResult(result: TaskResult, message: string, exit?: boolean): void {
+export function setResult(result: TaskResult, message: string): void {    
     debug('task result: ' + TaskResult[result]);
     command('task.complete', {'result': TaskResult[result]}, message);
 
@@ -61,22 +61,21 @@ export function setResult(result: TaskResult, message: string, exit?: boolean): 
         _writeError(message);
     }
 
-    console.log('exit: ' + exit);
-    if (exit) {
+    if (result == TaskResult.Failed) {
         process.exit(0);
-    }    
+    }   
 }
 
 //
 // Catching all exceptions
 //
 process.on('uncaughtException', (err) => {
-    setResult(TaskResult.Failed, 'Unhandled:' + err.message, true);
+    setResult(TaskResult.Failed, 'Unhandled:' + err.message);
 });
 
 export function exitOnCodeIf(code, condition: boolean) {
     if (condition) {
-        setResult(TaskResult.Failed, 'failure return code: ' + code, true);
+        setResult(TaskResult.Failed, 'failure return code: ' + code);
     }
 }
 
@@ -84,7 +83,104 @@ export function exitOnCodeIf(code, condition: boolean) {
 // back compat: should use setResult
 //
 export function exit(code: number): void {
-    setResult(code, 'return code: ' + code, true);
+    setResult(code, 'return code: ' + code);
+}
+
+//-----------------------------------------------------
+// Loc Helpers
+//-----------------------------------------------------
+var locStringCache: {
+    [key:string]:string
+} = {};
+var resourceFile: string;
+var libResourceFileLoaded: boolean = false;
+
+function loadLocStrings(resourceFile: string): any {
+    var locStrings: {
+        [key:string]:string
+    } = {};
+    
+    if(resourceFile && fs.existsSync(resourceFile)) {
+        debug('load loc strings from: ' + resourceFile);
+        var resourceJson= require(resourceFile);
+        
+        if(resourceJson && resourceJson.hasOwnProperty('messages')) {     
+            for(var key in resourceJson.messages) {
+                if(typeof(resourceJson.messages[key]) === 'object') {
+                    if(resourceJson.messages[key].loc && resourceJson.messages[key].loc.toString().length > 0) {
+                     locStrings[key] = resourceJson.messages[key].loc.toString();     
+                    }
+                    else if (resourceJson.messages[key].fallback){
+                        locStrings[key] = resourceJson.messages[key].fallback.toString();
+                    }
+                }
+                else if(typeof(resourceJson.messages[key]) === 'string') {
+                    locStrings[key] = resourceJson.messages[key];    
+                }
+            }
+        }
+    }
+
+    return locStrings;
+}
+
+export function setResourcePath(path: string): void {
+    if(process.env['TASKLIB_INPROC_UNITS']) {
+        resourceFile = null;
+        libResourceFileLoaded = false;
+        locStringCache = {};
+    }
+    if(!resourceFile) {
+        resourceFile = path;
+        debug('set resource file to: ' + resourceFile);
+        
+        var locStrs = loadLocStrings(resourceFile);
+        for(var key in locStrs) {
+            debug('cache loc string: ' + key);
+            locStringCache[key] = locStrs[key];
+        }
+
+    }
+    else {
+        warning('resource file is already set to: ' + resourceFile);
+    }
+}
+
+export function loc(key: string, ...param: any[]): string {
+    if(!libResourceFileLoaded) {
+        // merge loc strings from vso-task-lib.
+        var libResourceFile = path.join(__dirname, 'lib.json');
+        var libLocStrs = loadLocStrings(libResourceFile);
+        for(var libKey in libLocStrs) {
+            debug('cache vso-task-lib loc string: ' + libKey);
+            locStringCache[libKey] = libLocStrs[libKey];
+        }
+        
+        libResourceFileLoaded = true;
+    }
+
+    var locString;;
+    if(locStringCache.hasOwnProperty(key)) {
+        locString = locStringCache[key];
+    }
+    else {
+        if(!resourceFile) {
+            warning('resource file haven\'t been set, can\'t find loc string for key: ' + key);
+        }
+        else {
+            warning('can\'t find loc string for key: ' + key);    
+        }
+        
+        locString = key;
+    }
+    
+    if(param.length > 0) {
+        return util.format.apply(this, [locString].concat(param));    
+    }
+    else {
+        return locString;
+    }
+    
 }
 
 //-----------------------------------------------------
@@ -114,7 +210,7 @@ export function getInput(name: string, required?: boolean): string {
     var inval = process.env['INPUT_' + name.replace(' ', '_').toUpperCase()];
 
     if (required && !inval) {
-        setResult(TaskResult.Failed, 'Input required: ' + name, true);
+        setResult(TaskResult.Failed, 'Input required: ' + name);
     }
 
     debug(name + '=' + inval);
@@ -154,7 +250,7 @@ export function filePathSupplied(name: string): boolean {
 }
 
 export function getPathInput(name: string, required?: boolean, check?: boolean): string {
-    var inval = process.env['INPUT_' + name.replace(' ', '_').toUpperCase()];
+    var inval = getInput(name, required);
     if (inval) {
         if (check) {
             checkPath(inval, name);
@@ -170,7 +266,7 @@ export function getPathInput(name: string, required?: boolean, check?: boolean):
             } 
         }
     } else if (required) {
-        setResult(TaskResult.Failed, 'Input required: ' + name, true); // exit
+        setResult(TaskResult.Failed, 'Input required: ' + name); // exit
     }
 
     debug(name + '=' + inval);
@@ -205,7 +301,7 @@ export function getEndpointAuthorization(id: string, optional: boolean): Endpoin
     var aval = process.env['ENDPOINT_AUTH_' + id];
 
     if (!optional && !aval) {
-        setResult(TaskResult.Failed, 'Endpoint not present: ' + id, true);
+        setResult(TaskResult.Failed, 'Endpoint not present: ' + id);
     }
 
     debug(id + '=' + aval);
@@ -215,7 +311,7 @@ export function getEndpointAuthorization(id: string, optional: boolean): Endpoin
         auth = <EndpointAuthorization>JSON.parse(aval);
     }
     catch (err) {
-        setResult(TaskResult.Failed, 'Invalid endpoint auth: ' + aval, true); // exit
+        setResult(TaskResult.Failed, 'Invalid endpoint auth: ' + aval); // exit
     }
 
     return auth;
@@ -225,13 +321,13 @@ export function getEndpointAuthorization(id: string, optional: boolean): Endpoin
 // Fs Helpers
 //-----------------------------------------------------
 export class FsStats implements fs.Stats {
-    private m_isFile;
-    private m_isDirectory;
-    private m_isBlockDevice;
-    private m_isCharacterDevice;
-    private m_isSymbolicLink;
-    private m_isFIFO;
-    private m_isSocket;
+    private m_isFile: boolean;
+    private m_isDirectory: boolean;
+    private m_isBlockDevice: boolean;
+    private m_isCharacterDevice: boolean;
+    private m_isSymbolicLink: boolean;
+    private m_isFIFO: boolean;
+    private m_isSocket: boolean;
     
     dev: number;
     ino: number;
@@ -248,13 +344,13 @@ export class FsStats implements fs.Stats {
     ctime: Date;
         
     setAnswers(mockResponses) {
-        this.m_isFile = mockResponses['isFile'];
-        this.m_isDirectory = mockResponses['isDirectory'];
-        this.m_isBlockDevice = mockResponses['isBlockDevice'];
-        this.m_isCharacterDevice = mockResponses['isCharacterDevice'];
-        this.m_isSymbolicLink = mockResponses['isSymbolicLink'];
-        this.m_isFIFO = mockResponses['isFIFO'];
-        this.m_isSocket = mockResponses['isSocket'];  
+        this.m_isFile = mockResponses['isFile'] || false;
+        this.m_isDirectory = mockResponses['isDirectory'] || false;
+        this.m_isBlockDevice = mockResponses['isBlockDevice'] || false;
+        this.m_isCharacterDevice = mockResponses['isCharacterDevice'] || false;
+        this.m_isSymbolicLink = mockResponses['isSymbolicLink'] || false;
+        this.m_isFIFO = mockResponses['isFIFO'] || false;
+        this.m_isSocket = mockResponses['isSocket'] || false;
         
         this.dev = mockResponses['dev'];
         this.ino = mockResponses['ino'];
@@ -303,8 +399,12 @@ export class FsStats implements fs.Stats {
 
 export function stats(path: string): FsStats {
     var fsStats = new FsStats();
-    fsStats.setAnswers(mock.getResponse('stats', path));
+    fsStats.setAnswers(mock.getResponse('stats', path) || {} );
     return fsStats;
+}
+
+export function exist(path: string): boolean {
+    return mock.getResponse('exist', path) || false;
 }
 
 //-----------------------------------------------------
@@ -355,7 +455,7 @@ export function checkPath(p: string, name: string): void {
     debug('check path : ' + p);
     if (!p || !mock.getResponse('checkPath', p)) {
 
-        setResult(TaskResult.Failed, 'not found ' + name + ': ' + p, true);  // exit
+        setResult(TaskResult.Failed, 'not found ' + name + ': ' + p);  // exit
     }
 }
 
@@ -375,7 +475,8 @@ export function which(tool: string, check?: boolean): string {
 }
 
 export function cp(options, source: string, dest: string): void {
-    
+    console.log('###copying###');
+    debug('copying ' + source + ' to ' + dest);
 }
 
 export function find(findPath: string): string[] {
@@ -385,7 +486,7 @@ export function find(findPath: string): string[] {
 export function rmRF(path: string): void {
     var response = mock.getResponse('rmRF', path);
     if (!response['success']) {
-        setResult(1, response['message'], true);
+        setResult(1, response['message']);
     }
 }
 
@@ -463,15 +564,15 @@ export function createToolRunner(tool: string) {
 // Matching helpers
 //-----------------------------------------------------
 export function match(list, pattern, options): string[] {
-    return mock.getResponse('match', pattern);
+    return mock.getResponse('match', pattern) || [];
 }
 
 export function matchFile(list, pattern, options): string[] {
-    return mock.getResponse('match', pattern);
+    return mock.getResponse('match', pattern) || [];
 }
 
 export function filter(pattern, options): string[] {
-    return mock.getResponse('filter', pattern);
+    return mock.getResponse('filter', pattern) || [];
 }    
 
 //-----------------------------------------------------

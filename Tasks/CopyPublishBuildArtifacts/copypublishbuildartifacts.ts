@@ -1,11 +1,8 @@
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vso-task-lib.d.ts" />
 
 import path = require('path');
 import fs = require('fs');
-import Q = require('q');
-var tl = require("vso-task-lib");
+import tl = require("vso-task-lib/vsotask");
 
 function getCommonLocalPath(files: string[]): string {
     if (!files || files.length === 0) {
@@ -77,6 +74,8 @@ function getFolderDepth(fullPath: string): number {
 
     return count;
 }
+
+tl.setResourcePath(path.join( __dirname, 'task.json'));
 
 // contents is a multiline input containing glob patterns
 var contents: string[] = tl.getDelimitedInput('Contents', '\n');

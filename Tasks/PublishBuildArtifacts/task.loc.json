@@ -61,12 +61,13 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "publishBuildArtifacts.js",
+      "target": "publishbuildartifacts.js",
       "argumentFormat": ""
     }
   },
   "messages": {
     "ArtifactNameNotSpecified": "ms-resource:loc.messages.ArtifactNameNotSpecified",
-    "ArtifactTypeNotSpecified": "ms-resource:loc.messages.ArtifactTypeNotSpecified"
+    "ArtifactTypeNotSpecified": "ms-resource:loc.messages.ArtifactTypeNotSpecified",
+    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed"
   }
 }

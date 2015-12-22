@@ -74,5 +74,5 @@ for (var i = 0; i < files.length; i++) {
     }
 }
 if (errorHappened) {
-    tl.setResult(1, tl.loc("CantDeleteFiles", "Couldn't delete one or more files"));
+    tl.setResult(tl.TaskResult.Failed, tl.loc("CantDeleteFiles"));
 }

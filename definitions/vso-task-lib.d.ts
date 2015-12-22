@@ -45,8 +45,8 @@ declare module 'vso-task-lib/toolrunner' {
 	    private _argStringToArray(argString);
 	    arg(val: any): void;
 	    argIf(condition: any, val: any): void;
-	    exec(options: IExecOptions): Q.Promise<number>;
-	    execSync(options: IExecOptions): IExecResult;
+	    exec(options?: IExecOptions): Q.Promise<number>;
+	    execSync(options?: IExecOptions): IExecResult;
 	}
 
 }
@@ -74,7 +74,7 @@ declare module 'vso-task-lib/vsotask' {
 	export function exitOnCodeIf(code: any, condition: boolean): void;
 	export function exit(code: number): void;
 	export function setResourcePath(path: string): void;
-	export function loc(key: string, defaultStr: string): string;
+	export function loc(key: string, ...param: any[]): string;
 	export function getVariable(name: string): string;
 	export function setVariable(name: string, val: string): void;
 	export function getInput(name: string, required?: boolean): string;
@@ -94,6 +94,7 @@ declare module 'vso-task-lib/vsotask' {
 	export interface FsStats extends fs.Stats {
 	}
 	export function stats(path: string): FsStats;
+	export function exist(path: string): boolean;
 	export function command(command: string, properties: any, message: string): void;
 	export function warning(message: string): void;
 	export function error(message: string): void;
@@ -118,7 +119,7 @@ declare module 'vso-task-lib/vsotask' {
 	export class TestPublisher {
 	    constructor(testRunner: any);
 	    testRunner: string;
-	    publish(resultFiles: any, mergeResults: any, platform: any, config: any): void;
+	    publish(resultFiles: any, mergeResults: any, platform: any, config: any, runTitle: any, publishRunAttachments: any): void;
 	}
 
 }

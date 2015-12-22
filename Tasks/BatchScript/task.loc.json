@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "demands": [
     "Cmd"
@@ -79,8 +79,7 @@
       "target": "$(filename)",
       "argumentFormat": "$(arguments)",
       "workingDirectory": "$(workingFolder)",
-      "modifyEnvironment": "$(modifyEnvironment)",
-      "failOnStandardError": "$(failOnStandardError)"
+      "modifyEnvironment": "$(modifyEnvironment)"
     }
   }
 }

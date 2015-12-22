@@ -1,0 +1,15 @@
+{
+    "which": {
+        "bash": "/usr/local/bin/bash",
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/bash /script.sh arg1 arg2": {
+            "code": 0,
+            "stdout": "bash output here"
+        }
+    },
+    "checkPath" : {
+        "/script.sh" : true
+    }
+}

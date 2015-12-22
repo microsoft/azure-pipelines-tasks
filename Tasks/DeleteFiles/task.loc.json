@@ -40,8 +40,11 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "deleteFiles.js",
+      "target": "deletefiles.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CantDeleteFiles": "ms-resource:loc.messages.CantDeleteFiles"
   }
 }

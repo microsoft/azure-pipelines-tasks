@@ -37,7 +37,7 @@ export interface IExecResult {
 }
 
 export function debug(message) {
-    // do nothing, overridden
+    console.info(message);
 };
 
 export class ToolRunner extends events.EventEmitter {

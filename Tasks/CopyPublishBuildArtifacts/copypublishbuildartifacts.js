@@ -1,8 +1,6 @@
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vso-task-lib.d.ts" />
 var path = require('path');
-var tl = require("vso-task-lib");
+var tl = require("vso-task-lib/vsotask");
 function getCommonLocalPath(files) {
     if (!files || files.length === 0) {
         return "";
@@ -63,6 +61,7 @@ function getFolderDepth(fullPath) {
     }
     return count;
 }
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 // contents is a multiline input containing glob patterns
 var contents = tl.getDelimitedInput('Contents', '\n');
 var artifactName = tl.getInput('ArtifactName');

@@ -1,48 +1,36 @@
-var fs = require('fs');
+/// <reference path="../../definitions/vso-task-lib.d.ts" />
 var path = require('path');
-var tl = require('vso-task-lib');
-
-var gruntFile = tl.getPathInput('gruntFile', true);
-var cwd = tl.getInput('cwd', false);
-if (!cwd) {
-	cwd = path.dirname(gruntFile);
-}
+var tl = require('vso-task-lib/vsotask');
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+var gruntFile = tl.getPathInput('gruntFile', true, true);
+var cwd = tl.getPathInput('cwd', true, false);
+tl.mkdirP(cwd);
 tl.cd(cwd);
-
 var grunt = tl.which('grunt', false);
-
 tl.debug('check path : ' + grunt);
-if(!grunt || !fs.existsSync(grunt)) {
-	var gt = new tl.ToolRunner(tl.which('node', true));	
-	var gtcli = path.resolve(cwd, 'node_modules/grunt-cli/bin/grunt');
-	
-	tl.debug('check path : ' + gtcli);
-	if(!fs.existsSync(gtcli)) {
-		tl.error('grunt-cli is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: ' + gtcli);
-		tl.exit(1);
-		process.exit(0);
-	}
-	
-	gt.arg(gtcli);
+if (!tl.exist(grunt)) {
+    var gt = tl.createToolRunner(tl.which('node', true));
+    var gtcli = tl.getInput('gruntCli', true);
+    gtcli = path.join(cwd, gtcli);
+    tl.debug('check path : ' + gtcli);
+    if (!tl.exist(gtcli)) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc('GruntCliNotInstalled', gtcli));
+    }
+    gt.arg(gtcli);
 }
 else {
-	var gt = new tl.ToolRunner(grunt);
+    var gt = tl.createToolRunner(grunt);
 }
-
 // optional - no tasks will concat nothing
-gt.arg(tl.getDelimitedInput('targets', ' ', false));
-
+gt.arg(tl.getInput('targets', false));
 gt.arg('--gruntfile');
-
 gt.arg(gruntFile);
-
-gt.arg(tl.getDelimitedInput('arguments', ' ', false));
-
+gt.arg(tl.getInput('arguments', false));
 gt.exec()
-.then(function(code) {
-	tl.exit(code);
+    .then(function (code) {
+    tl.setResult(tl.TaskResult.Succeeded, tl.loc('GruntReturnCode', code));
 })
-.fail(function(err) {
-	tl.debug('taskRunner fail');
-	tl.exit(1);
-})
+    .fail(function (err) {
+    tl.debug('taskRunner fail');
+    tl.setResult(tl.TaskResult.Failed, tl.loc('GruntFailed', err.message));
+});

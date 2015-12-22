@@ -13,5 +13,7 @@
   "loc.input.help.arguments": "Arguments passed to the tool",
   "loc.input.label.workingFolder": "Working folder",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+  "loc.messages.CmdLineReturnCode": "%s exit with return code: %d",
+  "loc.messages.CmdLineFailed": "%s failed with error: %s"
 }
