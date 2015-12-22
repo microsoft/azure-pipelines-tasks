@@ -13,6 +13,8 @@
   "loc.input.help.SearchPattern": "The pattern used to discover the pdb files to publish.",
   "loc.input.label.SymbolsFolder": "Path to symbols folder",
   "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is the configured source folder.",
+  "loc.input.label.SkipIndexing": "Skip indexing",
+  "loc.input.help.SkipIndexing": "Indicates whether to skip injecting source server information into the PDB files.",
   "loc.input.label.TreatNotIndexedAsWarning": "Warn if not indexed",
   "loc.input.help.TreatNotIndexedAsWarning": "Indicates whether to warn if sources are not indexed for a PDB file. Otherwise the messages are logged as normal output.",
   "loc.input.label.SymbolsMaximumWaitTime": "Max wait time (min)",
