@@ -115,7 +115,7 @@ if ($testCloudLocation.Contains("*") -or $testCloudLocation.Contains("?"))
 }
 else 
 {
-    if (Test-Path -Path $testCloudLocation --Type Leaf) 
+    if (Test-Path -Path $testCloudLocation -Type Leaf) 
     {
         $testCloud = $testCloudLocation 
     }
