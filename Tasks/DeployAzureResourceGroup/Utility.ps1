@@ -501,7 +501,8 @@ function Get-AzureResourcesTags
         if(-not ($resource.Tags -eq $null or $resource.Tags.Count -eq 0))
         {
             $resourceFqdn = ($azureVmDetails[$resourceName]).fqdn
-            $tagsList.Add($resourceFqdn, $resource.Tags)
+            $resourcePort = ($azureVmDetails[$resourceName]).winRMHttpsPort
+            $tagsList.Add($resourceFqdn + ':' + $resourcePort, $resource.Tags)
         }
     }
 
