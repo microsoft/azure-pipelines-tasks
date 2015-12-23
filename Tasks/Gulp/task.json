@@ -85,7 +85,7 @@
     },
     "messages": {
         "GulpNotInstalled": "Gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
-        "GulpReturnCode": "Gulp exit with return code: %d",
+        "GulpReturnCode": "Gulp exited with return code: %d",
         "GulpFailed": "Gulp failed with error: %s"
     }
 }

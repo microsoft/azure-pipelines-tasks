@@ -47,5 +47,5 @@ gt.exec()
 })
 .fail(function(err) {
 	tl.debug('taskRunner fail');
-    tl.setResult(tl.TaskResult.Failed, tl.loc('GulpFailed', err.message));
+	tl.setResult(tl.TaskResult.Failed, tl.loc('GulpFailed', err.message));
 })

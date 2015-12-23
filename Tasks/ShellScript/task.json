@@ -69,7 +69,7 @@
         }        
     },
     "messages": {
-        "BashReturnCode": "Bash exit with return code: %d",
+        "BashReturnCode": "Bash exited with return code: %d",
         "BashFailed": "Bash failed with error: %s"
     }
 }

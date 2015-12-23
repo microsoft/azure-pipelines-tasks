@@ -49,7 +49,7 @@
         }
     },
     "messages": {
-        "CMakeReturnCode": "CMake exit with return code: %d",
+        "CMakeReturnCode": "CMake exited with return code: %d",
         "CMakeFailed": "CMake failed with error: %s"
     }
 }

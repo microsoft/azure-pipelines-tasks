@@ -10,6 +10,6 @@
   "loc.input.help.cwd": "Current working directory when cmake is run.",
   "loc.input.label.cmakeArgs": "Arguments",
   "loc.input.help.cmakeArgs": "Arguments passed to cmake",
-  "loc.messages.CMakeReturnCode": "CMake exit with return code: %d",
+  "loc.messages.CMakeReturnCode": "CMake exited with return code: %d",
   "loc.messages.CMakeFailed": "CMake failed with error: %s"
 }

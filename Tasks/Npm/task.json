@@ -63,7 +63,7 @@
         }
     },
     "messages": {
-        "NpmReturnCode": "Npm exit with return code: %d",
+        "NpmReturnCode": "Npm exited with return code: %d",
         "NpmFailed": "Npm failed with error: %s"
     }
 }

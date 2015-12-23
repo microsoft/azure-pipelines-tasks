@@ -71,7 +71,7 @@
         }        
     },
     "messages": {
-        "CmdLineReturnCode": "%s exit with return code: %d",
+        "CmdLineReturnCode": "%s exited with return code: %d",
         "CmdLineFailed": "%s failed with error: %s"
     }
 }

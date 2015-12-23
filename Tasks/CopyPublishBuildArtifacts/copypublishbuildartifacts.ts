@@ -208,8 +208,7 @@ else {
             }
         }
         catch (err) {
-            tl.error(err);
-            tl.exit(1);
+            tl.setResult(tl.TaskResult.Failed, err);
         }
     }
 }
