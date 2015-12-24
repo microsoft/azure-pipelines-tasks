@@ -39,18 +39,59 @@
   ],
   "inputs": [
     {
-      "name": "testMachineGroup",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.testMachineGroup",
+      "name": "environmentName",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.environmentName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
+      "helpMarkDown": "ms-resource:loc.input.help.environmentName",
       "groupName": "testMachineGroups"
     },
     {
-      "name": "ResourceFilteringMethod",
+      "name": "adminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.adminUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adminUserName",
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "adminPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.adminPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adminPassword",
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "protocol",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "label": "ms-resource:loc.input.label.protocol",
+      "required": false,
+      "defaultValue": "Http",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.protocol",
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "testCertificate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.testCertificate",
+      "defaultValue": "true",
+      "visibleRule": "Protocol = Https",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testCertificate",
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "resourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethod",
       "required": false,
       "defaultValue": "machineNames",
       "options": {

@@ -39,12 +39,12 @@
   ],
   "inputs": [
     {
-      "name": "testMachineGroup",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.testMachineGroup",
+      "name": "environmentName",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.environmentName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
+      "helpMarkDown": "ms-resource:loc.input.help.environmentName",
       "groupName": "setupOptions"
     },
     {
@@ -138,13 +138,13 @@
       "groupName": "reportingOptions"
     },
     {
-      "name": "autMachineGroup",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.autMachineGroup",
+      "name": "autMachines",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.autMachines",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.autMachineGroup",
-      "groupName": "reportingOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.autMachines",
+      "groupName": "testMachineGroups"
     }
   ],
   "sourceDefinitions": [
