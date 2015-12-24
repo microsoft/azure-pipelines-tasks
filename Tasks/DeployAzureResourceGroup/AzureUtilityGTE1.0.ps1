@@ -17,13 +17,13 @@ function Create-AzureResourceGroupIfNotExist
         {
             #Ignoring the exception
         }
-    }
 
-    if(!$azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
-    {
-        Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
-        $response = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
+        if(!$azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
+        {
+            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
+            $response = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+            Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
+        }
     }
 }
 
@@ -141,7 +141,7 @@ function Get-AzureRMVMsInResourceGroup
         try
         {
             Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
-            $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -Verbose
+            $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
             Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
         }
         catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
