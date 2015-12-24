@@ -10,7 +10,7 @@
   "loc.group.displayName.executionOptions": "Execution Options",
   "loc.group.displayName.reportingOptions": "Reporting Options",
   "loc.input.label.environmentName": "Machines *",
-  "loc.input.help.environmentName": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>Or provide a Machine Group Name. Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
+  "loc.input.help.environmentName": "Provide a comma separated list of machine IP addresses or FQDNs. Eg: dbserver.fabrikam.com or 192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>Or provide a Machine Group Name",
   "loc.input.label.dropLocation": "Test Drop Location",
   "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
   "loc.input.label.sourcefilters": "Test Assembly",
@@ -32,5 +32,5 @@
   "loc.input.label.testConfigurations": "Test Configurations",
   "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
   "loc.input.label.autMachines": "Application Under Test Machines",
-  "loc.input.help.autMachines": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>Or provide a Machine Group Name. The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running."
+  "loc.input.help.autMachines": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running"
 }

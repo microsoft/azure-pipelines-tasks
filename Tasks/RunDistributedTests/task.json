@@ -42,7 +42,7 @@
             "label": "Machines *",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>Or provide a Machine Group Name. Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. Eg: dbserver.fabrikam.com or 192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>Or provide a Machine Group Name",
             "groupName": "setupOptions"
         },
         {
@@ -144,7 +144,7 @@
             "label": "Application Under Test Machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>Or provide a Machine Group Name. The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+            "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
             "groupName": "testMachineGroups"
         }
     ],
