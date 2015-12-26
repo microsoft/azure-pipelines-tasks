@@ -62,15 +62,13 @@ function Get-AllVMInstanceView
     $VmInstanceViews = @{}
     if (-not [string]::IsNullOrEmpty($resourceGroupName))
     {
-        Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group $resourceGroupName"
-        $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
-        Write-Verbose -Verbose "[Azure Resource Manager]Got resource group $resourceGroupName"
+        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
+        $azureVMResources = Get-AzureVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
 
-        $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
-
-        if($azureResourceGroupResources)
+        if($azureVMResources)
         {
-            foreach($resource in $azureResourceGroupResources)
+            foreach($resource in $azureVMResources)
             {
                 $name = $resource.Name
                 Write-Verbose -Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
