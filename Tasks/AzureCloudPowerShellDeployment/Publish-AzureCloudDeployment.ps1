@@ -7,7 +7,7 @@ param
     [String] [Parameter(Mandatory = $true)]
     $ServiceName,
 
-    [String] [Parameter(Mandatory = $true)]
+    [String] [Parameter(Mandatory = $false)]
     $ServiceLocation,
 
     [String] [Parameter(Mandatory = $true)]
@@ -29,7 +29,13 @@ param
     $AppendDateTimeToLabel,
 
     [String] [Parameter(Mandatory = $true)]
-    $AllowUpgrade
+    $AllowUpgrade,
+    
+    [String] [Parameter(Mandatory = $false)]
+    $NewServiceAdditionalArguments,
+    
+    [String] [Parameter(Mandatory = $false)]    
+    $NewServiceAffinityGroup
 )
 
 # Import the Task.Common dll that has all the cmdlets we need for Build
@@ -180,6 +186,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 Write-Host "ConnectedServiceName= $ConnectedServiceName "
 Write-Host "ServiceName= $ServiceName"
 Write-Host "ServiceLocation= $ServiceLocation"
+Write-Host "AffinityGroup= $AffinityGroup"
 Write-Host "StorageAccount= $StorageAccount"
 Write-Host "CsPkg= $CsPkg"
 Write-Host "CsCfg= $CsCfg"
@@ -187,6 +194,7 @@ Write-Host "Slot= $Slot"
 Write-Host "DeploymentLabel= $DeploymentLabel"
 Write-Host "AppendDateTimeToLabel= $AppendDateTimeToLabel"
 Write-Host "AllowUpgrade= $AllowUpgrade"
+Write-Host "NewServiceAdditionalArguments= $NewServiceAdditionalArguments"
 
 $allowUpgrade = Convert-String $AllowUpgrade Boolean
 
@@ -200,12 +208,29 @@ $servicePackageFile = Find-Files -SearchPattern "$CsPkg"
 Write-Host "servicePackageFile= $servicePackageFile"
 $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
-Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue"
-$azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue
+Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError"
+$azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError
+
+if($azureServiceError){
+   $azureServiceError | ForEach-Object { Write-Warning $_.Exception.ToString() }
+}   
+
+   
 if (!$azureService)
-{
-    Write-Host "New-AzureService -ServiceName $ServiceName -Location $ServiceLocation"
-    $azureService = New-AzureService -ServiceName $ServiceName -Location $ServiceLocation
+{    
+    $azureService = "New-AzureService -ServiceName `"$ServiceName`""
+    if($NewServiceAffinityGroup) {
+        $azureService += " -AffinityGroup `"$NewServiceAffinityGroup`""
+    }
+    elseif($ServiceLocation) {
+         $azureService += " -Location `"$ServiceLocation`""
+    }
+    else {
+        throw "Either AffinityGroup or ServiceLocation must be specified"
+    }
+    $azureService += " $NewServiceAdditionalArguments"
+    Write-Host "$azureService"
+    $azureService = Invoke-Expression -Command $azureService
 }
 
 $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $CsCfg
@@ -220,8 +245,13 @@ if ($label -and $appendDateTime)
 	$label += Get-Date
 }
 
-Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue"
-$azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue
+Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError"
+$azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError
+
+if($azureDeploymentError) {
+   $azureDeploymentError | ForEach-Object { Write-Warning $_.Exception.ToString() }
+}
+
 if (!$azureDeployment)
 {
 	if ($label)

@@ -1,5 +1,6 @@
 function CmdletHasMember {
     [cmdletbinding()]
+    [OutputType([System.Boolean])]
     param(
         [string]$memberName
     )
@@ -20,6 +21,7 @@ function SetRegistryKeyForParallel {
 
 function IsVisualStudio2015Update1OrHigherInstalled {
     [cmdletbinding()]
+    [OutputType([System.Boolean])]
     param(
         [string]$vsTestVersion
     )
@@ -43,6 +45,7 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 
 function SetupRunSettingsFileForParallel {
     [cmdletbinding()]
+    [OutputType([System.String])]
     param(
         [string]$runInParallelFlag,
         [string]$runSettingsFilePath,
@@ -64,19 +67,19 @@ function SetupRunSettingsFileForParallel {
 '
         }
         else 
-        {
+        { 
             Write-Verbose "Adding maxcpucount element to runsettings file provided"
             $runSettingsForParallel = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
             $runConfigurationElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration")
             if($runConfigurationElement.Count -eq 0)
             {
-                 $runConfigurationElement = $runSettingsForParallel.RunSettings.AppendChild($runSettingsForParallel.CreateElement("RunConfiguration"))
+                $runConfigurationElement = $runSettingsForParallel.RunSettings.AppendChild($runSettingsForParallel.CreateElement("RunConfiguration"))
             }
 
             $maxCpuCountElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration/MaxCpuCount")
             if($maxCpuCountElement.Count -eq 0)
             {
-                 $newMaxCpuCountElement = $runConfigurationElement.AppendChild($runSettingsForParallel.CreateElement("MaxCpuCount"))
+                $newMaxCpuCountElement = $runConfigurationElement.AppendChild($runSettingsForParallel.CreateElement("MaxCpuCount"))
             }    
         }
 

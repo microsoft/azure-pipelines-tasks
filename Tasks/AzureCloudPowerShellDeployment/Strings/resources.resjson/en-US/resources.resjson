@@ -6,13 +6,14 @@
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Deploy an Azure Cloud Service",
   "loc.instanceNameFormat": "Azure Deployment: $(CsPkg)",
+  "loc.group.displayName.newServiceAdvancedOptions": "Advanced Options For Creating New Service",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure subscription to target for deployment.",
   "loc.input.label.StorageAccount": "Storage Account",
   "loc.input.help.StorageAccount": "Storage Account must exist prior to deployment.",
   "loc.input.label.ServiceName": "Service Name",
   "loc.input.label.ServiceLocation": "Service Location",
-  "loc.input.help.ServiceLocation": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
+  "loc.input.help.ServiceLocation": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "Path of CsPkg under the default artifact directory.",
   "loc.input.label.CsCfg": "CsCfg",
@@ -23,5 +24,9 @@
   "loc.input.help.DeploymentLabel": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used.",
   "loc.input.label.AppendDateTimeToLabel": "Append current date and time",
   "loc.input.help.AppendDateTimeToLabel": "Appends current date and time to deployment label",
-  "loc.input.label.AllowUpgrade": "Allow Upgrade"
+  "loc.input.label.AllowUpgrade": "Allow Upgrade",
+  "loc.input.label.NewServiceAdditionalArguments": "Additional Arguments",
+  "loc.input.help.NewServiceAdditionalArguments": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
+  "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
+  "loc.input.help.NewServiceAffinityGroup": "While creating new service, this affinity group will be considered instead of using service location."
 }

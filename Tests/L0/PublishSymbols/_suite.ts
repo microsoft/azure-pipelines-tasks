@@ -102,6 +102,12 @@ describe('PublishSymbols Suite', function () {
         })
         it('sets fallback max wait time', (done) => {
             psm.runPS(path.join(__dirname, 'SetsFallbackMaxWaitTime.ps1'), done);
+        }),
+        it('skips indexing', (done) => {
+            psm.runPS(path.join(__dirname, 'SkipsIndexing.ps1'), done);
+        })
+        it('skips publishing', (done) => {
+            psm.runPS(path.join(__dirname, 'SkipsPublishing.ps1'), done);
         })
     }
 });

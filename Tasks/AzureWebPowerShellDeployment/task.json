@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 20
+    "Patch": 21
   },
   "demands": [
     "azureps"
@@ -41,24 +41,7 @@
       "label": "Web App Location",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Select a region for deployment.",
-      "options": {
-        "Australia East": "Australia East",
-        "Australia Southeast": "Australia Southeast",
-        "Brazil South": "Brazil South",
-        "Central US": "Central US",
-        "East Asia": "East Asia",
-        "East US": "East US",
-        "East US2": "East US2",
-        "Japan East": "Japan East",
-        "Japan West": "Japan West",
-        "North Central US": "North Central US",
-        "North Europe": "North Europe",
-        "South Central US": "South Central US",
-        "Southeast Asia": "Southeast Asia",
-        "West Europe": "West Europe",
-        "West US": "West US"
-      },
+      "helpMarkDown": "Select a region for deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",     
       "properties": {
         "EditableOptions": "True"
       }
@@ -80,6 +63,14 @@
       "required": true
     },
     {
+        "name": "doNotDelete",
+        "type": "boolean",
+        "label": "Set DoNotDelete flag",
+        "defaultValue": "false",
+        "helpMarkDown": "By enabling this, additonal files in web deployment package are preserved while publishing website.",
+        "required": false
+    },
+    {
       "name": "AdditionalArguments",
       "type": "string",
       "label": "Additional Arguments",
@@ -95,6 +86,11 @@
 	  "parameters": {
 		"WebSiteLocation": "$(WebSiteLocation)"
 	  }
+    },
+    {
+      "target": "WebSiteLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",

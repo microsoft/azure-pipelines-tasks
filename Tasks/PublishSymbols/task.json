@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -46,6 +46,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder."
+        },
+        {
+            "name": "SkipIndexing",
+            "type": "boolean",
+            "label": "Skip indexing",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Indicates whether to skip injecting source server information into the PDB files.",
+            "groupName": "advanced"
         },
         {
             "name": "TreatNotIndexedAsWarning",

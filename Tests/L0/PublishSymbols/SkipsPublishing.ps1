@@ -17,7 +17,7 @@ Register-Mock Invoke-PublishSymbols
 foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     # Act.
     $splat = @{
-        SymbolsPath = 'Some input symbols path'
+        SymbolsPath = '' # Empty to skip publishing.
         SearchPattern = 'Some input search pattern'
         SourceFolder = '' # Support for sourceFolder has been Deprecated.
         SymbolsProduct = 'Some input symbols product'
@@ -34,6 +34,5 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     # Assert.
     Assert-WasCalled Find-Files -- -SearchPattern 'Some input search pattern' -RootFolder 'Some input symbols folder'
     Assert-WasCalled Invoke-IndexSources -- -SymbolsFilePaths ('Some PDB file 1', 'Some PDB file 2') -TreatNotIndexedAsWarning: $treatNotIndexedAsWarning
-    $semaphoreMessage = "Machine: $env:ComputerName, BuildUri: Some build URI, BuildNumber: Some build number, RepositoryName: Some build repository name, RepositoryUri: Some build repository URI, Team Project: Some team project, CollectionUri: Some team foundation collection URI at $($now.ToUniversalTime()) UTC"
-    Assert-WasCalled Invoke-PublishSymbols -- -PdbFiles ('Some PDB file 1', 'Some PDB file 2') -Share 'Some input symbols path' -Product 'Some input symbols product' -Version 'Some input symbols version' -MaximumWaitTime (123 * 60 * 1000).ToString() -MaximumSemaphoreAge (24 * 60).ToString() -ArtifactName 'Some symbols artifact name' -SemaphoreMessage $semaphoreMessage
+    Assert-WasNotCalled Invoke-PublishSymbols
 }
