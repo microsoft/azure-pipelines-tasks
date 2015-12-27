@@ -20,6 +20,7 @@
   "loc.input.help.testDir": "Ruta de acceso relativa a la carpeta que contiene los ensamblados de prueba, como: nombreDeSolución/nombreDeProyectoDePruebas/bin/Release",
   "loc.input.label.parallelization": "Paralelización",
   "loc.input.label.locale": "Idioma del sistema",
+  "loc.input.label.userDefinedLocale": "Definido por el usuario Sistema Idioma",
   "loc.input.label.testCloudLocation": "Ubicación de test-cloud.exe",
   "loc.input.label.optionalArgs": "Argumentos opcionales",
   "loc.input.help.optionalArgs": "Argumentos adicionales pasados a test-cloud.exe.",

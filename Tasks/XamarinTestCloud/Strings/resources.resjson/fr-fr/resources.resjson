@@ -20,6 +20,7 @@
   "loc.input.help.testDir": "Chemin d'accès relatif au dossier contenant les assemblys de test, par exemple, SolutionName/TestsProjectName/bin/Release",
   "loc.input.label.parallelization": "Parallélisation",
   "loc.input.label.locale": "Langue système",
+  "loc.input.label.userDefinedLocale": "Défini par l'utilisateur Système Langue",
   "loc.input.label.testCloudLocation": "Emplacement de test-cloud.exe",
   "loc.input.label.optionalArgs": "Arguments facultatifs",
   "loc.input.help.optionalArgs": "Arguments supplémentaires passés à test-cloud.exe.",

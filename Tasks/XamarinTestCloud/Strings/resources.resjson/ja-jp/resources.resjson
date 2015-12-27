@@ -20,6 +20,7 @@
   "loc.input.help.testDir": "テスト アセンブリを含むフォルダーへの相対パス。例: SolutionName/TestsProjectName/bin/Release",
   "loc.input.label.parallelization": "並列処理",
   "loc.input.label.locale": "システム言語",
+  "loc.input.label.userDefinedLocale": "ユーザー定義システム言語",
   "loc.input.label.testCloudLocation": "test-cloud.exe の場所",
   "loc.input.label.optionalArgs": "オプションの引数",
   "loc.input.help.optionalArgs": "test-cloud.exe に渡す追加の引数。",

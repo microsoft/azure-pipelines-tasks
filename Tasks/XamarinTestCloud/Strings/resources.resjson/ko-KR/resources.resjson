@@ -20,6 +20,7 @@
   "loc.input.help.testDir": "SolutionName/TestsProjectName/bin/Release와 같이, 테스트 어셈블리가 들어 있는 폴더의 상대적 경로",
   "loc.input.label.parallelization": "병렬 처리",
   "loc.input.label.locale": "시스템 언어",
+  "loc.input.label.userDefinedLocale": "사용자 정의 시스템 언어",
   "loc.input.label.testCloudLocation": "test-cloud.exe 위치",
   "loc.input.label.optionalArgs": "선택적 인수",
   "loc.input.help.optionalArgs": "추가 인수를 test-cloud.exe에 전달했습니다.",

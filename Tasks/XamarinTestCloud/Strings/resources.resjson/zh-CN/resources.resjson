@@ -20,6 +20,7 @@
   "loc.input.help.testDir": "包含测试程序集的文件夹的相对路径，如: SolutionName/TestsProjectName/bin/Release",
   "loc.input.label.parallelization": "并行化",
   "loc.input.label.locale": "系统语言",
+  "loc.input.label.userDefinedLocale": "用户定义的系统语言",
   "loc.input.label.testCloudLocation": "test-cloud.exe 位置",
   "loc.input.label.optionalArgs": "可选参数",
   "loc.input.help.optionalArgs": "传递给 test-cloud.exe 还原的其他参数。",

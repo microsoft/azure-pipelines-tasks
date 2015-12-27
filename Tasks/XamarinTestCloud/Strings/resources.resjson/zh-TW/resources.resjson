@@ -20,6 +20,7 @@
   "loc.input.help.testDir": "資料夾的相對路徑，其包含測試組件例如: SolutionName/TestsProjectName/bin/Release",
   "loc.input.label.parallelization": "並行",
   "loc.input.label.locale": "系統語言",
+  "loc.input.label.userDefinedLocale": "用戶定義的系統語言",
   "loc.input.label.testCloudLocation": "test-cloud.exe 位置",
   "loc.input.label.optionalArgs": "選擇性引數",
   "loc.input.help.optionalArgs": "傳遞至 test-cloud.exe 的其他引數。",

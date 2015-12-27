@@ -20,6 +20,7 @@
   "loc.input.help.testDir": "Percorso relativo della cartella che contiene gli assembly di test, ad esempio NomeSoluzione/NomeProgettoTest/bin/Versione",
   "loc.input.label.parallelization": "Parallelizzazione",
   "loc.input.label.locale": "Lingua del sistema",
+  "loc.input.label.userDefinedLocale": "Definito dall'utente Sistema Lingua",
   "loc.input.label.testCloudLocation": "Percorso di test-cloud.exe",
   "loc.input.label.optionalArgs": "Argomenti facoltativi",
   "loc.input.help.optionalArgs": "Argomenti aggiuntivi passati a test-cloud.exe.",
