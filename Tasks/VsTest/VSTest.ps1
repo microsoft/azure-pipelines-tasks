@@ -15,7 +15,7 @@ param(
     [string]$runInParallel
 )
 
-Write-Verbose "Entering script VSTestConsole.ps1"
+Write-Verbose "Entering script VSTest.ps1"
 Write-Verbose "vsTestVersion = $vsTestVersion"
 Write-Verbose "testAssembly = $testAssembly"
 Write-Verbose "testFiltercriteria = $testFiltercriteria"
@@ -162,4 +162,4 @@ else
     Write-Warning (Get-LocalizedString -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
 }
 
-Write-Verbose "Leaving script VSTestConsole.ps1"
+Write-Verbose "Leaving script VSTest.ps1"
