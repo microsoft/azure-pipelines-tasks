@@ -19,7 +19,7 @@ function Create-AzureResourceGroupIfNotExist
             #Ignoring the exception
         }
 
-        if(!$azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
+        if(-not $azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
         {
             Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
             $azureResourceGroup = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
