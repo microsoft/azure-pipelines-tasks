@@ -17,13 +17,14 @@ function Create-AzureResourceGroupIfNotExist
         {
             #Ignoring the exception
         }
-    }
 
-    if(!$azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
-    {
-        Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
-        $response = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
+        if(-not $azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
+        {
+            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
+            $azureResourceGroup = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+            Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
+        }
+        return $azureResourceGroup
     }
 }
 
@@ -57,15 +58,13 @@ function Get-AllVMInstanceView
     $VmInstanceViews = @{}
     if (-not [string]::IsNullOrEmpty($resourceGroupName))
     {
-        Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group $resourceGroupName"
-        $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -Verbose -ErrorAction Stop
-        Write-Verbose -Verbose "[Azure Resource Manager]Got resource group $resourceGroupName"
+        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
+        $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
 
-        $azureResourceGroupResources = $azureResourceGroup.Resources |  Where-Object {$_.ResourceType -eq "Microsoft.Compute/virtualMachines"}
-
-        if($azureResourceGroupResources)
+        if($azureVMResources)
         {
-            foreach($resource in $azureResourceGroupResources)
+            foreach($resource in $azureVMResources)
             {
                 $name = $resource.Name
                 Write-Verbose -Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
@@ -141,7 +140,7 @@ function Get-AzureRMVMsInResourceGroup
         try
         {
             Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
-            $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -Verbose
+            $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
             Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
         }
         catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException]
