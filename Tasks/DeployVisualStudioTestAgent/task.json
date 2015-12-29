@@ -82,7 +82,7 @@
             "type": "boolean",
             "label": "Test Certificate",
             "defaultValue": "true",
-            "visibleRule": "protocol = Https",
+            "visibleRule": "winRmProtocol = Https",
             "required": false,
             "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.",
             "groupName": "testMachineGroups"
