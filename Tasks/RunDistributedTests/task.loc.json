@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -39,12 +39,12 @@
   ],
   "inputs": [
     {
-      "name": "environmentName",
+      "name": "testMachineGroup",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.environmentName",
+      "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.environmentName",
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
       "groupName": "setupOptions"
     },
     {
@@ -138,12 +138,12 @@
       "groupName": "reportingOptions"
     },
     {
-      "name": "autMachines",
+      "name": "autMachineGroup",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.autMachines",
+      "label": "ms-resource:loc.input.label.autMachineGroup",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.autMachines",
+      "helpMarkDown": "ms-resource:loc.input.help.autMachineGroup",
       "groupName": "testMachineGroups"
     }
   ],

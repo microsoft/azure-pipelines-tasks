@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -39,12 +39,12 @@
   ],
   "inputs": [
     {
-      "name": "environmentName",
+      "name": "testMachineGroup",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.environmentName",
+      "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.environmentName",
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
       "groupName": "testMachineGroups"
     },
     {

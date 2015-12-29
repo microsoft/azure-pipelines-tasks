@@ -1,8 +1,8 @@
 param(
-    [string]$environmentName,    
+    [string]$testMachineGroup,
     [string]$adminUserName,
     [string]$adminPassword,
-    [string]$protocol,
+    [string]$winRmProtocol,
     [string]$testCertificate,
     [string]$resourceFilteringMethod,
     [string]$testMachines,
@@ -19,8 +19,8 @@ $logonAutomatically = $runAsProcess
 $disableScreenSaver = $runAsProcess
 
 Write-Verbose "Entering script DeployTestAgent.ps1"
-Write-Verbose "environmentName = $environmentName"
-Write-Verbose "protocol = $protocol"
+Write-Verbose "testMachineInput = $testMachineGroup"
+Write-Verbose "WinRmProtocal = $winRmProtocol"
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "testMachines = $testMachines"
 Write-Verbose "runAsProcess = $runAsProcess"
@@ -52,6 +52,8 @@ Write-Verbose "checkAgentInstallationScriptLocation = $checkAgentInstallationScr
 $downloadTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPath "DownloadTestAgent.ps1"
 Write-Verbose "downloadTestAgentScriptLocation = $downloadTestAgentScriptLocation"
 
+$verifyTestMachinesAreInUse = Join-Path -Path $currentDirectory -ChildPath "VerifyTestMachinesAreInUse.ps1"
+Write-Verbose "VerifyTestMachinesAreInUseScriptLocation = $verifyTestMachinesAreInUse"
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -70,19 +72,10 @@ if ( [string]::IsNullOrEmpty($personalAccessToken))
     throw (Get-LocalizedString -Key "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator")
 }
 
-Write-Verbose "Calling Invoke-DeployTestAgent"
-if($resourceFilteringMethod -eq "tags")
-{
-    Invoke-DeployTestAgent -TagFilter $testMachines -UserName $machineUserName -Password $machinePassword -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
-}
-else
-{
-    Write-Verbose "Calling Register-Environment"
-    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $protocol
-    
-    Write-Verbose "Environment details $environment"
-    
-    Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
-}
+Write-Verbose "Calling Register Environment cmdlet"
+$environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol
+Write-Verbose "Environment details $environment"
 
+Write-Verbose "Calling Deploy test agent cmdlet"
+Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly -WinRmProtocol $winRmProtocol -VerifyTestMachinesAreInUseScriptLocation $verifyTestMachinesAreInUse
 Write-Verbose "Leaving script DeployTestAgent.ps1"

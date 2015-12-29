@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [
     ],
@@ -37,7 +37,7 @@
     ],
     "inputs": [
         {
-            "name": "environmentName",			
+            "name": "testMachineGroup",
             "type": "multiLine",
             "label": "Machines *",
             "defaultValue": "",
@@ -139,7 +139,7 @@
         },
 
         {
-            "name": "autMachines",
+            "name": "autMachineGroup",
             "type": "multiLine",
             "label": "Application Under Test Machines",
             "defaultValue": "",

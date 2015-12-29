@@ -1,5 +1,5 @@
 param(
-    [string]$environmentName,
+    [string]$testMachineGroup,
     [string]$dropLocation,
     [string]$sourcefilters,
     [string]$testFilterCriteria,
@@ -10,7 +10,7 @@ param(
     [string]$codeCoverageEnabled,
     [string]$overrideRunParams,
     [string]$testConfigurations,
-    [string]$autMachines
+    [string]$autMachineGroup
 )
 
 Function CmdletHasMember($memberName) {
@@ -19,7 +19,7 @@ Function CmdletHasMember($memberName) {
 }
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
-Write-Verbose "environmentName = $environmentName"
+Write-Verbose "environmentName = $testMachineGroup"
 Write-Verbose "Test Drop Location = $dropLocation"
 Write-Verbose "Source Filter = $sourcefilters"
 Write-Verbose "Test Filter Criteria = $testFilterCriteria"
@@ -49,7 +49,7 @@ Write-Verbose "Calling Invoke-RunDistributedTests"
 $runTitleMemberExists = CmdletHasMember "RunTitle"
 if($runTitleMemberExists)
 {
-    Invoke-RunDistributedTests -TestMachineGroup $environmentName -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachines -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle
+    Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachines -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TaskContext $distributedTaskContext
 }
 else
 {
@@ -57,7 +57,7 @@ else
     {
         Write-Warning "Update the build agent to be able to customize your test run title."
     }
-    Invoke-RunDistributedTests -TestMachineGroup $environmentName -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachines -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation
+    Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachines -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TaskContext $distributedTaskContext
 } 
 
 Write-Verbose "Leaving script RunDistributedTests.ps1"
