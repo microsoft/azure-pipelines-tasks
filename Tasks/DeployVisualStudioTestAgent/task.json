@@ -58,7 +58,7 @@
         {
             "name": "adminPassword",
             "type": "string",
-            "label": "Password",
+            "label": "Admin Password",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.",
