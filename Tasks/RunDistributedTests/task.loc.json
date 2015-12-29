@@ -144,7 +144,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.autMachineGroup",
-      "groupName": "testMachineGroups"
+      "groupName": "reportingOptions"
     }
   ],
   "sourceDefinitions": [

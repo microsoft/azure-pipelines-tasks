@@ -83,7 +83,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.testCertificate",
       "defaultValue": "true",
-      "visibleRule": "Protocol = Https",
+      "visibleRule": "protocol = Https",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testCertificate",
       "groupName": "testMachineGroups"

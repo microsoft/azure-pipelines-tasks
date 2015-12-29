@@ -40,7 +40,7 @@
 		{
             "name": "testMachineGroup",
             "type": "multiLine",
-            "label": "Machines *",
+            "label": "Machines",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>Or provide a Machine Group Name.",
@@ -82,7 +82,7 @@
             "type": "boolean",
             "label": "Test Certificate",
             "defaultValue": "true",
-            "visibleRule": "Protocol = Https",
+            "visibleRule": "protocol = Https",
             "required": false,
             "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.",
             "groupName": "testMachineGroups"
