@@ -454,6 +454,7 @@ function Instantiate-Environment
     {
         $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
         $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources
+        $tagsList = Get-AzureResourcesTags -resources $azureVMResources -azureVmDetails $azureVMsDetails
     }
 
     if ($azureVMsDetails.Count -eq 0)
@@ -479,12 +480,33 @@ function Instantiate-Environment
     $machineSpecification = $resources -join ","
 
     Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
-    $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext
+    $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -TagsList $tagsList
     Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
 
     Write-Verbose "Adding environment $outputVariable to output variables" -Verbose
     Set-TaskVariable -Variable $outputVariable -Value $outputVariable
     Write-Verbose "Added the environmnent $outputVariable to output variable" -Verbose
+}
+
+function Get-AzureResourcesTags
+{
+    param($resources,
+          $azureVmDetails)
+
+    $tagsList = New-Object 'system.collections.generic.dictionary[[string],[system.collections.generic.dictionary[[string],[string]]]]' 
+
+    foreach($resource in $resources)
+    {
+        $resourceName = $resource.Name
+        if(-not ($resource.Tags -eq $null or $resource.Tags.Count -eq 0))
+        {
+            $resourceFqdn = ($azureVmDetails[$resourceName]).fqdn
+            $resourcePort = ($azureVmDetails[$resourceName]).winRMHttpsPort
+            $tagsList.Add($resourceFqdn + ':' + $resourcePort, $resource.Tags)
+        }
+    }
+
+    return $tagsList
 }
 
 function Get-MachinesFqdnsForLB
