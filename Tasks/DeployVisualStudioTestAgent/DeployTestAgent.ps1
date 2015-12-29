@@ -73,7 +73,7 @@ if ( [string]::IsNullOrEmpty($personalAccessToken))
 }
 
 Write-Verbose "Calling Register Environment cmdlet"
-$environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol
+$environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol
 Write-Verbose "Environment details $environment"
 
 Write-Verbose "Calling Deploy test agent cmdlet"

@@ -1,6 +1,12 @@
 function Check-TestAgentIsRunning([string] $Version)
 {
-	$Version = Locate-TestVersion
+	$AvlVersion = Locate-TestVersion
+	if($AvlVersion)
+	{
+		$Version = $AvlVersion
+	}
+	Write-Verbose "VS Agent version $Version" -verbose
+	
 	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
 	
 	if (-not (Test-Path $testAgentPath))
@@ -32,7 +38,12 @@ function Locate-TestVersion()
 	{
 		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
 	}
-	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()}
+	if (-not (Test-Path $regPath))
+	{
+		return $null
+	}
+	
+	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()} -ErrorAction SilentlyContinue
 	$Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
 
 	if ([string]::IsNullOrWhiteSpace($Version))
