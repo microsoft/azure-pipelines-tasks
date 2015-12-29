@@ -65,7 +65,7 @@
             "groupName": "testMachineGroups"
         },
         {
-            "name": "protocol",
+            "name": "winRmProtocol",
             "type": "radio",
             "label": "Protocol",
             "required": false,

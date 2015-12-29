@@ -66,16 +66,16 @@
       "groupName": "testMachineGroups"
     },
     {
-      "name": "protocol",
+      "name": "winRmProtocol",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.protocol",
+      "label": "ms-resource:loc.input.label.winRmProtocol",
       "required": false,
       "defaultValue": "Https",
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.protocol",
+      "helpMarkDown": "ms-resource:loc.input.help.winRmProtocol",
       "groupName": "testMachineGroups"
     },
     {
