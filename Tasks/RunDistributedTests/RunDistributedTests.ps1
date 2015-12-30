@@ -80,7 +80,7 @@ if($runTitleMemberExists)
      }
      else
      {
-       Write-Warning "Update the build agent to be able to run tests from test plan."
+       throw ("Update the build agent to be able to run tests from test plan.")
      }
    }
    else
@@ -102,7 +102,7 @@ else
      }
      else
      {
-        Write-Warning "Update the build agent to be able to run tests from test plan."
+        throw ("Update the build agent to be able to run tests from test plan.")
      }
    }    
    else

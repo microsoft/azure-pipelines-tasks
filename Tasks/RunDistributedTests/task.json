@@ -58,7 +58,7 @@
         {
             "name": "testSelection",
             "type": "pickList",
-            "label": "Test Selection",
+            "label": "Test Type Selection",
             "defaultValue": "testAssembly",
             "required": true,
             "helpMarkDown": "Select the way you want to run tests – using Test Assemblies or using Test Plan.",

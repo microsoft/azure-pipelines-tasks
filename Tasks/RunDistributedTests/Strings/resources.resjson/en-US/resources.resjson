@@ -13,7 +13,7 @@
   "loc.input.help.testMachineGroup": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
   "loc.input.label.dropLocation": "Test Drop Location",
   "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
-  "loc.input.label.testSelection": "Test Selection",
+  "loc.input.label.testSelection": "Test Type Selection",
   "loc.input.help.testSelection": "Select the way you want to run tests – using Test Assemblies or using Test Plan.",
   "loc.input.label.testPlan": "Test Plan",
   "loc.input.help.testPlan": "Select a Test Plan.",
