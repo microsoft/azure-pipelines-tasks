@@ -54,17 +54,27 @@ $runTitleMemberExists = CmdletHasMember "TestRunTitle"
 $testSelectionMemberExists  = CmdletHasMember "TestSelection"
 
 $suites = $testSuite.Split(",")
-$testSuites=@()
+$testSuites = @()
 foreach ($suite in $suites)
 {
-    $testSuites += ($suite.Trim())
+    $suiteId = 0
+    if([int]::TryParse($suite, [ref]$suiteId))
+    {
+        $testSuites += $suiteId
+    }    
 }
+
+$testPlanId = 0
+[int]::TryParse($testPlan, [ref]$testPlanId)
+
+$testConfigurationId = 0
+[int]::TryParse($testConfiguration, [ref]$testConfigurationId) 
 
 if($runTitleMemberExists)
 {
     if($testSelectionMemberExists)
-    {
-        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlan -TestSuites $testSuites -TestConfig $testConfiguration
+    {    
+        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId
     }
     else
     {
@@ -83,7 +93,7 @@ else
     }
     if($testSelectionMemberExists)
     {
-        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestSelection $testSelection -TestPlan $testPlan -TestSuites $testSuites -TestConfig $testConfiguration
+        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId
     }
     else
     {
