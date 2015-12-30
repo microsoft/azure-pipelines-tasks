@@ -147,20 +147,6 @@
             "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
             "groupName": "reportingOptions"
         }
-    ],
-    "sourceDefinitions": [ 
-     { 
-         "target": "testMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
-     },
-     { 
-         "target": "autMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
-     }
     ], 
     "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
     "execution": {

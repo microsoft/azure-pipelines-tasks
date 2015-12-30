@@ -147,20 +147,6 @@
       "groupName": "reportingOptions"
     }
   ],
-  "sourceDefinitions": [
-    {
-      "target": "testMachineGroup",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
-    },
-    {
-      "target": "autMachineGroup",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
-    }
-  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {

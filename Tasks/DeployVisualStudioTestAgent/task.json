@@ -163,14 +163,6 @@
             "groupName": "advanced"
         }
     ],
-    "sourceDefinitions": [ 
-     { 
-         "target": "testMachineGroup",
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-         "selector": "jsonpath:$.value[*].name",
-         "authKey": "tfs:DevTestLabs"
-     } 
-    ],
     "instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
     "execution": {
         "PowerShell": {
