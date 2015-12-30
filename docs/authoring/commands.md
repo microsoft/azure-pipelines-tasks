@@ -3,6 +3,11 @@
 The general format for a logging command is:
     ##vso[area.action property1=value;property2=value;...]message
 
+To invoke a logging command, simply emit the command via standard output. For example, from a PowerShell task:
+```
+"##vso[task.setvariable variable=testvar;]testvalue"
+```
+
 #### Task Logging Commands:
 <table>
     <thead>
@@ -130,9 +135,9 @@ The general format for a logging command is:
             </td>
             <td>
                 <p align="left">
-                    Set variable in variable service of taskcontext. The first task can set an variable, and following tasks are able to use the variable.<br>
+                    Sets a variable in the variable service of taskcontext. The first task can set a variable, and following tasks are able to use the variable. The variable is exposed to the following tasks as an environment variable.<br>
                     Example: <br>
-					##vso[task.setvariable variable=testvar;]testvalue<br> 
+                    ##vso[task.setvariable variable=testvar;]testvalue<br> 
                 </p>
             </td>
             <td>
