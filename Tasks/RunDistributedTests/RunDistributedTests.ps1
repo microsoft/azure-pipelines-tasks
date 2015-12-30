@@ -10,11 +10,15 @@ param(
     [string]$codeCoverageEnabled,
     [string]$overrideRunParams,
     [string]$testConfigurations,
-    [string]$autMachineGroup
+    [string]$autMachineGroup,
+    [string]$testSelection,
+    [string]$testPlan,
+    [string]$testSuite,
+    [string]$testConfiguration
 )
 
 Function CmdletHasMember($memberName) {
-    $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
+    $publishParameters = (gcm Invoke-RunDistributedTests).Parameters.Keys.Contains($memberName) 
     return $publishParameters
 }
 
@@ -46,10 +50,30 @@ Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
 
 Write-Verbose "Calling Invoke-RunDistributedTests"
 
-$runTitleMemberExists = CmdletHasMember "RunTitle"
+$runTitleMemberExists = CmdletHasMember "TestRunTitle"
+$testSelectionMemberExists  = CmdletHasMember "TestSelection"
+
+$suites = $testSuite.Split(",")
+$testSuites=@()
+foreach ($suite in $suites)
+{
+    $testSuites += ($suite.Trim())
+}
+
 if($runTitleMemberExists)
 {
-    Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle
+    if($testSelectionMemberExists)
+    {
+        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlan -TestSuites $testSuites -TestConfig $testConfiguration
+    }
+    else
+    {
+        if([string]::Equals($testSelection, "testPlan"))
+        {
+            Write-Warning "Update the build agent to be able to run tests from test plan."
+        }
+        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle
+    }
 }
 else
 {
@@ -57,7 +81,18 @@ else
     {
         Write-Warning "Update the build agent to be able to customize your test run title."
     }
-    Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation
+    if($testSelectionMemberExists)
+    {
+        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestSelection $testSelection -TestPlan $testPlan -TestSuites $testSuites -TestConfig $testConfiguration
+    }
+    else
+    {
+        if([string]::Equals($testSelection, "testPlan"))
+        {
+            Write-Warning "Update the build agent to be able to run tests from test plan."
+        }
+        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation
+    }
 } 
 
 Write-Verbose "Leaving script RunDistributedTests.ps1"
