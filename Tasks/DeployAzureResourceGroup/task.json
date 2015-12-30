@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 41
+        "Patch": 42
     },
     "demands": [
         "azureps"
@@ -94,7 +94,7 @@
             "label": "Template", 
             "defaultValue":"",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates.",
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates. To get started immediately use template http://aka.ms/sampletemplate.",
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
