@@ -160,6 +160,9 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     Upload and attach attachment to current timeline record. <br>
                     Example: <br>
 					##vso[task.addattachment type=myattachmenttype;name=myattachmentname;]c:\myattachment.txt<br> 
+                    Upload and attach summary markdown to current timeline record. <br>
+                    Example: <br>
+					##vso[task.addattachment type=Distributedtask.Core.Summary;name=myattachmentname;]c:\myattachment.md<br> 
                 </p>
             </td>
             <td>
@@ -269,9 +272,8 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 <p align="left">
-                    Upload customized summary.md to build’s container “summaries” folder.<br>
-                    Example: <br>
-                    ##vso[build.uploadsummary]c:\testsummary.md
+                    <b>Deprecated.</b> <br>Markdown uploaded through this command won't show up in build summary view. <br>
+                    Use <i>##vso[task.addattachment type=Distributedtask.Core.Summary;name=myattachmentname;]c:\myattachment.md</i> instead. <br />
                 </p>
             </td>
             <td>
