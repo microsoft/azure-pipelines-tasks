@@ -22,7 +22,7 @@ Write-Verbose "Entering script DeployTestAgent.ps1"
 Write-Verbose "testMachineInput = $testMachineGroup"
 Write-Verbose "WinRmProtocal = $winRmProtocol"
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "testMachines = $testMachines"
+Write-Verbose "filter testMachines = $testMachines"
 Write-Verbose "runAsProcess = $runAsProcess"
 Write-Verbose "logonAutomatically = $logonAutomatically"
 Write-Verbose "disableScreenSaver = $disableScreenSaver"
@@ -73,7 +73,7 @@ if ( [string]::IsNullOrEmpty($personalAccessToken))
 }
 
 Write-Verbose "Calling Register Environment cmdlet"
-$environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol
+$environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines
 Write-Verbose "Environment details $environment"
 
 Write-Verbose "Calling Deploy test agent cmdlet"
