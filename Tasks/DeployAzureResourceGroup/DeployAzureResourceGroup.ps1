@@ -65,7 +65,7 @@ function Handle-ResourceGroupLifeCycleOperations
 
     if( $action -eq "Create Or Update Resource Group" )
     {
-        Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
+        $azureResourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
         if(-not [string]::IsNullOrEmpty($outputVariable))
         {
             Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
@@ -97,8 +97,8 @@ try
             break
         }
     }
-
-    Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
+	
+	Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
 }
 catch
 {

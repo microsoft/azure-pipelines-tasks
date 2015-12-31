@@ -152,7 +152,7 @@ function Create-AzureResourceGroup
                     Write-Error $error -ErrorAction Continue
                 }
 
-                Write-Error (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName) -ErrorAction Continue
+                throw (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName)
             }
             else
             {
