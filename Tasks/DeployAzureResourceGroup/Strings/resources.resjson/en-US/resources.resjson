@@ -16,7 +16,7 @@
   "loc.input.label.location": "Location",
   "loc.input.help.location": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
   "loc.input.label.csmFile": "Template",
-  "loc.input.help.csmFile": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates.",
+  "loc.input.help.csmFile": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates. To get started immediately use template http://aka.ms/sampletemplate.",
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.help.csmParametersFile": "Specify the path for the parameters file for the Azure Resource Manager Template.",
   "loc.input.label.overrideParameters": "Override Template Parameters",

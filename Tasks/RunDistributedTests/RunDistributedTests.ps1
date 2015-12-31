@@ -10,16 +10,20 @@ param(
     [string]$codeCoverageEnabled,
     [string]$overrideRunParams,
     [string]$testConfigurations,
-    [string]$autMachineGroup
+    [string]$autMachineGroup,
+    [string]$testSelection,
+    [string]$testPlan,
+    [string]$testSuite,
+    [string]$testConfiguration
 )
 
 Function CmdletHasMember($memberName) {
-    $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
-    return $publishParameters
+    $cmdletParameter = (gcm Invoke-RunDistributedTests).Parameters.Keys.Contains($memberName) 
+    return $cmdletParameter
 }
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
-Write-Verbose "environmentName = $testMachineGroup"
+Write-Verbose "TestMachineGroup = $testMachineGroup"
 Write-Verbose "Test Drop Location = $dropLocation"
 Write-Verbose "Source Filter = $sourcefilters"
 Write-Verbose "Test Filter Criteria = $testFilterCriteria"
@@ -46,18 +50,38 @@ Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
 
 Write-Verbose "Calling Invoke-RunDistributedTests"
 
-$runTitleMemberExists = CmdletHasMember "RunTitle"
-if($runTitleMemberExists)
+$testSelectionMemberExists  = CmdletHasMember "TestSelection"
+
+$suites = $testSuite.Split(",")
+$testSuites = @()
+foreach ($suite in $suites)
 {
-    Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TaskContext $distributedTaskContext
+    $suiteId = 0
+    if([int]::TryParse($suite, [ref]$suiteId))
+    {
+        $testSuites += $suiteId
+    }    
+}
+
+$testPlanId = 0
+[int]::TryParse($testPlan, [ref]$testPlanId)
+
+$testConfigurationId = 0
+[int]::TryParse($testConfiguration, [ref]$testConfigurationId) 
+
+if($testSelectionMemberExists)
+{     
+    Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext
 }
 else
 {
-    if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+    if([string]::Equals($testSelection, "testPlan"))
     {
-        Write-Warning "Update the build agent to be able to customize your test run title."
+        throw ("Update the build agent to be able to run tests from test plan.")
     }
-    Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TaskContext $distributedTaskContext
-} 
+
+    Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle
+}
+
 
 Write-Verbose "Leaving script RunDistributedTests.ps1"
