@@ -703,12 +703,10 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     [hashtable]$winRmHttpsPortMap = @{}
     [hashtable]$vmResourcesDetails = @{}
 
-    if (-not [string]::IsNullOrEmpty($resourceGroupName))
+    if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
         $ResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
-        $ResourcesDetails.Add("$azureRMVMResources", $azureRMVMResources)
 
-        $azureVMResources = $ResourcesDetails["azureVMResources"]
         $networkInterfaceResources = $ResourcesDetails["networkInterfaceResources"]	
         $publicIPAddressResources = $ResourcesDetails["publicIPAddressResources"]	
         $loadBalancerResources = $ResourcesDetails["loadBalancerResources"]
