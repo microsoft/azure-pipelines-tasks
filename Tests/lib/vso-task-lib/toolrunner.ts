@@ -11,9 +11,9 @@ var run = function(cmd, callback) {
     console.log('running: ' + cmd);
     var output = '';
     try {
-      
+
     }
-    catch(err) {
+    catch (err) {
         console.log(err.message);
     }
 
@@ -79,7 +79,7 @@ export class ToolRunner extends events.EventEmitter {
             this._debug(this.toolPath + ' arg: ' + JSON.stringify(val));
             this.args = this.args.concat(val);
         }
-        else if (typeof(val) === 'string') {
+        else if (typeof (val) === 'string') {
             this._debug(this.toolPath + ' arg: ' + val);
             this.args = this.args.concat(this._argStringToArray(val));
         }
@@ -124,7 +124,7 @@ export class ToolRunner extends events.EventEmitter {
         }
 
         if (!ops.silent) {
-            ops.outStream.write('[command]' + cmdString + os.EOL);    
+            ops.outStream.write('[command]' + cmdString + os.EOL);
         }
 
         // TODO: filter process.env
@@ -135,8 +135,8 @@ export class ToolRunner extends events.EventEmitter {
             this.emit('stdout', res.stdout);
 
             if (!ops.silent) {
-                ops.outStream.write(res.stdout + os.EOL);    
-            }            
+                ops.outStream.write(res.stdout + os.EOL);
+            }
         }
 
         if (res.stderr) {
@@ -202,7 +202,7 @@ export class ToolRunner extends events.EventEmitter {
         }
 
         if (!ops.silent) {
-            ops.outStream.write('[command]' + cmdString + os.EOL);    
+            ops.outStream.write('[command]' + cmdString + os.EOL);
         }
 
         var r = mock.getResponse('exec', cmdString);
@@ -214,6 +214,6 @@ export class ToolRunner extends events.EventEmitter {
             ops.errStream.write(r.stderr);
         }
 
-        return <IExecResult>{ code: r.code, stdout: r.stdout, stderr: r.stderr};
-    }   
+        return <IExecResult>{ code: r.code, stdout: r.stdout, stderr: r.stderr };
+    }
 }

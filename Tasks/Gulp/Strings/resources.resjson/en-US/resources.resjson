@@ -16,5 +16,8 @@
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located.",
   "loc.input.label.gulpjs": "gulp.js location",
-  "loc.input.help.gulpjs": "gulp.js to run.  Defaults to the gulp.js under node_modules folder of cwd."
+  "loc.input.help.gulpjs": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of cwd.",
+  "loc.messages.GulpNotInstalled": "Gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
+  "loc.messages.GulpReturnCode": "Gulp exited with return code: %d",
+  "loc.messages.GulpFailed": "Gulp failed with error: %s"
 }

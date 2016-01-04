@@ -34,8 +34,11 @@
 	"instanceNameFormat": "Delete files from $(SourceFolder)",
 	"execution": {
 		"Node": {
-			"target": "deleteFiles.js",
+			"target": "deletefiles.js",
 			"argumentFormat": ""
 		}
-	}
+	},
+	"messages": {
+    	"CantDeleteFiles": "Couldn't delete one or more files"
+  }
 }

@@ -89,7 +89,12 @@ gulp.task('testLib', ['compileTests'], function (cb) {
 		.pipe(gulp.dest(path.join(_testRoot, 'lib')));
 });
 
-gulp.task('testResources', ['testLib', 'ps1tests']);
+gulp.task('testLib_NodeModules', ['testLib'], function (cb) {
+	return gulp.src(path.join(_testRoot ,'lib/vso-task-lib/**/*'))
+		.pipe(gulp.dest(path.join(_testRoot, 'lib/node_modules/vso-task-lib')));
+});
+
+gulp.task('testResources', ['testLib_NodeModules', 'ps1tests']);
 
 // compile tasks inline
 gulp.task('compileTasks', ['clean'], function (cb) {

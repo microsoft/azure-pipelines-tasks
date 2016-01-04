@@ -2,13 +2,13 @@
 /// <reference path="../definitions/Q.d.ts" />
 declare module 'vso-task-lib/taskcommand' {
 	export class TaskCommand {
-	    constructor(command: any, properties: any, message: any);
-	    command: string;
-	    message: string;
-	    properties: {
-	        [key: string]: string;
-	    };
-	    toString(): string;
+		constructor(command: any, properties: any, message: any);
+		command: string;
+		message: string;
+		properties: {
+			[key: string]: string;
+		};
+		toString(): string;
 	}
 	export function commandFromString(commandLine: any): TaskCommand;
 
@@ -19,34 +19,34 @@ declare module 'vso-task-lib/toolrunner' {
 	import Q = require('q');
 	import events = require('events');
 	export interface IExecOptions {
-	    cwd: string;
-	    env: {
-	        [key: string]: string;
-	    };
-	    silent: boolean;
-	    failOnStdErr: boolean;
-	    ignoreReturnCode: boolean;
-	    outStream: NodeJS.WritableStream;
-	    errStream: NodeJS.WritableStream;
+		cwd: string;
+		env: {
+			[key: string]: string;
+		};
+		silent: boolean;
+		failOnStdErr: boolean;
+		ignoreReturnCode: boolean;
+		outStream: NodeJS.WritableStream;
+		errStream: NodeJS.WritableStream;
 	}
 	export interface IExecResult {
-	    stdout: string;
-	    stderr: string;
-	    code: number;
-	    error: Error;
+		stdout: string;
+		stderr: string;
+		code: number;
+		error: Error;
 	}
 	export function debug(message: any): void;
 	export class ToolRunner extends events.EventEmitter {
-	    constructor(toolPath: any);
-	    toolPath: string;
-	    args: string[];
-	    silent: boolean;
-	    private _debug(message);
-	    private _argStringToArray(argString);
-	    arg(val: any): void;
-	    argIf(condition: any, val: any): void;
-	    exec(options: IExecOptions): Q.Promise<number>;
-	    execSync(options: IExecOptions): IExecResult;
+		constructor(toolPath: any);
+		toolPath: string;
+		args: string[];
+		silent: boolean;
+		private _debug(message);
+		private _argStringToArray(argString);
+		arg(val: any): void;
+		argIf(condition: any, val: any): void;
+		exec(options?: IExecOptions): Q.Promise<number>;
+		execSync(options?: IExecOptions): IExecResult;
 	}
 
 }
@@ -60,8 +60,8 @@ declare module 'vso-task-lib/vsotask' {
 	import fs = require('fs');
 	import trm = require('vso-task-lib/toolrunner');
 	export enum TaskResult {
-	    Succeeded = 0,
-	    Failed = 1,
+		Succeeded = 0,
+		Failed = 1,
 	}
 	export var _outStream: NodeJS.WritableStream;
 	export var _errStream: NodeJS.WritableStream;
@@ -74,7 +74,7 @@ declare module 'vso-task-lib/vsotask' {
 	export function exitOnCodeIf(code: any, condition: boolean): void;
 	export function exit(code: number): void;
 	export function setResourcePath(path: string): void;
-	export function loc(key: string, defaultStr: string): string;
+	export function loc(key: string, ...param: any[]): string;
 	export function getVariable(name: string): string;
 	export function setVariable(name: string, val: string): void;
 	export function getInput(name: string, required?: boolean): string;
@@ -85,15 +85,16 @@ declare module 'vso-task-lib/vsotask' {
 	export function getPathInput(name: string, required?: boolean, check?: boolean): string;
 	export function getEndpointUrl(id: string, optional: boolean): string;
 	export interface EndpointAuthorization {
-	    parameters: {
-	        [key: string]: string;
-	    };
-	    scheme: string;
+		parameters: {
+			[key: string]: string;
+		};
+		scheme: string;
 	}
 	export function getEndpointAuthorization(id: string, optional: boolean): EndpointAuthorization;
 	export interface FsStats extends fs.Stats {
 	}
 	export function stats(path: string): FsStats;
+	export function exist(path: string): boolean;
 	export function command(command: string, properties: any, message: string): void;
 	export function warning(message: string): void;
 	export function error(message: string): void;
@@ -116,9 +117,9 @@ declare module 'vso-task-lib/vsotask' {
 	export function match(list: any, pattern: any, options: any): string[];
 	export function filter(pattern: any, options: any): (element: string, indexed: number, array: string[]) => boolean;
 	export class TestPublisher {
-	    constructor(testRunner: any);
-	    testRunner: string;
-	    publish(resultFiles: any, mergeResults: any, platform: any, config: any): void;
+		constructor(testRunner: any);
+		testRunner: string;
+		publish(resultFiles: any, mergeResults: any, platform: any, config: any, runTitle: any, publishRunAttachments: any): void;
 	}
 
 }

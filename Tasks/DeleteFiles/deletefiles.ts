@@ -1,18 +1,23 @@
 /// <reference path="../../definitions/vso-task-lib.d.ts" />
-var path = require('path');
-var os = require('os');
-var tl = require('vso-task-lib/vsotask');
+
+import path = require('path');
+import os = require('os');
+import tl = require('vso-task-lib/vsotask');
+
 // contents is a multiline input containing glob patterns
-var contents = tl.getDelimitedInput('Contents', '\n');
-var sourceFolder = tl.getPathInput('SourceFolder');
+var contents: string[] = tl.getDelimitedInput('Contents', '\n', true);
+var sourceFolder = tl.getPathInput('SourceFolder', true, true);
+
 // include filter
 var includeContents = [];
+
 for (var i = 0; i < contents.length; i++) {
     var pattern = contents[i].trim();
     tl.debug('include content pattern: ' + pattern);
     var realPattern = path.join(sourceFolder, pattern);
-    includeContents.push(realPattern);
+    includeContents.push(realPattern);        
 }
+
 // enumerate all files
 var files = [];
 var allPaths = tl.find(sourceFolder);
@@ -20,8 +25,10 @@ tl.debug('allPaths: ' + allPaths);
 if (allPaths.length === 0) {
     tl.debug('source folder not found. nothing to delete.');
 }
-var allFiles = [];
-var allFolders = [];
+
+var allFiles: string[] = [];
+var allFolders: string[] = [];
+
 // folders should be deleted last
 for (var i = 0; i < allPaths.length; i++) {
     tl.debug("checking for directory: " + allPaths[i]);
@@ -33,7 +40,8 @@ for (var i = 0; i < allPaths.length; i++) {
     }
 }
 allFiles = allFiles.concat(allFolders);
-if (includeContents && allFiles && includeContents.length > 0 && allFiles.length > 0) {
+
+if (includeContents.length > 0 && allFiles.length > 0) {
     tl.debug("allFiles contains " + allFiles.length + " files");
     // a map to eliminate duplicates
     var map = {};
@@ -44,7 +52,7 @@ if (includeContents && allFiles && includeContents.length > 0 && allFiles.length
     }
     // apply include filter
     for (var i = 0; i < includeContents.length; i++) {
-        var pattern = includeContents[i];
+        var pattern: string = includeContents[i];
         tl.debug('Include matching: ' + pattern);
         // let minimatch do the actual filtering
         var matches = tl.match(allFiles, pattern, matchOptions);
@@ -61,9 +69,10 @@ if (includeContents && allFiles && includeContents.length > 0 && allFiles.length
 else {
     tl.debug("Either includeContents or allFiles is empty");
 }
+
 // try to delete all files/folders, even if one errs
-var errorHappened = false;
-for (var i = 0; i < files.length; i++) {
+var errorHappened: boolean = false;
+for (var i: number = 0; i < files.length; i++){
     try {
         tl.debug("trying to delete: " + files[i]);
         tl.rmRF(files[i]);
@@ -73,6 +82,7 @@ for (var i = 0; i < files.length; i++) {
         errorHappened = true;
     }
 }
+
 if (errorHappened) {
-    tl.setResult(1, tl.loc("CantDeleteFiles", "Couldn't delete one or more files"));
+    tl.setResult(tl.TaskResult.Failed, tl.loc("CantDeleteFiles"));
 }

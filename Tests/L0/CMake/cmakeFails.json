@@ -1,0 +1,13 @@
+{
+    "which": {
+        "cmake": "/usr/local/bin/cmake",
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/cmake ..": {
+            "code": 1,
+            "stdout": "cmake output here",
+            "stderr": "cmake failed with this output"
+        }
+    }
+}

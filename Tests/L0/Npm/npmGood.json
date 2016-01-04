@@ -1,0 +1,12 @@
+{
+    "which": {
+        "npm": "/usr/local/bin/npm",
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/npm install npm": {
+            "code": 0,
+            "stdout": "npm output here"
+        }
+    }
+}
