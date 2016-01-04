@@ -1,9 +1,9 @@
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
-import tl = require('vso-task-lib/vsotask');
+import tl = require('vsts-task-lib/vsotask');
 import util= require('util');
 
 function getCommonLocalPath(files: string[]): string {

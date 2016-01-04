@@ -7,7 +7,7 @@ import fs = require('fs');
 import path = require('path');
 var exec = require('child_process').exec;
 var shell = require('shelljs');
-var tl = require('vso-task-lib');
+var tl = require('vsts-task-lib');
 
 function debug(message) {
     if (process.env['TASK_TEST_TRACE']) {
@@ -74,12 +74,18 @@ export class TaskRunner extends events.EventEmitter {
 			throw (new Error('Did you build with "gulp"? Task does not exist: ' + this._taskSrcPath));
 		}
 		
-		// copy mocked vso-task-lib if it doesn't exist
+		// ensure we have latest mocked vsts-task-lib
 		var modPath = path.join(this._tempPath, 'node_modules');
+		var libPath = path.join(__dirname, 'vsts-task-lib');
+
 		if (!shell.test('-d', modPath)) {
 			shell.mkdir('-p', modPath);
-			shell.cp('-R', path.join(__dirname, 'vso-task-lib'), path.join(modPath));			
+			shell.cp('-R', libPath, modPath);	
 		}
+
+		
+		//shell.rm('-rf', path.join(modPath, 'vsts-task-lib'));
+		
 
 		// copy the task over so we can execute from Temp 
 		// this forces it to use the mocked vso-task-lib and provides isolation
@@ -89,8 +95,8 @@ export class TaskRunner extends events.EventEmitter {
 			shell.cp('-R', this._taskSrcPath, this._tempPath);
 		}
 
-		// delete it's linked copy of vso-task-lib so it uses the mocked task-lib above
-		var taskLibPath = path.join(this._taskPath, 'node_modules', 'vso-task-lib');
+		// delete it's linked copy of vsts-task-lib so it uses the mocked task-lib above
+		var taskLibPath = path.join(this._taskPath, 'node_modules', 'vsts-task-lib');
 		if (shell.test('-d', taskLibPath)) {
 			shell.rm('-rf', taskLibPath);
 		}

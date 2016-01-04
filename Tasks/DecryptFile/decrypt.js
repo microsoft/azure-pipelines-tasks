@@ -1,5 +1,5 @@
 var fs = require('fs'),
-	tl = require('vso-task-lib');
+	tl = require('vsts-task-lib');
 
 //Process working directory
 var cwd = tl.getInput('cwd') || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');

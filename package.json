@@ -39,7 +39,7 @@
     "shelljs": "^0.3.0",
     "through2": "^0.6.3",
     "validator": "^3.33.0",
-    "vso-task-lib": "^0.5.1"
+    "vsts-task-lib": "^0.5.6"
   },
   "dependencies": {
     "archiver": "^0.14.3",

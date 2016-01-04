@@ -1,11 +1,11 @@
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import path = require('path');
 import fs = require('fs');
 import Q = require('q');
-var tl = require("vso-task-lib");
+var tl = require("vsts-task-lib");
 
 function getCommonLocalPath(files: string[]): string {
     if (!files || files.length === 0) {

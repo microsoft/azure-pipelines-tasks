@@ -1,4 +1,4 @@
-var tl = require('vso-task-lib/vsotask');
+var tl = require('vsts-task-lib/vsotask');
 var path = require('path');
 
 // Define error handler

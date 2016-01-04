@@ -1,6 +1,6 @@
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 var path = require('path');
-var tl = require('vso-task-lib/vsotask');
+var tl = require('vsts-task-lib/vsotask');
 var nt = tl.createToolRunner(tl.which('node', true));
 var gulpFile = tl.getPathInput('gulpFile', true);
 var cwd = tl.getInput('cwd', false);

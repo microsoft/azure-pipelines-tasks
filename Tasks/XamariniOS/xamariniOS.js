@@ -1,6 +1,6 @@
 ﻿var fs = require('fs');
 var path = require('path');
-var tl = require('vso-task-lib');
+var tl = require('vsts-task-lib');
 
 // Get configuration
 var configuration = tl.getInput('configuration', true);
