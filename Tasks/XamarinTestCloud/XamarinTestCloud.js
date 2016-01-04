@@ -1,7 +1,7 @@
 ﻿var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
-var tl = require('vso-task-lib');
+var tl = require('vsts-task-lib');
 
 // Get inputs
 var app = tl.getInput('app', true);

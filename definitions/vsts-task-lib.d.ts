@@ -1,6 +1,6 @@
 /// <reference path="../definitions/node.d.ts" />
 /// <reference path="../definitions/Q.d.ts" />
-declare module 'vso-task-lib/taskcommand' {
+declare module 'vsts-task-lib/taskcommand' {
 	export class TaskCommand {
 	    constructor(command: any, properties: any, message: any);
 	    command: string;
@@ -13,7 +13,7 @@ declare module 'vso-task-lib/taskcommand' {
 	export function commandFromString(commandLine: any): TaskCommand;
 
 }
-declare module 'vso-task-lib/toolrunner' {
+declare module 'vsts-task-lib/toolrunner' {
 	/// <reference path="../definitions/node.d.ts" />
 	/// <reference path="../definitions/Q.d.ts" />
 	import Q = require('q');
@@ -45,12 +45,12 @@ declare module 'vso-task-lib/toolrunner' {
 	    private _argStringToArray(argString);
 	    arg(val: any): void;
 	    argIf(condition: any, val: any): void;
-	    exec(options: IExecOptions): Q.Promise<number>;
-	    execSync(options: IExecOptions): IExecResult;
+	    exec(options?: IExecOptions): Q.Promise<number>;
+	    execSync(options?: IExecOptions): IExecResult;
 	}
 
 }
-declare module 'vso-task-lib/vsotask' {
+declare module 'vsts-task-lib/vsotask' {
 	/// <reference path="../definitions/node.d.ts" />
 	/// <reference path="../definitions/Q.d.ts" />
 	/// <reference path="../definitions/shelljs.d.ts" />
@@ -58,7 +58,7 @@ declare module 'vso-task-lib/vsotask' {
 	/// <reference path="../definitions/glob.d.ts" />
 	import Q = require('q');
 	import fs = require('fs');
-	import trm = require('vso-task-lib/toolrunner');
+	import trm = require('vsts-task-lib/toolrunner');
 	export enum TaskResult {
 	    Succeeded = 0,
 	    Failed = 1,
@@ -71,10 +71,10 @@ declare module 'vso-task-lib/vsotask' {
 	export function setErrStream(errStream: any): void;
 	export function setResult(result: TaskResult, message: string): void;
 	export function handlerError(errMsg: string, continueOnError: boolean): void;
-	export function exitOnCodeIf(code: any, condition: boolean): void;
+	export function exitOnCodeIf(code: number, condition: boolean): void;
 	export function exit(code: number): void;
 	export function setResourcePath(path: string): void;
-	export function loc(key: string, defaultStr: string): string;
+	export function loc(key: string, ...param: any[]): string;
 	export function getVariable(name: string): string;
 	export function setVariable(name: string, val: string): void;
 	export function getInput(name: string, required?: boolean): string;
@@ -94,6 +94,7 @@ declare module 'vso-task-lib/vsotask' {
 	export interface FsStats extends fs.Stats {
 	}
 	export function stats(path: string): FsStats;
+	export function exist(path: string): boolean;
 	export function command(command: string, properties: any, message: string): void;
 	export function warning(message: string): void;
 	export function error(message: string): void;
@@ -118,7 +119,7 @@ declare module 'vso-task-lib/vsotask' {
 	export class TestPublisher {
 	    constructor(testRunner: any);
 	    testRunner: string;
-	    publish(resultFiles: any, mergeResults: any, platform: any, config: any): void;
+	    publish(resultFiles: any, mergeResults: any, platform: any, config: any, runTitle: any, publishRunAttachments: any): void;
 	}
 
 }

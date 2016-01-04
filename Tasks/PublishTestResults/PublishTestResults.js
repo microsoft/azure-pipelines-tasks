@@ -1,4 +1,4 @@
-var tl = require('vso-task-lib');
+var tl = require('vsts-task-lib');
 
 var testRunner = tl.getInput('testRunner', true);
 var testResultsFiles = tl.getInput('testResultsFiles', true);

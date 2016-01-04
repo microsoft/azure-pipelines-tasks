@@ -1,11 +1,11 @@
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import fs = require('fs');
 import path = require('path');
 import Q = require('q');
-var tl = require("vso-task-lib");
+var tl = require("vsts-task-lib");
 
 // content is a folder contain artifacts needs to publish.
 var pathtoPublish: string = tl.getPathInput('PathtoPublish');

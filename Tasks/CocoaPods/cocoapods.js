@@ -1,4 +1,4 @@
-var tl = require('vso-task-lib');
+var tl = require('vsts-task-lib');
 var path = require('path');
 
 tl.cd(tl.getPathInput('cwd', true, true));

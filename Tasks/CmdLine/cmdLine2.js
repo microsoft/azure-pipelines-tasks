@@ -1,5 +1,5 @@
 var path = require('path');
-var tl = require('vso-task-lib');
+var tl = require('vsts-task-lib');
 
 var tool = tl.which(tl.getInput('filename', true), true);
 

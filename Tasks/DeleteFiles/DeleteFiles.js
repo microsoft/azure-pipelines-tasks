@@ -1,7 +1,7 @@
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 var path = require('path');
 var os = require('os');
-var tl = require('vso-task-lib/vsotask');
+var tl = require('vsts-task-lib/vsotask');
 // contents is a multiline input containing glob patterns
 var contents = tl.getDelimitedInput('Contents', '\n');
 var sourceFolder = tl.getPathInput('SourceFolder');

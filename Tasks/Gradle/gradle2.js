@@ -1,4 +1,4 @@
-﻿var tl = require('vso-task-lib');
+﻿var tl = require('vsts-task-lib');
 var fs = require('fs');
 var path = require('path');
 

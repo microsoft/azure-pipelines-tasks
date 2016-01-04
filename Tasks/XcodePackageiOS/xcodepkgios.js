@@ -1,4 +1,4 @@
-var tl = require('vso-task-lib');
+var tl = require('vsts-task-lib');
 var path = require('path');
 
 var sourceDir = tl.getVariable('build.sourceDirectory');
