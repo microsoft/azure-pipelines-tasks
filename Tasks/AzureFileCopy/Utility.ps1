@@ -17,9 +17,9 @@ $telemetryCodes =
   "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
   "PREREQ_NoRGOrVMResources" = "PREREQ_NoRGOrVMResources";
   "PREREQ_ClassicStorageAccountNotFound" = "PREREQ_ClassicStorageAccountNotFound";
-  "PREREQ_NonClassicStorageAccountNotFound" = "PREREQ_NonClassicStorageAccountNotFound";
+  "PREREQ_RMStorageAccountNotFound" = "PREREQ_RMStorageAccountNotFound";
   "PREREQ_NoClassicVMResources" = "PREREQ_NoClassicVMResources";
-  "PREREQ_NoNonClassicVMResources" = "PREREQ_NoNonClassicVMResources";
+  "PREREQ_NoRMVMResources" = "PREREQ_NoRMVMResources";
   "PREREQ_ResourceGroupNotFound" = "PREREQ_ResourceGroupNotFound";
 
   "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
@@ -94,17 +94,14 @@ function Get-AzureUtility
 
 function Get-ConnectionType
 {
-    param([string]$connectedServiceName,
-          [object]$distributedTaskContext)
+    param([string][Parameter(Mandatory=$true)]$connectedServiceName,
+          [object][Parameter(Mandatory=$true)]$distributedTaskContext)
 
-    if(-not [string]::IsNullOrEmpty($connectedServiceName) -and $distributedTaskContext)
-    {
-        $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
-        $connectionType = $serviceEndpoint.Authorization.Scheme
+    $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
+    $connectionType = $serviceEndpoint.Authorization.Scheme
 
-        Write-Verbose -Verbose "Connection type used is $connectionType"
-        return $connectionType
-    }
+    Write-Verbose -Verbose "Connection type used is $connectionType"
+    return $connectionType
 }
 
 function Validate-AzurePowershellVersion
@@ -128,61 +125,58 @@ function Validate-AzurePowershellVersion
 
 function Get-StorageKey
 {
-    param([string]$storageAccountName,
-          [string]$connectionType)
+    param([string][Parameter(Mandatory=$true)]$storageAccountName,
+          [string][Parameter(Mandatory=$true)]$connectionType)
 
     $storageAccountName = $storageAccountName.Trim()
-    if(-not [string]::IsNullOrEmpty($storageAccountName) -and -not [string]::IsNullOrEmpty($connectionType))
+    if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
     {
-        if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
+        try
         {
-            try
+            # getting storage key from RDFE
+            $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccountName
+        }
+        catch [Hyak.Common.CloudException]
+        {
+            $exceptionMessage = $_.Exception.Message.ToString()
+            Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage" -Verbose
+
+            if($connectionType -eq 'Certificate')
             {
-                # getting storage key from RDFE
-                $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccountName
+                Write-TaskSpecificTelemetry "PREREQ_ClassicStorageAccountNotFound"
+                Throw (Get-LocalizedString -Key "Storage account: {0} not found. Selected Connection 'Certificate' supports storage account of Azure Classic type only." -ArgumentList $storageAccountName)
             }
-            catch [Hyak.Common.CloudException]
+            # Since authentication is UserNamePassword we will check whether storage is non-classic
+            # Bug: We are validating azureps version to be atleast 0.9.0 though it is not required if user working on classic resources
+            else
             {
-                $exceptionMessage = $_.Exception.Message.ToString()
-                Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage" -Verbose
-
-                if($connectionType -eq 'Certificate')
+                try
                 {
-                    Write-TaskSpecificTelemetry "PREREQ_ClassicStorageAccountNotFound"
-                    Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing classic storage account" -ArgumentList $storageAccountName)
+                    # checking azure powershell version to make calls to ARM endpoint
+                    Validate-AzurePowershellVersion
+
+                    # getting storage account key from ARM endpoint
+                    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName
                 }
-                # Since authentication is UserNamePassword we will check whether storage is non-classic
-                # Bug: We are validating azureps version to be atleast 0.9.0 though it is not required if user working on classic resources
-                else
+                catch
                 {
-                    try
-                    {
-                        # checking azure powershell version to make calls to ARM endpoint
-                        Validate-AzurePowershellVersion
-
-                        # getting storage account key from ARM endpoint
-                        $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName
-                    }
-                    catch
-                    {
-                        #since authentication was UserNamePassword so we cant suggest user whether storage should be classic or non-classic
-                        Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
-                        Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
-                    }
+                    #since authentication was UserNamePassword so we cant suggest user whether storage should be classic or non-classic
+                    Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
+                    Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
                 }
             }
         }
-        else
-        {
-            # checking azure powershell version to make calls to ARM endpoint
-            Validate-AzurePowershellVersion
-
-            # getting storage account key from ARM endpoint
-            $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName
-        }
-
-        return $storageKey
     }
+    else
+    {
+        # checking azure powershell version to make calls to ARM endpoint
+        Validate-AzurePowershellVersion
+
+        # getting storage account key from ARM endpoint
+        $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName
+    }
+
+    return $storageKey
 }
 
 function ThrowError
@@ -196,68 +190,65 @@ function ThrowError
 
 function Upload-FilesToAzureContainer
 {
-    param([string]$sourcePath,
-          [string]$storageAccountName,
-          [string]$containerName,
+    param([string][Parameter(Mandatory=$true)]$sourcePath,
+          [string][Parameter(Mandatory=$true)]$storageAccountName,
+          [string][Parameter(Mandatory=$true)]$containerName,
           [string]$blobPrefix,
-          [string]$storageKey,
-          [string]$azCopyLocation,
+          [string][Parameter(Mandatory=$true)]$storageKey,
+          [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [string]$additionalArguments,
-          [string]$destinationType)
+          [string][Parameter(Mandatory=$true)]$destinationType)
 
     $sourcePath = $sourcePath.Trim('"')
     $storageAccountName = $storageAccountName.Trim()
-    if( -not [string]::IsNullOrEmpty($sourcePath) -and -not [string]::IsNullOrEmpty($storageAccountName) -and -not [string]::IsNullOrEmpty($containerName) -and -not [string]::IsNullOrEmpty($storageKey) -and -not [string]::IsNullOrEmpty($azCopyLocation) -and -not [string]::IsNullOrEmpty($destinationType))
+    try
     {
-        try
-        {
-            Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
 
-            if([string]::IsNullOrWhiteSpace($additionalArguments))
-            {
-                $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation
-            }
-            else
-            {
-                $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments
-            }
+        if([string]::IsNullOrWhiteSpace($additionalArguments))
+        {
+            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation
         }
-        catch
+        else
+        {
+            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments
+        }
+    }
+    catch
+    {
+        # deletes container only if we have created temporary container
+        if ($destinationType -ne "AzureBlob")
+        {
+            Remove-AzureContainer -containerName $containerName -storageContext $storageContext
+        }
+
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
+
+        $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $exceptionMessage)
+        Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
+        ThrowError -errorMessage $errorMessage
+    }
+    finally
+    {
+        if ($uploadResponse.Status -eq "Failed")
         {
             # deletes container only if we have created temporary container
-            if ($destinationType -ne "AzureBlob")
+            if ($destination -ne "AzureBlob")
             {
                 Remove-AzureContainer -containerName $containerName -storageContext $storageContext
             }
 
-            $exceptionMessage = $_.Exception.Message.ToString()
-            Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
+            $uploadErrorMessage = $uploadResponse.Error
+            Write-Verbose "UploadErrorMessage: $uploadErrorMessage" -Verbose
 
-            $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $exceptionMessage)
+            $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $uploadErrorMessage)
             Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
             ThrowError -errorMessage $errorMessage
         }
-        finally
+        elseif ($uploadResponse.Status -eq "Succeeded")
         {
-            if ($uploadResponse.Status -eq "Failed")
-            {
-                # deletes container only if we have created temporary container
-                if ($destination -ne "AzureBlob")
-                {
-                    Remove-AzureContainer -containerName $containerName -storageContext $storageContext
-                }
-
-                $uploadErrorMessage = $uploadResponse.Error
-                Write-Verbose "UploadErrorMessage: $uploadErrorMessage" -Verbose
-
-                $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $uploadErrorMessage)
-                Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
-                ThrowError -errorMessage $errorMessage
-            }
-            elseif ($uploadResponse.Status -eq "Succeeded")
-            {
-                Write-Output (Get-LocalizedString -Key "Uploaded files successfully from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
-            }
+            Write-Output (Get-LocalizedString -Key "Uploaded files successfully from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
         }
     }
 }
@@ -753,12 +744,12 @@ function Get-AzureVMResourcesProperties
                 if($connectionType -eq 'Certificate')
                 {
                     Write-TaskSpecificTelemetry "PREREQ_NoClassicVMResources"
-                    throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy. Please specify resource group which has classic VMs" -ArgumentList $resourceGroupName)
+                    throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy. Selected Connection '{1}' supports Virtual Machines of Azure Classic type only." -ArgumentList $resourceGroupName, $connectionType)
                 }
                 elseif($connectionType -eq 'ServicePrincipal')
                 {
-                    Write-TaskSpecificTelemetry "PREREQ_NoNonClassicVMResources"
-                    throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy. Please specify resource group which has non-classic VMs" -ArgumentList $resourceGroupName)
+                    Write-TaskSpecificTelemetry "PREREQ_NoRMVMResources"
+                    throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy. Selected Connection '{1}' supports Virtual Machines of Azure Resource Manager type only." -ArgumentList $resourceGroupName, $connectionType)
                 }
                 else
                 {
@@ -799,191 +790,170 @@ function Get-SkipCACheckOption
 
 function Get-AzureVMsCredentials
 {
-    param([string]$vmsAdminUserName,
-          [string]$vmsAdminPassword)
+    param([string][Parameter(Mandatory=$true)]$vmsAdminUserName,
+          [string][Parameter(Mandatory=$true)]$vmsAdminPassword)
 
-    if(-not [string]::IsNullOrEmpty($vmsAdminUserName) -and -not [string]::IsNullOrEmpty($vmsAdminPassword))
-    {
-        Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName" -Verbose
-        $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassword
+    Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName" -Verbose
+    $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassword
 
-        return $azureVmsCredentials
-    }
+    return $azureVmsCredentials
 }
 
 function Copy-FilesSequentiallyToAzureVMs
 {
-    param([string]$storageAccountName,
-          [string]$containerName,
-          [string]$containerSasToken,
-          [string]$targetPath,
-          [string]$azCopyLocation,
-          [string]$resourceGroupName,
-          [object]$azureVMResourcesProperties,
-          [object]$azureVMsCredentials,
-          [string]$cleanTargetBeforeCopy,
+    param([string][Parameter(Mandatory=$true)]$storageAccountName,
+          [string][Parameter(Mandatory=$true)]$containerName,
+          [string][Parameter(Mandatory=$true)]$containerSasToken,
+          [string][Parameter(Mandatory=$true)]$targetPath,
+          [string][Parameter(Mandatory=$true)]$azCopyLocation,
+          [string][Parameter(Mandatory=$true)]$resourceGroupName,
+          [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
+          [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
+          [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string]$skipCACheckOption,
-          [string]$enableDetailedLoggingString,
+          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments)
 
-    if (-not [string]::IsNullOrEmpty($storageAccountName) -and -not [string]::IsNullOrEmpty($containerName) -and -not [string]::IsNullOrEmpty($containerSasToken) -and `
-        -not [string]::IsNullOrEmpty($targetPath) -and -not [string]::IsNullOrEmpty($azCopyLocation) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and `
-        -not [string]::IsNullOrEmpty($cleanTargetBeforeCopy) -and  -not [string]::IsNullOrEmpty($skipCACheckOption) -and -not [string]::IsNullOrEmpty($enableDetailedLoggingString) -and `
-         $azureVMResourcesProperties -and $azureVMsCredentials)
+    foreach ($resource in $azureVMResourcesProperties.Keys)
     {
-        foreach ($resource in $azureVMResourcesProperties.Keys)
-        {
-            $resourceProperties = $azureVMResourcesProperties[$resource]
-            $resourceFQDN = $resourceProperties.fqdn
-            $resourceName = $resourceProperties.Name
-            $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
+        $resourceProperties = $azureVMResourcesProperties[$resource]
+        $resourceFQDN = $resourceProperties.fqdn
+        $resourceName = $resourceProperties.Name
+        $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
 
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
+        Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
-            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
+        $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
                             $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVMsCredentials, `
                             $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocal, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
-            $status = $copyResponse.Status
+        $status = $copyResponse.Status
 
-            Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $copyResponse
-            Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $resourceName, $status)
+        Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $copyResponse
+        Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $resourceName, $status)
 
-            if ($status -ne "Passed")
-            {
-                $copyErrorMessage =  $copyResponse.Error.Message
-                Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
+        if ($status -ne "Passed")
+        {
+            $copyErrorMessage =  $copyResponse.Error.Message
+            Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
 
-                Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
-                ThrowError -errorMessage $copyErrorMessage
-            }
+            Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
+            ThrowError -errorMessage $copyErrorMessage
         }
     }
 }
 
 function Copy-FilesParallelyToAzureVMs
 {
-    param([string]$storageAccountName,
-          [string]$containerName,
-          [string]$containerSasToken,
-          [string]$targetPath,
-          [string]$azCopyLocation,
-          [string]$resourceGroupName,
-          [object]$azureVMResourcesProperties,
-          [object]$azureVMsCredentials,
-          [string]$cleanTargetBeforeCopy,
+    param([string][Parameter(Mandatory=$true)]$storageAccountName,
+          [string][Parameter(Mandatory=$true)]$containerName,
+          [string][Parameter(Mandatory=$true)]$containerSasToken,
+          [string][Parameter(Mandatory=$true)]$targetPath,
+          [string][Parameter(Mandatory=$true)]$azCopyLocation,
+          [string][Parameter(Mandatory=$true)]$resourceGroupName,
+          [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
+          [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
+          [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string]$skipCACheckOption,
-          [string]$enableDetailedLoggingString,
+          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments)
 
-    if (-not [string]::IsNullOrEmpty($storageAccountName) -and -not [string]::IsNullOrEmpty($containerName) -and -not [string]::IsNullOrEmpty($containerSasToken) -and `
-        -not [string]::IsNullOrEmpty($targetPath) -and -not [string]::IsNullOrEmpty($azCopyLocation) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and `
-        -not [string]::IsNullOrEmpty($cleanTargetBeforeCopy) -and  -not [string]::IsNullOrEmpty($skipCACheckOption) -and -not [string]::IsNullOrEmpty($enableDetailedLoggingString) -and `
-         $azureVMResourcesProperties -and $azureVMsCredentials)
+    [hashtable]$Jobs = @{}
+    foreach ($resource in $azureVMResourcesProperties.Keys)
     {
-        [hashtable]$Jobs = @{}
-        foreach ($resource in $azureVMResourcesProperties.Keys)
-        {
-            $resourceProperties = $azureVMResourcesProperties[$resource]
-            $resourceFQDN = $resourceProperties.fqdn
-            $resourceName = $resourceProperties.Name
-            $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
+        $resourceProperties = $azureVMResourcesProperties[$resource]
+        $resourceFQDN = $resourceProperties.fqdn
+        $resourceName = $resourceProperties.Name
+        $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
 
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
+        Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
-            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
+        $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
                    $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, `
                    $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocal, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
-            $Jobs.Add($job.Id, $resourceProperties)
-        }
+        $Jobs.Add($job.Id, $resourceProperties)
+    }
 
-        While (Get-Job)
+    While (Get-Job)
+    {
+        Start-Sleep 10
+        foreach ($job in Get-Job)
         {
-            Start-Sleep 10
-            foreach ($job in Get-Job)
+            if ($job.State -ne "Running")
             {
-                if ($job.State -ne "Running")
+                $output = Receive-Job -Id $job.Id
+                Remove-Job $Job
+
+                $status = $output.Status
+                $resourceName = $Jobs.Item($job.Id).Name
+
+                Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $output
+                Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $resourceName, $status)
+
+                if ($status -ne "Passed")
                 {
-                    $output = Receive-Job -Id $job.Id
-                    Remove-Job $Job
-
-                    $status = $output.Status
-                    $resourceName = $Jobs.Item($job.Id).Name
-
-                    Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $output
-                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $resourceName, $status)
-
-                    if ($status -ne "Passed")
+                    $parallelOperationStatus = "Failed"
+                    $errorMessage = ""
+                    if($output.Error -ne $null)
                     {
-                        $parallelOperationStatus = "Failed"
-                        $errorMessage = ""
-                        if($output.Error -ne $null)
-                        {
-                            $errorMessage = $output.Error.Message
-                        }
-
-                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
+                        $errorMessage = $output.Error.Message
                     }
+
+                    Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
                 }
             }
         }
+    }
 
-        # While copying paralelly, if copy failed on one or more azure VMs then throw
-        if ($parallelOperationStatus -eq "Failed")
-        {
-            $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
-            Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
-            ThrowError -errorMessage $errorMessage
-        }
+    # While copying paralelly, if copy failed on one or more azure VMs then throw
+    if ($parallelOperationStatus -eq "Failed")
+    {
+        $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
+        Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
+        ThrowError -errorMessage $errorMessage
     }
 }
 
 function Copy-FilesToAzureVMsFromStorageContainer
 {
-    param([string]$storageAccountName,
-          [string]$containerName,
-          [string]$containerSasToken,
-          [string]$targetPath,
-          [string]$azCopyLocation,
-          [string]$resourceGroupName,
-          [object]$azureVMResourcesProperties,
-          [object]$azureVMsCredentials,
-          [string]$cleanTargetBeforeCopy,
+    param([string][Parameter(Mandatory=$true)]$storageAccountName,
+          [string][Parameter(Mandatory=$true)]$containerName,
+          [string][Parameter(Mandatory=$true)]$containerSasToken,
+          [string][Parameter(Mandatory=$true)]$targetPath,
+          [string][Parameter(Mandatory=$true)]$azCopyLocation,
+          [string][Parameter(Mandatory=$true)]$resourceGroupName,
+          [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
+          [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
+          [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string]$skipCACheckOption,
-          [string]$enableDetailedLoggingString,
+          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
-          [string]$copyFilesInParallel)
+          [string][Parameter(Mandatory=$true)]$copyFilesInParallel)
 
-    if (-not [string]::IsNullOrEmpty($storageAccountName) -and -not [string]::IsNullOrEmpty($containerName) -and -not [string]::IsNullOrEmpty($containerSasToken) -and `
-        -not [string]::IsNullOrEmpty($targetPath) -and -not [string]::IsNullOrEmpty($azCopyLocation) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and `
-        -not [string]::IsNullOrEmpty($cleanTargetBeforeCopy) -and  -not [string]::IsNullOrEmpty($skipCACheckOption) -and -not [string]::IsNullOrEmpty($enableDetailedLoggingString) -and `
-        -not [string]::IsNullOrEmpty($copyFilesInParallel) -and $azureVMResourcesProperties -and $azureVMsCredentials)
+    # copies files sequentially
+    if ($copyFilesInParallel -eq "false" -or ( $azureVMResourcesProperties.Count -eq 1 ))
     {
-        # copies files sequentially
-        if ($copyFilesInParallel -eq "false" -or ( $azureVMResourcesProperties.Count -eq 1 ))
-        {
 
-            Copy-FilesSequentiallyToAzureVMs `
+        Copy-FilesSequentiallyToAzureVMs `
                 -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
-        }
-        # copies files parallely
-        else
-        {
-            Copy-FilesParallelyToAzureVMs `
-                -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
-                -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
-                -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
-                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
-        }
-
-        # if no error thrown, copy succesfully succeeded
-        Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $environmentName)
     }
+    # copies files parallely
+    else
+    {
+        Copy-FilesParallelyToAzureVMs `
+                -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
+                -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
+                -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
+                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
+    }
+
+    # if no error thrown, copy succesfully succeeded
+    Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $environmentName)
 }

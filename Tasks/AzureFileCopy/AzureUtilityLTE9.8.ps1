@@ -22,31 +22,30 @@ function Get-AzureStorageAccountResourceGroupName
     param([string]$storageAccountName)
 
     $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
-    try
+    if (-not [string]::IsNullOrEmpty($storageAccountName))
     {
-        if (-not [string]::IsNullOrEmpty($storageAccountName))
-        {
-            Switch-AzureMode AzureResourceManager
+        Switch-AzureMode AzureResourceManager
 
+        try
+        {
             Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
             $azureStorageAccountResourceDetails = (Get-AzureResource -ResourceName $storageAccountName -ErrorAction Stop) | Where-Object { $_.ResourceType -eq $ARMStorageAccountResourceType }
             Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType" -Verbose
 
             $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
+            return $azureStorageAccountResourceDetails.ResourceGroupName
         }
-    }
-    finally
-    {
-        if ([string]::IsNullOrEmpty($azureResourceGroupName))
+        finally
         {
-            Write-Verbose "(ARM)Storage account: $storageAccountName not found" -Verbose
+            if ([string]::IsNullOrEmpty($azureResourceGroupName))
+            {
+                Write-Verbose "(ARM)Storage account: $storageAccountName not found" -Verbose
 
-            Write-TaskSpecificTelemetry "PREREQ_NonClassicStorageAccountNotFound"
-            Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing non-classic storage account" -ArgumentList $storageAccountName)
+                Write-TaskSpecificTelemetry "PREREQ_RMStorageAccountNotFound"
+                Throw (Get-LocalizedString -Key "Storage account: {0} not found. Selected Connection 'ServicePrincipal' supports storage account of Azure Resource Manager type only." -ArgumentList $storageAccountName)
+            }
         }
     }
-
-    return $azureStorageAccountResourceDetails.ResourceGroupName
 }
 
 function Get-AzureStorageKeyFromARM
