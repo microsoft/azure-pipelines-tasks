@@ -151,37 +151,38 @@ function CreateSonarQubeArgs
     # To avoid this, force it to ignore the Append return value using [void]
 
     if (![String]::IsNullOrWhiteSpace($serverUrl))
-    {    
-        [void]$sb.Append("-Dsonar.host.url=""$serverUrl""")
+    {            
+		[void]$sb.Append("-Dsonar.host.url=" + (EscapeArg($serverUrl))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($serverUsername))
     {
-        [void]$sb.Append(" -Dsonar.login=""$serverUsername""")
+        [void]$sb.Append(" -Dsonar.login=" + (EscapeArg($serverUsername))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($serverPassword))
     {
-        [void]$sb.Append(" -Dsonar.password=""$serverPassword""")
+        [void]$sb.Append(" -Dsonar.password=" + (EscapeArg($serverPassword))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($dbUrl))
     {
-        [void]$sb.Append(" -Dsonar.jdbc.url=""$dbUrl""")
+        [void]$sb.Append(" -Dsonar.jdbc.url=" + (EscapeArg($dbUrl))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($dbUsername))
     {
-        [void]$sb.Append(" -Dsonar.jdbc.username=""$dbUsername""")
+        [void]$sb.Append(" -Dsonar.jdbc.username=" + (EscapeArg($dbUsername))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($dbPassword))
     {
-        [void]$sb.Append(" -Dsonar.jdbc.password=""$dbPassword""")
+        [void]$sb.Append(" -Dsonar.jdbc.password=" + (EscapeArg($dbPassword))) 
     }
 
     return $sb.ToString();
 }
+
 
 
 function PublishCodeCoverageJacoco
@@ -294,3 +295,15 @@ function EnableCodeCoverage
      }
 	 
 }
+
+# When passing arguments to a process, the quotes need to be doubled and   
+# the entire string needs to be placed inside quotes to avoid issues with spaces  
+function EscapeArg  
+{  
+    param([string]$argVal)  
+  
+    $argVal = $argVal.Replace('"', '""');  
+    $argVal = '"' + $argVal + '"';  
+  
+    return $argVal;  
+}  
