@@ -197,8 +197,8 @@
      { 
          "target": "testMachineGroup", 
          "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
      },
      { 
          "target": "autMachineGroup", 
@@ -210,19 +210,25 @@
          "target": "testPlan",
          "endpoint": "/$(system.teamProject)/_apis/test/plans",
          "selector": "jsonpath:$.value[*].name",
-         "keySelector": "jsonpath:$.value[*].id"
+         "keySelector": "jsonpath:$.value[*].id",
+         "authKey": "tfs:DevTestLabs", 
+         "refreshable": "true"
      },
      {
          "target": "testConfiguration",
-         "endpoint":"/$(system.teamProject)/_apis/test/configurations",
+         "endpoint":"/$(system.teamProject)/_apis/test/configurations2",
          "selector":"jsonpath:$.value[*].name",
-         "keySelector":"jsonpath:$.value[*].id"
+         "keySelector":"jsonpath:$.value[*].id",
+         "authKey": "tfs:DevTestLabs", 
+         "refreshable": "true"
      },
      {
          "target": "testSuite",
          "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
          "selector":"jsonpath:$.value[*].name",
-         "keySelector":"jsonpath:$.value[*].id"
+         "keySelector":"jsonpath:$.value[*].id",
+         "authKey": "tfs:DevTestLabs", 
+         "refreshable": "true"
      }
     ], 
     "instanceNameFormat": "Run Tests on $(testMachineGroup)", 
