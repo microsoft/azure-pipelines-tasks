@@ -3,7 +3,7 @@
   Licensed under the MIT license. See LICENSE file in the project root for full license information.
 */
 
-var tl = require('vso-task-lib'),
+var tl = require('vsts-task-lib'),
 	path = require('path'),
 	fs = require('fs'),
 	Q = require ('q'),

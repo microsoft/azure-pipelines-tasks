@@ -1,7 +1,7 @@
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import path = require('path');
-import tl = require('vso-task-lib/vsotask');
+import tl = require('vsts-task-lib/vsotask');
 
 tl.setResourcePath(path.join( __dirname, 'task.json'));
 

@@ -1,5 +1,7 @@
-var tl = require('vso-task-lib');
-var path = require('path');
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import tl = require('vsts-task-lib/vsotask');
+import path = require('path');
 
 var mvntool = '';
 var mavenVersionSelection = tl.getInput('mavenVersionSelection', true);
@@ -22,10 +24,10 @@ var mavenPOMFile = tl.getPathInput('mavenPOMFile', true, true);
 var mavenOptions = tl.getDelimitedInput('options', ' ', false);
 var mavenGoals = tl.getDelimitedInput('goals', ' ', true);
 
-var mvnv = new tl.ToolRunner(mvntool);
+var mvnv = tl.createToolRunner(mvntool);
 mvnv.arg('-version');
 
-var mvnb = new tl.ToolRunner(mvntool);
+var mvnb = tl.createToolRunner(mvntool);
 mvnb.arg('-f');
 mvnb.arg(mavenPOMFile);
 mvnb.arg(mavenOptions);
@@ -65,7 +67,7 @@ if (specifiedJavaHome) {
 var publishJUnitResults = tl.getInput('publishJUnitResults');
 var testResultsFiles = tl.getInput('testResultsFiles', true);
 
-function publishTestResults(publishJUnitResults, testResultsFiles) {
+function publishTestResults(publishJUnitResults, testResultsFiles: string) {
     if (publishJUnitResults == 'true') {
         //check for pattern in testResultsFiles
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
@@ -86,7 +88,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles) {
         }
 
         var tp = new tl.TestPublisher("JUnit");
-        tp.publish(matchingTestResultsFiles, false, "", "");
+        tp.publish(matchingTestResultsFiles, false, "", "", "", "");
     }
 }
 
@@ -131,15 +133,15 @@ function getEndpointDetails(inputFieldName) {
         throw new Error(errorMessage);
     }
 
-    hostUrl = tl.getEndpointUrl(genericEndpoint, false);
+    var hostUrl = tl.getEndpointUrl(genericEndpoint, false);
     if (!hostUrl) {
         throw new Error(errorMessage);
     }
 
     // Currently the username and the password are required, but in the future they will not be mandatory
     // - so not validating the values here
-    hostUsername = getAuthParameter(genericEndpoint, 'username');
-    hostPassword = getAuthParameter(genericEndpoint, 'password');
+    var hostUsername = getAuthParameter(genericEndpoint, 'username');
+    var hostPassword = getAuthParameter(genericEndpoint, 'password');
     tl.debug("hostUsername: " + hostUsername);
 
     return {
@@ -178,8 +180,8 @@ function getAuthParameter(endpoint, paramName) {
     return paramValue;
 }
 
-function createMavenSQRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword) {
-    var mvnsq = new tl.ToolRunner(mvntool);
+function createMavenSQRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?) {
+    var mvnsq = tl.createToolRunner(mvntool);
 
     mvnsq.arg('-Dsonar.host.url="' + sqHostUrl + '"');
     if (sqHostUsername) {
@@ -228,7 +230,7 @@ mvnv.exec()
     userRunFailed = true; // record the error and continue
 })
 .then(function (code) {
-    mvnsq = getSonarQubeRunner();
+    var mvnsq = getSonarQubeRunner();
 
     if (mvnsq) {
         // run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures)

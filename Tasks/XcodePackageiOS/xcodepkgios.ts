@@ -1,13 +1,18 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
-var tl = require('vsts-task-lib/vsotask');
-var path = require('path');
+
+import tl = require('vsts-task-lib/vsotask');
+import path = require('path');
+
 var sourceDir = tl.getVariable('build.sourceDirectory');
+
 var tool = tl.which('xcrun', true);
 var xcv = tl.createToolRunner(tool);
 xcv.arg('--version');
+
 //creates the dir if it's not there; note that this needs to be an absolute path for the .ipa to be generated.
 var ipaPath = tl.getInput('ipaPath', true);
 tl.mkdirP(path.join(sourceDir, ipaPath));
+
 //
 // xcrun -sdk $sdk PackageApplication -v "$sourceDir/$appPath/$appFilename" -o "$sourceDir/$ipaPath/$ipaFilename" -embed '$provProfile'
 //
@@ -24,15 +29,16 @@ xcrun.arg(path.join(sourceDir, ipaPath, tl.getInput('ipaName', true)));
 //xcrun.arg('iPhone Developer: Some Name (5CX2Y47E88)');
 xcrun.arg('--embed');
 xcrun.arg(tl.getInput('provisioningProfile', true));
+
 xcv.exec()
-    .then(function (code) {
-    return xcrun.exec();
+.then(function(code) {
+	return xcrun.exec();
 })
-    .then(function (code) {
-    tl.exit(code);
+.then(function(code) {
+	tl.exit(code);
 })
-    .fail(function (err) {
-    console.error(err.message);
-    tl.debug('taskRunner fail');
-    tl.exit(1);
-});
+.fail(function(err) {
+	console.error(err.message);
+	tl.debug('taskRunner fail');
+	tl.exit(1);
+})

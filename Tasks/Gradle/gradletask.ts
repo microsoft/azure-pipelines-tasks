@@ -1,6 +1,8 @@
-﻿var tl = require('vso-task-lib');
-var fs = require('fs');
-var path = require('path');
+﻿/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import tl = require('vsts-task-lib/vsotask');
+import fs = require('fs');
+import path = require('path');
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
 fs.chmodSync(wrapperScript, "755"); //Make sure the wrapper script is executable
@@ -12,7 +14,7 @@ if(!cwd) {
 }
 tl.cd(cwd);
 
-var gb = new tl.ToolRunner(wrapperScript);
+var gb = tl.createToolRunner(wrapperScript);
 
 gb.arg(tl.getDelimitedInput('options', ' ', false));
 gb.arg(tl.getDelimitedInput('tasks', ' ', true));
@@ -52,7 +54,7 @@ if (specifiedJavaHome) {
 var publishJUnitResults = tl.getInput('publishJUnitResults');
 var testResultsFiles = tl.getInput('testResultsFiles', true);
 
-function publishTestResults(publishJUnitResults, testResultsFiles) {
+function publishTestResults(publishJUnitResults, testResultsFiles: string) {
   if(publishJUnitResults == 'true') {
     //check for pattern in testResultsFiles
     if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
@@ -72,7 +74,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles) {
     }
 
     var tp = new tl.TestPublisher("JUnit");
-    tp.publish(matchingTestResultsFiles, false, "", "");
+    tp.publish(matchingTestResultsFiles, false, "", "", "", "");
   } 
 }
 

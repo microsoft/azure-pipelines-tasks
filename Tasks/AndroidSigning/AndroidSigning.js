@@ -4,10 +4,10 @@
 */
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 var path = require('path');
 var Q = require('q');
-var tl = require("vso-task-lib/vsotask");
+var tl = require('vsts-task-lib/vsotask');
 // Define error handler
 var onError = function (errorMsg) {
     tl.error(errorMsg);

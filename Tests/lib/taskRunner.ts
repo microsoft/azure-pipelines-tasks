@@ -1,7 +1,7 @@
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts"/>
 /// <reference path="../../definitions/shelljs.d.ts"/>
-/// <reference path="../../definitions/vso-task-lib.d.ts"/>
+/// <reference path="../../definitions/vsts-task-lib.d.ts"/>
 
 import Q = require('q');
 import events = require('events');
@@ -9,7 +9,7 @@ import fs = require('fs');
 import path = require('path');
 import child_process = require('child_process');
 import shell = require('shelljs');
-import tcm = require('vso-task-lib/taskcommand');
+import tcm = require('vsts-task-lib/taskcommand');
 
 function debug(message) {
     if (process.env['TASK_TEST_TRACE']) {
@@ -86,23 +86,23 @@ export class TaskRunner extends events.EventEmitter {
 			throw (new Error('Did you build with "gulp"? Task does not exist: ' + this._taskSrcPath));
 		}
 		
-		// copy mocked vso-task-lib if it doesn't exist
+		// copy mocked vsts-task-lib if it doesn't exist
 		var modPath = path.join(this._tempPath, 'node_modules');
 		if (!shell.test('-d', modPath)) {
 			shell.mkdir('-p', modPath);
-			shell.cp('-R', path.join(__dirname, 'node_modules/vso-task-lib'), path.join(modPath));			
+			shell.cp('-R', path.join(__dirname, 'node_modules/vsts-task-lib'), path.join(modPath));			
 		}
 
 		// copy the task over so we can execute from Temp 
-		// this forces it to use the mocked vso-task-lib and provides isolation
+		// this forces it to use the mocked vsts-task-lib and provides isolation
 		this._taskPath = path.join(this._tempPath, this._name);
 		if (!shell.test('-d', this._taskPath)) {
 			shell.mkdir('-p', this._taskPath);
 			shell.cp('-R', this._taskSrcPath, this._tempPath);
 		}
 
-		// delete it's linked copy of vso-task-lib so it uses the mocked task-lib above
-		var taskLibPath = path.join(this._taskPath, 'node_modules', 'vso-task-lib');
+		// delete it's linked copy of vsts-task-lib so it uses the mocked task-lib above
+		var taskLibPath = path.join(this._taskPath, 'node_modules', 'vsts-task-lib');
 		if (shell.test('-d', taskLibPath)) {
 			shell.rm('-rf', taskLibPath);
 		}
