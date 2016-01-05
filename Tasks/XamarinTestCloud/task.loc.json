@@ -122,7 +122,8 @@
       "label": "ms-resource:loc.input.label.userDefinedLocale",
       "groupName": "advanced",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "visibleRule": "locale = user"
     },
     {
       "name": "testCloudLocation",
