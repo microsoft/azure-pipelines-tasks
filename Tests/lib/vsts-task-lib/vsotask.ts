@@ -148,11 +148,11 @@ export function setResourcePath(path: string): void {
 
 export function loc(key: string, ...param: any[]): string {
     if (!libResourceFileLoaded) {
-        // merge loc strings from vso-task-lib.
+        // merge loc strings from vsts-task-lib.
         var libResourceFile = path.join(__dirname, 'lib.json');
         var libLocStrs = loadLocStrings(libResourceFile);
         for (var libKey in libLocStrs) {
-            debug('cache vso-task-lib loc string: ' + libKey);
+            debug('cache vsts-task-lib loc string: ' + libKey);
             locStringCache[libKey] = libLocStrs[libKey];
         }
 

@@ -13,7 +13,7 @@
     "checkPath": {
         "some/path/foo": true,
         "some/path/bar": false
-    }    
+    },    
     "find": {
         "/some/path": [
             "/some/path/one",

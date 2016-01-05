@@ -1,6 +1,6 @@
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 var path = require('path');
-var tl = require('vso-task-lib/vsotask');
+var tl = require('vsts-task-lib/vsotask');
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 var cmake = tl.createToolRunner(tl.which('cmake', true));
 var cwd = tl.getPathInput('cwd', true, false);
