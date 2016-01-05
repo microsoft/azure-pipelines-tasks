@@ -15,7 +15,6 @@ $telemetryCodes =
   "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
   "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
   "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
-  "PREREQ_NoRGOrVMResources" = "PREREQ_NoRGOrVMResources";
   "PREREQ_ClassicStorageAccountNotFound" = "PREREQ_ClassicStorageAccountNotFound";
   "PREREQ_RMStorageAccountNotFound" = "PREREQ_RMStorageAccountNotFound";
   "PREREQ_NoClassicVMResources" = "PREREQ_NoClassicVMResources";
