@@ -216,7 +216,7 @@
      },
      {
          "target": "testConfiguration",
-         "endpoint":"/$(system.teamProject)/_apis/test/configurations2",
+         "endpoint":"/$(system.teamProject)/_apis/test/configurations",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
          "authKey": "tfs:DevTestLabs", 
