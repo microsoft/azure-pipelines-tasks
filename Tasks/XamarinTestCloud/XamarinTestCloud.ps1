@@ -56,12 +56,7 @@ if (!$series)
 }
 $parameters = "$parameters --series `"$series`""
 
-if (!$locale) 
-{
-    throw "Must specify the system language."
-}
-
-if($locale -eq "user" -and [string]::IsNullOrEmpty($userDefinedLocale))
+if (!$locale -or ($locale -eq "user" -and [string]::IsNullOrEmpty($userDefinedLocale))) 
 {
     throw "Must specify the system language."
 }

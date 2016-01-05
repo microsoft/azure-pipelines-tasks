@@ -120,7 +120,8 @@
             "label": "User Defined Locale",
             "groupName": "advanced",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "visibleRule": "locale = user"
         },
         {
             "name": "testCloudLocation",
