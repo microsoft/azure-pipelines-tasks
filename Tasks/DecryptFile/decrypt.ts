@@ -1,11 +1,13 @@
-var fs = require('fs'),
-	tl = require('vso-task-lib');
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import fs = require('fs');
+import tl = require('vsts-task-lib/vsotask');
 
 //Process working directory
 var cwd = tl.getInput('cwd') || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
 tl.cd(cwd);
 
-var tr = new tl.ToolRunner(tl.which('openssl', true));
+var tr = tl.createToolRunner(tl.which('openssl', true));
 
 tr.arg(tl.getInput('cipher', true))
 

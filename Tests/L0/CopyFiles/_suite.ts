@@ -5,6 +5,7 @@ import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import psm = require('../../lib/psRunner');
 import path = require('path');
+import os = require('os');
 
 function setResponseFile(name: string) {
 	process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -47,7 +48,9 @@ describe('Copy Files Suite', function() {
 		setResponseFile('copyFilesSomeGood.json');
 		
 		var tr = new trm.TaskRunner('CopyFiles');
-		tr.setInput('Contents', '**\n!**\\someOtherDir2\\**');
+        var patterns = '**' + os.EOL + path.join('!**', 'someOtherDir2', '**');
+
+		tr.setInput('Contents', patterns);
 		tr.setInput('SourceFolder', '/srcDir');
 		tr.setInput('TargetFolder', '/destDir');
 		tr.setInput('CleanTargetFolder', 'false');

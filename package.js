@@ -194,7 +194,7 @@ function packageTask(pkgPath){
 
 	        		var tskLibSrc = path.join(__dirname, '_temp', 'node_modules');
 	        		if (shell.test('-d', tskLibSrc)) {
-	        			new gutil.PluginError('PackageTask', 'vso-task-lib not found: ' + tskLibSrc);
+	        			new gutil.PluginError('PackageTask', 'vsts-task-lib not found: ' + tskLibSrc);
 	        		}
 
 					shell.cp('-R', tskLibSrc, tgtPath);

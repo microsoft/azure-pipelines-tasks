@@ -5,12 +5,11 @@
 
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import path = require('path');
-import fs = require('fs');
 import Q = require('q');
-import tl = require("vso-task-lib/vsotask");
+import tl = require('vsts-task-lib/vsotask');
 
 // Define error handler
 var onError = function (errorMsg) {

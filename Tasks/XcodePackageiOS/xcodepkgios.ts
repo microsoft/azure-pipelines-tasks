@@ -1,10 +1,12 @@
-var tl = require('vso-task-lib');
-var path = require('path');
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import tl = require('vsts-task-lib/vsotask');
+import path = require('path');
 
 var sourceDir = tl.getVariable('build.sourceDirectory');
 
 var tool = tl.which('xcrun', true);
-var xcv = new tl.ToolRunner(tool);
+var xcv = tl.createToolRunner(tool);
 xcv.arg('--version');
 
 //creates the dir if it's not there; note that this needs to be an absolute path for the .ipa to be generated.
@@ -14,7 +16,7 @@ tl.mkdirP(path.join(sourceDir, ipaPath));
 //
 // xcrun -sdk $sdk PackageApplication -v "$sourceDir/$appPath/$appFilename" -o "$sourceDir/$ipaPath/$ipaFilename" -embed '$provProfile'
 //
-var xcrun = new tl.ToolRunner(tool);
+var xcrun = tl.createToolRunner(tool);
 xcrun.arg('-sdk');
 xcrun.arg(tl.getInput('sdk', true));
 xcrun.arg('PackageApplication');

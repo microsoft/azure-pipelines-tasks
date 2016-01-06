@@ -1,7 +1,10 @@
-﻿var fs = require('fs');
-var path = require('path');
-var shell = require('shelljs');
-var tl = require('vso-task-lib');
+﻿/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../definitions/shelljs.d.ts" />
+
+import fs = require('fs');
+import path = require('path');
+import shell = require('shelljs');
+import tl = require('vsts-task-lib/vsotask');
 
 // Get inputs
 var app = tl.getInput('app', true);
@@ -135,12 +138,12 @@ function publishTestResults() {
     var matchingTestResultsFiles = tl.match(allFiles, 'xamarintest_' + buildId + '*.xml', { matchBase: true });    
 
     var tp = new tl.TestPublisher("NUnit");
-    tp.publish(matchingTestResultsFiles, false, "", "");
+    tp.publish(matchingTestResultsFiles, false, "", "", "", "");
   } 
 }
 var submitToTestCloud = function (index) {
     // Form basic arguments
-    var monoToolRunner = new tl.ToolRunner(monoPath);
+    var monoToolRunner = tl.createToolRunner(monoPath);
     monoToolRunner.arg(testCloud);
     monoToolRunner.arg('submit');
     monoToolRunner.arg(appFiles[index]);

@@ -1,5 +1,7 @@
-var tl = require('vso-task-lib/vsotask');
-var path = require('path');
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import tl = require('vsts-task-lib/vsotask');
+import path = require('path');
 
 // Define error handler
 var onError = function (errorMsg) {
@@ -15,7 +17,7 @@ var firstWildcardIndex = function (str) {
         if (idx > -1) {
             idx = Math.min(idx, idxOfWildcard);
         } else {
-            idx = idxOfWildCard; 
+            idx = idxOfWildcard; 
         }
     }
 
@@ -57,7 +59,7 @@ var curlRunner = tl.createToolRunner('curl');
 // Resolve files for the specified value or pattern
 if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
     // No pattern found, check literal path to a single file
-    tl.checkPath(filesPattern);
+    tl.checkPath(filesPattern, "filesPattern");
 
     // Use the specified single file
     var uploadFiles = filesPattern;
@@ -89,7 +91,7 @@ if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
 tl.debug("uploading file(s): " + uploadFiles);
 
 curlRunner.arg('-T')
-// arrayify the arg so vso-task-lib does not try to break args at space
+// arrayify the arg so vsts-task-lib does not try to break args at space
 // this is required for any file input that could potentially contain spaces
 curlRunner.arg([uploadFiles]);
 

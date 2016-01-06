@@ -1,11 +1,13 @@
-var tl = require('vso-task-lib');
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import tl = require('vsts-task-lib/vsotask');
 
 var anttool = tl.which('ant', true);
 
-var antv = new tl.ToolRunner(anttool);
+var antv = tl.createToolRunner(anttool);
 antv.arg('-version');
 
-var antb = new tl.ToolRunner(anttool);
+var antb = tl.createToolRunner(anttool);
 antb.arg('-buildfile');
 antb.arg(tl.getPathInput('antBuildFile', true, true));
 
@@ -56,7 +58,7 @@ if (specifiedJavaHome) {
 var publishJUnitResults = tl.getInput('publishJUnitResults');
 var testResultsFiles = tl.getInput('testResultsFiles', true);
 
-function publishTestResults(publishJUnitResults, testResultsFiles) {
+function publishTestResults(publishJUnitResults, testResultsFiles: string) {
   if(publishJUnitResults == 'true') {
     //check for pattern in testResultsFiles
     if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
@@ -76,7 +78,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles) {
     }
 
     var tp = new tl.TestPublisher("JUnit");
-    tp.publish(matchingTestResultsFiles, false, "", "");
+    tp.publish(matchingTestResultsFiles, false, "", "","", "");
   } 
 }
 

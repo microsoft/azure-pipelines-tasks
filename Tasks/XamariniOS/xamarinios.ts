@@ -1,6 +1,8 @@
-﻿var fs = require('fs');
-var path = require('path');
-var tl = require('vso-task-lib');
+﻿/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import fs = require('fs');
+import path = require('path');
+import tl = require('vsts-task-lib/vsotask');
 
 // Get configuration
 var configuration = tl.getInput('configuration', true);
@@ -46,14 +48,14 @@ var onFailedExecution = function (err) {
 }
 
 // Restore NuGet packages of the solution
-var nugetRunner = new tl.ToolRunner(nugetPath);
+var nugetRunner = tl.createToolRunner(nugetPath);
 nugetRunner.arg('restore');
 nugetRunner.arg(solutionPath);
 nugetRunner.exec()
 .then(function (code) {
 
     // Prepare build command line
-    var mdtoolRunner = new tl.ToolRunner(mdtoolPath);
+    var mdtoolRunner = tl.createToolRunner(mdtoolPath);
     mdtoolRunner.arg('--verbose');
     mdtoolRunner.arg('build');
     mdtoolRunner.arg('--configuration:\"' + configuration + '|' + device + '\"');

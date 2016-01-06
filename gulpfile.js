@@ -30,7 +30,7 @@ Build:
 - validate the task.json for each task
 - generate task.loc.json file and strings file for each task.  allows for hand off to loc.
 - compile .ts --> .js
-- "link" in the vso-task-lib declared in package.json into tasks using node handler
+- "link" in the vsts-task-lib declared in package.json into tasks using node handler
 
 Test:
 - Run Tests (L0, L1) - see docs/runningtests.md
@@ -90,8 +90,8 @@ gulp.task('testLib', ['compileTests'], function (cb) {
 });
 
 gulp.task('testLib_NodeModules', ['testLib'], function (cb) {
-	return gulp.src(path.join(_testRoot ,'lib/vso-task-lib/**/*'))
-		.pipe(gulp.dest(path.join(_testRoot, 'lib/node_modules/vso-task-lib')));
+	return gulp.src(path.join(_testRoot ,'lib/vsts-task-lib/**/*'))
+		.pipe(gulp.dest(path.join(_testRoot, 'lib/node_modules/vsts-task-lib')));
 });
 
 gulp.task('testResources', ['testLib_NodeModules', 'ps1tests']);
@@ -144,7 +144,7 @@ gulp.task('default', ['build']);
 //-----------------------------------------------------------------------------------------------------------------
 
 var getLatestTaskLib = function() {
-	gutil.log('Getting latest vso-task-lib');
+	gutil.log('Getting latest vsts-task-lib');
 	shell.mkdir('-p', path.join(_tempPath, 'node_modules'));
 	
 	var pkg = {
@@ -178,7 +178,7 @@ var getLatestTaskLib = function() {
 		throw new Error('NPM version must be at least ' + NPM_MIN_VER + '. Found ' + ver);
 	}
 
-	var cmdline = '"' + npmPath + '" install vso-task-lib';
+	var cmdline = '"' + npmPath + '" install vsts-task-lib';
 
 	var res = cp.execSync(cmdline); 
 	gutil.log(res.toString());	

@@ -1,4 +1,6 @@
-var tl = require('vso-task-lib');
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import tl = require('vsts-task-lib/vsotask');
 
 var testRunner = tl.getInput('testRunner', true);
 var testResultsFiles = tl.getInput('testResultsFiles', true);

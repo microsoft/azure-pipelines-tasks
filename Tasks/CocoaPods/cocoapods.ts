@@ -1,5 +1,6 @@
-var tl = require('vso-task-lib');
-var path = require('path');
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
+import tl = require('vsts-task-lib/vsotask');
 
 tl.cd(tl.getPathInput('cwd', true, true));
 
@@ -7,7 +8,7 @@ tl.debug('Setting locale to UTF8 - required by CocoaPods');
 process.env['LC_ALL']='en_US.UTF-8';
 
 var tool = tl.which('pod', true);
-var pod = new tl.ToolRunner(tool);
+var pod = tl.createToolRunner(tool);
 pod.arg('install');
 
 pod.exec()
