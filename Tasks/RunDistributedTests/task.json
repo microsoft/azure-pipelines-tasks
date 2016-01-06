@@ -63,7 +63,10 @@
             "required": true,
             "helpMarkDown": "Select the way you want to run tests – using Test Assemblies or using Test Plan.",
             "options": { "testAssembly" : "Test Assembly", "testPlan" : "Test Plan" },
-            "groupName": "executionOptions"
+            "groupName": "executionOptions",
+            "properties": {
+                "disableManageLink": "true"
+            }
         },
 
         {
@@ -74,7 +77,11 @@
             "required": true,
             "helpMarkDown": "Select a Test Plan.",
             "visibleRule": "testSelection = testPlan",
-            "groupName": "executionOptions"
+            "groupName": "executionOptions",
+            "refreshable": true,
+            "properties": {
+                "disableManageLink": "true"
+            }
         },
         {
             "name": "testSuite",
@@ -83,7 +90,8 @@
             "defaultValue": "",
             "required": true,
             "properties": {
-                "MultiSelect": "True" 
+                "MultiSelect": "True" ,
+                "disableManageLink": "true"
             },
             "helpMarkDown": "Select Test Suites from the Test Plan.",
             "visibleRule": "testSelection = testPlan",
@@ -211,24 +219,21 @@
          "endpoint": "/$(system.teamProject)/_apis/test/plans",
          "selector": "jsonpath:$.value[*].name",
          "keySelector": "jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs", 
-         "refreshable": "true"
+         "authKey": "tfs:DevTestLabs"
      },
      {
          "target": "testConfiguration",
          "endpoint":"/$(system.teamProject)/_apis/test/configurations",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs", 
-         "refreshable": "true"
+         "authKey": "tfs:DevTestLabs" 
      },
      {
          "target": "testSuite",
          "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs", 
-         "refreshable": "true"
+         "authKey": "tfs:DevTestLabs" 
      }
     ], 
     "instanceNameFormat": "Run Tests on $(testMachineGroup)", 

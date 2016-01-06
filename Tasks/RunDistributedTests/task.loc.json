@@ -67,7 +67,10 @@
         "testAssembly": "Test Assembly",
         "testPlan": "Test Plan"
       },
-      "groupName": "executionOptions"
+      "groupName": "executionOptions",
+      "properties": {
+        "disableManageLink": "true"
+      }
     },
     {
       "name": "testPlan",
@@ -77,7 +80,11 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testPlan",
       "visibleRule": "testSelection = testPlan",
-      "groupName": "executionOptions"
+      "groupName": "executionOptions",
+      "refreshable": true,
+      "properties": {
+        "disableManageLink": "true"
+      }
     },
     {
       "name": "testSuite",
@@ -86,7 +93,8 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "MultiSelect": "True"
+        "MultiSelect": "True",
+        "disableManageLink": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.testSuite",
       "visibleRule": "testSelection = testPlan",
@@ -213,24 +221,21 @@
       "endpoint": "/$(system.teamProject)/_apis/test/plans",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs",
-      "refreshable": "true"
+      "authKey": "tfs:DevTestLabs"
     },
     {
       "target": "testConfiguration",
       "endpoint": "/$(system.teamProject)/_apis/test/configurations",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs",
-      "refreshable": "true"
+      "authKey": "tfs:DevTestLabs"
     },
     {
       "target": "testSuite",
       "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs",
-      "refreshable": "true"
+      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
