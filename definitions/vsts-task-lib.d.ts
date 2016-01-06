@@ -50,7 +50,7 @@ declare module 'vsts-task-lib/toolrunner' {
 	}
 
 }
-declare module 'vsts-task-lib/vsotask' {
+declare module 'vsts-task-lib/task' {
 	/// <reference path="../definitions/node.d.ts" />
 	/// <reference path="../definitions/Q.d.ts" />
 	/// <reference path="../definitions/shelljs.d.ts" />
@@ -69,6 +69,13 @@ declare module 'vsts-task-lib/vsotask' {
 	export function _writeLine(str: string): void;
 	export function setStdStream(stdStream: any): void;
 	export function setErrStream(errStream: any): void;
+	/**
+	 * setResult sets the result of the task.
+	 *
+	 * @param result    TaskResult enum of Success or Failed.  If the result is Failed (1), then execution will halt.
+	 * @param messages  A message which will be added as an issue
+	 * @returns         void
+	 */
 	export function setResult(result: TaskResult, message: string): void;
 	export function handlerError(errMsg: string, continueOnError: boolean): void;
 	export function exitOnCodeIf(code: number, condition: boolean): void;

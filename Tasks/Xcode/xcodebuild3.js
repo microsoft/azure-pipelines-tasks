@@ -5,7 +5,7 @@
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
-var tl = require('vsts-task-lib/vsotask');
+var tl = require('vsts-task-lib/task');
 var tr = require('vsts-task-lib/toolrunner');
 var path = require('path');
 var Q = require('q');

@@ -1,7 +1,7 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import fs = require('fs');
-import tl = require('vsts-task-lib/vsotask');
+import tl = require('vsts-task-lib/task');
 
 //Process working directory
 var cwd = tl.getInput('cwd') || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');

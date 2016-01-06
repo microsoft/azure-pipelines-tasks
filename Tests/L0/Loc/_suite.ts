@@ -55,6 +55,48 @@ describe('Loc String Suite', function() {
 		done();
 	})
 	
+    it('Find .js with uppercase', (done) => {
+		this.timeout(1000);
+		
+		var tasksRootFolder =  path.resolve(__dirname, '../../../../Tasks');
+		
+		var taskFolders: string[] = [];
+		fs.readdirSync(tasksRootFolder).forEach(folderName=> {
+			if(fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) { 
+				taskFolders.push(path.join(tasksRootFolder, folderName));	
+			}
+		})
+
+		for(var i = 0; i < taskFolders.length; i++) {
+			var taskFolder = taskFolders[i];
+
+			var taskjson = path.join(taskFolder, 'task.json');
+            var task = require(taskjson);
+            
+            if (task.execution['Node']) {
+				
+				var tsFiles = fs.readdirSync(taskFolder).filter(file => {
+					return file.search(/\.ts$/) > 0;
+				})
+				
+				tsFiles.forEach(tsFile => {
+                    if(tsFile.search(/[A-Z]/g) >= 0) {
+                        console.error('Has uppercase in .ts file name for tasks: ' + path.relative(tasksRootFolder, taskjson));
+                        assert(false, 'Has uppercase is dangerous for xplat tasks.' + taskjson);
+                    }
+				})
+				
+                var targetJs = task.execution['Node'].target;
+                if(targetJs.search(/[A-Z]/g) >= 0) {
+                    console.error('Has uppercase in task.json\'s excution.node.target for tasks: ' + path.relative(tasksRootFolder, taskjson));
+                    assert(false, 'Has uppercase is dangerous for xplat tasks.' + taskjson);
+                }
+			}
+		}
+		
+		done();
+	})
+    
 	it('Find invalid message key in task.json', (done) => {
 		this.timeout(1000);
 		

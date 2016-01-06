@@ -2,7 +2,7 @@
 
 import fs = require('fs');
 import path = require('path');
-import tl = require('vsts-task-lib/vsotask');
+import tl = require('vsts-task-lib/task');
 
 // Get configuration
 var configuration = tl.getInput('configuration', true);

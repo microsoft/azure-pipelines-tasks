@@ -2,7 +2,7 @@
 
 import path = require('path');
 import os = require('os');
-import tl = require('vsts-task-lib/vsotask');
+import tl = require('vsts-task-lib/task');
 
 // contents is a multiline input containing glob patterns
 var contents: string[] = tl.getDelimitedInput('Contents', '\n', true);
