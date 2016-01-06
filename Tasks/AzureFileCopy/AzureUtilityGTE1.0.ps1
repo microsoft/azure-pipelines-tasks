@@ -48,15 +48,18 @@ function Get-AzureStorageKeyFromARM
 {
     param([string]$storageAccountName)
 
-    # get azure storage account resource group name
-    $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
+    if (-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        # get azure storage account resource group name
+        $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
-    Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
-    $storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
-    $storageKey = $storageKeyDetails.Key1
-    Write-Verbose "[Azure Call]Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+        Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
+        $storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
+        $storageKey = $storageKeyDetails.Key1
+        Write-Verbose "[Azure Call]Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName" -Verbose
 
-    return $storageKey
+        return $storageKey
+    }
 }
 
 function Create-AzureStorageContext
@@ -178,8 +181,6 @@ function Get-AzureRMVMsInResourceGroup
     {
         try
         {
-            Switch-AzureMode AzureResourceManager
-
             Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
             $azureRMVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
             Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureRMVMResources.Count)"
@@ -206,8 +207,6 @@ function Get-AzureRMResourceGroupResourcesDetails
     [hashtable]$loadBalancerDetails = @{}
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
-        Switch-AzureMode AzureResourceManager
-
         Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
         $networkInterfaceResources = Get-AzureRMNetworkInterface -ResourceGroupName $resourceGroupName -Verbose
         Write-Verbose -Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
