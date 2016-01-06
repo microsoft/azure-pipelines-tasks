@@ -7,7 +7,7 @@
 /// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import tl = require('vsts-task-lib/vsotask');
+import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
 import fs = require('fs');

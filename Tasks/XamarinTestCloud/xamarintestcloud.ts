@@ -4,7 +4,7 @@
 import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
-import tl = require('vsts-task-lib/vsotask');
+import tl = require('vsts-task-lib/task');
 
 // Get inputs
 var app = tl.getInput('app', true);

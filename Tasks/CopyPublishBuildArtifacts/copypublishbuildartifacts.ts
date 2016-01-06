@@ -2,7 +2,7 @@
 
 import path = require('path');
 import fs = require('fs');
-import tl = require("vsts-task-lib/vsotask");
+import tl = require("vsts-task-lib/task");
 
 function getCommonLocalPath(files: string[]): string {
     if (!files || files.length === 0) {

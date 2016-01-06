@@ -9,7 +9,7 @@
 
 import path = require('path');
 import Q = require('q');
-import tl = require('vsts-task-lib/vsotask');
+import tl = require('vsts-task-lib/task');
 
 // Define error handler
 var onError = function (errorMsg) {
