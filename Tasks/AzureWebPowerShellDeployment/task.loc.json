@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [
     "azureps"
@@ -36,7 +36,10 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebSiteName",
       "defaultValue": "",
-      "required": true
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "WebSiteLocation",
