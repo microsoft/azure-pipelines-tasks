@@ -5,7 +5,7 @@
   "loc.friendlyName": "Run Functional Tests",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Run Coded UI/Selenium/Functional tests on a set of machines (using Test Agent)",
-  "loc.instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)",
+  "loc.instanceNameFormat": "Run Tests on $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Setup Options",
   "loc.group.displayName.executionOptions": "Execution Options",
   "loc.group.displayName.reportingOptions": "Reporting Options",

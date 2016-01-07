@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 16
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -67,7 +67,10 @@
         "testAssembly": "Test Assembly",
         "testPlan": "Test Plan"
       },
-      "groupName": "executionOptions"
+      "groupName": "executionOptions",
+      "properties": {
+        "DisableManageLink": "true"
+      }
     },
     {
       "name": "testPlan",
@@ -77,7 +80,10 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testPlan",
       "visibleRule": "testSelection = testPlan",
-      "groupName": "executionOptions"
+      "groupName": "executionOptions",
+      "properties": {
+        "DisableManageLink": "true"
+      }
     },
     {
       "name": "testSuite",
@@ -86,7 +92,8 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "MultiSelect": "True"
+        "MultiSelect": "True",
+        "DisableManageLink": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.testSuite",
       "visibleRule": "testSelection = testPlan",

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 15
+        "Patch": 16
     },
     "demands": [
     ],
@@ -63,7 +63,10 @@
             "required": true,
             "helpMarkDown": "Select the way you want to run tests – using Test Assemblies or using Test Plan.",
             "options": { "testAssembly" : "Test Assembly", "testPlan" : "Test Plan" },
-            "groupName": "executionOptions"
+            "groupName": "executionOptions",
+            "properties": {
+                "DisableManageLink": "true"
+            }
         },
 
         {
@@ -74,7 +77,10 @@
             "required": true,
             "helpMarkDown": "Select a Test Plan.",
             "visibleRule": "testSelection = testPlan",
-            "groupName": "executionOptions"
+            "groupName": "executionOptions",
+            "properties": {
+                "DisableManageLink": "true"
+            }
         },
         {
             "name": "testSuite",
@@ -83,7 +89,8 @@
             "defaultValue": "",
             "required": true,
             "properties": {
-                "MultiSelect": "True" 
+                "MultiSelect": "True" ,
+                "DisableManageLink": "true"
             },
             "helpMarkDown": "Select Test Suites from the Test Plan.",
             "visibleRule": "testSelection = testPlan",
@@ -197,8 +204,8 @@
      { 
          "target": "testMachineGroup", 
          "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
      },
      { 
          "target": "autMachineGroup", 
@@ -208,9 +215,9 @@
      },
      {
          "target": "testPlan",
-         "endpoint":"/$(system.teamProject)/_apis/test/plans",
-         "selector":"jsonpath:$.value[*].name",
-         "keySelector":"jsonpath:$.value[*].id",
+         "endpoint": "/$(system.teamProject)/_apis/test/plans",
+         "selector": "jsonpath:$.value[*].name",
+         "keySelector": "jsonpath:$.value[*].id",
          "authKey": "tfs:DevTestLabs"
      },
      {
@@ -218,17 +225,17 @@
          "endpoint":"/$(system.teamProject)/_apis/test/configurations",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs"
+         "authKey": "tfs:DevTestLabs" 
      },
      {
          "target": "testSuite",
          "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs"
+         "authKey": "tfs:DevTestLabs" 
      }
     ], 
-    "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
+    "instanceNameFormat": "Run Tests on $(testMachineGroup)", 
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RunDistributedTests.ps1",
