@@ -81,7 +81,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.testPlan",
       "visibleRule": "testSelection = testPlan",
       "groupName": "executionOptions",
-      "refreshable": true,
       "properties": {
         "DisableManageLink": "true"
       }

@@ -78,7 +78,6 @@
             "helpMarkDown": "Select a Test Plan.",
             "visibleRule": "testSelection = testPlan",
             "groupName": "executionOptions",
-            "refreshable": true,
             "properties": {
                 "DisableManageLink": "true"
             }
