@@ -234,7 +234,7 @@ function Get-AzureRMResourceGroupResourcesDetails
         $azureRGResourcesDetails.Add("publicIPAddressResources", $publicIPAddressResources)
 
         Write-Verbose -Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
-        $lbGroup = Get-AzureResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.Network/loadBalancers" -ErrorAction Stop -Verbose
+        $lbGroup =  Get-AzureLoadBalancer -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
         Write-Verbose -Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
         if($lbGroup)
