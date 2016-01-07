@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [
     "azureps"
@@ -33,7 +33,10 @@
       "type": "pickList",
       "label": "Web App Name",
       "defaultValue": "",
-      "required": true
+      "required": true,
+	  "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "WebSiteLocation",
