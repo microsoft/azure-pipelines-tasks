@@ -111,7 +111,7 @@ function RunSonarQubeAnalysis
 		
 		if($execFileJacoco)
 		{
-			$sqArguments = $sqArguments + " -Dsonar.jacoco.reportPath=" + '"'+ $execFileJacoco +'"'
+			$sqArguments = $sqArguments + " -Dsonar.jacoco.reportPath=" + (EscapeArg($execFileJacoco)) 
 		}
 		
 		Invoke-Maven -MavenPomFile $mavenPOMFile -Options $sqArguments -Goals "sonar:sonar"
