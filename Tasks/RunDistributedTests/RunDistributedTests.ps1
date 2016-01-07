@@ -65,10 +65,10 @@ foreach ($suite in $suites)
 }
 
 $testPlanId = 0
-[int]::TryParse($testPlan, [ref]$testPlanId)
+if([int]::TryParse($testPlan, [ref]$testPlanId)){}
 
 $testConfigurationId = 0
-[int]::TryParse($testConfiguration, [ref]$testConfigurationId) 
+if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
 
 if($runTitleMemberExists)
 {
