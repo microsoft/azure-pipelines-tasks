@@ -69,7 +69,7 @@
       },
       "groupName": "executionOptions",
       "properties": {
-        "disableManageLink": "true"
+        "DisableManageLink": "true"
       }
     },
     {
@@ -83,7 +83,7 @@
       "groupName": "executionOptions",
       "refreshable": true,
       "properties": {
-        "disableManageLink": "true"
+        "DisableManageLink": "true"
       }
     },
     {
@@ -94,7 +94,7 @@
       "required": true,
       "properties": {
         "MultiSelect": "True",
-        "disableManageLink": "true"
+        "DisableManageLink": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.testSuite",
       "visibleRule": "testSelection = testPlan",

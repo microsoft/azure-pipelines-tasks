@@ -65,7 +65,7 @@
             "options": { "testAssembly" : "Test Assembly", "testPlan" : "Test Plan" },
             "groupName": "executionOptions",
             "properties": {
-                "disableManageLink": "true"
+                "DisableManageLink": "true"
             }
         },
 
@@ -80,7 +80,7 @@
             "groupName": "executionOptions",
             "refreshable": true,
             "properties": {
-                "disableManageLink": "true"
+                "DisableManageLink": "true"
             }
         },
         {
@@ -91,7 +91,7 @@
             "required": true,
             "properties": {
                 "MultiSelect": "True" ,
-                "disableManageLink": "true"
+                "DisableManageLink": "true"
             },
             "helpMarkDown": "Select Test Suites from the Test Plan.",
             "visibleRule": "testSelection = testPlan",
