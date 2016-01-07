@@ -161,7 +161,7 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
             $resourceName = $azureClassicVMResource.Name
 
             Write-Verbose -Verbose "[Azure Call](RDFE)Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
-            $azureClassicVM = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -Verbose
+            $azureClassicVM = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -ErrorAction Stop -Verbose
             Write-Verbose -Verbose "[Azure Call](RDFE)Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
             
             Write-Verbose -Verbose "[Azure Call](RDFE)Getting classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
@@ -224,17 +224,17 @@ function Get-AzureRMResourceGroupResourcesDetails
         Switch-AzureMode AzureResourceManager
 
         Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
-        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -Verbose
+        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
         Write-Verbose -Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         $azureRGResourcesDetails.Add("networkInterfaceResources", $networkInterfaceResources)
 
         Write-Verbose -Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
-        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -Verbose
+        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
         Write-Verbose -Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
         $azureRGResourcesDetails.Add("publicIPAddressResources", $publicIPAddressResources)
 
         Write-Verbose -Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
-        $lbGroup = Get-AzureResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.Network/loadBalancers" -Verbose
+        $lbGroup = Get-AzureResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.Network/loadBalancers" -ErrorAction Stop -Verbose
         Write-Verbose -Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
         if($lbGroup)
@@ -243,15 +243,15 @@ function Get-AzureRMResourceGroupResourcesDetails
             {
                 $lbDetails = @{}
                 Write-Verbose -Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
-                $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -Verbose
+                $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
                 Write-Verbose -Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
 
                 Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config" -Verbose
-                $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer
+                $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
                 Write-Verbose "[Azure Call]Got LoadBalancer Frontend Ip Config" -Verbose
 
                 Write-Verbose "[Azure Call]Getting Azure LoadBalancer Inbound NatRule Config" -Verbose
-                $inboundRules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer
+                $inboundRules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
                 Write-Verbose "[Azure Call]Got Azure LoadBalancer Inbound NatRule Config" -Verbose
 
                 $lbDetails.Add("frontEndIPConfigs", $frontEndIPConfigs)

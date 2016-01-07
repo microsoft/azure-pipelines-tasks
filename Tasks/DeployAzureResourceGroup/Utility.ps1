@@ -74,7 +74,7 @@ function Validate-AzurePowerShellVersion
 
 function Check-AzureRMInstalled
 {
-    if(!(Get-Module -Name "AzureRM" -ListAvailable))
+    if(!(Get-Module -Name "AzureRM*" -ListAvailable))
     {
         Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
         throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
