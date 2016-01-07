@@ -85,3 +85,38 @@ function Generate-AzureStorageContainerSASToken
           [object]$storageContext,
           [System.Int32]$tokenTimeOutInHours)
 }
+
+# Returns the status of vm $name in ResourceGroup $resourceGroupName
+function Get-AzureMachineStatus
+{
+    param([string]$resourceGroupName,
+          [string]$name)
+}
+
+# Returns details of the custon script extension $name of VM $vmName present in ResourceGroup $resourceGroupName
+function Get-AzureMachineCustomScriptExtension
+{
+    param([string]$resourceGroupName,
+          [string]$vmName,
+          [string]$name)
+}
+
+# Returns details of the custon script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
+function Set-AzureMachineCustomScriptExtension
+{
+    param([string]$resourceGroupName,
+          [string]$vmName,
+          [string]$name,
+          [string[]]$fileUri,
+          [string]$run,
+          [string]$argument,
+          [string]$location)
+}
+
+# Returns details of the custon script extension $name deleted from VM $vmName present in ResourceGroup $resourceGroupName
+function Remove-AzureMachineCustomScriptExtension
+{
+    param([string]$resourceGroupName,
+          [string]$vmName,
+          [string]$name)
+}

@@ -447,7 +447,8 @@ function Invoke-OperationOnMachine
 function Instantiate-Environment
 {
     param([string]$resourceGroupName,
-          [string]$outputVariable)
+          [string]$outputVariable,
+          [string]$enableRemoteDeployment)
 
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
@@ -456,7 +457,7 @@ function Instantiate-Environment
     if($azureVMsDetails.Count -eq 0)
     {
         $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
-        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources
+        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableRemoteDeployment $enableRemoteDeployment
     }
 
     if ($azureVMsDetails.Count -eq 0)
@@ -700,7 +701,8 @@ function Get-MachinesFqdns
 function Get-AzureRMVMsConnectionDetailsInResourceGroup
 {
     param([string]$resourceGroupName,
-          [object]$azureRMVMResources)
+          [object]$azureRMVMResources,
+          [string]$enableRemoteDeployment)
 
     [hashtable]$fqdnMap = @{}
     [hashtable]$winRmHttpsPortMap = @{}
@@ -752,6 +754,12 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             $resourceProperties.winRMHttpsPort = $resourceWinRmHttpsPort
 
             $vmResourcesDetails.Add($resourceName, $resourceProperties)
+
+            if ($enableRemoteDeployment -eq "true")
+            {
+                Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+            }
         }
         return $vmResourcesDetails
     }
@@ -854,18 +862,18 @@ function Is-WinRMCustomScriptExtensionExists
 function Add-AzureVMCustomScriptExtension
 {
     param([string]$resourceGroupName,
-          [object]$vmResource)
-	
-    $vmName = $vmResource.Name
-    $location=$vmResource.Location	
-    $dnsName=[string]::Concat("*.",$location,".cloudapp.azure.com")
+          [string]$vmName,          
+          [string]$dnsName,
+          [string]$location)
+
     $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
     $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
-    $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"		
+    $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
 
     Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
+    Write-Verbose -Verbose "VM Location : $location"
     Write-Verbose -Verbose "VM DNS : $dnsName"
 	
     $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose	
@@ -894,6 +902,7 @@ function Enable-WinRMHttpsListener
 {
     param([string]$resourceGroupName)
    
+    # Get azurerm vms
     $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName 		    
     if ($azureVMResources.Count -eq 0)
     {
@@ -901,8 +910,6 @@ function Enable-WinRMHttpsListener
         return		
     }
 	
-    foreach($vmResource in $azureVMResources)
-    {
-        Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmResource $vmResource -Verbose
-    }
+    # Below call enables the winrm custom script extension
+    $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableRemoteDeployment $true
 }

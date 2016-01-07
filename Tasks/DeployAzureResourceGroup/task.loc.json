@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 47
+    "Patch": 48
   },
   "demands": [
     "azureps"
@@ -122,7 +122,7 @@
       "name": "enableRemoteDeploymentForCreate",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableRemoteDeploymentForCreate",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "visibleRule": "action = Create Or Update Resource Group",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableRemoteDeploymentForCreate"
@@ -131,7 +131,7 @@
       "name": "enableRemoteDeploymentForSelect",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableRemoteDeploymentForSelect",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "visibleRule": "action = Select Resource Group",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableRemoteDeploymentForSelect"

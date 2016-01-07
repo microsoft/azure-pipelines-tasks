@@ -55,12 +55,7 @@ function Handle-SelectResourceGroupAction
         throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
     }
 
-    if($enableRemoteDeploymentForSelect -eq "true")
-    {
-	    Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName
-    }
-
-    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableRemoteDeployment $enableRemoteDeploymentForSelect
 }
 
 function Handle-ResourceGroupLifeCycleOperations
@@ -76,14 +71,13 @@ function Handle-ResourceGroupLifeCycleOperations
     {
         $azureResourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
 
-        if($enableRemoteDeploymentForCreate -eq "true")
-        {
-	        Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName
-        }
-
         if(-not [string]::IsNullOrEmpty($outputVariable))
         {
-            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableRemoteDeployment $enableRemoteDeploymentForCreate
+        }
+        elseif($enableRemoteDeploymentForCreate -eq "true")
+        {
+            Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName
         }
     }
     else

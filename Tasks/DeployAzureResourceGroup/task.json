@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 47
+        "Patch": 48
     },
     "demands": [
         "azureps"
@@ -119,7 +119,7 @@
             "name": "enableRemoteDeploymentForCreate",
             "type": "boolean",
             "label": "Enable Remote Deployment",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "visibleRule": "action = Create Or Update Resource Group",
             "required": false,
             "helpMarkDown": "Configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986)."
@@ -128,7 +128,7 @@
             "name": "enableRemoteDeploymentForSelect",
             "type": "boolean",
             "label": "Enable Remote Deployment",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "visibleRule": "action = Select Resource Group",
             "required": false,
             "helpMarkDown": "Configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
