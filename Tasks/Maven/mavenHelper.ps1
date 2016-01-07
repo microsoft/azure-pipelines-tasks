@@ -83,7 +83,8 @@ function RunSonarQubeAnalysis
 		  [string]$sqDbUsername,
 		  [string]$sqDbPassword, 
 		  [string]$userOptions,
-		  [string]$mavenPOMFile)
+		  [string]$mavenPOMFile,
+		  [string]$execFileJacoco)
 
 	# SonarQube Analysis - there is a known issue with the SonarQube Maven plugin that the sonar:sonar goal should be run independently
 	$sqAnalysisEnabledBool = Convert-String $sqAnalysisEnabled Boolean
@@ -104,10 +105,15 @@ function RunSonarQubeAnalysis
 			# The platform may cache the db details values so we force them to be empty
 			$sqArguments = CreateSonarQubeArgs $sqServiceEndpoint.Url $sqServiceEndpoint.Authorization.Parameters.UserName $sqServiceEndpoint.Authorization.Parameters.Password "" "" ""
 		}
-
+		
 		$sqArguments = $userOptions + " " + $sqArguments
 		Write-Verbose "Running Maven with goal sonar:sonar and options: $sqArguments"
-
+		
+		if($execFileJacoco)
+		{
+			$sqArguments = $sqArguments + " -Dsonar.jacoco.reportPath=" + (EscapeArg($execFileJacoco)) 
+		}
+		
 		Invoke-Maven -MavenPomFile $mavenPOMFile -Options $sqArguments -Goals "sonar:sonar"
 	 }
 }

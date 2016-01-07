@@ -161,6 +161,8 @@ else
 
 if ($codeCoverageTool -eq "JaCoCo")
 {
+	#set sonar parameter
+	$execFileJacoco = Join-Path $reportDirectory "jacoco.exec"
 	# Publish code coverage for Jacoco
 	PublishCodeCoverageJacoco  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFileJacoco $reportDirectory $codeCoverageTool $reportPOMFile
 }
@@ -171,7 +173,7 @@ ElseIf ($codeCoverageTool -eq "Cobertura")
 }
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
-RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile
+RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
 
 if(Test-Path $reportDirectory)
 {
