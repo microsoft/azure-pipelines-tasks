@@ -3,7 +3,7 @@
 	"name": "DeleteFiles",
 	"friendlyName": "Delete Files",
 	"description": "Delete files or folders. (The minimatch patterns will only match file paths, not folder paths)",
-	"helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=708389)",
+	"helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=722333)",
 	"category": "Utility",
 	"visibility": [
 		"Build"
@@ -29,7 +29,7 @@
 		"label": "Contents",
 		"defaultValue": "myFileShare",
 		"required": true,
-		"helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=708389)"
+		"helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=722333)"
 	}],
 	"instanceNameFormat": "Delete files from $(SourceFolder)",
 	"execution": {
