@@ -30,11 +30,11 @@ comma separated list of filters to include or exclude classes from collecting co
 - **Source Files Directories :** This option is enabled only when you select JaCoCo as code coverage tool. This field is required for a multi module project. Code coverage reports are created using ANT task. Specify comma seperated list of relative paths from Maven POM file to source directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.
 
 ####Advanced
-Use the next options to manage your JAVA_HOME attribute by JDK Version and Path
+Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Path
 
-- **Set JAVA_HOME by :** Select to set JAVA_HOME either by providing a PATH or let VSTS set the JAVA_HOME based on JDK version choosen. By default it is set to `JDK Version`
+- **Set JAVA_HOME by :** Select to set `JAVA_HOME` either by providing a path or let VSTS set the `JAVA_HOME` based on JDK version choosen. By default it is set to `JDK Version`
 
-- **JDK Version :** Here provide the PATH to JAVA_HOME if you want to set it by PATH or select the appropriate JDK verision.
+- **JDK Version :** Here provide the PATH to `JAVA_HOME` if you want to set it by path or select the appropriate JDK verision.
 
 - **JDK Architecture :** Select the approriate JDK Architecture. By default it is set to `x86`
 
