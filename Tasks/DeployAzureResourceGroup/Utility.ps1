@@ -841,27 +841,22 @@ function Is-WinRMCustomScriptExtensionExists
 
         if($customScriptExtension)
         {
-        if($customScriptExtension.ProvisioningState -ne "Succeeded")
-        {	
-            $removeExtension = $true		    
-        }
-        else
-        {
-            try
-            {
-                    Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+            if($customScriptExtension.ProvisioningState -ne "Succeeded")
+            {	
+                $removeExtension = $true		    
             }
-            catch
+            else
             {
-                    $isExtensionExists = $false
-            }				
+                try
+                {
+                        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+                }
+                catch
+                {
+                        $isExtensionExists = $false
+                }
             }
         }
-        else
-        {
-            $isExtensionExists = $false
-        }
-    }
         else
         {
             $isExtensionExists = $false
@@ -930,22 +925,6 @@ function Add-AzureVMCustomScriptExtension
     Write-Verbose -Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
 }
 
-function Enable-WinRMHttpsListener
-{
-    param([string]$resourceGroupName)
-   
-    # Get azurerm vms
-    $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName 		    
-    if ($azureVMResources.Count -eq 0)
-    {
-        Write-Verbose "No VMs found in resource group: $resourceGroupName"
-        return		
-    }
-	
-    # Below call enables the winrm custom script extension
-    $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $true
-}
-	
 function Enable-WinRMHttpsListener
 {
     param([string]$resourceGroupName)
