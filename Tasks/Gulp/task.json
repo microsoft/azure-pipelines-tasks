@@ -12,10 +12,11 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 6
+        "Patch": 9
     },
     "demands" : [
-        "gulp"
+        "gulp",
+        "node"
     ],
     "minimumAgentVersion": "1.91.0",
     "groups": [
@@ -67,7 +68,7 @@
             "label": "gulp.js location",
             "defaultValue":"node_modules/gulp/bin/gulp.js",
             "required":true,
-            "helpMarkDown": "gulp.js to run.  Defaults to the gulp.js under node_modules folder of cwd.",
+            "helpMarkDown": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of cwd.",
             "groupName":"advanced"
         }
     ],
@@ -81,5 +82,10 @@
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "GulpNotInstalled": "Gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
+        "GulpReturnCode": "Gulp exited with return code: %d",
+        "GulpFailed": "Gulp failed with error: %s"
     }
 }

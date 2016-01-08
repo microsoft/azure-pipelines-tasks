@@ -16,12 +16,19 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 19
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.90.0",
+  "groups": [
+    {
+      "name": "newServiceAdvancedOptions",
+      "displayName": "ms-resource:loc.group.displayName.newServiceAdvancedOptions",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -37,6 +44,9 @@
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
       "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
     },
     {
@@ -44,15 +54,21 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ServiceName",
       "defaultValue": "",
-      "required": true
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "ServiceLocation",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.ServiceLocation",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ServiceLocation"
+      "helpMarkDown": "ms-resource:loc.input.help.ServiceLocation",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "CsPkg",
@@ -100,6 +116,27 @@
       "label": "ms-resource:loc.input.label.AllowUpgrade",
       "defaultValue": "true",
       "required": true
+    },
+    {
+      "name": "NewServiceAdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.NewServiceAdditionalArguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.NewServiceAdditionalArguments",
+      "groupName": "newServiceAdvancedOptions"
+    },
+    {
+      "name": "NewServiceAffinityGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.NewServiceAffinityGroup",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.NewServiceAffinityGroup",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "EditableOptions": "True"
+      }
     }
   ],
   "sourceDefinitions": [
@@ -115,6 +152,16 @@
       "target": "ServiceName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureHostedServiceNames"
+    },
+    {
+      "target": "ServiceLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "NewServiceAffinityGroup",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureAffinityGroups"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

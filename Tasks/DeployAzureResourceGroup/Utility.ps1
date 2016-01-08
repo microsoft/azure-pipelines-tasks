@@ -9,6 +9,9 @@ $telemetryCodes =
   "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
   "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed";
 
+  "ENABLEWINRM_ProvisionVmCustomScriptFailed" = "ENABLEWINRM_ProvisionVmCustomScriptFailed"
+  "ENABLEWINRM_ExecutionOfVmCustomScriptFailed" = "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
+
   "PREREQ_AzureRMModuleNotFound" = "PREREQ_AzureRMModuleNotFound";
   "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
   "PREREQ_InvalidServiceConnectionType" = "PREREQ_InvalidServiceConnectionType";
@@ -71,7 +74,7 @@ function Validate-AzurePowerShellVersion
 
 function Check-AzureRMInstalled
 {
-    if(!(Get-Module -Name "AzureRM" -ListAvailable))
+    if(!(Get-Module -Name "AzureRM*" -ListAvailable))
     {
         Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
         throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
@@ -115,7 +118,7 @@ function Create-AzureResourceGroup
     #Create csm parameter object
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
 
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
+    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
     {
         $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
     }
@@ -152,7 +155,7 @@ function Create-AzureResourceGroup
                     Write-Error $error -ErrorAction Continue
                 }
 
-                Write-Error (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName) -ErrorAction Continue
+                throw (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName)
             }
             else
             {
@@ -261,7 +264,7 @@ function Validate-DeploymentFileAndParameters
         throw (Get-LocalizedString -Key "Please specify a complete and a valid template file path")
     }
 
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\") -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
+    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
     {
          Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
          throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
@@ -330,8 +333,8 @@ function Get-CsmAndParameterFiles
     $csmFile = Get-File $csmFile
     Write-Verbose -Verbose "deploymentDefinitionFile = $csmFile"
 
-    # csmParametersFile value would be  BUILD_SOURCESDIRECTORY when left empty in UI.
-    if ($csmParametersFile -ne $env:BUILD_SOURCESDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:BUILD_SOURCESDIRECTORY, "\"))
+    # csmParametersFile value would be  SYSTEM_DEFAULTWORKINGDIRECTORY when left empty in UI.
+    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
     {
         #Find the matching deployment definition Parameter File
         $csmParametersFile = Get-File $csmParametersFile
@@ -703,12 +706,10 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     [hashtable]$winRmHttpsPortMap = @{}
     [hashtable]$vmResourcesDetails = @{}
 
-    if (-not [string]::IsNullOrEmpty($resourceGroupName))
+    if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
         $ResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
-        $ResourcesDetails.Add("$azureRMVMResources", $azureRMVMResources)
 
-        $azureVMResources = $ResourcesDetails["azureVMResources"]
         $networkInterfaceResources = $ResourcesDetails["networkInterfaceResources"]	
         $publicIPAddressResources = $ResourcesDetails["publicIPAddressResources"]	
         $loadBalancerResources = $ResourcesDetails["loadBalancerResources"]
@@ -753,5 +754,155 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             $vmResourcesDetails.Add($resourceName, $resourceProperties)
         }
         return $vmResourcesDetails
+    }
+}
+
+function Validate-CustomScriptExecutionStatus
+{
+    param([string]$resourceGroupName,
+          [string]$vmName,
+          [string]$extensionName)
+		  
+    Write-Verbose -Verbose "Validating the winrm configuration custom script extension status"
+
+    $isScriptExecutionPassed = $true
+    $status = Get-AzureMachineStatus -resourceGroupName $resourceGroupName -Name $vmName -ErrorAction Stop -Verbose
+    $customScriptExtension = $status.Extensions | Where-Object { $_.ExtensionType -eq "Microsoft.Compute.CustomScriptExtension" -and $_.Name -eq $extensionName }
+
+    if($customScriptExtension)
+    {
+        $subStatuses = $customScriptExtension.SubStatuses
+        $subStatusesStr = $subStatuses | Out-String
+
+        Write-Verbose -Verbose "Custom script extension execution statuses: $subStatusesStr"
+
+        if($subStatuses)
+        {
+            foreach($subStatus in $subStatuses)
+            {
+                if($subStatus.Code.Contains("ComponentStatus/StdErr") -and (-not [string]::IsNullOrEmpty($subStatus.Message)))
+                {
+                    $isScriptExecutionPassed = $false
+                    $errMessage = $subStatus.Message
+                    break
+                }
+            }
+        }
+        else
+        {
+            $isScriptExecutionPassed = $false
+            $errMessage = "No execution status exists for the custom script extension '$extensionName'"
+        }
+    }
+    else
+    {
+        $isScriptExecutionPassed = $false
+        $errMessage = "No custom script extension '$extensionName' exists"     
+    }
+
+    if(-not $isScriptExecutionPassed)
+    {
+        Write-TaskSpecificTelemetry "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
+        throw (Get-LocalizedString -Key "Failed to enable remote deployment. Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}" -ArgumentList $extensionName, $vmName, $errMessage)
+    }
+
+    Write-Verbose -Verbose "Validated the script execution successfully"
+}
+
+function Is-WinRMCustomScriptExtensionExists
+{
+    param([string]$resourceGroupName,
+    [string]$vmName,
+    [string]$extensionName)
+	 
+    $isExtensionExists = $true
+    $removeExtension = $false
+	
+    try
+    {
+        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -ErrorAction SilentlyContinue					
+        if($customScriptExtension.ProvisioningState -ne "Succeeded")
+        {	
+            $removeExtension = $true		    
+        }
+        else
+        {
+            try
+            {
+                Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose
+            }
+            catch
+            {
+                $removeExtension = $true
+            }				
+        }
+    }
+    catch
+    {
+        $isExtensionExists = $false	
+    }		
+    
+    if($removeExtension)
+    {
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -Verbose
+        $isExtensionExists = $false
+    }
+	
+    $isExtensionExists
+}
+
+function Add-AzureVMCustomScriptExtension
+{
+    param([string]$resourceGroupName,
+          [object]$vmResource)
+	
+    $vmName = $vmResource.Name
+    $location=$vmResource.Location	
+    $dnsName=[string]::Concat("*.",$location,".cloudapp.azure.com")
+    $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
+    $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
+    $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"		
+    $scriptToRun="ConfigureWinRM.ps1"
+    $extensionName="WinRMCustomScriptExtension"
+
+    Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
+    Write-Verbose -Verbose "VM DNS : $dnsName"
+	
+    $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose	
+    Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
+	
+    if($isExtensionExists)
+    {
+        Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
+        return
+    }
+	
+    $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location -Verbose	
+
+    if($result.Status -ne "Succeeded")
+    {
+        Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
+        throw (Get-LocalizedString -Key "Failed to enable remote deployment. Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
+    }
+	
+    Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose
+	
+    Write-Verbose -Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
+}
+
+function Enable-WinRMHttpsListener
+{
+    param([string]$resourceGroupName)
+   
+    $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName 		    
+    if ($azureVMResources.Count -eq 0)
+    {
+        Write-Verbose "No VMs found in resource group: $resourceGroupName"
+        return		
+    }
+	
+    foreach($vmResource in $azureVMResources)
+    {
+        Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmResource $vmResource -Verbose
     }
 }

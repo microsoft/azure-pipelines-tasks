@@ -15,10 +15,11 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 6
+    "Patch": 9
   },
   "demands": [
-    "gulp"
+    "gulp",
+    "node"
   ],
   "minimumAgentVersion": "1.91.0",
   "groups": [
@@ -84,5 +85,10 @@
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
+  },
+  "messages": {
+    "GulpNotInstalled": "ms-resource:loc.messages.GulpNotInstalled",
+    "GulpReturnCode": "ms-resource:loc.messages.GulpReturnCode",
+    "GulpFailed": "ms-resource:loc.messages.GulpFailed"
   }
 }

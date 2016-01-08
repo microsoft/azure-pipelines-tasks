@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.92.0",
@@ -40,8 +40,11 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "deleteFiles.js",
+      "target": "deletefiles.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CantDeleteFiles": "ms-resource:loc.messages.CantDeleteFiles"
   }
 }

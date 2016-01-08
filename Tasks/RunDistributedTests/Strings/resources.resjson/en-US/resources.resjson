@@ -2,9 +2,9 @@
 // GENERATED FILE - DO NOT EDIT DIRECTLY
 // *******************************************************
 {
-  "loc.friendlyName": "Visual Studio Test using Test Agent",
+  "loc.friendlyName": "Run Functional Tests",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624389)",
-  "loc.description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
+  "loc.description": "Run Coded UI/Selenium/Functional tests on a set of machines (using Test Agent)",
   "loc.instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Setup Options",
   "loc.group.displayName.executionOptions": "Execution Options",

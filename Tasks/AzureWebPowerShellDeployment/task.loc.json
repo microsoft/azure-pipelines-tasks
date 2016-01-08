@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 20
+    "Patch": 22
   },
   "demands": [
     "azureps"
@@ -36,7 +36,10 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebSiteName",
       "defaultValue": "",
-      "required": true
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "WebSiteLocation",
@@ -45,23 +48,6 @@
       "defaultValue": "South Central US",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
-      "options": {
-        "Australia East": "Australia East",
-        "Australia Southeast": "Australia Southeast",
-        "Brazil South": "Brazil South",
-        "Central US": "Central US",
-        "East Asia": "East Asia",
-        "East US": "East US",
-        "East US2": "East US2",
-        "Japan East": "Japan East",
-        "Japan West": "Japan West",
-        "North Central US": "North Central US",
-        "North Europe": "North Europe",
-        "South Central US": "South Central US",
-        "Southeast Asia": "Southeast Asia",
-        "West Europe": "West Europe",
-        "West US": "West US"
-      },
       "properties": {
         "EditableOptions": "True"
       }
@@ -83,6 +69,14 @@
       "required": true
     },
     {
+      "name": "doNotDelete",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.doNotDelete",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.doNotDelete",
+      "required": false
+    },
+    {
       "name": "AdditionalArguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
@@ -98,6 +92,11 @@
       "parameters": {
         "WebSiteLocation": "$(WebSiteLocation)"
       }
+    },
+    {
+      "target": "WebSiteLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

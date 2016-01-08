@@ -8,6 +8,7 @@ param(
     [string]$SymbolsMaximumWaitTime,
     [string]$SymbolsFolder,
     [string]$SymbolsArtifactName,
+    [string]$SkipIndexing,
     [string]$TreatNotIndexedAsWarning = 'false',
     [string]$OmitDotSource
 )
@@ -21,6 +22,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 # Convert Booleans.
+[bool]$SkipIndexing = $SkipIndexing -eq 'true'
 [bool]$OmitDotSource = $OmitDotSource -eq 'true'
 [bool]$TreatNotIndexedAsWarning = $TreatNotIndexedAsWarning -eq 'true'
 
@@ -85,8 +87,12 @@ foreach ($pdbFile in $pdbFiles) {
 
 Write-Host (Get-LocalizedString -Key "Found {0} symbol files to index." -ArgumentList $pdbFiles.Count)
 
-# Index the sources.
-Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
+if ($SkipIndexing) {
+    Write-Host "Skipping indexing."
+} else {
+    # Index the sources.
+    Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
+}
 
 # Publish the symbols.
 if ($SymbolsPath) {

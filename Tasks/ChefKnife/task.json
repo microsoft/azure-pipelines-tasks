@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "C7B7CCF9-D6E0-472B-97BB-06B6E43504F3",
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "demands" : [
         "Chef",

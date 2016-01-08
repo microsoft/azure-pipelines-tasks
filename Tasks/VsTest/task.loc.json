@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 27
+    "Patch": 28
   },
   "demands": [
     "vstest"
@@ -89,7 +89,7 @@
       "name": "runInParallel",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.runInParallel",
-      "defaultValue": "False",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
       "groupName": "executionOptions"

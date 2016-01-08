@@ -3,7 +3,7 @@
   Licensed under the MIT license. See LICENSE file in the project root for full license information.
 */
 
-var tl = require('vso-task-lib'),
+var tl = require('vsts-task-lib'),
 	path = require('path'),
 	fs = require('fs'),
 	Q = require ('q'),
@@ -191,7 +191,7 @@ function iosProfile(code) {
 
 function execBuild(code) {
 	// Add optional additional args
-	var args=tl.getDelimitedInput('args', ' ', false);			
+	var args=tl.getInput('args', ' ', false);			
 	if(args) {
 		xcb.arg(args);						
 	}

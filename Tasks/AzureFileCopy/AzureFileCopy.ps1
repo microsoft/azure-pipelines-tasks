@@ -38,85 +38,56 @@ Write-Verbose "skipCACheck = $skipCACheck" -Verbose
 # Constants #
 $defaultSasTokenTimeOutInHours = 2
 $useHttpsProtocolOption = ''
-$azureFileCopyOperation = 'AzureFileCopy'
 $ErrorActionPreference = 'Stop'
 $telemetrySet = $false
 
+$sourcePath = $sourcePath.Trim('"')
+$storageAccount = $storageAccount.Trim()
+
+# azcopy location on automation agent
+$agentHomeDir = $env:AGENT_HOMEDIRECTORY
+$azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
+
+# Import all the dlls and modules which have cmdlets we need
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+
+# Load all dependent files for execution
+Import-Module ./AzureFileCopyJob.ps1 -Force
+Import-Module ./Utility.ps1 -Force
+
+# enabling detailed logging only when system.debug is true
+$enableDetailedLoggingString = $env:system_debug
+if ($enableDetailedLoggingString -ne "true")
+{
+    $enableDetailedLoggingString = "false"
+}
+
+#### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try
-{ 
-    # Load all dependent files for execution
-    Import-Module ./AzureFileCopyJob.ps1 -Force
-    Import-Module ./AzureUtility.ps1 -Force
-    Import-Module ./Utility.ps1 -Force
+{
+    # Importing required version of azure cmdlets according to azureps installed on machine
+    $azureUtility = Get-AzureUtility
 
-    # Import all the dlls and modules which have cmdlets we need
-    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
-    Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+    Write-Verbose -Verbose "Loading $azureUtility"
+    Import-Module ./$azureUtility -Force
 
-    # enabling detailed logging only when system.debug is true
-    $enableDetailedLoggingString = $env:system_debug
-    if ($enableDetailedLoggingString -ne "true")
-    {
-        $enableDetailedLoggingString = "false"
-    }
+    # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
+    $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName -distributedTaskContext $distributedTaskContext
 
-    # azcopy location on automation agent
-    $agentHomeDir = $env:AGENT_HOMEDIRECTORY
-    $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
-
-    $isSwitchAzureModeRequired = Does-RequireSwitchAzureMode
-
-    if($isSwitchAzureModeRequired)
-    {
-        Write-Verbose "Azure Powershell commandlet version is less than 0.9.9" -Verbose
-        Import-Module ./AzureResourceManagerLegacyProvider.ps1 -Force
-    }
-
-    # try to get storage key from RDFE, if not exists will try from ARM endpoint
-    $storageAccount = $storageAccount.Trim()
-    try
-    {
-        if($isSwitchAzureModeRequired)
-        {
-            Write-Verbose "Switching Azure mode to AzureServiceManagement." -Verbose
-            Switch-AzureMode AzureServiceManagement
-        }
-
-        # getting storage key from RDFE    
-        $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
-
-        Write-Verbose "RDFE call succeeded. Loading ARM Wrapper." -Verbose
-    }
-    catch [Hyak.Common.CloudException], [System.ApplicationException], [System.Management.Automation.CommandNotFoundException]
-    {
-        $errorMsg = $_.Exception.Message.ToString()
-        Write-Verbose "[Azure Call](RDFE) $errorMsg" -Verbose
-
-        # checking azure powershell version to make calls to ARM endpoint
-        Validate-AzurePowershellVersion
-
-        if($isSwitchAzureModeRequired)
-        {
-            Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
-            Switch-AzureMode AzureResourceManager
-        }
-
-        # getting storage account key from ARM endpoint
-        $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
-    }
+    # Getting storage key for the storage account based on the connection type
+    $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType
 
     # creating storage context to be used while creating container, sas token, deleting container
-    $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
+    $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
-    # creating temporary container for uploading files
-    if ([string]::IsNullOrEmpty($containerName))
+    # creating temporary container for uploading files if no input is provided for container name
+    if([string]::IsNullOrEmpty($containerName))
     {
-        $containerName = [guid]::NewGuid().ToString();
-        Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccount" -Verbose
-        $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container
-        Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccount" -Verbose
+        $containerName = [guid]::NewGuid().ToString()
+        Create-AzureContainer -containerName $containerName -storageContext $storageContext
     }
 }
 catch
@@ -129,225 +100,46 @@ catch
     throw
 }
 
-# uploading files to container
-$sourcePath = $sourcePath.Trim('"')
-try
-{
-    Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccount, $containerName, $blobPrefix)
-    if([string]::IsNullOrWhiteSpace($additionalArguments)) 
-    {
-        $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccount -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation
-    }
-    else
-    {
-        $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccount -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments
-    }
-}
-catch
-{
-    # deletes container only if we have created temporary container
-    if ($destination -ne "AzureBlob")
-    {
-        Remove-AzureContainer -containerName $containerName -storageContext $storageContext -storageAccount $storageAccount
-    }
+# Uploading files to container
+Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -storageKey $storageKey `
+                             -azCopyLocation $azCopyLocation -additionalArguments $additionalArguments -destinationType $destination
 
-    Write-Verbose $_.Exception.ToString() -Verbose
-    $error = $_.Exception.Message
-    $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
-    Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
-    ThrowError -errorMessage $errorMessage
-}
-finally
-{
-    if ($uploadResponse.Status -eq "Failed")
-    {
-        # deletes container only if we have created temporary container
-        if ($destination -ne "AzureBlob")
-        {
-            Remove-AzureContainer -containerName $containerName -storageContext $storageContext -storageAccount $storageAccount
-        }
-
-        $error = $uploadResponse.Error
-        $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccount, $blobPrefix, $error)
-        Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
-        ThrowError -errorMessage $errorMessage
-    }
-    elseif ($uploadResponse.Status -eq "Succeeded")
-    {
-        Write-Output (Get-LocalizedString -Key "Uploaded files successfully from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccount, $containerName, $blobPrefix)
-    }
-}
-
-# do not proceed further if destination is azure blob
+# Complete the task if destination is azure blob
 if ($destination -eq "AzureBlob")
 {
     Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination" -Verbose
     return
 }
 
-$envOperationStatus = 'Passed'
-# copying files to azure vms
+# Copying files to Azure VMs
 try
 {
-    Initialize-GlobalMaps
-
-    if($isSwitchAzureModeRequired)
-    {
-        Write-Verbose "Switching Azure mode to AzureServiceManagement" -Verbose
-        Switch-AzureMode AzureServiceManagement
-    }
-
-    $machineNames = $machineNames.Trim()
-
-    $allAzureClassicVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $environmentName
-    $azureVMResources = Get-FilteredAzureClassicVMsInResourceGroup -allAzureClassicVMResources $allAzureClassicVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
-    Get-MachineConnectionInformationForClassicVms -resourceGroupName $environmentName 
-
-    # Fallbacking on RM resources if authentication is not Cert
-    $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
-    $isAuthenticationTypeCertificate = $serviceEndpoint.Authorization.Scheme -eq "Certificate"
-
-    if($azureVMResources.Count -eq 0)
-    {
-        if($isAuthenticationTypeCertificate -eq $false)
-        {
-            Write-Verbose "Trying to find RM resources since there are no classic resources in resource group: $environmentName" -Verbose
-            if($isSwitchAzureModeRequired)
-            {
-                Write-Verbose "Switching Azure mode to AzureResourceManager." -Verbose
-                Switch-AzureMode AzureResourceManager
-            }
-
-            $allAzureRMVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $environmentName
-            $azureVMResources = Get-FilteredAzureRMVMsInResourceGroup -allAzureRMVMResources $allAzureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
-        }
-        
-        if($azureVMResources.Count -eq 0)
-        {
-            if($isAuthenticationTypeCertificate -and $allAzureClassicVMResources.Count -eq 0)
-            {
-                Write-TaskSpecificTelemetry "PREREQ_NoRGOrVMResources"
-                throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $environmentName)
-            }
-            elseif([string]::IsNullOrEmpty($machineNames) -or ($allAzureClassicVMResources.Count -eq 0 -and $allAzureRMVMResources.Count -eq 0))
-            {
-                Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
-                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' for copy." -ArgumentList $environmentName)
-            }
-            else
-            {
-                Write-TaskSpecificTelemetry "FILTERING_NoVMResources"
-                throw (Get-LocalizedString -Key "No machine exists under resource group: '{0}' with the following {1} '{2}'." -ArgumentList $environmentName, $resourceFilteringMethod, $machineNames)
-            }
-        }
-
-        Get-MachineConnectionInformationForRMVms -resourceGroupName $environmentName
-    }
-
-    $azureVMResourcesPropertiesBag = Get-AzureVMResourcesProperties -resources $azureVMResources
+    # getting azure vms properties(name, fqdn, winrmhttps port)
+    $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
+    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames
 
     $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
-    $azureVmsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
+    $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 
-    # create container sas token with full permissions
-    Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccount with expiry time: $defaultSasTokenTimeOutInHours hours" -Verbose
-    $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours) -Context $storageContext -Permission rwdl
-    Write-Verbose "[Azure Call]Generated SasToken: $containerSasToken successfully for container: $containerName in storage: $storageAccount" -Verbose
+    # generate container sas token with full permissions
+    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
 
-    # copies files sequentially
-    if ($copyFilesInParallel -eq "false" -or ( $resources.Count -eq 1 ))
-    {
-        foreach ($resource in $azureVMResources)
-        {
-            $resourceProperties = $azureVMResourcesPropertiesBag.Item($resource.Name)
-            $resourceFQDN = $resourceProperties.fqdn
-            $resourceName = $resourceProperties.Name
-            $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
-
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
-
-            $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $useHttpsProtocolOption, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
-            $status = $copyResponse.Status
-
-            Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $resourceName -deploymentResponse $copyResponse
-            Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $resourceName, $status)
-
-            if ($status -ne "Passed")
-            {
-                Write-Verbose $copyResponse.Error.ToString() -Verbose
-                $errorMessage =  $copyResponse.Error.Message
-                Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
-                ThrowError -errorMessage $errorMessage
-            }
-        }
-    }
-    # copies files parallely
-    else
-    {
-        [hashtable]$Jobs = @{}
-        foreach ($resource in $azureVMResources)
-        {
-            $resourceProperties = $azureVMResourcesPropertiesBag.Item($resource.Name)
-            $resourceFQDN = $resourceProperties.fqdn
-            $resourceName = $resourceProperties.Name
-            $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
-
-            Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
-
-            $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $useHttpsProtocolOption, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
-            $Jobs.Add($job.Id, $resourceProperties)
-        }
-
-        While (Get-Job)
-        {
-            Start-Sleep 10
-            foreach ($job in Get-Job)
-            {
-                if ($job.State -ne "Running")
-                {
-                    $output = Receive-Job -Id $job.Id
-                    Remove-Job $Job
-
-                    $status = $output.Status
-                    $resourceName = $Jobs.Item($job.Id).Name
-
-                    Write-ResponseLogs -operationName $azureFileCopyOperation -fqdn $resourceName -deploymentResponse $output
-                    Write-Output (Get-LocalizedString -Key "Copy status for machine '{0}' : '{1}'" -ArgumentList $resourceName, $status)
-
-                    if ($status -ne "Passed")
-                    {
-                        $envOperationStatus = "Failed"
-                        $errorMessage = ""
-                        if($output.Error -ne $null)
-                        {
-                            $errorMessage = $output.Error.Message
-                        }
-                        Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
-                    }
-                }
-            }
-        }
-    }
-
-    if ($envOperationStatus -ne "Passed")
-    {
-        $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
-        Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
-        ThrowError -errorMessage $errorMessage
-    }
-    else
-    {
-        Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $environmentName)
-    }
+    #copies files on azureVMs 
+    Copy-FilesToAzureVMsFromStorageContainer `
+        -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
+        -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
+        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
+        -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -copyFilesInParallel $copyFilesInParallel
 }
 catch
 {
     Write-Verbose $_.Exception.ToString() -Verbose
+
     Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
     throw
 }
 finally
 {
-    Remove-AzureContainer -containerName $containerName -storageContext $storageContext -storageAccount $storageAccount
+    Remove-AzureContainer -containerName $containerName -storageContext $storageContext
     Write-Verbose "Completed Azure File Copy Task for Azure VMs Destination" -Verbose
 }

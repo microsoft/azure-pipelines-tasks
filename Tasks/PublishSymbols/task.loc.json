@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -49,6 +49,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder"
+    },
+    {
+      "name": "SkipIndexing",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SkipIndexing",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SkipIndexing",
+      "groupName": "advanced"
     },
     {
       "name": "TreatNotIndexedAsWarning",

@@ -17,6 +17,9 @@ param
     $Slot, 
 
     [String] [Parameter(Mandatory = $false)]
+    $DoNotDelete,
+
+    [String] [Parameter(Mandatory = $false)]
     $AdditionalArguments
 )
 
@@ -24,7 +27,11 @@ param
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
-try { [system.web.httputility] } catch { add-type -AssemblyName system.web }
+[bool]$DoNotDelete = Convert-String $DoNotDelete Boolean
+Write-Verbose "DonotDelete (converted) = $DoNotDelete"
+
+# adding System.Web explicitly, since we use http utility
+Add-Type -AssemblyName System.Web
 
 function Get-SingleFile($files, $pattern)
 {
@@ -93,6 +100,11 @@ if($WebSiteLocation)
 
 #Deploy the package
 $azureCommand = "Publish-AzureWebsiteProject"
+
+if($DoNotDelete) {
+   $AdditionalArguments = $AdditionalArguments + " -DoNotDelete"
+}
+
 if ($Slot)
 {
     $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" -Slot `"$Slot`" $AdditionalArguments -ErrorVariable publishAzureWebsiteError"
@@ -101,6 +113,7 @@ else
 {
     $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments -ErrorVariable publishAzureWebSiteError"
 }
+
 $finalCommand = "$azureCommand $azureCommandArguments"
 Write-Host "$finalCommand"
 Invoke-Expression -Command $finalCommand

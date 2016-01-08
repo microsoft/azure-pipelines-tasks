@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 9
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -73,7 +73,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "copyFiles.js",
+      "target": "copyfiles.js",
       "argumentFormat": ""
     }
   },

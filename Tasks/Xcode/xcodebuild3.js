@@ -4,9 +4,9 @@
 */
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
-var tl = require('vso-task-lib/vsotask');
-var tr = require('vso-task-lib/toolrunner');
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+var tl = require('vsts-task-lib/task');
+var tr = require('vsts-task-lib/toolrunner');
 var path = require('path');
 var Q = require('q');
 var xcutils = require('./xcode-task-utils.js');

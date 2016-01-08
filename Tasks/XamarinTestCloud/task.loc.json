@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 8
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -144,7 +144,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "XamarinTestCloud.js",
+      "target": "xamarintestcloud.js",
       "argumentFormat": ""
     },
     "PowerShell": {

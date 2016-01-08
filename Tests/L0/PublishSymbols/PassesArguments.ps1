@@ -25,6 +25,7 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
         SymbolsMaximumWaitTime = '123'
         SymbolsFolder = 'Some input symbols folder'
         SymbolsArtifactName = 'Some symbols artifact name'
+        SkipIndexing = 'false'
         TreatNotIndexedAsWarning = $treatNotIndexedAsWarning.ToString()
         OmitDotSource = 'true'
     }

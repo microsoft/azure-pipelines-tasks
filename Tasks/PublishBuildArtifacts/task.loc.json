@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 24
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -61,12 +61,11 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "publishBuildArtifacts.js",
+      "target": "publishbuildartifacts.js",
       "argumentFormat": ""
     }
   },
   "messages": {
-    "ArtifactNameNotSpecified": "ms-resource:loc.messages.ArtifactNameNotSpecified",
-    "ArtifactTypeNotSpecified": "ms-resource:loc.messages.ArtifactTypeNotSpecified"
+    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed"
   }
 }

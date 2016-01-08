@@ -1,35 +1,51 @@
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import path = require('path');
-import tl = require('vso-task-lib/vsotask');
+import tl = require('vsts-task-lib/task');
 
-var nt = tl.createToolRunner(tl.which('node', true));
+tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-var gulpFile = tl.getPathInput('gulpFile', true);
-var cwd = tl.getInput('cwd', false);
-if (!cwd) {
-	cwd = path.dirname(gulpFile);
-}
+var gulpFile = tl.getPathInput('gulpFile', true, true);
 
-var gulpjs = tl.getInput('gulpjs', true);
-
-tl.debug('check path : ' + gulpjs);
-tl.checkPath(gulpjs, 'gulpjs');
-
-nt.arg(gulpjs);
-
-// optional - no tasks will concat nothing
-nt.arg(tl.getDelimitedInput('targets', ' ', false));
-
-nt.arg('--gulpfile');
-
-nt.arg(gulpFile);
-
-nt.arg(tl.getDelimitedInput('arguments', ' ', false));
-
+var cwd = tl.getPathInput('cwd', true, false);
+tl.mkdirP(cwd);
 tl.cd(cwd);
 
-nt.exec(null)
+var gulp = tl.which('gulp', false);
+
+tl.debug('check path : ' + gulp);
+if(!tl.exist(gulp)) {
+	tl.debug('not found global installed gulp, try to find gulp locally.');
+	var gt = tl.createToolRunner(tl.which('node', true));
+
+	var gulpjs = tl.getInput('gulpjs', true);
+	gulpjs = path.resolve(cwd, gulpjs);
+
+	tl.debug('check path : ' + gulpjs);
+	if(!tl.exist(gulpjs)) {
+		tl.setResult(tl.TaskResult.Failed, tl.loc('GulpNotInstalled', gulpjs));
+	}
+
+	gt.arg(gulpjs);
+}
+else {
+	var gt = tl.createToolRunner(gulp);
+}
+
+// optional - no tasks will concat nothing
+gt.arg(tl.getInput('targets', false));
+
+gt.arg('--gulpfile');
+
+gt.arg(gulpFile);
+
+gt.arg(tl.getInput('arguments', false));
+
+gt.exec()
+.then(function(code) {
+	tl.setResult(tl.TaskResult.Succeeded, tl.loc('GulpReturnCode', code));
+})
 .fail(function(err) {
-    tl.setResult(tl.TaskResult.Failed, err.message);
+	tl.debug('taskRunner fail');
+	tl.setResult(tl.TaskResult.Failed, tl.loc('GulpFailed', err.message));
 })

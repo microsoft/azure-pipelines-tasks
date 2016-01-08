@@ -14,5 +14,10 @@
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Additional arguments passed to grunt.  --gruntfile is not needed since already added via gruntFile input above.",
   "loc.input.label.cwd": "Working Directory",
-  "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located."
+  "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+  "loc.input.label.gruntCli": "grunt-cli location",
+  "loc.input.help.gruntCli": "grunt-cli to run when agent can't find global installed grunt-cli  Defaults to the grunt-cli under node_modules folder of cwd.",
+  "loc.messages.GruntCliNotInstalled": "Grunt-cli is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
+  "loc.messages.GruntReturnCode": "Grunt exited with return code: %d",
+  "loc.messages.GruntFailed": "Grunt failed with error: %s"
 }

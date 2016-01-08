@@ -3,9 +3,8 @@ param()
 
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 
-$called=$false
 $testAssembly='testAssembly.dll'
-Register-Mock Get-LocalizedString { $called=$true } -- -Key "No results found to publish."
+Register-Mock Get-LocalizedString { } -- -Key "No results found to publish."
 Register-Mock Get-LocalizedString 
 Register-Mock Write-Warning
 
@@ -47,4 +46,3 @@ Assert-WasCalled IsVisualStudio2015Update1OrHigherInstalled -Times 0
 Assert-WasCalled Publish-TestResults -Times 0
 Assert-WasCalled Invoke-VsTest -Times 1
 Assert-WasCalled Get-LocalizedString -Times 1
-Assert-IsTrue $called

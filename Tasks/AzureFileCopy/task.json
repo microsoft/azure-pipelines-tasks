@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
   "name": "AzureFileCopy",
   "friendlyName": "Azure File Copy",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 28
   },
   "demands": [
     "azureps"

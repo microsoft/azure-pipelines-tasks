@@ -1,8 +1,8 @@
-﻿{
+{
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunVisualStudioTestsusingTestAgent",
-    "friendlyName": "Visual Studio Test using Test Agent",
-    "description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
+    "friendlyName": "Run Functional Tests",
+    "description": "Run Coded UI/Selenium/Functional tests on a set of machines (using Test Agent)",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624389)",
     "category": "Test",
     "visibility": [     
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 17
     },
     "demands": [
     ],
@@ -60,7 +60,7 @@
             "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll",
             "required": true,
-            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, '**\\*test*.dll;' for all dlls containing 'test' in their name.",
+            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, '**\\*test*.dll;' for all dlls containing 'test' in their name.",            
             "groupName": "executionOptions"
         },
         {
@@ -69,7 +69,7 @@
             "label": "Test Filter criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally specify the test case filter criteria. For example, 'Owner=james&Priority=1'.",
+            "helpMarkDown": "Optionally specify the test case filter criteria. For example, 'Owner=james&Priority=1'.",            
             "groupName": "executionOptions"
         },
         {
@@ -125,9 +125,8 @@
 	          "required":false,
               "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
 	          "groupName": "reportingOptions"
-	      },
-        
-        
+	      },   
+
         {
             "name": "testConfigurations",
             "type": "string",
@@ -137,7 +136,6 @@
             "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
             "groupName": "reportingOptions"
         },
-
         {
             "name": "autMachineGroup",
             "type": "pickList",
@@ -152,15 +150,15 @@
      { 
          "target": "testMachineGroup", 
          "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
      },
      { 
          "target": "autMachineGroup", 
          "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
          "selector": "jsonpath:$.value[*].name", 
          "authKey": "tfs:DevTestLabs" 
-     }
+     }     
     ], 
     "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
     "execution": {

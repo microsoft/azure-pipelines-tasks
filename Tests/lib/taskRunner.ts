@@ -1,13 +1,15 @@
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts"/>
+/// <reference path="../../definitions/shelljs.d.ts"/>
+/// <reference path="../../definitions/vsts-task-lib.d.ts"/>
 
 import Q = require('q');
 import events = require('events');
 import fs = require('fs');
 import path = require('path');
-var exec = require('child_process').exec;
-var shell = require('shelljs');
-var tl = require('vso-task-lib');
+import child_process = require('child_process');
+import shell = require('shelljs');
+import tcm = require('vsts-task-lib/taskcommand');
 
 function debug(message) {
     if (process.env['TASK_TEST_TRACE']) {
@@ -26,8 +28,10 @@ export class TaskRunner extends events.EventEmitter {
 		this.failed = false;
 		this.resultWasSet = false;
 		this.invokedToolCount = 0;
+		this.stdout = '';
 		this.stderr = '';
 		this._tempPath = process.env['TASK_TEST_TEMP'];
+		this._commands = [];
 	}
 	
 	public succeeded: boolean;
@@ -44,9 +48,17 @@ export class TaskRunner extends events.EventEmitter {
 	private _taskSrcPath: string;
 	private _taskPath: string;
 	private _tempPath: string;
+	private _commands: string[];  
 
 	public ran(cmdLine: string): boolean {
-		return true;
+		var executed: boolean = false;
+		this._commands.forEach((cmd: string)=>{
+			if(cmdLine.trim().localeCompare(cmd.trim()) === 0) {
+				executed = true;
+			}
+		})
+
+		return executed;
 	}
 
 	public setInput(name: string, val: string) {
@@ -74,23 +86,23 @@ export class TaskRunner extends events.EventEmitter {
 			throw (new Error('Did you build with "gulp"? Task does not exist: ' + this._taskSrcPath));
 		}
 		
-		// copy mocked vso-task-lib if it doesn't exist
+		// copy mocked vsts-task-lib if it doesn't exist
 		var modPath = path.join(this._tempPath, 'node_modules');
 		if (!shell.test('-d', modPath)) {
 			shell.mkdir('-p', modPath);
-			shell.cp('-R', path.join(__dirname, 'vso-task-lib'), path.join(modPath));			
+			shell.cp('-R', path.join(__dirname, 'node_modules/vsts-task-lib'), path.join(modPath));			
 		}
 
 		// copy the task over so we can execute from Temp 
-		// this forces it to use the mocked vso-task-lib and provides isolation
+		// this forces it to use the mocked vsts-task-lib and provides isolation
 		this._taskPath = path.join(this._tempPath, this._name);
 		if (!shell.test('-d', this._taskPath)) {
 			shell.mkdir('-p', this._taskPath);
 			shell.cp('-R', this._taskSrcPath, this._tempPath);
 		}
 
-		// delete it's linked copy of vso-task-lib so it uses the mocked task-lib above
-		var taskLibPath = path.join(this._taskPath, 'node_modules', 'vso-task-lib');
+		// delete it's linked copy of vsts-task-lib so it uses the mocked task-lib above
+		var taskLibPath = path.join(this._taskPath, 'node_modules', 'vsts-task-lib');
 		if (shell.test('-d', taskLibPath)) {
 			shell.rm('-rf', taskLibPath);
 		}
@@ -120,6 +132,7 @@ export class TaskRunner extends events.EventEmitter {
 	
 
 	private _processOutput(stdout: string, stderr: string) {
+		this.stdout = stdout || '';
 		this.stderr = stderr || '';
 
 		var stdoutLines: string[] = [];
@@ -130,19 +143,20 @@ export class TaskRunner extends events.EventEmitter {
 		stdoutLines.forEach((line: string) => {
 			if (line.indexOf('[command]') >= 0) {
 				++this.invokedToolCount;
+				this._commands.push(line.substr(line.indexOf('[command]') + '[command]'.length).trim());
 			}
 
 			if (line.indexOf('##vso[') >= 0) {
-				var cmd = tl.commandFromString(line);
+				var cmd = tcm.commandFromString(line);
 				//console.log(JSON.stringify(cmd, null, 2));
 
   				if (cmd.command === "task.complete") {
-  					if (cmd.properties.result === 'Failed') {
+  					if (cmd.properties['result'] === 'Failed') {
   						this.failed = true;
   						this.succeeded = false;
   						this.resultWasSet = true;
   					}
-  					else if (cmd.properties.result === 'Succeeded') {
+  					else if (cmd.properties['result'] === 'Succeeded') {
   						this.succeeded = true;
   						this.failed = false;
   						this.resultWasSet = true;
@@ -178,7 +192,7 @@ export class TaskRunner extends events.EventEmitter {
 				throw (new Error('target does not exist: ' + scriptPath));
 			}
 
-			var child = exec('node ' + scriptPath, 
+			var child = child_process.exec('node ' + scriptPath, 
 							{ 
 								cwd: this._taskPath, 
 								// keep current env clean
@@ -190,9 +204,10 @@ export class TaskRunner extends events.EventEmitter {
 						return;
 					}
 
-					this._processOutput(stdout, stderr);
+					this._processOutput(stdout.toString(), stderr.toString());
 
 					if (stdout) {
+						debug('stdout:');
 						debug(stdout);
 					}
 					

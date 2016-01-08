@@ -15,9 +15,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 12
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "CMake $(cmakeArgs)",
     "inputs": [
         { 
@@ -39,7 +39,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "cmake2.js",
+            "target": "cmaketask.js",
             "argumentFormat": ""
         },        
         "PowerShell": {
@@ -47,5 +47,9 @@
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "CMakeReturnCode": "CMake exited with return code: %d",
+        "CMakeFailed": "CMake failed with error: %s"
     }
 }

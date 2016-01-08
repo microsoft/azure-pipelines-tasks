@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
   "name": "CopyPublishBuildArtifacts",
   "friendlyName": "Copy and Publish Build Artifacts",
@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 16
   },
   "demands": [
   ],
@@ -73,7 +73,7 @@
       "platforms" : ["windows"]
     },
     "Node": {
-      "target": "CopyPublishBuildArtifacts.js",
+      "target": "copypublishbuildartifacts.js",
       "argumentFormat": ""            
     }
   }

@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "EAE5B2CC-AC5E-4CBA-B022-A06621F9C01F",
     "name": "SonarQubePreBuild",
     "friendlyName": "SonarQube for MSBuild - Begin Analysis",
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 30
+        "Patch": 31
     },
     "demands": [
         "msbuild",

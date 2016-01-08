@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
   "name": "AzureCloudPowerShellDeployment",
   "friendlyName": "Azure Cloud Service Deployment",
@@ -13,12 +13,19 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 19
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.90.0",
+  "groups": [
+    {
+      "name": "newServiceAdvancedOptions",
+      "displayName": "Advanced Options For Creating New Service",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -34,6 +41,9 @@
       "label": "Storage Account",
       "defaultValue": "",
       "required": true,
+	  "properties": {
+        "EditableOptions": "True"
+      },
       "helpMarkDown": "Storage Account must exist prior to deployment."
     },
     {
@@ -41,15 +51,21 @@
       "type": "pickList",
       "label": "Service Name",
       "defaultValue": "",
-      "required": true
+      "required": true,
+	  "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "ServiceLocation",
-      "type": "string",
+      "type": "pickList",
       "label": "Service Location",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
+      "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "CsPkg",
@@ -97,6 +113,27 @@
       "label": "Allow Upgrade",
       "defaultValue": "true",
       "required": true
+    },
+    {
+      "name": "NewServiceAdditionalArguments",
+      "type": "string",
+      "label": "Additional Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
+      "groupName": "newServiceAdvancedOptions"
+    },
+    {
+      "name": "NewServiceAffinityGroup",
+      "type": "pickList",
+      "label": "AffinityGroup",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "While creating new service, this affinity group will be considered instead of using service location.",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "EditableOptions": "True"
+      }
     }
   ],
   "sourceDefinitions": [
@@ -112,6 +149,16 @@
       "target": "ServiceName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureHostedServiceNames"
+    },
+    {
+      "target": "ServiceLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "NewServiceAffinityGroup",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureAffinityGroups"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(CsPkg)",

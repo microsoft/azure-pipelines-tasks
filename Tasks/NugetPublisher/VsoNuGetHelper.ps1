@@ -1,6 +1,9 @@
 Add-Type -AssemblyName System.Security
 
-$nuGetTempDirectory = Join-Path $Env:AGENT_BUILDDIRECTORY "NuGet\"
+# Get-TaskVariable comes from Microsoft.TeamFoundation.DistributedTask.Task.Internal and must be
+# available in the session. VsoNuGetHelper.ps1 is dotsourced into a ps1 which already imported that module.
+$artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
+$nuGetTempDirectory = Join-Path $artifactsDirectory "NuGet\"
 $tempNuGetConfigPath = Join-Path $nuGetTempDirectory "newNuGet.config"
 
 function SaveTempNuGetConfig

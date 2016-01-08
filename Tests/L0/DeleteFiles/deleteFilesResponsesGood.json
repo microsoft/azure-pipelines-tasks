@@ -36,5 +36,8 @@
         "/someDir/someOtherDir2": [
               "/someDir/someOtherDir2"
         ]
+    },
+    "checkPath" : {
+        "/someDir": true
     }
 }
