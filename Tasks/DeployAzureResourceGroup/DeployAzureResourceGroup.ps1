@@ -16,8 +16,8 @@ param(
     [string]$vmPassword,
     [string]$skipCACheck,
     [string]$outputVariable,
-    [string]$enableRemoteDeploymentForCreate,
-	[string]$enableRemoteDeploymentForSelect
+    [string]$enableDeploymentPrerequisitesForCreate,
+	[string]$enableDeploymentPrerequisitesForSelect
 )
 
 Write-Verbose -Verbose "Starting Azure Resource Group Deployment Task"
@@ -27,8 +27,8 @@ Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
 Write-Verbose -Verbose "Location = $location"
 Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
 Write-Verbose -Verbose "OutputVariable = $outputVariable"
-Write-Verbose -Verbose "enableRemoteDeploymentForCreate = $enableRemoteDeploymentForCreate"
-Write-Verbose -Verbose "enableRemoteDeploymentForSelect = $enableRemoteDeploymentForSelect"
+Write-Verbose -Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
+Write-Verbose -Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()
@@ -55,7 +55,7 @@ function Handle-SelectResourceGroupAction
         throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
     }
 
-    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableRemoteDeployment $enableRemoteDeploymentForSelect
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForSelect
 }
 
 function Handle-ResourceGroupLifeCycleOperations
@@ -73,9 +73,9 @@ function Handle-ResourceGroupLifeCycleOperations
 
         if(-not [string]::IsNullOrEmpty($outputVariable))
         {
-            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableRemoteDeployment $enableRemoteDeploymentForCreate
+            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForCreate
         }
-        elseif($enableRemoteDeploymentForCreate -eq "true")
+        elseif($enableDeploymentPrerequisitesForCreate -eq "true")
         {
             Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName
         }

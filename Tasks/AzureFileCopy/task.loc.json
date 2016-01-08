@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 29
+    "Patch": 34
   },
   "demands": [
     "azureps"
@@ -144,13 +144,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
-      "name": "enableRemoteDeployment",
+      "name": "enableCopyPrerequisites",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableRemoteDeployment",
+      "label": "ms-resource:loc.input.label.enableCopyPrerequisites",
       "defaultValue": "false",
       "visibleRule": "Destination = AzureVMs",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.enableRemoteDeployment"
+      "helpMarkDown": "ms-resource:loc.input.help.enableCopyPrerequisites"
     },
     {
       "name": "CopyFilesInParallel",

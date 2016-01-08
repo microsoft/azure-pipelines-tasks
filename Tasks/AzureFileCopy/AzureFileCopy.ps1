@@ -35,7 +35,7 @@ Write-Verbose "additionalArguments = $additionalArguments" -Verbose
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 Write-Verbose "skipCACheck = $skipCACheck" -Verbose
-Write-Verbose "enableRemoteDeployment = $enableRemoteDeployment" -Verbose
+Write-Verbose "enableCopyPrerequisites = $enableCopyPrerequisites" -Verbose
 
 # Constants #
 $defaultSasTokenTimeOutInHours = 2
@@ -118,7 +118,7 @@ try
 {
     # getting azure vms properties(name, fqdn, winrmhttps port)
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
-    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableRemoteDeployment $enableRemoteDeployment
+    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites
 
     $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
     $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
