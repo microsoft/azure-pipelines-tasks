@@ -447,7 +447,8 @@ function Invoke-OperationOnMachine
 function Instantiate-Environment
 {
     param([string]$resourceGroupName,
-          [string]$outputVariable)
+          [string]$outputVariable,
+          [string]$enableDeploymentPrerequisites)
 
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
@@ -456,7 +457,7 @@ function Instantiate-Environment
     if($azureVMsDetails.Count -eq 0)
     {
         $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
-        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources
+        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $enableDeploymentPrerequisites
     }
 
     if ($azureVMsDetails.Count -eq 0)
@@ -700,7 +701,8 @@ function Get-MachinesFqdns
 function Get-AzureRMVMsConnectionDetailsInResourceGroup
 {
     param([string]$resourceGroupName,
-          [object]$azureRMVMResources)
+          [object]$azureRMVMResources,
+          [string]$enableDeploymentPrerequisites)
 
     [hashtable]$fqdnMap = @{}
     [hashtable]$winRmHttpsPortMap = @{}
@@ -752,6 +754,12 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             $resourceProperties.winRMHttpsPort = $resourceWinRmHttpsPort
 
             $vmResourcesDetails.Add($resourceName, $resourceProperties)
+
+            if ($enableDeploymentPrerequisites -eq "true")
+            {
+                Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+        }
         }
         return $vmResourcesDetails
     }
@@ -766,7 +774,10 @@ function Validate-CustomScriptExecutionStatus
     Write-Verbose -Verbose "Validating the winrm configuration custom script extension status"
 
     $isScriptExecutionPassed = $true
-    $status = Get-AzureMachineStatus -resourceGroupName $resourceGroupName -Name $vmName -ErrorAction Stop -Verbose
+    try
+    {
+        $status = Get-AzureMachineStatus -resourceGroupName $resourceGroupName -Name $vmName
+
     $customScriptExtension = $status.Extensions | Where-Object { $_.ExtensionType -eq "Microsoft.Compute.CustomScriptExtension" -and $_.Name -eq $extensionName }
 
     if($customScriptExtension)
@@ -799,11 +810,17 @@ function Validate-CustomScriptExecutionStatus
         $isScriptExecutionPassed = $false
         $errMessage = "No custom script extension '$extensionName' exists"     
     }
+    }
+    catch
+    {
+        $isScriptExecutionPassed = $false
+        $errMessage = $_.Exception.Message  
+    }
 
     if(-not $isScriptExecutionPassed)
     {
-        Write-TaskSpecificTelemetry "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
-        throw (Get-LocalizedString -Key "Failed to enable remote deployment. Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}" -ArgumentList $extensionName, $vmName, $errMessage)
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        throw (Get-LocalizedString -Key "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}" -ArgumentList $extensionName, $vmName, $errMessage)
     }
 
     Write-Verbose -Verbose "Validated the script execution successfully"
@@ -820,21 +837,29 @@ function Is-WinRMCustomScriptExtensionExists
 	
     try
     {
-        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -ErrorAction SilentlyContinue					
-        if($customScriptExtension.ProvisioningState -ne "Succeeded")
-        {	
-            $removeExtension = $true		    
+        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+
+        if($customScriptExtension)
+        {
+            if($customScriptExtension.ProvisioningState -ne "Succeeded")
+            {	
+                $removeExtension = $true		    
+            }
+            else
+            {
+                try
+                {
+                        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+                }
+                catch
+                {
+                        $isExtensionExists = $false
+                }
+            }
         }
         else
         {
-            try
-            {
-                Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose
-            }
-            catch
-            {
-                $removeExtension = $true
-            }				
+            $isExtensionExists = $false
         }
     }
     catch
@@ -844,7 +869,7 @@ function Is-WinRMCustomScriptExtensionExists
     
     if($removeExtension)
     {
-        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -Verbose
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
         $isExtensionExists = $false
     }
 	
@@ -854,11 +879,10 @@ function Is-WinRMCustomScriptExtensionExists
 function Add-AzureVMCustomScriptExtension
 {
     param([string]$resourceGroupName,
-          [object]$vmResource)
+          [string]$vmName,          
+          [string]$dnsName,
+          [string]$location)
 	
-    $vmName = $vmResource.Name
-    $location=$vmResource.Location	
-    $dnsName=[string]::Concat("*.",$location,".cloudapp.azure.com")
     $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
     $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
     $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"		
@@ -866,9 +890,12 @@ function Add-AzureVMCustomScriptExtension
     $extensionName="WinRMCustomScriptExtension"
 
     Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
+    Write-Verbose -Verbose "VM Location : $location"
     Write-Verbose -Verbose "VM DNS : $dnsName"
 	
-    $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose	
+    try
+    {
+        $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
     Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
 	
     if($isExtensionExists)
@@ -877,15 +904,23 @@ function Add-AzureVMCustomScriptExtension
         return
     }
 	
-    $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location -Verbose	
+        $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
 
     if($result.Status -ne "Succeeded")
     {
         Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
-        throw (Get-LocalizedString -Key "Failed to enable remote deployment. Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
+
+            $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+            throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
     }
 	
-    Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose
+        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+    }
+    catch
+    {
+         Write-TaskSpecificTelemetry "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"    
+        throw (Get-LocalizedString -Key "Failed to enable deployment prerequisites. {0}" -ArgumentList $_.exception.message)
+    }
 	
     Write-Verbose -Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
 }
@@ -894,6 +929,7 @@ function Enable-WinRMHttpsListener
 {
     param([string]$resourceGroupName)
    
+    # Get azurerm vms
     $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName 		    
     if ($azureVMResources.Count -eq 0)
     {
@@ -901,8 +937,6 @@ function Enable-WinRMHttpsListener
         return		
     }
 	
-    foreach($vmResource in $azureVMResources)
-    {
-        Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmResource $vmResource -Verbose
-    }
+    # Below call enables the winrm custom script extension
+    $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $true
 }
