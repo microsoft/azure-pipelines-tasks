@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 29
+    "Patch": 30
   },
   "demands": [
     "azureps"
@@ -139,6 +139,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "Additional AzCopy.exe arguments that will be applied when uploading to blob or uploading to VM like, /NC:10."
+    },
+    {
+      "name": "enableCopyPrerequisites",
+      "type": "boolean",
+      "label": "Enable Copy Prerequisites",
+      "defaultValue": "false",
+      "visibleRule": "Destination = AzureVMs",
+      "required": false,
+      "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
     },
     {
       "name": "CopyFilesInParallel",
