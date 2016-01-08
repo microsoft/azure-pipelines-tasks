@@ -1129,19 +1129,3 @@ function Add-AzureVMCustomScriptExtension
 
     Write-Verbose -Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
 }
-
-function Enable-WinRMHttpsListener
-{
-    param([string]$resourceGroupName)
-   
-    # Get azurerm vms
-    $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName 		    
-    if ($azureVMResources.Count -eq 0)
-    {
-        Write-Verbose "No VMs found in resource group: $resourceGroupName"
-        return		
-    }
-	
-    # Below call enables the winrm custom script extension
-    $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $true
-}

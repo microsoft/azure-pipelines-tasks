@@ -15,7 +15,7 @@ param (
     [string]$cleanTargetBeforeCopy,
     [string]$copyFilesInParallel,
     [string]$skipCACheck,
-    [string]$enableRemoteDeployment
+    [string]$enableCopyPrerequisites
 )
 
 Write-Verbose "Starting Azure File Copy Task" -Verbose
