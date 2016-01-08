@@ -163,7 +163,7 @@ function Get-MsDeployCmdArgs
     $webDeployPackage = $webDeployPackage.Trim('"')
     $webDeployParamFile = $webDeployParamFile.Trim('"')
     $overRideParams = $overRideParams.Trim('"').Replace('''', '"')
-    $setParams = $overRideParams.Trim('"').Split([System.Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
+    $setParams = $overRideParams.Split([System.Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
     
     if(-not ( Test-Path -Path $webDeployPackage))
     {
@@ -184,7 +184,8 @@ function Get-MsDeployCmdArgs
     
     foreach($setParam in $setParams)
     {
-        if(-not [string]::IsNullOrEmpty($setParam.Trim(' ')))
+        $setParam = $setParam.Trim()
+        if(-not [string]::IsNullOrEmpty($setParam))
         {
             $msDeployCmdArgs = [string]::Format('{0} -setParam:{1}', $msDeployCmdArgs, $setParam)
         }
