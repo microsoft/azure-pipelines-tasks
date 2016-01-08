@@ -821,20 +821,27 @@ function Is-WinRMCustomScriptExtensionExists
     try
     {
         $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -ErrorAction SilentlyContinue					
-        if($customScriptExtension.ProvisioningState -ne "Succeeded")
-        {	
-            $removeExtension = $true		    
+        if($customScriptExtension)
+        {
+            if($customScriptExtension.ProvisioningState -ne "Succeeded")
+            {	
+                $removeExtension = $true		    
+            }
+            else
+            {
+                try
+                {
+                    Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose
+                }
+                catch
+                {
+                    $removeExtension = $true
+                }				
+            }
         }
         else
         {
-            try
-            {
-                Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -Verbose
-            }
-            catch
-            {
-                $removeExtension = $true
-            }				
+            $isExtensionExists = $false
         }
     }
     catch
