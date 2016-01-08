@@ -5,70 +5,69 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   version="1.1"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 1024 1024"
    id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="delete-files.svg"
+   width="1024"
    height="1024"
-   width="1024">
-  <title
-     id="title4145">copy-files</title>
-  <defs
-     id="defs10">
-    <pattern
-       id="EMFhbasepattern"
-       patternUnits="userSpaceOnUse"
-       width="6"
-       height="6"
-       x="0"
-       y="0" />
-  </defs>
+   inkscape:export-filename="C:\Users\JimLamb\Documents\edit-delete.png"
+   inkscape:export-xdpi="2.8099999"
+   inkscape:export-ydpi="2.8099999">
   <metadata
-     id="metadata4">
+     id="metadata10">
     <rdf:RDF>
-      <cc:Work>
-        <dc:subject>
-                    Data
-                </dc:subject>
-        <dc:identifier>
-                    sql-database-generic
-                </dc:identifier>
-        <dc:title>copy-files</dc:title>
-        <dc:format>
-                    image/svg+xml
-                </dc:format>
-        <dc:publisher>
-                    Amido Limited
-                </dc:publisher>
-        <dc:creator>
-                    Richard Slater
-                </dc:creator>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1438"
+     inkscape:window-height="922"
+     id="namedview6"
+     showgrid="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:zoom="0.52678571"
+     inkscape:cx="907.38983"
+     inkscape:cy="527.72881"
+     inkscape:window-x="101"
+     inkscape:window-y="81"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4138"
+       spacingx="32"
+       spacingy="32"
+       empspacing="2" />
+  </sodipodi:namedview>
   <path
-     id="rect4758"
-     d="m 384,320 0,544 448,0 0,-355.2168 L 643.2168,320 384,320 Z"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke:none"
+     d="m 352,0 c -35.456,0 -64,28.544 -64,64 l 0,64 -128,0 c -35.456,0 -64,28.544 -64,64 l 0,64 c 0,35.456 28.544,64 64,64 l 0,640 c 0,35.456 28.544,64 64,64 l 576,0 c 35.456,0 64,-28.544 64,-64 l 0,-640 c 35.456,0 64,-28.544 64,-64 l 0,-64 c 0,-35.456 -28.544,-64 -64,-64 l -128,0 0,-64 C 736,28.544 707.456,0 672,0 L 352,0 Z"
+     id="rect4147"
+     inkscape:connector-curvature="0" />
   <path
-     id="rect4756"
-     d="m 192,160 0,544 384,0 0,-384.66602 L 416.66602,160 192,160 Z"
-     style="fill:#ffffff;fill-opacity:1" />
-  <path
-     d="M 864,493.64299 864,896 l -518.6969,0 0,-146.48183 -185.3031,0 L 160,128 l 259.34845,0 148.0906,146.10737 74.0453,0 L 864,493.64299 Z M 456.18124,274.10737 382.1359,201.05366 l -148.47032,0 0,475.41085 111.63752,0 0,-402.35714 110.87814,0 z m 333.77346,292.58928 -222.51565,0 0,-219.16099 -148.0906,0 0,475.03617 370.60625,0 0,-255.87518 z m -37.21255,-73.05366 -111.2578,-109.76781 0,109.76781 111.2578,0 z"
-     style="font-style:normal;font-variant:normal;font-weight:400;font-size:180px;line-height:125%;font-family:'Segoe UI Symbol';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-     id="path4726" />
-  <text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:400;font-size:13.8125px;line-height:125%;font-family:Calibri;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-     x="38.329788"
-     y="-1.9297017"
-     id="text4708"><tspan
-       x="-35.113876"
-       y="-66.530151"
-       id="tspan4710"><tspan
-         dx="0"
-         dy="0"
-         style="font-style:normal;font-variant:normal;font-weight:400;font-size:13.8125px;font-family:Calibri;fill:#000000"
-         id="tspan4712" /></tspan></text>
+     d="m 416,768 -64,0 0,-384 64,0 0,384 z m 128,-384 -64,0 0,384 64,0 0,-384 z m 128,0 -64,0 0,384 64,0 0,-384 z m 192,-192 0,64 -64,0 0,640 c 0,35.344 -28.652,64 -64,64 l -448,0 c -35.348,0 -64,-28.656 -64,-64 l 0,-640 -64,0 0,-64 192,0 0,-64 c 0,-35.348 28.652,-64 64,-64 l 192,0 c 35.348,0 64,28.652 64,64 l 0,64 192,0 z m -448,0 192,0 0,-64 -192,0 0,64 z m 320,64 -448,0 0,640 448,0 0,-640 z"
+     id="path4"
+     style="fill:#f34235;fill-opacity:1"
+     inkscape:connector-curvature="0" />
 </svg>
