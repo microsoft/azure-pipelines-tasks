@@ -845,7 +845,8 @@ function Copy-FilesSequentiallyToAzureVMs
 
         if ($status -ne "Passed")
         {
-            $copyErrorMessage =  $copyResponse.Error.Message
+            $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' task parameter."
+            $copyErrorMessage =  $copyResponse.Error.Message + $winrmHelpMsg
             Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
 
             Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
@@ -909,7 +910,8 @@ function Copy-FilesParallelyToAzureVMs
                     $errorMessage = ""
                     if($output.Error -ne $null)
                     {
-                        $errorMessage = $output.Error.Message
+                        $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' task parameter."
+                        $errorMessage = $output.Error.Message + $winrmHelpMsg            
                     }
 
                     Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
