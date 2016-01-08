@@ -25,7 +25,7 @@
   "loc.input.label.WebDeployParamFile": "Web Deploy Parameter File",
   "loc.input.help.WebDeployParamFile": "Location of the Parameter file on the target machines or on a UNC path. Parameter file is used to override Web application configuration settings like, IIS Web application name or database connection string.",
   "loc.input.label.OverRideParams": "Override Parameters",
-  "loc.input.help.OverRideParams": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. For example,  name=\"IIS Web Application Name\", value=\"Fabrikam\".",
+  "loc.input.help.OverRideParams": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. To override more than one parameter use line separator, e.g., <br/> \"IIS Web Application Name\"=\"Fabrikam\" <br/> \"ConnectionString\"=\"Server=localhost;Database=Fabrikam;\"",
   "loc.input.label.CreateWebSite": "Create or Update Website",
   "loc.input.help.CreateWebSite": "Select the option to create a website or to update an existing website.",
   "loc.input.label.WebSiteName": "Website Name",

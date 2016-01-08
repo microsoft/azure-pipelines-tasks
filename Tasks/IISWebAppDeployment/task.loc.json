@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -109,7 +109,7 @@
     },
     {
       "name": "OverRideParams",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.OverRideParams",
       "required": false,
       "groupName": "deployment",
