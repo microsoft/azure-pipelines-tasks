@@ -15,12 +15,13 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 4
+    "Patch": 7
   },
   "demands": [
-    "grunt"
+    "grunt",
+    "node"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "advanced",
@@ -63,6 +64,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "gruntCli",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gruntCli",
+      "defaultValue": "node_modules/grunt-cli/bin/grunt",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.gruntCli",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -75,5 +85,10 @@
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
+  },
+  "messages": {
+    "GruntCliNotInstalled": "ms-resource:loc.messages.GruntCliNotInstalled",
+    "GruntReturnCode": "ms-resource:loc.messages.GruntReturnCode",
+    "GruntFailed": "ms-resource:loc.messages.GruntFailed"
   }
 }

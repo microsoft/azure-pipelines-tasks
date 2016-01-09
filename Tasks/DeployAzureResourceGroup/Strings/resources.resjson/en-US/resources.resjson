@@ -16,11 +16,15 @@
   "loc.input.label.location": "Location",
   "loc.input.help.location": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
   "loc.input.label.csmFile": "Template",
-  "loc.input.help.csmFile": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates.",
+  "loc.input.help.csmFile": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates. To get started immediately use template http://aka.ms/sampletemplate.",
   "loc.input.label.csmParametersFile": "Template Parameters",
   "loc.input.help.csmParametersFile": "Specify the path for the parameters file for the Azure Resource Manager Template.",
   "loc.input.label.overrideParameters": "Override Template Parameters",
   "loc.input.help.overrideParameters": "Specify the template parameters to override like, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre).",
+  "loc.input.label.enableRemoteDeploymentForCreate": "Enable Remote Deployment",
+  "loc.input.help.enableRemoteDeploymentForCreate": "Configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986).",
+  "loc.input.label.enableRemoteDeploymentForSelect": "Enable Remote Deployment",
+  "loc.input.help.enableRemoteDeploymentForSelect": "Configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs.",
   "loc.input.label.outputVariable": "Resource Group",
   "loc.input.help.outputVariable": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
 }

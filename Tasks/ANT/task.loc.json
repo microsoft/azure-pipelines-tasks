@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 27
   },
   "demands": [
     "ant"
@@ -201,7 +201,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "ant2.js",
+      "target": "anttask.js",
       "argumentFormat": ""
     },
     "PowerShell": {

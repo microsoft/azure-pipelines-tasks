@@ -5,10 +5,10 @@
 
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vso-task-lib.d.ts" />
+/// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import tl = require('vso-task-lib/vsotask');
-import tr = require('vso-task-lib/toolrunner');
+import tl = require('vsts-task-lib/task');
+import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
 import fs = require('fs');
 import Q = require ('q');

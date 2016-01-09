@@ -7,13 +7,12 @@
   "loc.description": "Publish Build artifacts to the server or a file share",
   "loc.instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "loc.input.label.PathtoPublish": "Path to Publish",
-  "loc.input.help.PathtoPublish": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root.  Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.PathtoPublish": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root, wildcards is not supported. Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
   "loc.input.label.ArtifactName": "Artifact Name",
   "loc.input.help.ArtifactName": "The name of the artifact to create.",
   "loc.input.label.ArtifactType": "Artifact Type",
   "loc.input.help.ArtifactType": "The type of the artifact to create.",
   "loc.input.label.TargetPath": "Path",
   "loc.input.help.TargetPath": "The file share to which to copy the files",
-  "loc.messages.ArtifactNameNotSpecified": "Artifact name is not specified.",
-  "loc.messages.ArtifactTypeNotSpecified": "Artifact type is not specified."
+  "loc.messages.PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s"
 }

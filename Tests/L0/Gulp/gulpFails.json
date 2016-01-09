@@ -1,34 +1,18 @@
 {
     "which": {
-        "gulp": "/usr/local/bin/gulp",
-        "node": "/usr/local/bin/node"
+        "gulp": "/usr/local/bin/gulp"
     },
     "exec": {
-        "/usr/local/bin/node node_modules/gulp/gulp.js --gulpfile gulpfile.js": {
+        "/usr/local/bin/gulp --gulpfile gulpfile.js": {
             "code": 1,
             "stdout": "gulp output here",
             "stderr": "gulp failed with this output"
         }
     },
     "checkPath": {
-        "node_modules/gulp/gulp.js": true
-    },        
-    "find": {
-        "/some/path": [
-            "/some/path/one",
-            "/some/path/two"
-        ]
+        "gulpfile.js": true
     },
-    "match": {
-        "some*pattern": [
-            "/some/path/one",
-            "/some/path/two"        
-        ]
-    },
-    "filter": {
-        "some*pattern": [
-            "/some/path/one",
-            "/some/path/two"        
-        ]
-    } 
+    "exist": {
+        "/usr/local/bin/gulp": true  
+    }
 }

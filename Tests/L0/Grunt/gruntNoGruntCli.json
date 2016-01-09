@@ -1,0 +1,8 @@
+{
+    "which": {
+        "node": "/usr/local/bin/node"
+    },
+    "checkPath": {
+        "gruntfile.js": true
+    }
+}

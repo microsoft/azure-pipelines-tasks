@@ -15,7 +15,9 @@ param(
     [string]$vmUserName,
     [string]$vmPassword,
     [string]$skipCACheck,
-    [string]$outputVariable
+    [string]$outputVariable,
+    [string]$enableRemoteDeploymentForCreate,
+	[string]$enableRemoteDeploymentForSelect
 )
 
 Write-Verbose -Verbose "Starting Azure Resource Group Deployment Task"
@@ -25,6 +27,8 @@ Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
 Write-Verbose -Verbose "Location = $location"
 Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
 Write-Verbose -Verbose "OutputVariable = $outputVariable"
+Write-Verbose -Verbose "enableRemoteDeploymentForCreate = $enableRemoteDeploymentForCreate"
+Write-Verbose -Verbose "enableRemoteDeploymentForSelect = $enableRemoteDeploymentForSelect"
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()
@@ -51,6 +55,11 @@ function Handle-SelectResourceGroupAction
         throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
     }
 
+    if($enableRemoteDeploymentForSelect -eq "true")
+    {
+	    Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName
+    }
+
     Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
 }
 
@@ -65,7 +74,13 @@ function Handle-ResourceGroupLifeCycleOperations
 
     if( $action -eq "Create Or Update Resource Group" )
     {
-        Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
+        $azureResourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
+
+        if($enableRemoteDeploymentForCreate -eq "true")
+        {
+	        Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName
+        }
+
         if(-not [string]::IsNullOrEmpty($outputVariable))
         {
             Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
@@ -97,8 +112,8 @@ try
             break
         }
     }
-
-    Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
+	
+	Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
 }
 catch
 {

@@ -1,0 +1,22 @@
+{
+    "which": {
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/node /fake/wd/node_modules/grunt-cli/bin/grunt --gruntfile gruntfile.js": {
+            "code": 0,
+            "stdout": "grunt output here"
+        },
+        "/usr/local/bin/node c:\\fake\\wd\\node_modules\\grunt-cli\\bin\\grunt --gruntfile gruntfile.js": {
+            "code": 0,
+            "stdout": "grunt output here"
+        }
+    },
+    "checkPath": {
+        "gruntfile.js": true
+    },        
+    "exist": {
+        "/fake/wd/node_modules/grunt-cli/bin/grunt": true,
+        "c:\\fake\\wd\\node_modules\\grunt-cli\\bin\\grunt": true
+    }
+}

@@ -1,8 +1,8 @@
-﻿{
+{
     "id": "52A38A6A-1517-41D7-96CC-73EE0C60D2B6",
     "name": "DeployVisualStudioTestAgent",
     "friendlyName": "Visual Studio Test Agent Deployment",
-    "description": "Deploy and configure Test Agent to run tests on a lab machine group",
+    "description": "Deploy and configure Test Agent to run tests on a set of machines",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=625976)",
     "category": "Test",
     "visibility": [     
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
 

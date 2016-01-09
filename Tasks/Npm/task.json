@@ -9,12 +9,12 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 3
     },
     "demands" : [
         "npm"
     ],
-    "minimumAgentVersion": "1.86.0",
+    "minimumAgentVersion": "1.91.0",
     "groups": [
         {
             "name":"advanced",
@@ -53,7 +53,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "npm.js",
+            "target": "npmtask.js",
             "argumentFormat": ""
         },
         "PowerShell": {
@@ -61,5 +61,9 @@
             "argumentFormat": "",
             "workingDirectory": "$(cwd)"
         }
+    },
+    "messages": {
+        "NpmReturnCode": "Npm exited with return code: %d",
+        "NpmFailed": "Npm failed with error: %s"
     }
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "5BFB729A-A7C8-4A78-A7C3-8D717BB7C13C",
   "name": "CopyFiles",
   "friendlyName": "Copy Files",
@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 9
   },
   "demands": [
   ],
@@ -71,13 +71,13 @@
   "instanceNameFormat": "Copy Files to: $(TargetFolder)",
   "execution": {
     "Node": {
-      "target": "copyFiles.js",
+      "target": "copyfiles.js",
       "argumentFormat": ""
     }
   },
   "messages": {
     "FoundNFiles": "found %d files",
-    "CleaningTargetFolder": "Cleaning target folder: ",
+    "CleaningTargetFolder": "Cleaning target folder: %s",
     "FileAlreadyExistAt": "File %s already exist at %s",
     "CopyingTo": "Copying %s to %s"
   }

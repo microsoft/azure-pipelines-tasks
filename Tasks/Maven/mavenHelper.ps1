@@ -83,7 +83,8 @@ function RunSonarQubeAnalysis
 		  [string]$sqDbUsername,
 		  [string]$sqDbPassword, 
 		  [string]$userOptions,
-		  [string]$mavenPOMFile)
+		  [string]$mavenPOMFile,
+		  [string]$execFileJacoco)
 
 	# SonarQube Analysis - there is a known issue with the SonarQube Maven plugin that the sonar:sonar goal should be run independently
 	$sqAnalysisEnabledBool = Convert-String $sqAnalysisEnabled Boolean
@@ -104,10 +105,15 @@ function RunSonarQubeAnalysis
 			# The platform may cache the db details values so we force them to be empty
 			$sqArguments = CreateSonarQubeArgs $sqServiceEndpoint.Url $sqServiceEndpoint.Authorization.Parameters.UserName $sqServiceEndpoint.Authorization.Parameters.Password "" "" ""
 		}
-
+		
 		$sqArguments = $userOptions + " " + $sqArguments
 		Write-Verbose "Running Maven with goal sonar:sonar and options: $sqArguments"
-
+		
+		if($execFileJacoco)
+		{
+			$sqArguments = $sqArguments + " -Dsonar.jacoco.reportPath=" + (EscapeArg($execFileJacoco)) 
+		}
+		
 		Invoke-Maven -MavenPomFile $mavenPOMFile -Options $sqArguments -Goals "sonar:sonar"
 	 }
 }
@@ -151,37 +157,38 @@ function CreateSonarQubeArgs
     # To avoid this, force it to ignore the Append return value using [void]
 
     if (![String]::IsNullOrWhiteSpace($serverUrl))
-    {    
-        [void]$sb.Append("-Dsonar.host.url=""$serverUrl""")
+    {            
+		[void]$sb.Append("-Dsonar.host.url=" + (EscapeArg($serverUrl))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($serverUsername))
     {
-        [void]$sb.Append(" -Dsonar.login=""$serverUsername""")
+        [void]$sb.Append(" -Dsonar.login=" + (EscapeArg($serverUsername))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($serverPassword))
     {
-        [void]$sb.Append(" -Dsonar.password=""$serverPassword""")
+        [void]$sb.Append(" -Dsonar.password=" + (EscapeArg($serverPassword))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($dbUrl))
     {
-        [void]$sb.Append(" -Dsonar.jdbc.url=""$dbUrl""")
+        [void]$sb.Append(" -Dsonar.jdbc.url=" + (EscapeArg($dbUrl))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($dbUsername))
     {
-        [void]$sb.Append(" -Dsonar.jdbc.username=""$dbUsername""")
+        [void]$sb.Append(" -Dsonar.jdbc.username=" + (EscapeArg($dbUsername))) 
     }
 
     if (![String]::IsNullOrWhiteSpace($dbPassword))
     {
-        [void]$sb.Append(" -Dsonar.jdbc.password=""$dbPassword""")
+        [void]$sb.Append(" -Dsonar.jdbc.password=" + (EscapeArg($dbPassword))) 
     }
 
     return $sb.ToString();
 }
+
 
 
 function PublishCodeCoverageJacoco
@@ -294,3 +301,15 @@ function EnableCodeCoverage
      }
 	 
 }
+
+# When passing arguments to a process, the quotes need to be doubled and   
+# the entire string needs to be placed inside quotes to avoid issues with spaces  
+function EscapeArg  
+{  
+    param([string]$argVal)  
+  
+    $argVal = $argVal.Replace('"', '""');  
+    $argVal = '"' + $argVal + '"';  
+  
+    return $argVal;  
+}  
