@@ -3,7 +3,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 
-var sourceDir = tl.getVariable('build.sourceDirectory');
+var sourceDir = tl.getVariable('build.sourcesDirectory');
 
 var tool = tl.which('xcrun', true);
 var xcv = tl.createToolRunner(tool);
