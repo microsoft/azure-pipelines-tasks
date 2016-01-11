@@ -4,7 +4,7 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent Deployment",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=625976)",
-  "loc.description": "Deploy and configure Test Agent to run tests on a lab machine group",
+  "loc.description": "Deploy and configure Test Agent to run tests on a set of machines",
   "loc.instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Test Machine Group",
   "loc.group.displayName.agentConfiguration": "Agent Configuration",

@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "049918CB-1488-48EB-85E8-C318ECCAAA74",
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5 
+        "Patch": 8 
     },
     "demands": [
     ],
@@ -143,7 +143,7 @@
     "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
     "execution": {
        "Node": {
-            "target": "XamarinTestCloud.js",
+            "target": "xamarintestcloud.js",
             "argumentFormat": ""
         },
         "PowerShell": {

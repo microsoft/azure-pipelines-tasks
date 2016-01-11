@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 12
     },
     "demands" : [
         "sh"
@@ -64,8 +64,12 @@
     ],
     "execution": {
         "Node": {
-            "target": "shellscript2.js",
+            "target": "shellscript.js",
             "argumentFormat": ""
         }        
-    }    
+    },
+    "messages": {
+        "BashReturnCode": "Bash exited with return code: %d",
+        "BashFailed": "Bash failed with error: %s"
+    }
 }

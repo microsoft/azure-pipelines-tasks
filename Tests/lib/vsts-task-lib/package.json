@@ -1,0 +1,44 @@
+{
+  "name": "vsts-task-lib",
+  "version": "0.4.5",
+  "description": "VSO Agent Task Library",
+  "main": "./task.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/vsts-task-lib"
+  },
+  "keywords": [
+    "vsts",
+    "xplat",
+    "agent",
+    "build"
+  ],
+  "author": {
+    "name": "Microsoft"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-task-lib/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-task-lib",
+  "dependencies": {
+    "q": "^1.1.2",
+    "shelljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-mocha": "2.0.0",
+    "gulp-tsc": "^0.10.1",
+    "minimatch": "^2.0.8",
+    "mocha": "^2.2.5"
+  },
+  "readme": "# VSO DevOps Task SDK\n\nLibraries for writing VSO and TFS build and deployment tasks\n\n## Node Task Lib\nLibrary for writing tasks with the node handler\n\n## Contributing\n\n### Node\n\nOnce:\n```bash\n$ cd node\n$ npm install\n$ sudo npm install gulp -g\n```\n\nBuild and test:\n```bash\n$ cd node\n$ gulp\n```\n\n### Powershell\n\nComing soon\n",
+  "readmeFilename": "README.md",
+  "_id": "vsts-task-lib@0.4.5",
+  "_shasum": "ae49a8e425a52c4e63611cc17b7a077501d386ac",
+  "_from": "vsts-task-lib@>=0.4.0 <0.5.0"
+}

@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 23
   },
   "demands": [
     "java"
@@ -197,7 +197,7 @@
       ]
     },
     "Node": {
-      "target": "gradle2.js",
+      "target": "gradletask.js",
       "argumentFormat": ""
     }
   }

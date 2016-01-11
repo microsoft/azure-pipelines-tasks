@@ -1,0 +1,39 @@
+{
+    "which": {
+        "xcodebuild": "/usr/bin/xcodebuild",
+        "xctool": "/usr/local/bin/xctool"
+    },
+    "exec": {
+        "/usr/local/bin/tool -arg1 \"some val\" -flag": {
+            "code": 0,
+            "stdout": "tool stdout",
+            "stderr": "tool stderr"
+        }
+    },
+    "checkPath": {
+        "some/path/foo": true,
+        "some/path/bar": false
+    },    
+    "find": {
+        "/some/path": [
+            "/some/path/one",
+            "/some/path/two"
+        ]
+    },
+    "match": {
+        "some*pattern": [
+            "/some/path/one",
+            "/some/path/two"        
+        ]
+    },
+    "filter": {
+        "some*pattern": [
+            "/some/path/one",
+            "/some/path/two"        
+        ]
+    },
+    "getVariable": {
+        "someVar1": "value1",
+        "someVar2": "value2"
+    }
+}

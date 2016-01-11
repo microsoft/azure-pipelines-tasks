@@ -1,0 +1,22 @@
+{
+    "which": {
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js": {
+            "code": 0,
+            "stdout": "gulp output here"
+        },
+        "/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js": {
+            "code": 0,
+            "stdout": "gulp output here"
+        }
+    },
+    "checkPath": {
+        "gulpfile.js": true
+    }, 
+    "exist": {
+        "/fake/wd/node_modules/gulp/gulp.js": true,
+        "c:\\fake\\wd\\node_modules\\gulp\\gulp.js": true
+    }
+}

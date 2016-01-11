@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 14
+    "Patch": 17
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -105,7 +105,7 @@
       ]
     },
     "Node": {
-      "target": "PublishTestResults.js",
+      "target": "publishtestresults.js",
       "argumentFormat": ""
     }
   }

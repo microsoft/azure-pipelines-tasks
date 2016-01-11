@@ -1,0 +1,58 @@
+{
+    "rmRF": {
+        "/someDir/someOtherDir": {
+            "success": true,
+            "message": "success"
+        },
+        "/someDir/someOtherDir2": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "find": {
+        "/srcDir": [
+            "/srcDir/someOtherDir",
+            "/srcDir/someOtherDir/file1.file",
+            "/srcDir/someOtherDir/file2.file",
+            "/srcDir/someOtherDir2",
+            "/srcDir/someOtherDir2/file1.file",
+            "/srcDir/someOtherDir2/file2.file",
+            "/srcDir/someOtherDir2/file3.file",
+            "/srcDir/someOtherDir3"
+        ],
+        "/destDir": [
+            "/destDir/someOtherDir",
+            "/destDir/someOtherDir2"
+        ]
+    },
+    "stats": {
+        "/srcDir/someOtherDir": {
+            "isDirectory": true
+        },
+        "/srcDir/someOtherDir2": {
+            "isDirectory": true
+        },
+        "/srcDir/someOtherDir3" :{
+            "isDirectory": true
+        }
+    },
+    "match": {
+        "\\srcDir\\**": [
+            "/srcDir/someOtherDir/file1.file",
+            "/srcDir/someOtherDir/file2.file",
+            "/srcDir/someOtherDir2/file1.file",
+            "/srcDir/someOtherDir2/file2.file",
+            "/srcDir/someOtherDir2/file3.file"
+        ],
+        "/srcDir/**": [
+            "/srcDir/someOtherDir/file1.file",
+            "/srcDir/someOtherDir/file2.file",
+            "/srcDir/someOtherDir2/file1.file",
+            "/srcDir/someOtherDir2/file2.file",
+            "/srcDir/someOtherDir2/file3.file"
+        ]
+    },
+    "checkPath" : {
+        "/srcDir": true
+    }
+}

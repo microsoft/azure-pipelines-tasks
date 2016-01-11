@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "DCBEA2C9-E7F4-4929-82B2-DA7FC9177109",
   "name": "Docker",
   "friendlyName": "Docker",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "minimumAgentVersion": "1.82.0",
   "demands": [

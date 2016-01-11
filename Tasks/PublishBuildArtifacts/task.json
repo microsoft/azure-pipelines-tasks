@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "2FF763A7-CE83-4E1F-BC89-0AE63477CEBE",
   "name": "PublishBuildArtifacts",
   "friendlyName": "Publish Build Artifacts",
@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 24
   },
   "demands": [
   ],
@@ -24,7 +24,7 @@
       "label": "Path to Publish",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root.  Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
+      "helpMarkDown": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root, wildcards is not supported. Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
     },
     {
       "name": "ArtifactName",
@@ -59,12 +59,11 @@
   "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "execution": {    
     "Node": {
-      "target": "publishBuildArtifacts.js",
+      "target": "publishbuildartifacts.js",
       "argumentFormat": ""            
     }
   },
   "messages": {
-    "ArtifactNameNotSpecified" : "Artifact name is not specified.",
-    "ArtifactTypeNotSpecified" : "Artifact type is not specified."
+    "PublishBuildArtifactsFailed" : "Publish build artifacts failed with error: %s" 
   }
 }

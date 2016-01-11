@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 16
   },
   "groups": [
     {
@@ -71,8 +71,12 @@
       ]
     },
     "Node": {
-      "target": "cmdLine2.js",
+      "target": "cmdlinetask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CmdLineReturnCode": "ms-resource:loc.messages.CmdLineReturnCode",
+    "CmdLineFailed": "ms-resource:loc.messages.CmdLineFailed"
   }
 }

@@ -15,7 +15,9 @@ param(
     [string]$vmUserName,
     [string]$vmPassword,
     [string]$skipCACheck,
-    [string]$outputVariable
+    [string]$outputVariable,
+    [string]$enableDeploymentPrerequisitesForCreate,
+	[string]$enableDeploymentPrerequisitesForSelect
 )
 
 Write-Verbose -Verbose "Starting Azure Resource Group Deployment Task"
@@ -25,6 +27,8 @@ Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
 Write-Verbose -Verbose "Location = $location"
 Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
 Write-Verbose -Verbose "OutputVariable = $outputVariable"
+Write-Verbose -Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
+Write-Verbose -Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()
@@ -51,7 +55,7 @@ function Handle-SelectResourceGroupAction
         throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
     }
 
-    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForSelect
 }
 
 function Handle-ResourceGroupLifeCycleOperations
@@ -66,9 +70,14 @@ function Handle-ResourceGroupLifeCycleOperations
     if( $action -eq "Create Or Update Resource Group" )
     {
         $azureResourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
+
         if(-not [string]::IsNullOrEmpty($outputVariable))
         {
-            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable
+            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForCreate
+        }
+        elseif($enableDeploymentPrerequisitesForCreate -eq "true")
+        {
+            Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName
         }
     }
     else

@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "D9BAFED4-0B18-4F58-968D-86655B4D2CE9",
     "name": "CmdLine",
     "friendlyName": "Command Line",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 16
     },
     "groups": [
     {
@@ -66,8 +66,12 @@
             "platforms" : ["windows"]
         },
         "Node": {
-            "target": "cmdLine2.js",
+            "target": "cmdlinetask.js",
             "argumentFormat": ""
         }        
+    },
+    "messages": {
+        "CmdLineReturnCode": "%s exited with return code: %d",
+        "CmdLineFailed": "%s failed with error: %s"
     }
 }

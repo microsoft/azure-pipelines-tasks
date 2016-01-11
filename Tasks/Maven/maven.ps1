@@ -161,6 +161,8 @@ else
 
 if ($codeCoverageTool -eq "JaCoCo")
 {
+	#set sonar parameter
+	$execFileJacoco = Join-Path $reportDirectory "jacoco.exec"
 	# Publish code coverage for Jacoco
 	PublishCodeCoverageJacoco  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFileJacoco $reportDirectory $codeCoverageTool $reportPOMFile
 }
@@ -169,6 +171,9 @@ ElseIf ($codeCoverageTool -eq "Cobertura")
 	# Publish code coverage for Jacoco
 	PublishCodeCoverageCobertura  $isCoverageEnabled $mavenPOMFile $summaryFileCobertura $reportDirectoryCobertura $codeCoverageTool
 }
+
+# Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
+RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
 
 if(Test-Path $reportDirectory)
 {
@@ -187,10 +192,6 @@ if(Test-Path $reportPOMFile)
     # delete any previous code coverage data 
     rm $reportPOMFile -force | Out-Null
 }
-
-
-# Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
-RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile
 
 Write-Verbose "Leaving script Maven.ps1"
 

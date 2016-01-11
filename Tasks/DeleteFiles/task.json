@@ -3,7 +3,7 @@
 	"name": "DeleteFiles",
 	"friendlyName": "Delete Files",
 	"description": "Delete files or folders. (The minimatch patterns will only match file paths, not folder paths)",
-	"helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=708389)",
+	"helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=722333)",
 	"category": "Utility",
 	"visibility": [
 		"Build"
@@ -12,7 +12,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 0
+		"Patch": 2
 	},
 	"demands": [],
 	"minimumAgentVersion": "1.92.0",
@@ -29,13 +29,16 @@
 		"label": "Contents",
 		"defaultValue": "myFileShare",
 		"required": true,
-		"helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=708389)"
+		"helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=722333)"
 	}],
 	"instanceNameFormat": "Delete files from $(SourceFolder)",
 	"execution": {
 		"Node": {
-			"target": "deleteFiles.js",
+			"target": "deletefiles.js",
 			"argumentFormat": ""
 		}
-	}
+	},
+	"messages": {
+    	"CantDeleteFiles": "Couldn't delete one or more files"
+  }
 }

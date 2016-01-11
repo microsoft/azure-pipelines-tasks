@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 9
   },
   "demands": [
     "JDK",
@@ -124,7 +124,7 @@
       "workingDirectory": "$(currentDirectory)"
     },
     "Node": {
-      "target": "AndroidSigning.js",
+      "target": "androidsigning.js",
       "argumentFormat": ""
     }
   }
