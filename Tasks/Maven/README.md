@@ -18,7 +18,7 @@ Use the next three options to manage your JUnit test results in VSTS
 - **Test Run Title :** This option wil appear if you select the `Publish to VSO/TFS` option. Here provide a name for the Test Run
 
 ####Code Coverage
-Use the next options to manage your code coverage options.
+Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
 
 - **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported. 
 
@@ -42,15 +42,7 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 - **Run SonarQube Analysis :** You can choose to run SonarQube analysis after executing the current goals. 'install' or 'package' goals should be executed first. To know more about this option [click here](http://blogs.msdn.com/b/visualstudioalm/archive/2015/10/08/the-maven-build-task-now-simplifies-sonarqube-analysis.aspx)
 
-####Control Options
 
-- **Enabled :** Clear this check box if you want to disable a step. This is a handy option if a step is not working correctly or if you need to focus on other parts of the process. 
-You can also right-click the build step to toggle this setting.
-
-- **Continue on error :**  If an error occurs in this step, and this check box is Cleared, the build fails and no subsequent steps are run. If the check box is Selected, the build will be partially successful at best, and the next step is run.
-
-- **Always run :** Select this check box if you want the step to run even if the build is failing. 
- 
 
 
 
