@@ -110,8 +110,18 @@
                 "ja_JP": "Japanese (Japan)",
                 "ru_RU": "Russian (Russia)",
                 "es_MX": "Spanish (Mexico)",
-                "es_ES": "Spanish (Spain)"
+                "es_ES": "Spanish (Spain)",
+                "user": "User Defined"
             }
+        },
+        {
+            "name": "userDefinedLocale",
+            "type": "string",
+            "label": "User Defined Locale",
+            "groupName": "advanced",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "locale = user"
         },
         {
             "name": "testCloudLocation",

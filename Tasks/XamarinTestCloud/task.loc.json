@@ -112,8 +112,18 @@
         "ja_JP": "Japanese (Japan)",
         "ru_RU": "Russian (Russia)",
         "es_MX": "Spanish (Mexico)",
-        "es_ES": "Spanish (Spain)"
+        "es_ES": "Spanish (Spain)",
+        "user": "User Defined"
       }
+    },
+    {
+      "name": "userDefinedLocale",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userDefinedLocale",
+      "groupName": "advanced",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "locale = user"
     },
     {
       "name": "testCloudLocation",

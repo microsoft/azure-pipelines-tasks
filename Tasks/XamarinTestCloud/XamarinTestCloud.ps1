@@ -6,6 +6,7 @@
     [string]$devices,
     [string]$series, 
     [string]$locale,
+    [string]$userDefinedLocale,
     [string]$testCloudLocation,
     [string]$parallelization,
     [string]$optionalArgs,
@@ -20,6 +21,7 @@ Write-Verbose "user = $user"
 Write-Verbose "devices = $devices"
 Write-Verbose "series = $series"
 Write-Verbose "locale = $locale"
+Write-Verbose "userDefinedLocale = $userDefinedLocale"
 Write-Verbose "testCloudLocation = $testCloudLocation"
 Write-Verbose "parallelization = $parallelization"
 Write-Verbose "optionalArgs = $optionalArgs"
@@ -54,11 +56,19 @@ if (!$series)
 }
 $parameters = "$parameters --series `"$series`""
 
-if (!$locale) 
+if (!$locale -or ($locale -eq "user" -and [string]::IsNullOrEmpty($userDefinedLocale))) 
 {
     throw "Must specify the system language."
 }
-$parameters = "$parameters --locale `"$locale`""
+
+if($locale -eq "user")
+{
+    $parameters = "$parameters --locale `"$userDefinedLocale`""
+}
+else
+{
+    $parameters = "$parameters --locale `"$locale`""
+}
 
 # check for app pattern
 if ($app.Contains("*") -or $app.Contains("?"))
