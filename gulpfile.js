@@ -99,7 +99,8 @@ gulp.task('testResources', ['testLib_NodeModules', 'ps1tests']);
 // compile tasks inline
 gulp.task('compileTasks', ['clean'], function (cb) {
 	try {
-		getLatestTaskLib();
+		getNpmExternal('vsts-task-lib');
+		getNpmExternal('vsts-task-sdk');
 	}
 	catch (err) {
 		console.log('error:' + err.message);
@@ -143,9 +144,17 @@ gulp.task('default', ['build']);
 // This task requires windows and direct access to the internal nuget drop
 //-----------------------------------------------------------------------------------------------------------------
 
-var getLatestTaskLib = function() {
-	gutil.log('Getting latest vsts-task-lib');
-	shell.mkdir('-p', path.join(_tempPath, 'node_modules'));
+var getNpmExternal = function(name) {
+	var externals = require('./externals.json');
+	var libVer = externals[name];
+	if (!libVer) {
+		throw new Error('External module not defined in externals.json: ' + name);
+	}
+
+	gutil.log('acquiring ' + name + ': ' + libVer);
+
+	var libPath = path.join(_tempPath, name, libVer);
+	shell.mkdir('-p', path.join(libPath, 'node_modules'));
 	
 	var pkg = {
 		  "name": "temp",
@@ -163,7 +172,7 @@ var getLatestTaskLib = function() {
 		};
 	fs.writeFileSync(path.join(_tempPath, 'package.json'), JSON.stringify(pkg, null, 2));
 
-	shell.pushd(_tempPath);
+	shell.pushd(libPath);
 
 	var npmPath = shell.which('npm');
 	if (!npmPath) {
@@ -178,10 +187,10 @@ var getLatestTaskLib = function() {
 		throw new Error('NPM version must be at least ' + NPM_MIN_VER + '. Found ' + ver);
 	}
 
-	var cmdline = '"' + npmPath + '" install vsts-task-lib';
-
+	var cmdline = '"' + npmPath + '" install ' + name + '@' + libVer;
 	var res = cp.execSync(cmdline); 
 	gutil.log(res.toString());	
+
 	shell.popd();
 	if (res.status > 0) {
 		throw new Error('npm failed with code of ' + res.status);

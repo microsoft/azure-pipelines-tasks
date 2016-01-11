@@ -188,17 +188,46 @@ function packageTask(pkgPath){
 	        	shell.rm(path.join(tgtPath, '*.csproj'));
 	        	shell.rm(path.join(tgtPath, '*.md'));
 
-	        	// 'statically link' task-lib
-	        	if (task.execution['Node']) {
-	        		gutil.log('linking task-lib for ' + task.name);
 
-	        		var tskLibSrc = path.join(__dirname, '_temp', 'node_modules');
+	        	// 'statically link' libs
+	        	var externals = require('./externals.json');
+
+	        	if (task.execution['Node']) {
+	        		var libVer = externals["vsts-task-lib"];
+					if (!libVer) {
+						throw new Error('External vsts-task-lib not defined in externals.json');
+					}
+
+	        		gutil.log('linking vsts-task-lib ' + libVer + ' into ' + task.name);
+
+	        		var tskLibSrc = path.join(__dirname, '_temp', 'vsts-task-lib', libVer, 'node_modules');
 	        		if (shell.test('-d', tskLibSrc)) {
 	        			new gutil.PluginError('PackageTask', 'vsts-task-lib not found: ' + tskLibSrc);
 	        		}
 
 					shell.cp('-R', tskLibSrc, tgtPath);
 	        	}
+
+	        	if (task.execution['PowerShell3']) {
+	        		var libVer = externals["vsts-task-sdk"];
+					if (!libVer) {
+						throw new Error('External vsts-task-sdk not defined in externals.json');
+					}
+
+	        		gutil.log('linking vsts-task-sdk ' + libVer + ' into ' + task.name);
+
+	        		var tskLibSrc = path.join(__dirname, '_temp', 'vsts-task-sdk', libVer, 'node_modules', 
+	        								  'vsts-task-sdk', 'VstsTaskSdk');
+
+	        		if (shell.test('-d', tskLibSrc)) {
+	        			new gutil.PluginError('PackageTask', 'vsts-task-sdk not found: ' + tskLibSrc);
+	        		}
+
+	        		var cpTarg = path.join(tgtPath, 'ps_modules');
+	        		shell.mkdir('-p', cpTarg);
+					shell.cp('-R', tskLibSrc, cpTarg);
+	        	}
+
 	        	return;        	
 	        })
 	        .then(function() {
