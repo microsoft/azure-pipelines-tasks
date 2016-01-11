@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
   ],
@@ -107,12 +107,12 @@
     },
     {
       "name": "OverRideParams",
-      "type": "string",
+      "type": "multiLine",
       "label": "Override Parameters",
       "required": false,
       "groupName": "deployment",
       "defaultValue": "",
-      "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. For example,  name=\"IIS Web Application Name\", value=\"Fabrikam\"."
+      "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. To override more than one parameter use line separator, e.g., <br/> \"IIS Web Application Name\"=\"Fabrikam\" <br/> \"ConnectionString\"=\"Server=localhost;Database=Fabrikam;\""
     },
     {
       "name": "CreateWebSite",
@@ -382,7 +382,7 @@
       "groupName": "advanced",
       "helpMarkDown": "Setting it to true will deploy the Web application in-parallel on the target machines."
     },
-	{
+    {
       "name": "ResourceFilteringMethod",
       "type": "radio",
       "label": "Select Machines By",
@@ -392,7 +392,7 @@
         "machineNames": "Machine Names",
         "tags": "Tags"
       },
-	  "groupName": "advanced",
+      "groupName": "advanced",
       "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
     },
     {
@@ -401,7 +401,7 @@
       "label": "Deploy to Machines",
       "required": false,
       "defaultValue": "",
-	  "groupName": "advanced",
+      "groupName": "advanced",
       "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
     }
   ],
