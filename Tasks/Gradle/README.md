@@ -36,17 +36,7 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 - **JDK Architecture :** Select the approriate JDK Architecture. By default it is set to `x86`
 
-####Control Options
-
-- **Enabled :** Clear this check box if you want to disable a step. This is a handy option if a step is not working correctly or if you need to focus on other parts of the process. 
-You can also right-click the build step to toggle this setting.
-
-- **Continue on error :**  If an error occurs in this step, and this check box is Cleared, the build fails and no subsequent steps are run. If the check box is Selected, the build will be partially successful at best, and the next step is run.
-
-- **Always run :** Select this check box if you want the step to run even if the build is failing. 
- 
-
-###FAQ
+###Q&A
 
 ####How do I generate a wrapper from my Gradle project?
 
