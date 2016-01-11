@@ -15,11 +15,10 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 9
+    "Patch": 10
   },
   "demands": [
-    "gulp",
-    "node"
+    "node.js"
   ],
   "minimumAgentVersion": "1.91.0",
   "groups": [
