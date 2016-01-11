@@ -15,8 +15,7 @@
         "Patch": 9
     },
     "demands" : [
-        "gulp",
-        "node"
+        "node.js"
     ],
     "minimumAgentVersion": "1.91.0",
     "groups": [
