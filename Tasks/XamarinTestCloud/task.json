@@ -113,18 +113,19 @@
                 "ru_RU": "Russian (Russia)",
                 "es_MX": "Spanish (Mexico)",
                 "es_ES": "Spanish (Spain)",
-                "user": "User Defined"
+                "user": "Other"
             },
-            "helpMarkDown": "If your language isn't displayed, please use any two-letter ISO-639 language code along with any two-letter ISO 3166 country code in the format [language]_[country], such as en_US."
+            "helpMarkDown": "If your language isn't displayed, select 'Other' and enter its locale below, such as en_US."
         },
         {
             "name": "userDefinedLocale",
             "type": "string",
-            "label": "User Defined Locale",
+            "label": "Other Locale",
             "groupName": "advanced",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "locale = user"
+            "visibleRule": "locale = user",
+            "helpMarkDown": "Enter any two-letter ISO-639 language code along with any two-letter ISO 3166 country code in the format [language]_[country], such as en_US."
         },
         {
             "name": "testCloudLocation",

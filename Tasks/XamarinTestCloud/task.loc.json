@@ -115,7 +115,7 @@
         "ru_RU": "Russian (Russia)",
         "es_MX": "Spanish (Mexico)",
         "es_ES": "Spanish (Spain)",
-        "user": "User Defined"
+        "user": "Other"
       },
       "helpMarkDown": "ms-resource:loc.input.help.locale"
     },
@@ -126,7 +126,8 @@
       "groupName": "advanced",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "locale = user"
+      "visibleRule": "locale = user",
+      "helpMarkDown": "ms-resource:loc.input.help.userDefinedLocale"
     },
     {
       "name": "testCloudLocation",
