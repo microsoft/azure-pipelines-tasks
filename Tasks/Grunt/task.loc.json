@@ -18,8 +18,7 @@
     "Patch": 7
   },
   "demands": [
-    "grunt",
-    "node"
+    "node.js"
   ],
   "minimumAgentVersion": "1.91.0",
   "groups": [
