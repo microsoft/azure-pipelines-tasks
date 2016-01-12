@@ -26,7 +26,7 @@
             "type": "filePath",
             "label": "Path/Pattern to nupkg",
             "defaultValue":"**\\*.nupkg",
-            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded",
+            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
             "required":true
         },
         {
