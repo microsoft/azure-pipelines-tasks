@@ -23,6 +23,7 @@
   "loc.input.help.testDir": "Relative path to the folder containing the test assemblies, such as: SolutionName/TestsProjectName/bin/Release",
   "loc.input.label.parallelization": "Parallelization",
   "loc.input.label.locale": "System Language",
+  "loc.input.help.locale": "If your language isn't displayed, please use any two-letter ISO-639 language code along with any two-letter ISO 3166 country code in the format [language]_[country], such as en_US.",
   "loc.input.label.userDefinedLocale": "User Defined Locale",
   "loc.input.label.testCloudLocation": "test-cloud.exe Location",
   "loc.input.label.optionalArgs": "Optional Arguments",
