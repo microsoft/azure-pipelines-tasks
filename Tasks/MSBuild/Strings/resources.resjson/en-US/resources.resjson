@@ -16,7 +16,7 @@
   "loc.input.label.clean": "Clean",
   "loc.input.help.clean": "Run a clean build (/t:clean) prior to the build.",
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
-  "loc.input.help.restoreNugetPackages": "Run NuGet restore prior to the build.",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.logProjectEvents": "Record Project Details",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild Version",

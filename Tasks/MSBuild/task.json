@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 21
     },
     "demands" : [
         "msbuild"
@@ -68,9 +68,10 @@
             "name": "restoreNugetPackages", 
             "type": "boolean", 
             "label": "Restore NuGet Packages", 
-            "defaultValue": "true", 
+            "defaultValue": "false", 
             "required": false,
-            "helpMarkDown": "Run NuGet restore prior to the build."
+            "groupName": "advanced",
+            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build."
         },
         { 
             "name": "logProjectEvents", 
