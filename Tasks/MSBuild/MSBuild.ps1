@@ -42,7 +42,7 @@ Write-Verbose "RestoreNuGetPackages (converted) = $RestoreNuGetPackages"
 [bool]$LogProjectEvents = Convert-String $LogProjectEvents Boolean
 Write-Verbose "LogProjectEvents (converted) = $LogProjectEvents"
 [bool]$Clean = Convert-String $Clean Boolean
-Write-Verbose "clean (converted) = $Clean"
+Write-Verbose "Clean (converted) = $Clean"
 
 $solutionFiles = Get-SolutionFiles -Solution $Solution
 $MSBuildArguments = Format-MSBuildArguments -MSBuildArguments $MSBuildArguments -Platform $Platform -Configuration $Configuration

@@ -197,12 +197,13 @@ function Register-Mock {
     $mock = $mocks[$Command]
     if (!$mock) {
         # Create the mock.
+        $functionName = [guid]::NewGuid().ToString()
         $mocks[$Command] = New-Object -TypeName psobject -Property @{
             'Command' = $Command
             'Implementations' = @( )
             'Invocations' = @( )
-            'GlobalAlias' = New-Alias -Name $Command -Value "global:$Command" -Scope global -PassThru
-            'GlobalFunction' = New-Item -Force -Path "function:\global:$Command" -Value {
+            'GlobalAlias' = New-Alias -Name $Command -Value "global:$functionName" -Scope global -PassThru
+            'GlobalFunction' = New-Item -Force -Path "function:\global:$functionName" -Value {
                 param()
 
                 # Lookup the mock.
