@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Облачный нагрузочный тест",
-  "loc.helpMarkDown": "Эту задачу можно использовать для активации облачного нагрузочного теста с помощью Visual Studio Online. [Подробнее](http://go.microsoft.com/fwlink/?linkid=546976).",
-  "loc.description": "Запуск нагрузочного теста в облаке с помощью Visual Studio Online",
+  "loc.helpMarkDown": "Эту задачу можно использовать для активации облачного нагрузочного теста с помощью Visual Studio Team Services. [Подробнее](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.description": "Запуск нагрузочного теста в облаке с помощью Visual Studio Team Services",
   "loc.instanceNameFormat": "Облачный нагрузочный тест $(LoadTest)",
   "loc.input.label.connectedServiceName": "Зарегистрированное подключение",
   "loc.input.help.connectedServiceName": "Выберите ранее зарегистрированное подключение службы для взаимодействия со службой облачного нагрузочного тестирования. Чтобы зарегистрировать новое подключение, нажмите \"Управление\".",
