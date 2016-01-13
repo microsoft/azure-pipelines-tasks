@@ -22,39 +22,6 @@ describe('VSBuild Suite', function () {
     });
 
     if (ps) {
-        it('(Format-MSBuildArguments) adds configuration property', (done) => {
-            psm.runPS(path.join(__dirname, 'Format-MSBuildArguments.AddsConfigurationProperty.ps1'), done);
-        })
-        it('(Format-MSBuildArguments) adds platform property', (done) => {
-            psm.runPS(path.join(__dirname, 'Format-MSBuildArguments.AddsPlatformProperty.ps1'), done);
-        })
-        it('(Format-MSBuildArguments) adds vs version property', (done) => {
-            psm.runPS(path.join(__dirname, 'Format-MSBuildArguments.AddsVSVersionProperty.ps1'), done);
-        })
-        it('(Get-SolutionFiles) resolves wildcards', (done) => {
-            psm.runPS(path.join(__dirname, 'Get-SolutionFiles.ResolvesWildcards.ps1'), done);
-        })
-        it('(Get-SolutionFiles) returns non wildcard solution', (done) => {
-            psm.runPS(path.join(__dirname, 'Get-SolutionFiles.ReturnsNonWildcardSolution.ps1'), done);
-        })
-        it('(Get-SolutionFiles) throws if no solution found', (done) => {
-            psm.runPS(path.join(__dirname, 'Get-SolutionFiles.ThrowsIfNoSolutionFound.ps1'), done);
-        })
-        it('(Invoke-BuildTools) invokes all tools for all files', (done) => {
-            psm.runPS(path.join(__dirname, 'Invoke-BuildTools.InvokesAllToolsForAllFiles.ps1'), done);
-        })
-        it('(Invoke-BuildTools) skips clean if specified', (done) => {
-            psm.runPS(path.join(__dirname, 'Invoke-BuildTools.SkipsCleanIfSpecified.ps1'), done);
-        })
-        it('(Invoke-BuildTools) skips restore if nu get not found', (done) => {
-            psm.runPS(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfNuGetNotFound.ps1'), done);
-        })
-        it('(Invoke-BuildTools) skips restore if specified', (done) => {
-            psm.runPS(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfSpecified.ps1'), done);
-        })
-        it('passes arguments', (done) => {
-            psm.runPS(path.join(__dirname, 'PassesArguments.ps1'), done);
-        })
         it('(Select-MSBuildLocation) maps vs versions', (done) => {
             psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.MapsVSVersions.ps1'), done);
         })
@@ -76,17 +43,11 @@ describe('VSBuild Suite', function () {
         it('(Select-VSVersion) warns if vs not found', (done) => {
             psm.runPS(path.join(__dirname, 'Select-VSVersion.WarnsIfVSNotFound.ps1'), done);
         })
-        it('throws if no solution', (done) => {
-            psm.runPS(path.join(__dirname, 'ThrowsIfNoSolution.ps1'), done);
+        it('passes arguments', (done) => {
+            psm.runPS(path.join(__dirname, 'PassesArguments.ps1'), done);
         })
-        it('warns if ms build location specified', (done) => {
-            psm.runPS(path.join(__dirname, 'WarnsIfMSBuildLocationSpecified.ps1'), done);
-        })
-        it('warns if ms build version specified', (done) => {
-            psm.runPS(path.join(__dirname, 'WarnsIfMSBuildVersionSpecified.ps1'), done);
-        })
-        it('warns if vs location specified', (done) => {
-            psm.runPS(path.join(__dirname, 'WarnsIfVSLocationSpecified.ps1'), done);
+        it('warns if deprecated input specified', (done) => {
+            psm.runPS(path.join(__dirname, 'WarnsIfDeprecatedInputSpecified.ps1'), done);
         })
     }
 });

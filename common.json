@@ -1,0 +1,14 @@
+{
+    "MSBuild": [
+        {
+            "module": "MSBuildHelpers",
+            "dest": "ps_modules"
+        }
+    ],
+    "VSBuild": [
+        {
+            "module": "MSBuildHelpers",
+            "dest": "ps_modules"
+        }
+    ]
+}

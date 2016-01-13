@@ -1,0 +1,8 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.messages.MSB_Build0": "Build {0}",
+  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
+  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'."
+}

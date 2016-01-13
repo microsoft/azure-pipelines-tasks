@@ -1,9 +1,8 @@
 function Test-AreEqual {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param(
         [object]$Object1,
-        [object]$Object2
-    )
+        [object]$Object2)
 
     $canUnravel1 = Test-CanUnravel $Object1
     $canUnravel2 = Test-CanUnravel $Object2
@@ -34,7 +33,7 @@ function Test-AreEqual {
 }
 
 function Test-CanUnravel {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param($Object)
 
     return !([object]::ReferenceEquals($Object, $null)) -and
@@ -43,7 +42,7 @@ function Test-CanUnravel {
 }
 
 function Test-Invocation {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param(
         [object[]]$Invocation,
         [scriptblock]$ParametersEvaluator,
@@ -92,10 +91,8 @@ function Test-Invocation {
 }
 
 function Trace-Invocations {
-    [cmdletbinding()]
-    param(
-        $mock
-    )
+    [CmdletBinding()]
+    param($mock)
 
     foreach ($invocation in $mock.Invocations) {
         $OFS = " "

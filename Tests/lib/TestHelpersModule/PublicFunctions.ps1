@@ -1,5 +1,5 @@
 function Assert-AreEqual {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param([object]$Expected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting are equal. Expected: '$Expected' ; Actual: '$Actual'."
@@ -9,7 +9,7 @@ function Assert-AreEqual {
 }
 
 function Assert-AreNotEqual {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param([object]$NotExpected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting are not equal. Expected: '$NotExpected' ; Actual: '$Actual'."
@@ -19,7 +19,7 @@ function Assert-AreNotEqual {
 }
 
 function Assert-IsGreaterThan {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param([object]$Expected, [object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting is greater than. Expected greater than: '$Expected' ; Actual: '$Actual'."
@@ -29,7 +29,7 @@ function Assert-IsGreaterThan {
 }
 
 function Assert-IsNotNullOrEmpty {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param([object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting is not null or empty."
@@ -40,7 +40,7 @@ function Assert-IsNotNullOrEmpty {
 }
 
 function Assert-IsNullOrEmpty {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param([object]$Actual, [string]$Message)
 
     Write-Verbose "Asserting is null or empty."
@@ -50,35 +50,11 @@ function Assert-IsNullOrEmpty {
     }
 }
 
-function Assert-Parses {
-    [cmdletbinding()]
-    param(
-        [ValidateNotNullOrEmpty()]
-        [string[]]$Path)
-
-    $parseErrors = $null
-    $fileCount = 0
-    foreach ($file in (Get-ChildItem -Path $Path)) {
-        $fileCount++
-        $null = [System.Management.Automation.PSParser]::Tokenize((Get-Content $file), [ref]$parseErrors)
-        if ($parseErrors) {
-            $OFS = " "
-            throw "Errors parsing file: $($file.FullName) ; Errors: $parseErrors)"
-        }
-    }
-
-    Assert-IsGreaterThan 0 $fileCount "Expected at least one file to parse."
-}
-
-
 function Assert-Throws {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param(
-        [ValidateNotNull()]
         [Parameter(Mandatory = $true)]
         [scriptblock]$ScriptBlock,
-        
-        [Parameter()]
         [string]$MessagePattern)
 
     Write-Verbose "Asserting script block should throw: {$ScriptBlock}"
@@ -104,20 +80,15 @@ function Assert-Throws {
 }
 
 function Assert-WasCalled {
-    [cmdletbinding(DefaultParameterSetName = "ParametersEvaluator")]
+    [CmdletBinding(DefaultParameterSetName = "ParametersEvaluator")]
     param(
-        [ValidateNotNullOrEmpty()]
-        [Parameter(Position = 1)]
+        [Parameter(Mandatory = $true, Position = 1)]
         [string]$Command,
-
         [int]$Times = -1,
-
         [Parameter(ParameterSetName = "ParametersEvaluator")]
         [scriptblock]$ParametersEvaluator,
-
         [Parameter(ParameterSetName = "ArgumentsEvaluator")]
         [scriptblock]$ArgumentsEvaluator,
-
         [Parameter(ParameterSetName = "Arguments", Position = 2, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
 
@@ -139,8 +110,7 @@ function Assert-WasCalled {
     }
 
     # Get the mock.
-    $mock = $mocks[$Command]
-    if (!$mock) {
+    if (!($mock = $mocks[$Command])) {
         throw "Mock not found for command: $Command"
     }
 
@@ -171,21 +141,16 @@ function Assert-WasCalled {
 }
 
 function Register-Mock {
-    [cmdletbinding(DefaultParameterSetName = "ParametersEvaluator")]
+    [CmdletBinding(DefaultParameterSetName = "ParametersEvaluator")]
     param(
-        [ValidateNotNullOrEmpty()]
-        [Parameter(Position = 1)]
+        [Parameter(Mandatory = $true, Position = 1)]
         [string]$Command,
-
         [Parameter(Position = 2)]
         [scriptblock]$Func,
-
         [Parameter(ParameterSetName = "ParametersEvaluator")]
         [scriptblock]$ParametersEvaluator,
-
         [Parameter(ParameterSetName = 'ArgumentsEvaluator')]
         [scriptblock]$ArgumentsEvaluator,
-
         [Parameter(ParameterSetName = 'Arguments', Position = 3, ValueFromRemainingArguments = $true)]
         [object[]]$Arguments)
 
@@ -194,8 +159,7 @@ function Register-Mock {
     }
 
     # Check if the command is already registered.
-    $mock = $mocks[$Command]
-    if (!$mock) {
+    if (!($mock = $mocks[$Command])) {
         # Create the mock.
         $functionName = [guid]::NewGuid().ToString()
         $mocks[$Command] = New-Object -TypeName psobject -Property @{
@@ -286,9 +250,9 @@ function Register-Mock {
 }
 
 function Unregister-Mock {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param(
-        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory = $true)]
         [string]$Command)
 
     $mock = $mocks[$Command]
