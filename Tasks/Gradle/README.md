@@ -11,14 +11,14 @@
 ####JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
 
-- **Publish to VSTS :** Select this option to publish JUnit Test results produced by the Gradle build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS.
+- **Publish to VSTS :** Select this option to publish JUnit Test results produced by the Gradle build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS.
 
 - **Test Results Files :** This option wil appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
 
 - **Test Run Title :** This option will appear if you select the `Publish to VSO/TFS` option. Here provide a name for the Test Run
 
 ####Code Coverage
-Use the next options to manage your code coverage options.
+Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
 
 - **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported. 
 
