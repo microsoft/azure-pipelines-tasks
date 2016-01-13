@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 18
     },
     "demands": [
     ],
@@ -51,7 +51,7 @@
             "label": "Test Drop Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
             "groupName": "setupOptions"
         },
         {
@@ -60,7 +60,7 @@
             "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll",
             "required": true,
-            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, '**\\*test*.dll;' for all dlls containing 'test' in their name.",            
+            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, `**\\*test*.dll;` for all dlls containing 'test' in their name.",            
             "groupName": "executionOptions"
         },
         {
@@ -69,7 +69,7 @@
             "label": "Test Filter criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally specify the test case filter criteria. For example, 'Owner=james&Priority=1'.",            
+            "helpMarkDown": "Optionally specify the test case filter criteria. For example, `Owner=james&Priority=1`",            
             "groupName": "executionOptions"
         },
         {
@@ -78,7 +78,7 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings file to use with the tests. Use $(agent.BuildDirectory)\\$(system.teamProject) to access the Project folder.",
+            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
             "groupName": "executionOptions"
         },
         {
@@ -87,7 +87,7 @@
             "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080.",
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
             "groupName": "executionOptions"
         },
         {
@@ -133,7 +133,7 @@
             "label": "Test Configurations",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: FullyQualifiedName~Chrome:12.",
+            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
             "groupName": "reportingOptions"
         },
         {
