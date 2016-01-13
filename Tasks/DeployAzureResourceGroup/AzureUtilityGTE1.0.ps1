@@ -243,7 +243,6 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
             $azureClassicVMEndpoint = $azureClassicVM | Get-AzureEndpoint | Where-Object {$_.LocalPort -eq '5986'}
             Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
 
-
             $fqdnUri = [System.Uri]$azureClassicVM.DNSName
             $resourceFQDN = $fqdnUri.Host
 
