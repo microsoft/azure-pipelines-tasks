@@ -11,7 +11,7 @@
 ####JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
 
-- **Publish to VSO/TFS :** Select this option to publish JUnit Test results produced by the Gradle build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS.
+- **Publish to VSTS :** Select this option to publish JUnit Test results produced by the Gradle build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS.
 
 - **Test Results Files :** This option wil appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
 
