@@ -163,6 +163,7 @@ function Get-MsDeployCmdArgs
     $webDeployPackage = $webDeployPackage.Trim('"')
     $webDeployParamFile = $webDeployParamFile.Trim('"')
     $overRideParams = $overRideParams.Trim('"').Replace('''', '"')
+    $setParams = $overRideParams.Split([System.Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
     
     if(-not ( Test-Path -Path $webDeployPackage))
     {
@@ -180,10 +181,14 @@ function Get-MsDeployCmdArgs
 
         $msDeployCmdArgs = [string]::Format(' -setParamFile="{0}"', $webDeployParamFile)
     }
-
-    if(-not (IsInputNullOrEmpty -str $overRideParams))
+    
+    foreach($setParam in $setParams)
     {
-        $msDeployCmdArgs = [string]::Format('{0} -setParam:{1}', $msDeployCmdArgs, $overRideParams)
+        $setParam = $setParam.Trim()
+        if(-not [string]::IsNullOrEmpty($setParam))
+        {
+            $msDeployCmdArgs = [string]::Format('{0} -setParam:{1}', $msDeployCmdArgs, $setParam)
+        }
     }
     
     $msDeployCmdArgs = [string]::Format(' -verb:sync -source:package="{0}" {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000', $webDeployPackage, $msDeployCmdArgs)

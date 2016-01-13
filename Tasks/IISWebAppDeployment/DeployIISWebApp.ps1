@@ -100,10 +100,17 @@ $appPoolUsername = $appPoolUsername.Trim()
 
 $appCmdCommands = $appCmdCommands.Replace('"', '`"')
 
-if([string]::IsNullOrWhiteSpace($overRideParams) -and ![string]::IsNullOrWhiteSpace($webSiteName))
+if(![string]::IsNullOrWhiteSpace($webSiteName))
 {
-    Write-Verbose "Adding override params to ensure deployment happens on $webSiteName" -Verbose
-    $overRideParams = [string]::Format('name="IIS Web Application Name",value="{0}"', $webSiteName)
+    if([string]::IsNullOrWhiteSpace($overRideParams))
+    {
+        Write-Verbose "Adding override params to ensure deployment happens on $webSiteName" -Verbose
+        $overRideParams = [string]::Format('name="IIS Web Application Name",value="{0}"', $webSiteName)
+    }
+    elseif(!$overRideParams.Contains("IIS Web Application Name")) 
+    {
+        $overRideParams = $overRideParams + [string]::Format('{0}name="IIS Web Application Name",value="{1}"',  [System.Environment]::NewLine, $webSiteName)
+    }
 }
 
 $overRideParams = $overRideParams.Replace('"', '''')

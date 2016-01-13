@@ -1,4 +1,4 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 Write-Verbose "Initializing test helpers."
@@ -10,10 +10,18 @@ if (!(Get-Module | Where-Object { $_.Name -eq 'Microsoft.PowerShell.Management' 
 
 Import-Module $PSScriptRoot\TestHelpersModule -Verbose:$false
 Register-Mock Import-Module
+
+# Temporary mocks for common VSTS task SDK. Need to actually import the module instead.
+Register-Mock Get-VstsLocString { $OFS = ' ' ; "$($args[1]) $($args[3])".Trim() }
+Register-Mock Import-VstsLocStrings
+Register-Mock Trace-VstsEnteringInvocation
+Register-Mock Trace-VstsLeavingInvocation
+
+# This is a mock implementation for the legacy module cmdlet.
 function Get-LocalizedString {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param(
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [string]$Key,
         
         [object[]]$ArgumentList)

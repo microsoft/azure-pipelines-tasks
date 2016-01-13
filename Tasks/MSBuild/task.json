@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 17
     },
     "demands" : [
         "msbuild"
@@ -56,19 +56,21 @@
             "required":false,
             "helpMarkDown": "Additional arguments passed to MSBuild."
         },
-        { 
+        {
             "name": "clean", 
             "type": "boolean", 
             "label": "Clean", 
             "defaultValue": "false", 
-            "required": false 
+            "required": false,
+            "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
         },
         { 
             "name": "restoreNugetPackages", 
             "type": "boolean", 
             "label": "Restore NuGet Packages", 
             "defaultValue": "true", 
-            "required": false 
+            "required": false,
+            "helpMarkDown": "Run NuGet restore prior to the build."
         },
         { 
             "name": "logProjectEvents", 
@@ -133,6 +135,9 @@
     ],
     "instanceNameFormat": "Build solution $(solution)",
     "execution": {
+        "PowerShell3": {
+            "target": "MSBuild_PS3.ps1"
+        },
         "PowerShell": {
             "target": "$(currentDirectory)\\MSBuild.ps1",
             "argumentFormat": "",

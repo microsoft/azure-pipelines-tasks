@@ -16,6 +16,7 @@ var series = tl.getInput('series', true);
 var testDir = tl.getPathInput('testDir', true);
 var parallelization = tl.getInput('parallelization', true);
 var locale = tl.getInput('locale', true);
+var userDefinedLocale = tl.getInput('userDefinedLocale', true);
 var testCloudLocation = tl.getInput('testCloudLocation', true);
 var optionalArgs = tl.getInput('optionalArgs', false);
 var publishNUnitResults = tl.getInput('publishNUnitResults', false);
@@ -30,6 +31,7 @@ tl.debug('series: ' + series);
 tl.debug('testDir: ' + testDir);
 tl.debug('parallelization: ' + parallelization);
 tl.debug('locale: ' + locale);
+tl.debug('userDefinedLocale: ' + userDefinedLocale);
 tl.debug('testCloudLocation: ' + testCloudLocation);
 tl.debug('optionalArgs: ' + optionalArgs);
 
@@ -155,7 +157,14 @@ var submitToTestCloud = function (index) {
     monoToolRunner.arg('--series');
     monoToolRunner.arg(series);
     monoToolRunner.arg('--locale');
-    monoToolRunner.arg(locale);
+    if(locale == 'user')
+    {
+        monoToolRunner.arg(userDefinedLocale);
+    }
+    else
+    {
+        monoToolRunner.arg(locale);
+    }
     monoToolRunner.arg('--assembly-dir');
     monoToolRunner.arg(testDir);
     if (parallelization != 'none') {

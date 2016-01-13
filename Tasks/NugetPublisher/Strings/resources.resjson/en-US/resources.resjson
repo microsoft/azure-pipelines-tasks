@@ -8,7 +8,7 @@
   "loc.instanceNameFormat": "NuGet Publisher $(solution)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.searchPattern": "Path/Pattern to nupkg",
-  "loc.input.help.searchPattern": "The pattern to match or path to nupkg files to be uploaded",
+  "loc.input.help.searchPattern": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
   "loc.input.label.nuGetFeedType": "Feed type",
   "loc.input.label.connectedServiceName": "NuGet Server Endpoint",
   "loc.input.help.connectedServiceName": "The NuGet server generic endpoint, set the key 'Password/Token Key' field to your NuGet API key.",

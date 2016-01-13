@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 28
+    "Patch": 29
   },
   "demands": [
     "vstest"
@@ -52,7 +52,7 @@
       "label": "Test Filter criteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: Priority=1|Name=MyTestMethod",
+      "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
       "groupName": "executionOptions"
     },
     {
@@ -61,7 +61,7 @@
       "label": "Run Settings File",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Path to runsettings file to use with the tests. Use $(Build.SourcesDirectory) to access the Project folder.",
+      "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
       "groupName": "executionOptions"
     },
     {
@@ -70,7 +70,7 @@
       "label": "Override TestRun Parameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: Platform=$(platform);Port=8080",
+      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
       "groupName": "executionOptions"      
     },     
     {

@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -105,15 +105,29 @@
       "required": true,
       "groupName": "advanced",
       "options": {
-        "en_US": "English (United States)",
+        "da_DK": "Danish (Denmark)",
+        "nl_NL": "Dutch (Netherlands)",
         "en_GB": "English (United Kingdom)",
+        "en_US": "English (United States)",
         "fr_FR": "French (France)",
         "de_DE": "German (Germany)",
         "ja_JP": "Japanese (Japan)",
         "ru_RU": "Russian (Russia)",
         "es_MX": "Spanish (Mexico)",
-        "es_ES": "Spanish (Spain)"
-      }
+        "es_ES": "Spanish (Spain)",
+        "user": "Other"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.locale"
+    },
+    {
+      "name": "userDefinedLocale",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userDefinedLocale",
+      "groupName": "advanced",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "locale = user",
+      "helpMarkDown": "ms-resource:loc.input.help.userDefinedLocale"
     },
     {
       "name": "testCloudLocation",
