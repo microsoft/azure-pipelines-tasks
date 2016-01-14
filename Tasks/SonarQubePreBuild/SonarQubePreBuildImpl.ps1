@@ -1,4 +1,22 @@
 #
+# Store some parameters as context variables so that they can be picked by other tasks, mainly by the "end task"
+#
+function StoreParametersInTaskContext
+{    
+	param(
+		  [string]$hostUrl,
+		  [string]$bootstrapperPath,
+		  [string]$dahsboardUrl, 
+          [string]$breakBuild)
+	
+    SetTaskContextVariable "MSBuild.SonarQube.BootstrapperPath" $bootstrapperPath    
+    SetTaskContextVariable "MSBuild.SonarQube.HostUrl" $hostUrl   
+    SetTaskContextVariable "MSBuild.SonarQube.BreakBuild" $breakBuild    
+    SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dahsboardUrl
+}
+
+
+#
 # Remarks: Some sensitive parameters cannot be stored on the agent between the 2 steps so 
 # we'll store them in the task context and pass them to the post-test step
 #
@@ -10,10 +28,10 @@ function StoreSensitiveParametersInTaskContext
 		  [string]$dbUsername,
 		  [string]$dbPassword)
 
-	SetTaskContextVariable "MsBuild.SonarQube.ServerUsername" $serverUsername
-	SetTaskContextVariable "MsBuild.SonarQube.ServerPassword" $serverPassword
-	SetTaskContextVariable "MsBuild.SonarQube.DbUsername" $dbUsername
-	SetTaskContextVariable "MsBuild.SonarQube.DbPassword" $dbPassword
+	SetTaskContextVariable "MSBuild.SonarQube.ServerUsername" $serverUsername
+	SetTaskContextVariable "MSBuild.SonarQube.ServerPassword" $serverPassword
+	SetTaskContextVariable "MSBuild.SonarQube.DbUsername" $dbUsername
+	SetTaskContextVariable "MSBuild.SonarQube.DbPassword" $dbPassword
 }
 
 function CreateCommandLineArgs
@@ -90,24 +108,18 @@ function CreateCommandLineArgs
     return $sb.ToString();
 }
 
-function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
-{
-    $prcaEnabled = GetTaskContextVariable "PullRequestSonarQubeCodeAnalysisEnabled"
-    if ($prcaEnabled -ieq "true")
+function UpdateArgsForPullRequestAnalysis($cmdLineArgs)
+{       
+    if (IsPrBuild)
     {
         if ($cmdLineArgs -and $cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
         {
             throw "Error: sonar.analysis.mode seems to be set already. Please check the properties of SonarQube build tasks and try again."
         }
 
-        Write-Verbose "PullRequestSonarQubeCodeAnalysisEnabled is true, setting command line args for sonar-runner."
-        $sqServerVersion = GetSonarQubeServerVersion $serviceEndpoint.Url
+        Write-Verbose "Detected a PR build - running the SonarQube analysis in issues / incremental mode"
 
-        if (!$sqServerVersion)
-        {
-            #we want to fail the build step if SonarQube server version isn't fetched
-            throw "Error: Unable to fetch SonarQube server version. Please make sure SonarQube server is reachable at $($serviceEndpoint.Url)"
-        }
+        $sqServerVersion = GetSonarQubeServerVersion     
 
         Write-Verbose "SonarQube server version:$sqServerVersion"
 
@@ -128,7 +140,7 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs, $serviceEndpoint)
         }
 
 		#use this variable in post-test task
-		SetTaskContextVariable "MsBuild.SonarQube.AnalysisModeIsIncremental" "true"
+		SetTaskContextVariable "MSBuild.SonarQube.AnalysisModeIsIncremental" "true"
 	}
 
 	return $cmdLineArgs
@@ -159,92 +171,15 @@ function GetEndpointData
 
 ################# Helpers ######################
 
-# When passing arguments to a process, the quotes need to be doubled and   
-# the entire string needs to be placed inside quotes to avoid issues with spaces  
-function EscapeArg  
-{  
-    param([string]$argVal)  
-  
-    $argVal = $argVal.Replace('"', '""');  
-    $argVal = '"' + $argVal + '"';  
-  
-    return $argVal;  
-}  
-
-
-# Set a variable in a property bag that is accessible by all steps
-# To retrieve the variable use $val = Get-Variable $distributedTaskContext "varName"
-function SetTaskContextVariable
-{
-    param([string][ValidateNotNullOrEmpty()]$varName, 
-          [string]$varValue)
-    
-    Write-Host "##vso[task.setvariable variable=$varName;]$varValue"
-}
-
-function GetTaskContextVariable()
-{
-	param([string][ValidateNotNullOrEmpty()]$varName)
-	return Get-TaskVariable -Context $distributedTaskContext -Name $varName
-}
-
-#
-# Helper that informs if a "filePath" has been specified. The platform will return the root of the repo / workspace if the user enters nothing.
-#
-function IsFilePathSpecified
-{
-     param([string]$path)
-
-     if ([String]::IsNullOrWhiteSpace($path))
-     {
-        return $false
-     }
-
-     return ![String]::Equals(
-                [System.IO.Path]::GetFullPath($path).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar),
-                [System.IO.Path]::GetFullPath($env:BUILD_SOURCESDIRECTORY).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar),
-                [StringComparison]::OrdinalIgnoreCase)
-}
-
-
-function GetVersionString($uri)
-{
-    $version = $null
-
-    Try
-    {
-        $version = Invoke-RestMethod -Uri $uri -Method Get
-    }
-    Catch [System.Net.WebException]
-    {
-        Write-Verbose "WebException while trying to invoke $uri. Exception msg:$($_.Exception.Message)"
-    }
-
-    return $version
-}
-
 #
 # Helper that returns the version number of the SonarQube server
 #
 function GetSonarQubeServerVersion()
-{
-    param([String][ValidateNotNullOrEmpty()]$serverUrl)
+{         
+    $command = {InvokeGetRestMethod "/api/server/version" }
+    $version = Retry $command -maxRetries 2 -retryDelay 1 -Verbose
+  
+    Write-Verbose "Returning SonarQube server version:$version"
 
-    Write-Host "Fetching SonarQube server version.."
-
-    $serverUri = New-Object -TypeName System.Uri -ArgumentList $serverUrl
-    $serverApiUri = New-Object -TypeName System.Uri -ArgumentList ($serverUri, "/api/server/version")
-
-    $sqVersion = GetVersionString $serverApiUri
-
-    if(!$sqVersion)
-    {
-        Write-Verbose "Trying to fetch SonarQube version number again.."
-        Start-Sleep -s 2
-
-        $sqVersion = GetVersionString $serverApiUri
-    }
-
-    Write-Verbose "Returning SonarQube server version:$sqVersion"
-    return $sqVersion
+    return $version
 }
