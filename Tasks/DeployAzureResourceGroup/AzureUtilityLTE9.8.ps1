@@ -253,13 +253,20 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
             $azureClassicVM = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -ErrorAction Stop -Verbose
             Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
             
-            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
-            $azureClassicVMEndpoint = $azureClassicVM | Get-AzureEndpoint -Name PowerShell
-            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName PowerShell endpoint in resource group $resourceGroupName"
+            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
+            $azureClassicVMEndpoint = $azureClassicVM | Get-AzureEndpoint | Where-Object {$_.LocalPort -eq '5986'}
+            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
 
             $fqdnUri = [System.Uri]$azureClassicVM.DNSName
             $resourceFQDN = $fqdnUri.Host
+
             $resourceWinRmHttpsPort = $azureClassicVMEndpoint.Port
+            if([string]::IsNullOrWhiteSpace($resourceWinRMHttpsPort))
+            {
+                Write-Verbose -Verbose "Defaulting WinRMHttpsPort of $resourceName to 5986"
+                $resourceWinRMHttpsPort = "5986"
+            }
+
             Write-Verbose -Verbose "FQDN value for resource $resourceName is $resourceFQDN"
             Write-Verbose -Verbose "WinRM HTTPS Port for resource $resourceName is $resourceWinRmHttpsPort"
 
