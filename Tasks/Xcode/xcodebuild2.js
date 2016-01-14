@@ -191,7 +191,7 @@ function iosProfile(code) {
 
 function execBuild(code) {
 	// Add optional additional args
-	var args=tl.getInput('args', ' ', false);			
+	var args=tl.getInput('args', false);			
 	if(args) {
 		xcb.arg(args);						
 	}
