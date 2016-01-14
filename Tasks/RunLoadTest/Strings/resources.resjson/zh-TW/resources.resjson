@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "雲端式負載測試 ",
-  "loc.helpMarkDown": "此工作可用於觸發使用 Visual Studio Online 的雲端式負載測試。[詳細資訊](http://go.microsoft.com/fwlink/?linkid=546976)。",
-  "loc.description": "在雲端中執行負載測試，搭配 Visual Studio Online",
+  "loc.helpMarkDown": "此工作可用於觸發使用 Visual Studio Team Services 的雲端式負載測試。[詳細資訊](http://go.microsoft.com/fwlink/?linkid=546976)。",
+  "loc.description": "在雲端中執行負載測試，搭配 Visual Studio Team Services",
   "loc.instanceNameFormat": "雲端負載測試 $(LoadTest)",
   "loc.input.label.connectedServiceName": "已註冊的連接",
   "loc.input.help.connectedServiceName": "選取先前註冊的服務連接，以和雲端式負載測試服務溝通。請選擇 'Manage'，以註冊新的連接。",

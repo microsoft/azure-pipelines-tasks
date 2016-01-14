@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "基于云的 Web 性能测试",
-  "loc.helpMarkDown": "此任务可以用于触发使用 Visual Studio Online 的基于云的负载测试。[了解详细信息](http://go.microsoft.com/fwlink/?linkid=613203)。",
-  "loc.description": "使用 Visual Studio Online 在云中运行快速 Web 性能测试",
+  "loc.helpMarkDown": "此任务可以用于触发使用 Visual Studio Team Services 的基于云的负载测试。[了解详细信息](http://go.microsoft.com/fwlink/?linkid=613203)。",
+  "loc.description": "使用 Visual Studio Team Services 在云中运行快速 Web 性能测试",
   "loc.instanceNameFormat": "快速 Web 性能测试 $(testName)",
   "loc.input.label.connectedServiceName": "已注册的连接",
   "loc.input.help.connectedServiceName": "选择以前注册的服务连接以与基于云的负载测试服务进行通话。选择“管理”可注册新连接。",
