@@ -2,7 +2,7 @@
 
 # ======================================
 # This script contains a collection of utility functions
-# for VSO bash tasks.
+# for VSTS bash tasks.
 # ======================================
 
 # make sure all variables are set
@@ -10,7 +10,7 @@ set -u
 
 CMD_PREFIX="##vso["
 
-# Gets input for VSO tasks
+# Gets input for VSTS tasks
 # Converts to uppercase and replaces spaces with underscores
 function getInput()
 {

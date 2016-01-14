@@ -44,7 +44,7 @@ Package (only on windows):
 - zip the tasks.
 - if nuget found (windows):
   - create nuget package
-  - if server url, publish package - this is for our VSO build 
+  - if server url, publish package - this is for our VSTS build 
 */
 
 var mopts = {
@@ -149,7 +149,7 @@ gulp.task('default', ['build']);
 //-----------------------------------------------------------------------------------------------------------------
 // INTERNAL BELOW
 //
-// This particular task is for internal microsoft publishing as a nuget package for the VSO build to pick-up
+// This particular task is for internal microsoft publishing as a nuget package for the VSTS build to pick-up
 // Contributors should not need to run this task
 // This task requires windows and direct access to the internal nuget drop
 //-----------------------------------------------------------------------------------------------------------------

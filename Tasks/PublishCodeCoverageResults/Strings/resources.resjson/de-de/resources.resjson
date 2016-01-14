@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Code Coverage-Ergebnisse veröffentlichen",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Code Coverage-Ergebnisse in VSO/TFS veröffentlichen",
+  "loc.description": "Code Coverage-Ergebnisse in VSTS/TFS veröffentlichen",
   "loc.instanceNameFormat": "Code Coverage-Ergebnisse veröffentlichen $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code Coverage-Tool",
   "loc.input.help.codeCoverageTool": "Wählen Sie das Tool aus, mit dem die Code Coverage-Zusammenfassungsdateien generiert wurden.",

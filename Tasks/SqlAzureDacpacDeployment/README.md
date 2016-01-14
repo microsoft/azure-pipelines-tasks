@@ -22,16 +22,16 @@ The following pre-requisites need to be setup for the task to work properly.
 
 ### Azure Subscription
 
-To deploy to Azure SQL Database, an Azure subscription has to be linked to VSO using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management tasks by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. Select Azure from the Add New Service Connection dropdown. Fill in the required details from the Azure account, and select credentials for authentication as certificates are not supported by Azure Resource Manager. **The credentials have to be a** [work account](http://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) **like** [joe@fabrikam.com](mailto:joe@fabrikam.com) **because Microsoft accounts like** [joe@live.com](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) **or** [joe@hotmail.com](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) **are not supported.**
+To deploy to Azure SQL Database, an Azure subscription has to be linked to VSTS using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management tasks by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. Select Azure from the Add New Service Connection dropdown. Fill in the required details from the Azure account, and select credentials for authentication as certificates are not supported by Azure Resource Manager. **The credentials have to be a** [work account](http://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) **like** [joe@fabrikam.com](mailto:joe@fabrikam.com) **because Microsoft accounts like** [joe@live.com](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) **or** [joe@hotmail.com](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) **are not supported.**
 
 _NOTE: Currently the Azure SQL Database Deployment task will not work for accounts that have two factor authentication enabled, to support this ability to specify_ [Service Principal](https://azure.microsoft.com/en-in/documentation/articles/resource-group-create-service-principal-portal/) _in the Service Connections is coming soon._
 
 Similarly, for Azure MSDN accounts, one can either use a Service Principal or a work account. It's easy to create a work account as shown below:
 
-1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the account in VSO:
+1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the account in VSTS:
     * Add the Active Directory account to the co-administrators in the subscription. Go to the Settings and then click on administrators and add the account as a co-admin like, [testuser@ambrishmhotmail.onmicrosoft.com](mailto:testuser@ambrishmhotmail.onmicrosoft.com)
     * Login to the portal with this Active Directory account wiz. [testuser@ambrishmhotmail.onmicrosoft.com](mailto:testuser@ambrishmhotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
-2. Add that user and password in the service connections in the VSO and deployments will work with that account.
+2. Add that user and password in the service connections in the VSTS and deployments will work with that account.
 
 ### Azure SQL Server
 

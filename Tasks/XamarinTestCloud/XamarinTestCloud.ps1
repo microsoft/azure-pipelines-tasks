@@ -161,7 +161,7 @@ foreach ($ap in $appFiles)
     Invoke-Tool -Path $testCloud -Arguments $argument 
 }
 
-# Publish nunit test results to VSO
+# Publish nunit test results to VSTS
 if($publishResults) 
 {    
     $searchPattern = Join-Path $testDir "xamarintest_$buildId*.xml"
