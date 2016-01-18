@@ -42,19 +42,19 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
-            "label": "Azure Subscription",
+            "label": "Azure RM Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure subscription for the deployment. Only the supported Azure service connections are displayed and they are of the authentication type of Credentials or Service Principals.",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
             "name": "ConnectedServiceNameClassic",
             "type": "connectedService:Azure",
-            "label": "Azure Subscription",
+            "label": "Classic Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure subscription for the deployment. Only the supported Azure service connections are displayed and they are of the authentication type of Credentials or Service Principals.",
+            "helpMarkDown": "Select the Classic Azure subscription for the deployment.",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
@@ -81,9 +81,9 @@
             "label": "Action",
             "defaultValue": "Select Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
+            "helpMarkDown" : "Action to be performed on the Azure resources or cloud service.",
             "options": {
-                 "Select Resource Group": "Select Resource Group"
+                 "Select Resource Group": "Select Cloud Service"
                 },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },

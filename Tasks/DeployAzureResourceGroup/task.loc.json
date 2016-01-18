@@ -86,7 +86,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.actionClassic",
       "options": {
-        "Select Resource Group": "Select Resource Group"
+        "Select Resource Group": "Select Cloud Service"
       },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
     },

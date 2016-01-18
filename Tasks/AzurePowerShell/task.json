@@ -35,19 +35,19 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:Azure",
-            "label": "Azure Subscription",
+            "label": "Classic Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription to configure before running PowerShell",
+            "helpMarkDown": "Classic Azure subscription to configure before running PowerShell",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
             "name": "ConnectedServiceNameARM",
             "type": "connectedService:AzureRM",
-            "label": "Azure Subscription",
+            "label": "Azure RM Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription to configure before running PowerShell",
+            "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
         },
         {
