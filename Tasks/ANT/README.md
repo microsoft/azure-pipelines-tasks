@@ -11,7 +11,7 @@
 ####JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
 
-- **Publish to VSTS/TFS :** Select this option to publish JUnit Test results produced by the Gradle build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS.
+- **Publish to VSTS/TFS :** Select this option to publish JUnit Test results produced by the Ant build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS.
 
 - **Test Results Files :** This option wil appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
 
@@ -20,9 +20,9 @@ Use the next three options to manage your JUnit test results in VSTS
 ####Code Coverage
 Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
 
-- **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported.
+- **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported. For JaCoCo, make sure jacocoant.jar is available in lib folder of Ant installation. For cobertura, set up an environment variable `COBERTURA_HOME` pointing to the cobertura jars location.
 
-- **Class Files Directories :** Provide comma separated list of relative paths from ant build file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. For example: target/classes,target/testClasses.
+- **Class Files Directories :** Provide comma separated list of relative paths from ant build file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. For example: target/classes,target/testClasses.  [Click here](http://www.eclemma.org/jacoco/trunk/doc/ant.html) to know more about Jacoco and [Click here](https://github.com/cobertura/cobertura/wiki/Ant-Task-Reference) to know more about Cobertura.
 
 - **Class Inclusion/Exclusion Filters :** This option is enabled only when you select one tool in the above option. Provide a 
 comma separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.
