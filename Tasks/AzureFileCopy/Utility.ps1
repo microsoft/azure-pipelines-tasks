@@ -255,13 +255,12 @@ function Upload-FilesToAzureContainer
     }
 }
 
-function Does-AzureVMMatchFilterCriteria
+function Does-AzureVMMatchTagFilterCriteria
 {
     param([object]$azureVMResource,
-          [string]$resourceFilteringMethod,
           [string]$filter)
 
-    if($azureVMResource -and -not [string]::IsNullOrEmpty($resourceFilteringMethod))
+    if($azureVMResource)
     {
         # If no filters are provided, by default operations are performed on all azure resources
         if([string]::IsNullOrEmpty($filter))
@@ -317,7 +316,7 @@ function Get-TagBasedFilteredAzureVMs
         $filteredAzureVMResources = @()
         foreach($azureVMResource in $azureVMResources)
         {
-            if(Does-AzureVMMatchFilterCriteria -azureVMResource $azureVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            if(Does-AzureVMMatchTagFilterCriteria -azureVMResource $azureVMResource -filter $filter)
             {
                 Write-Verbose -Verbose "azureVM with name: $($azureVMResource.Name) matches filter criteria"
                 $filteredAzureVMResources += $azureVMResource
@@ -337,6 +336,7 @@ function Get-MachineBasedFilteredAzureVMs
     {
         $filteredAzureVMResources = @()
 
+        $machineFilterArray = $filter.Split(',').Trim()
         $machineFilterArray = $machineFilterArray | % {$_.ToLower()} | Select -Uniq
         foreach($machine in $machineFilterArray)
         {
