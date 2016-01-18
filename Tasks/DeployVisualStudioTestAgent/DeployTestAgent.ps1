@@ -23,6 +23,10 @@ Function CmdletHasMember($memberName) {
     return $cmdletParameter
 }
 
+Function Get-PersonalAccessToken($vssEndPoint) {
+    return $vssEndpoint.Authorization.Parameters.AccessToken
+}
+
 Write-Verbose "Entering script DeployTestAgent.ps1"
 Write-Verbose "testMachineInput = $testMachineGroup"
 Write-Verbose "WinRmProtocal = $winRmProtocol"
@@ -70,15 +74,15 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 Write-Verbose "Getting Personal Access Token for the Run"
 $vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
-$personalAccessToken = $vssEndpoint.Authorization.Parameters.AccessToken
+$personalAccessToken = Get-PersonalAccessToken $vssEndpoint
 
-$taskContextMemberExists  = CmdletHasMember "TaskContext"
-
-if ( [string]::IsNullOrEmpty($personalAccessToken))
+if (!$personalAccessToken)
 {
     Write-Host "##vso[task.logissue type=error;code=001002;]"
     throw (Get-LocalizedString -Key "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator")
 }
+
+$taskContextMemberExists  = CmdletHasMember "TaskContext"
 
 if($taskContextMemberExists){
     Write-Verbose "Calling Register Environment cmdlet"
