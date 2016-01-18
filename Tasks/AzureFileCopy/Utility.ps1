@@ -255,13 +255,12 @@ function Upload-FilesToAzureContainer
     }
 }
 
-function Does-AzureVMMatchFilterCriteria
+function Does-AzureVMMatchTagFilterCriteria
 {
     param([object]$azureVMResource,
-          [string]$resourceFilteringMethod,
           [string]$filter)
 
-    if($azureVMResource -and -not [string]::IsNullOrEmpty($resourceFilteringMethod))
+    if($azureVMResource)
     {
         # If no filters are provided, by default operations are performed on all azure resources
         if([string]::IsNullOrEmpty($filter))
@@ -317,7 +316,7 @@ function Get-TagBasedFilteredAzureVMs
         $filteredAzureVMResources = @()
         foreach($azureVMResource in $azureVMResources)
         {
-            if(Does-AzureVMMatchFilterCriteria -azureVMResource $azureVMResource -resourceFilteringMethod $resourceFilteringMethod -filter $filter)
+            if(Does-AzureVMMatchTagFilterCriteria -azureVMResource $azureVMResource -filter $filter)
             {
                 Write-Verbose -Verbose "azureVM with name: $($azureVMResource.Name) matches filter criteria"
                 $filteredAzureVMResources += $azureVMResource
@@ -337,6 +336,7 @@ function Get-MachineBasedFilteredAzureVMs
     {
         $filteredAzureVMResources = @()
 
+        $machineFilterArray = $filter.Split(',').Trim()
         $machineFilterArray = $machineFilterArray | % {$_.ToLower()} | Select -Uniq
         foreach($machine in $machineFilterArray)
         {
@@ -704,7 +704,7 @@ function Check-AzureCloudServiceExists
             if($connectionType -eq 'Certificate')
             {
                 Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
-                throw (Get-LocalizedString -Key "Provided resource group '{0}' does not exist." -ArgumentList $cloudServiceName)
+                throw (Get-LocalizedString -Key "Using selected Connection '{0}' unable to find the resource '{1}'. Selected connection '{0}' supports classic resources only (Service Management model)." -ArgumentList $connectionType, $cloudServiceName)
             }
         }
     }
@@ -816,7 +816,6 @@ function Copy-FilesSequentiallyToAzureVMs
           [string][Parameter(Mandatory=$true)]$containerSasToken,
           [string][Parameter(Mandatory=$true)]$targetPath,
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
-          [string][Parameter(Mandatory=$true)]$resourceGroupName,
           [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
@@ -835,7 +834,7 @@ function Copy-FilesSequentiallyToAzureVMs
         Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
-                            $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVMsCredentials, `
+                            $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVMsCredentials, `
                             $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocal, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $status = $copyResponse.Status
@@ -845,7 +844,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         if ($status -ne "Passed")
         {
-            $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' task parameter."
+            $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task. If set already, and the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
             $copyErrorMessage =  $copyResponse.Error.Message + $winrmHelpMsg
             Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
 
@@ -862,7 +861,6 @@ function Copy-FilesParallelyToAzureVMs
           [string][Parameter(Mandatory=$true)]$containerSasToken,
           [string][Parameter(Mandatory=$true)]$targetPath,
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
-          [string][Parameter(Mandatory=$true)]$resourceGroupName,
           [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
@@ -882,7 +880,7 @@ function Copy-FilesParallelyToAzureVMs
         Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
         $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
-                   $resourceFQDN, $storageAccount, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, `
+                   $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, `
                    $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocal, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $Jobs.Add($job.Id, $resourceProperties)
@@ -910,8 +908,8 @@ function Copy-FilesParallelyToAzureVMs
                     $errorMessage = ""
                     if($output.Error -ne $null)
                     {
-                        $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' task parameter."
-                        $errorMessage = $output.Error.Message + $winrmHelpMsg            
+                        $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task. If set already, and the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
+                        $errorMessage = $output.Error.Message + $winrmHelpMsg
                     }
 
                     Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
@@ -951,23 +949,23 @@ function Copy-FilesToAzureVMsFromStorageContainer
     {
 
         Copy-FilesSequentiallyToAzureVMs `
-                -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
-                -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
-                -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
+                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
+                -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
+                -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
     }
     # copies files parallely
     else
     {
         Copy-FilesParallelyToAzureVMs `
-                -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
-                -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
-                -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
+                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
+                -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
+                -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
     }
 
     # if no error thrown, copy succesfully succeeded
-    Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $environmentName)
+    Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $resourceGroupName)
 }
 
 function Validate-CustomScriptExecutionStatus
@@ -975,7 +973,7 @@ function Validate-CustomScriptExecutionStatus
     param([string]$resourceGroupName,
           [string]$vmName,
           [string]$extensionName)
-		  
+
     Write-Verbose -Verbose "Validating the winrm configuration custom script extension status"
 
     $isScriptExecutionPassed = $true
