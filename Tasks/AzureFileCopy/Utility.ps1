@@ -704,7 +704,7 @@ function Check-AzureCloudServiceExists
             if($connectionType -eq 'Certificate')
             {
                 Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
-                throw (Get-LocalizedString -Key "Provided resource group '{0}' does not exist. Selected Connection '{1}' supports resource group in classic portal." -ArgumentList $cloudServiceName, $connectionType)
+                throw (Get-LocalizedString -Key "Using selected Connection '{0}' unable to find the resource '{1}'. Selected connection '{0}' supports classic resources only (Service Management model)." -ArgumentList $connectionType, $cloudServiceName)
             }
         }
     }
@@ -844,7 +844,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         if ($status -ne "Passed")
         {
-            $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task and ensure inbound NAT rules are configured for target port (5986), if the target vms are backed by a load balancer or associated with a network security group (NSG)."
+            $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task. If set already, and the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
             $copyErrorMessage =  $copyResponse.Error.Message + $winrmHelpMsg
             Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
 
@@ -908,7 +908,7 @@ function Copy-FilesParallelyToAzureVMs
                     $errorMessage = ""
                     if($output.Error -ne $null)
                     {
-                        $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task and ensure inbound NAT rules are configured for target port (5986), if the target vms are backed by a load balancer or associated with a network security group (NSG)."
+                        $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task. If set already, and the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
                         $errorMessage = $output.Error.Message + $winrmHelpMsg
                     }
 
