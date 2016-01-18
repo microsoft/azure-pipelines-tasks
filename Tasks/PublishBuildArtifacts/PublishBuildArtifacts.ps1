@@ -30,9 +30,10 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 # added to fix an issue we have with our on Prem TFS build vNext agent where it throws:  
 ##[error]The term 'Get-LocalizedString' is not recognized as the name of a cmdlet, function, script file, or operable program.
 # if the publish build artifacts task is used in a two step build process which contains a PowerShell script followed by the Publish Build Artifacts step
-$agentWorkerPath =  "$($env:AGENT_HOMEDIRECTORY)\agent\worker"
-$agentCommonModulePath = "$agentWorkerPath\Microsoft.TeamFoundation.DistributedTask.Agent.Common.dll"
-Import-Module $agentCommonModulePath
+$agentWorkerModulesPath = "$($env:AGENT_HOMEDIRECTORY)\agent\worker\Modules"
+$agentDistributedTaskCommonModulePath = "$agentWorkerModulesPath\Microsoft.TeamFoundation.DistributedTask.Task.Common\Microsoft.TeamFoundation.DistributedTask.Task.Common.dll"
+Write-Host "Importing VSTS Module $agentDistributedTaskCommonModulePath"
+Import-Module $agentDistributedTaskCommonModulePath
 
 $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
 $teamProjectId = Get-TaskVariable $distributedTaskContext "system.teamProjectId"
