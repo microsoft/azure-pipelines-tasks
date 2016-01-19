@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 19
+    "Patch": 20
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -30,6 +30,14 @@
       "name": "executionOptions",
       "displayName": "ms-resource:loc.group.displayName.executionOptions",
       "isExpanded": true
+    },
+    {
+      "name": "runUsingTestPlan",
+      "displayName": "ms-resource:loc.group.displayName.runUsingTestPlan",
+      "tags": [
+        "Preview"
+      ],
+      "isExpanded": false
     },
     {
       "name": "reportingOptions",
@@ -145,6 +153,70 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.autMachineGroup",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "testPlan",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlan",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testPlan",
+      "groupName": "runUsingTestPlan"
+    },
+    {
+      "name": "testSuite",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testSuite",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "MultiSelect": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testSuite",
+      "groupName": "runUsingTestPlan"
+    },
+    {
+      "name": "testConfiguration",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testConfiguration",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testConfiguration",
+      "groupName": "runUsingTestPlan"
+    },
+    {
+      "name": "runSettingsFilePreview",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.runSettingsFilePreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runSettingsFilePreview",
+      "groupName": "runUsingTestPlan"
+    },
+    {
+      "name": "overrideRunParamsPreview",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.overrideRunParamsPreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.overrideRunParamsPreview",
+      "groupName": "runUsingTestPlan"
+    },
+    {
+      "name": "codeCoverageEnabledPreview",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.codeCoverageEnabledPreview",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabledPreview",
+      "groupName": "runUsingTestPlan"
     }
   ],
   "sourceDefinitions": [
@@ -158,6 +230,27 @@
       "target": "autMachineGroup",
       "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
       "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    },
+    {
+      "target": "testPlan",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans",
+      "selector": "jsonpath:$.value[*].name",
+      "keySelector": "jsonpath:$.value[*].id",
+      "authKey": "tfs:DevTestLabs"
+    },
+    {
+      "target": "testConfiguration",
+      "endpoint": "/$(system.teamProject)/_apis/test/configurations",
+      "selector": "jsonpath:$.value[*].name",
+      "keySelector": "jsonpath:$.value[*].id",
+      "authKey": "tfs:DevTestLabs"
+    },
+    {
+      "target": "testSuite",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
+      "selector": "jsonpath:$.value[*].name",
+      "keySelector": "jsonpath:$.value[*].id",
       "authKey": "tfs:DevTestLabs"
     }
   ],
