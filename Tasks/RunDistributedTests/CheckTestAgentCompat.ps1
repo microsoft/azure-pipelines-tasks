@@ -26,13 +26,13 @@ function Check-AgentCompat($ProductVersion)
 
             $minorVersion=$null
             $majorVersion=$null
-            [Int]::TryParse($versionArray[0], [ref]$majorVersion)
-            [Int]::TryParse($versionArray[2], [ref]$minorVersion)
-
-            if($majorVersion -eq 14 -and $minorVersion -le 24712)
-            {
-              # Comparing with version of Agent last shipped that does not contain the changes.
-              Write-Error "Update Test Agent to be able to run tests from Test plan." -Verbose
+            if([Int]::TryParse($versionArray[0], [ref]$majorVersion) -and [Int]::TryParse($versionArray[2], [ref]$minorVersion))
+            {            
+              if($majorVersion -eq 14 -and $minorVersion -le 24712)
+              {
+                # Comparing with version of Agent last shipped that does not contain the changes.
+                Write-Error "" -Verbose
+              }
             }
           }
         }
