@@ -1,11 +1,11 @@
-[CmdletBinding()]
+[cmdletbinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-VSVersion_PS3.ps1
+. $PSScriptRoot\..\..\..\Tasks\VSBuild\Helpers.ps1
 Register-Mock Write-Warning
-Register-Mock Get-VSPath
+Register-Mock Get-VisualStudioPath
 
 # Act.
 $actual = Select-VSVersion -PreferredVersion ''

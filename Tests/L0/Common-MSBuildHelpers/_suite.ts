@@ -10,7 +10,7 @@ import path = require('path');
 var shell = require('shelljs');
 var ps = shell.which('powershell');
 
-describe('MSBuild-Legacy Suite', function () {
+describe('Common-MSBuildHelpers Suite', function () {
     this.timeout(20000);
 
     before((done) => {
@@ -22,11 +22,20 @@ describe('MSBuild-Legacy Suite', function () {
     });
 
     if (ps) {
+        it('(ConvertFrom-SerializedLoggingCommand) ignores malformed commands', (done) => {
+            psm.runPS(path.join(__dirname, 'ConvertFrom-SerializedLoggingCommand.IgnoresMalformedCommands.ps1'), done);
+        })
+        it('(ConvertFrom-SerializedLoggingCommand) parses into objects', (done) => {
+            psm.runPS(path.join(__dirname, 'ConvertFrom-SerializedLoggingCommand.ParsesIntoObjects.ps1'), done);
+        })
         it('(Format-MSBuildArguments) adds configuration property', (done) => {
             psm.runPS(path.join(__dirname, 'Format-MSBuildArguments.AddsConfigurationProperty.ps1'), done);
         })
         it('(Format-MSBuildArguments) adds platform property', (done) => {
             psm.runPS(path.join(__dirname, 'Format-MSBuildArguments.AddsPlatformProperty.ps1'), done);
+        })
+        it('(Format-MSBuildArguments) adds VS version property', (done) => {
+            psm.runPS(path.join(__dirname, 'Format-MSBuildArguments.AddsVSVersionProperty.ps1'), done);
         })
         it('(Get-SolutionFiles) resolves wildcards', (done) => {
             psm.runPS(path.join(__dirname, 'Get-SolutionFiles.ResolvesWildcards.ps1'), done);
@@ -46,38 +55,8 @@ describe('MSBuild-Legacy Suite', function () {
         it('(Invoke-BuildTools) skips clean if specified', (done) => {
             psm.runPS(path.join(__dirname, 'Invoke-BuildTools.SkipsCleanIfSpecified.ps1'), done);
         })
-        it('(Invoke-BuildTools) skips restore if nu get not found', (done) => {
-            psm.runPS(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfNuGetNotFound.ps1'), done);
-        })
         it('(Invoke-BuildTools) skips restore if specified', (done) => {
             psm.runPS(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfSpecified.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) defaults method to location if location specified', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.DefaultsMethodToLocationIfLocationSpecified.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) defaults method to version if no location', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.DefaultsMethodToVersionIfNoLocation.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) returns latest version', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ReturnsLatestVersion.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) returns specified location', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ReturnsSpecifiedLocation.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) returns specified version', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ReturnsSpecifiedVersion.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) reverts to latest version if version not found', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.RevertsToLatestVersionIfVersionNotFound.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) reverts to version if no location specified', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.RevertsToVersionIfNoLocationSpecified.ps1'), done);
-        })
-        it('(Select-MSBuildLocation) throws if version not found', (done) => {
-            psm.runPS(path.join(__dirname, 'Select-MSBuildLocation.ThrowsIfVersionNotFound.ps1'), done);
-        })
-        it('passes arguments', (done) => {
-            psm.runPS(path.join(__dirname, 'PassesArguments.ps1'), done);
         })
     }
 });

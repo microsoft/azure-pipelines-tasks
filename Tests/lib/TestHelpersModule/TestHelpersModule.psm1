@@ -1,4 +1,4 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 [hashtable]$mocks = @{ }
@@ -11,7 +11,6 @@ Export-ModuleMember -Verbose:$false -Function @(
     'Assert-IsNotNullOrEmpty'
     'Assert-IsNullOrEmpty'
     'Assert-IsGreaterThan'
-    'Assert-Parses'
     'Assert-Throws'
     'Assert-WasCalled'
     'Register-Mock'
