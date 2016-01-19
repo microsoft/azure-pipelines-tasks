@@ -7,10 +7,14 @@
   "loc.description": "Run a PowerShell script",
   "loc.instanceNameFormat": "Powershell: $(scriptName)",
   "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.type": "Type",
+  "loc.input.help.type": "File Path or Inline Script",
   "loc.input.label.scriptName": "Script filename",
   "loc.input.help.scriptName": "Path of the script to execute. Should be fully qualified path or relative to the default working directory.",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters",
   "loc.input.label.workingFolder": "Working folder",
-  "loc.input.help.workingFolder": "Current working directory when script is run.  Defaults to the folder where the script is located."
+  "loc.input.help.workingFolder": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+  "loc.input.label.script": "Script",
+  "loc.input.help.script": "Write your scripts and have fun"
 }
