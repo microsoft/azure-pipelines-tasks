@@ -31,7 +31,7 @@ function Check-AgentCompat($ProductVersion)
               if($majorVersion -eq 14 -and $minorVersion -le 24712)
               {
                 # Comparing with version of Agent last shipped that does not contain the changes.
-                Write-Error "" -Verbose
+                Write-Error "The test agent being used does not support the feature to execute tests by selecting Test Suite(s). Please use a newer version." -Verbose
               }
             }
           }
