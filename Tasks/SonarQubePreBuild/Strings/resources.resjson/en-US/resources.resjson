@@ -27,5 +27,7 @@
   "loc.input.label.cmdLineArgs": "Additional Settings",
   "loc.input.help.cmdLineArgs": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](http://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "Settings File",
-  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](http://go.microsoft.com/fwlink/?LinkID=620062)"
+  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](http://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.label.breakBuild": "Fail the build on quality gate failure (SQ 5.3+)",
+  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. More information"
 }

@@ -1,3 +1,5 @@
+. ./SonarQubePostTestImpl.ps1
+
 $ProjectGuidAndFilePathMap = @{}
 $ComponentKeyAndPathMap = @{}
 $ComponentKeyAndRelativePathCache = @{}
@@ -111,20 +113,16 @@ function GetRelativeFilePath($component)
 }
 
 function GetSonarReportProcessedFilePath
-{
-    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
-
-    $sonarReportFolderPath = [System.IO.Path]::Combine($agentBuildDirectory, ".sonarqube", "out", ".sonar")
+{    
+    $sonarReportFolderPath = GetSonarScannerDirectory
     $sonarReportProcessedFilePath = [System.IO.Path]::Combine($sonarReportFolderPath, "code-analysis-report.json")
 
     return $sonarReportProcessedFilePath
 }
 
 function GetSonarReportFilePath
-{
-    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
-
-    $sonarReportFolderPath = [System.IO.Path]::Combine($agentBuildDirectory, ".sonarqube", "out", ".sonar")
+{ 
+    $sonarReportFolderPath = GetSonarScannerDirectory
     $sonarReportFilePath = [System.IO.Path]::Combine($sonarReportFolderPath, "sonar-report.json")
 
     return $sonarReportFilePath
@@ -132,27 +130,23 @@ function GetSonarReportFilePath
 
 function UploadCodeAnalysisArtifact
 {
-    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
-
-    $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath $agentBuildDirectory
+    $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath
 
     if ([System.IO.File]::Exists($sonarReportProcessedFilePath))
     {
-        Write-Host "Uploading build artifact $sonarReportProcessedFilePath"
+        Write-Host "Uploading issues identified by the analysis as an artifact $sonarReportProcessedFilePath"
         Write-Host "##vso[artifact.upload containerfolder=CodeAnalysisIssues;artifactname=CodeAnalysisIssues;]$sonarReportProcessedFilePath"
     }
     else
     {
-        Write-Warning "Could not find file $sonarReportProcessedFilePath"
+        Write-Warning "Could not find the file containing issues identified by the analysis at $sonarReportProcessedFilePath"
     }
 }
 
 function ProcessSonarCodeAnalysisReport
-{
-    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
-
-    $sonarReportFilePath = GetSonarReportFilePath $agentBuildDirectory
-    $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath $agentBuildDirectory
+{    
+    $sonarReportFilePath = GetSonarReportFilePath
+    $sonarReportProcessedFilePath = GetSonarReportProcessedFilePath
 
     #read sonar-report.json file as a json object
     $sonarReportFileContent = Get-Content -Raw $sonarReportFilePath
@@ -189,12 +183,10 @@ function ProcessSonarCodeAnalysisReport
     $sonarReportProcessedRootObj | ConvertTo-Json | Set-Content -Path $sonarReportProcessedFilePath
 }
 
-#creates a mapping of msbuild project guid and the path of .xxproj file on disk using ProjectInfo.xml file
+# Creates a mapping of msbuild project guid and the path of .xxproj file on disk using ProjectInfo.xml file
 function CreateProjectGuidAndPathMap
-{
-    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
-
-    $parentFolder = [System.IO.Path]::Combine($agentBuildDirectory, ".sonarqube", "out")
+{        
+    $parentFolder = GetSonarQubeOutDirectory
     $parentFolderItem = Get-Item $parentFolder
     $directories = $parentFolderItem.GetDirectories()
 
@@ -217,25 +209,23 @@ function CreateProjectGuidAndPathMap
     }
 }
 
-#post-process sonar runner output (sonar-report.json) to generate code-analysis-report.json which has new issues only and repo relative file paths
+# Post-process sonar runner output (sonar-report.json) to generate code-analysis-report.json which has new issues only and repo relative file paths
 function GenerateCodeAnalysisReport
-{
-    param([string][ValidateNotNullOrEmpty()]$agentBuildDirectory)
-
-    Write-Host "Post-processing sonar analysis report..."
-
-    Write-Verbose "GenerateCodeAnalysisReport: agentBuildDirectory=$agentBuildDirectory"
+{  
+    Write-Host "Post-processing the SonarQube analysis report..."    
 
     #bail out if sonar-report.json does not exist
-    $sonarReportFilePath = GetSonarReportFilePath $agentBuildDirectory
+    $sonarReportFilePath = GetSonarReportFilePath
     if (![System.IO.File]::Exists($sonarReportFilePath))
     {
         Write-Warning "Could not find file $sonarReportFilePath"
         return
     }
 
-    CreateProjectGuidAndPathMap $agentBuildDirectory
-    ProcessSonarCodeAnalysisReport $agentBuildDirectory
+    Write-Verbose "Report file found at $sonarReportFilePath"    
 
-    UploadCodeAnalysisArtifact $agentBuildDirectory
+    CreateProjectGuidAndPathMap
+    ProcessSonarCodeAnalysisReport
+
+    UploadCodeAnalysisArtifact
 }
