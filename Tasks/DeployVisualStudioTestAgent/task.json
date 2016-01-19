@@ -18,7 +18,7 @@
     "demands": [
 
     ],
-    "minimumAgentVersion": "1.92.0",
+    "minimumAgentVersion": "1.95.0",
     "groups":  [
         {
             "name": "testMachineGroups",
@@ -43,7 +43,7 @@
             "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>Or provide a Machine Group Name.",
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. `Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name.",
             "groupName": "testMachineGroups"
         },
         {
@@ -61,7 +61,7 @@
             "label": "Admin Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.",
+            "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as `$(passwordVariable)`. <br>You may mark variable type as 'secret' to secure it.",
             "groupName": "testMachineGroups"
         },
         {
@@ -74,7 +74,7 @@
                 "Http": "HTTP",
                 "Https": "HTTPS"
             },
-            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
+            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is `HTTPS`.",
             "groupName": "testMachineGroups"
         },
         {
@@ -105,7 +105,7 @@
             "label": "Filter Criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a list of machines like dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is to deploy agent on all machines represented in the Machines field.",
+            "helpMarkDown": "Provide a list of machines like `dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1`. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is to deploy agent on all machines represented in the Machines field.",
             "groupName": "testMachineGroups"
         },
         {
@@ -142,7 +142,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkId=536423"
+            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `http://go.microsoft.com/fwlink/?LinkId=536423`"
         },
         {
             "name": "updateTestAgent",

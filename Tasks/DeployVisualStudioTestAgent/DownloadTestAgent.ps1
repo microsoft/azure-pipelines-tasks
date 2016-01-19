@@ -5,15 +5,15 @@
 # Validate that the given source path exists and is not a directory.
 function ValidateSourceFile([string] $sourcePath)
 {
-   if(! (Test-Path -Path $sourcePath))
-   {
+    if(! (Test-Path -Path $sourcePath))
+    {
         throw "Test agent source path '{0}' is not accessible to the test machine. Please check if the file exists and that test machine has access to that machine" -f $sourcePath
-   }
-   
-   if((Get-Item $sourcePath) -is [System.IO.DirectoryInfo])
-   {
+    }
+    
+    if((Get-Item $sourcePath) -is [System.IO.DirectoryInfo])
+    {
         throw "Provide the source path of test agent including the installation file. Given path is '{0}'" -f $sourcePath
-   }
+    }
 }
 
 $source = $sourcePath.Split(";")
