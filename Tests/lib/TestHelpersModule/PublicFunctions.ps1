@@ -110,7 +110,7 @@ function Assert-WasCalled {
     }
 
     # Get the mock.
-    if (!($mock = $mocks[$Command])) {
+    if (!($mock = $script:mocks[$Command])) {
         throw "Mock not found for command: $Command"
     }
 
@@ -159,10 +159,10 @@ function Register-Mock {
     }
 
     # Check if the command is already registered.
-    if (!($mock = $mocks[$Command])) {
+    if (!($mock = $script:mocks[$Command])) {
         # Create the mock.
-        $functionName = [guid]::NewGuid().ToString()
-        $mocks[$Command] = New-Object -TypeName psobject -Property @{
+        $functionName = "$($Command)_$([guid]::NewGuid().ToString().GetHashCode())"
+        $script:mocks[$Command] = New-Object -TypeName psobject -Property @{
             'Command' = $Command
             'Implementations' = @( )
             'Invocations' = @( )
@@ -171,11 +171,11 @@ function Register-Mock {
                 param()
 
                 # Lookup the mock.
-                $commandName = $MyInvocation.InvocationName
+                $commandName = $MyInvocation.MyCommand.Name.Substring(0, $MyInvocation.MyCommand.Name.LastIndexOf('_'))
                 Write-Verbose "Invoking mock command: $commandName"
                 $OFS = " "
                 Write-Verbose "  Arguments: $args"
-                $mock = $mocks[$MyInvocation.InvocationName];
+                $mock = $script:mocks[$commandName];
                 if (!$mock) {
                     throw "Unexpected exception. Mock not found for command: $commandName"
                 }
@@ -216,7 +216,7 @@ function Register-Mock {
                 }
             }
         }
-        $mock = $mocks[$Command]
+        $mock = $script:mocks[$Command]
     }
 
     # Check if an implementation is specified.
@@ -255,10 +255,10 @@ function Unregister-Mock {
         [Parameter(Mandatory = $true)]
         [string]$Command)
 
-    $mock = $mocks[$Command]
+    $mock = $script:mocks[$Command]
     if ($mock) {
         Remove-Item -LiteralPath "alias:\$($mock.GlobalAlias.Name)"
         Remove-Item -LiteralPath $mock.GlobalFunction.PSPath
-        $mocks.Remove($Command)
+        $script:mocks.Remove($Command)
     }
 }

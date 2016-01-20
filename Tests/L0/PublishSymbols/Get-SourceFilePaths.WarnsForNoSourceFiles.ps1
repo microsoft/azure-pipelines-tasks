@@ -1,12 +1,12 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\SourceFileFunctions.ps1
 $symbolsFilePath = 'SomeDrive:\SomeSourceDir\SomeProject\SomeLibrary.pdb'
 $sourceRootPath = 'SomeDrive:\SomeSourceDir'
-Register-Mock Get-IndexedSourceFilePaths
+Register-Mock Get-DbghelpSourceFilePaths
 Register-Mock Test-Path { $true }
 foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Unregister-Mock Write-Host

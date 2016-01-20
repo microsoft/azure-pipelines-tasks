@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\VSBuild\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\VSBuild\LegacyHelpers.ps1
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '' }
     @{ VSVersion = '14.0' ; MSBuildVersion = '14.0' }

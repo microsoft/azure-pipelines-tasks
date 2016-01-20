@@ -274,10 +274,6 @@ describe('Gulp Suite', function() {
 		it('gets the default working directory', (done) => {
 			psm.runPS(path.join(__dirname, 'Helpers.WorkingDirectoryNotSet.ps1'), done);
 		})
-
-		it('parses without error', (done) => {
-			psm.runPS(path.join(__dirname, 'ParsesWithoutError.ps1'), done);
-		})
 	}
 
 });

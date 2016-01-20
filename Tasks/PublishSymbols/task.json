@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 18
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -105,10 +105,10 @@
     "instanceNameFormat": "Publish symbols path: $(SymbolsPath)",
     "execution": {
         "PowerShell3": {
-            "target": "PublishSymbols_PS3.ps1"
+            "target": "PublishSymbols.ps1"
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\PublishSymbols.ps1",
+            "target": "$(currentDirectory)\\LegacyPublishSymbols.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }

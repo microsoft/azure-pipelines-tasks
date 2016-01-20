@@ -1,15 +1,15 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
-$env:BUILD_REPOSITORY_PROVIDER = 'TfsGit'
-$env:BUILD_SOURCESDIRECTORY = 'Some build sources directory'
-$env:SYSTEM_TEAMPROJECTID = 'Some team project ID'
-$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = 'SomeProtocol://SomeCollection/'
-$env:BUILD_REPOSITORY_ID = 'Some repo ID'
-$env:BUILD_SOURCEVERSION = 'Some commit ID'
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\SourceProviderFunctions.ps1
+Register-Mock Get-VstsTaskVariable { 'TfsGit' } -- -Name Build.Repository.Provider -Require
+Register-Mock Get-VstsTaskVariable { 'Some build sources directory' } -- -Name Build.SourcesDirectory -Require
+Register-Mock Get-VstsTaskVariable { 'Some team project ID' } -- -Name System.TeamProjectId -Require
+Register-Mock Get-VstsTaskVariable { 'SomeProtocol://SomeCollection/' } -- -Name System.TeamFoundationCollectionUri -Require
+Register-Mock Get-VstsTaskVariable { 'Some repo ID' } -- -Name Build.Repository.Id -Require
+Register-Mock Get-VstsTaskVariable { 'Some commit ID' } -- -Name Build.SourceVersion -Require
 Register-Mock Invoke-DisposeSourceProvider
 
 # Act.
@@ -17,10 +17,10 @@ $actual = Get-SourceProvider
 
 # Assert.
 Assert-IsNotNullOrEmpty $actual
-Assert-AreEqual $actual.Name $env:BUILD_REPOSITORY_PROVIDER
-Assert-AreEqual $actual.SourcesRootPath $env:BUILD_SOURCESDIRECTORY
-Assert-AreEqual $actual.TeamProjectId $env:SYSTEM_TEAMPROJECTID
-Assert-AreEqual $actual.CollectionUrl "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
-Assert-AreEqual $actual.RepoId $env:BUILD_REPOSITORY_ID
-Assert-AreEqual $actual.CommitId $env:BUILD_SOURCEVERSION
-Assert-WasCalled Invoke-DisposeSourceProvider -Time 0
+Assert-AreEqual 'TfsGit' $actual.Name
+Assert-AreEqual 'Some build sources directory' $actual.SourcesRootPath
+Assert-AreEqual 'Some team project ID' $actual.TeamProjectId
+Assert-AreEqual 'SomeProtocol://SomeCollection' $actual.CollectionUrl
+Assert-AreEqual 'Some repo ID' $actual.RepoId
+Assert-AreEqual 'Some commit ID' $actual.CommitId
+Assert-WasCalled Invoke-DisposeSourceProvider -Times 0

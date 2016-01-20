@@ -29,6 +29,6 @@ Assert-AreEqual $cpuCount $readRunSettingsFile.RunSettings.RunConfiguration.MaxC
 if($fileExists){
 	Remove-Item $returnedFilePath
 }
-if(Test-Path $temptestsettingsfile){
+if(Test-Path $tempDir.FullName){
 	Remove-Item $tempDir.FullName
 }

@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 19
+    "Patch": 20
   },
   "demands": [
     "msbuild"
@@ -139,10 +139,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell3": {
-      "target": "MSBuild_PS3.ps1"
+      "target": "MSBuild.ps1"
     },
     "PowerShell": {
-      "target": "$(currentDirectory)\\MSBuild.ps1",
+      "target": "$(currentDirectory)\\LegacyMSBuild.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
