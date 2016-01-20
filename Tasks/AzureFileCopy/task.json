@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-        "Patch": 40
+    "Patch": 40
   },
   "demands": [
     "azureps"
@@ -66,7 +66,7 @@
     {
       "name": "ContainerName",
       "type": "string",
-            "label": "Container",
+      "label": "Container Name",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Name of the Container for uploading the files. Default is to create a container automatically.",

@@ -117,14 +117,11 @@ if ($destination -eq "AzureBlob")
     if(-not [string]::IsNullOrEmpty($outputStorageURI))
     {
         $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName
-#        Set-TaskVariable -Variable $outputStorageURI -Value $storageAccountContainerURI
-#        Write-Output "URI: $storageAccountContainerURI"
 		Write-Verbose "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI" -Verbose
     }
     if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
     {
         $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
-#		Write-Output "SASToken: $storageContainerSaSToken"
 		Write-Verbose "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken" -Verbose
     }
 
