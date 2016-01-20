@@ -1,11 +1,15 @@
 {
-  "loc.friendlyName": "npm 安裝",
+  "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "安裝 npm 套件",
-  "loc.instanceNameFormat": "npm 安裝 $(arguments)",
+  "loc.description": "執行 npm 命令",
+  "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "進階",
+  "loc.input.label.command": "命令",
+  "loc.input.help.command": "要執行的 npm 命令。[詳細資訊](https://docs.npmjs.com/).",
   "loc.input.label.arguments": "引數",
-  "loc.input.help.arguments": "傳遞至 npm install 的額外引數。",
+  "loc.input.help.arguments": "傳遞給 npm 的其他引數。",
   "loc.input.label.cwd": "工作目錄",
-  "loc.input.help.cwd": "執行 npm 安裝的目前工作目錄。預設為儲存機制根。"
+  "loc.input.help.cwd": "目前的工作目錄，npm 命令會在其中執行。預設值為儲存機制的根目錄。",
+  "loc.messages.NpmReturnCode": "Npm 已結束，傳回碼為: %d",
+  "loc.messages.NpmFailed": "Npm 失敗，錯誤為: %s"
 }

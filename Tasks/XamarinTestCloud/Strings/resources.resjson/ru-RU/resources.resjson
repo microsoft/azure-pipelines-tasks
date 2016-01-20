@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "Тестирование мобильных приложений в Xamarin Test Cloud с помощью Xamarin.UITest",
   "loc.instanceNameFormat": "Протестировать $(app) с помощью Xamarin.UITest в Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -20,9 +20,12 @@
   "loc.input.help.testDir": "Относительный путь к папке, содержащей тестовые сборки, например SolutionName/TestsProjectName/bin/Release",
   "loc.input.label.parallelization": "Распараллеливание",
   "loc.input.label.locale": "Системный язык",
+  "loc.input.help.locale": "Если ваш язык не отображается, выберите \"Другой\" и укажите его ниже, например ru_RU.",
+  "loc.input.label.userDefinedLocale": "Другая локаль",
+  "loc.input.help.userDefinedLocale": "Введите двухбуквенный код языка ISO-639 и двухбуквенный код страны ISO 3166 в формате [язык]_[страна], например ru_RU.",
   "loc.input.label.testCloudLocation": "Расположение test-cloud.exe",
   "loc.input.label.optionalArgs": "Дополнительные аргументы",
   "loc.input.help.optionalArgs": "Дополнительные аргументы, передаваемые в test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Опубликовать результаты в VSO/TFS",
-  "loc.input.help.publishNUnitResults": "Если этот параметр выбран, параметр --nunit-xml будет передан в test-cloud.exe. Результаты из XML-файла NUnit будут опубликованы в VSO/TFS."
+  "loc.input.label.publishNUnitResults": "Опубликовать результаты в VSO/Team Foundation Server",
+  "loc.input.help.publishNUnitResults": "Если этот параметр выбран, параметр --nunit-xml будет передан в test-cloud.exe. Результаты из XML-файла NUnit будут опубликованы в VSO/Team Foundation Server."
 }

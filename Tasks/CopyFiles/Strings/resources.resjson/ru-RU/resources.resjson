@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Копировать файлы",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "Копирование файлов из исходной папки в целевую с помощью шаблонов Minimatch, в которых на соответствие проверяются только пути к файлам, а не пути к папкам.",
+  "loc.instanceNameFormat": "Копировать файлы в: $(TargetFolder)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.SourceFolder": "Исходная папка",
+  "loc.input.help.SourceFolder": "Исходная папка, откуда будут запускаться шаблоны копирования. Если значение не указано, используется корень репозитория. Используйте [переменные](http://go.microsoft.com/fwlink/?LinkID=550988), если файлы находятся не в репозитории. Например: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Оглавление",
+  "loc.input.help.Contents": "Пути к файлам, которые будут включены в операцию копирования. Есть поддержка многострочных шаблонов Minimatch. [Подробнее...](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "Целевая папка",
+  "loc.input.help.TargetFolder": "Целевая папка, куда будут скопированы файлы. Используйте [переменные](http://go.microsoft.com/fwlink/?LinkID=550988). Например: $(build.artifactstagingdirectory)",
+  "loc.input.label.CleanTargetFolder": "Очистить целевую папку",
+  "loc.input.help.CleanTargetFolder": "Удалить все существующие файлы в целевой папке перед копированием",
+  "loc.input.label.OverWrite": "Перезаписать",
+  "loc.input.help.OverWrite": "Заменить существующий файл в целевой папке",
+  "loc.messages.FoundNFiles": "найдено файлов: %d",
+  "loc.messages.CleaningTargetFolder": "Очистка целевого каталога: %s",
+  "loc.messages.FileAlreadyExistAt": "Файл \"%s\" уже существует в \"%s\"",
+  "loc.messages.CopyingTo": "Копирование \"%s\" в \"%s\""
+}

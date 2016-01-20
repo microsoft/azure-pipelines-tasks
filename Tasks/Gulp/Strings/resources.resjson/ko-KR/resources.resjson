@@ -5,11 +5,16 @@
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.gulpFile": "Gulp 파일 경로",
-  "loc.input.help.gulpFile": "실행할 gulp 파일 스크립트 파일의 리포지토리 루트로부터의 상대적 경로입니다.",
+  "loc.input.help.gulpFile": "실행할 gulp 파일 스크립트 파일의 리포 루트로부터의 상대 경로입니다.",
   "loc.input.label.targets": "Gulp 작업",
   "loc.input.help.targets": "선택 사항. 공백으로 구분된 실행할 작업 목록입니다. 지정하지 않을 경우 기본 작업이 실행됩니다.",
   "loc.input.label.arguments": "인수",
   "loc.input.help.arguments": "추가 인수를 gulp에 전달했습니다. --gulpfile은 위의 gulpFile 입력을 통해 이미 추가되었으므로 필요하지 않습니다.",
   "loc.input.label.cwd": "작업 디렉터리",
-  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 스크립트가 있는 폴더를 기본값으로 지정합니다."
+  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 기본값을 스크립트가 있는 폴더로 지정합니다.",
+  "loc.input.label.gulpjs": "gulp.js 위치",
+  "loc.input.help.gulpjs": "에이전트가 전역 설치 Gulp를 찾을 수 없을 때 실행할 gulp.js입니다. 기본값을 cwd의 node_modules 폴더 아래에 있는 gulp.js로 지정합니다.",
+  "loc.messages.GulpNotInstalled": "Gulp가 전역으로 설치되지 않았거나 에이전트가 실행 중인 사용자 경로에 없으며 로컬 작업 폴더 %s에 없습니다.",
+  "loc.messages.GulpReturnCode": "반환 코드 %d(으)로 Gulp 종료",
+  "loc.messages.GulpFailed": "오류 %s(으)로 Gulp 실패"
 }

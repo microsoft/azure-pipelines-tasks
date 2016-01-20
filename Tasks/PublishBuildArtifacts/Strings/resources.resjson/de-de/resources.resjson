@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Buildartefakte veröffentlichen",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "Buildartefakte auf dem Server oder in einer Dateifreigabe veröffentlichen",
+  "loc.instanceNameFormat": "Artefakt veröffentlichen: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "Zu veröffentlichender Pfad",
+  "loc.input.help.PathtoPublish": "Der zu veröffentlichende Ordner- oder Dateipfad. Es kann sich um einen vollqualifizierten Pfad oder um einen relativen Pfad handeln, der relativ zum Repositorystamm ist. Platzhalter werden nicht unterstützt. Verwenden Sie [Variablen](http://go.microsoft.com/fwlink/?LinkID=550988), z. B. \"$(build.artifactstagingdirectory)\".",
+  "loc.input.label.ArtifactName": "Artefaktname",
+  "loc.input.help.ArtifactName": "Der Name des zu erstellenden Artefakts.",
+  "loc.input.label.ArtifactType": "Artefakttyp",
+  "loc.input.help.ArtifactType": "Der Typ des zu erstellenden Artefakts.",
+  "loc.input.label.TargetPath": "Pfad",
+  "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Dateien kopiert werden sollen",
+  "loc.messages.PublishBuildArtifactsFailed": "Fehler beim Veröffentlichen von Buildartefakten: %s"
+}

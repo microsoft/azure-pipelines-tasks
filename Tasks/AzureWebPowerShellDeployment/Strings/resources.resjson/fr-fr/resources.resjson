@@ -7,10 +7,12 @@
   "loc.input.help.ConnectedServiceName": "Abonnement Azure à cibler pour le déploiement.",
   "loc.input.label.WebSiteName": "Nom de l'application web",
   "loc.input.label.WebSiteLocation": "Emplacement de l'application web",
-  "loc.input.help.WebSiteLocation": "Sélectionnez une région pour le déploiement.",
+  "loc.input.help.WebSiteLocation": "Sélectionnez une région de déploiement. Les options possibles sont **Est des États-Unis**, **Est des États-Unis 2**, **Centre des États-Unis**, **Sud du centre des États-Unis**, **Ouest des États-Unis**, **Europe du Nord**, **Europe de l'Ouest**, etc.",
   "loc.input.label.Slot": "Emplacement",
   "loc.input.help.Slot": "Emplacement",
   "loc.input.label.Package": "Package Web Deploy",
   "loc.input.help.Package": "Chemin d'accès au package Web Deploy de Visual Studio dans le répertoire de l'artefact par défaut.",
+  "loc.input.label.doNotDelete": "Définir l'indicateur DoNotDelete",
+  "loc.input.help.doNotDelete": "Une fois cette option activée, les fichiers supplémentaires du package de déploiement web sont conservés durant la publication du site web.",
   "loc.input.label.AdditionalArguments": "Arguments supplémentaires"
 }

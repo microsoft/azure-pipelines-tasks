@@ -4,7 +4,7 @@
   "loc.description": "Générer une application iOS avec Xamarin sur Mac OS",
   "loc.instanceNameFormat": "Générer la solution Xamarin.iOS $(solution)",
   "loc.input.label.solution": "Solution",
-  "loc.input.help.solution": "Chemin d'accès relatif depuis la racine du référentiel à la solution Xamarin.iOS à générer.",
+  "loc.input.help.solution": "Chemin d'accès relatif depuis la racine de référentiel à la solution Xamarin.iOS à générer.",
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Les configurations standard sont Ad-Hoc, AppStore, Debug, Release.",
   "loc.input.label.mdtoolLocation": "Remplacer le chemin d'accès de mdtool",

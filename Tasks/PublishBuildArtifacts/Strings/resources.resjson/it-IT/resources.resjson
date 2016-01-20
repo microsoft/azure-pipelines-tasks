@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Pubblica artefatti di compilazione",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "Consente di pubblicare artefatti di compilazione nel server o in una condivisione file",
+  "loc.instanceNameFormat": "Pubblica artefatto: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "Percorso per la pubblicazione",
+  "loc.input.help.PathtoPublish": "Percorso del file o della cartella da pubblicare. Può essere un percorso completo o relativo alla radice del repository. I caratteri jolly non sono supportati. Usare [variabili](http://go.microsoft.com/fwlink/?LinkID=550988). Esempio: $(build.artifactstagingdirectory)",
+  "loc.input.label.ArtifactName": "Nome artefatto",
+  "loc.input.help.ArtifactName": "Nome dell'artefatto da creare.",
+  "loc.input.label.ArtifactType": "Tipo di artefatto",
+  "loc.input.help.ArtifactType": "Tipo dell'artefatto da creare.",
+  "loc.input.label.TargetPath": "Percorso",
+  "loc.input.help.TargetPath": "Condivisione file in cui copiare i file",
+  "loc.messages.PublishBuildArtifactsFailed": "Pubblicazione degli artefatti di compilazione non riuscita. Errore: %s"
+}

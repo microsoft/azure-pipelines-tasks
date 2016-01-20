@@ -6,7 +6,7 @@
   "loc.group.displayName.msbuildOptions": "MSBuild-Optionen",
   "loc.group.displayName.jdkOptions": "JDK-Optionen",
   "loc.input.label.project": "Projekt",
-  "loc.input.help.project": "Relativer Pfad vom Repositorystamm von zu erstellenden Xamarin.Android-Projekten. Platzhalter können verwendet werden. Beispiel: \"**\\*.csproj\" für alle CSPROJ-Dateien in allen Unterordnern. Das Projekt muss ein PackageForAndroid-Ziel haben.",
+  "loc.input.help.project": "Der relative Pfad vom Repositorystamm von zu erstellenden Xamarin.Android-Projekten. Platzhalter können verwendet werden. Beispiel: \"**\\*.csproj\" für alle CSPROJ-Dateien in allen Unterordnern. Das Projekt muss ein PackageForAndroid-Ziel haben.",
   "loc.input.label.target": "Ziel",
   "loc.input.help.target": "Erstellt diese Ziele in diesem Projekt. Trennen Sie mehrere Ziele mit einem Semikolon.",
   "loc.input.label.outputDir": "Ausgabeverzeichnis",

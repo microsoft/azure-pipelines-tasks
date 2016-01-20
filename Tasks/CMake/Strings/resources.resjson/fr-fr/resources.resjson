@@ -6,5 +6,7 @@
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail actuel pendant l'exécution de cmake.",
   "loc.input.label.cmakeArgs": "Arguments",
-  "loc.input.help.cmakeArgs": "Arguments passés à cmake"
+  "loc.input.help.cmakeArgs": "Arguments passés à cmake",
+  "loc.messages.CMakeReturnCode": "Sortie de CMake. Code de retour : %d",
+  "loc.messages.CMakeFailed": "Échec de CMake. Erreur : %s"
 }

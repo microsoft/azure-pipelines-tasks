@@ -7,10 +7,12 @@
   "loc.input.help.ConnectedServiceName": "Azure-Zielabonnement für Bereitstellung",
   "loc.input.label.WebSiteName": "Web App-Name",
   "loc.input.label.WebSiteLocation": "Web App-Ort",
-  "loc.input.help.WebSiteLocation": "Wählen Sie eine Region für die Bereitstellung aus.",
+  "loc.input.help.WebSiteLocation": "Wählen Sie eine Region für die Bereitstellung aus. Mögliche Optionen sind **USA, Osten**, **USA, Osten 2**, **USA, Mitte**, **USA, Süden-Mitte**, **USA, Westen**, **Europa, Norden**, **Europa, Westen** usw.",
   "loc.input.label.Slot": "Platz",
   "loc.input.help.Slot": "Platz",
   "loc.input.label.Package": "Web Deploy-Paket",
   "loc.input.help.Package": "Pfad des Visual Studio Web Deploy-Pakets unter dem Artefaktstandardverzeichnis.",
+  "loc.input.label.doNotDelete": "Kennzeichen \"DoNotDelete\" festlegen",
+  "loc.input.help.doNotDelete": "Durch Aktivieren dieser Option werden zusätzliche Dateien im Webbereitstellungspaket beim Veröffentlichen der Website beibehalten.",
   "loc.input.label.AdditionalArguments": "Zusätzliche Argumente"
 }

@@ -1,15 +1,20 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=627413)",
   "loc.description": "JavaScript Task Runner",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.gruntFile": "Grunt 파일 경로",
-  "loc.input.help.gruntFile": "실행할 grunt 파일 스크립트 파일의 리포지토리 루트로부터의 상대 경로입니다.",
+  "loc.input.help.gruntFile": "실행할 grunt 파일 스크립트 파일의 리포 루트로부터의 상대 경로입니다.",
   "loc.input.label.targets": "Grunt 작업",
   "loc.input.help.targets": "선택 사항. 공백으로 구분된 실행할 작업 목록입니다. 지정하지 않을 경우 기본 작업이 실행됩니다.",
   "loc.input.label.arguments": "인수",
   "loc.input.help.arguments": "추가 인수가 grunt로 전달되었습니다. --gruntfile은 위의 gruntFile 입력을 통해 이미 추가되었으므로 필요하지 않습니다.",
   "loc.input.label.cwd": "작업 디렉터리",
-  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 기본값은 스크립트가 있는 폴더입니다."
+  "loc.input.help.cwd": "스크립트 실행 시 현재 작업 디렉터리입니다. 기본값은 스크립트가 있는 폴더입니다.",
+  "loc.input.label.gruntCli": "Grunt-cli 위치",
+  "loc.input.help.gruntCli": "에이전트에서 전역 설치 Grunt-cli를 찾을 수 없을 때 실행할 Grunt-cli입니다. 기본값을 cwd의 node_modules 폴더에서 Grunt-cli로 지정합니다.",
+  "loc.messages.GruntCliNotInstalled": "Grunt-cli가 전역으로 설치되지 않았거나 에이전트가 실행 중인 사용자 경로에 없으며 로컬 작업 폴더 %s에 없습니다.",
+  "loc.messages.GruntReturnCode": "반환 코드 %d(으)로 Grunt 종료",
+  "loc.messages.GruntFailed": "오류 %s(으)로 Grunt 실패"
 }

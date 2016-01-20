@@ -6,10 +6,12 @@
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.solution": "Chemin d'accès de la solution",
   "loc.input.help.solution": "Chemin d'accès du fichier de la solution Visual Studio",
+  "loc.input.label.nugetConfigPath": "Chemin d'accès vers NuGet.config",
+  "loc.input.help.nugetConfigPath": "Pour utiliser les flux au sein de ce compte, archivez un fichier NuGet.config qui les répertorie comme sources pour les sélectionner. Le système de build pourra alors authentifier ces flux, à condition que vous ayez ajouté l'identité de build en tant que lecteur ou contributeur au flux.\n\nVous souhaitez en savoir plus sur les autorisations de flux ? [En savoir plus]( http://go.microsoft.com/fwlink/?LinkID=691232).",
   "loc.input.label.noCache": "Désactiver le cache local",
   "loc.input.help.noCache": "Équivaut à l'argument de ligne de commande -NoCache NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Arguments NuGet",
-  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
-  "loc.input.label.nuGetPath": "Chemin d'accès de NuGet.exe",
+  "loc.input.help.nuGetRestoreArgs": "Arguments supplémentaires passés à la commande restore de NuGet.exe. [Plus d'informations](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
+  "loc.input.label.nuGetPath": "Chemin de NuGet.exe",
   "loc.input.help.nuGetPath": "Indiquez éventuellement le chemin d'accès à NuGet.exe"
 }

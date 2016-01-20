@@ -4,12 +4,17 @@
   "loc.description": "Sistema di compilazione basato su attività di streaming di Node.js",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Avanzate",
-  "loc.input.label.gulpFile": "Percorso file di Gulp",
+  "loc.input.label.gulpFile": "Percorso file di gulp",
   "loc.input.help.gulpFile": "Percorso relativo dalla radice del repository del file di script del file gulp da eseguire.",
-  "loc.input.label.targets": "Attività di Gulp",
+  "loc.input.label.targets": "Attività di gulp",
   "loc.input.help.targets": "Facoltativo. Elenco di attività delimitate da spazio da eseguire. Se non è specificato, viene eseguita l'attività predefinita.",
   "loc.input.label.arguments": "Argomenti",
   "loc.input.help.arguments": "Argomenti aggiuntivi passati a gulp. --gulpfile non è necessario dal momento che è già stato aggiunto tramite l'input di gulpFile in precedenza.",
   "loc.input.label.cwd": "Directory di lavoro",
-  "loc.input.help.cwd": "Directory di lavoro corrente durante l'esecuzione dello script. Per impostazione predefinita, corrisponde alla cartella in cui si trova lo script."
+  "loc.input.help.cwd": "Directory di lavoro corrente durante l'esecuzione dello script. Per impostazione predefinita, corrisponde alla cartella in cui si trova lo script.",
+  "loc.input.label.gulpjs": "Percorso di gulp.js",
+  "loc.input.help.gulpjs": "File gulp.js da eseguire quando l'agente non riesce a trovare il file gulp installato globale. Per impostazione predefinita, viene usato il file gulp.js presente nella cartella node_modules di cwd.",
+  "loc.messages.GulpNotInstalled": "Gulp non è installato globalmente oppure non è presente nel percorso dell'utente con cui viene eseguito l'agente e non è incluso nella cartella di lavoro locale %s",
+  "loc.messages.GulpReturnCode": "Gulp terminato. Codice restituito: %d",
+  "loc.messages.GulpFailed": "Gulp non riuscito. Errore: %s"
 }

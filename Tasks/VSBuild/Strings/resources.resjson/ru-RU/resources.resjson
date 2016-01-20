@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Сборка Visual Studio",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Build with MSBuild and set the Visual Studio version property",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.description": "Сборка с помощью MSBuild и задание свойства версии Visual Studio",
   "loc.instanceNameFormat": "Сборка решения $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.solution": "Решение",
@@ -16,5 +16,12 @@
   "loc.input.help.vsVersion": "Если не удается найти предпочтительную версию, будет использована последняя найденная версия.",
   "loc.input.label.msbuildArchitecture": "Архитектура MSBuild",
   "loc.input.help.msbuildArchitecture": "При необходимости укажите архитектуру используемого средства MSBuild (x86, x64).",
-  "loc.input.label.logProjectEvents": "Записать сведения о проекте"
+  "loc.input.label.logProjectEvents": "Записать сведения о проекте",
+  "loc.messages.MSBuildLocationDeprecated0": "Параметр расположения MSBuild устарел. Выполняется пропуск значения \"{0}\"",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1": "Не удалось найти MSBuild для версии \"{0}\" и архитектуры \"{1}\".",
+  "loc.messages.MSBuildVersionDeprecated0": "Параметр версии MSBuild устарел. Выполняется пропуск значения \"{0}\".",
+  "loc.messages.UnexpectedVSVersion0": "Непредвиденная версия Visual Studio \"{0}\".",
+  "loc.messages.VSLocationDeprecated0": "Параметр расположения Visual Studio устарел. Выполняется пропуск значения \"{0}\"",
+  "loc.messages.VSNotFoundTry": "Не удалось найти Visual Studio. Попробуйте установить поддерживаемую версию Visual Studio. Список поддерживаемых версий см. в определении задач.",
+  "loc.messages.VSVersion0NotFoundLookingForLatest": "Не удалось найти версию Visual Studio \"{0}\". Выполняется поиск последней версии."
 }

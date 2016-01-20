@@ -6,7 +6,7 @@
   "loc.group.displayName.msbuildOptions": "MSBuild 옵션",
   "loc.group.displayName.jdkOptions": "JDK 옵션",
   "loc.input.label.project": "프로젝트",
-  "loc.input.help.project": "빌드할 Xamarin.Android 프로젝트의 리포지토리 루트로부터의 상대적 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어, 모든 하위 폴더에 있는 모든 csproj 파일을 표시하기 위해 `**\\*.csproj`를 사용할 수 있습니다. 프로젝트에 PackageForAndroid 대상이 있어야 합니다.",
+  "loc.input.help.project": "빌드할 Xamarin.Android 프로젝트의 리포 루트로부터의 상대 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어, 모든 하위 폴더에 있는 모든 csproj 파일을 표시하기 위해 `**\\*.csproj`를 사용할 수 있습니다. 프로젝트에 PackageForAndroid 대상이 있어야 합니다.",
   "loc.input.label.target": "대상",
   "loc.input.help.target": "이 프로젝트에서 이 대상을 빌드하세요. 여러 대상을 구분하려면 세미콜론을 사용하세요.",
   "loc.input.label.outputDir": "출력 디렉터리",

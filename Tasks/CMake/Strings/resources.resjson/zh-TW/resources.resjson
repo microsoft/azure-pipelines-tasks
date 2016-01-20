@@ -6,5 +6,7 @@
   "loc.input.label.cwd": "工作目錄",
   "loc.input.help.cwd": "執行 cmake 時的目前工作目錄。",
   "loc.input.label.cmakeArgs": "引數",
-  "loc.input.help.cmakeArgs": "傳遞至 cmake 的引數"
+  "loc.input.help.cmakeArgs": "傳遞至 cmake 的引數",
+  "loc.messages.CMakeReturnCode": "CMake 已結束，傳回碼為: %d",
+  "loc.messages.CMakeFailed": "CMake 失敗，錯誤為: %s"
 }

@@ -6,7 +6,7 @@
   "loc.group.displayName.jarsignerOptions": "Jarsigner 選項",
   "loc.group.displayName.zipalignOptions": "Zipalign 選項",
   "loc.input.label.files": "APK 檔案",
-  "loc.input.help.files": "來自檔案儲存機制根的相對路徑。可使用萬用字元。例如，適用 bin 子資料夾中所有 APK 檔的 `**\\bin\\*.apk`。",
+  "loc.input.help.files": "來自檔案儲存機制根路徑的相對路徑。可使用萬用字元。例如，`**\\bin\\*.apk` 即適用於 bin 子資料夾中的所有 APK 檔。",
   "loc.input.label.jarsign": "簽署 APK",
   "loc.input.label.keystoreFile": "Keystore 檔案",
   "loc.input.help.keystoreFile": "KeyStore 檔的完整路徑。",

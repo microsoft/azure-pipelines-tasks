@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "Realice pruebas de aplicaciones móviles con Xamarin Test Cloud mediante Xamarin.UITest",
+  "loc.description": "Probar aplicaciones móviles con Xamarin Test Cloud mediante Xamarin.UITest",
   "loc.instanceNameFormat": "Probar $(app) con Xamarin.UITest en Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.app": "Archivo de la aplicación",
@@ -20,9 +20,12 @@
   "loc.input.help.testDir": "Ruta de acceso relativa a la carpeta que contiene los ensamblados de prueba, como: nombreDeSolución/nombreDeProyectoDePruebas/bin/Release",
   "loc.input.label.parallelization": "Paralelización",
   "loc.input.label.locale": "Idioma del sistema",
+  "loc.input.help.locale": "Si no aparece su idioma, seleccione 'Otro' e indique a continuación su configuración regional, por ejemplo es_ES.",
+  "loc.input.label.userDefinedLocale": "Otra configuración regional",
+  "loc.input.help.userDefinedLocale": "Escriba un código de idioma ISO-639 de dos letras con un código de país ISO 3166 de dos letras en el formato [idioma]_[país], por ejemplo, es_ES.",
   "loc.input.label.testCloudLocation": "Ubicación de test-cloud.exe",
   "loc.input.label.optionalArgs": "Argumentos opcionales",
   "loc.input.help.optionalArgs": "Argumentos adicionales pasados a test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Publicar resultados en VSO/TFS",
-  "loc.input.help.publishNUnitResults": "Si se selecciona la opción --nunit-xml, se pasará a test-cloud.exe. Los resultados del archivo XML NUnit se publicarán en VSO/TFS."
+  "loc.input.label.publishNUnitResults": "Publicar resultados en VSO o TFS",
+  "loc.input.help.publishNUnitResults": "Si se selecciona la opción --nunit-xml, se pasará a test-cloud.exe. Los resultados del archivo XML NUnit se publicarán en VSO o TFS."
 }

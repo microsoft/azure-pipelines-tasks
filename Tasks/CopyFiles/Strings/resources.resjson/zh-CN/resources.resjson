@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "复制文件",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "使用最小匹配模式(最小匹配模式将仅匹配文件路径，而不匹配文件夹路径)将文件从源文件夹复制到目标文件夹",
+  "loc.instanceNameFormat": "将文件复制到: $(TargetFolder)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.SourceFolder": "源文件夹",
+  "loc.input.help.SourceFolder": "将在其中运行复制模式的源文件夹。为空表示存储库的根。如果存储库中没有文件，请使用[变量](http://go.microsoft.com/fwlink/?LinkID=550988)。示例: $(agent.builddirectory)",
+  "loc.input.label.Contents": "内容",
+  "loc.input.help.Contents": "要包含在副本中的文件路径。支持多行或最小匹配模式。[详细信息](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "目标文件夹",
+  "loc.input.help.TargetFolder": "文件将复制到的目标文件夹。使用[变量](http://go.microsoft.com/fwlink/?LinkID=550988)。示例: $(build.artifactstagingdirectory)",
+  "loc.input.label.CleanTargetFolder": "清理目标文件夹",
+  "loc.input.help.CleanTargetFolder": "复制之前，先删除目标文件夹中的现有全部文件",
+  "loc.input.label.OverWrite": "覆盖",
+  "loc.input.help.OverWrite": "替换目标文件夹中的现有文件",
+  "loc.messages.FoundNFiles": "已找到 %d 个文件",
+  "loc.messages.CleaningTargetFolder": "正在清理目标文件夹: %s",
+  "loc.messages.FileAlreadyExistAt": "%s 处已存在文件 %s",
+  "loc.messages.CopyingTo": "正在将 %s 复制到 %s"
+}
