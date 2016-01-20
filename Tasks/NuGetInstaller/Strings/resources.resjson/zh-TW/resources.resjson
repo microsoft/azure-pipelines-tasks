@@ -6,10 +6,12 @@
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.solution": "方案的路徑",
   "loc.input.help.solution": "Visual Studio 方案檔案的路徑",
+  "loc.input.label.nugetConfigPath": "NuGet.config 的路徑",
+  "loc.input.help.nugetConfigPath": "若要在此帳戶中使用摘要，可查看 NuGet.config。NuGet.config 會將這些摘要列為來源，您可以在其中選取。倘若您以摘要的讀者或參與者的身分加入建置身分識別，這可讓建置系統向這些摘要驗證其身分。\n\n想進一步了解摘要權限嗎? [進一步了解]( http://go.microsoft.com/fwlink/?LinkID=691232)。",
   "loc.input.label.noCache": "停用本機快取",
   "loc.input.help.noCache": "相當於 -NoCache NuGet.exe 命令列引數",
   "loc.input.label.nuGetRestoreArgs": "NuGet 引數",
-  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
+  "loc.input.help.nuGetRestoreArgs": "傳遞至 NuGet.exe 還原的其他引數。[詳細資訊](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路徑",
   "loc.input.help.nuGetPath": "選擇性地提供 NuGet.exe 的路徑"
 }

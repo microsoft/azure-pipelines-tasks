@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 19
+        "Patch": 21
     },
     "demands": [
     ],
@@ -28,6 +28,12 @@
             "name": "executionOptions",
             "displayName": "Execution Options",
             "isExpanded": true
+        },
+        {
+            "name": "runUsingTestPlan",
+            "displayName": "Run using Test Plan",
+            "tags" : [ "Preview" ],
+            "isExpanded": false
         },
         {
             "name": "reportingOptions",
@@ -144,10 +150,110 @@
             "required": false,
             "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
             "groupName": "reportingOptions"
+        },
+        {
+            "name": "testPlan",
+            "type": "pickList",
+            "label": "Test Plan",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "DisableManageLink": "True" 
+            },
+            "helpMarkDown": "Select a Test Plan.",
+            "groupName": "runUsingTestPlan"
+        },
+        {
+            "name": "testSuite",
+            "type": "pickList",
+            "label": "Test Suite",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "MultiSelect": "True",
+                "DisableManageLink": "True" 
+            },
+            "helpMarkDown": "Select Test Suites from the Test Plan.",
+            "groupName": "runUsingTestPlan"
+        },
+        {
+            "name": "testConfiguration",
+            "type": "pickList",
+            "label": "Test Configuration",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "DisableManageLink": "True" 
+            },
+            "helpMarkDown": "Select Test Configuration.",
+            "groupName": "runUsingTestPlan"
+        },
+        {
+            "name": "runSettingsFilePreview",
+            "type": "filePath",
+            "label": "Run Settings File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+            "groupName": "runUsingTestPlan"
+        },
+        {
+            "name": "overrideRunParamsPreview",
+            "type": "string",
+            "label": "Override Test Run Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
+            "groupName": "runUsingTestPlan"
+        },
+        {
+            "name": "codeCoverageEnabledPreview",
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Whether code coverage needs to be enabled.",
+            "groupName": "runUsingTestPlan"
         }
 
     ],
-    
+
+    "sourceDefinitions": [ 
+     { 
+         "target": "testMachineGroup", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
+     },
+     { 
+         "target": "autMachineGroup", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     },
+     {
+         "target": "testPlan",
+         "endpoint":"/$(system.teamProject)/_apis/test/plans",
+         "selector":"jsonpath:$.value[*].name",
+         "keySelector":"jsonpath:$.value[*].id",
+         "authKey": "tfs:DevTestLabs"
+     },
+     {
+         "target": "testConfiguration",
+         "endpoint":"/$(system.teamProject)/_apis/test/configurations",
+         "selector":"jsonpath:$.value[*].name",
+         "keySelector":"jsonpath:$.value[*].id",
+         "authKey": "tfs:DevTestLabs"
+     },
+     {
+         "target": "testSuite",
+         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
+         "selector":"jsonpath:$.value[*].name",
+         "keySelector":"jsonpath:$.value[*].id",
+         "authKey": "tfs:DevTestLabs"
+     }      
+    ], 
+
     "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
     "execution": {
         "PowerShell": {

@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Cargar archivos con cURL",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "Use cURL para cargar archivos con los protocolos admitidos (FTP, FTPS, SFTP, HTTP, etc.).",
-  "loc.instanceNameFormat": "Cargar $(files) con cURL",
+  "loc.instanceNameFormat": "Upload $(files) with cURL",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.files": "Archivos",
   "loc.input.help.files": "Archivos que se van a cargar. Puede usar caracteres comodín. Por ejemplo: \"**\\*.zip\" para todos los archivos ZIP en todas las subcarpetas.",
@@ -14,6 +14,6 @@
   "loc.input.help.url": "Especifique la dirección URL en la que se van a cargar los archivos. El directorio debe finalizar con una barra diagonal. Los protocolos posibles son DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET y TFTP.",
   "loc.input.label.options": "Argumentos opcionales",
   "loc.input.help.options": "Argumentos adicionales que se van a pasar a cURL.",
-  "loc.input.label.redirectStderr": "Redirigir error estándar a resultado estándar",
-  "loc.input.help.redirectStderr": "Agregue \"--stderr -\" a cURL. cURL escribe una barra de progreso en stderr de forma predeterminada, cosa que la compilación considerará un resultado erróneo. Suprimiendo este comportamiento."
+  "loc.input.label.redirectStderr": "Redirigir error estándar a salida estándar",
+  "loc.input.help.redirectStderr": "Agregue \"--stderr -\" a cURL. cURL escribe una barra de progreso en stderr de forma predeterminada, cosa que la compilación considerará un resultado erróneo. Se suprimirá este comportamiento."
 }

@@ -3,13 +3,14 @@
   "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "部署 Azure 雲端服務",
   "loc.instanceNameFormat": "Azure 部署: $(CsPkg)",
+  "loc.group.displayName.newServiceAdvancedOptions": "用於建立新服務的進階選項",
   "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
   "loc.input.help.ConnectedServiceName": "要加以部署的 Azure 訂用帳戶。",
   "loc.input.label.StorageAccount": "儲存體帳戶",
   "loc.input.help.StorageAccount": "儲存體帳戶必須存在才能部署應用程式。",
   "loc.input.label.ServiceName": "服務名稱",
   "loc.input.label.ServiceLocation": "服務位置",
-  "loc.input.help.ServiceLocation": "可能的選項為 **美國東部**、**美國東部 2**、**美國中部**、**美國中南部**、**美國西部**、**北歐**、**西歐** 以及其他。",
+  "loc.input.help.ServiceLocation": "請選取要部署新服務的區域。可能的選項為 **美國東部**、**美國東部 2**、**美國中部**、**美國中南部**、**美國西部**、**北歐**、**西歐** 以及其他。",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "預設成品目錄之下的 CsPkg 路徑。",
   "loc.input.label.CsCfg": "CsCfg",
@@ -20,5 +21,9 @@
   "loc.input.help.DeploymentLabel": "指定新部署的標籤名稱。若未指定，將會使用全域唯一識別項 (GUID)。",
   "loc.input.label.AppendDateTimeToLabel": "附加目前的日期與時間",
   "loc.input.help.AppendDateTimeToLabel": "將目前的日期與時間附加到部署標籤",
-  "loc.input.label.AllowUpgrade": "允許升級"
+  "loc.input.label.AllowUpgrade": "允許升級",
+  "loc.input.label.NewServiceAdditionalArguments": "其他引數",
+  "loc.input.help.NewServiceAdditionalArguments": "在建立全新的服務時傳入其他引數。這些引數將傳遞到 `New-AzureService` 指令程式。例如: `-Label 'MyTestService'`",
+  "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
+  "loc.input.help.NewServiceAffinityGroup": "在建立新服務時，將考慮此同質群組而非使用服務位置。"
 }

@@ -1,9 +1,9 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\VSBuild\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-MSBuildLocation_PS3.ps1
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '' }
     @{ VSVersion = '14.0' ; MSBuildVersion = '14.0' }
@@ -12,8 +12,8 @@ $mappings = @(
     @{ VSVersion = '10.0' ; MSBuildVersion = '4.0' }
 )
 foreach ($mapping in $mappings) {
-    Unregister-Mock Get-MSBuildLocation
-    Register-Mock Get-MSBuildLocation { "Some location" } -- -Version $mapping.MSBuildVersion -Architecture 'Some architecture'
+    Unregister-Mock Get-MSBuildPath
+    Register-Mock Get-MSBuildPath { "Some location" } -- -Version $mapping.MSBuildVersion -Architecture 'Some architecture'
     
     # Act.
     $actual = Select-MSBuildLocation -VSVersion $mapping.VSVersion -Architecture 'Some architecture'

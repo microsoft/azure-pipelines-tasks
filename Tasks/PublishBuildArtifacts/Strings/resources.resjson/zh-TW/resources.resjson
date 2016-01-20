@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "發行組建成品",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "將組建成品發行到伺服器或檔案共用",
+  "loc.instanceNameFormat": "發行成品: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "要發行的路徑",
+  "loc.input.help.PathtoPublish": "要發行的資料夾或檔案路徑。可以是完整路徑或相對於儲存機制根的相對路徑，不支援萬用字元。請使用 [變數](http://go.microsoft.com/fwlink/?LinkID=550988)。例如: $(build.artifactstagingdirectory)",
+  "loc.input.label.ArtifactName": "成品名稱",
+  "loc.input.help.ArtifactName": "要建立之成品的名稱。",
+  "loc.input.label.ArtifactType": "成品類型",
+  "loc.input.help.ArtifactType": "要建立之成品的類型。",
+  "loc.input.label.TargetPath": "路徑",
+  "loc.input.help.TargetPath": "要接受所複製之檔案的檔案共用",
+  "loc.messages.PublishBuildArtifactsFailed": "發行組建成品失敗，錯誤為: %s"
+}

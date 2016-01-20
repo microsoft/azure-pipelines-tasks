@@ -6,10 +6,12 @@
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.solution": "解决方案的路径",
   "loc.input.help.solution": "Visual Studio 解决方案文件的路径",
+  "loc.input.label.nugetConfigPath": "NuGet.config 的路径",
+  "loc.input.help.nugetConfigPath": "若要在此帐户中使用订阅源，请签入将这些订阅源列为源的 NuGet.config 并在此处选择它。这将允许生成系统向这些订阅源进行身份验证，前提是你已经将该生成身份添加为了该订阅源的读者或参与者。\n\n要了解有关订阅源权限的详细信息? [了解详情]( http://go.microsoft.com/fwlink/?LinkID=691232)。",
   "loc.input.label.noCache": "禁用本地缓存",
   "loc.input.help.noCache": "等效于 -NoCache NuGet.exe 命令行参数",
   "loc.input.label.nuGetRestoreArgs": "NuGet 参数",
-  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
+  "loc.input.help.nuGetRestoreArgs": "传递给 NuGet.exe restore 的其他参数。[详细信息](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路径",
   "loc.input.help.nuGetPath": "可以选择提供 NuGet.exe 的路径"
 }

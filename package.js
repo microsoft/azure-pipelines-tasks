@@ -21,7 +21,13 @@ var createError = function(msg) {
 	return new gutil.PluginError('PackageTask', msg);
 }
 
-var validate = function(folderName, task) {
+var validateModule = function(folderName, module) {
+    var defer = Q.defer();
+    defer.resolve();
+    return defer.promise;
+}
+
+var validateTask = function(folderName, task) {
 	var defer = Q.defer();
 
 	var vn = (task.name  || folderName);
@@ -151,7 +157,57 @@ var createStrings = function(task, pkgPath, srcPath) {
 	return defer.promise;
 };
 
-function packageTask(pkgPath){
+function locCommon() {
+    return through.obj(
+        function(moduleJson, encoding, done) {
+            // Validate the module.json file exists.
+            if (!fs.existsSync(moduleJson)) {
+                new gutil.PluginError('PackageModule', 'Module json cannot be found: ' + moduleJson.path);
+            }
+
+            if (moduleJson.isNull() || moduleJson.isDirectory()) {
+                this.push(moduleJson);
+                return callback();
+            }
+
+            // Deserialize the module.json.
+            var jsonContents = moduleJson.contents.toString();
+            var module = { };
+            try {
+                module = JSON.parse(jsonContents);
+            }
+            catch (err) {
+                done(createError('Common module ' + moduleJson.path + ' parse error: ' + err.message));
+                return;
+            }
+
+            // Build the content for the en-US resjson file.
+            var strPath = path.join(path.dirname(moduleJson.path), _strRelPath);
+            shell.mkdir('-p', strPath);
+            var strings = { };
+            if (module.messages) {
+                for (var key in module.messages) {
+                    var messageKey = LOC_MESSAGES + key;
+                    strings[messageKey] = module.messages[key];
+                }
+            }
+            
+            // Create the en-US resjson file.
+            var enPath = path.join(strPath, 'resources.resjson');
+            var enContents = '' + _banner;
+            enContents += JSON.stringify(strings, null, 2);
+            fs.writeFile(enPath, enContents, function(err) {
+                if (err) {
+                    done(createError('Could not create: ' + enPath + ' - ' + err.message));
+                    return;
+                }
+            })
+
+            done();
+        });
+}
+
+function packageTask(pkgPath, commonDeps, commonSrc){
     return through.obj(
 		function(taskJson, encoding, done) {
 		    if (!fs.existsSync(taskJson)) {
@@ -178,57 +234,66 @@ function packageTask(pkgPath){
 
 	        var tgtPath;
 
-	        validate(folderName, task)
+	        validateTask(folderName, task)
 	        .then(function() {
-				gutil.log('Packaging: ' + task.name);
-	        	
-	        	tgtPath = path.join(pkgPath, task.name);
-	        	shell.mkdir('-p', tgtPath);
-	        	shell.cp('-R', path.join(dirName, '*'), tgtPath);
-	        	shell.rm(path.join(tgtPath, '*.csproj'));
-	        	shell.rm(path.join(tgtPath, '*.md'));
+                // Copy the task to the layout folder.
+                gutil.log('Packaging: ' + task.name);
+                tgtPath = path.join(pkgPath, task.name);
+                shell.mkdir('-p', tgtPath);
+                shell.cp('-R', path.join(dirName, '*'), tgtPath);
+                shell.rm(path.join(tgtPath, '*.csproj'));
+                shell.rm(path.join(tgtPath, '*.md'));
 
+                // Build a list of external task lib dependencies.
+                var externals = require('./externals.json');
+                var libDeps = [ ];
+                if (task.execution['Node']) {
+                    libDeps.push({
+                        "name": "vsts-task-lib",
+                        "src": "node_modules",
+                        "dest": "node_modules"
+                    });
+                }
 
-	        	// 'statically link' libs
-	        	var externals = require('./externals.json');
+                if (task.execution['PowerShell3']) {
+                    libDeps.push({
+                        "name": "vsts-task-sdk",
+                        "src": path.join("node_modules", "vsts-task-sdk", "VstsTaskSdk"),
+                        "dest": path.join("ps_modules", "VstsTaskSdk")
+                    });
+                }
 
-	        	if (task.execution['Node']) {
-	        		var libVer = externals["vsts-task-lib"];
-					if (!libVer) {
-						throw new Error('External vsts-task-lib not defined in externals.json');
-					}
+                // Statically link the required external task libs.
+                libDeps.forEach(function (libDep) {
+                    var libVer = externals[libDep.name];
+                    if (!libVer) {
+                        throw new Error('External ' + libDep.name + ' not defined in externals.json.');
+                    }
 
-	        		gutil.log('linking vsts-task-lib ' + libVer + ' into ' + task.name);
+                    gutil.log('Linking ' + libDep.name + ' ' + libVer + ' into ' + task.name);
+                    var tskLibSrc = path.join(__dirname, '_temp', libDep.name, libVer, libDep.src);
+                    if (shell.test('-d', tskLibSrc)) {
+                        new gutil.PluginError('PackageTask', libDep.name + ' not found: ' + tskLibSrc);
+                    }
 
-	        		var tskLibSrc = path.join(__dirname, '_temp', 'vsts-task-lib', libVer, 'node_modules');
-	        		if (shell.test('-d', tskLibSrc)) {
-	        			new gutil.PluginError('PackageTask', 'vsts-task-lib not found: ' + tskLibSrc);
-	        		}
+                    var dest = path.join(tgtPath, libDep.dest) 
+                    shell.mkdir('-p', dest);
+                    shell.cp('-R', path.join(tskLibSrc, '*'), dest);
+                })
 
-					shell.cp('-R', tskLibSrc, tgtPath);
-	        	}
+                // Statically link the required internal common modules.
+                var taskDeps;
+                if ((taskDeps = commonDeps[task.name])) {
+                    taskDeps.forEach(function (dep) {
+                        gutil.log('Linking ' + dep.module + ' into ' + task.name);
+                        var src = path.join(commonSrc, dep.module);
+                        var dest = path.join(tgtPath, dep.dest);
+                        shell.mkdir('-p', dest);
+                        shell.cp('-R', src, dest);
+                    })
+                }
 
-	        	if (task.execution['PowerShell3']) {
-	        		var libVer = externals["vsts-task-sdk"];
-					if (!libVer) {
-						throw new Error('External vsts-task-sdk not defined in externals.json');
-					}
-
-	        		gutil.log('linking vsts-task-sdk ' + libVer + ' into ' + task.name);
-
-	        		var tskLibSrc = path.join(__dirname, '_temp', 'vsts-task-sdk', libVer, 'node_modules', 
-	        								  'vsts-task-sdk', 'VstsTaskSdk');
-
-	        		if (shell.test('-d', tskLibSrc)) {
-	        			new gutil.PluginError('PackageTask', 'vsts-task-sdk not found: ' + tskLibSrc);
-	        		}
-
-	        		var cpTarg = path.join(tgtPath, 'ps_modules');
-	        		shell.mkdir('-p', cpTarg);
-					shell.cp('-R', tskLibSrc, cpTarg);
-	        	}
-
-	        	return;        	
+	        	return;
 	        })
 	        .then(function() {
 	        	return createStrings(task, tgtPath, dirName);
@@ -241,4 +306,6 @@ function packageTask(pkgPath){
 	        })
 		});    
 }
+
+exports.LocCommon = locCommon;
 exports.PackageTask = packageTask;

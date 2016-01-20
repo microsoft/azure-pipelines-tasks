@@ -1,15 +1,17 @@
 {
   "loc.friendlyName": "Установщик NuGet",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613747)",
   "loc.description": "Установка и обновление отсутствующих пакетов NuGet",
   "loc.instanceNameFormat": "Восстановление NuGet $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.solution": "Путь к решению",
   "loc.input.help.solution": "Путь к файлу решения Visual Studio",
+  "loc.input.label.nugetConfigPath": "Путь к файлу NuGet.config",
+  "loc.input.help.nugetConfigPath": "Чтобы использовать веб-каналы в этой учетной записи, зарегистрируйте файл NuGet.config, который содержит список этих веб-каналов, и выберите его. Это позволит системе сборки проверить подлинность этих каналов, подразумевая, что удостоверение сборки добавлено в веб-канал в качестве подписчика или соавтора.\n\nХотите узнать больше о разрешениях для веб-канала? [Подробнее](http://go.microsoft.com/fwlink/?LinkID=691232).",
   "loc.input.label.noCache": "Отключить локальный кэш",
   "loc.input.help.noCache": "Эквивалентно аргументу -NoCache командной строки NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Аргументы NuGet",
-  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
+  "loc.input.help.nuGetRestoreArgs": "Дополнительные аргументы, передаваемые средству восстановления NuGet.exe. [Подробнее...](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Путь к NuGet.exe",
   "loc.input.help.nuGetPath": "При необходимости укажите путь к NuGet.exe"
 }

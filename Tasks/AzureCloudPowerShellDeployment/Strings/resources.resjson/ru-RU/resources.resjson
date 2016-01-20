@@ -1,15 +1,16 @@
 {
   "loc.friendlyName": "Развертывание облачной службы Azure",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Развертывание облачной службы Azure",
   "loc.instanceNameFormat": "Развертывание Azure: $(CsPkg)",
+  "loc.group.displayName.newServiceAdvancedOptions": "Расширенные параметры для создания новой службы",
   "loc.input.label.ConnectedServiceName": "Подписка Azure",
   "loc.input.help.ConnectedServiceName": "Целевая подписка Azure для развертывания.",
   "loc.input.label.StorageAccount": "Учетная запись хранения",
   "loc.input.help.StorageAccount": "Учетная запись хранения должна существовать до развертывания.",
   "loc.input.label.ServiceName": "Имя службы",
   "loc.input.label.ServiceLocation": "Расположение службы",
-  "loc.input.help.ServiceLocation": "Возможные варианты: **Восток США**, **Восток США 2**, **Центральная часть США**, **Южно-Центральная часть США**, **Запад США**, **Северная Европа**, **Западная Европа** и другие.",
+  "loc.input.help.ServiceLocation": "Выберите регион для развертывания новой службы. Возможные варианты: **Восток США**, **Восток США 2**, **Центральная часть США**, **Южно-Центральная часть США**, **Запад США**, **Северная Европа**, **Западная Европа** и другие.",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "Путь к CsPkg в каталоге артефактов по умолчанию.",
   "loc.input.label.CsCfg": "CsCfg",
@@ -20,5 +21,9 @@
   "loc.input.help.DeploymentLabel": "Указывает имя метки для нового развертывания. Если оно не указано, используется GUID.",
   "loc.input.label.AppendDateTimeToLabel": "Добавить текущую дату и время",
   "loc.input.help.AppendDateTimeToLabel": "Добавляет текущую дату и время в метку развертывания",
-  "loc.input.label.AllowUpgrade": "Разрешить обновление"
+  "loc.input.label.AllowUpgrade": "Разрешить обновление",
+  "loc.input.label.NewServiceAdditionalArguments": "Дополнительные аргументы",
+  "loc.input.help.NewServiceAdditionalArguments": "Передайте дополнительные аргументы во время создания новой службы. Они будут отправлены в командлет New-AzureService. Например, -Label 'MyTestService'",
+  "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
+  "loc.input.help.NewServiceAffinityGroup": "При создании новой службы будет учитываться эта территориальная группа, а не расположение службы."
 }

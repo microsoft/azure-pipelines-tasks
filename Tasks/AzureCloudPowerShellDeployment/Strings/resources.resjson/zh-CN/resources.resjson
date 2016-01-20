@@ -3,13 +3,14 @@
   "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "部署 Azure 云服务",
   "loc.instanceNameFormat": "Azure 部署: $(CsPkg)",
+  "loc.group.displayName.newServiceAdvancedOptions": "创建新服务的高级选项",
   "loc.input.label.ConnectedServiceName": "Azure 订阅",
   "loc.input.help.ConnectedServiceName": "要作为部署目标的 Azure 订阅。",
   "loc.input.label.StorageAccount": "存储帐户",
   "loc.input.help.StorageAccount": "存储帐户必须在部署之前便存在。",
   "loc.input.label.ServiceName": "服务名称",
   "loc.input.label.ServiceLocation": "服务位置",
-  "loc.input.help.ServiceLocation": "可能的选项有 **East US**、**East US 2**、**Central US**、**South Central US**、**West US**、**North Europe**、**West Europe** 和其他选项。",
+  "loc.input.help.ServiceLocation": "为新服务部署选择区域。可能的选项有 **美国东部**、**美国东部 2**、**美国中部**、**美国中南部**、**美国西部**、**欧洲北部**、**欧洲西部** 和其他选项。",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "默认项目目录下 CsPkg 的路径。",
   "loc.input.label.CsCfg": "CsCfg",
@@ -20,5 +21,9 @@
   "loc.input.help.DeploymentLabel": "指定新部署的标签名。如未指定，将使用全局唯一标识符(GUID)。",
   "loc.input.label.AppendDateTimeToLabel": "追加当前的日期和时间",
   "loc.input.help.AppendDateTimeToLabel": "将当前的日期和时间追加到部署标签",
-  "loc.input.label.AllowUpgrade": "允许升级"
+  "loc.input.label.AllowUpgrade": "允许升级",
+  "loc.input.label.NewServiceAdditionalArguments": "其他参数",
+  "loc.input.help.NewServiceAdditionalArguments": "创建全新服务时传入其他参数。这些参数将传递给 \"New-AzureService\" commandlet。例如: \"-Label 'MyTestService'\"。",
+  "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
+  "loc.input.help.NewServiceAffinityGroup": "创建新服务时，将考虑此地缘组而不使用服务位置。"
 }

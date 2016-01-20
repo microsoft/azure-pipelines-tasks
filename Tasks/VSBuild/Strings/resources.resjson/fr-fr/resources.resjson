@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Build Visual Studio",
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Build with MSBuild and set the Visual Studio version property",
+  "loc.description": "Générer avec MSBuild et définir la propriété de version Visual Studio",
   "loc.instanceNameFormat": "Générer la solution $(solution)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.solution": "Solution",
-  "loc.input.help.solution": "Chemin d'accès relatif depuis la racine du référentiel aux solutions ou au projet MSBuild à exécuter. Les caractères génériques sont autorisés. Par exemple, '**\\*.sln' pour tous les fichiers sln de tous les sous-dossiers.",
+  "loc.input.help.solution": "Chemin d'accès relatif depuis la racine de référentiel aux solutions ou au projet MSBuild à exécuter. Les caractères génériques sont autorisés. Par exemple, '**\\*.sln' pour tous les fichiers sln de tous les sous-dossiers.",
   "loc.input.label.msbuildArgs": "Arguments MSBuild",
   "loc.input.help.msbuildArgs": "Arguments supplémentaires passés à MSBuild.",
   "loc.input.label.platform": "Plateforme",
@@ -16,5 +16,12 @@
   "loc.input.help.vsVersion": "Si la version par défaut est introuvable, la dernière version trouvée est utilisée à la place.",
   "loc.input.label.msbuildArchitecture": "Architecture MSBuild",
   "loc.input.help.msbuildArchitecture": "Indiquez éventuellement l'architecture (x86, x64) de MSBuild à exécuter.",
-  "loc.input.label.logProjectEvents": "Enregistrer les détails du projet"
+  "loc.input.label.logProjectEvents": "Enregistrer les détails du projet",
+  "loc.messages.MSBuildLocationDeprecated0": "Le paramètre d'emplacement de MSBuild est déconseillé. Valeur '{0}' ignorée",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1": "MSBuild est introuvable pour la version '{0}' et l'architecture '{1}'.",
+  "loc.messages.MSBuildVersionDeprecated0": "Le paramètre de version de MSBuild est déconseillé. Valeur '{0}' ignorée.",
+  "loc.messages.UnexpectedVSVersion0": "Version inattendue de Visual Studio : '{0}'.",
+  "loc.messages.VSLocationDeprecated0": "Le paramètre d'emplacement de Visual Studio est déconseillé. Valeur '{0}' ignorée",
+  "loc.messages.VSNotFoundTry": "Visual Studio est introuvable. Essayez d'installer une version prise en charge de Visual Studio. Consultez la définition de tâche pour obtenir une liste des versions prises en charge.",
+  "loc.messages.VSVersion0NotFoundLookingForLatest": "Visual Studio version '{0}' est introuvable. Recherche de la dernière version."
 }

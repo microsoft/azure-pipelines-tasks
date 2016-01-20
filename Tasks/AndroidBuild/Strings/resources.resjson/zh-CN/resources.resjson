@@ -19,6 +19,7 @@
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "要用于 Android 虚拟设备(AVD)的 ABI。",
   "loc.input.label.avdForce": "覆盖现有 AVD",
+  "loc.input.help.avdForce": "正在将 --force 传递到 \"android create avd\" 命令。",
   "loc.input.label.avdOptionalArgs": "创建 AVD 可选参数",
   "loc.input.help.avdOptionalArgs": "传递给 \"android create avd\" 的其他参数。",
   "loc.input.label.startEmulator": "启动和停止 Android 仿真程序",

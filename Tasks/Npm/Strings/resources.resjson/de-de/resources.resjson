@@ -1,11 +1,15 @@
 {
-  "loc.friendlyName": "npm install",
+  "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "NPM-Pakete installieren",
-  "loc.instanceNameFormat": "npm install $(arguments)",
+  "loc.description": "Führt einen npm-Befehl aus.",
+  "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.command": "Befehl",
+  "loc.input.help.command": "Der auszuführende npm-Befehl. [Weitere Informationen](https://docs.npmjs.com/).",
   "loc.input.label.arguments": "Argumente",
-  "loc.input.help.arguments": "Zusätzliche Argumente, die an \"npm install\" übergeben werden.",
+  "loc.input.help.arguments": "Weitere Argumente, die an npm übergeben werden.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
-  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Ausführung von \"npm install\". Standardmäßig der Repositorystamm."
+  "loc.input.help.cwd": "Das aktuelle Arbeitsverzeichnis, in dem der npm-Befehl ausgeführt wird. Der Standardwert ist der Stamm des Repositorys.",
+  "loc.messages.NpmReturnCode": "Npm wurde mit dem folgenden Rückgabecode beendet: %d",
+  "loc.messages.NpmFailed": "Npm-Fehler: %s"
 }

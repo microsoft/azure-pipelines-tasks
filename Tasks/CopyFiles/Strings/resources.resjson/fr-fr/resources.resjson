@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Copier les fichiers",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "Copiez les fichiers du dossier source au dossier cible à l'aide de modèles minimatch (les modèles minimatch correspondent uniquement aux chemins d'accès de fichiers, et non aux chemins d'accès de dossiers)",
+  "loc.instanceNameFormat": "Copier les fichiers vers : $(TargetFolder)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.SourceFolder": "Dossier source",
+  "loc.input.help.SourceFolder": "Dossier source à partir duquel les modèles de copie sont exécutés.  La valeur vide est la racine du référentiel.  Utilisez [variables](http://go.microsoft.com/fwlink/?LinkID=550988) si les fichiers ne sont pas dans le référentiel. Exemple : $(agent.builddirectory)",
+  "loc.input.label.Contents": "Contenu",
+  "loc.input.help.Contents": "Chemins d'accès de fichiers à inclure dans la copie. Prend en charge plusieurs lignes de modèles minimatch. [Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "Dossier cible",
+  "loc.input.help.TargetFolder": "Dossier cible vers lequel les fichiers sont copiés. Utilisez [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Exemple : $(build.artifactstagingdirectory)",
+  "loc.input.label.CleanTargetFolder": "Effacer le dossier cible",
+  "loc.input.help.CleanTargetFolder": "Supprimer tous les fichiers existants dans le dossier cible avant de copier",
+  "loc.input.label.OverWrite": "Remplacer",
+  "loc.input.help.OverWrite": "Remplacer le fichier existant dans le dossier cible",
+  "loc.messages.FoundNFiles": "%d fichiers trouvés",
+  "loc.messages.CleaningTargetFolder": "Nettoyage du dossier cible : %s",
+  "loc.messages.FileAlreadyExistAt": "Le fichier %s existe déjà sur %s",
+  "loc.messages.CopyingTo": "Copie de %s vers %s"
+}

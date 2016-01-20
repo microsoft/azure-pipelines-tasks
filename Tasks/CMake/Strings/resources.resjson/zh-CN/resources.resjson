@@ -6,5 +6,7 @@
   "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "cmake 运行时的当前工作目录。",
   "loc.input.label.cmakeArgs": "参数",
-  "loc.input.help.cmakeArgs": "传递给 cmake 的参数"
+  "loc.input.help.cmakeArgs": "传递给 cmake 的参数",
+  "loc.messages.CMakeReturnCode": "CMake 已退出，返回代码为: %d",
+  "loc.messages.CMakeFailed": "CMake 失败，出现错误: %s"
 }

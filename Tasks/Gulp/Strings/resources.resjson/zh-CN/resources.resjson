@@ -2,14 +2,19 @@
   "loc.friendlyName": "Gulp",
   "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "基于生成系统的 Node.js 流任务",
-  "loc.instanceNameFormat": "gulp $(targets)",
+  "loc.instanceNameFormat": "Gulp $(targets)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.gulpFile": "Gulp 文件路径",
-  "loc.input.help.gulpFile": "相对于要运行的 gulp 文件脚本文件的存储库根的路径。",
+  "loc.input.help.gulpFile": "要运行的 Gulp 文件脚本文件的存储库根路径的相对路径。",
   "loc.input.label.targets": "Gulp 任务",
   "loc.input.help.targets": "可选。待运行任务的列表，以空格分隔。如未指定，则将运行默认任务。",
   "loc.input.label.arguments": "参数",
-  "loc.input.help.arguments": "传递给 gulp 的其他参数。无需 --gulpfile，因为已通过上面的 gulpFile 输入添加。",
+  "loc.input.help.arguments": "传递给 Gulp 的其他参数。无需 --gulpfile，因为已通过上面的 gulpFile 输入添加。",
   "loc.input.label.cwd": "工作目录",
-  "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。"
+  "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。",
+  "loc.input.label.gulpjs": "gulp.js 位置",
+  "loc.input.help.gulpjs": "代理找不到全局安装的 Gulp 时要运行的 gulp.js。默认为 cwd 的 node_modules 文件夹下的 gulp.js。",
+  "loc.messages.GulpNotInstalled": "Gulp 未全局安装(或不位于代理运行身份用户的路径下)，且不位于本地工作文件夹中: %s",
+  "loc.messages.GulpReturnCode": "Gulp 已退出，返回代码为: %d",
+  "loc.messages.GulpFailed": "Gulp 失败，出现错误: %s"
 }

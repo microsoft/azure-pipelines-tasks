@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 31
+    "Patch": 32
   },
   "demands": [
     "msbuild",
@@ -116,6 +116,15 @@
       "label": "ms-resource:loc.input.label.configFile",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.configFile",
+      "groupName": "advanced"
+    },
+    {
+      "name": "breakBuild",
+      "type": "boolean",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.breakBuild",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.breakBuild",
       "groupName": "advanced"
     }
   ],

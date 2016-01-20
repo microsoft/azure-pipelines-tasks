@@ -19,6 +19,7 @@
   "loc.input.label.avdAbi": "ABI AVD",
   "loc.input.help.avdAbi": "ABI da usare per il dispositivo virtuale Android (AVD).",
   "loc.input.label.avdForce": "Sovrascrivi AVD esistente",
+  "loc.input.help.avdForce": "Passaggio di --force al comando 'android create avd'.",
   "loc.input.label.avdOptionalArgs": "Argomenti facoltativi creazione AVD",
   "loc.input.help.avdOptionalArgs": "Argomenti aggiuntivi passati ad 'android create avd'.",
   "loc.input.label.startEmulator": "Avvia e arresta emulatore Android",
