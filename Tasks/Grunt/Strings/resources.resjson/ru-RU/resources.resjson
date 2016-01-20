@@ -1,15 +1,20 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[Дополнительные сведения](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=627413)",
   "loc.description": "Средство запуска задач JavaScript",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.gruntFile": "Путь к файлу Grunt",
-  "loc.input.help.gruntFile": "Относительный путь из корневого репозитория запускаемого файла скрипта файла Grunt.",
+  "loc.input.help.gruntFile": "Относительный путь от корня репозитория для запускаемого файла скрипта файла Grunt.",
   "loc.input.label.targets": "Задачи Grunt",
   "loc.input.help.targets": "Необязательно. Список запускаемых задач с разделителями-пробелами. Если он не указан, будет запущена задача по умолчанию.",
   "loc.input.label.arguments": "Аргументы",
   "loc.input.help.arguments": "Дополнительные аргументы, переданные Grunt. Параметр --gruntfile не требуется, так как он уже добавлен с помощью ввода gruntFile выше.",
-  "loc.input.label.cwd": "Рабочий каталог",
-  "loc.input.help.cwd": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий."
+  "loc.input.label.cwd": "Рабочая папка",
+  "loc.input.help.cwd": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий.",
+  "loc.input.label.gruntCli": "Расположение grunt-cli",
+  "loc.input.help.gruntCli": "Grunt-cli, подлежащий выполнению, когда агенту не удается найти глобально установленный grunt-cli. Значение по умолчанию — grunt-cli в папке node_modules в cwd.",
+  "loc.messages.GruntCliNotInstalled": "Grunt-cli не установлен глобально (или не находится в пути пользователя, от имени которого выполняется агент) и не находится в локальной рабочей папке: %s",
+  "loc.messages.GruntReturnCode": "Завершение работы Grunt с кодом возврата: %d",
+  "loc.messages.GruntFailed": "Сбой Grunt с ошибкой: %s"
 }

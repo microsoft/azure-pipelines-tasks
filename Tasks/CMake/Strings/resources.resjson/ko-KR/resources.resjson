@@ -6,5 +6,7 @@
   "loc.input.label.cwd": "작업 디렉터리",
   "loc.input.help.cwd": "cmake가 실행될 때 현재의 작업 디렉터리입니다.",
   "loc.input.label.cmakeArgs": "인수",
-  "loc.input.help.cmakeArgs": "인수가 cmake로 전달되었습니다."
+  "loc.input.help.cmakeArgs": "인수가 cmake로 전달되었습니다.",
+  "loc.messages.CMakeReturnCode": "반환 코드 %d(으)로 CMake 종료",
+  "loc.messages.CMakeFailed": "오류 %s(으)로 CMake 실패"
 }

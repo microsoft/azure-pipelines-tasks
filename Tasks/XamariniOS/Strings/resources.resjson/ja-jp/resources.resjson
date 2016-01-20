@@ -4,7 +4,7 @@
   "loc.description": "Xamarin を使用して Mac OS 上で iOS アプリをビルドします",
   "loc.instanceNameFormat": "Xamarin.iOS ソリューションのビルド $(solution)",
   "loc.input.label.solution": "ソリューション",
-  "loc.input.help.solution": "リポジトリ ルートを基準に指定した、ビルドする Xamarin.iOS ソリューションの相対パス。",
+  "loc.input.help.solution": "リポジトリのルートを基準に指定した、ビルドする Xamarin.iOS ソリューションの相対パス。",
   "loc.input.label.configuration": "構成",
   "loc.input.help.configuration": "標準構成は、Ad-Hoc、AppStore、Debug、Release です。",
   "loc.input.label.mdtoolLocation": "mdtool へのパスのオーバーライド",

@@ -6,5 +6,7 @@
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Ausführung von CMake.",
   "loc.input.label.cmakeArgs": "Argumente",
-  "loc.input.help.cmakeArgs": "An CMake übergebene Argumente"
+  "loc.input.help.cmakeArgs": "An CMake übergebene Argumente",
+  "loc.messages.CMakeReturnCode": "CMake wurde mit dem folgenden Rückgabecode beendet: %d",
+  "loc.messages.CMakeFailed": "CMake-Fehler: %s"
 }

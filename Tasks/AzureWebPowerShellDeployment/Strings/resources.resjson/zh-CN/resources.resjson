@@ -7,10 +7,12 @@
   "loc.input.help.ConnectedServiceName": "要作为部署目标的 Azure 订阅。",
   "loc.input.label.WebSiteName": "Web 应用名称",
   "loc.input.label.WebSiteLocation": "Web 应用位置",
-  "loc.input.help.WebSiteLocation": "为部署选择区域。",
+  "loc.input.help.WebSiteLocation": "为部署选择区域。可能的选项有 **美国东部**、**美国东部 2**、**美国中部**、**美国中南部**、**美国西部**、**欧洲北部**、**欧洲西部** 和其他选项。",
   "loc.input.label.Slot": "槽",
   "loc.input.help.Slot": "槽",
   "loc.input.label.Package": "Web 部署包",
   "loc.input.help.Package": "默认项目目录下 Visual Studio Web 部署包的路径。",
+  "loc.input.label.doNotDelete": "设置 DoNotDelete 标记",
+  "loc.input.help.doNotDelete": "启用此项后，将在发布网站时保留 Web 部署包中的其他文件。",
   "loc.input.label.AdditionalArguments": "其他参数"
 }

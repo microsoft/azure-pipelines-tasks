@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Сборка Android",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613716)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Сборка приложения Android с помощью Gradle и при необходимости запуск эмулятора для модульных тестов",
   "loc.instanceNameFormat": "Сборка Android $(gradleProj)",
   "loc.group.displayName.avdOptions": "Параметры виртуального устройства Android (AVD)",
@@ -19,6 +19,7 @@
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "ABI, используемый для виртуального устройства Android (AVD).",
   "loc.input.label.avdForce": "Перезаписать существующее устройство AVD",
+  "loc.input.help.avdForce": "Передача параметра --force в команду \"android create avd\".",
   "loc.input.label.avdOptionalArgs": "Создать дополнительные аргументы AVD",
   "loc.input.help.avdOptionalArgs": "Дополнительные аргументы, передаваемые команде \"android create avd\".",
   "loc.input.label.startEmulator": "Запуск и остановка эмулятора Android",

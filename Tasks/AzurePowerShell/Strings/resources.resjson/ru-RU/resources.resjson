@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Выполнение скрипта PowerShell в среде Azure",
   "loc.instanceNameFormat": "Сценарий Azure PowerShell: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Подписка Azure",

@@ -8,7 +8,7 @@
   "loc.input.label.Environment": "環境",
   "loc.input.help.Environment": "用於部署的 Chef 環境名稱。將會編輯該環境的屬性。",
   "loc.input.label.Attributes": "環境屬性",
-  "loc.input.help.Attributes": "Specify the value of the leaf node attribute(s) to be updated. Example. { \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }. Task fails if the leaf node does not exist.",
+  "loc.input.help.Attributes": "指定要更新之分葉節點屬性的值。範例。{ \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }。若分葉節點不存在則工作會失敗。",
   "loc.input.label.chefWaitTime": "等候時間",
   "loc.input.help.chefWaitTime": "等候工作完成所需的時間 (以秒為單位)。預設值: 30 分鐘"
 }

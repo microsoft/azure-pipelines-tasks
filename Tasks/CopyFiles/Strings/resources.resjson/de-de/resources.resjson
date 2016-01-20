@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Dateien kopieren",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "Kopiert Dateien aus dem Quellordner mithilfe von Minimatchmustern in den Zielordner (die Minimatchmuster ordnen nur Dateipfade und keine Ordnerpfade zu).",
+  "loc.instanceNameFormat": "Dateien kopieren in: $(TargetFolder)",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.SourceFolder": "Quellordner",
+  "loc.input.help.SourceFolder": "Der Quellordner, aus dem mindestens ein Kopiermuster ausgeführt wird. \"Empty\" ist der Stamm des Repositorys. Verwenden Sie [Variablen](http://go.microsoft.com/fwlink/?LinkID=550988), wenn sich Dateien nicht im Repository befinden. Beispiel: \"$(agent.builddirectory)\".",
+  "loc.input.label.Contents": "Inhalte",
+  "loc.input.help.Contents": "Dateipfade, die als Teil der Kopie eingeschlossen werden sollen. Unterstützt mehrere Zeilen von Minimatchmustern. [Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "Zielordner",
+  "loc.input.help.TargetFolder": "Der Zielordner, in den die Dateien kopiert werden. Verwenden Sie [Variablen](http://go.microsoft.com/fwlink/?LinkID=550988). Beispiel: \"$(build.artifactstagingdirectory)\".",
+  "loc.input.label.CleanTargetFolder": "Zielordner bereinigen",
+  "loc.input.help.CleanTargetFolder": "Alle vorhandenen Dateien im Zielordner vor dem Kopieren löschen",
+  "loc.input.label.OverWrite": "Überschreiben",
+  "loc.input.help.OverWrite": "Vorhandene Datei im Zielordner ersetzen",
+  "loc.messages.FoundNFiles": "%d Dateien wurden gefunden.",
+  "loc.messages.CleaningTargetFolder": "Bereinigen des Zielordners: %s",
+  "loc.messages.FileAlreadyExistAt": "Die Datei \"%s\" ist bereits unter \"%s\" vorhanden.",
+  "loc.messages.CopyingTo": "\"%s\" wird nach \"%s\" kopiert."
+}

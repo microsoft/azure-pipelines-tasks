@@ -5,11 +5,16 @@
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.gulpFile": "Gulp-Dateipfad",
-  "loc.input.help.gulpFile": "Relativer Pfad vom Repositorystamm der auszuführenden gulp-Skriptdatei.",
+  "loc.input.help.gulpFile": "Der relative Pfad vom Repositorystamm der auszuführenden gulp-Skriptdatei.",
   "loc.input.label.targets": "Gulp-Aufgabe(n)",
   "loc.input.help.targets": "Optional. Mit Leerzeichen getrennte Liste der auszuführenden Aufgaben. Wenn nicht angegeben, wird die Standardaufgabe ausgeführt.",
   "loc.input.label.arguments": "Argumente",
-  "loc.input.help.arguments": "Zusätzliche Argumente, die an Gulp übergeben werden. \"--gulpfile\" ist nicht erforderlich, da es bereits über die gulpFile-Eingabe weiter oben hinzugefügt wurde.",
+  "loc.input.help.arguments": "Zusätzliche Argumente, die an Gulp übergeben werden. \"-gulpfile\" wurde bereits über die gulpFile-Eingabe weiter oben hinzugefügt und ist daher nicht erforderlich.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
-  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist."
+  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist.",
+  "loc.input.label.gulpjs": "Speicherort von \"gulp.js\"",
+  "loc.input.help.gulpjs": "Die auszuführende Datei \"gulp.js\", wenn der Agent kein globale Installation von Gulp findet. Standardmäßig wird die Datei \"gulp.js\" im Ordner \"node_modules\" von \"cwd\" verwendet.",
+  "loc.messages.GulpNotInstalled": "Gulp ist nicht global installiert (oder befindet sich nicht im Pfad des Benutzers, als der der Agent ausgeführt wird) und befindet sich nicht im lokalen Arbeitsordner: %s",
+  "loc.messages.GulpReturnCode": "Gulp wurde mit dem folgenden Rückgabecode beendet: %d",
+  "loc.messages.GulpFailed": "Gulp-Fehler: %s"
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Test prestazioni Web basato sul cloud",
   "loc.helpMarkDown": "È possibile usare questa attività per attivare un test di carico basato sul cloud con Visual Studio Online. [Altre informazioni](http://go.microsoft.com/fwlink/?linkid=613203).",
-  "loc.description": "Consente di eseguire il test prestazioni Web rapido nel cloud con Visual Studio Online.",
+  "loc.description": "Consente di eseguire il test prestazioni Web rapido nel cloud con Visual Studio Online",
   "loc.instanceNameFormat": "Test prestazioni Web rapido $(testName)",
   "loc.input.label.connectedServiceName": "Connessione registrata",
   "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al servizio registrata in precedenza per comunicare con il servizio del test di carico basato sul cloud. Scegliere 'Gestisci' per registrare una nuova connessione.",

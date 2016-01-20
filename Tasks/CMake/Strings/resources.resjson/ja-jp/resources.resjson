@@ -6,5 +6,7 @@
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "cmake の実行時の現行の作業ディレクトリ。",
   "loc.input.label.cmakeArgs": "引数 ",
-  "loc.input.help.cmakeArgs": "cmake に渡される引数 "
+  "loc.input.help.cmakeArgs": "cmake に渡される引数 ",
+  "loc.messages.CMakeReturnCode": "CMake は、リターン コードを伴って終了しました: %d ",
+  "loc.messages.CMakeFailed": "CMake でエラーが発生しました: %s"
 }

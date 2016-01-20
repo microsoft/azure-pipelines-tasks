@@ -4,7 +4,7 @@
   "loc.description": "iOS-App mit Xamarin auf Mac OS erstellen",
   "loc.instanceNameFormat": "Xamarin.iOS-Projektmappe $(solution) erstellen",
   "loc.input.label.solution": "Projektmappe",
-  "loc.input.help.solution": "Relativer Pfad vom Repositorystamm der zu erstellenden Xamarin.iOS-Projektmappe.",
+  "loc.input.help.solution": "Der relative Pfad vom Repositorystamm der zu erstellenden Xamarin.iOS-Projektmappe.",
   "loc.input.label.configuration": "Konfiguration",
   "loc.input.help.configuration": "Standardkonfigurationen sind Ad-Hoc, AppStore, Debug und Release.",
   "loc.input.label.mdtoolLocation": "Pfad zu mdtool überschreiben",

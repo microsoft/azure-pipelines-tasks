@@ -1,16 +1,18 @@
 {
-  "loc.friendlyName": "Azure Web アプリの展開",
+  "loc.friendlyName": "Azure Web アプリの配置",
   "loc.helpMarkDown": "[詳細] (http://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Web 配置を使用した Microsoft Azure Web アプリへの Visual Studio Web プロジェクトの発行",
-  "loc.instanceNameFormat": "Azure 展開: $(WebSiteName)",
+  "loc.instanceNameFormat": "Azure 配置: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
-  "loc.input.help.ConnectedServiceName": "展開対象への Azure のサブスクリプション。",
+  "loc.input.help.ConnectedServiceName": "配置対象への Azure のサブスクリプション。",
   "loc.input.label.WebSiteName": "Web アプリの名前",
   "loc.input.label.WebSiteLocation": "Web アプリの場所",
-  "loc.input.help.WebSiteLocation": "展開するための領域を選択します。",
+  "loc.input.help.WebSiteLocation": "配置する地域を選択します。使用可能なオプションは、**米国東部**、**米国東部 2**、**米国中央部**、**米国中南部**、**米国西部**、**北欧**、**西欧** などです。",
   "loc.input.label.Slot": "スロット",
   "loc.input.help.Slot": "スロット",
   "loc.input.label.Package": "Web 配置パッケージ",
   "loc.input.help.Package": "成果物の既定のディレクトリにある Visual Studio Web 配置パッケージへのパス。",
+  "loc.input.label.doNotDelete": "DoNotDelete フラグの設定",
+  "loc.input.help.doNotDelete": "これを有効にすると、Web 配置のパッケージ内の追加ファイルが Web の発行中に保持されます。",
   "loc.input.label.AdditionalArguments": "追加引数"
 }

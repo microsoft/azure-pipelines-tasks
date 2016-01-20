@@ -1,16 +1,18 @@
 {
   "loc.friendlyName": "Implementación de aplicaciones web de Azure",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613750)",
-  "loc.description": "Publique un proyecto web de Visual Studio en una aplicación web de Microsoft Azure con Web Deploy",
+  "loc.description": "Publicar un proyecto web de Visual Studio en una aplicación web de Microsoft Azure con Web Deploy",
   "loc.instanceNameFormat": "Implementación de Azure: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
   "loc.input.help.ConnectedServiceName": "Suscripción de Azure de destino para la implementación.",
   "loc.input.label.WebSiteName": "Nombre de la aplicación web",
   "loc.input.label.WebSiteLocation": "Ubicación de la aplicación web",
-  "loc.input.help.WebSiteLocation": "Seleccione una región para la implementación.",
+  "loc.input.help.WebSiteLocation": "Seleccione una región para la implementación. Las opciones posibles son **Este de EE. UU.**, **Este de EE. UU. 2**, **Centro de EE. UU.**, **Centro y sur de EE. UU.**, **Oeste de EE. UU.**, **Norte de Europa**, **Oeste de Europa** y otros.",
   "loc.input.label.Slot": "Ranura",
   "loc.input.help.Slot": "Ranura",
   "loc.input.label.Package": "Paquete de Web Deploy",
   "loc.input.help.Package": "Ruta de acceso al paquete de Web Deploy de Visual Studio en el directorio de artefacto predeterminado.",
+  "loc.input.label.doNotDelete": "Establecer el indicador DoNotDelete",
+  "loc.input.help.doNotDelete": "Al habilitar esta opción, se conservan los archivos adicionales del paquete de implementación web al tiempo que se publica el sitio web.",
   "loc.input.label.AdditionalArguments": "Argumentos adicionales"
 }

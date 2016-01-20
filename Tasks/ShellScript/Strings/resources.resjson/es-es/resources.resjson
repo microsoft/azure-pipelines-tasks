@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Script de Shell",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613738)",
-  "loc.description": "Ejecute un script de Shell con la terminal",
+  "loc.description": "Ejecutar un script de Shell con Bash",
   "loc.instanceNameFormat": "Script de shell $(scriptPath)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.scriptPath": "Ruta de acceso del script",
@@ -10,6 +10,8 @@
   "loc.input.help.args": "Argumentos pasados al script de shell",
   "loc.input.label.cwd": "Directorio de trabajo",
   "loc.input.help.cwd": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script.",
-  "loc.input.label.failOnStandardError": "Error en la secuencia Error estándar",
-  "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."
+  "loc.input.label.failOnStandardError": "Error si se produce un error estándar",
+  "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError.",
+  "loc.messages.BashReturnCode": "Bash se cerró con el código de retorno: %d",
+  "loc.messages.BashFailed": "Error de Bash: %s"
 }

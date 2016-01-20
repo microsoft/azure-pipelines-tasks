@@ -3,13 +3,14 @@
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Déployer un service cloud Azure",
   "loc.instanceNameFormat": "Déploiement Azure : $(CsPkg)",
+  "loc.group.displayName.newServiceAdvancedOptions": "Options avancées pour la création d'un service",
   "loc.input.label.ConnectedServiceName": "Abonnement Azure",
   "loc.input.help.ConnectedServiceName": "Abonnement Azure à cibler pour le déploiement.",
   "loc.input.label.StorageAccount": "Compte de stockage",
   "loc.input.help.StorageAccount": "Un compte de stockage est nécessaire pour le déploiement.",
   "loc.input.label.ServiceName": "Nom du service",
   "loc.input.label.ServiceLocation": "Emplacement du service",
-  "loc.input.help.ServiceLocation": "Les options possibles sont **Est des États-Unis**, **Est des États-Unis 2**, **Centre des États-Unis**, **Sud du centre des États-Unis**, **Ouest des États-Unis**, **Europe du Nord**, **Europe de l'Ouest**, etc.",
+  "loc.input.help.ServiceLocation": "Sélectionnez une région pour le déploiement du nouveau service. Les options possibles sont **Est des États-Unis**, **Est des États-Unis 2**, **Centre des États-Unis**, **Sud du centre des États-Unis**, **Ouest des États-Unis**, **Europe du Nord**, **Europe de l'Ouest**, etc.",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "Chemin d'accès à CsPkg dans le répertoire de l'artefact par défaut.",
   "loc.input.label.CsCfg": "CsCfg",
@@ -20,5 +21,9 @@
   "loc.input.help.DeploymentLabel": "Spécifie le nom d'étiquette pour le nouveau déploiement. À défaut de spécification, un identificateur global unique (GUID) est utilisé.",
   "loc.input.label.AppendDateTimeToLabel": "Ajouter date et heure actuelles",
   "loc.input.help.AppendDateTimeToLabel": "Ajoute la date et l'heure actuelles à l'étiquette du déploiement",
-  "loc.input.label.AllowUpgrade": "Autoriser la mise à niveau"
+  "loc.input.label.AllowUpgrade": "Autoriser la mise à niveau",
+  "loc.input.label.NewServiceAdditionalArguments": "Arguments supplémentaires",
+  "loc.input.help.NewServiceAdditionalArguments": "Passez des arguments supplémentaires durant la création d'un service. Ils sont passés à l'applet de commande 'New-AzureService'. Exemple : -Label 'MyTestService'",
+  "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
+  "loc.input.help.NewServiceAffinityGroup": "Durant la création d'un service, ce groupe d'affinités est pris en compte à la place de l'emplacement du service."
 }

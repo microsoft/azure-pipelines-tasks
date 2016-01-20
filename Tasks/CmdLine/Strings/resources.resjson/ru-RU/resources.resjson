@@ -1,14 +1,16 @@
 {
   "loc.friendlyName": "Командная строка",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "Запуск командной строки с аргументами",
   "loc.instanceNameFormat": "Выполнить $(filename)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.filename": "Инструмент",
-  "loc.input.help.filename": "Имя запускаемого средства. Средство должно находиться по указанному пути. Дополнительно можно указать полный путь, но при этом средство должно находиться в агенте.<br/> Примечание. Вы можете использовать **$(agent.builddirectory)**\\\\..., если хотите получить относительный путь к репозиторию.",
+  "loc.input.help.filename": "Имя запускаемого средства. Средство должно находиться в вашем пути. Дополнительно можно указать полный путь, но при этом средство должно находиться в агенте.<br/> Примечание. Вы можете использовать **$(Build.SourcesDirectory)**\\\\, если вам нужен относительный путь к репозиторию.",
   "loc.input.label.arguments": "Аргументы",
-  "loc.input.help.arguments": "Arguments passed to the tool",
+  "loc.input.help.arguments": "Аргументы, передаваемые в средство",
   "loc.input.label.workingFolder": "Рабочая папка",
   "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой",
-  "loc.input.help.failOnStandardError": "Если имеет значение true, задача завершится сбоем при записи любых ошибок в поток StandardError."
+  "loc.input.help.failOnStandardError": "Если задано значение True, задача завершится сбоем при записи любых ошибок в поток StandardError.",
+  "loc.messages.CmdLineReturnCode": "Завершение работы %s с кодом возврата: %d",
+  "loc.messages.CmdLineFailed": "Сбой %s с ошибкой: %s"
 }
