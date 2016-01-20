@@ -5,11 +5,13 @@
   "loc.instanceNameFormat": "シェル スクリプト $(scriptPath)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.scriptPath": "スクリプト パス",
-  "loc.input.help.scriptPath": "リポジトリ ルートを基準に指定した、実行するシェル スクリプト ファイルの相対パス。",
+  "loc.input.help.scriptPath": "リポジトリのルートを基準に指定した、実行するシェル スクリプト ファイルの相対パス。",
   "loc.input.label.args": "引数",
   "loc.input.help.args": "シェル スクリプトに渡す引数",
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。",
   "loc.input.label.failOnStandardError": "標準エラーで失敗します",
-  "loc.input.help.failOnStandardError": "true の場合、StandardError ストリームにエラーが書き込まれると、このタスクは失敗します。"
+  "loc.input.help.failOnStandardError": "True の場合、StandardError ストリームにエラーが書き込まれると、このタスクは失敗します。",
+  "loc.messages.BashReturnCode": "バッシュは、リターン コードを伴って終了しました: %d",
+  "loc.messages.BashFailed": "バッシュでエラーが発生しました: %s"
 }

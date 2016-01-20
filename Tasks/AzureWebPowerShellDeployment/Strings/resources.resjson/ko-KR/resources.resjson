@@ -7,10 +7,12 @@
   "loc.input.help.ConnectedServiceName": "배포를 위한 대상으로 지정할 Azure 구독입니다.",
   "loc.input.label.WebSiteName": "웹앱 이름",
   "loc.input.label.WebSiteLocation": "웹앱 위치",
-  "loc.input.help.WebSiteLocation": "배포할 지역을 선택하세요.",
+  "loc.input.help.WebSiteLocation": "배포할 지역을 선택하세요. **미국 동부**, **미국 동부 2**, **미국 중부**, **미국 중남부**, **미국 서부**, **북유럽**, **서유럽** 등의 옵션을 사용할 수 있습니다.",
   "loc.input.label.Slot": "슬롯",
   "loc.input.help.Slot": "슬롯",
   "loc.input.label.Package": "웹 배포 패키지",
   "loc.input.help.Package": "기본 아티팩트 디렉터리의 Visual Studio 웹 배포 패키지 경로입니다.",
+  "loc.input.label.doNotDelete": "DoNotDelete 플래그 설정",
+  "loc.input.help.doNotDelete": "이 기능이 사용하도록 설정되면 웹 사이트를 게시하는 동안 웹 배포 패키지의 추가 파일이 유지됩니다.",
   "loc.input.label.AdditionalArguments": "추가 인수"
 }

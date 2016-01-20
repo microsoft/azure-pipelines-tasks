@@ -1,11 +1,15 @@
 {
-  "loc.friendlyName": "instalación de npm",
+  "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "Instalar paquetes npm",
-  "loc.instanceNameFormat": "$(arguments) de instalación de npm",
+  "loc.description": "Ejecutar un comando npm",
+  "loc.instanceNameFormat": "npm $(comando)",
   "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.command": "Comando",
+  "loc.input.help.command": "Comando npm que se ejecutará. [Más información](https://docs.npmjs.com/).",
   "loc.input.label.arguments": "Argumentos",
-  "loc.input.help.arguments": "Argumentos adicionales pasados a la instalación de npm.",
+  "loc.input.help.arguments": "Argumentos adicionales pasados a npm.",
   "loc.input.label.cwd": "Directorio de trabajo",
-  "loc.input.help.cwd": "Directorio de trabajo actual donde se ejecuta la instalación npm. Se establece de forma predeterminada en la raíz del repositorio."
+  "loc.input.help.cwd": "Directorio de trabajo actual donde se ejecuta el comando npm. El valor predeterminado es la raíz del repositorio.",
+  "loc.messages.NpmReturnCode": "Npm se cerró con el código de retorno: %d",
+  "loc.messages.NpmFailed": "Error de Npm: %s"
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Compilación de Android",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613716)",
-  "loc.description": "Compilar una aplicación Android con Gradle y, opcionalmente, inicie el emulador para realizar pruebas unitarias",
+  "loc.description": "Compilar una aplicación Android con Gradle y, opcionalmente, iniciar el emulador para realizar pruebas unitarias",
   "loc.instanceNameFormat": "Compilación de Android $(gradleProj)",
   "loc.group.displayName.avdOptions": "Opciones de dispositivo virtual Android (AVD)",
   "loc.group.displayName.emulatorOptions": "Opciones del emulador",
@@ -19,6 +19,7 @@
   "loc.input.label.avdAbi": "ABI AVD",
   "loc.input.help.avdAbi": "ABI que se va a usar para el dispositivo virtual Android (AVD).",
   "loc.input.label.avdForce": "Sobrescribir AVD existente",
+  "loc.input.help.avdForce": "Pasando --force al comando 'android create avd'.",
   "loc.input.label.avdOptionalArgs": "Crear argumentos opcionales de AVD",
   "loc.input.help.avdOptionalArgs": "Argumentos adicionales pasados a \"android create avd\".",
   "loc.input.label.startEmulator": "Iniciar y detener el emulador de Android",

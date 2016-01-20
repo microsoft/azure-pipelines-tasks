@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "ビルド成果物の発行",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "ビルド成果物をサーバーまたはファイル共有に発行する",
+  "loc.instanceNameFormat": "成果物の公開: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "発行するためのパス",
+  "loc.input.help.PathtoPublish": "発行するフォルダー パスまたはファイル パス。完全修飾パスまたはリポジトリのルートから見た相対パスを指定できます。 ワイルドカードはサポートされません。[変数](http://go.microsoft.com/fwlink/?LinkID=550988) を使用します。例: $(build.artifactstagingdirectory)",
+  "loc.input.label.ArtifactName": "成果物の名前",
+  "loc.input.help.ArtifactName": "作成する成果物の名前。",
+  "loc.input.label.ArtifactType": "成果物の種類",
+  "loc.input.help.ArtifactType": "作成する成果物の種類。",
+  "loc.input.label.TargetPath": "パス",
+  "loc.input.help.TargetPath": "ファイルのコピー先となるファイル共有",
+  "loc.messages.PublishBuildArtifactsFailed": "ビルド成果物の発行でエラーが発生しました: %s"
+}

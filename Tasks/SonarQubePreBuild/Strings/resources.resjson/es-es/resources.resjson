@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SonarQube para MSBuild - Iniciar el análisis",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Capturar el perfil de calidad desde SonarQube para configurar el análisis",
   "loc.instanceNameFormat": "Capturar el perfil de calidad desde SonarQube",
   "loc.group.displayName.serverSettings": "Servidor de SonarQube",
@@ -22,7 +22,9 @@
   "loc.input.label.dbPassword": "Contraseña del usuario de la base de datos",
   "loc.input.help.dbPassword": "Solo el servidor de SonarQube 5.1 o versiones anteriores. La contraseña para el usuario de la base de datos, es decir, sonar.jdbc.password",
   "loc.input.label.cmdLineArgs": "Configuración adicional",
-  "loc.input.help.cmdLineArgs": "Entrar en la configuración con el formato: /d:nombreDeLaPropiedad=valorDeLaPropiedad. Para obtener más información sobre la configuración, consulte la [documentación de SonarQube](http://docs.sonarqube.org/)",
+  "loc.input.help.cmdLineArgs": "Opciones de configuración separadas por espacios con el formato: /d:propertyName=propertyValue. Se aplican las reglas de escape estándar de la línea de comandos. Para obtener más información sobre la configuración, consulte la [documentación de SonarQube](http://go.microsoft.com/fwlink/?LinkID=624390)",
   "loc.input.label.configFile": "Archivo de configuración",
-  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](http://go.microsoft.com/fwlink/?LinkID=620062)"
+  "loc.input.help.configFile": "También puede especificar la configuración mediante un archivo de configuración. Hay una plantilla disponible [aquí](http://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.label.breakBuild": "Fail the build on quality gate failure (SQ 5.3+)",
+  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. More information"
 }

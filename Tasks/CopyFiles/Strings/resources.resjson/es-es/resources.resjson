@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Copiar archivos",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "Copiar archivos de la carpeta de origen a la carpeta de destino mediante patrones de minimatch (los patrones de minimatch harán coincidir solo las rutas de acceso de los archivos, no las rutas de acceso de las carpetas)",
+  "loc.instanceNameFormat": "Copiar archivos a: $(TargetFolder)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.SourceFolder": "Carpeta de origen",
+  "loc.input.help.SourceFolder": "La carpeta de origen desde la que se ejecutarán los patrones de copia. La raíz del repositorio está vacía. Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988) si los archivos no están en el repositorio. Ejemplo: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Contenido",
+  "loc.input.help.Contents": "Rutas de acceso de archivo que se incluirán como parte de la copia. Se admiten varias líneas de patrones de minimatch. [Más información](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "Carpeta de destino",
+  "loc.input.help.TargetFolder": "La carpeta de destino en la que se copiarán los archivos. Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Ejemplo: $(build.artifactstagingdirectory)",
+  "loc.input.label.CleanTargetFolder": "Borrar carpeta de destino",
+  "loc.input.help.CleanTargetFolder": "Eliminar todos los archivos existentes en la carpeta de destino antes de copiar",
+  "loc.input.label.OverWrite": "Sobrescribir",
+  "loc.input.help.OverWrite": "Reemplazar archivo existente en la carpeta de destino",
+  "loc.messages.FoundNFiles": "se encontraron %d archivos",
+  "loc.messages.CleaningTargetFolder": "Limpiando carpeta de destino: %s",
+  "loc.messages.FileAlreadyExistAt": "El archivo %s ya existe en %s",
+  "loc.messages.CopyingTo": "Copiando %s en %s"
+}

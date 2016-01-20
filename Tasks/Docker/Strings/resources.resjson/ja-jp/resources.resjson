@@ -2,7 +2,7 @@
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Docker イメージをリモート コンピューターに展開します",
-  "loc.instanceNameFormat": "Docker の展開: $(Repository)",
+  "loc.instanceNameFormat": "Docker の配置: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker エンドポイント",
   "loc.input.help.DockerEndpoint": "Docker サーバーのリモート接続 URL。有効な remote_api_port の範囲は [0,65535] です。",
   "loc.input.label.Repository": "リポジトリ",

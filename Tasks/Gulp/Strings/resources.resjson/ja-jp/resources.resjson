@@ -11,5 +11,10 @@
   "loc.input.label.arguments": "引数",
   "loc.input.help.arguments": "gulp に渡される追加の引数。上記の gulpFile 入力で既に追加されているので、--gulpfile は不要です。",
   "loc.input.label.cwd": "作業ディレクトリ",
-  "loc.input.help.cwd": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。"
+  "loc.input.help.cwd": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。",
+  "loc.input.label.gulpjs": "gulp.js の場所",
+  "loc.input.help.gulpjs": "エージェントがグローバルにインストールされた gulp を見つけられない場合に実行する gulp.js。既定値は、cwd の node_modules フォルダーの下にある gulp.js です。",
+  "loc.messages.GulpNotInstalled": "Gulp はグローバルにインストールされていません (またはエージェントが実行しているユーザーのパスにありません)。またローカル作業フォルダーにありません: %s",
+  "loc.messages.GulpReturnCode": "Gulp は、リターン コードを伴って終了しました: %d",
+  "loc.messages.GulpFailed": "Gulp でエラーが発生しました: %s"
 }

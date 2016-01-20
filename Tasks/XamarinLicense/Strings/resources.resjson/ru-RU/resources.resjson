@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Лицензия Xamarin",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613739)",
   "loc.description": "Активация или деактивация лицензий Xamarin",
   "loc.instanceNameFormat": "Лицензия Xamarin - $(action)",
   "loc.group.displayName.advanced": "Дополнительно",

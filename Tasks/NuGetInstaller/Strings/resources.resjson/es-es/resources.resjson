@@ -6,10 +6,12 @@
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.solution": "Ruta de acceso de la solución",
   "loc.input.help.solution": "Ruta de acceso al archivo de solución de Visual Studio",
+  "loc.input.label.nugetConfigPath": "Ruta de acceso a NuGet.config",
+  "loc.input.help.nugetConfigPath": "Para utilizar fuentes dentro de esta cuenta, inserte en el repositorio un NuGet.config que enumere tales fuentes como orígenes y selecciónelo aquí. Esto permitirá al sistema de compilación autenticar tales fuentes, suponiendo que haya agregado la identidad de compilación como lector o colaborador de la fuente.\n\n¿Quiere obtener más información sobre los permisos de fuentes? [Más información]( http://go.microsoft.com/fwlink/?LinkID=691232).",
   "loc.input.label.noCache": "Deshabilitar la caché local",
-  "loc.input.help.noCache": "Equivale al argumento de línea de comandos -NoCache de NuGet.exe",
+  "loc.input.help.noCache": "Equivalente al argumento de línea de comandos -NoCache de NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Argumentos de NuGet",
-  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
+  "loc.input.help.nuGetRestoreArgs": "Argumentos adicionales que se pasan al comando restore de NuGet.exe. [Más información](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Ruta de acceso de NuGet.exe",
   "loc.input.help.nuGetPath": "Indique opcionalmente la ruta de acceso a NuGet.exe"
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure PowerShell",
   "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613749)",
-  "loc.description": "Consente di eseguire uno script Powershell in un ambiente Azure",
+  "loc.description": "Consente di eseguire uno script PowerShell in un ambiente Azure",
   "loc.instanceNameFormat": "Script Azure PowerShell: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
   "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure da configurare prima di eseguire PowerShell",

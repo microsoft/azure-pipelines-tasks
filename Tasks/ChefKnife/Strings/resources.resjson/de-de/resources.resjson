@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceName": "Chef-Abonnements",
   "loc.input.help.ConnectedServiceName": "Vor der Ausführung von Knife-Befehlen zu konfigurierendes Chef-Abonnement",
   "loc.input.label.ScriptPath": "Skriptpfad",
-  "loc.input.help.ScriptPath": "Pfad des Skripts. Muss der vollständig qualifizierte Pfad oder ein Pfad relativ zum Standardarbeitsverzeichnis sein.",
+  "loc.input.help.ScriptPath": "Der Pfad des Skripts. Es muss sich um den vollqualifizierten Pfad oder einen Pfad relativ zum Standardarbeitsverzeichnis handeln.",
   "loc.input.label.ScriptArguments": "Skriptargumente",
   "loc.input.help.ScriptArguments": "Zusätzliche Parameter, die an Skript übergeben werden sollen. Entweder Ordnungszahl- oder benannte Parameter."
 }

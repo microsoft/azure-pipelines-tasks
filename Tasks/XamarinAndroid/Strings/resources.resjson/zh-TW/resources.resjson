@@ -6,7 +6,7 @@
   "loc.group.displayName.msbuildOptions": "MSBuild 選項",
   "loc.group.displayName.jdkOptions": "JDK 選項",
   "loc.input.label.project": "專案",
-  "loc.input.help.project": "建置的 Xamarin.Android 專案的儲存機制根的相對路徑。可使用萬用字元。例如，適用於所有子資料夾之全部 csproj 檔案的 `**\\*.csproj`。專案必須包含 PackageForAndroid 目標。",
+  "loc.input.help.project": "建置的 Xamarin.Android 專案的儲存機制根路徑的相對路徑。可使用萬用字元。例如，`**\\*.csproj` 即適用於所有子資料夾中的所有 csproj 檔。專案必須包含 PackageForAndroid 目標。",
   "loc.input.label.target": "目標",
   "loc.input.help.target": "在此專案中建置這些目標。請使用分號以區隔多個目標。",
   "loc.input.label.outputDir": "輸出目錄",

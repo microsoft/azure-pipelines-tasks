@@ -65,7 +65,7 @@ var _wkRoot = path.join(__dirname, '_working');
 var _tempPath = path.join(__dirname, '_temp');
 
 gulp.task('clean', function (cb) {
-	del([_buildRoot, _tempPath, _pkgRoot, _wkRoot, _oldPkg],cb);
+	del([_buildRoot, _pkgRoot, _wkRoot, _oldPkg],cb);
 });
 
 gulp.task('cleanTests', function (cb) {
@@ -117,10 +117,20 @@ gulp.task('compileTasks', ['clean'], function (cb) {
 
 gulp.task('compile', ['compileTasks', 'compileTests']);
 
-gulp.task('build', ['compileTasks'], function () {
-	shell.mkdir('-p', _buildRoot);
-	return gulp.src(path.join(__dirname, 'Tasks', '**/task.json'))
-        .pipe(pkgm.PackageTask(_buildRoot));
+gulp.task('locCommon', ['compileTasks'], function () {
+    return gulp.src(path.join(__dirname, 'Tasks/Common/**/module.json'))
+        .pipe(pkgm.LocCommon());
+});
+
+gulp.task('build', ['locCommon'], function () {
+    // Load the dependency references to the intra-repo modules.
+    var commonDeps = require('./common.json');
+    var commonSrc = path.join(__dirname, 'Tasks/Common');
+
+    // Layout the tasks.
+    shell.mkdir('-p', _buildRoot);
+    return gulp.src(path.join(__dirname, 'Tasks', '**/task.json'))
+        .pipe(pkgm.PackageTask(_buildRoot, commonDeps, commonSrc));
 });
 
 gulp.task('test', ['testResources'], function () {
@@ -173,6 +183,12 @@ var getNpmExternal = function(name) {
 	fs.writeFileSync(path.join(_tempPath, 'package.json'), JSON.stringify(pkg, null, 2));
 
 	shell.pushd(libPath);
+    var completedPath = path.join(libPath, 'installcompleted');
+    if (shell.test('-f', completedPath)) {
+        console.log('Package already installed. Skipping.');
+        shell.popd();
+        return;
+    }
 
 	var npmPath = shell.which('npm');
 	if (!npmPath) {
@@ -195,6 +211,8 @@ var getNpmExternal = function(name) {
 	if (res.status > 0) {
 		throw new Error('npm failed with code of ' + res.status);
 	}	
+
+    fs.writeFileSync(completedPath, '');
 }
 
 var QExec = function(commandLine) {
