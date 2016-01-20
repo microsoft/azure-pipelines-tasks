@@ -110,18 +110,29 @@ This is the api the author of the tool installer uses
 
 API:
 ```
-getOS():string     // 'linux', 'windows', 'darwin'
-getArch(): string  // 'x86', 'amd64'
-download(url: string): QPromise
+
+// returns location of downloaded package
+download(url: string): QPromise string    
+
+// tar.gz, zip.  will support handful of well known as convenience.  can always control your own
+// will extract to the proper location in the agents tools folder
+// returns string of tool set
+extract(location: string: type: string): QPromise string;  
 ```
 
 Sample:
 ```
 import installer = require('vsts-task-lib/toolinstaller');
 
-export function install(version, os, arch) {
+export function install(version, os, arch): QPromise<string> {
   var ar = arch == 'amd64' ? 'x64' : 'x86';
+  var ext = os == 'windows' ? 'zip' : 'tar.gz';
   var nodeUrl="https://nodejs.org/dist/v$" + version + "/node-v" + version + "-" + os + "-" + ar;
+
+  return installer.download(nodeUrl)
+  .then((loc: string) => {
+    installer.extract(loc, ext);
+  })
 }
 
 ```
