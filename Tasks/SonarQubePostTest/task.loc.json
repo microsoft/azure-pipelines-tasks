@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 32
+    "Patch": 33
   },
   "demands": [
     "msbuild",
@@ -26,16 +26,6 @@
       "name": "extraSettings",
       "displayName": "ms-resource:loc.group.displayName.extraSettings",
       "isExpanded": true
-    }
-  ],
-  "inputs": [
-    {
-      "name": "breakBuild",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.breakBuild",
-      "defaultValue": "false",
-      "groupName": "extraSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.breakBuild"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
