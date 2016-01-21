@@ -86,7 +86,7 @@ if($runTitleMemberExists)
      }
      else
      {
-       throw ("Update the build agent to be able to run tests from test plan.")
+       throw ("Update the build agent to run tests from test plan. If you are using a hosted agent, retry using your own agent.")
      }
    }
    else
