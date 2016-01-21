@@ -1,7 +1,11 @@
 param(
-    [string][Parameter(Mandatory=$true)]$ConnectedServiceName,
-    [string][Parameter(Mandatory=$true)]$action,
-    [string][Parameter(Mandatory=$true)]$resourceGroupName,
+    [string][Parameter(Mandatory=$true)]$connectedServiceNameSelector,
+    [string]$connectedServiceName,
+    [string]$connectedServiceNameClassic,
+    [string]$action,
+    [string]$actionClassic,
+    [string]$resourceGroupName,
+    [string]$cloudService,
     [string]$location,
     [string]$csmFile,
     [string]$csmParametersFile,
@@ -21,14 +25,25 @@ param(
 )
 
 Write-Verbose -Verbose "Starting Azure Resource Group Deployment Task"
+Write-Verbose -Verbose "ConnectedServiceNameSelector = $connectedServiceNameSelector"
 Write-Verbose -Verbose "ConnectedServiceName = $ConnectedServiceName"
+Write-Verbose -Verbose "ConnectedServiceNameClassic = $connectedServiceNameClassic"
 Write-Verbose -Verbose "Action = $action"
+Write-Verbose -Verbose "ActionClassic = $actionClassic"
 Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
+Write-Verbose -Verbose "CloudService = $cloudService"
 Write-Verbose -Verbose "Location = $location"
 Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
 Write-Verbose -Verbose "OutputVariable = $outputVariable"
 Write-Verbose -Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
 Write-Verbose -Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
+
+if($connectedServiceNameSelector -eq "ConnectedServiceNameClassic")
+{
+    $connectedServiceName = $connectedServiceNameClassic
+    $action = $actionClassic
+    $resourceGroupName = $cloudService
+}
 
 $resourceGroupName = $resourceGroupName.Trim()
 $location = $location.Trim()

@@ -2,7 +2,13 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
+    $ConnectedServiceNameSelector,    
+
+    [String]
     $ConnectedServiceName,
+
+    [String]
+    $ConnectedServiceNameARM,
 
     [String] [Parameter(Mandatory = $true)]
     $ScriptPath,
