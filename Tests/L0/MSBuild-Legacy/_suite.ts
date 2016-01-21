@@ -10,7 +10,7 @@ import path = require('path');
 var shell = require('shelljs');
 var ps = shell.which('powershell');
 
-describe('MSBuild Legacy Suite', function () {
+describe('MSBuild-Legacy Suite', function () {
     this.timeout(20000);
 
     before((done) => {

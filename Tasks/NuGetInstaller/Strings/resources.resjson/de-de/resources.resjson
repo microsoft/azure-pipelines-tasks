@@ -6,10 +6,12 @@
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.solution": "Pfad zur Projektmappe",
   "loc.input.help.solution": "Der Pfad zur Visual Studio-Projektmappendatei",
+  "loc.input.label.nugetConfigPath": "Pfad zu \"NuGet.config\"",
+  "loc.input.help.nugetConfigPath": "Wenn Sie Feeds in diesem Konto verwenden möchten, checken Sie eine Datei \"NuGet.config\" ein, die diese Feeds als Quellen auflistet, und wählen sie hier aus. Auf diese Weise kann das Buildsystem eine Authentifizierung für diese Feeds ausführen, wenn Sie dem Feed die Buildidentität als Leser oder Mitwirkender hinzugefügt haben.\n\nMöchten Sie mehr über Feedberechtigungen erfahren? [Weitere Informationen]( http://go.microsoft.com/fwlink/?LinkID=691232).",
   "loc.input.label.noCache": "Lokalen Cache deaktivieren",
-  "loc.input.help.noCache": "Entspricht dem Befehlszeilenargument \"-NoCache\" für Nuget.exe",
+  "loc.input.help.noCache": "Entspricht dem Befehlszeilenargument \"-NoCache\" von \"Nuget.exe\".",
   "loc.input.label.nuGetRestoreArgs": "NuGet-Argumente",
-  "loc.input.help.nuGetRestoreArgs": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
+  "loc.input.help.nuGetRestoreArgs": "Zusätzliche Argumente, die an \"NuGet.exe restore\" übergeben werden. [Weitere Informationen](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
   "loc.input.label.nuGetPath": "Pfad zu NuGet.exe",
   "loc.input.help.nuGetPath": "Geben Sie optional den Pfad zu NuGet.exe an."
 }

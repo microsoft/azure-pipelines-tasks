@@ -7,10 +7,12 @@
   "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure usata come destinazione della distribuzione.",
   "loc.input.label.WebSiteName": "Nome app Web",
   "loc.input.label.WebSiteLocation": "Percorso app Web",
-  "loc.input.help.WebSiteLocation": "Selezionare un'area per la distribuzione.",
+  "loc.input.help.WebSiteLocation": "Consente di selezionare un'area geografica per la distribuzione. Le opzioni possibili sono **Stati Uniti orientali**, **Stati Uniti orientali 2**, **Stati Uniti centrali**, **Stati Uniti centro-meridionali**, **Stati Uniti occidentali**, **Europa settentrionale**, **Europa occidentale** e altre.",
   "loc.input.label.Slot": "Slot",
   "loc.input.help.Slot": "Slot",
   "loc.input.label.Package": "Pacchetto Distribuzione Web",
-  "loc.input.help.Package": "Percorso al pacchetto Distribuzione Web di Visual Studio nella directory di elementi predefiniti.",
+  "loc.input.help.Package": "Percorso del pacchetto Distribuzione Web di Visual Studio nella directory di artefatti predefiniti.",
+  "loc.input.label.doNotDelete": "Imposta flag DoNotDelete",
+  "loc.input.help.doNotDelete": "Se si abilita questa opzione, i file aggiuntivi presenti nel pacchetto di distribuzione Web verranno mantenuti durante la pubblicazione del sito Web.",
   "loc.input.label.AdditionalArguments": "Argomenti aggiuntivi"
 }

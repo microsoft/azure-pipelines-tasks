@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "cURL 上傳檔案",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "使用 cURL 搭配支援的通訊協定來上傳檔案。(FTP、FTPS、SFTP、HTTP 等等)",
   "loc.instanceNameFormat": "使用 cURL 上傳 $(files) ",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.files": "檔案",
-  "loc.input.help.files": "要上傳的檔案。可使用萬用字元。例如，適用於所有子資料夾中所有 ZIP 檔的 `**\\*.zip`。",
+  "loc.input.help.files": "要上傳的檔案。可使用萬用字元。例如，`**\\*.zip` 即適用於所有子資料夾中的所有 ZIP 檔 。",
   "loc.input.label.username": "使用者名稱",
   "loc.input.help.username": "指定伺服器驗證所使用的使用者名稱。",
   "loc.input.label.password": "密碼",

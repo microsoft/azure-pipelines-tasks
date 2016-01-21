@@ -1,15 +1,16 @@
 {
-  "loc.friendlyName": "Bereitstellung des Azure-Cloud-Diensts",
+  "loc.friendlyName": "Bereitstellung des Azure-Clouddiensts",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613748)",
-  "loc.description": "Azure-Cloud-Dienst bereitstellen",
+  "loc.description": "Azure-Clouddienst bereitstellen",
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(CsPkg)",
+  "loc.group.displayName.newServiceAdvancedOptions": "Erweiterte Optionen für das Erstellen des neuen Diensts.",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
   "loc.input.help.ConnectedServiceName": "Azure-Zielabonnement für Bereitstellung",
   "loc.input.label.StorageAccount": "Speicherkonto",
   "loc.input.help.StorageAccount": "Das Speicherkonto muss vor der Bereitstellung vorhanden sein.",
   "loc.input.label.ServiceName": "Dienstname",
   "loc.input.label.ServiceLocation": "Dienstspeicherort",
-  "loc.input.help.ServiceLocation": "Mögliche Optionen sind **Osten USA**, **Osten US 2**, **USA Mitte**, **USA (Mitte/Süden)**, **Westen USA**, **Nordeuropa**, **Westeuropa** u. a.",
+  "loc.input.help.ServiceLocation": "Wählen Sie eine Region für die neue Dienstbereitstellung aus. Mögliche Optionen sind **USA, Osten**, **USA, Osten 2**, **USA, Mitte**, **USA, Süden-Mitte**, **USA, Westen**, **Europa, Norden**, **Europa, Westen** usw.",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "Pfad von CsPkg unter dem Artefaktstandardverzeichnis.",
   "loc.input.label.CsCfg": "CsCfg",
@@ -20,5 +21,9 @@
   "loc.input.help.DeploymentLabel": "Gibt die Bezeichnung für die neue Bereitstellung an. Wenn dieser Wert nicht angegeben wird, wird ein Globally Unique Identifier (GUID) verwendet.",
   "loc.input.label.AppendDateTimeToLabel": "Aktuelle(s) Datum und Uhrzeit anfügen",
   "loc.input.help.AppendDateTimeToLabel": "Fügt das aktuelle Datum und die aktuelle Uhrzeit an die Bereitstellungsbezeichnung an",
-  "loc.input.label.AllowUpgrade": "Upgrade zulassen"
+  "loc.input.label.AllowUpgrade": "Upgrade zulassen",
+  "loc.input.label.NewServiceAdditionalArguments": "Weitere Argumente",
+  "loc.input.help.NewServiceAdditionalArguments": "Übergeben Sie weitere Argumente beim Erstellen eines ganz neuen Dienstes. Diese werden an das Cmdlet \"New-AzureService\" übergeben, z. B. \"-label 'MeinTestDienst'\".",
+  "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
+  "loc.input.help.NewServiceAffinityGroup": "Beim Erstellen des neuen Diensts wird diese Affinitätsgruppe anstelle eines Dienstspeicherorts berücksichtigt."
 }

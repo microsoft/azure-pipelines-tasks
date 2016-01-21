@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Публикация артефактов сборки",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "Публикация артефактов сборки на сервере или в общей папке",
+  "loc.instanceNameFormat": "Опубликовать артефакт: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "Путь к публикации",
+  "loc.input.help.PathtoPublish": "Путь к папке или файлу для публикации. Может быть полным путем или относительным к корню репозитория (подстановочные знаки не поддерживаются). Используйте [переменные] (http://go.microsoft.com/fwlink/?LinkID=550988). Например, $(build.artifactstagingdirectory)",
+  "loc.input.label.ArtifactName": "Имя артефакта",
+  "loc.input.help.ArtifactName": "Имя создаваемого артефакта.",
+  "loc.input.label.ArtifactType": "Тип артефакта",
+  "loc.input.help.ArtifactType": "Тип создаваемого артефакта.",
+  "loc.input.label.TargetPath": "Путь",
+  "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы",
+  "loc.messages.PublishBuildArtifactsFailed": "Сбой публикации артефактов сборки с ошибкой: %s"
+}

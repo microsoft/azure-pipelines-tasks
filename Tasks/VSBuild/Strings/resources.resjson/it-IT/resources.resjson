@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Compilazione Visual Studio",
   "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Build with MSBuild and set the Visual Studio version property",
+  "loc.description": "Consente di compilare con MSBuild e di impostare la proprietà della versione di Visual Studio",
   "loc.instanceNameFormat": "Compila la soluzione $(solution)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.solution": "Soluzione",
@@ -16,5 +16,12 @@
   "loc.input.help.vsVersion": "Se la versione preferita non viene trovata, verrà usata la versione più recente.",
   "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
   "loc.input.help.msbuildArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di MSBuild da eseguire.",
-  "loc.input.label.logProjectEvents": "Registra dettagli progetto"
+  "loc.input.label.logProjectEvents": "Registra dettagli progetto",
+  "loc.messages.MSBuildLocationDeprecated0": "Il parametro Percorso MSBuild è stato deprecato. Il valore '{0}' verrà ignorato.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1": "MSBuild non è stato trovato per la versione '{0}' e l'architettura '{1}'.",
+  "loc.messages.MSBuildVersionDeprecated0": "Il parametro Versione MSBuild è stato deprecato. Il valore '{0}' verrà ignorato.",
+  "loc.messages.UnexpectedVSVersion0": "Versione di Visual Studio imprevista: '{0}'.",
+  "loc.messages.VSLocationDeprecated0": "Il parametro Percorso Visual Studio è stato deprecato. Il valore '{0}' verrà ignorato.",
+  "loc.messages.VSNotFoundTry": "Visual Studio non è stato trovato. Provare a installarne una versione supportata. Per un elenco delle versioni supportate, vedere la definizione di attività.",
+  "loc.messages.VSVersion0NotFoundLookingForLatest": "La versione '{0}' di Visual Studio non è stata trovata. Verrà cercata la versione più recente."
 }

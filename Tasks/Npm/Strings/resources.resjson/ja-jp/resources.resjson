@@ -1,11 +1,15 @@
 {
-  "loc.friendlyName": "npm のインストール",
+  "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "npm パッケージのインストール",
-  "loc.instanceNameFormat": "npm のインストール $(arguments)",
+  "loc.description": "npm コマンドの実行",
+  "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.command": "コマンド",
+  "loc.input.help.command": "実行する npm コマンド。[詳細](https://docs.npmjs.com/)。",
   "loc.input.label.arguments": "引数",
-  "loc.input.help.arguments": "npm のインストールに渡す追加の引数。",
+  "loc.input.help.arguments": "npm に渡される追加引数。",
   "loc.input.label.cwd": "作業ディレクトリ",
-  "loc.input.help.cwd": "npm のインストールが実行する現行の作業ディレクトリ。既定値はリポジトリのルートです。"
+  "loc.input.help.cwd": "npm コマンドが実行される現在の作業ディレクトリ。リポジトリのルートを既定値に使用します。",
+  "loc.messages.NpmReturnCode": "Npm は、リターン コードを伴って終了しました: %d",
+  "loc.messages.NpmFailed": "Npm でエラーが発生しました: %s"
 }

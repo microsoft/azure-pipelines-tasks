@@ -6,7 +6,7 @@
   "loc.group.displayName.jarsignerOptions": "Jarsigner 옵션",
   "loc.group.displayName.zipalignOptions": "Zipalign 옵션",
   "loc.input.label.files": "APK 파일",
-  "loc.input.help.files": "파일의 리포지토리 루트로부터의 상대적 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어, bin 하위 폴더에 있는 모든 APK 파일을 표시하기 위해 `**\\bin\\*.apk`를 사용할 수 있습니다.",
+  "loc.input.help.files": "파일의 리포 루트로부터의 상대 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어, bin 하위 폴더에 있는 모든 APK 파일을 표시하기 위해 `**\\bin\\*.apk`를 사용할 수 있습니다.",
   "loc.input.label.jarsign": "APK 서명",
   "loc.input.label.keystoreFile": "Keystore 파일",
   "loc.input.help.keystoreFile": "keystore 파일의 전체 경로입니다.",

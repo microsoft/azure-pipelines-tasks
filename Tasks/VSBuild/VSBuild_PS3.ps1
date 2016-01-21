@@ -31,7 +31,7 @@ try {
     . $PSScriptRoot\Get-VSPath_PS3.ps1
     . $PSScriptRoot\Select-MSBuildLocation_PS3.ps1
     . $PSScriptRoot\Select-VSVersion_PS3.ps1
-    Import-Module -Name $PSScriptRoot\MSBuildHelpers\MSBuildHelpers.psm1
+    Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
     $solutionFiles = Get-SolutionFiles -Solution $Solution
     $VSVersion = Select-VSVersion -PreferredVersion $VSVersion
     $MSBuildLocation = Select-MSBuildLocation -VSVersion $VSVersion -Architecture $MSBuildArchitecture

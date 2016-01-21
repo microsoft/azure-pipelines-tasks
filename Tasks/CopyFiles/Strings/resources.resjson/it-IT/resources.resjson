@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Copia file",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "Copia i file dalla cartella di origine a quella di destinazione usando criteri di corrispondenza minima che prendono in considerazione solo i percorsi dei file e non i percorsi delle cartelle",
+  "loc.instanceNameFormat": "Copia file in: $(TargetFolder)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.SourceFolder": "Cartella di origine",
+  "loc.input.help.SourceFolder": "Cartella di origine da cui verranno eseguiti i criteri di copia. Il valore vuoto corrisponde alla radice del repository. Usare [variabili](http://go.microsoft.com/fwlink/?LinkID=550988) se i file non sono presenti nel repository. Esempio: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Contenuti",
+  "loc.input.help.Contents": "Percorsi di file da includere nella copia. Sono supportate più righe di criteri di corrispondenza minima. [Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "Cartella di destinazione",
+  "loc.input.help.TargetFolder": "Cartella di destinazione in cui verranno copiati i file. Usare [variabili](http://go.microsoft.com/fwlink/?LinkID=550988). Esempio: $(build.artifactstagingdirectory)",
+  "loc.input.label.CleanTargetFolder": "Pulisci cartella di destinazione",
+  "loc.input.help.CleanTargetFolder": "Elimina tutti i file esistenti nella cartella di destinazione prima della copia",
+  "loc.input.label.OverWrite": "Sovrascrivi",
+  "loc.input.help.OverWrite": "Sostituisce il file esistente nella cartella di destinazione",
+  "loc.messages.FoundNFiles": "sono stati trovati %d file",
+  "loc.messages.CleaningTargetFolder": "Pulizia della cartella di destinazione: %s",
+  "loc.messages.FileAlreadyExistAt": "Il file %s esiste già in %s",
+  "loc.messages.CopyingTo": "Copia di %s in %s"
+}

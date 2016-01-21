@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Publicar los artefactos de la compilación",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "Publicar artefactos de compilación en el servidor o en un recurso compartido de archivos",
+  "loc.instanceNameFormat": "Publicar artefacto: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "Ruta de acceso para publicar",
+  "loc.input.help.PathtoPublish": "Ruta de acceso del archivo o la carpeta que se publicará. Puede ser una ruta de acceso completa o una ruta de acceso relativa pertinente para la raíz del repositorio, no se admiten comodines. Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Ejemplo: $(build.artifactstagingdirectory)",
+  "loc.input.label.ArtifactName": "Nombre del artefacto",
+  "loc.input.help.ArtifactName": "Nombre del artefacto que se va a crear.",
+  "loc.input.label.ArtifactType": "Tipo de artefacto",
+  "loc.input.help.ArtifactType": "Tipo del artefacto que se va a crear.",
+  "loc.input.label.TargetPath": "Ruta de acceso",
+  "loc.input.help.TargetPath": "Recurso compartido de archivos en el que copiar los archivos",
+  "loc.messages.PublishBuildArtifactsFailed": "Error al publicar artefactos de compilación: %s"
+}

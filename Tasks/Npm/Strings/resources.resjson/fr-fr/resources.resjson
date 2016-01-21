@@ -1,11 +1,15 @@
 {
-  "loc.friendlyName": "installation de npm",
+  "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "Installer des packages npm",
-  "loc.instanceNameFormat": "Installation de npm $(arguments)",
+  "loc.description": "Exécuter une commande npm",
+  "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.command": "Commande",
+  "loc.input.help.command": "Commande npm à exécuter. [Plus d'informations](https://docs.npmjs.com/).",
   "loc.input.label.arguments": "Arguments",
-  "loc.input.help.arguments": "Arguments supplémentaires passés à l'installation de npm.",
+  "loc.input.help.arguments": "Arguments supplémentaires transmis à npm.",
   "loc.input.label.cwd": "Répertoire de travail",
-  "loc.input.help.cwd": "Répertoire de travail actuel dans lequel l'installation de npm est exécutée. Il s'agit généralement de la racine du référentiel."
+  "loc.input.help.cwd": "Répertoire de travail actuel dans lequel la commande npm est exécutée.  La valeur par défaut est la racine du référentiel.",
+  "loc.messages.NpmReturnCode": "Sortie de Npm. Code de retour : %d",
+  "loc.messages.NpmFailed": "Échec de Npm. Erreur : %s"
 }

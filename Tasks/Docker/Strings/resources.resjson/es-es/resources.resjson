@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
-  "loc.description": "Implemente una imagen de Docker en una máquina remota",
+  "loc.description": "Implementar una imagen de Docker en una máquina remota",
   "loc.instanceNameFormat": "Implementación de Docker: $(Repository)",
   "loc.input.label.DockerEndpoint": "Extremo de Docker",
-  "loc.input.help.DockerEndpoint": "Dirección URL de conexión remota de servidor Docker. El rango de puertos API remotos es [0,65535]",
+  "loc.input.help.DockerEndpoint": "Dirección URL de conexión remota del servidor Docker. El intervalo válido de remote_api_port es [0,65535]",
   "loc.input.label.Repository": "Repositorio",
   "loc.input.help.Repository": "Nombre de la imagen",
   "loc.input.label.Tag": "Etiqueta",

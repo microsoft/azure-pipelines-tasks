@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Firma de Android",
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613717)",
-  "loc.description": "Firme y alinee archivos APK de Android",
+  "loc.description": "Firmar y alinear archivos APK de Android",
   "loc.instanceNameFormat": "Firma y alineación de archivos APK $(files)",
   "loc.group.displayName.jarsignerOptions": "Opciones de Jarsigner",
   "loc.group.displayName.zipalignOptions": "Opciones de Zipalign",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Подписывание Android",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Подписывание и назначение APK-файлов Android",
   "loc.instanceNameFormat": "Подписание и выравнивание файлов APK $(files)",
   "loc.group.displayName.jarsignerOptions": "Параметры Jarsigner",

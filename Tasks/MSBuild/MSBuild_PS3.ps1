@@ -16,7 +16,7 @@ try {
     [string]$msBuildVersion = Get-VstsInput -Name MSBuildVersion
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
     . $PSScriptRoot\Select-MSBuildLocation_PS3.ps1
-    Import-Module -Name $PSScriptRoot\MSBuildHelpers\MSBuildHelpers.psm1
+    Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
     $solutionFiles = Get-SolutionFiles -Solution $solution
     $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msBuildArguments -Platform $platform -Configuration $configuration
     $msBuildLocation = Select-MSBuildLocation -Method $msBuildLocationMethod -Location $msBuildLocation -Version $msBuildVersion -Architecture $msBuildArchitecture

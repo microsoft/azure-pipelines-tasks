@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Publier les artefacts de build",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "Publier les artefacts de build sur le serveur ou un partage de fichiers",
+  "loc.instanceNameFormat": "Publier l'artefact : $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "Chemin d'accès à publier",
+  "loc.input.help.PathtoPublish": "Chemin de dossier ou de fichier à publier. Il peut s'agir d'un chemin complet ou d'un chemin relatif à la racine du dépôt. Les caractères génériques ne sont pas pris en charge. Utilisez des [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Exemple : $(build.artifactstagingdirectory)",
+  "loc.input.label.ArtifactName": "Nom de l'artefact",
+  "loc.input.help.ArtifactName": "Nom de l'artefact à créer.",
+  "loc.input.label.ArtifactType": "Type d'artefact",
+  "loc.input.help.ArtifactType": "Type de l'artefact à créer.",
+  "loc.input.label.TargetPath": "Chemin d'accès",
+  "loc.input.help.TargetPath": "Partage de fichiers dans lequel copier les fichiers",
+  "loc.messages.PublishBuildArtifactsFailed": "Échec de la publication des artefacts de build. Erreur : %s"
+}

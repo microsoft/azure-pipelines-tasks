@@ -25,7 +25,7 @@ describe('General Suite', function() {
 		
 		var taskFolders: string[] = [];
 		fs.readdirSync(tasksRootFolder).forEach(folderName=> {
-			if(fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) { 
+			if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
 				taskFolders.push(path.join(tasksRootFolder, folderName));	
 			}
 		})
@@ -62,7 +62,7 @@ describe('General Suite', function() {
 		
 		var taskFolders: string[] = [];
 		fs.readdirSync(tasksRootFolder).forEach(folderName=> {
-			if(fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) { 
+			if(folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
 				taskFolders.push(path.join(tasksRootFolder, folderName));	
 			}
 		})
@@ -118,7 +118,7 @@ describe('General Suite', function() {
 		
 		var taskFolders: string[] = [];
 		fs.readdirSync(tasksRootFolder).forEach(folderName=> {
-			if(fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) { 
+			if(folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
 				taskFolders.push(path.join(tasksRootFolder, folderName));	
 			}
 		})

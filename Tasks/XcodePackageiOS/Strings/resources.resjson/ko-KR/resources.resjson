@@ -13,7 +13,7 @@
   "loc.input.label.sdk": "SDK",
   "loc.input.help.sdk": "지정된 SDK를 사용하세요. **xcodebuild -showsdks**를 실행하여 올바른 SDK 목록을 표시합니다.",
   "loc.input.label.appPath": ".app 경로",
-  "loc.input.help.appPath": "빌드된 .app 파일의 상대적 경로",
+  "loc.input.help.appPath": "빌드된 .app 파일의 상대 경로",
   "loc.input.label.ipaPath": ".ipa를 배치할 경로",
-  "loc.input.help.ipaPath": ".ipa가 위치하게 되는 상대적 경로입니다. 존재하지 않을 경우 디렉터리가 만들어집니다."
+  "loc.input.help.ipaPath": ".ipa가 위치하게 되는 상대 경로입니다. 존재하지 않을 경우 디렉터리가 만들어집니다."
 }

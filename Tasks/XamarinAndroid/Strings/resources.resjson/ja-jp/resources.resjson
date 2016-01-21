@@ -6,17 +6,17 @@
   "loc.group.displayName.msbuildOptions": "MSBuild オプション",
   "loc.group.displayName.jdkOptions": "JDK オプション",
   "loc.input.label.project": "プロジェクト",
-  "loc.input.help.project": "リポジトリ ルートを基準に指定した、ビルドする Xamarin.Android プロジェクトの相対パス。ワイルドカードを使用できます。たとえば、すべてのサブフォルダー内の csproj ファイルの場合は、`**\\*.csproj` となります。プロジェクトには PackageForAndroid ターゲットが必要です。",
+  "loc.input.help.project": "リポジトリのルートを基準に指定した、ビルドする Xamarin.Android プロジェクトの相対パス。ワイルドカードを使用できます。たとえば、すべてのサブフォルダー内の csproj ファイルの場合は、`**\\*.csproj` となります。プロジェクトには PackageForAndroid ターゲットが必要です。",
   "loc.input.label.target": "ターゲット",
   "loc.input.help.target": "指定したターゲットをこのプロジェクトでビルドします。ターゲットが複数の場合には、セミコロンを使用して区切ります。",
   "loc.input.label.outputDir": "出力ディレクトリ",
   "loc.input.label.configuration": "構成",
   "loc.input.label.msbuildLocation": "MSBuild の場所",
-  "loc.input.help.msbuildLocation": "オプションで、MSBuild へのパスを指定します。指定しない場合は、最新のバージョンが検索されます。",
+  "loc.input.help.msbuildLocation": "必要に応じて、MSBuild へのパスを指定します。指定しない場合は、最新のバージョンが検索されます。",
   "loc.input.label.msbuildArguments": "MSBuild 引数",
   "loc.input.help.msbuildArguments": "MSBuild に渡す追加の引数。",
   "loc.input.label.jdkVersion": "JDK のバージョン",
   "loc.input.help.jdkVersion": "ビルド中、選択された JDK バージョンを使用します。",
   "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
-  "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。"
+  "loc.input.help.jdkArchitecture": "必要に応じて、JDK のアーキテクチャ (x86、x64) を指定します。"
 }

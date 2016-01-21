@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "发布生成项目",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "将生成项目发布到服务器或文件共享",
+  "loc.instanceNameFormat": "发布项目: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "要发布的路径",
+  "loc.input.help.PathtoPublish": "要发布的文件夹或文件路径。可以是完全限定的路径或相对于存储库根路径的相对路径，不支持使用通配符。使用[变量](http://go.microsoft.com/fwlink/?LinkID=550988)。示例: $(build.artifactstagingdirectory)",
+  "loc.input.label.ArtifactName": "项目名称",
+  "loc.input.help.ArtifactName": "要创建的项目的名称。",
+  "loc.input.label.ArtifactType": "项目类型",
+  "loc.input.help.ArtifactType": "要创建的项目的类型。",
+  "loc.input.label.TargetPath": "路径",
+  "loc.input.help.TargetPath": "要将文件复制到的文件共享",
+  "loc.messages.PublishBuildArtifactsFailed": "发布生成项目失败，出现错误: %s"
+}

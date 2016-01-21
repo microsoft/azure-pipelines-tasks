@@ -5,10 +5,12 @@
   "loc.instanceNameFormat": "Exécuter $(filename)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.filename": "Outil",
-  "loc.input.help.filename": "Nom de l'outil à exécuter. L'outil doit se trouver dans votre chemin d'accès. Éventuellement, un chemin d'accès complet peut être indiqué, mais cela suppose qu'il soit présent sur l'agent.<br/> Remarque : vous pouvez utiliser **$(agent.builddirectory)**\\\\... si vous voulez le chemin d'accès relatif au référentiel.",
+  "loc.input.help.filename": "Nom de l'outil à exécuter. L'outil doit se trouver dans votre chemin. Éventuellement, vous pouvez indiquer un chemin complet, mais cela suppose qu'il soit présent sur l'agent.<br/> Remarque : vous pouvez utiliser **$(Build.SourcesDirectory)**\\\\ si vous souhaitez que le chemin soit relatif au dépôt.",
   "loc.input.label.arguments": "Arguments",
-  "loc.input.help.arguments": "Arguments passed to the tool",
+  "loc.input.help.arguments": "Arguments passés à l'outil",
   "loc.input.label.workingFolder": "Dossier de travail",
   "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
-  "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError."
+  "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError.",
+  "loc.messages.CmdLineReturnCode": "Sortie de %s. Code de retour : %d",
+  "loc.messages.CmdLineFailed": "Échec de %s. Erreur : %s"
 }
