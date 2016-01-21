@@ -55,7 +55,7 @@ Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
 
 Write-Verbose "Calling Invoke-RunDistributedTests"
 
-$checkTestAgentCompatScriptLocationExists  = CmdletHasMember "CheckTestAgentCompatScriptLocation"
+$checkTestAgentCompatScriptLocationMemberExists  = CmdletHasMember "CheckTestAgentCompatScriptLocation"
 
 $suites = $testSuite.Split(",")
 $testSuites = @()
@@ -74,7 +74,7 @@ if([int]::TryParse($testPlan, [ref]$testPlanId)){}
 $testConfigurationId = 0
 if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
   
-if($checkTestAgentCompatScriptLocationExists)
+if($checkTestAgentCompatScriptLocationMemberExists)
 {     
     if(![string]::IsNullOrWhiteSpace($testPlan))  
     {
