@@ -15,18 +15,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 33
+    "Patch": 34
   },
   "demands": [
     "msbuild",
     "java"
-  ],
-  "groups": [
-    {
-      "name": "extraSettings",
-      "displayName": "ms-resource:loc.group.displayName.extraSettings",
-      "isExpanded": true
-    }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {

@@ -5,6 +5,5 @@
   "loc.friendlyName": "SonarQube for MSBuild - End Analysis",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Finish the analysis and upload the results to SonarQube",
-  "loc.instanceNameFormat": "Finish the analysis and upload the results to SonarQube",
-  "loc.group.displayName.extraSettings": "Post Analysis Settings"
+  "loc.instanceNameFormat": "Finish the analysis and upload the results to SonarQube"
 }

@@ -12,19 +12,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 33
+    "Patch": 34
   },
   "demands": [
     "msbuild",
     "java"
-  ],
-  "groups": [
-    {
-      "name": "extraSettings",
-      "displayName": "Post Analysis Settings",
-      "isExpanded": true
-    }
-  ],  
+  ], 
   "instanceNameFormat": "Finish the analysis and upload the results to SonarQube",
   "execution": {
     "PowerShell": {
