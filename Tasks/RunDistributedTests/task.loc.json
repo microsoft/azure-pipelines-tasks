@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [],
   "minimumAgentVersion": "1.88.0",
@@ -37,7 +37,7 @@
       "tags": [
         "Preview"
       ],
-      "isExpanded": false
+      "isExpanded": true
     },
     {
       "name": "reportingOptions",
