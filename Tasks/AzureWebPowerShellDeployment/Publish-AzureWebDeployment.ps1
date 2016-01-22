@@ -68,16 +68,15 @@ $azureWebSiteError = $null
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)
 {
-    if ($Slot)
+    if (!$Slot)
     {
-        Write-Host "Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError"
-        $azureWebSite = Get-AzureWebSite -Name $WebSiteName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError
+        #Default slot to production so that we can get back single website with more details
+        $Slot = "Production"
     }
-    else
-    {
-        Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError"
-        $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError
-    }
+
+    Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError"
+    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError
+
     
     if($azureWebSiteError){
         $azureWebSiteError | ForEach-Object { Write-Warning $_.Exception.ToString() }

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 22
+    "Patch": 23
   },
   "demands": [
     "azureps"
@@ -31,7 +31,7 @@
     {
       "name": "WebSiteName",
       "type": "pickList",
-      "label": "Web App Name",
+      "label": "Web App Name with out slot.If your web app uses slot, mention in **Slot** field, else default **Production** slot is considered",
       "defaultValue": "",
       "required": true,
 	  "properties": {

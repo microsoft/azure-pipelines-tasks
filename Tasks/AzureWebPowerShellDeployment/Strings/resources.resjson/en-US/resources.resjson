@@ -8,7 +8,7 @@
   "loc.instanceNameFormat": "Azure Deployment: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure subscription to target for deployment.",
-  "loc.input.label.WebSiteName": "Web App Name",
+  "loc.input.label.WebSiteName": "Web App Name with out slot.If your web app uses slot, mention in **Slot** field, else default **Production** slot is considered",
   "loc.input.label.WebSiteLocation": "Web App Location",
   "loc.input.help.WebSiteLocation": "Select a region for deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
   "loc.input.label.Slot": "Slot",
