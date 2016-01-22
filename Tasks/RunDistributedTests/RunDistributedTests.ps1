@@ -86,7 +86,7 @@ if($runTitleMemberExists)
      }
      else
      {
-       throw ("Update the build agent to run tests from test plan. If you are using a hosted agent, retry using your own agent.")
+       throw (Get-LocalizedString -Key "Update the build agent to run tests from test plan. If you are using hosted agent there are chances that it is still not updated, so retry using your own agent.")
      }
    }
    else
