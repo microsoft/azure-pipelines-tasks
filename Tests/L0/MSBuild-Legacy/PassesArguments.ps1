@@ -29,7 +29,7 @@ foreach ($clean in @($true, $false)) {
                 'MSBuildArchitecture' = 'Some input architecture'
                 'OmitDotSource' = 'true'
             }
-            $output = & $PSScriptRoot\..\..\..\Tasks\MSBuild\MSBuild.ps1 @splat
+            $output = & $PSScriptRoot\..\..\..\Tasks\MSBuild\MSBuild.ps1 @splat -NoSuchParam ParamValue -NoSuchSwitch
 
             # Assert.
             Assert-AreEqual 'Some build output' $output
