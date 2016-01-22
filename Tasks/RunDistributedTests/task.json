@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 22
     },
     "demands": [
     ],
@@ -31,9 +31,9 @@
         },
         {
             "name": "runUsingTestPlan",
-            "displayName": "Run using Test Plan",
+            "displayName": "Execution Options - Run using Test Plan",
             "tags" : [ "Preview" ],
-            "isExpanded": false
+            "isExpanded": true
         },
         {
             "name": "reportingOptions",
