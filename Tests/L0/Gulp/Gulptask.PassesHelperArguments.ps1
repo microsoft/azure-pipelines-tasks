@@ -9,7 +9,7 @@ Register-Mock Get-WorkingDirectoryParameter { 'Some other working directory' } -
 Register-Mock Invoke-Tool
 
 # Act.
-& $PSScriptRoot\..\..\..\Tasks\Gulp\Gulptask.ps1 -Cwd 'Some working directory' -GulpFile 'Some gulp file' -Targets 'Some targets' -Arguments 'Some arguments' -OmitDotSource $true
+& $PSScriptRoot\..\..\..\Tasks\Gulp\Gulptask.ps1 -Cwd 'Some working directory' -GulpFile 'Some gulp file' -Targets 'Some targets' -Arguments 'Some arguments' -OmitDotSource $true -NoSuchParam ParamValue -NoSuchSwitch
 
 # Assert.
 Assert-WasCalled Invoke-Tool -- -Path 'Some path to gulp' -Arguments 'Some formatted arguments' -WorkingFolder 'Some other working directory'
