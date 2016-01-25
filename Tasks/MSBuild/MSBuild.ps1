@@ -11,8 +11,9 @@ param(
     [string]$LogProjectEvents,
     [string]$MSBuildVersion,
     [string]$MSBuildArchitecture,
-    [string]$OmitDotSource
-)
+    [string]$OmitDotSource,
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [object[]]$RemainingArguments)
 
 Write-Verbose "Entering script MSBuild.ps1"
 Write-Verbose "MSBuildLocationMethod = $MSBuildLocationMethod"
@@ -26,6 +27,8 @@ Write-Verbose "RestoreNuGetPackages = $RestoreNuGetPackages"
 Write-Verbose "LogProjectEvents = $LogProjectEvents"
 Write-Verbose "MSBuildVersion = $MSBuildVersion"
 Write-Verbose "MSBuildArchitecture = $MSBuildArchitecture"
+$OFS = " "
+Write-Verbose "RemainingArguments = $RemainingArguments"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"

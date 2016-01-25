@@ -5,8 +5,12 @@ param(
     [string]$arguments,
     [string]$cwd,
     [string]$gulpjs,
-    [string]$OmitDotSource
-)
+    [string]$OmitDotSource,
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [object[]]$RemainingArguments)
+
+$OFS = " "
+Write-Verbose "RemainingArguments = $RemainingArguments"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"

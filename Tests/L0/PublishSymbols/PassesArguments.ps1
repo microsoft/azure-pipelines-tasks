@@ -29,7 +29,7 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
         TreatNotIndexedAsWarning = $treatNotIndexedAsWarning.ToString()
         OmitDotSource = 'true'
     }
-    & $PSScriptRoot\..\..\..\Tasks\PublishSymbols\PublishSymbols.ps1 @splat
+    & $PSScriptRoot\..\..\..\Tasks\PublishSymbols\PublishSymbols.ps1 @splat -NoSuchParam ParamValue -NoSuchSwitch
 
     # Assert.
     Assert-WasCalled Find-Files -- -SearchPattern 'Some input search pattern' -RootFolder 'Some input symbols folder'
