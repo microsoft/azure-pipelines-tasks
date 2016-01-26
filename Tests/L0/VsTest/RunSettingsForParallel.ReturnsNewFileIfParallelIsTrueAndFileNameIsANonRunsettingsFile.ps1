@@ -22,6 +22,8 @@ $returnedFilePath = SetupRunSettingsFileForParallel "true" $temptestsettingsfile
 $fileExists = Test-Path $returnedFilePath
 Assert-AreEqual $true $fileExists
 
+Assert-AreNotEqual $temptestsettingsfile $returnedFilePath
+
 $readRunSettingsFile=[System.Xml.XmlDocument](Get-Content $returnedFilePath)
 Assert-AreEqual $cpuCount $readRunSettingsFile.RunSettings.RunConfiguration.MaxCpuCount
 
