@@ -10,8 +10,9 @@ param(
     [string]$SymbolsArtifactName,
     [string]$SkipIndexing,
     [string]$TreatNotIndexedAsWarning = 'false',
-    [string]$OmitDotSource
-)
+    [string]$OmitDotSource,
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [object[]]$RemainingArguments)
 
 Write-Verbose "Entering script $PSCommandPath"
 $PSBoundParameters.Keys |

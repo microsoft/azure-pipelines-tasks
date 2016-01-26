@@ -12,7 +12,9 @@ param(
     [string]$Clean,
     [string]$RestoreNugetPackages,
     [string]$LogProjectEvents,
-    [string]$OmitDotSource)
+    [string]$OmitDotSource,
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [object[]]$RemainingArguments)
 
 Write-Verbose "Entering script VSBuild.ps1"
 Write-Verbose "VSLocation = $VSLocation"
@@ -27,6 +29,8 @@ Write-Verbose "Configuration = $Configuration"
 Write-Verbose "Clean = $Clean"
 Write-Verbose "RestoreNugetPackages = $RestoreNugetPackages"
 Write-Verbose "LogProjectEvents = $LogProjectEvents"
+$OFS = " "
+Write-Verbose "RemainingArguments = $RemainingArguments"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
