@@ -86,7 +86,7 @@
       "name": "runInParallel",
       "type": "boolean",
       "label": "Run In Parallel",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "helpMarkDown": "Enable parallel execution of your tests.",
       "groupName": "executionOptions"
