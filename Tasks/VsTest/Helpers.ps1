@@ -55,7 +55,7 @@ function SetupRunSettingsFileForParallel {
     if($runInParallelFlag -eq "True")
     {        
         $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
-        if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -Or (-Not (Test-Path $runSettingsFilePath -pathtype leaf)))  # no file provided so create one and use it for the run
+        if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -Or (-Not [io.path]::HasExtension($runSettingsFilePath)) -Or (Test-Path $runSettingsFilePath -pathtype container))  # no file provided so create one and use it for the run
         {
             Write-Verbose "No runsettings file provided"
             $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>
