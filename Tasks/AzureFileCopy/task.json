@@ -18,7 +18,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "1.94.0",
   "inputs": [
     {
       "name": "SourcePath",
@@ -228,20 +228,17 @@
       "target": "EnvironmentName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureHostedServiceNames"
-    }
-  ],
-  "sourceDefinitions": [
+    },
     {
       "target": "StorageAccountRM",
-      "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/providers/Microsoft.Storage/storageAccounts?api-version=2015-06-15",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "$(ConnectedServiceNameARM)"
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureStorageAccountRM"
     },
     {
       "target": "EnvironmentNameRM",
-      "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "$(ConnectedServiceNameARM)"
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureVirtualMachinesV2Id",
+      "resultTemplate": "{{#extractResource resourceGroups}}"
     }
   ],
   "instanceNameFormat": "$(Destination) File Copy",
