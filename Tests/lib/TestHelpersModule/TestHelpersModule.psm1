@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param()
 
-[hashtable]$mocks = @{ }
+[hashtable]$script:mocks = @{ }
 . $PSScriptRoot\PrivateFunctions.ps1
 . $PSScriptRoot\PublicFunctions.ps1
 

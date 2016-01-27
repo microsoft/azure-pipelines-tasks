@@ -1,9 +1,9 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\SrcSrvIniContentFunctions.ps1
 $provider = New-Object psobject -Property @{
         PublicCollectionUrl = 'Some public collection URL'
         SourcesRootPath = 'SomeDrive:\SomeRoot\\\' # Function should handle trimming trailing slashes.

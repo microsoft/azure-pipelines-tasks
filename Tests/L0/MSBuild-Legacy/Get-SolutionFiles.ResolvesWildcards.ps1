@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\MSBuild\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\MSBuild\LegacyHelpers.ps1
 $expected = 'Some solution 1', 'Some solution 2'
 $solutions = 'Some * solution', 'Some ? solution'
 foreach ($solution in $solutions) {

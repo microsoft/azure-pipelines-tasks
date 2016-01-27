@@ -1,17 +1,13 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\DbghelpFunctions.ps1
 $env:AGENT_HOMEDIRECTORY = 'SomeDrive:\AgentHome'
-Register-Mock Test-Path { $false }
+Register-Mock Assert-VstsPath { throw "This error should be thrown." } -- -LiteralPath "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll" -PathType Leaf -PassThru
 Register-Mock Get-CurrentProcess
-Register-Mock Add-DbghelpLibraryCore
+Register-Mock Invoke-LoadLibrary
 
-# Assert.
-Assert-Throws {
-        # Act.
-        Add-DbghelpLibrary 
-    } -MessagePattern "Could not find dbghelp.dll at: $([System.Management.Automation.WildcardPattern]::Escape("$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll"))"
-Assert-WasCalled Test-Path -- -LiteralPath "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll" -PathType Leaf
+# Act/Assert.
+Assert-Throws { Add-DbghelpLibrary } -MessagePattern "This error should be thrown."

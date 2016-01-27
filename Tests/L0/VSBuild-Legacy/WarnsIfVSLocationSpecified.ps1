@@ -24,9 +24,8 @@ $splat = @{
     'Clean' = 'True'
     'RestoreNuGetPackages' = 'True'
     'LogProjectEvents' = 'True'
-    'OmitDotSource' = 'true'
 }
-$output = & $PSScriptRoot\..\..\..\Tasks\VSBuild\VSBuild.ps1 @splat
+$output = & $PSScriptRoot\..\..\..\Tasks\VSBuild\LegacyVSBuild.ps1 @splat
 
 # Assert.
 Assert-AreEqual 'Some build output' $output

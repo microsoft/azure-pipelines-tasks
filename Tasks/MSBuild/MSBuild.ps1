@@ -1,54 +1,28 @@
-[cmdletbinding()]
-param(
-    [string]$MSBuildLocationMethod,
-    [string]$MSBuildLocation, 
-    [string]$MSBuildArguments, 
-    [string]$Solution, 
-    [string]$Platform,
-    [string]$Configuration,
-    [string]$Clean,
-    [string]$RestoreNuGetPackages,
-    [string]$LogProjectEvents,
-    [string]$MSBuildVersion,
-    [string]$MSBuildArchitecture,
-    [string]$OmitDotSource,
-    [Parameter(ValueFromRemainingArguments = $true)]
-    [object[]]$RemainingArguments)
+[CmdletBinding()]
+param()
 
-Write-Verbose "Entering script MSBuild.ps1"
-Write-Verbose "MSBuildLocationMethod = $MSBuildLocationMethod"
-Write-Verbose "MSBuildLocation = $MSBuildLocation"
-Write-Verbose "MSBuildArguments = $MSBuildArguments"
-Write-Verbose "Solution = $Solution"
-Write-Verbose "Platform = $Platform"
-Write-Verbose "Configuration = $Configuration"
-Write-Verbose "Clean = $Clean"
-Write-Verbose "RestoreNuGetPackages = $RestoreNuGetPackages"
-Write-Verbose "LogProjectEvents = $LogProjectEvents"
-Write-Verbose "MSBuildVersion = $MSBuildVersion"
-Write-Verbose "MSBuildArchitecture = $MSBuildArchitecture"
-$OFS = " "
-Write-Verbose "RemainingArguments = $RemainingArguments"
-
-# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-
-if (!$OmitDotSource) {
-    . $PSScriptRoot\Helpers.ps1
+Trace-VstsEnteringInvocation $MyInvocation
+try {
+    Remove-Item -LiteralPath "$PSScriptRoot\Strings\resources.resjson\en-US\resources.resjson" -ErrorAction Ignore # This is a temporary targeted fix due to ConvertFrom-Json not appreciating leading comments in the en-US resjson file. None of the other language resjson files have leading comments.
+    Import-VstsLocStrings "$PSScriptRoot\Task.json"
+    [string]$msBuildLocationMethod = Get-VstsInput -Name MSBuildLocationMethod
+    [string]$msBuildLocation = Get-VstsInput -Name MSBuildLocation
+    [string]$msBuildArguments = Get-VstsInput -Name MSBuildArguments
+    [string]$solution = Get-VstsInput -Name Solution -Require
+    [string]$platform = Get-VstsInput -Name Platform
+    [string]$configuration = Get-VstsInput -Name Configuration
+    [bool]$clean = Get-VstsInput -Name Clean -AsBool
+    [bool]$restoreNuGetPackages = Get-VstsInput -Name RestoreNuGetPackages -AsBool
+    [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
+    [string]$msBuildVersion = Get-VstsInput -Name MSBuildVersion
+    [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
+    . $PSScriptRoot\Select-MSBuildLocation.ps1
+    Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
+    $solutionFiles = Get-SolutionFiles -Solution $solution
+    $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msBuildArguments -Platform $platform -Configuration $configuration
+    $msBuildLocation = Select-MSBuildLocation -Method $msBuildLocationMethod -Location $msBuildLocation -Version $msBuildVersion -Architecture $msBuildArchitecture
+    $ErrorActionPreference = 'Continue'
+    Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -NoTimelineLogger:(!$logProjectEvents)
+} finally {
+    Trace-VstsLeavingInvocation $MyInvocation
 }
-
-# Parse Booleans. Convert-String should be removed or renamed. It conflicts
-# with Microsoft.PowerShell.Utility\Convert-String in PowerShell 5.
-[bool]$RestoreNuGetPackages = Convert-String $RestoreNuGetPackages Boolean
-Write-Verbose "RestoreNuGetPackages (converted) = $RestoreNuGetPackages"
-[bool]$LogProjectEvents = Convert-String $LogProjectEvents Boolean
-Write-Verbose "LogProjectEvents (converted) = $LogProjectEvents"
-[bool]$Clean = Convert-String $Clean Boolean
-Write-Verbose "Clean (converted) = $Clean"
-
-$solutionFiles = Get-SolutionFiles -Solution $Solution
-$MSBuildArguments = Format-MSBuildArguments -MSBuildArguments $MSBuildArguments -Platform $Platform -Configuration $Configuration
-$MSBuildLocation = Select-MSBuildLocation -Method $MSBuildLocationMethod -Location $MSBuildLocation -Version $MSBuildVersion -Architecture $MSBuildArchitecture
-Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArguments -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents)
-Write-Verbose "Leaving script MSBuild.ps1"

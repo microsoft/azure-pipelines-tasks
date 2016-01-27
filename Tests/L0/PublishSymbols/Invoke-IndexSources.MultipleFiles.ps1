@@ -1,11 +1,11 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\IndexFunctions.ps1
 foreach ($treatNotIndexedAsWarning in @($false, $true)) {
-    Unregister-Mock Get-ToolPath
+    Unregister-Mock Assert-VstsPath
     Unregister-Mock Push-Location
     Unregister-Mock Add-DbghelpLibrary
     Unregister-Mock Get-SourceProvider
@@ -15,7 +15,8 @@ foreach ($treatNotIndexedAsWarning in @($false, $true)) {
     Unregister-Mock Invoke-DisposeSourceProvider
     Unregister-Mock Remove-DbghelpLibrary
     $script:pdbstrExePath = 'SomeDrive:\SomeDir\pdbstr.exe'
-    Register-Mock Get-ToolPath { $script:pdbstrExePath } -- -Name 'Pdbstr\pdbstr.exe'
+    $env:AGENT_HOMEDIRECTORY = 'SomeDrive:\AgentHome'
+    Register-Mock Assert-VstsPath { $script:pdbstrExePath } -- -LiteralPath "$env:Agent_HomeDirectory\Agent\Worker\Tools\Pdbstr\pdbstr.exe" -PathType Leaf -PassThru
     Register-Mock Push-Location
     $script:libraryHandle = -1234
     Register-Mock Add-DbghelpLibrary { $script:libraryHandle }

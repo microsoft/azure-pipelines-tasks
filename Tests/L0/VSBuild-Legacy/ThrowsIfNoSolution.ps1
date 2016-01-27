@@ -19,6 +19,5 @@ $splat = @{
     'Clean' = 'True'
     'RestoreNuGetPackages' = 'True'
     'LogProjectEvents' = 'True'
-    'OmitDotSource' = 'true'
 }
-Assert-Throws { & $PSScriptRoot\..\..\..\Tasks\VSBuild\VSBuild.ps1 @splat } -MessagePattern "*solution*"
+Assert-Throws { & $PSScriptRoot\..\..\..\Tasks\VSBuild\LegacyVSBuild.ps1 @splat } -MessagePattern "*solution*"

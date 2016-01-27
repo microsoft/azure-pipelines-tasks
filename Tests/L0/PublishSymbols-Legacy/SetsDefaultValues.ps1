@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\lib\Initialize-Test.ps1 -Legacy
 
 $now = Get-Date
 $env:Build_BuildUri = 'Some build URI'
@@ -34,9 +34,8 @@ $splat = @{
     SymbolsFolder = ''
     SymbolsArtifactName = 'Some symbols artifact name'
     TreatNotIndexedAsWarning = 'true'
-    OmitDotSource = 'true'
 }
-& $PSScriptRoot\..\..\..\Tasks\PublishSymbols\PublishSymbols.ps1 @splat
+& $PSScriptRoot\..\..\..\Tasks\PublishSymbols\LegacyPublishSymbols.ps1 @splat
 
 # Assert.
 Assert-WasCalled Find-Files -- -SearchPattern $defaultSearchPattern -RootFolder $defaultSymbolsFolder
