@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Index Sources & Publish Symbols",
   "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](http://go.microsoft.com/fwlink/?LinkID=613722)",

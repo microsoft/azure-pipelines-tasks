@@ -3,7 +3,6 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 try {
-    Remove-Item -LiteralPath "$PSScriptRoot\Strings\resources.resjson\en-US\resources.resjson" -ErrorAction Ignore # This is a temporary targeted fix due to ConvertFrom-Json not appreciating leading comments in the en-US resjson file. None of the other language resjson files have leading comments.
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
     [string]$vsVersion = Get-VstsInput -Name VSVersion
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
