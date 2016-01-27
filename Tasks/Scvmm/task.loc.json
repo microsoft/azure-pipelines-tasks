@@ -1,0 +1,99 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "7bc5c778-e949-4435-b156-b00c4ede3e35",
+  "name": "SCVMM",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.87.0",
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:SCVMM",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "defaultValue": "Restore",
+      "required": true,
+      "options": {
+        "Restore": "Restore Checkpoint"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Action"
+    },
+    {
+      "name": "VMList",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VMList",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.VMList"
+    },
+    {
+      "name": "checkPointName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.checkPointName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.checkPointName",
+      "visibleRule": "Action = Restore"
+    },
+    {
+      "name": "ScopeFilter",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ScopeFilter",
+      "required": false,
+      "defaultValue": "",
+      "options": {
+        "CloudFiltering": "CLOUD",
+        "HostFiltering": "HOST"
+      },
+      "visibleRule": "Action = Restore",
+      "helpMarkDown": "ms-resource:loc.input.help.ScopeFilter"
+    },
+    {
+      "name": "CloudFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CloudFilter",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CloudFilter",
+      "visibleRule": "ScopeFilter = CloudFiltering"
+    },
+    {
+      "name": "HostFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HostFilter",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.HostFilter",
+      "visibleRule": "ScopeFilter = HostFiltering"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\scvmm.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
