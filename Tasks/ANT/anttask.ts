@@ -23,6 +23,12 @@ if (antHomeUserInputPath) {
     process.env['ANT_HOME'] = antHomeUserInputPath;
 }
 
+// Warn if ANT_HOME is not set either locally or on the task via antHomeUserInputPath
+var antHome = tl.getVariable('ANT_HOME');
+if (!antHome) {
+    tl.warning('The ANT_HOME environment variable is not set.  Please make sure that it exists and is set to the location of the bin folder.  See http://ant.apache.org/manual/install.html.');
+}
+
 // update JAVA_HOME if user selected specific JDK version or set path manually
 var javaHomeSelection = tl.getInput('javaHomeSelection', true);
 var specifiedJavaHome = null;
