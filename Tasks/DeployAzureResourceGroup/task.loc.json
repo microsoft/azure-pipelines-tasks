@@ -199,8 +199,8 @@
     {
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureVirtualMachinesV2Details",
-      "resultTemplate": "{{#extractResourceGroup id}}"
+      "dataSourceName": "AzureVirtualMachinesV2Id",
+      "resultTemplate": "{{#extractResource resourceGroups}}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

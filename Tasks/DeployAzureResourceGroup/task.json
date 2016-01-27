@@ -196,8 +196,8 @@
     {
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureVirtualMachinesV2Details",
-      "resultTemplate": "{{#extractResourceGroup id}}"
+      "dataSourceName": "AzureVirtualMachinesV2Id",
+      "resultTemplate": "{{#extractResource resourceGroups}}"
     }
   ],
   "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
