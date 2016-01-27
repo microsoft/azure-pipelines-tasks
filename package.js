@@ -12,11 +12,6 @@ var _strRelPath = path.join('Strings', 'resources.resjson', 'en-US');
 var _tempPath = path.join(__dirname, '_temp');
 shell.mkdir('-p', _tempPath);
 
-var _divider = '// *******************************************************' + os.EOL;
-var _banner = '' + _divider;
-_banner += '// GENERATED FILE - DO NOT EDIT DIRECTLY' + os.EOL;
-_banner += _divider;
-
 var createError = function(msg) {
 	return new gutil.PluginError('PackageTask', msg);
 }
@@ -126,8 +121,7 @@ var createStrings = function(task, pkgPath, srcPath) {
 	var enPath = path.join(strPath, 'resources.resjson');
 	var enSrcPath = path.join(srcStrPath, 'resources.resjson');
 
-	var enContents = '' + _banner;
-	enContents += JSON.stringify(strings, null, 2);
+	var enContents = JSON.stringify(strings, null, 2);
 	fs.writeFile(enPath, enContents, function(err) {
 		if (err) {
 			defer.reject(createError('could not create: ' + enPath + ' - ' + err.message));
@@ -136,8 +130,7 @@ var createStrings = function(task, pkgPath, srcPath) {
 
 		var taskPath = path.join(pkgPath, 'task.loc.json');
 
-		var contents = '' + _banner;
-		contents += JSON.stringify(task, null, 2);
+		var contents = JSON.stringify(task, null, 2);
 
 		fs.writeFile(taskPath, contents, function(err) {
 			if (err) {
@@ -194,8 +187,7 @@ function locCommon() {
             
             // Create the en-US resjson file.
             var enPath = path.join(strPath, 'resources.resjson');
-            var enContents = '' + _banner;
-            enContents += JSON.stringify(strings, null, 2);
+            var enContents = JSON.stringify(strings, null, 2);
             fs.writeFile(enPath, enContents, function(err) {
                 if (err) {
                     done(createError('Could not create: ' + enPath + ' - ' + err.message));
