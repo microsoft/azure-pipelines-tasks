@@ -148,7 +148,7 @@ var submitToTestCloud = function (index) {
     var monoToolRunner = tl.createToolRunner(monoPath);
     monoToolRunner.arg(testCloud);
     monoToolRunner.arg('submit');
-    monoToolRunner.arg(appFiles[index]);
+    monoToolRunner.pathArg(appFiles[index]);
     monoToolRunner.arg(teamApiKey);
     monoToolRunner.arg('--user');
     monoToolRunner.arg(user);
@@ -166,7 +166,7 @@ var submitToTestCloud = function (index) {
         monoToolRunner.arg(locale);
     }
     monoToolRunner.arg('--assembly-dir');
-    monoToolRunner.arg(testDir);
+    monoToolRunner.pathArg(testDir);
     if (parallelization != 'none') {
         monoToolRunner.arg(parallelization);
     }
@@ -176,7 +176,7 @@ var submitToTestCloud = function (index) {
     if(publishNUnitResults == 'true') {
         var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');
         monoToolRunner.arg('--nunit-xml');
-        monoToolRunner.arg(nunitFile);    
+        monoToolRunner.pathArg(nunitFile);    
     }
 
     // For an iOS .ipa app, look for an accompanying dSYM file
@@ -194,7 +194,7 @@ var submitToTestCloud = function (index) {
         else {
             // Include dSYM file in Test Cloud arguments
             monoToolRunner.arg('--dsym');
-            monoToolRunner.arg(dsymFiles[0]);
+            monoToolRunner.pathArg(dsymFiles[0]);
         }
     }
 

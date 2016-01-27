@@ -17,9 +17,9 @@ tr.arg(['-d', '-in', inFile]);
 tr.arg('-out');
 var outFile = tl.getPathInput('outFile', false);
 if(fs.existsSync(outFile) && fs.lstatSync(outFile).isDirectory()) {
-	tr.arg(inFile + '.out');
+	tr.pathArg(inFile + '.out');
 } else {
-	tr.arg(outFile)	
+	tr.pathArg(outFile)	
 }
 
 tr.arg(['-pass','pass:' + tl.getInput('passphrase')])

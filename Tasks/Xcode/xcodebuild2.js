@@ -112,7 +112,7 @@ function processInputs() {
 			}
 
 			xcb.arg('-workspace');
-			xcb.arg(workspaceMatches[0]);
+			xcb.pathArg(workspaceMatches[0]);
 		} 
 		else {
 			console.error('Workspace specified but it does not exist or is not a directory');
@@ -209,7 +209,7 @@ function packageApps(code) {
 		tl.debug('out: ' + out);
 		var outPath=path.join(out, 'build.sym');
 		tl.debug('outPath: ' + outPath);
-		appFolders = glob.sync(outPath + '/**/*.app')
+		appFolders = tl.glob(outPath + '/**/*.app')
 		if(appFolders) {
 			tl.debug(appFolders.length + ' apps found for packaging.');
 			var xcrunPath = tl.which('xcrun', true);	
