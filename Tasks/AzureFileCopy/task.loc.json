@@ -178,6 +178,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
       "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "outputStorageUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputStorageUri",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputStorageUri"
+    },
+    {
+      "name": "outputStorageContainerSasToken",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputStorageContainerSasToken",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputStorageContainerSasToken"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

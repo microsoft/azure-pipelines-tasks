@@ -87,8 +87,14 @@ The parameters of the task are described in details, including examples, to show
  * **Blob Prefix**: A prefix for the Blobs that can be used to filter the blobs like appending the Build number to the blobs, so that all the blobs with the same build number can be downloaded from the Container.
 
 * **Additional Arguments**: Additional [AzCopy.exe](https://azure.microsoft.com/en-us/documentation/articles/storage-use-azcopy/) arguments that will be applied for uploading to blob and same will be applied for downloading while copy to VM.
- * **Blob Destination** Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
- * **VM Destination** Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
+ * **Blob Destination**: Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
+ 
+ * **VM Destination**: Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
+ 
+* **Output Parameters**
+ * **Storage Container Uri**: When copying files to an Azure container, if you want the task to return the Uri of the container where the files were copied to, provide the name of the output variable you would like to use.
+ 
+ * **Storage Container SasToken**: When copying files to an Azure container, if you want the task to create and return a SasToken for the container, provide the name of the output variable you would like to use.  By default, this token expires after 4 hours.
 
 ### Known Limitations :
 
