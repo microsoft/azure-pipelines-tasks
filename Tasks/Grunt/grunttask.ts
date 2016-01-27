@@ -26,7 +26,7 @@ if(!tl.exist(grunt)) {
 		tl.setResult(tl.TaskResult.Failed, tl.loc('GruntCliNotInstalled', gtcli));
 	}
 	
-	gt.arg(gtcli);
+	gt.pathArg(gtcli);
 }
 else {
 	var gt = tl.createToolRunner(grunt);
@@ -37,7 +37,7 @@ gt.arg(tl.getInput('targets', false));
 
 gt.arg('--gruntfile');
 
-gt.arg(gruntFile);
+gt.pathArg(gruntFile);
 
 gt.arg(tl.getInput('arguments', false));
 

@@ -26,7 +26,7 @@ if(!tl.exist(gulp)) {
 		tl.setResult(tl.TaskResult.Failed, tl.loc('GulpNotInstalled', gulpjs));
 	}
 
-	gt.arg(gulpjs);
+	gt.pathArg(gulpjs);
 }
 else {
 	var gt = tl.createToolRunner(gulp);
@@ -37,7 +37,7 @@ gt.arg(tl.getInput('targets', false));
 
 gt.arg('--gulpfile');
 
-gt.arg(gulpFile);
+gt.pathArg(gulpFile);
 
 gt.arg(tl.getInput('arguments', false));
 
