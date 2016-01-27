@@ -121,7 +121,7 @@ Invoke-Expression -Command $finalCommand
 #Update Deployment status - https://github.com/projectkudu/kudu/wiki/REST-API#deployment
 
 if($azureWebSite) {
-    $matchedWebSiteName = $azureWebSite.EnabledHostNames | Where-Object { $_ -like '*.scm.azurewebsites.net*' } | Select-Object -First 1
+    $matchedWebSiteName = $azureWebSite.EnabledHostNames | Where-Object { $_ -like '*.scm*azurewebsites.net*' } | Select-Object -First 1
     if ($matchedWebSiteName) {
         $status = 3 #failed
         if(!$publishAzureWebsiteError) {
@@ -133,8 +133,33 @@ if($azureWebSite) {
         $credential = New-Object System.Management.Automation.PSCredential ($username, $securePwd)
         
         $author = Get-TaskVariable $distributedTaskContext "build.sourceVersionAuthor"
-        $deploymentId = Get-TaskVariable $distributedTaskContext "build.sourceVersion" #let's use commitId as unique deploymentId
+        if([string]::IsNullOrEmpty($author)) {
+            # fall back to build/release requestedfor
+            $author = Get-TaskVariable $distributedTaskContext "build.requestedfor"
+            if([string]::IsNullOrEmpty($author)) {
+                $author = Get-TaskVariable $distributedTaskContext "release.requestedfor"
+            }
+            # At this point if this is still null, let's use agent name
+            if([string]::IsNullOrEmpty($author)) {
+                $author = Get-TaskVariable $distributedTaskContext "agent.name"
+            }
+        }
+        
+        $deploymentId = Get-TaskVariable $distributedTaskContext "build.sourceVersion" #let's use commitId as unique deploymentId in build context
+        if([string]::IsNullOrEmpty($deploymentId)) {
+            $deploymentId = Get-TaskVariable $distributedTaskContext "release.releaseUri" #let's use releaseUri as unique deploymentId in release context
+        }        
+        if([string]::IsNullOrEmpty($deploymentId)) {
+            #No point in proceeding further
+            Write-Warning (Get-LocalizedString -Key "Cannot update deployment status, unique deploymentId cannot be retrieved")  
+            Return
+        }
+        
         $message = Get-TaskVariable $distributedTaskContext "build.sourceVersionMessage"
+        if([string]::IsNullOrEmpty($message)) {
+            $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $deploymentId
+        }
+        
         $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
         
         $collectionUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
@@ -152,7 +177,7 @@ if($azureWebSite) {
         $url = [string]::Format("https://{0}/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($matchedWebSiteName),[System.Web.HttpUtility]::UrlEncode($deploymentId))
 
         Write-Verbose "Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
-        Write-Host "Updating deployment status"
+        Write-Host (Get-LocalizedString -Key "Updating deployment status")
         try {
             Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType "application/json" -UserAgent "myuseragent"
         } 
@@ -164,16 +189,16 @@ if($azureWebSite) {
             $streamReader.BaseStream.Position = 0
             $streamReader.DiscardBufferedData()
             $responseBody = $streamReader.ReadToEnd()
-            $streamReader.Close()
-            Write-Warning "Cannot update deployment status for $WebSiteName - $responseBody"        
+            $streamReader.Close()            
+            Write-Warning (Get-LocalizedString -Key "Cannot update deployment status for {0} - {1}" -ArgumentList $WebSiteName, $responseBody)        
         }                   
     }
     else {
-        Write-Warning "Cannot update deployment status, SCM endpoint is not enabled for this website"      
+        Write-Warning (Get-LocalizedString -Key "Cannot update deployment status, SCM endpoint is not enabled for this website")      
     }
 }
 else {
-     Write-Warning "Cannot get website, deployment status is not updated"
+     Write-Warning (Get-LocalizedString -Key "Cannot get website, deployment status is not updated")
 }
 
 Write-Verbose "Leaving script Publish-AzureWebDeployment.ps1"
