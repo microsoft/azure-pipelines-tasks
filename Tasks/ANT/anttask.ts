@@ -9,7 +9,7 @@ antv.arg('-version');
 
 var antb = tl.createToolRunner(anttool);
 antb.arg('-buildfile');
-antb.arg(tl.getPathInput('antBuildFile', true, true));
+antb.pathArg(tl.getPathInput('antBuildFile', true, true));
 
 // options and targets are optional
 antb.arg(tl.getDelimitedInput('options', ' ', false));

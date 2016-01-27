@@ -70,7 +70,7 @@ export class ToolRunner extends events.EventEmitter {
         return args;
     }
 
-    public arg(val: any) {
+    public arg(val: any, literal?: boolean) {
         if (!val) {
             return;
         }
@@ -79,12 +79,23 @@ export class ToolRunner extends events.EventEmitter {
             this._debug(this.toolPath + ' arg: ' + JSON.stringify(val));
             this.args = this.args.concat(val);
         }
-        else if (typeof (val) === 'string') {
-            this._debug(this.toolPath + ' arg: ' + val);
-            this.args = this.args.concat(this._argStringToArray(val));
+        else if (typeof(val) === 'string') {
+            if(literal) {
+                this._debug(this.toolPath + ' literal arg: ' + val);
+                this.args = this.args.concat(val);
+            }
+            else {
+                this._debug(this.toolPath + ' arg: ' + val);
+                this.args = this.args.concat(this._argStringToArray(val));    
+            }
         }
     }
 
+    public pathArg(val: string) {
+        this._debug(this.toolPath + ' pathArg: ' + val);
+        this.arg(val, true);
+    }
+    
     public argIf(condition: any, val: any) {
         if (condition) {
             this.arg(val);

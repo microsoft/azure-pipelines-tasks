@@ -12,7 +12,7 @@ tl.mkdirP(cwd);
 tl.cd(cwd);
 
 var scriptPath = tl.getPathInput('scriptPath', true, true);
-bash.arg(scriptPath);
+bash.pathArg(scriptPath);
 
 bash.arg(tl.getInput('args', false));
 
