@@ -1,0 +1,96 @@
+{
+    "id": "7bc5c778-e949-4435-b156-b00c4ede3e35",
+    "name": "SCVMM",
+    "friendlyName": "SCVMM",
+    "description": "Manage Vms with SCVMM",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=616089)",
+    "category": "Build",
+    "visibility": [
+    "Build",
+    "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "minimumAgentVersion": "1.95.0",
+    "inputs": [
+    {
+        "name": "connectedServiceName",
+        "type": "connectedService:SCVMM",
+        "label": "SCVMM Service Connection",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "SCVMM connection to configure before running any SCVMM operation"
+    },
+    {
+        "name": "Action",
+        "type": "pickList",
+        "label": "Action",
+        "defaultValue": "Restore",
+        "required": true,
+        "options": {
+            "Restore": "Restore Checkpoint"
+        },
+        "helpMarkDown": "Action to be performed on the SCVMM virtual machines."
+    },
+    {
+        "name": "VMList",
+        "type": "string",
+        "label": "Virtual Machine Names",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Provide a comma separated list of the virtual machine's names. For example, FabrikamWeb, FabrikamDB, FabrikamTest."
+    },
+    {
+        "name": "checkPointName",
+        "type": "string",
+        "label": "Checkpoint Name",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Check point name",
+        "visibleRule": "Action = Restore"
+    },
+    {
+        "name": "ScopeFilter",
+        "type": "radio",
+        "label": "Select VMs From",
+        "required": false,
+        "defaultValue": "",
+        "options": {
+            "CloudFiltering": "CLOUD",
+            "HostFiltering": "HOST"
+        },
+        "visibleRule": "Action = Restore",
+        "helpMarkDown": "Select the filter for Virtual Machine"
+    },
+    {
+        "name": "CloudFilter",
+        "type": "string",
+        "label": "Cloud Name",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Cloud name to filter the VM",
+        "visibleRule": "ScopeFilter = CloudFiltering"
+    },
+    {
+        "name": "HostFilter",
+        "type": "string",
+        "label": "Host Name",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Host name to filter the VM",
+        "visibleRule": "ScopeFilter = HostFiltering"
+    }
+    ],
+    "instanceNameFormat": "SCVMM :$(action) action on $(VMList)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\scvmm.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
