@@ -15,6 +15,9 @@
         "Minor": 0,
         "Patch": 0
     },
+   "demands": [
+        "SCVMMAdminConsole"
+    ],
     "minimumAgentVersion": "1.95.0",
     "inputs": [
     {
