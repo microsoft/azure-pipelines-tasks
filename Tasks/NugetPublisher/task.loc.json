@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 40
+    "Patch": 42
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -25,7 +25,7 @@
       "name": "searchPattern",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPattern",
-      "defaultValue": "**\\*.nupkg",
+      "defaultValue": "**\\*.nupkg;-:**\\packages\\**\\*.nupkg",
       "helpMarkDown": "ms-resource:loc.input.help.searchPattern",
       "required": true
     },
