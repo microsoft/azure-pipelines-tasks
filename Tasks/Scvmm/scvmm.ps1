@@ -188,31 +188,6 @@ function GetSCVMMServerInfo
     return $scvmmServerInfo
 }
 
-function LoadSCVMMPowershellModule
-{
-    param(
-    [Parameter(Mandatory=$true)]
-    [string]$modulePathToLoad
-    )
-    
-    $module = $null
-    
-    if ( Test-Path $modulePathToLoad )
-    { 
-        write-host " Importing SCVMM related modules from $scvmmModulePath "
-        Import-Module $modulePathToLoad
-        
-        $module = $modulePathToLoad      
-    } 
-    else
-    { 
-        
-        Write-Warning "Unable to find / load the Powershell modules for SCVMM. This may result into failure of all/some operations on SCVMM . Ensure 'Microsoft System Center Virtual Machine Manager Administrator Console' is installed on agent machine. " -Verbose
-    }
-    
-    return $module
-}
-
 function DoPreOperations([ref]$psmodulesToLoad, [ref]$powershellScriptsToLoad, [ref]$scvmmCred, [ref]$scvmmServerInfo, [ref]$scvmmVMList)
 {
     Write-Verbose "Doing required pre-operations" -Verbose
@@ -221,13 +196,9 @@ function DoPreOperations([ref]$psmodulesToLoad, [ref]$powershellScriptsToLoad, [
     
     $scvmmModulePath = GetSCVMMModulePath -regKeyPath $SCVMMAdminConsoleInstallPathRegKey 
     
-    Write-Verbose "Load SCVMM Powershell module from $scvmmModulePath" -verbose
-    
-    $module = LoadSCVMMPowershellModule $scvmmModulePath
-    
-    if($module)
+    if($scvmmModulePath)
     {
-        $psmodulesToLoad.Value += $module
+        $psmodulesToLoad.Value += $scvmmModulePath
     }
     
     $scvmmPlatform = GetSCVMMPlatform
