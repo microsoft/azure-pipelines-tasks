@@ -18,7 +18,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "1.94.0",
   "groups": [
     {
       "name": "output",
@@ -93,6 +93,9 @@
       "label": "ms-resource:loc.input.label.resourceGroupName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
     {
@@ -101,6 +104,9 @@
       "label": "ms-resource:loc.input.label.cloudService",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.cloudService",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
     },
     {
