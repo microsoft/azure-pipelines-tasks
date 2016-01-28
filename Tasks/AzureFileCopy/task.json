@@ -18,7 +18,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "1.94.0",
   "inputs": [
     {
       "name": "SourcePath",
@@ -77,6 +77,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Specify a pre-existing classic storage account. It is also used as an intermediary for copying files to Azure VMs",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
     {
@@ -86,6 +89,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Specify a pre-existing ARM storage account. It is also used as an intermediary for copying files to Azure VMs",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
@@ -113,6 +119,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Name of the target Cloud Service for copying files to.",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName && Destination = AzureVMs"
     },
     {
@@ -122,6 +131,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Name of the target Resource Group for copying files to.",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs"
     },
     {

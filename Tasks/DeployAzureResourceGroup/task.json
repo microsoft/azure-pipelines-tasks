@@ -18,7 +18,7 @@
     "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "1.94.0",
     "groups": [
         {
             "name": "output",
@@ -93,6 +93,9 @@
             "label": "Resource Group",
             "required": true,
             "helpMarkDown": "Provide the name of the resource group.",
+            "properties": {
+              "EditableOptions": "True"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
@@ -101,6 +104,9 @@
             "label": "Cloud Service",
             "required": true,
             "helpMarkDown": "Provide the name of the cloud service.",
+            "properties": {
+              "EditableOptions": "True"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
