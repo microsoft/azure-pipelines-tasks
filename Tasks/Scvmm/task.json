@@ -4,7 +4,7 @@
     "friendlyName": "SCVMM",
     "description": "Manage Vms with SCVMM",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=616089)",
-    "category": "Build",
+    "category": "Deploy",
     "visibility": [
     "Build",
     "Release"
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
    "demands": [
         "SCVMMAdminConsole"
