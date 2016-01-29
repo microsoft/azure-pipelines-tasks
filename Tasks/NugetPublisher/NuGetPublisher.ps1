@@ -195,7 +195,7 @@ try
 
     foreach ($packageFile in $packagesToPush)
     {
-        $argsUpload = "push `"$packageFile`" -s $nugetServer"
+        $argsUpload = "push `"$packageFile`" -Source $nugetServer"
 
         if($useExternalFeed)
         {
@@ -203,7 +203,7 @@ try
         }
         elseif(-not $useExternalFeed)
         {
-            $argsUpload = $argsUpload + "  -configFile `"$tempNuGetConfigPath`" -apiKey VssSessionKey"
+            $argsUpload = $argsUpload + "  -ConfigFile `"$tempNuGetConfigPath`" -ApiKey VssSessionKey"
         }
 
         if($nuGetAdditionalArgs)
@@ -212,7 +212,40 @@ try
         } 
 
         Write-Host (Get-LocalizedString -Key "Invoking nuget with {0} on {1}" -ArgumentList $argsUpload,$packageFile)
-        Invoke-Tool -Path $nugetPath -Arguments "$argsUpload" 
+        
+        try
+        {
+            Invoke-Tool -Path $nugetPath -Arguments "$argsUpload" 
+        }
+        catch
+        {
+            Write-Warning (Get-LocalizedString -Key "Failed to push packages. Make sure the feed URL is correct, and the packages have unique version numbers.")
+
+            if($accessToken)
+            {
+                Add-Type -LiteralPath "$env:AGENT_SERVEROMDIRECTORY\Microsoft.VisualStudio.Services.Common.dll"
+
+                # Add-Type will try to load MS.VS.Services.Client's dependencies, including Microsoft.ServiceBus.
+                # The agent doesn't ship Microsoft.ServiceBus, so load the assembly directly
+                $assemblyName = [System.Reflection.AssemblyName]::GetAssemblyName("$env:AGENT_SERVEROMDIRECTORY\Microsoft.VisualStudio.Services.Client.dll")
+                [System.Reflection.Assembly]::Load($assemblyName) | Out-Null
+
+                $cred = New-Object Microsoft.VisualStudio.Services.Client.VssOAuthCredential $accessToken
+
+                $locationClient = New-Object Microsoft.VisualStudio.Services.Location.Client.LocationHttpClient (
+                    [uri]$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI,
+                    $cred)
+
+                $connectionData = $locationClient.GetConnectionDataAsync("None", -1).Result
+
+                $builderDisplayName = $connectionData.AuthorizedUser.DisplayName
+                $builderAccountName = $connectionData.AuthorizedUser.Properties["Account"]
+
+                Write-Warning (Get-LocalizedString -Key "For internal feeds, make sure the build service identity '{0}' [{1}] has access to the feed." -ArgumentList $builderDisplayName, $builderAccountName)
+            }
+
+            throw
+        }
     }
 }
 finally
