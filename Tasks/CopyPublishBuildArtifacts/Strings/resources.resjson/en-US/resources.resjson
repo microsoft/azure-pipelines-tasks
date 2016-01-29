@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "Artifact Type",
   "loc.input.help.ArtifactType": "The type of the artifact to create.",
   "loc.input.label.TargetPath": "Path",
-  "loc.input.help.TargetPath": "The file share to which to copy the files"
+  "loc.input.help.TargetPath": "The file share to which to copy the files",
+  "loc.messages.CopyPublishBuildArtifactsNotSupported": "Copy and Publish Build Artifacts task is not supported within Release"
 }

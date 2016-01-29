@@ -5,6 +5,12 @@ import tl = require('vsts-task-lib/task');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+// Getting host type, throwing error if it is invoked through Release
+var hostType: string = tl.getVariable('system.hosttype');
+if(hostType === "release") {  
+    tl.setResult(tl.TaskResult.Failed, tl.loc('PublishBuildArtifactsNotSupported'));
+} 
+
 // content is a folder contain artifacts needs to publish.
 var pathtoPublish: string = tl.getPathInput('PathtoPublish', true, true);
 var artifactName: string = tl.getInput('ArtifactName', true);
@@ -23,7 +29,7 @@ try {
     // upload or copy
     if (artifactType === "container") {
         data["containerfolder"] = artifactName;
-            
+        
         // add localpath to ##vso command's properties for back compat of old Xplat agent
         data["localpath"] = pathtoPublish;
         tl.command("artifact.upload", data, pathtoPublish);
@@ -32,11 +38,11 @@ try {
         var artifactPath: string = path.join(targetPath, artifactName);
         tl.mkdirP(artifactPath);
         tl.cp("-Rf", path.join(pathtoPublish, "*"), artifactPath);
-            
+        
         // add artifactlocation to ##vso command's properties for back compat of old Xplat agent
         data["artifactlocation"] = targetPath;
         tl.command("artifact.associate", data, targetPath);
-    }
+    }    
 }
 catch (err) {
     tl.setResult(tl.TaskResult.Failed, tl.loc('PublishBuildArtifactsFailed', err.message));
