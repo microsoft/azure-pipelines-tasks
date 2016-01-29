@@ -35,7 +35,9 @@ foreach($key in $PSBoundParameters.Keys)
 }
 
 Write-Host (Get-LocalizedString -Key "Check/Set nuget path")
-if(!$nuGetPath)
+$useBuiltinNuGetExe = !$nuGetPath
+
+if($useBuiltinNuGetExe)
 {
     $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
 }
@@ -173,30 +175,47 @@ foreach ($packageFile in $packagesToPush)
     Write-Host (Get-LocalizedString -Key "File: {0}" -ArgumentList $packageFile)
 }
 
-
-foreach ($packageFile in $packagesToPush)
+$initialNuGetExtensionsPath = $env:NUGET_EXTENSIONS_PATH
+try
 {
     if ($env:NUGET_EXTENSIONS_PATH)
     {
-        Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
+        if($useBuiltinNuGetExe)
+        {
+            # NuGet.exe extensions only work with a single specific version of nuget.exe. This causes problems
+            # whenever we update nuget.exe on the agent.
+            $env:NUGET_EXTENSIONS_PATH = $null
+            Write-Warning (Get-LocalizedString -Key "The NUGET_EXTENSIONS_PATH environment variable is set, but nuget.exe extensions are not supported when using the built-in NuGet implementation.")   
+        }
+        else
+        {
+            Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
+        }
     }
 
-    $argsUpload = "push `"$packageFile`" -s $nugetServer"
-
-    if($useExternalFeed)
+    foreach ($packageFile in $packagesToPush)
     {
-        $argsUpload = $argsUpload + " $nugetServerKey"
+        $argsUpload = "push `"$packageFile`" -s $nugetServer"
+
+        if($useExternalFeed)
+        {
+            $argsUpload = $argsUpload + " $nugetServerKey"
+        }
+        elseif(-not $useExternalFeed)
+        {
+            $argsUpload = $argsUpload + "  -configFile `"$tempNuGetConfigPath`" -apiKey VssSessionKey"
+        }
+
+        if($nuGetAdditionalArgs)
+        {
+            $argsUpload = ($argsUpload + " " + $nuGetAdditionalArgs);
+        } 
+
+        Write-Host (Get-LocalizedString -Key "Invoking nuget with {0} on {1}" -ArgumentList $argsUpload,$packageFile)
+        Invoke-Tool -Path $nugetPath -Arguments "$argsUpload" 
     }
-    elseif(-not $useExternalFeed)
-    {
-        $argsUpload = $argsUpload + "  -configFile `"$tempNuGetConfigPath`" -apiKey VssSessionKey"
-    }
-
-    if($nuGetAdditionalArgs)
-    {
-        $argsUpload = ($argsUpload + " " + $nuGetAdditionalArgs);
-    } 
-
-    Write-Host (Get-LocalizedString -Key "Invoking nuget with {0} on {1}" -ArgumentList $argsUpload,$packageFile)
-    Invoke-Tool -Path $nugetPath -Arguments "$argsUpload" 
+}
+finally
+{
+    $env:NUGET_EXTENSIONS_PATH = $initialNuGetExtensionsPath
 }
