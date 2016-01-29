@@ -6,25 +6,25 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613745)",
     "category": "Package",
     "visibility": [
-                "Build"
-                  ],    
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 6
+        "Patch": 7
     },
-    "demands" : [
+    "demands": [
         "cocoapods"
     ],
     "instanceNameFormat": "pod install",
     "inputs": [
-        { 
-            "name": "cwd", 
-            "type": "filePath", 
-            "label": "Working Directory", 
-            "defaultValue":"", 
-            "required":false,
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Current working directory. Defaults to the repo directory."
         }
     ],
@@ -37,5 +37,5 @@
             "target": "cocoapods.js",
             "argumentFormat": ""
         }
-    }    
+    }
 }

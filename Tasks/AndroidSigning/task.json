@@ -6,20 +6,20 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613717)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],    
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "demands": [
         "JDK",
         "AndroidSDK"
     ],
     "minimumAgentVersion": "1.83.0",
-    "groups":  [
+    "groups": [
         {
             "name": "jarsignerOptions",
             "displayName": "Jarsigner Options",
@@ -40,11 +40,11 @@
             "required": true,
             "helpMarkDown": "Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\bin\\*.apk` for all APK files in bin subfolder."
         },
-        { 
-            "name": "jarsign", 
-            "type": "boolean", 
-            "label": "Sign the APK", 
-            "defaultValue": "true", 
+        {
+            "name": "jarsign",
+            "type": "boolean",
+            "label": "Sign the APK",
+            "defaultValue": "true",
             "required": false,
             "groupName": "jarsignerOptions"
         },
@@ -56,7 +56,7 @@
             "required": true,
             "helpMarkDown": "Full path to the keystore file.",
             "visibleRule": "jarsign = true",
-            "groupName":"jarsignerOptions"   
+            "groupName": "jarsignerOptions"
         },
         {
             "name": "keystorePass",
@@ -65,7 +65,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "jarsign = true",
-            "groupName":"jarsignerOptions"   
+            "groupName": "jarsignerOptions"
         },
         {
             "name": "keystoreAlias",
@@ -74,7 +74,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "jarsign = true",
-            "groupName":"jarsignerOptions"   
+            "groupName": "jarsignerOptions"
         },
         {
             "name": "keyPass",
@@ -83,7 +83,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "jarsign = true",
-            "groupName":"jarsignerOptions"   
+            "groupName": "jarsignerOptions"
         },
         {
             "name": "jarsignerArguments",
@@ -94,20 +94,20 @@
             "visibleRule": "jarsign = true",
             "groupName": "jarsignerOptions"
         },
-        { 
-            "name": "zipalign", 
-            "type": "boolean", 
-            "label": "Zipalign", 
-            "defaultValue": "true", 
+        {
+            "name": "zipalign",
+            "type": "boolean",
+            "label": "Zipalign",
+            "defaultValue": "true",
             "required": false,
             "groupName": "zipalignOptions"
         },
-        { 
-            "name": "zipalignLocation", 
-            "type": "string", 
-            "label": "Zipalign Location", 
-            "defaultValue":"", 
-            "required":false,
+        {
+            "name": "zipalignLocation",
+            "type": "string",
+            "label": "Zipalign Location",
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Optionally supply the path to zipalign.exe.  It defaults to use any zipalign.exe found in Android SDK folder.",
             "visibleRule": "zipalign = true",
             "groupName": "zipalignOptions"
