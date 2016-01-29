@@ -106,7 +106,7 @@ describe('General Suite', function() {
                                           'PowerShell', 'SqlPackage', 'VisualStudio', 'VisualStudio_IDE',
                                           'VSTest', 'WindowsKit', 'WindowsSdk', 'cmake',
                                           'cocoapods', 'curl', 'Cmd', 'sh',
-                                          'KnifeReporting', 'Xamarin.Android', 'Xamarin.iOS', 'xcode'];
+                                          'KnifeReporting', 'Xamarin.Android', 'Xamarin.iOS', 'xcode', 'SCVMMAdminConsole'];
         
         supportedDemands.forEach(demand => {
             if(supportedDemands.indexOf(demand.toLocaleLowerCase()) < 0) {
