@@ -71,5 +71,5 @@ These arguments will override the settings in the Publish profile XML file (if p
 
 ## Known Issues
 
-- The auto-detection of the automation agent's IP Address only works in Visual Studio Online (VSO) and not in Team Foundation Server (TFS).
+- The auto-detection of the automation agent's IP Address only works with hosted automation agent in Visual Studio Team Services (VSTS) and not in Team Foundation Server (TFS).
 - The Azure SQL Database Deployment task does not support BACPAC and SQL scripts. The SqlPackage.exe provides out-of-box support for both BACPAC and SQL Scripts and the work to enable this support is in our backlog. Please send us feedback for the task and for the support for BACPAC and SQL scripts at RM\_Customer\_Queries at microsoft dot com.
