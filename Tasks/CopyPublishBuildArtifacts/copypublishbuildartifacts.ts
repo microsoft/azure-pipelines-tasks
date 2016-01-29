@@ -75,7 +75,16 @@ function getFolderDepth(fullPath: string): number {
     return count;
 }
 
+function CheckIfTaskSupportedByHostType(): void {
+    var hostType: string = tl.getVariable('system.hosttype');
+    if(hostType === "release") {  
+        tl.setResult(tl.TaskResult.Failed, tl.loc('CopyPublishBuildArtifactsNotSupported'));  
+    }    
+}
+
 tl.setResourcePath(path.join( __dirname, 'task.json'));
+
+CheckIfTaskSupportedByHostType(); 
 
 // contents is a multiline input containing glob patterns
 var contents: string[] = tl.getDelimitedInput('Contents', '\n');

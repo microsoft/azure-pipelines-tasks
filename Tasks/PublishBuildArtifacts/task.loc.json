@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 26
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -63,6 +63,7 @@
     }
   },
   "messages": {
-    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed"
+    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
+    "PublishBuildArtifactsNotSupported": "ms-resource:loc.messages.PublishBuildArtifactsNotSupported"
   }
 }

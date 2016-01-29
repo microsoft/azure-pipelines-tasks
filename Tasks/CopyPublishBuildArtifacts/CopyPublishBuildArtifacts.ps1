@@ -28,6 +28,13 @@ Write-Verbose "TargetPath = $TargetPath"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
+$hostType = Get-TaskVariable $distributedTaskContext "system.hosttype"
+
+if($hostType -ieq "release" )
+{
+    throw (Get-LocalizedString -Key "Copy and Publish Build Artifacts task is not supported within Release")
+}
+
 $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
 $teamProjectId = Get-TaskVariable $distributedTaskContext "system.teamProjectId"
 $stagingFolder = Get-TaskVariable $distributedTaskContext "build.artifactstagingdirectory"

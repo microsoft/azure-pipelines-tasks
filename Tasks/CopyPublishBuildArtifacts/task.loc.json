@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 18
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -77,5 +77,8 @@
       "target": "copypublishbuildartifacts.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CopyPublishBuildArtifactsNotSupported": "ms-resource:loc.messages.CopyPublishBuildArtifactsNotSupported"
   }
 }

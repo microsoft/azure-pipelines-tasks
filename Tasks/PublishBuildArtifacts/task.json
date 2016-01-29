@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 26
   },
   "demands": [
   ],
@@ -64,6 +64,7 @@
     }
   },
   "messages": {
-    "PublishBuildArtifactsFailed" : "Publish build artifacts failed with error: %s" 
+    "PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s",
+    "PublishBuildArtifactsNotSupported" : "Publish build artifacts is not supported within Release"
   }
 }
