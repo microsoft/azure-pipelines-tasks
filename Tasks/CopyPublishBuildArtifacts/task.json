@@ -1,80 +1,81 @@
 {
-  "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
-  "name": "CopyPublishBuildArtifacts",
-  "friendlyName": "Copy and Publish Build Artifacts",
-  "description": "Copy Build artifacts to staging folder then publish Build artifacts to the server or a file share using minimatch patterns",
-  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
-  "category": "Utility",
-  "visibility": [
-    "Build"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 17
-  },
-  "demands": [
-  ],
+    "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
+    "name": "CopyPublishBuildArtifacts",
+    "friendlyName": "Copy and Publish Build Artifacts",
+    "description": "Copy Build artifacts to staging folder then publish Build artifacts to the server or a file share using minimatch patterns",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
+    "category": "Utility",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 18
+    },
+    "demands": [],
     "minimumAgentVersion": "1.83.0",
-  "inputs": [
-    {
-      "name": "CopyRoot",
-      "type": "filePath",
-      "label": "Copy Root",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Root folder to apply copy patterns to.  Empty is the root of the repo.  Use variables if build steps building outside the repo. Example: $(agent.builddirectory)"
-    },  
-    {
-      "name": "Contents",
-      "type": "multiLine",
-      "label": "Contents",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "File or folder paths to include as part of the artifact.  Supports multiple lines or minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=613725)"
-    },
-    {
-      "name": "ArtifactName",
-      "type": "string",
-      "label": "Artifact Name",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The name of the artifact to create."
-    },
-    {
-      "name": "ArtifactType",
-      "type": "pickList",
-      "label": "Artifact Type",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The type of the artifact to create.",
-      "options": {
-        "Container": "Server",
-        "FilePath": "File share"
-      }
-    },
-    {
-      "name": "TargetPath",
-      "type": "string",
-      "label": "Path",
-      "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
-      "required": false,
-      "helpMarkDown": "The file share to which to copy the files",
-      "visibleRule": "ArtifactType = FilePath"
+    "inputs": [
+        {
+            "name": "CopyRoot",
+            "type": "filePath",
+            "label": "Copy Root",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Root folder to apply copy patterns to.  Empty is the root of the repo.  Use variables if build steps building outside the repo. Example: $(agent.builddirectory)"
+        },
+        {
+            "name": "Contents",
+            "type": "multiLine",
+            "label": "Contents",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "File or folder paths to include as part of the artifact.  Supports multiple lines or minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=613725)"
+        },
+        {
+            "name": "ArtifactName",
+            "type": "string",
+            "label": "Artifact Name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of the artifact to create."
+        },
+        {
+            "name": "ArtifactType",
+            "type": "pickList",
+            "label": "Artifact Type",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The type of the artifact to create.",
+            "options": {
+                "Container": "Server",
+                "FilePath": "File share"
+            }
+        },
+        {
+            "name": "TargetPath",
+            "type": "string",
+            "label": "Path",
+            "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
+            "required": false,
+            "helpMarkDown": "The file share to which to copy the files",
+            "visibleRule": "ArtifactType = FilePath"
+        }
+    ],
+    "instanceNameFormat": "Copy Publish Artifact: $(ArtifactName)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\CopyPublishBuildArtifacts.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)",
+            "platforms": [
+                "windows"
+            ]
+        },
+        "Node": {
+            "target": "copypublishbuildartifacts.js",
+            "argumentFormat": ""
+        }
     }
-  ],
-  "instanceNameFormat": "Copy Publish Artifact: $(ArtifactName)",
-  "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\CopyPublishBuildArtifacts.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms" : ["windows"]
-    },
-    "Node": {
-      "target": "copypublishbuildartifacts.js",
-      "argumentFormat": ""            
-    }
-  }
 }

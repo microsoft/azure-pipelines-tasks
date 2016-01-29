@@ -99,14 +99,36 @@ describe('General Suite', function() {
     
     it('Find unsupported demands', (done) => {
 		this.timeout(1000);
-		
-        var supportedDemands :string[] = ['AndroidSDK', 'ant', 'AzurePS', 'Chef', 
-                                          'DotNetFramework', 'java', 'JDK', 'maven',
-                                          'MSBuild', 'MSBuild_x64', 'npm', 'node.js',
-                                          'PowerShell', 'SqlPackage', 'VisualStudio', 'VisualStudio_IDE',
-                                          'VSTest', 'WindowsKit', 'WindowsSdk', 'cmake',
-                                          'cocoapods', 'curl', 'Cmd', 'sh',
-                                          'KnifeReporting', 'Xamarin.Android', 'Xamarin.iOS', 'xcode', 'SCVMMAdminConsole'];
+
+        var supportedDemands :string[] = ['AndroidSDK',
+                                          'ant', 
+                                          'AzurePS', 
+                                          'Chef', 
+                                          'DotNetFramework', 
+                                          'java', 
+                                          'JDK', 
+                                          'maven',
+                                          'MSBuild', 
+                                          'MSBuild_x64', 
+                                          'npm', 
+                                          'node.js',
+                                          'PowerShell', 
+                                          'SqlPackage', 
+                                          'VisualStudio', 
+                                          'VisualStudio_IDE',
+                                          'VSTest', 
+                                          'WindowsKit', 
+                                          'WindowsSdk', 
+                                          'cmake',
+                                          'cocoapods', 
+                                          'curl', 
+                                          'Cmd', 
+                                          'SCVMMAdminConsole',
+                                          'sh',
+                                          'KnifeReporting', 
+                                          'Xamarin.Android', 
+                                          'Xamarin.iOS', 
+                                          'xcode'];
         
         supportedDemands.forEach(demand => {
             if(supportedDemands.indexOf(demand.toLocaleLowerCase()) < 0) {

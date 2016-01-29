@@ -6,17 +6,16 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [
-                "Build",
-                "Release"
-                  ],
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
-    "demands": [
-    ],
+    "demands": [],
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
@@ -152,11 +151,10 @@
             "defaultValue": "true",
             "helpMarkDown": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
         }
-
     ],
     "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
     "execution": {
-       "Node": {
+        "Node": {
             "target": "xamarintestcloud.js",
             "argumentFormat": ""
         },
@@ -164,7 +162,9 @@
             "target": "$(currentDirectory)\\XamarinTestCloud.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)",
-            "platforms": ["windows"]
+            "platforms": [
+                "windows"
+            ]
         }
     }
 }
