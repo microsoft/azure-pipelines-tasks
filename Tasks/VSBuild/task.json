@@ -68,8 +68,10 @@
             "name": "restoreNugetPackages",
             "type": "boolean",
             "label": "Restore NuGet Packages",
-            "defaultValue": "true",
-            "required": false
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build."
         },
         {
             "name": "vsVersion",

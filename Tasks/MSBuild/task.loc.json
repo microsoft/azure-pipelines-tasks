@@ -68,8 +68,9 @@
       "name": "restoreNugetPackages",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.restoreNugetPackages",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
+      "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.restoreNugetPackages"
     },
     {
