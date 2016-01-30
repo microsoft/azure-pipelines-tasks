@@ -26,7 +26,7 @@ if ($b_versionByBuild)
     
     # Regular expression pattern to find the version in the build number 
     # and then apply it to the assemblies
-    $VersionRegex = "\d+\.\d+\.\d+\.\d+"
+    $VersionRegex = "\d+\.\d+\.\d+(\.\d+)|(-[A-Za-z0-9]+)"
     
     # If this script is not running on a build server, remind user to 
     # set environment variables so that this script can be debugged
