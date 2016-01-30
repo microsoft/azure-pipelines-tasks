@@ -274,15 +274,17 @@ function packageTask(pkgPath, commonDeps, commonSrc){
                 })
 
                 // Statically link the required internal common modules.
-                var taskDeps;
-                if ((taskDeps = commonDeps[task.name])) {
-                    taskDeps.forEach(function (dep) {
-                        gutil.log('Linking ' + dep.module + ' into ' + task.name);
-                        var src = path.join(commonSrc, dep.module);
-                        var dest = path.join(tgtPath, dep.dest);
-                        shell.mkdir('-p', dest);
-                        shell.cp('-R', src, dest);
-                    })
+                if(commonDeps){
+                    var taskDeps;
+                    if ((taskDeps = commonDeps[task.name])) {
+                        taskDeps.forEach(function (dep) {
+                            gutil.log('Linking ' + dep.module + ' into ' + task.name);
+                            var src = path.join(commonSrc, dep.module);
+                            var dest = path.join(tgtPath, dep.dest);
+                            shell.mkdir('-p', dest);
+                            shell.cp('-R', src, dest);
+                        })
+                    }
                 }
 
 	        	return;
