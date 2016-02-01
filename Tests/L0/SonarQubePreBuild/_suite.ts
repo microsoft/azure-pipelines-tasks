@@ -3,8 +3,6 @@
 /// <reference path="../../../definitions/Q.d.ts"/>
 
 import Q = require('q');
-import assert = require('assert');
-import trm = require('../../lib/taskRunner');
 import psm = require('../../lib/psRunner');
 import path = require('path');
 var shell = require('shelljs');
@@ -22,7 +20,7 @@ describe('Common-MSBuildHelpers Suite', function () {
     });
 
     if (ps) {
-        it('(CreateCommandLineArgs) works', (done) => {
+        it('CreateCommandLineArgs tests', (done) => {
             psm.runPS(path.join(__dirname, 'CreateCommandLineArgs.ps1'), done);
         })
        
