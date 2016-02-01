@@ -2,7 +2,7 @@
     "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
     "name": "PublishCodeCoverageResults",
     "friendlyName": "Publish Code Coverage Results",
-    "description": "Publish code coverage results to VSO/TFS",
+    "description": "Publish code coverage results to VSTS/TFS",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=626485)",
     "category": "Test",
     "visibility": [
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands" : [
     ],
