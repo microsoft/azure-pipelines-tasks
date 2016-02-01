@@ -106,13 +106,85 @@ function Delete-AzureSqlDatabaseServerFirewallRule
     {
         if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
         {
-            Delete-AzureSqlDatabaseServerFirewallRuleRDFE -serverName $serverName -firewallRuleName $firewallRuleName
+            Delete-AzureSqlDatabaseServerFirewallRuleRDFE -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
         }
         else
         {
-            Delete-AzureSqlDatabaseServerFirewallRuleARM -serverName $serverName -firewallRuleName $firewallRuleName
+            Delete-AzureSqlDatabaseServerFirewallRuleARM -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
         }
     }
 }
 
+function Get-SqlPackageCommandArguments
+{
+    param([String] $dacpacFile,
+          [String] $targetMethod,
+          [String] $serverName,
+          [String] $databaseName,
+          [String] $sqlUsername,
+          [String] $sqlPassword,
+          [String] $connectionString,
+          [String] $publishProfile,
+          [String] $additionalArguments)
 
+    $ErrorActionPreference = 'Stop'
+    $dacpacFileExtension = ".dacpac"
+    $SqlPackageOptions =
+    @{
+        SourceFile = "/SourceFile:"; 
+        Action = "/Action:"; 
+        TargetServerName = "/TargetServerName:";
+        TargetDatabaseName = "/TargetDatabaseName:";
+        TargetUser = "/TargetUser:";
+        TargetPassword = "/TargetPassword:";
+        TargetConnectionString = "/TargetConnectionString:";
+        Profile = "/Profile:";
+    }
+
+    # validate dacpac file
+    if([System.IO.Path]::GetExtension($dacpacFile) -ne $dacpacFileExtension)
+    {
+        Write-Error (Get-LocalizedString -Key "Invalid Dacpac file '{0}' provided" -ArgumentList $dacpacFile)
+    }
+
+    $sqlPackageArguments = @($SqlPackageOptions.SourceFile + "`'$dacpacFile`'")
+    $sqlPackageArguments += @($SqlPackageOptions.Action + "Publish")
+
+    if($targetMethod -eq "server")
+    {
+        $sqlPackageArguments += @($SqlPackageOptions.TargetServerName + "`'$serverName`'")
+        if($databaseName)
+        {
+            $sqlPackageArguments += @($SqlPackageOptions.TargetDatabaseName + "`'$databaseName`'")
+        }
+
+        if($sqlUsername)
+        {
+            $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`'$sqlUsername`'")
+            if(-not($sqlPassword))
+            {
+                Write-Error (Get-LocalizedString -Key "No password specified for the SQL User: '{0}'" -ArgumentList $sqlUserName)
+            }
+            $sqlPackageArguments += @($SqlPackageOptions.TargetPassword + "`'$sqlPassword`'")
+        }
+    }
+    elseif($targetMethod -eq "connectionString")
+    {
+        $sqlPackageArguments += @($SqlPackageOptions.TargetConnectionString + "`'$connectionString`'")
+    }
+
+    if($publishProfile)
+    {
+        # validate publish profile
+        if([System.IO.Path]::GetExtension($publishProfile) -ne ".xml")
+        {
+            Write-Error (Get-LocalizedString -Key "Invalid Publish Profile '{0}' provided" -ArgumentList $publishProfile)
+        }
+        $sqlPackageArguments += @($SqlPackageOptions.Profile + "`'$publishProfile`'")
+    }
+
+    $sqlPackageArguments += @("$additionalArguments")
+    $scriptArgument = '"' + ($sqlPackageArguments -join " ") + '"'
+
+    return $scriptArgument
+}

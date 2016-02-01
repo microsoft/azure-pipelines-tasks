@@ -1,12 +1,12 @@
 [CmdletBinding(DefaultParameterSetName = 'None')]
 param
 (
-    [string] [Parameter(Mandatory=$true)]$connectedServiceNameSelector,
+    [string] [Parameter(Mandatory=$true)] $connectedServiceNameSelector,
     [String] [Parameter(Mandatory = $true)] $DacpacFile,
     [String] [Parameter(Mandatory = $true)] $ServerName,
     [String] [Parameter(Mandatory = $true)] $DatabaseName,
-    [string]$connectedServiceName,
-    [string]$connectedServiceNameARM,
+    [string] $connectedServiceName,
+    [string] $connectedServiceNameARM,
     [String] $SqlUsername,
     [String] $SqlPassword,
     [String] $PublishProfile,
@@ -20,7 +20,7 @@ param
 Write-Verbose "Entering script DeploySqlAzure.ps1"
 
 # Log arguments
-Write-Verbose "ConnectedServiceNameSelector= ConnectedServiceNameSelector" -Verbose
+Write-Verbose "ConnectedServiceNameSelector= $connectedServiceNameSelector" -Verbose
 Write-Verbose "DacpacFile= $DacpacFile" -Verbose
 Write-Verbose "ServerName= $ServerName" -Verbose
 Write-Verbose "DatabaseName= $DatabaseName" -Verbose
@@ -35,7 +35,6 @@ Write-Verbose "DeleteFirewallRule= $DeleteFirewallRule" -Verbose
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
 # Load all dependent files for execution
 Import-Module ./Utility.ps1 -Force
@@ -68,7 +67,6 @@ Try
     # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
     $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName -taskContext $distributedTaskContext
 
-
     # creating firewall rule for agent on sql server
     $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -connectionType $connectionType
     Write-Verbose ($firewallSettings | Format-List | Out-String) -Verbose
@@ -98,4 +96,4 @@ Finally
                                               -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $DeleteFirewallRule
 }
 
-Write-Verbose "Leaving script DeploySqlAzure.ps1"  -Verbose
+Write-Verbose "Leaving script DeploySqlAzure.ps1" -Verbose
