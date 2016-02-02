@@ -36,7 +36,7 @@ function Select-MSBuildLocation {
 
                 # Warn if not found.
                 if (!$Location) {
-                    Write-Warning (Get-VstsLocString -Key 'UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion.' -ArgumentList $Version, $Architecture)
+                    Write-Warning (Get-VstsLocString -Key 'UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion' -ArgumentList $Version, $Architecture)
                 }
             }
 

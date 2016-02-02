@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [
     "msbuild"
@@ -143,5 +143,9 @@
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
+  },
+  "messages": {
+    "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "ms-resource:loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion",
+    "MSBuildNotFoundVersion0Architecture1TryDifferent": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent"
   }
 }
