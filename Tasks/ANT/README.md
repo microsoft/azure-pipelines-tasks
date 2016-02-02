@@ -1,12 +1,12 @@
-#Build your code using ANT in VSTS
+#Build your code using Ant in VSTS
 
-###Paramaters for ANT build task are explained below
+###Parameters for Ant build task are explained below
 
-- **Ant Build File :** This is a Required field. Provide relative path from the repository root to the Ant build file. To Know more [click here](http://ant.apache.org/manual/using.html#buildfile)
+- **Ant Build File :** This is a Required field. Provide relative path from the repository root to the Ant build file. To know more [click here](http://ant.apache.org/manual/using.html#buildfile)
 
 - **Options :** Provide any options to pass to the Ant command line. You can provide your own properties (for example, `-DmyProperty=myPropertyValue`) and also use built-in variables (for example, `-DcollectionId=$(system.collectionId)`). Alternatively, the built-in variables are already set as environment variables during the build and can be passed directly (for example, `-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%)` To know more [click here](http://ant.apache.org/manual/running.html#options)
 
-- **Target(s) :** Provide The task(s) for ANT to execute for this build. To know more [click here](http://ant.apache.org/manual/targets.html#targets)
+- **Target(s) :** Provide The task(s) for Ant to execute for this build. To know more [click here](http://ant.apache.org/manual/targets.html#targets)
 
 ####JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
@@ -15,12 +15,12 @@ Use the next three options to manage your JUnit test results in VSTS
 
 - **Test Results Files :** This option wil appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
 
-- **Test Run Title :** This option will appear if you select the `Publish to VSO/TFS` option. Here provide a name for the Test Run
+- **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
 
 ####Code Coverage
 Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
 
-- **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported. For JaCoCo, make sure `jacocoant.jar` is available in lib folder of Ant installation. For cobertura, set up an environment variable `COBERTURA_HOME` pointing to the cobertura jars location.  [Click here](http://www.eclemma.org/jacoco/trunk/doc/ant.html) to know more about Jacoco and [Click here](https://github.com/cobertura/cobertura/wiki/Ant-Task-Reference) to know more about Cobertura.
+- **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported. For JaCoCo, make sure `jacocoant.jar` is available in lib folder of Ant installation. For Cobertura, set up an environment variable `COBERTURA_HOME` pointing to the Cobertura jars location.  [Click here](http://www.eclemma.org/jacoco/trunk/doc/ant.html) to know more about Jacoco and [Click here](https://github.com/cobertura/cobertura/wiki/Ant-Task-Reference) to know more about Cobertura.
 
 - **Class Files Directories :** Provide comma separated list of relative paths from ant build file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. Directories and archives are searched recursively for class files. For example: target/classes,target/testClasses.
 
