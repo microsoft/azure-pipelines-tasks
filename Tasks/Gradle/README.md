@@ -1,21 +1,21 @@
 #Build your code using Gradle in VSTS
 
-###Paramaters for Gradle build task are explained below
+###Parameters for Gradle build task are explained below
 
 - **Gradle Wrapper :** This is a Required field. The location in the repository of the gradlew wrapper used for the build. Note that on Windows build agents (including the hosted pool), you must use the `gradlew.bat` wrapper. Xplat build agents use the `gradlew` shell script. To Know more [click here](https://docs.gradle.org/current/userguide/gradle_wrapper.html)
 
 - **Options :** Specify any command line options you want to pass to the Gradle wrapper. To know more [click here](https://docs.gradle.org/current/userguide/gradle_command_line.html)
 
-- **Goal(s) :** The task(s) for Gradle to execute. A list of tasks can be taken from `gradlew tasks` issued from a command prompt. To knoq more [click here](https://docs.gradle.org/current/userguide/tutorial_using_tasks.html)
+- **Goal(s) :** The task(s) for Gradle to execute. A list of tasks can be taken from `gradlew tasks` issued from a command prompt. To know more [click here](https://docs.gradle.org/current/userguide/tutorial_using_tasks.html)
 
 ####JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
 
 - **Publish to VSTS :** Select this option to publish JUnit Test results produced by the Gradle build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS.
 
-- **Test Results Files :** This option wil appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
+- **Test Results Files :** This option will appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
 
-- **Test Run Title :** This option will appear if you select the `Publish to VSO/TFS` option. Here provide a name for the Test Run
+- **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
 
 ####Code Coverage
 Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
@@ -32,7 +32,7 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 - **Set JAVA_HOME by :** Select to set `JAVA_HOME` either by providing a path or let VSTS set the `JAVA_HOME` based on JDK version choosen. By default it is set to `JDK Version`
 
-- **JDK Version :** Here provide the PATH to `JAVA_HOME` if you want to set it by path or select the appropriate JDK verision.
+- **JDK Version :** Here provide the PATH to `JAVA_HOME` if you want to set it by path or select the appropriate JDK version.
 
 - **JDK Architecture :** Select the approriate JDK Architecture. By default it is set to `x86`
 
