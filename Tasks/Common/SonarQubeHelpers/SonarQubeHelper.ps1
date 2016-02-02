@@ -94,7 +94,7 @@ function Retry
 }
 
 #
-# Retry a specific command until the results is true. Returns true if the command succeded. Timeout and retry delay are in seconds. Usage:  
+# Retry a specific command until the results is true. Returns true if the command succeeded. Timeout and retry delay are in seconds. Usage:  
 #
 #   $command = { GetStatus -eq "Complete" } 
 #   RetryUntilTrue $command -timeout 60 -retryDelay 1 -Verbose
