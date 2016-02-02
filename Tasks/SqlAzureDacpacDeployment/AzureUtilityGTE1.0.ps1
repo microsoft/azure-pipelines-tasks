@@ -7,10 +7,20 @@ function Create-AzureSqlDatabaseServerFirewallRuleRDFE
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    Write-Verbose "[Azure Platform Call] Creating firewall rule $firewallRuleName"  -Verbose
-    $azureSqlDatabaseServerFirewallRule = New-AzureSqlDatabaseServerFirewallRule -StartIPAddress $startIPAddress -EndIPAddress $endIPAddress -ServerName $serverName `
-                                                                                 -RuleName $firewallRuleName -ErrorAction Stop
-    Write-Verbose "[Azure Platform Call] Firewall rule $firewallRuleName created"  -Verbose
+    try
+    {
+        Write-Verbose "[Azure RDFE Call] Creating firewall rule $firewallRuleName"  -Verbose
+        $azureSqlDatabaseServerFirewallRule = New-AzureSqlDatabaseServerFirewallRule -StartIPAddress $startIPAddress -EndIPAddress $endIPAddress -ServerName $serverName `
+                                                                                    -RuleName $firewallRuleName -ErrorAction Stop
+        Write-Verbose "[Azure RDFE Call] Firewall rule $firewallRuleName created"  -Verbose
+    }
+    catch [System.ServiceModel.CommunicationException]
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
+
+        Throw (Get-LocalizedString -Key "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist." -ArgumentList $serverName)
+    }
 
     return $azureSqlDatabaseServerFirewallRule
 }
@@ -22,9 +32,9 @@ function Get-AzureSqlDatabaseServerRGName
     $ARMSqlServerResourceType =  "Microsoft.Sql/servers"
     try
     {
-        Write-Verbose "[Azure Call]Getting resource details for azure sql server resource: $serverName with resource type: $ARMSqlServerResourceType" -Verbose
+        Write-Verbose "[Azure RM Call] Getting resource details for azure sql server resource: $serverName with resource type: $ARMSqlServerResourceType" -Verbose
         $azureSqlServerResourceDetails = (Get-AzureRMResource -ErrorAction Stop) | Where-Object { $_.ResourceName -eq $serverName -and $_.ResourceType -eq $ARMSqlServerResourceType }
-        Write-Verbose "[Azure Call]Retrieved resource details successfully for azure sql server resource: $serverName with resource type: $ARMSqlServerResourceType" -Verbose
+        Write-Verbose "[Azure RM Call] Retrieved resource details successfully for azure sql server resource: $serverName with resource type: $ARMSqlServerResourceType" -Verbose
 
         $azureResourceGroupName = $azureSqlServerResourceDetails.ResourceGroupName
         return $azureSqlServerResourceDetails.ResourceGroupName
@@ -33,7 +43,7 @@ function Get-AzureSqlDatabaseServerRGName
     {
         if ([string]::IsNullOrEmpty($azureResourceGroupName))
         {
-            Write-Verbose "(ARM)Sql Server: $serverName not found" -Verbose
+            Write-Verbose "[Azure RM Call] Sql Database Server: $serverName not found" -Verbose
 
             Throw (Get-LocalizedString -Key "Sql Database Server: '{0}' not found." -ArgumentList $serverName)
         }
@@ -49,10 +59,21 @@ function Create-AzureSqlDatabaseServerFirewallRuleARM
 
      # get azure storage account resource group name
     $azureResourceGroupName = Get-AzureSqlDatabaseServerRGName -serverName $serverName
+    Write-Verbose "For azure sql database server: '$serverName' resourcegroup name is '$azureResourceGroupName'." -Verbose
 
-    Write-Verbose "[Azure Platform Call] Creating firewall rule $firewallRuleName on azure database server: $serverName" -Verbose
-    $azureSqlDatabaseServerFirewallRule = New-AzureRMSqlServerFirewallRule -ResourceGroupName $azureResourceGroupName -StartIPAddress $startIPAddress -EndIPAddress $endIPAddress -ServerName $serverName -FirewallRuleName $firewallRuleName -ErrorAction Stop
-    Write-Verbose "[Azure Platform Call] Firewall rule $firewallRuleName created on azure database server: $serverName" -Verbose
+    try
+    {
+        Write-Verbose "[Azure RM Call] Creating firewall rule $firewallRuleName on azure database server: $serverName" -Verbose
+        $azureSqlDatabaseServerFirewallRule = New-AzureRMSqlServerFirewallRule -ResourceGroupName $azureResourceGroupName -StartIPAddress $startIPAddress -EndIPAddress $endIPAddress -ServerName $serverName -FirewallRuleName $firewallRuleName -ErrorAction Stop
+        Write-Verbose "[Azure RM Call] Firewall rule $firewallRuleName created on azure database server: $serverName" -Verbose
+    }
+    catch [Hyak.Common.CloudException]
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
+
+        Throw (Get-LocalizedString -Key "IPAddress mentioned is not a valid IPv4 address." -ArgumentList $serverName)
+    }
 
     return $azureSqlDatabaseServerFirewallRule
 }
@@ -62,9 +83,9 @@ function Delete-AzureSqlDatabaseServerFirewallRuleRDFE
     param([String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    Write-Verbose "[Azure Platform Call] Deleting firewall rule $firewallRuleName on azure database server: $serverName" -Verbose
-    Remove-AzureSqlDatabaseServerFirewallRule -ServerName $serverName -RuleName $firewallRuleName -Force -ErrorAction Stop | Out-Null
-    Write-Verbose "[Azure Platform Call] Firewall rule $firewallRuleName deleted on azure database server: $serverName" -Verbose
+    Write-Verbose "[Azure RDFE Call] Deleting firewall rule $firewallRuleName on azure database server: $serverName" -Verbose
+    Remove-AzureSqlDatabaseServerFirewallRule -ServerName $serverName -RuleName $firewallRuleName -Force -ErrorAction Stop
+    Write-Verbose "[Azure RDFE Call] Firewall rule $firewallRuleName deleted on azure database server: $serverName" -Verbose
 }
 
 function Delete-AzureSqlDatabaseServerFirewallRuleARM
@@ -74,8 +95,9 @@ function Delete-AzureSqlDatabaseServerFirewallRuleARM
 
     # get azure storage account resource group name
     $azureResourceGroupName = Get-AzureSqlDatabaseServerRGName -serverName $serverName
+    Write-Verbose "For azure sql database server: '$serverName' resourcegroup name is '$azureResourceGroupName'." -Verbose
 
-    Write-Verbose "[Azure Platform Call] Deleting firewall rule $firewallRuleName on azure database server: $serverName" -Verbose
-    Remove-AzureRMSqlServerFirewallRule -ResourceGroupName $azureResourceGroupName -ServerName $serverName -FirewallRuleName $firewallRuleName -Force -ErrorAction Stop | Out-Null
-    Write-Verbose "[Azure Platform Call] Firewall rule $firewallRuleName deleted on azure database server: $serverName" -Verbose
+    Write-Verbose "[Azure RM Call] Deleting firewall rule $firewallRuleName on azure database server: $serverName" -Verbose
+    Remove-AzureRMSqlServerFirewallRule -ResourceGroupName $azureResourceGroupName -ServerName $serverName -FirewallRuleName $firewallRuleName -Force -ErrorAction Stop
+    Write-Verbose "[Azure RM Call] Firewall rule $firewallRuleName deleted on azure database server: $serverName" -Verbose
 }
