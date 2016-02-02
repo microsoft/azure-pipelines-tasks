@@ -48,7 +48,7 @@ function determineIdentity(input) {
 				foundIdent = removeExecOutputNoise(foundIdent)
 				var ident;
 				if(input.iosSigningIdentity) {
-					tl.warning('Signing Identitiy specified along with P12 Certificate. Omit Signing Identity in task to ensure p12 value used.');
+					tl.warning('Signing Identity specified along with P12 Certificate. Omit Signing Identity in task to ensure p12 value used.');
 					ident = input.iosSigningIdentity;
 				} else {
 					ident = foundIdent;
