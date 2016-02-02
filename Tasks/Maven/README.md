@@ -1,6 +1,6 @@
 #Build your Java code using Maven in VSTS
 
-###Paramaters for Maven build task are explained below
+###Parameters for Maven build task are explained below
 
 - **Maven POM file :** This is a Required field. Provide relative path from the repo root to the Maven POM .xml file. [Click here to know more about POM] (http://maven.apache.org/guides/introduction/introduction-to-the-pom.html)
 
@@ -8,14 +8,14 @@
 
 - **Goal(s) :** In most cases, set this to `package` to compile your code and package it into a .war file. If you leave this argument blank, the build will fail. [Click here to know more about Maven Build Lifecycle](http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
 
-####Junit Test Results
+####JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
 
-- **Publish to VSO/TFS :** Select this option to publish JUnit Test results produced by the Maven build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS.
+- **Publish to VSTS/TFS :** Select this option to publish JUnit Test results produced by the Maven build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS/TFS.
 
-- **Test Results Files :** This option wil appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
+- **Test Results Files :** This option will appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
 
-- **Test Run Title :** This option wil appear if you select the `Publish to VSO/TFS` option. Here provide a name for the Test Run
+- **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
 
 ####Code Coverage
 Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
