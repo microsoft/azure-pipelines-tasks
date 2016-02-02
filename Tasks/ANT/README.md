@@ -13,7 +13,7 @@ Use the next three options to manage your JUnit test results in VSTS
 
 - **Publish to VSTS/TFS :** Select this option to publish JUnit Test results produced by the Ant build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS.
 
-- **Test Results Files :** This option wil appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
+- **Test Results Files :** This option will appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
 
 - **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
 
@@ -36,7 +36,7 @@ Use the next options to manage your `ANT_HOME` and `JAVA_HOME` attributes
 
 - **Set JAVA_HOME by :** Select to set `JAVA_HOME` either by providing a path or let VSTS set the `JAVA_HOME` based on JDK version choosen. By default it is set to `JDK Version`
 
-- **JDK Version/Path :** Here provide the PATH to `JAVA_HOME` if you want to set it by path or select the appropriate JDK verision.
+- **JDK Version/Path :** Here provide the PATH to `JAVA_HOME` if you want to set it by path or select the appropriate JDK version.
 
 - **JDK Architecture :** Select the approriate JDK Architecture. By default it is set to `x86`
 
