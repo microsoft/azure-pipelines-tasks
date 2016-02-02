@@ -99,7 +99,7 @@ If the range cannot be satisfied, the default version will be downloaded.  The d
 
 After that call, the location to that 
 
-Tasks are run out of proc so there's no case where the path is poisoined for the next task.
+Tasks are run out of proc so there's no case where the path is poisoned for the next task.
 
 No need to take os or arch in the api.  The api can discover that easily.
 
