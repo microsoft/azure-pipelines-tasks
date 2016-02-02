@@ -58,5 +58,8 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Invoke-BuildTools) skips restore if specified', (done) => {
             psm.runPS(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfSpecified.ps1'), done);
         })
+        it('(Invoke-MSBuild) combines msbuildexe', (done) => {
+            psm.runPS(path.join(__dirname, 'Invoke-MSBuild.CombinesMsbuildexe.ps1'), done);
+        })
     }
 });
