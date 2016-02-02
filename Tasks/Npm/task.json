@@ -9,46 +9,46 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 5
     },
-    "demands" : [
+    "demands": [
         "npm"
     ],
     "minimumAgentVersion": "1.91.0",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
-    ],    
+    ],
     "instanceNameFormat": "npm $(command)",
     "inputs": [
         {
             "name": "command",
             "type": "string",
             "label": "Command",
-            "defaultValue":"install",
+            "defaultValue": "install",
             "helpMarkDown": "npm command to run. [More Information](https://docs.npmjs.com/).",
-            "required":true
+            "required": true
         },
         {
             "name": "arguments",
             "type": "string",
             "label": "Arguments",
-            "defaultValue":"",
+            "defaultValue": "",
             "helpMarkDown": "Additional arguments passed to npm.",
-            "required":false,
-            "groupName":"advanced"
+            "required": false,
+            "groupName": "advanced"
         },
         {
             "name": "cwd",
             "type": "filePath",
             "label": "Working Directory",
-            "defaultValue":"",
-            "required":false,
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Current working directory where npm command is run.  Defaults to the root of the repo.",
-            "groupName":"advanced"
+            "groupName": "advanced"
         }
     ],
     "execution": {

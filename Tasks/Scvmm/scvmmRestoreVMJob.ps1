@@ -11,32 +11,6 @@ $RunSCVMMRestoreVMJob = {
     [string[]]$powershellScriptsToLoad
     )
 
-    foreach ($psModule in $powershellModulesToLoad) {
-        if ( Test-Path $psModule )
-        { 
-            write-verbose " Importing SCVMM related modules from $scvmmModulePath in context of job $($psModule)" -verbose
-            Import-Module -Name $psModule
-        } 
-        else
-        {
-            write-warning "Unable to import $psModule from restore action job. Ensure path is valid and accessible "
-        }
-    }
-
-    foreach ($psScript in $powershellScriptsToLoad) {
-        
-        if ( Test-Path $psScript )
-        { 
-            write-verbose " Loading the PS script - $psScript in job context " -verbose
-            . $psScript
-        } 
-        else
-        {
-            write-warning "Unable to load $psScript from restore action job . Ensure path is valid and accessible"
-        }
-    }
-
-
     $CloudFiltering = "CloudFiltering"
     $HostFiltering = "HostFiltering"
 
@@ -46,8 +20,39 @@ $RunSCVMMRestoreVMJob = {
     $result.VMName = $vmName
     $scvmmCloud = $null
     $scvmmHost = $null
-    $scvmmServerConnection = $null
+    $scvmmServerConnection = $null 
+
+    if($powershellModulesToLoad)
+    {
+        foreach ($psModule in $powershellModulesToLoad) {
+            if ( Test-Path $psModule )
+            { 
+                write-verbose " Importing SCVMM related modules from $scvmmModulePath in context of job $($psModule)" -verbose
+                Import-Module -Name $psModule
+            } 
+            else
+            {
+                Write-Warning "Unable to find / load the Powershell modules $psModule for SCVMM. This may result into failure of all/some operations on SCVMM . Ensure 'Microsoft System Center Virtual Machine Manager Administrator Console' is installed on agent machine. "
+            }
+        }
+    }
     
+    if($powershellScriptsToLoad)
+    {
+        foreach ($psScript in $powershellScriptsToLoad) {
+            
+            if ( Test-Path $psScript )
+            { 
+                write-verbose " Loading the PS script - $psScript in job context " -verbose
+                . $psScript
+            } 
+            else
+            {
+                write-warning "Unable to load $psScript from restore action job . Ensure path is valid and accessible"
+            }
+        }
+    }
+
     function GetConnection
     {
         
@@ -109,7 +114,7 @@ $RunSCVMMRestoreVMJob = {
     }
     
     try
-    {
+    {      
         write-verbose " Creating connection with SCVMM server $scvmmServerName on port $scvmmServerPort" -verbose
         $scvmmServerConnection = GetConnection
         write-verbose " Connection with SCVMM server $scvmmServerName on port $scvmmServerPort is made, now get the VM - $vmName" -verbose
