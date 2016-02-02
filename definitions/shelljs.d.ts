@@ -81,7 +81,7 @@ declare module "shelljs"
     /**
      * Copies files. The wildcard * is accepted.
      * @param {string}   options Available options: -f (force), -r, -R (recursive)
-     * @param {strin]}   source  The source.
+     * @param {string}   source  The source.
      * @param {string}   dest    The destination.
      */
     export function cp(options: string, source: string, dest: string): void;
