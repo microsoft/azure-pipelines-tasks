@@ -145,6 +145,6 @@ TODO: flush out how our images run the installers and/or discovery scripts
 
 ## Capabilities
 
-TODO: Writing up how to make capabilities extensibile rather than being a hard coded set in the agent (busted).
+TODO: Writing up how to make capabilities extensible rather than being a hard coded set in the agent (busted).
 
 
