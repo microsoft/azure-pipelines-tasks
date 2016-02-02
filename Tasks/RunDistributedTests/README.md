@@ -87,7 +87,7 @@ If this is not the case, testagent should be manually downloaded from official m
 
 -	**Usage Error Conditions**
 
-	a.	Using same test machines across different machine groups, and running builds (with any BDT tasks) parallely against those machine groups is not supported.
+	a.	Using same test machines across different machine groups, and running builds (with any BDT tasks) parallelly against those machine groups is not supported.
 	
 	b.	Cancelling an inprogress build/release with BDT tasks is not supported. If you do cancel, your subsequent builds may misbehave.
 	
