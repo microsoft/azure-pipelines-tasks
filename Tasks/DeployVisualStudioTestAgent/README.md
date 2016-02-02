@@ -47,7 +47,7 @@ To dynamically deploy Azure resource groups with virtual machines in them use th
 
 - **Test Agent Location:**	Use this to supply a path to the Test Agent (vstf_testagent.exe) which is different from the default (http://go.microsoft.com/fwlink/?LinkId=536423). 
   
-  For example, if you have stored a local copy of the Test Agent within your network, you can speicfy a path to that. Local path or a network location can be specified and location should be accessible by either buildagent (with the identity it is running with) OR testagent (with the identity its configured with above). For Azure test machines, web location can be provided. 
+  For example, if you have stored a local copy of the Test Agent within your network, you can specify a path to that. Local path or a network location can be specified and location should be accessible by either buildagent (with the identity it is running with) OR testagent (with the identity its configured with above). For Azure test machines, web location can be provided. 
 
 - **Update Test Agent:**	If Test Agent is already deployed on a machine, this option checks to see if there is an update available for that version of the Test Agent. Unchecking the box will skip the update check
 
