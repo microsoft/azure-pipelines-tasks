@@ -1119,7 +1119,7 @@ declare module "crypto" {
         update(data: any): void;
         sign(private_key: string, output_format: string): string;
     }
-    export function createVerify(algorith: string): Verify;
+    export function createVerify(algorithm: string): Verify;
     interface Verify {
         update(data: any): void;
         verify(object: string, signature: string, signature_format?: string): boolean;
