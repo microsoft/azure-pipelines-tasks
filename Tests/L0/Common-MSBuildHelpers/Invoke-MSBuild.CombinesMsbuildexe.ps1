@@ -10,7 +10,7 @@ $expectedMSBuildPath = "C:\Some msbuild dir\msbuild.exe"
 Register-Mock Assert-VstsPath
 Register-Mock Get-VstsTaskVariable { "C:\Some agent home directory" } -- -Name Agent.HomeDirectory -Require
 Register-Mock Invoke-VstsTool { 'Some output 1', 'Some output 2' }
-$LASTEXITCODE = 0
+$global:LASTEXITCODE = 0
 Register-Mock Write-VstsSetResult
 
 # Act.
