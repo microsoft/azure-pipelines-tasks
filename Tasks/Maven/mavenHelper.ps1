@@ -7,7 +7,7 @@ function ConfigureJDK
 	if($javaHomeSelection -eq 'JDKVersion')
 	{
 		Write-Verbose "Using JDK version to find and set JAVA_HOME"
-		# If the JDK version is not the deafult set the jdkPath to the new JDK version selected
+		# If the JDK version is not the default set the jdkPath to the new JDK version selected
 		if($jdkVersion -and ($jdkVersion -ne "default"))
 		{
 			$jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
