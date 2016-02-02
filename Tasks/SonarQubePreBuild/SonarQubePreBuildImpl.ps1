@@ -32,13 +32,13 @@ function StoreParametersInTaskContext
 	param(
 		  [string]$hostUrl,
 		  [string]$bootstrapperPath,
-		  [string]$dahsboardUrl,
+		  [string]$dashboardUrl,
           [string]$includeFullReport, 
           [string]$breakBuild)
 	
     SetTaskContextVariable "MSBuild.SonarQube.Internal.BootstrapperPath" $bootstrapperPath    
     SetTaskContextVariable "MSBuild.SonarQube.HostUrl" $hostUrl
-    SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dahsboardUrl   
+    SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dashboardUrl   
     SetTaskContextVariable "MSBuild.SonarQube.Internal.BreakBuild" $breakBuild
     SetTaskContextVariable "MSBuild.SonarQube.Internal.IncludeFullReport" $includeFullReport        
 }
