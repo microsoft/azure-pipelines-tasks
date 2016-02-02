@@ -794,13 +794,13 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             }
 
             $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources `
-                                                       -ThrowOnTotalUnavaialbility $false -debugLogsFlag $debugLogsFlag
+                                                       -ThrowOnTotalUnavailability $false -debugLogsFlag $debugLogsFlag
         }
 
         $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources `
                                                 -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap -debugLogsFlag $debugLogsFlag
         $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources `
-                                                -ThrowOnTotalUnavaialbility $true -debugLogsFlag $debugLogsFlag
+                                                -ThrowOnTotalUnavailability $true -debugLogsFlag $debugLogsFlag
 
         foreach ($resource in $azureRMVMResources)
         {
