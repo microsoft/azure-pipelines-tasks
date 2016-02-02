@@ -25,7 +25,7 @@ To dynamically deploy Azure resource groups with virtual machines in them use th
 
 ###The different parameters of the task are explained below:
 
-- **Machines:** Required Field. Provide the comma seperated list of machine names or "Azure Resource Group / Test Machine Group" name or Variable name containing the list of machines on which the Test Agent should be deployed.
+- **Machines:** Required Field. Provide the comma separated list of machine names or "Azure Resource Group / Test Machine Group" name or Variable name containing the list of machines on which the Test Agent should be deployed.
 
 - **Admin Login:** Required Field in case of Flat Machines or if you have used one of the Dynamic machine provisioning tasks like "Azure Resource Group Deployment". Username should be an admin on the Test Machines on which Test Agent is being deployed. Multiple formats like Domain\username, username, Machinename\username and .\username are supported. Note that UPN format like username@domain.com and built in System accounts like “NT Authority\System” are not supported
 

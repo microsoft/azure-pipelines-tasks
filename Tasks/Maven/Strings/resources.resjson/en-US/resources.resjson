@@ -22,7 +22,7 @@
   "loc.input.label.classFilter": "Class Inclusion/Exclusion Filters",
   "loc.input.help.classFilter": "Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.",
   "loc.input.label.classFilesDirectories": "Class Files Directories",
-  "loc.input.help.classFilesDirectories": "This field is required for a multi-module project. Specify a comma-seperated list of relative paths from the Maven POM file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
+  "loc.input.help.classFilesDirectories": "This field is required for a multi-module project. Specify a comma-separated list of relative paths from the Maven POM file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
   "loc.input.label.srcDirectories": "Source Files Directories",
   "loc.input.help.srcDirectories": "This field is required for a multi-module project. Specify a comma-separated list of relative paths from the Maven POM file to source code directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.",
   "loc.input.label.javaHomeSelection": "Set JAVA_HOME by",
