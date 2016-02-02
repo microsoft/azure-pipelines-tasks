@@ -49,7 +49,7 @@ function Add-SourceServerStream {
                         # Pdbstr.exe doesn't seem to ever write to STDERR or return a non-zero
                         # exit code. Just in case it does, log it as an error. Mainly this is
                         # just for consistency as that's what would have happened in the previous
-                        # implemention that ran under the legacy PowerShell handler.
+                        # implementation that ran under the legacy PowerShell handler.
                         #
                         # It would probably be better to write an error if STDOUT matches the
                         # command usage.
