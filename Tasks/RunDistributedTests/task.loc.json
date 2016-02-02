@@ -13,10 +13,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 24
   },
   "demands": [],
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "setupOptions",
@@ -45,7 +45,7 @@
   "inputs": [
     {
       "name": "testMachineGroup",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
@@ -144,7 +144,7 @@
     },
     {
       "name": "autMachineGroup",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.autMachineGroup",
       "defaultValue": "",
       "required": false,
