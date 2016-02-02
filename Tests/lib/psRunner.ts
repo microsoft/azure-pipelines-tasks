@@ -60,20 +60,20 @@ export class PSRunner extends events.EventEmitter {
 							env: process.env
 						},
 			(err, stdout, stderr) => {
+				if (stdout) {
+					debug(stdout);
+				}
+
+				if (stderr) {
+					debug('stderr:');
+					debug(stderr);
+				}
+
 				if (err !== null) {
 					defer.reject(err);
 					return;
 				}
 
-				if (stdout) {
-					debug(stdout);
-				}
-				
-				if (stderr) {
-					debug('stderr:');
-					debug(stderr);
-				}
-				
 				defer.resolve(null);
 			});
 		

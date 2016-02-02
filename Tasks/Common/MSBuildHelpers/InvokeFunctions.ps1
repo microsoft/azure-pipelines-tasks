@@ -183,7 +183,7 @@ function Invoke-MSBuild {
             $MSBuildPath = Get-MSBuildPath
         } else {
             $MSBuildPath = [System.Environment]::ExpandEnvironmentVariables($MSBuildPath)
-            if (!$MSBuildPath -like '*msbuild.exe') {
+            if ($MSBuildPath -notlike '*msbuild.exe') {
                 $MSBuildPath = [System.IO.Path]::Combine($MSBuildPath, 'msbuild.exe')
             }
         }
