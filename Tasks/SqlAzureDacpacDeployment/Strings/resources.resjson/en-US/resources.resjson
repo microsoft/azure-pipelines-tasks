@@ -25,7 +25,7 @@
   "loc.input.label.AdditionalArguments": "Additional SqlPackage.exe Arguments",
   "loc.input.help.AdditionalArguments": "Additional SqlPackage.exe arguments that will be applied when creating or updating the Azure SQL Database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).​",
   "loc.input.label.IpDetectionMethod": "Specify Firewall Rules Using",
-  "loc.input.help.IpDetectionMethod": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Provide the IP Address range of the automation agents, or select to auto-detect the IP Address of the agent where this task will run.",
+  "loc.input.help.IpDetectionMethod": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Provide the IP Address range of the automation agents, or select to auto-detect in case of hosted automation agent.",
   "loc.input.label.StartIpAddress": "Start IP Address",
   "loc.input.help.StartIpAddress": "The starting IP Address of the automation agent machine pool like 196.21.30.50.",
   "loc.input.label.EndIpAddress": "End IP Address",
