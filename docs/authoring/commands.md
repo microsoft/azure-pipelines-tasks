@@ -1,4 +1,4 @@
-﻿## Logging Commands:
+## Logging Commands:
 
 The general format for a logging command is:
     ##vso[area.action property1=value;property2=value;...]message
@@ -132,12 +132,16 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 <p align="left">
                     variable=variable name (Required) <br>
                 </p>
+                 <p align="left">
+                    issecret=true (Optional) <br>
+                </p>
             </td>
             <td>
                 <p align="left">
-                    Sets a variable in the variable service of taskcontext. The first task can set a variable, and following tasks are able to use the variable. The variable is exposed to the following tasks as an environment variable.<br>
+                    Sets a variable in the variable service of taskcontext. The first task can set a variable, and following tasks are able to use the variable. The variable is exposed to the following tasks as an environment variable. When 'issecret' is set to true, the value of the variable will be saved as secret and masked out from log.<br>
                     Example: <br>
                     ##vso[task.setvariable variable=testvar;]testvalue<br> 
+                    ##vso[task.setvariable variable=testvar;issecret=true;]testvalue<br> 
                 </p>
             </td>
             <td>
@@ -278,7 +282,8 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
             </td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td>
                 <p align="left">
                     ##vso[build.updatebuildnumber]build number
@@ -297,6 +302,27 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 1.88
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="left">
+                    ##vso[build.addbuildtag]build tag
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Add a tag for current build.<br>
+                    Example: <br>
+                    ##vso[build.addbuildtag]Tag_UnitTestPassed
+                </p>
+            </td>
+            <td>
+                1.95
             </td>
         </tr>
     </tbody>

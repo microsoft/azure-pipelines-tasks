@@ -1,11 +1,11 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\DbghelpFunctions.ps1
 $env:AGENT_HOMEDIRECTORY = 'SomeDrive:\AgentHome'
-Register-Mock Test-Path { $true }
+Register-Mock Assert-VstsPath { "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll" }
 Register-Mock Get-CurrentProcess {
     New-Object psobject -Property @{
             Id = $PID
@@ -17,12 +17,12 @@ Register-Mock Get-CurrentProcess {
             )
         }
 }
-Register-Mock Add-DbghelpLibraryCore
+Register-Mock Invoke-LoadLibrary
 Register-Mock Write-Warning
 
 # Act.
-Add-DbghelpLibrary 
+Add-DbghelpLibrary
 
 # Assert.
-Assert-WasCalled Add-DbghelpLibraryCore -- -LiteralPath "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll"
+Assert-WasCalled Invoke-LoadLibrary -- -LiteralPath "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll"
 Assert-WasCalled Write-Warning -Times 0

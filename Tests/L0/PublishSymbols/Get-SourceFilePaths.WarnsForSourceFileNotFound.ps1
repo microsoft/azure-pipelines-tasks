@@ -1,15 +1,15 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\SourceFileFunctions.ps1
 $symbolsFilePath = 'SomeDrive:\SomeSourceDir\SomeProject\SomeLibrary.pdb'
 $sourceRootPath = 'SomeDrive:\SomeSourceDir'
 $global:sourceFile1 = 'SomeDrive:\SomeSourceDir\SomeProject\SomeFile1.cs'
 $global:sourceFile2 = 'SomeDrive:\SomeSourceDir\SomeProject\SomeFile2.cs'
 $global:sourceFile3 = 'SomeDrive:\SomeSourceDir\SomeProject\SomeFile3.cs'
-Register-Mock Get-IndexedSourceFilePaths {
+Register-Mock Get-DbghelpSourceFilePaths {
         $global:sourceFile1
         $global:sourceFile2
         $global:sourceFile3
@@ -18,6 +18,7 @@ Register-Mock Test-Path { $true } -- -LiteralPath $symbolsFilePath -PathType Lea
 Register-Mock Test-Path { $true } -- -LiteralPath $global:sourceFile1 -PathType Leaf
 Register-Mock Test-Path { $false } -- -LiteralPath $global:sourceFile2 -PathType Leaf
 Register-Mock Test-Path { $true } -- -LiteralPath $global:sourceFile3 -PathType Leaf
+Register-Mock Trace-VstsPath
 foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Unregister-Mock Write-Host
     Unregister-Mock Write-Warning

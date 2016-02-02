@@ -29,7 +29,7 @@ mvnv.arg('-version');
 
 var mvnb = tl.createToolRunner(mvntool);
 mvnb.arg('-f');
-mvnb.arg(mavenPOMFile);
+mvnb.pathArg(mavenPOMFile);
 mvnb.arg(mavenOptions);
 mvnb.arg(mavenGoals);
 
@@ -115,7 +115,7 @@ function getSonarQubeRunner() {
     }
 
     mvnsq.arg('-f');
-    mvnsq.arg(mavenPOMFile);
+    mvnsq.pathArg(mavenPOMFile);
     mvnsq.arg(mavenOptions); // add the user options to allow further customization of the SQ run
     mvnsq.arg("sonar:sonar");
 

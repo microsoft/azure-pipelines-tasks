@@ -6,19 +6,19 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613729)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 10
     },
     "demands": [
         "Xamarin.iOS"
     ],
     "inputs": [
-        { 
+        {
             "name": "solution",
             "type": "filePath",
             "label": "Solution",
@@ -34,7 +34,7 @@
             "required": true,
             "helpMarkDown": "Standard configurations are Ad-Hoc, AppStore, Debug, Release."
         },
-        { 
+        {
             "name": "mdtoolLocation",
             "type": "string",
             "label": "Override path to mdtool",

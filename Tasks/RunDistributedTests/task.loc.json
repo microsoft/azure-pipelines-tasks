@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
   "name": "RunVisualStudioTestsusingTestAgent",
@@ -16,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 23
   },
   "demands": [],
   "minimumAgentVersion": "1.95.0",
@@ -37,7 +34,7 @@
       "tags": [
         "Preview"
       ],
-      "isExpanded": false
+      "isExpanded": true
     },
     {
       "name": "reportingOptions",

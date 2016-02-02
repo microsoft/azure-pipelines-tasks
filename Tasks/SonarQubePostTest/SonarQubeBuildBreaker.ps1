@@ -176,8 +176,10 @@ function FailBuildOnQualityGateStatus
     if ($qualityGateStatus -eq "error")
     {        
         $dashboardUrl = GetTaskContextVariable "MSBuild.SonarQube.ProjectUri"
-        Write-Error "The SonarQube quality gate associated with this build has failed. For more details see $dashboardUrl"
-        Write-host "##vso[task.complete result=Failed;]"
+        
+        Write-Host "##vso[task.logissue type=error]The SonarQube quality gate associated with this build has failed. For more details see $dashboardUrl"
+        Write-Host "##vso[task.complete result=Failed;]"
+        
     }
     else
     {

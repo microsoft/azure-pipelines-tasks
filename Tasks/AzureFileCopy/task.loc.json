@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
   "name": "AzureFileCopy",
@@ -21,7 +18,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.92.0",
+  "minimumAgentVersion": "1.94.0",
   "inputs": [
     {
       "name": "SourcePath",
@@ -32,12 +29,34 @@
       "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
     },
     {
+      "name": "ConnectedServiceNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "ConnectedServiceName",
+      "options": {
+        "ConnectedServiceName": "Azure Classic",
+        "ConnectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
       "name": "ConnectedServiceName",
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
       "name": "Destination",
@@ -53,11 +72,27 @@
     },
     {
       "name": "StorageAccount",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "StorageAccountRM",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.StorageAccountRM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccountRM",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
       "name": "ContainerName",
@@ -79,12 +114,27 @@
     },
     {
       "name": "EnvironmentName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName",
-      "visibleRule": "Destination = AzureVMs"
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName && Destination = AzureVMs"
+    },
+    {
+      "name": "EnvironmentNameRM",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.EnvironmentNameRM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentNameRM",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs"
     },
     {
       "name": "ResourceFilteringMethod",
@@ -148,7 +198,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableCopyPrerequisites",
       "defaultValue": "false",
-      "visibleRule": "Destination = AzureVMs",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableCopyPrerequisites"
     },
@@ -178,6 +228,32 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
       "visibleRule": "Destination = AzureVMs"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "StorageAccount",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageServiceNames"
+    },
+    {
+      "target": "EnvironmentName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureHostedServiceNames"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "StorageAccountRM",
+      "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/providers/Microsoft.Storage/storageAccounts?api-version=2015-06-15",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "$(ConnectedServiceNameARM)"
+    },
+    {
+      "target": "EnvironmentNameRM",
+      "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "$(ConnectedServiceNameARM)"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

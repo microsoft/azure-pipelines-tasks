@@ -18,7 +18,7 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.92.0",
+  "minimumAgentVersion": "1.94.0",
   "inputs": [
     {
       "name": "SourcePath",
@@ -29,12 +29,34 @@
       "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file."
     },
     {
+      "name": "ConnectedServiceNameSelector",
+      "type": "pickList",
+      "label": "Azure Connection Type",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "ConnectedServiceName",
+      "options": {
+        "ConnectedServiceName": "Azure Classic",
+        "ConnectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
       "name": "ConnectedServiceName",
       "type": "connectedService:Azure",
-      "label": "Azure Subscription",
+      "label": "Classic Azure Subscription",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to target for copying the files."
+      "helpMarkDown": "Classic Azure subscription to target for copying the files.",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "Azure RM Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure Resource Manager subscription to target for copying the files.",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
       "name": "Destination",
@@ -45,16 +67,32 @@
       "options": {
         "AzureBlob": "Azure Blob",
         "AzureVMs": "Azure VMs"
-       },
+      },
       "helpMarkDown": "Select the destination, either Azure Blob or Azure VMs."
     },
     {
       "name": "StorageAccount",
-      "type": "string",
-      "label": "Storage Account",
+      "type": "pickList",
+      "label": "Classic Storage Account",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify a pre-existing storage account. It is also used as an intermediary for copying files to Azure VMs"
+      "helpMarkDown": "Specify a pre-existing classic storage account. It is also used as an intermediary for copying files to Azure VMs",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "StorageAccountRM",
+      "type": "pickList",
+      "label": "RM Storage Account",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Specify a pre-existing ARM storage account. It is also used as an intermediary for copying files to Azure VMs",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
       "name": "ContainerName",
@@ -76,12 +114,27 @@
     },
     {
       "name": "EnvironmentName",
-      "type": "string",
+      "type": "pickList",
+      "label": "Cloud Service",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Name of the target Cloud Service for copying files to.",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName && Destination = AzureVMs"
+    },
+    {
+      "name": "EnvironmentNameRM",
+      "type": "pickList",
       "label": "Resource Group",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Name of the target Resource Group for copying files to.",
-      "visibleRule": "Destination = AzureVMs"
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs"
     },
     {
       "name": "ResourceFilteringMethod",
@@ -145,7 +198,7 @@
       "type": "boolean",
       "label": "Enable Copy Prerequisites",
       "defaultValue": "false",
-      "visibleRule": "Destination = AzureVMs",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs",
       "required": false,
       "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
     },
@@ -175,6 +228,32 @@
       "required": false,
       "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
       "visibleRule": "Destination = AzureVMs"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "StorageAccount",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageServiceNames"
+    },
+    {
+      "target": "EnvironmentName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureHostedServiceNames"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "StorageAccountRM",
+      "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/providers/Microsoft.Storage/storageAccounts?api-version=2015-06-15",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "$(ConnectedServiceNameARM)"
+    },
+    {
+      "target": "EnvironmentNameRM",
+      "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "$(ConnectedServiceNameARM)"
     }
   ],
   "instanceNameFormat": "$(Destination) File Copy",

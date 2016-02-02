@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Visual Studio Build",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
@@ -15,6 +12,7 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.clean": "Clean",
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.vsVersion": "Visual Studio Version",
   "loc.input.help.vsVersion": "If the preferred version cannot be found, the latest version found will be used instead.",
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",

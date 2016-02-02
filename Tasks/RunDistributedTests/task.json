@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 23
     },
     "demands": [
     ],
@@ -31,9 +31,9 @@
         },
         {
             "name": "runUsingTestPlan",
-            "displayName": "Run using Test Plan",
+            "displayName": "Execution Options - Run using Test Plan",
             "tags" : [ "Preview" ],
-            "isExpanded": false
+            "isExpanded": true
         },
         {
             "name": "reportingOptions",
@@ -93,7 +93,7 @@
             "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
             "groupName": "executionOptions"
         },
         {

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Delete Files",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=722333)",
@@ -10,5 +7,6 @@
   "loc.input.help.SourceFolder": "The source folder that the deletion(s) will be run from.  Empty is the root of the repo.  Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)",
   "loc.input.label.Contents": "Contents",
   "loc.input.help.Contents": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.messages.CantDeleteFiles": "Couldn't delete one or more files"
+  "loc.messages.CantDeleteFiles": "Couldn't delete one or more files",
+  "loc.messages.SkippingSymbolStore": "Skipping delete for symbol store file share: %s"
 }

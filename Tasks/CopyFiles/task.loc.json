@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "5BFB729A-A7C8-4A78-A7C3-8D717BB7C13C",
   "name": "CopyFiles",
@@ -15,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 11
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",

@@ -1,9 +1,9 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\SourceProviderFunctions.ps1
 $global:disposeCount = 0
 $tfsTeamProjectCollection = New-Object psobject
 $tfsTeamProjectCollection | Add-Member -MemberType ScriptMethod -Name Dispose -Value { $global:disposeCount++ }

@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\MSBuild\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\MSBuild\LegacyHelpers.ps1
 Register-Mock Get-MSBuildLocation { 'Some resolved location' } -- -Version '' -Architecture 'Some architecture'
 foreach ($version in @('', 'latest')) {
     # Act.

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "2FF763A7-CE83-4E1F-BC89-0AE63477CEBE",
   "name": "PublishBuildArtifacts",
@@ -15,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 26
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",

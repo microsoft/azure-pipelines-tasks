@@ -9,7 +9,7 @@ antv.arg('-version');
 
 var antb = tl.createToolRunner(anttool);
 antb.arg('-buildfile');
-antb.arg(tl.getPathInput('antBuildFile', true, true));
+antb.pathArg(tl.getPathInput('antBuildFile', true, true));
 
 // options and targets are optional
 antb.arg(tl.getDelimitedInput('options', ' ', false));
@@ -21,6 +21,12 @@ if (antHomeUserInputPath) {
     tl.debug('Using path from user input to set ANT_HOME');
     tl.debug('Set ANT_HOME to ' + antHomeUserInputPath);
     process.env['ANT_HOME'] = antHomeUserInputPath;
+}
+
+// Warn if ANT_HOME is not set either locally or on the task via antHomeUserInputPath
+var antHome = tl.getVariable('ANT_HOME');
+if (!antHome) {
+    tl.warning('The ANT_HOME environment variable is not set.  Please make sure that it exists and is set to the location of the bin folder.  See http://ant.apache.org/manual/install.html.');
 }
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
