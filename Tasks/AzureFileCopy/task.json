@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 35
   },
   "demands": [
     "azureps"
@@ -33,7 +33,7 @@
       "type": "pickList",
       "label": "Azure Connection Type",
       "required": false,
-      "helpMarkDown": "",
+      "helpMarkDown": "Select Azure subscription type to connect to target to copy file",
       "defaultValue": "ConnectedServiceName",
       "options": {
         "ConnectedServiceName": "Azure Classic",
@@ -76,7 +76,7 @@
       "label": "Classic Storage Account",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify a pre-existing classic storage account. It is also used as an intermediary for copying files to Azure VMs",
+      "helpMarkDown": "Specify a pre-existing classic storage account. It is used as an intermediary for copying files to Azure VMs",
       "properties": {
         "EditableOptions": "True"
       },
@@ -85,10 +85,10 @@
     {
       "name": "StorageAccountRM",
       "type": "pickList",
-      "label": "RM Storage Account",
+      "label": "ARM Storage Account",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify a pre-existing ARM storage account. It is also used as an intermediary for copying files to Azure VMs",
+      "helpMarkDown": "Specify a pre-existing ARM storage account. It is used as an intermediary for copying files to Azure VMs",
       "properties": {
         "EditableOptions": "True"
       },

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 35
   },
   "demands": [
     "azureps"
@@ -33,7 +33,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
       "required": false,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameSelector",
       "defaultValue": "ConnectedServiceName",
       "options": {
         "ConnectedServiceName": "Azure Classic",
