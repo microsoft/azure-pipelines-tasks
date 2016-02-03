@@ -24,7 +24,7 @@ $identifierUri = $homePage
 $isAzureModulePresent = Get-Module -Name AzureRM* -ListAvailable
 if ([String]::IsNullOrEmpty($isAzureModulePresent) -eq $true)
 {
-    Write-Output "Script requires AzureRM module to be present. Obtain AzureRM from https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015" -Verbose
+    Write-Output "Script requires AzureRM modules to be present. Obtain AzureRM from https://github.com/Azure/azure-powershell/releases. Please refer https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md for recommended AzureRM versions." -Verbose
     return
 }
 
