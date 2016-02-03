@@ -24,9 +24,9 @@ Use the next options to manage your code coverage options. If your Build file al
 
 - **Class Inclusion/Exclusion Filters :** This option is enabled only when you select one tool in the above option. Provide a 
 comma separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*. 
-- **Class Files Directories :** This option is enabled only when you select JaCoCo as code coverage tool. This field is required for a multi module project. Specify comma seperated list of relative paths from Maven POM file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. For example: target/classes,target/testClasses.
+- **Class Files Directories :** This option is enabled only when you select JaCoCo as code coverage tool. This field is required for a multi module project. Specify comma separated list of relative paths from Maven POM file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. For example: target/classes,target/testClasses.
 
-- **Source Files Directories :** This option is enabled only when you select JaCoCo as code coverage tool. This field is required for a multi module project. Code coverage reports are created using ANT task. Specify comma seperated list of relative paths from Maven POM file to source directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.
+- **Source Files Directories :** This option is enabled only when you select JaCoCo as code coverage tool. This field is required for a multi module project. Specify comma separated list of relative paths from Maven POM file to source directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.
 
 ####Advanced
 Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Path
