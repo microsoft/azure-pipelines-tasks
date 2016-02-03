@@ -1,37 +1,37 @@
-﻿{
-  "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
-  "name": "SqlAzureDacpacDeployment",
-  "friendlyName": "Azure SQL Database Deployment",
-  "description": "Deploy Azure SQL DB using DACPAC",
-  "helpMarkDown": "[More Information](http://aka.ms/sqlazuredeployreadme)",
-  "category": "Deploy",
-  "visibility": [
+{
+    "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
+    "name": "SqlAzureDacpacDeployment",
+    "friendlyName": "Azure SQL Database Deployment",
+    "description": "Deploy Azure SQL DB using DACPAC",
+    "helpMarkDown": "[More Information](http://aka.ms/sqlazuredeployreadme)",
+    "category": "Deploy",
+    "visibility": [
         "Build",
         "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 8
-  },
-  "demands": [
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 8
+    },
+    "demands": [
         "azureps",
         "sqlpackage"
-  ],
-  "minimumAgentVersion": "1.95.0",
-  "groups": [
-    {
-      "name": "target",
-      "displayName": "Target",
-      "isExpanded": true
-    },
-    {
-      "name": "firewall",
-      "displayName": "Firewall",
-      "isExpanded": false
-    }
-  ],
+    ],
+    "minimumAgentVersion": "1.95.0",
+    "groups": [
+        {
+            "name": "target",
+            "displayName": "Target",
+            "isExpanded": true
+        },
+        {
+            "name": "firewall",
+            "displayName": "Firewall",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "ConnectedServiceNameSelector",
@@ -163,21 +163,21 @@
             "defaultValue": "true",
             "helpMarkDown": "If selected, then after the task ends, the IP Addresses specified here are deleted from the 'Allowed IP Addresses' list of the Azure SQL Server's Firewall."
         }
-    ],  
-    "sourceDefinitions": [ 
-     { 
-         "target": "IpDetectionMethod", 
-         "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods", 
-         "selector": "jsonpath:$.value[*]", 
-         "authKey": "tfs:DevTestLabs" 
-     } 
-    ], 
-  "instanceNameFormat": "Deploy Azure SQL DACPAC: $(DacpacFile)",
-  "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    ],
+    "sourceDefinitions": [
+        {
+            "target": "IpDetectionMethod",
+            "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods",
+            "selector": "jsonpath:$.value[*]",
+            "authKey": "tfs:DevTestLabs"
+        }
+    ],
+    "instanceNameFormat": "Deploy Azure SQL DACPAC: $(DacpacFile)",
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  }
 }
