@@ -13,11 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 24
     },
     "demands": [
     ],
-    "minimumAgentVersion": "1.88.0",
+    "minimumAgentVersion": "1.95.0",
     "groups": [
         {
             "name": "setupOptions",
@@ -44,11 +44,11 @@
     "inputs": [
         {
             "name": "testMachineGroup",
-            "type": "pickList",
-            "label": "Test Machine Group / Azure Resource Group",
+            "type": "multiLine",
+            "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. `Eg: dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name",
             "groupName": "setupOptions"
         },
         {
@@ -57,7 +57,7 @@
             "label": "Test Drop Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy` task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
             "groupName": "setupOptions"
         },
         {
@@ -93,7 +93,7 @@
             "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
             "groupName": "executionOptions"
         },
         {
@@ -144,11 +144,11 @@
         },
         {
             "name": "autMachineGroup",
-            "type": "pickList",
-            "label": "Application Under Test Machine Group",
+            "type": "multiLine",
+            "label": "Application Under Test Machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+            "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
             "groupName": "reportingOptions"
         },
         {
@@ -215,7 +215,9 @@
             "helpMarkDown": "Whether code coverage needs to be enabled.",
             "groupName": "runUsingTestPlan"
         }
+
     ],
+
     "sourceDefinitions": [ 
      { 
          "target": "testMachineGroup", 
@@ -251,6 +253,7 @@
          "authKey": "tfs:DevTestLabs"
      }      
     ], 
+
     "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
     "execution": {
         "PowerShell": {

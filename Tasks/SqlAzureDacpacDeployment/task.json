@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
   "name": "SqlAzureDacpacDeployment",
   "friendlyName": "Azure SQL Database Deployment",
@@ -7,19 +7,19 @@
   "category": "Deploy",
   "visibility": [
         "Build",
-    "Release"
+        "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [
         "azureps",
         "sqlpackage"
   ],
-  "minimumAgentVersion": "1.87.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "target",
