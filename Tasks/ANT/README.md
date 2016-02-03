@@ -32,7 +32,7 @@ comma separated list of filters to include or exclude classes from collecting co
 ####Advanced
 Use the next options to manage your `ANT_HOME` and `JAVA_HOME` attributes
 
-- **Set ANT_HOME Path :** If set, overrides any existing`ANT_HOME` environment variable with the given path.
+- **Set ANT_HOME Path :** If set, overrides any existing `ANT_HOME` environment variable with the given path.
 
 - **Set JAVA_HOME by :** Select to set `JAVA_HOME` either by providing a path or let VSTS set the `JAVA_HOME` based on JDK version choosen. By default it is set to `JDK Version`
 
