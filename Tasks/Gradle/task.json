@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 26
     },
     "demands": [
         "java"
@@ -70,11 +70,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to VSO/TFS",
+            "label": "Publish to VSTS/TFS",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit Test results produced by the Gradle build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
+            "helpMarkDown": "Select this option to publish JUnit Test results produced by the Gradle build to VSTS/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS/TFS."
         },
         {
             "name": "testResultsFiles",
