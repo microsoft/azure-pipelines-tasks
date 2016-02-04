@@ -72,7 +72,7 @@ function Create-AzureSqlDatabaseServerFirewallRuleARM
         $exceptionMessage = $_.Exception.Message.ToString()
         Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
 
-        Throw (Get-LocalizedString -Key "IPAddress mentioned is not a valid IPv4 address." -ArgumentList $serverName)
+        Throw (Get-LocalizedString -Key "IPAddress mentioned is not a valid IPv4 address.")
     }
 
     return $azureSqlDatabaseServerFirewallRule
