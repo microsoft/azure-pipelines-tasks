@@ -153,7 +153,7 @@ function SetCredentialsNuGetConfigAndSaveTemp
                 if([string]::Equals(([System.Xml.XmlNode]$section).Attributes["key"].Value, "password", "InvariantCultureIgnoreCase"))
                 {
                     Write-Verbose "Setting new credential for $encodedSource"
-                    $encryptedPassword = EncryptNuGetPassword $accessToken
+                    $encryptedPassword = EncryptNuGetPassword ([System.Xml.XmlNode]$section).Attributes["value"].Value
                     ([System.Xml.XmlNode]$section).Attributes["value"].Value = $encryptedPassword
                 }
             }
