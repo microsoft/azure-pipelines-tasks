@@ -72,5 +72,5 @@ Recommended:
 [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)
 
 Other supported versions:
-[Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/download/v0.9.8-September2015)
+[Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)
  
