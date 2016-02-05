@@ -101,7 +101,6 @@ If resource group contains both [resource manager](https://azure.microsoft.com/e
 If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/vso-agent-tasks/tree/releases/m90/Tasks/AzureFileCopy/. 
 
 ### Supported Azure and AzureRM module versions:
-### Supported Azure and AzureRM module versions:
 Recommended: 
 [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)
 
