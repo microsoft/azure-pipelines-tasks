@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 35
   },
   "demands": [
     "azureps"
@@ -77,6 +77,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
     {
@@ -86,6 +89,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccountRM",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
@@ -113,6 +119,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName && Destination = AzureVMs"
     },
     {
@@ -122,6 +131,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentNameRM",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs"
     },
     {
