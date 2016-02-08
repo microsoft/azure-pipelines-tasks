@@ -45,7 +45,11 @@ The task runs on the automation agent machine and the following needs to be inst
     * Visual Studio 2015 installs the SqlPackage.exe at - C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120. Here the install location of Visual Studio is - C:\Program Files (x86)\Microsoft Visual Studio 14.0.
     * Install it by using the [Microsoft Web Platform Installer](http://www.microsoft.com/web/gallery/install.aspx?appid=DACFX) (Web PI). Note that the link will open Web PI with the DACFX showing-up ready to install, where the DACFX download represents all the MSIs that need to be installed for SqlPackage.exe.
     * [SQL Server Management Studio](https://www.microsoft.com/en-in/download/details.aspx?id=42299) for SQL Server 2014 or SQL Server Express or SQL Server 2012 and SQL Server 2014 and [DAC Framework](http://www.microsoft.com/en-us/download/details.aspx?id=42293) MSIs install SqlPackage.exe at C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin.
-2. The Azure PowerShell needs to be installed on the automation agent and it can be done easily using the [Microsoft Web Platform Installer](http://go.microsoft.com/fwlink/p/?LinkId=320376) (Web PI). Note that the link will open Web PI with Azure PowerShell showing-up ready to install.
+
+
+##### Azure PowerShell
+
+The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
 
 ## Parameters of the task:
 
@@ -73,3 +77,10 @@ These arguments will override the settings in the Publish profile XML file (if p
 
 - The auto-detection of the automation agent's IP Address only works with hosted automation agent in Visual Studio Team Services (VSTS) and not in Team Foundation Server (TFS).
 - The Azure SQL Database Deployment task does not support BACPAC and SQL scripts. The SqlPackage.exe provides out-of-box support for both BACPAC and SQL Scripts and the work to enable this support is in our backlog. Please send us feedback for the task and for the support for BACPAC and SQL scripts at RM\_Customer\_Queries at microsoft dot com.
+
+### Supported Azure and AzureRM module versions:
+Recommended: 
+[Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)
+
+Other supported versions:
+[Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)
