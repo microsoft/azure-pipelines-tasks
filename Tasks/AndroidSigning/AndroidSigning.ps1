@@ -94,12 +94,12 @@ if ($jarsignApk)
 
     if ($keystorePass) 
     {
-        $jarsignerArguments = "$jarsignerArguments -storepass $keystorePass" 
+        $jarsignerArguments = "$jarsignerArguments -storepass `"$keystorePass`""
     }
 
     if ($keyPass) 
     {
-        $jarsignerArguments = "$jarsignerArguments -keypass $keyPass" 
+        $jarsignerArguments = "$jarsignerArguments -keypass `"$keyPass`"" 
     }
 }
 
@@ -137,7 +137,7 @@ foreach ($file in $filesToSign)
         # move the apk file so we do not pollute the work direcotry with multiple apks
         $unsignedApk = RenameExtension $file ".unsigned"
 
-        $jarsignerArgs = "$jarsignerArguments -keystore `"$keystoreFile`" -signedjar $file $unsignedApk $keystoreAlias"
+        $jarsignerArgs = "$jarsignerArguments -keystore `"$keystoreFile`" -signedjar `"$file`" `"$unsignedApk`" `"$keystoreAlias`""
         
         Invoke-Tool -Path $jarsigner -Arguments $jarsignerArgs 
     }
@@ -147,7 +147,7 @@ foreach ($file in $filesToSign)
         $unalignedApk = RenameExtension $file ".unaligned"
 
         # alignment must be 4 or play store will reject, hard code this to avoid user errors
-        $zipalignArgs = "-v 4 $unalignedApk $file" 
+        $zipalignArgs = "-v 4 `"$unalignedApk`" `"$file`"" 
 
         Invoke-Tool -Path $zipaligner -Arguments $zipalignArgs
     }
