@@ -102,7 +102,7 @@ function GetRelativeFilePath($component)
     #after the SubString() call finalFilePath=\Mail2Bug\Main.cs
     $finalFilePath = $finalFilePath.ToString().SubString($repoLocalPath.Length);
 
-    #Replace '\' with '/'. VSO expects file path like /Mail2Bug/Main.cs (\Mail2Bug\Main.cs does not work)
+    #Replace '\' with '/'. VSTS expects file path like /Mail2Bug/Main.cs (\Mail2Bug\Main.cs does not work)
     $finalFilePath = $finalFilePath.ToString().Replace([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
     Write-Verbose "GetRelativeFilePath: Returning finalFilePath:$finalFilePath"
 

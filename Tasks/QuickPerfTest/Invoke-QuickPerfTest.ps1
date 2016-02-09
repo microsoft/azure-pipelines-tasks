@@ -210,7 +210,7 @@ $VSOAccountUrl = $serviceEndpoint.Url.AbsoluteUri
 ##$EndpointName = $serviceEndpoint.Name
 $CltAccountUrl = ComposeAccountUrl($VSOAccountUrl)
 
-Write-Verbose "VSO account Url = $VSOAccountUrl" -Verbose
+Write-Verbose "VSTS account Url = $VSOAccountUrl" -Verbose
 
 ValidateInputs
 
@@ -230,7 +230,7 @@ if ($drop.dropType -eq "InPlaceDrop")
 }
 else
 {
-    Write-Error ("Failed to connect to the endpoint '{0}' for VSO account '{1}'" -f $EndpointName, $VSOAccountUrl)
+    Write-Error ("Failed to connect to the endpoint '{0}' for VSTS account '{1}'" -f $EndpointName, $VSOAccountUrl)
 }
 
 Write-Output "Finished Quick Perf Test Script"

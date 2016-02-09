@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "test-cloud.exe の場所",
   "loc.input.label.optionalArgs": "オプションの引数",
   "loc.input.help.optionalArgs": "test-cloud.exe に渡す追加の引数。",
-  "loc.input.label.publishNUnitResults": "結果を VSO/TFS に発行する",
-  "loc.input.help.publishNUnitResults": "選択された場合、--nunit-xml オプションが test-cloud.exe に渡されます。NUnit xml ファイルからの結果は、VSO/TFS に発行されます。"
+  "loc.input.label.publishNUnitResults": "結果を VSTS/TFS に発行する",
+  "loc.input.help.publishNUnitResults": "選択された場合、--nunit-xml オプションが test-cloud.exe に渡されます。NUnit xml ファイルからの結果は、VSTS/TFS に発行されます。"
 }

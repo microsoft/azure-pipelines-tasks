@@ -588,7 +588,7 @@ export class TestPublisher {
     public publish(resultFiles, mergeResults, platform, config) {
 
         if (mergeResults == 'true') {
-            _writeLine("Merging test results from multiple files to one test run is not supported on this version of build agent for OSX/Linux, each test result file will be published as a separate test run in VSO/TFS.");
+            _writeLine("Merging test results from multiple files to one test run is not supported on this version of build agent for OSX/Linux, each test result file will be published as a separate test run in VSTS/TFS.");
         }
 
         var properties = <{ [key: string]: string }>{};

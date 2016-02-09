@@ -14,19 +14,19 @@ Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are 
 
 To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Online using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. Select Azure from the Add New Service Connection dropdown. Fill in the required details from the Azure account, and select credentials, or certificate, or service principal for authentication. The credentials have to be a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported. For using Service Principal, follow the steps listed in the link [here](http://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 
-The task supports both the [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) storage account and the newer [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) storage account. The classic and the resource manager APIs support different authentication type, and depending upon the storage account the Azure connect has to be appropriately setup in Visual Studio Online (VSO) or Team Foundation Server (TFS). The following table lists the storage accounts and the service connections that with them. To identify whether a storage account is based on the classic APIs or the resource manager APIs, log into [https://portal.azure.com/](https://portal.azure.com/) and browse for storage accounts (classic) or storage accounts.
+The task supports both the [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) storage account and the newer [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) storage account. The classic and the resource manager APIs support different authentication type, and depending upon the storage account the Azure connect has to be appropriately setup in Visual Studio Online (VSTS) or Team Foundation Server (TFS). The following table lists the storage accounts and the service connections that with them. To identify whether a storage account is based on the classic APIs or the resource manager APIs, log into [https://portal.azure.com/](https://portal.azure.com/) and browse for storage accounts (classic) or storage accounts.
 
-| **Storage Account Type** | **Azure Service Connections in VSO/TFS** |
+| **Storage Account Type** | **Azure Service Connections in VSTS/TFS** |
 | --- | --- |
 | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts |
 | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Certificate or credentials based on work accounts |
 
 For Azure MSDN accounts, in addition to the certificates and the Service Principal, a work account can be easily created as shown below:
 
-1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the account in VSO:
+1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the account in VSTS:
   - Add the Active Directory account to the co-administrators in the subscription. Go to the Settings and then click on administrators and add the account as a co-admin like, [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com)
   - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
-2. Add that user and password in the service connections in the VSO and deployments will work with that account.
+2. Add that user and password in the service connections in the VSTS and deployments will work with that account.
 
 **Azure PowerShell**
 
@@ -36,7 +36,7 @@ The task needs the Azure PowerShell version to be installed on the automation ag
 
 The task can copy files to the Azure Virtual Machines that are created either using the [new azure portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) or through the [azure classic portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/). For copying the files to VMs, they are first copied to an automatically generated container in the  Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs. The valid combination of Azure service connections and storage accounts for copying to a Azure is as given below:
 
-| **Storage Account Type** | **Azure Service Connections in VSO/TFS** | **Azure Virtual Machines** |
+| **Storage Account Type** | **Azure Service Connections in VSTS/TFS** | **Azure Virtual Machines** |
 | --- | --- | --- |
 | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Service principal or credentials based on work accounts | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) Azure Virtual machines |
 | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Certificate or credentials based on work accounts | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) Azure Virtual machines |
