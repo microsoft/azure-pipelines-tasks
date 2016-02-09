@@ -43,10 +43,10 @@
     {
       "name": "ConnectedServiceName",
       "type": "connectedService:Azure",
-      "label": "Classic Azure Subscription",
+      "label": "Azure Classic Subscription",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Classic Azure subscription to target for copying the files.",
+      "helpMarkDown": "Azure Classic subscription to target for copying the files.",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
     {

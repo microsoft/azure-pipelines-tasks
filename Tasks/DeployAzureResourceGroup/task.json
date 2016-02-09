@@ -51,10 +51,10 @@
         {
             "name": "ConnectedServiceNameClassic",
             "type": "connectedService:Azure",
-            "label": "Classic Azure Subscription",
+            "label": "Azure Classic Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Classic Azure subscription for the deployment.",
+            "helpMarkDown": "Select the Azure Classic subscription for the deployment.",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
