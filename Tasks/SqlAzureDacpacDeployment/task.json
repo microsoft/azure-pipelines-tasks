@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [
         "azureps",
@@ -48,10 +48,10 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:Azure",
-            "label": "Classic Azure Subscription",
+            "label": "Azure Classic Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Classic Azure subscription to target for deploying SQL Dacpac files",
+            "helpMarkDown": "Azure Classic subscription to target for deploying SQL Dacpac files",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {

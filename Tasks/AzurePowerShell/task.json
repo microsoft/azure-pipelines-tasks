@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "demands" : [
         "azureps"
@@ -35,10 +35,10 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:Azure",
-            "label": "Classic Azure Subscription",
+            "label": "Azure Classic Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Classic Azure subscription to configure before running PowerShell",
+            "helpMarkDown": "Azure Classic subscription to configure before running PowerShell",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
