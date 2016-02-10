@@ -244,6 +244,9 @@ function Upload-FilesToAzureContainer
             $uploadErrorMessage = $uploadResponse.Error
             Write-Verbose "UploadErrorMessage: $uploadErrorMessage" -Verbose
 
+            $uploadResponseLog = $uploadResponse.Log
+            Write-Verbose "UploadResponseLog: $uploadResponseLog" -Verbose
+
             $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $uploadErrorMessage)
             Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
             ThrowError -errorMessage $errorMessage
