@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 23
     },
     "demands": [
     ],
@@ -234,21 +234,21 @@
          "endpoint":"/$(system.teamProject)/_apis/test/plans",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs"
+         "authKey": "tfs:teamfoundation"
      },
      {
          "target": "testConfiguration",
          "endpoint":"/$(system.teamProject)/_apis/test/configurations",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs"
+         "authKey": "tfs:teamfoundation"
      },
      {
          "target": "testSuite",
          "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs"
+         "authKey": "tfs:teamfoundation"
      }      
     ], 
     "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
