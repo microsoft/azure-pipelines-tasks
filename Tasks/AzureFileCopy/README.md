@@ -18,8 +18,8 @@ The task supports both the [classic](https://azure.microsoft.com/en-us/documenta
 
 | **Storage Account Type** | **Azure Service Connections in VSO/TFS** |
 | --- | --- |
-| [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Azure Resource manger EndPoint  |
-| [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Azure Endpoint type with Certificate or credentials based authentication on work accounts |
+| [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Azure Resource Manager EndPoint  |
+| [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Azure EndPoint type with Certificate or credentials based authentication on work accounts |
 
 For Azure MSDN accounts, in addition to the certificates and the Service Principal, a work account can be easily created as shown below:
 
