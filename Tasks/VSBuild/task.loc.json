@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 18
   },
   "demands": [
     "msbuild",
@@ -112,10 +112,22 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "PowerShell3": {
+      "target": "VSBuild_PS3.ps1"
+    },
     "PowerShell": {
       "target": "$(currentDirectory)\\VSBuild.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
+  },
+  "messages": {
+    "MSBuildLocationDeprecated0": "ms-resource:loc.messages.MSBuildLocationDeprecated0",
+    "MSBuildNotFoundVersion0Architecture1": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1",
+    "MSBuildVersionDeprecated0": "ms-resource:loc.messages.MSBuildVersionDeprecated0",
+    "UnexpectedVSVersion0": "ms-resource:loc.messages.UnexpectedVSVersion0",
+    "VSLocationDeprecated0": "ms-resource:loc.messages.VSLocationDeprecated0",
+    "VSNotFoundTry": "ms-resource:loc.messages.VSNotFoundTry",
+    "VSVersion0NotFoundLookingForLatest": "ms-resource:loc.messages.VSVersion0NotFoundLookingForLatest"
   }
 }

@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "DF857559-8715-46EB-A74E-AC98B9178AA0",
     "name": "AndroidBuild",
     "friendlyName": "Android Build",
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 8
     },
     "demands" : [
 	    "AndroidSDK"
@@ -49,7 +49,7 @@
             "name": "gradleArguments",
             "type": "string",
             "label": "Gradle Arguments",
-            "defaultValue":"",
+            "defaultValue":"build",
             "required":false
         },
         {
@@ -107,6 +107,7 @@
             "defaultValue": false,
             "required": false,
             "visibleRule": "createAvd = true",
+            "helpMarkDown": "Passing --force to 'android create avd' command.",
             "groupName":"avdOptions"
         },
         {

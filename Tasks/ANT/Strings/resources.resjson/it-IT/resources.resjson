@@ -13,8 +13,12 @@
   "loc.input.help.publishJUnitResults": "Selezionare questa opzione per pubblicare i risultati del test JUnit prodotti dalla compilazione Ant in VSO/TFS. Ogni file dei risultati del test corrispondente al valore di `File dei risultati del test` verrà pubblicato come esecuzione dei test in VSO/TFS.",
   "loc.input.label.testResultsFiles": "File dei risultati del test",
   "loc.input.help.testResultsFiles": "Percorso dei file dei risultati del test. È possibile usare i caratteri jolly, ad esempio `**/TEST-*.xml` per individuare tutti i file XML il cui nome inizia con TEST-.",
+  "loc.input.label.javaHomeSelection": "Set JAVA_HOME by",
+  "loc.input.help.javaHomeSelection": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
   "loc.input.label.jdkVersion": "Versione JDK",
   "loc.input.help.jdkVersion": "Prova a individuare il percorso della versione selezionata di JDK e imposta JAVA_HOME di conseguenza.",
+  "loc.input.label.jdkUserInputPath": "JDK Path",
+  "loc.input.help.jdkUserInputPath": "Sets JAVA_HOME to the given path.",
   "loc.input.label.jdkArchitecture": "Architettura JDK",
   "loc.input.help.jdkArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di JDK."
 }

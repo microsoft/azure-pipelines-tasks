@@ -1,0 +1,18 @@
+{
+    "which": {
+        "gulp": "/usr/local/bin/gulp"
+    },
+    "exec": {
+        "/usr/local/bin/gulp --gulpfile gulpfile.js": {
+            "code": 1,
+            "stdout": "gulp output here",
+            "stderr": "gulp failed with this output"
+        }
+    },
+    "checkPath": {
+        "gulpfile.js": true
+    },
+    "exist": {
+        "/usr/local/bin/gulp": true  
+    }
+}

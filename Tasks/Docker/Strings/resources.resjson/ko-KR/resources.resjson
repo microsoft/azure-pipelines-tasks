@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "원격 컴퓨터에 Docker 이미지 배포",
+  "loc.helpMarkDown": "[자세한 정보](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "원격 컴퓨터에 Docker 이미지 배포",
   "loc.instanceNameFormat": "Docker 배포: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker 끝점",

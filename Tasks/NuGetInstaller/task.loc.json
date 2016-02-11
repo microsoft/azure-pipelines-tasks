@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 12
+    "Patch": 16
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -30,7 +30,15 @@
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "**\\*.sln",
       "helpMarkDown": "ms-resource:loc.input.help.solution",
-      "required": true
+      "required": "true"
+    },
+    {
+      "name": "nugetConfigPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.nugetConfigPath",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.nugetConfigPath",
+      "required": "false"
     },
     {
       "name": "noCache",

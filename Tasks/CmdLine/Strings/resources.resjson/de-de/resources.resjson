@@ -5,10 +5,10 @@
   "loc.instanceNameFormat": "$(filename) ausführen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.filename": "Tool",
-  "loc.input.help.filename": "Name des auszuführenden Tools. Das Tool muss sich im Pfad befinden oder über diesen aufgelöst werden können. Optional kann ein vollständig qualifizierter Pfad angegeben werden, dieser muss jedoch auf dem Agent vorhanden sein.",
+  "loc.input.help.filename": "Name des auszuführenden Tools. Das Tool muss sich in Ihrem Pfad befinden. Optional kann ein vollqualifizierter Pfad angegeben werden, der jedoch auf dem Agent vorhanden sein muss.<br/> Hinweis: Mit \"**$(agent.builddirectory)**\\\\...\" können Sie einen Pfad relativ zum Repository angeben.",
   "loc.input.label.arguments": "Argumente",
+  "loc.input.help.arguments": "Arguments passed to the tool",
   "loc.input.label.workingFolder": "Arbeitsordner",
-  "loc.input.help.workingFolder": "An das Tool übergebene Argumente",
   "loc.input.label.failOnStandardError": "Fehler bei Standardfehler",
   "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden."
 }

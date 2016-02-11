@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "Chef ワークステーションで knife コマンドを使ってスクリプトを実行します",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/ChefKnife/README.md)",
   "loc.description": "Chef ワークステーションで knife コマンドを使ってスクリプトを実行します",
   "loc.instanceNameFormat": "Chef の knife スクリプト: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Chef サブスクリプション",
   "loc.input.help.ConnectedServiceName": "knife コマンドを実行する前に構成する Chef のサブスクリプション",
   "loc.input.label.ScriptPath": "スクリプト パス",
-  "loc.input.help.ScriptPath": "スクリプトのパス。完全修飾パスか、既定の作業ディレクトリを基準とした相対パスのいずれか。",
+  "loc.input.help.ScriptPath": "スクリプトのパス。完全修飾パスか、既定の作業ディレクトリを基準とした相対パスのいずれかです。",
   "loc.input.label.ScriptArguments": "スクリプトの引数",
   "loc.input.help.ScriptArguments": "スクリプトに渡す追加のパラメーター。順序によるパラメーターまたは名前指定されたパラメーターのいずれかです。"
 }

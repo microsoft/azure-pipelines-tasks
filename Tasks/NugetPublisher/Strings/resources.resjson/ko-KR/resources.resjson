@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "NuGet Publisher",
+  "loc.helpMarkDown": " ",
+  "loc.description": "Uploads nupkg files to a nuget server",
+  "loc.instanceNameFormat": "NuGet Publisher $(solution)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.searchPattern": "Path/Pattern to nupkg",
+  "loc.input.help.searchPattern": "The pattern to match or path to nupkg files to be uploaded",
+  "loc.input.label.connectedServiceName": "Nuget Server Endpoint",
+  "loc.input.help.connectedServiceName": "The nuget server generic endpoint, set the key 'Password/Token Key' field to your nuget api key",
+  "loc.input.label.nuGetAdditionalArgs": "NuGet Arguments",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack ",
+  "loc.input.label.nuGetPath": "Path to NuGet.exe",
+  "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
+}

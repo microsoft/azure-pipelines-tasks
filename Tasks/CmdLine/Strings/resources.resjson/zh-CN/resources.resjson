@@ -5,10 +5,10 @@
   "loc.instanceNameFormat": "运行 $(filename)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.filename": "工具",
-  "loc.input.help.filename": "要运行的工具名。工具应处于路径中或可通过路径解析。可以选择提供完全限定的路径，但是这依赖于代理上存在的内容。",
+  "loc.input.help.filename": "要运行的工具名。工具应位于路径中。可以选择提供完全限定的路径，但是这依赖于代理上存在的内容。<br/>注意: 如果要提供相对于存储库的路径，可以使用 **$(agent.builddirectory)**\\\\...。",
   "loc.input.label.arguments": "参数",
+  "loc.input.help.arguments": "Arguments passed to the tool",
   "loc.input.label.workingFolder": "工作文件夹",
-  "loc.input.help.workingFolder": "传递给工具的参数",
   "loc.input.label.failOnStandardError": "因标准错误失败",
   "loc.input.help.failOnStandardError": "如果这是 true，则在向 StandardError 流写入任何错误时，此任务都会失败。"
 }

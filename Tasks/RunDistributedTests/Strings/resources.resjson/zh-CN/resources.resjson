@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "使用测试代理的 Visual Studio 测试",
-  "loc.helpMarkDown": "对实验室计算机组使用多个测试代理以分布方式运行测试",
-  "loc.description": "对实验室计算机组使用多个测试代理以分布方式运行测试",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 上运行测试 $(sourcefilters)",
   "loc.group.displayName.testMachineGroups": "测试计算机组",
   "loc.group.displayName.testSettings": "测试设置",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "测试计算机组",
   "loc.input.help.testMachineGroup": "需要对其运行测试的测试计算机组的名称。",
   "loc.input.label.dropLocation": "测试失败位置",
-  "loc.input.help.dropLocation": "“将文件复制到计算机”任务过程中在代理计算机上放置测试二进制文件的位置。系统环境变量也可以用于位置字符串，例如 \"%systemdrive%\\Tests\"、\"%temp%\\DropLocation\" 等。",
+  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
   "loc.input.label.sourcefilters": "测试程序集",
   "loc.input.help.sourcefilters": "要对其运行测试的测试二进制文件。可以使用通配符。例如，\"**\\*test*.dll;\" 表示名称中包含 \"test\" 的所有 dll。",
   "loc.input.label.testFilterCriteria": "测试筛选器标准",

@@ -16,16 +16,16 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 22
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.90.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
+      "type": "connectedService:Azure:Certificate,UsernamePassword",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
@@ -36,7 +36,10 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebSiteName",
       "defaultValue": "",
-      "required": true
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "WebSiteLocation",
@@ -45,21 +48,6 @@
       "defaultValue": "South Central US",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
-      "options": {
-        "Brazil South": "Brazil South",
-        "Central US": "Central US",
-        "East Asia": "East Asia",
-        "East US": "East US",
-        "East US2": "East US2",
-        "Japan East": "Japan East",
-        "Japan West": "Japan West",
-        "North Central US": "North Central US",
-        "North Europe": "North Europe",
-        "South Central US": "South Central US",
-        "Southeast Asia": "Southeast Asia",
-        "West Europe": "West Europe",
-        "West US": "West US"
-      },
       "properties": {
         "EditableOptions": "True"
       }
@@ -74,11 +62,19 @@
     },
     {
       "name": "Package",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.Package",
       "required": true
+    },
+    {
+      "name": "doNotDelete",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.doNotDelete",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.doNotDelete",
+      "required": false
     },
     {
       "name": "AdditionalArguments",
@@ -88,12 +84,19 @@
       "required": false
     }
   ],
-  "sourceDefinitions": [
+  "dataSourceBindings": [
     {
       "target": "WebSiteName",
-      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/webspaces/$(WebSiteLocation)Webspace/sites",
-      "selector": "xpath://Site/Name",
-      "authKey": "$(ConnectedServiceName)"
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureWebSiteNames",
+      "parameters": {
+        "WebSiteLocation": "$(WebSiteLocation)"
+      }
+    },
+    {
+      "target": "WebSiteLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

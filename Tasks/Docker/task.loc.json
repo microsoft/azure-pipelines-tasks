@@ -17,9 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 5
   },
   "minimumAgentVersion": "1.82.0",
+  "demands": [
+    "DotNetFramework"
+  ],
   "inputs": [
     {
       "name": "DockerEndpoint",

@@ -1,0 +1,72 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
+  "name": "Npm",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 2,
+    "Patch": 3
+  },
+  "demands": [
+    "npm"
+  ],
+  "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "command",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "install",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "required": true
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "required": false,
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "npmtask.js",
+      "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Npm.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(cwd)"
+    }
+  },
+  "messages": {
+    "NpmReturnCode": "ms-resource:loc.messages.NpmReturnCode",
+    "NpmFailed": "ms-resource:loc.messages.NpmFailed"
+  }
+}

@@ -1,9 +1,9 @@
-﻿{
+{
     "id": "52A38A6A-1517-41D7-96CC-73EE0C60D2B6",
     "name": "DeployVisualStudioTestAgent",
     "friendlyName": "Visual Studio Test Agent Deployment",
-    "description": "Deploy and configure Test Agent to run tests on a lab machine group",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
+    "description": "Deploy and configure Test Agent to run tests on a set of machines",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=625976)",
     "category": "Test",
     "visibility": [     
                   "Build",
@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 19
     },
     "demands": [
 
     ],
-    "minimumAgentVersion": "1.85.0",
+    "minimumAgentVersion": "1.88.0",
     "groups":  [
         {
             "name": "testMachineGroups",
@@ -40,10 +40,10 @@
         {
             "name": "testMachineGroup",
             "type": "pickList",
-            "label": "Test Machine Group",
+            "label": "Test Machine Group / Azure Resource Group",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
+            "helpMarkDown": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
             "groupName": "testMachineGroups"
         },
         {

@@ -16,27 +16,38 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 28
   },
   "demands": [
     "vstest"
   ],
-  "minimumAgentVersion": "1.87.0",
+  "minimumAgentVersion": "1.89.0",
   "groups": [
     {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "name": "executionOptions",
+      "displayName": "ms-resource:loc.group.displayName.executionOptions",
+      "isExpanded": true
+    },
+    {
+      "name": "advancedExecutionOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedExecutionOptions",
+      "isExpanded": false
+    },
+    {
+      "name": "reportingOptions",
+      "displayName": "ms-resource:loc.group.displayName.reportingOptions",
       "isExpanded": false
     }
   ],
   "inputs": [
     {
       "name": "testAssembly",
-      "type": "filePath",
+      "type": "string",
       "label": "ms-resource:loc.input.label.testAssembly",
       "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testAssembly"
+      "helpMarkDown": "ms-resource:loc.input.help.testAssembly",
+      "groupName": "executionOptions"
     },
     {
       "name": "testFiltercriteria",
@@ -44,23 +55,8 @@
       "label": "ms-resource:loc.input.label.testFiltercriteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.testFiltercriteria"
-    },
-    {
-      "name": "platform",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.platform",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.platform"
-    },
-    {
-      "name": "configuration",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.configuration",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.configuration"
+      "helpMarkDown": "ms-resource:loc.input.help.testFiltercriteria",
+      "groupName": "executionOptions"
     },
     {
       "name": "runSettingsFile",
@@ -68,7 +64,8 @@
       "label": "ms-resource:loc.input.label.runSettingsFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runSettingsFile"
+      "helpMarkDown": "ms-resource:loc.input.help.runSettingsFile",
+      "groupName": "executionOptions"
     },
     {
       "name": "overrideTestrunParameters",
@@ -76,7 +73,8 @@
       "label": "ms-resource:loc.input.label.overrideTestrunParameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.overrideTestrunParameters"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideTestrunParameters",
+      "groupName": "executionOptions"
     },
     {
       "name": "codeCoverageEnabled",
@@ -85,7 +83,16 @@
       "defaultValue": "False",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
-      "groupName": "advanced"
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "runInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
+      "groupName": "executionOptions"
     },
     {
       "name": "vsTestVersion",
@@ -94,7 +101,7 @@
       "defaultValue": "14.0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
-      "groupName": "advanced",
+      "groupName": "advancedExecutionOptions",
       "options": {
         "latest": "Latest",
         "14.0": "Visual Studio 2015",
@@ -108,7 +115,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
-      "groupName": "advanced"
+      "groupName": "advancedExecutionOptions"
     },
     {
       "name": "otherConsoleOptions",
@@ -117,7 +124,43 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
-      "groupName": "advanced"
+      "groupName": "advancedExecutionOptions"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "platform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.platform",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.platform",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "publishRunAttachments",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishRunAttachments",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
+      "groupName": "reportingOptions"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

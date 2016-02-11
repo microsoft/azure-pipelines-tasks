@@ -1,0 +1,87 @@
+{
+    "id": "333b11bd-d341-40d9-afcf-b32d5ce6f25b",
+    "name": "NuGetPublisher",
+    "friendlyName": "NuGet Publisher",
+    "description": "Uploads nupkg files to a NuGet server",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627417)",
+    "category": "Package",
+    "author": "Lawrence Gripper",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 40
+    },
+    "minimumAgentVersion": "1.83.0",
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],    
+    "instanceNameFormat": "NuGet Publisher $(solution)",
+    "inputs": [
+        {
+            "name": "searchPattern",
+            "type": "filePath",
+            "label": "Path/Pattern to nupkg",
+            "defaultValue":"**\\*.nupkg",
+            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded",
+            "required":true
+        },
+        {
+            "name":"nuGetFeedType",
+            "type":"radio",
+            "label":"Feed type",
+            "required":true,
+            "defaultValue":"external",
+            "options": {
+                "external":"External NuGet Feed",
+                "internal":"Internal NuGet Feed"
+            }   
+        },
+        {
+            "name": "connectedServiceName",
+            "type": "connectedService:Generic",
+            "label": "NuGet Server Endpoint",
+            "required": true,
+            "helpMarkDown": "The NuGet server generic endpoint, set the key 'Password/Token Key' field to your NuGet API key.",
+            "visibleRule": "nuGetFeedType = external"
+        },
+        {
+            "name": "feedName",
+            "type": "string",
+            "label": "Internal Feed URL",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The URL of a NuGet feed hosted in this account.",
+            "visibleRule": "nuGetFeedType = internal"
+        },
+        {
+            "name": "nuGetAdditionalArgs",
+            "type": "string",
+            "label": "NuGet Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to NuGet.exe push. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-push-command).",
+            "groupName": "advanced"
+        },
+        {
+            "name": "nuGetPath",
+            "type": "string",
+            "label": "Path to NuGet.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to NuGet.exe",
+            "groupName": "advanced"
+        }
+
+    ],
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\NuGetPublisher.ps1",
+            "argumentFormat": "",
+            "workingDirectory": ""
+        }
+    }
+}

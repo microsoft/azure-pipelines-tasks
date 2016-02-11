@@ -9,7 +9,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -17,16 +16,16 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 50
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.86.0",
+  "minimumAgentVersion": "1.92.0",
   "groups": [
     {
-      "name": "advancedDeploymentOptions",
-      "displayName": "ms-resource:loc.group.displayName.advancedDeploymentOptions",
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true
     }
   ],
@@ -38,6 +37,23 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "Create Or Update Resource Group",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.action",
+      "options": {
+        "Create Or Update Resource Group": "Create Or Update Resource Group",
+        "Select Resource Group": "Select Resource Group",
+        "Start": "Start Virtual Machines",
+        "Stop": "Stop Virtual Machines",
+        "Restart": "Restart Virtual Machines",
+        "Delete": "Delete Virtual Machines",
+        "DeleteRG": "Delete Resource Group"
+      }
     },
     {
       "name": "resourceGroupName",
@@ -54,15 +70,26 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.location",
       "options": {
+        "Australia East": "Australia East",
+        "Australia Southeast": "Australia Southeast",
+        "Brazil South": "Brazil South",
+        "Central US": "Central US",
         "East Asia": "East Asia",
         "East US": "East US",
+        "East US 2 ": "East US 2 ",
+        "Japan East": "Japan East",
+        "Japan West": "Japan West",
+        "North Central US": "North Central US",
+        "North Europe": "North Europe",
+        "South Central US": "South Central US",
         "Southeast Asia": "Southeast Asia",
         "West Europe": "West Europe",
         "West US": "West US"
       },
       "properties": {
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "csmFile",
@@ -70,7 +97,8 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile",
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "csmParametersFile",
@@ -78,7 +106,8 @@
       "label": "ms-resource:loc.input.label.csmParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile"
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "overrideParameters",
@@ -86,74 +115,35 @@
       "label": "ms-resource:loc.input.label.overrideParameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
-      "name": "dscDeployment",
+      "name": "enableDeploymentPrerequisitesForCreate",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.dscDeployment",
-      "required": false,
+      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForCreate",
       "defaultValue": "false",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
-    },
-    {
-      "name": "moduleUrlParameterName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.moduleUrlParameterName",
-      "defaultValue": "",
+      "visibleRule": "action = Create Or Update Resource Group",
       "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
-      "visibleRule": "dscDeployment = true"
+      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForCreate"
     },
     {
-      "name": "sasTokenParameterName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sasTokenParameterName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
-      "visibleRule": "dscDeployment = true"
-    },
-    {
-      "name": "vmCreds",
+      "name": "enableDeploymentPrerequisitesForSelect",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.vmCreds",
-      "required": false,
+      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForSelect",
       "defaultValue": "false",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.vmCreds"
+      "visibleRule": "action = Select Resource Group",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForSelect"
     },
     {
-      "name": "vmUserName",
+      "name": "outputVariable",
       "type": "string",
-      "label": "ms-resource:loc.input.label.vmUserName",
+      "label": "ms-resource:loc.input.label.outputVariable",
+      "required": false,
       "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "vmCreds = true",
-      "helpMarkDown": "ms-resource:loc.input.help.vmUserName"
-    },
-    {
-      "name": "vmPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vmPassword",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "vmCreds = true",
-      "helpMarkDown": "ms-resource:loc.input.help.vmPassword"
-    },
-    {
-      "name": "skipCACheck",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.skipCACheck",
-      "required": false,
-      "defaultValue": "true",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

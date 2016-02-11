@@ -1,3 +1,4 @@
+[cmdletbinding()]
 param(
     [string]$vsTestVersion, 
     [string]$testAssembly,
@@ -7,11 +8,26 @@ param(
     [string]$pathtoCustomTestAdapters,
     [string]$overrideTestrunParameters,
     [string]$otherConsoleOptions,
+    [string]$testRunTitle,
     [string]$platform,
-    [string]$configuration
+    [string]$configuration,
+    [string]$publishRunAttachments,
+    [string]$runInParallel
 )
 
-Write-Verbose "Entering script VSTestConsole.ps1"
+Write-Verbose "Entering script VSTest.ps1"
+Write-Verbose "vsTestVersion = $vsTestVersion"
+Write-Verbose "testAssembly = $testAssembly"
+Write-Verbose "testFiltercriteria = $testFiltercriteria"
+Write-Verbose "runSettingsFile = $runSettingsFile"
+Write-Verbose "codeCoverageEnabled = $codeCoverageEnabled"
+Write-Verbose "pathtoCustomTestAdapters = $pathtoCustomTestAdapters"
+Write-Verbose "overrideTestrunParameters = $overrideTestrunParameters"
+Write-Verbose "otherConsoleOptions = $otherConsoleOptions"
+Write-Verbose "testRunTitle = $testRunTitle"
+Write-Verbose "platform = $platform"
+Write-Verbose "configuration = $configuration"
+Write-Verbose "publishRunAttachments = $publishRunAttachments"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -19,17 +35,33 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 # Import the Task.TestResults dll that has the cmdlet we need for publishing results
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
+. $PSScriptRoot\Helpers.ps1
+    
 if (!$testAssembly)
 {
-    throw (Get-LocalizedString -Key "Test assembly parameter not set on script")
+    Write-Host "##vso[task.logissue type=error;code=002001;]" 
+    throw (Get-LocalizedString -Key "No test assembly specified. Provide a test assembly parameter and try again.")
+}
+
+$sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+if(!$sourcesDirectory)
+{
+    # For RM, look for the test assemblies under the release directory.
+    $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Agent.ReleaseDirectory"
+}
+
+if(!$sourcesDirectory)
+{
+    # If there is still no sources directory, error out immediately.
+    Write-Host "##vso[task.logissue type=error;code=002002;]"
+    throw (Get-LocalizedString -Key "No source directory found.")
 }
 
 # check for solution pattern
-if ($testAssembly.Contains("*") -or $testAssembly.Contains("?"))
+if ($testAssembly.Contains("*") -Or $testAssembly.Contains("?"))
 {
     Write-Verbose "Pattern found in solution parameter. Calling Find-Files."
-    Write-Verbose "Calling Find-Files with pattern: $testAssembly"
-    $sourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+    Write-Verbose "Calling Find-Files with pattern: $testAssembly"    
     $testAssemblyFiles = Find-Files -SearchPattern $testAssembly -RootFolder $sourcesDirectory
     Write-Verbose "Found files: $testAssemblyFiles"
 }
@@ -54,23 +86,80 @@ if($testAssemblyFiles)
     $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
     $workingDirectory = $artifactsDirectory
-    $testResultsDirectory = $workingDirectory + "\" + "TestResults"
+    $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+
+    if($runInParallel -eq "True")
+    {
+        $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion
+        if(-Not $rightVSVersionAvailable)
+        {
+            Write-Warning (Get-LocalizedString -Key "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.")
+            $runInParallel = "false"
+        }
+    }
     
-    Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFile -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
+    $defaultCpuCount = "0"    
+    $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
+    
+    Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
 
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
-    if($resultFiles) 
+    $publishResultsOption = Convert-String $publishRunAttachments Boolean
+
+    if($resultFiles)
     {
-        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+        # Remove the below hack once the min agent version is updated to S91 or above
+    
+        $runTitleMemberExists = CmdletHasMember "RunTitle"
+        $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
+        if($runTitleMemberExists)
+        {
+            if($publishRunLevelAttachmentsExists)
+            {
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
+            }
+            else
+            {
+                if(!$publishResultsOption)
+                {
+                    Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "opt in/out of publishing test run attachments")
+                }
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
+            }
+        }
+        else
+        {
+            if($testRunTitle)
+            {
+                Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "custom run title")
+            }
+            
+            if($publishRunLevelAttachmentsExists)		
+            {
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
+            }
+            else
+            {
+                if(!$publishResultsOption)
+                {
+                    Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "opt in/out of publishing test run attachments")
+                }
+                Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+            }		
+        }
     }
     else
     {
-        Write-Warning "No results found to publish."
+        Write-Host "##vso[task.logissue type=warning;code=002003;]"
+        Write-Warning (Get-LocalizedString -Key "No results found to publish.")
     }
+    
 }
 else
 {
-    Write-Warning "No test assemblies found matching the pattern: $testAssembly"
+    Write-Host "##vso[task.logissue type=warning;code=002004;]"
+    Write-Warning (Get-LocalizedString -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
 }
-Write-Verbose "Leaving script VSTestConsole.ps1"
+
+Write-Verbose "Leaving script VSTest.ps1"

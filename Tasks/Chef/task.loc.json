@@ -17,11 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 8
   },
   "demands": [
     "Chef",
-    "KnifeReporting"
+    "KnifeReporting",
+    "DotNetFramework"
   ],
   "minimumAgentVersion": "1.83.0",
   "inputs": [

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "테스트 에이전트를 사용하여 Visual Studio 테스트",
-  "loc.helpMarkDown": "랩 컴퓨터 그룹에서 여러 테스트 에이전트를 사용하여 테스트를 분산되게 실행합니다.",
-  "loc.description": "랩 컴퓨터 그룹에서 여러 테스트 에이전트를 사용하여 테스트를 분산되게 실행합니다.",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.description": "Run tests across multiple test agents on a lab machine group in a distributed fashion",
   "loc.instanceNameFormat": "$(testMachineGroup)에서 테스트 $(sourcefilters) 실행",
   "loc.group.displayName.testMachineGroups": "테스트 컴퓨터 그룹",
   "loc.group.displayName.testSettings": "테스트 설정",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "테스트 컴퓨터 그룹",
   "loc.input.help.testMachineGroup": "테스트를 실행해야 하는 테스트 컴퓨터 그룹의 이름입니다.",
   "loc.input.label.dropLocation": "테스트 저장 위치",
-  "loc.input.help.dropLocation": "에이전트 컴퓨터에서 테스트 이진 파일을 '컴퓨터에 파일 복사' 작업의 일부로서 삭제한 위치. 시스템 환경 변수를 위치 문자열에서 사용할 수도 있습니다. 예: '%systemdrive%\\Tests', '%temp%\\DropLocation' 등",
+  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
   "loc.input.label.sourcefilters": "테스트 어셈블리",
   "loc.input.help.sourcefilters": "테스트를 실행할 테스트 이진 파일입니다. 와일드카드를 사용할 수 있습니다. 예를 들어, 이름에 'test'가 들어 있는 모든 dll을 표시하기 위해 '**\\*test*.dll;'을 사용할 수 있습니다.",
   "loc.input.label.testFilterCriteria": "테스트 필터 조건",

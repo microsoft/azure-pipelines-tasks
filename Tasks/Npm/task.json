@@ -1,0 +1,69 @@
+{
+    "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
+    "name": "Npm",
+    "friendlyName": "npm",
+    "description": "Run a npm command",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 2,
+        "Patch": 3
+    },
+    "demands" : [
+        "npm"
+    ],
+    "minimumAgentVersion": "1.91.0",
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
+    ],    
+    "instanceNameFormat": "npm $(command)",
+    "inputs": [
+        {
+            "name": "command",
+            "type": "string",
+            "label": "Command",
+            "defaultValue":"install",
+            "helpMarkDown": "npm command to run. [More Information](https://docs.npmjs.com/).",
+            "required":true
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue":"",
+            "helpMarkDown": "Additional arguments passed to npm.",
+            "required":false,
+            "groupName":"advanced"
+        },
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue":"",
+            "required":false,
+            "helpMarkDown": "Current working directory where npm command is run.  Defaults to the root of the repo.",
+            "groupName":"advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "npmtask.js",
+            "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\Npm.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(cwd)"
+        }
+    },
+    "messages": {
+        "NpmReturnCode": "Npm exited with return code: %d",
+        "NpmFailed": "Npm failed with error: %s"
+    }
+}

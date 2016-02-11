@@ -3,6 +3,11 @@
 The general format for a logging command is:
     ##vso[area.action property1=value;property2=value;...]message
 
+To invoke a logging command, simply emit the command via standard output. For example, from a PowerShell task:
+```
+"##vso[task.setvariable variable=testvar;]testvalue"
+```
+
 #### Task Logging Commands:
 <table>
     <thead>
@@ -10,6 +15,7 @@ The general format for a logging command is:
             <th>Syntax</th>
             <th>Property Name</th>
             <th>Usage</th>
+            <th>Minimum Agent Version</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +41,8 @@ The general format for a logging command is:
                     ##vso[task.logissue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnumber=1;code=100;]this is an error
                 </p>
             </td>
+            <td>
+            </td>
         </tr>
         <tr>
             <td>
@@ -54,6 +62,8 @@ The general format for a logging command is:
                     ##vso[task.setprogress value=75;]Upload Log
                 </p>
             </td>
+            <td>
+            </td>
         </tr>
         <tr>
             <td>
@@ -72,6 +82,8 @@ The general format for a logging command is:
                     Example: <br>
                     ##vso[task.complete result=Succeeded;]DONE
                 </p>
+            </td>
+            <td>
             </td>
         </tr>
         <tr>
@@ -107,6 +119,8 @@ The general format for a logging command is:
                     Update exist timeline record: ##vso[task.logdetail id=exist timeline record guid;progress=15;state=InProgress;]update timeline record
                 </p>
             </td>
+            <td>
+            </td>
         </tr>
         <tr>
             <td>
@@ -121,10 +135,37 @@ The general format for a logging command is:
             </td>
             <td>
                 <p align="left">
-                    Set variable in variable service of taskcontext. The first task can set an variable, and following tasks are able to use the variable.<br>
+                    Sets a variable in the variable service of taskcontext. The first task can set a variable, and following tasks are able to use the variable. The variable is exposed to the following tasks as an environment variable.<br>
                     Example: <br>
-					##vso[task.setvariable variable=testvar;]testvalue<br> 
+                    ##vso[task.setvariable variable=testvar;]testvalue<br> 
                 </p>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="left">
+                    ##vso[task.addattachment]value
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    type=attachment type (Required) <br>
+                    name=attachment name (Required) <br>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Upload and attach attachment to current timeline record. <br>
+                    Example: <br>
+					##vso[task.addattachment type=myattachmenttype;name=myattachmentname;]c:\myattachment.txt<br> 
+                    Upload and attach summary markdown to current timeline record. <br>
+                    Example: <br>
+					##vso[task.addattachment type=Distributedtask.Core.Summary;name=myattachmentname;]c:\myattachment.md<br> 
+                </p>
+            </td>
+            <td>
             </td>
         </tr>
     </tbody>
@@ -138,6 +179,7 @@ The general format for a logging command is:
             <th>Syntax</th>
             <th>Property Name</th>
             <th>Usage</th>
+            <th>Minimum Agent Version</th>
         </tr>
     </thead>
     <tbody>
@@ -159,6 +201,8 @@ The general format for a logging command is:
                     ##vso[artifact.associate artifactname=drop;]#/1/build <br>
                 </p>
             </td>
+            <td>
+            </td>
         </tr>
         <tr>
             <td>
@@ -179,6 +223,8 @@ The general format for a logging command is:
                     ##vso[artifact.upload containerfolder=testresult;artifactname=uploadedresult;]c:\testresult.trx<br>
                 </p>
             </td>
+            <td>
+            </td>
     </tbody>
 </table>
 
@@ -190,6 +236,7 @@ The general format for a logging command is:
             <th>Syntax</th>
             <th>Property Name</th>
             <th>Usage</th>
+            <th>Minimum Agent Version</th>
         </tr>
     </thead>
     <tbody>
@@ -210,6 +257,8 @@ The general format for a logging command is:
                     ##vso[build.uploadlog]c:\msbuild.log
                 </p>
             </td>
+            <td>
+            </td>
         </tr>
         <tr>
             <td>
@@ -223,10 +272,31 @@ The general format for a logging command is:
             </td>
             <td>
                 <p align="left">
-                    Upload customized summary.md to build’s container “summaries” folder.<br>
-                    Example: <br>
-                    ##vso[build.uploadsummary]c:\testsummary.md
+                    <b>Deprecated.</b> <br>Markdown uploaded through this command won't show up in build summary view. <br>
+                    Use <i>##vso[task.addattachment type=Distributedtask.Core.Summary;name=myattachmentname;]c:\myattachment.md</i> instead. <br />
                 </p>
+            </td>
+            <td>
+            </td>
+        </tr><tr>
+            <td>
+                <p align="left">
+                    ##vso[build.updatebuildnumber]build number
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Update build number for current build.<br>
+                    Example: <br>
+                    ##vso[build.updatebuildnumber]my-new-build-number
+                </p>
+            </td>
+            <td>
+                1.88
             </td>
         </tr>
     </tbody>

@@ -17,14 +17,14 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 8
   },
   "demands": [],
-  "minimumAgentVersion": "1.87.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
-      "name": "source",
-      "displayName": "ms-resource:loc.group.displayName.source",
+      "name": "deployment",
+      "displayName": "ms-resource:loc.group.displayName.deployment",
       "isExpanded": true
     },
     {
@@ -41,41 +41,55 @@
   "inputs": [
     {
       "name": "EnvironmentName",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
       "required": true,
-      "groupName": "source",
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
     },
     {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "name": "AdminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminUserName",
+      "defaultValue": "",
       "required": false,
-      "groupName": "source",
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod"
+      "helpMarkDown": "ms-resource:loc.input.help.AdminUserName"
     },
     {
-      "name": "MachineFilter",
+      "name": "AdminPassword",
       "type": "string",
-      "label": "ms-resource:loc.input.label.MachineFilter",
-      "required": false,
-      "groupName": "source",
+      "label": "ms-resource:loc.input.label.AdminPassword",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminPassword"
+    },
+    {
+      "name": "Protocol",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.Protocol",
+      "required": false,
+      "defaultValue": "",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Protocol"
+    },
+    {
+      "name": "TestCertificate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TestCertificate",
+      "defaultValue": "true",
+      "visibleRule": "Protocol = Https",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
     },
     {
       "name": "DacpacFile",
       "type": "string",
       "label": "ms-resource:loc.input.label.DacpacFile",
       "required": true,
-      "groupName": "source",
+      "groupName": "deployment",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.DacpacFile"
     },
@@ -169,14 +183,28 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.DeployInParallel"
-    }
-  ],
-  "sourceDefinitions": [
+    },
     {
-      "target": "EnvironmentName",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod"
+    },
+    {
+      "name": "MachineFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineFilter",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.MachineFilter"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Consente di distribuire un'immagine Docker in un computer remoto",
+  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Consente di distribuire un'immagine Docker in un computer remoto",
   "loc.instanceNameFormat": "Distribuzione Docker: $(Repository)",
   "loc.input.label.DockerEndpoint": "Endpoint Docker",

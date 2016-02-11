@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 16
   },
   "groups": [
     {
@@ -39,6 +39,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "required": false
     },
     {
@@ -47,7 +48,6 @@
       "label": "ms-resource:loc.input.label.workingFolder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
       "groupName": "advanced"
     },
     {
@@ -66,11 +66,17 @@
       "target": "$(filename)",
       "argumentFormat": "$(arguments)",
       "workingDirectory": "$(workingFolder)",
-      "failOnStandardError": "$(failOnStandardError)"
+      "platforms": [
+        "windows"
+      ]
     },
     "Node": {
-      "target": "cmdLine2.js",
+      "target": "cmdlinetask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CmdLineReturnCode": "ms-resource:loc.messages.CmdLineReturnCode",
+    "CmdLineFailed": "ms-resource:loc.messages.CmdLineFailed"
   }
 }

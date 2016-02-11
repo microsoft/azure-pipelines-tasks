@@ -10,10 +10,12 @@
   "loc.input.help.ConnectedServiceName": "Azure subscription to target for deployment.",
   "loc.input.label.WebSiteName": "Web App Name",
   "loc.input.label.WebSiteLocation": "Web App Location",
-  "loc.input.help.WebSiteLocation": "Select a region for deployment.",
+  "loc.input.help.WebSiteLocation": "Select a region for deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
   "loc.input.label.Slot": "Slot",
   "loc.input.help.Slot": "Slot",
   "loc.input.label.Package": "Web Deploy Package",
   "loc.input.help.Package": "Path to the Visual Studio Web Deploy package under the default artifact directory.",
+  "loc.input.label.doNotDelete": "Set DoNotDelete flag",
+  "loc.input.help.doNotDelete": "By enabling this, additonal files in web deployment package are preserved while publishing website.",
   "loc.input.label.AdditionalArguments": "Additional Arguments"
 }

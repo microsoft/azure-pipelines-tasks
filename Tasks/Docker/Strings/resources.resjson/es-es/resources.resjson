@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Implementar una imagen de Docker en un equipo remoto",
+  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Implemente una imagen de Docker en una máquina remota",
   "loc.instanceNameFormat": "Implementación de Docker: $(Repository)",
   "loc.input.label.DockerEndpoint": "Extremo de Docker",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "Durch Bearbeiten der Umgebungsattribute in Chef-Umgebungen bereitstellen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "Durch Bearbeiten der Umgebungsattribute in Chef-Umgebungen bereitstellen",
   "loc.instanceNameFormat": "Durch Bearbeiten von Umgebungsattributen von Chef-Abonnement $(ChefServer) an Chef bereitstellen",
   "loc.input.label.connectedServiceName": "Chef-Verbindung",
@@ -8,7 +8,7 @@
   "loc.input.label.Environment": "Umgebung",
   "loc.input.help.Environment": "Name der für die Bereitstellung zu verwendenden Chef-Umgebung. Die Attribute dieser Umgebung werden bearbeitet.",
   "loc.input.label.Attributes": "Umgebungsattribute",
-  "loc.input.help.Attributes": "Geben Sie den Wert der zu aktualisierenden Blattknotenattribute an. Beispiel: {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. Wenn der Blattknoten nicht vorhanden ist, tritt ein Aufgabenfehler auf.",
+  "loc.input.help.Attributes": "Specify the value of the leaf node attribute(s) to be updated. Example. { \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }. Task fails if the leaf node does not exist.",
   "loc.input.label.chefWaitTime": "Wartezeit",
   "loc.input.help.chefWaitTime": "Der Zeitraum (in Minuten), für den auf den Abschluss dieser Aufgabe gewartet werden soll. Standardwert: 30 Minuten."
 }

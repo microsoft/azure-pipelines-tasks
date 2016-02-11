@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 5
   },
   "demands": [
     "azureps",
@@ -25,11 +25,6 @@
   ],
   "minimumAgentVersion": "1.87.0",
   "groups": [
-    {
-      "name": "source",
-      "displayName": "ms-resource:loc.group.displayName.source",
-      "isExpanded": true
-    },
     {
       "name": "target",
       "displayName": "ms-resource:loc.group.displayName.target",
@@ -44,7 +39,7 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
+      "type": "connectedService:Azure:Certificate,UsernamePassword",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
@@ -55,7 +50,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.DacpacFile",
       "required": true,
-      "groupName": "source",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.DacpacFile"
     },
@@ -162,7 +156,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
+    "AzurePowerShell": {
       "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"

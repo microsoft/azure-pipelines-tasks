@@ -1,0 +1,13 @@
+{
+    "which": {
+        "cmd": "/usr/local/bin/cmd",
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/cmd /c cmd": {
+            "code": 1,
+            "stdout": "cmd output here",
+            "stderr": "cmd failed with this output"
+        }
+    }
+}

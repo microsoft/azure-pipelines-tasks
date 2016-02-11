@@ -12,12 +12,12 @@ Write-Verbose "email = $email"
 Write-Verbose "activateAndroid = $activateAndroid"
 Write-Verbose "timeout = $timeout"
 
-$activateAndroidLicense = Convert-String $activateAndroid Boolean
-Write-Verbose "activateAndroid (converted) = $activateAndroidLicense"
-
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
+$activateAndroidLicense = Convert-String $activateAndroid Boolean
+Write-Verbose "activateAndroid (converted) = $activateAndroidLicense"
 
 if (!$action)
 {

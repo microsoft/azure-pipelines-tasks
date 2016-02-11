@@ -8,7 +8,7 @@
   "loc.input.label.project": "プロジェクト",
   "loc.input.help.project": "リポジトリ ルートを基準に指定した、ビルドする Xamarin.Android プロジェクトの相対パス。ワイルドカードを使用できます。たとえば、すべてのサブフォルダー内の csproj ファイルの場合は、`**\\*.csproj` となります。プロジェクトには PackageForAndroid ターゲットが必要です。",
   "loc.input.label.target": "ターゲット",
-  "loc.input.help.target": "これらのターゲットをこのプロジェクトでビルドします。セミコロンを使用して複数のターゲットを区切ります。",
+  "loc.input.help.target": "指定したターゲットをこのプロジェクトでビルドします。ターゲットが複数の場合には、セミコロンを使用して区切ります。",
   "loc.input.label.outputDir": "出力ディレクトリ",
   "loc.input.label.configuration": "構成",
   "loc.input.label.msbuildLocation": "MSBuild の場所",

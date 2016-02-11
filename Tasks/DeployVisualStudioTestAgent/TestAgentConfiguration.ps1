@@ -1,20 +1,50 @@
-﻿function Locate-TestVersionAndVsRoot([string] $Version)
+﻿function Get-TestAgentType([string] $Version)
+{
+	$Version = Locate-TestVersion
+	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
+	
+	if (-not (Test-Path $testAgentPath))
+	{
+		$testAgentPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
+	}
+	
+	if (-not (Test-Path $testAgentPath))
+	{
+		return $null
+	}
+	
+	$testAgentServiceConfig = (Get-ItemProperty $testAgentPath -ErrorAction SilentlyContinue).AgentRunMode
+	if (($testAgentServiceConfig -eq $null) -or ($testAgentServiceConfig.Length -eq 0))
+    {
+		return $null
+	}
+	return $testAgentServiceConfig
+}
+
+
+function Locate-TestVersion()
+{
+	#Find the latest version
+	$regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
+	if (-not (Test-Path $regPath))
+	{
+		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
+	}
+	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()}
+	$Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
+
+	if ([string]::IsNullOrWhiteSpace($Version))
+	{
+		return $null
+	}
+	return $Version
+}
+
+function Locate-TestVersionAndVsRoot([string] $Version)
 {
     if ([string]::IsNullOrWhiteSpace($Version))
     {
-        #Find the latest version
-        $regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
-        if (-not (Test-Path $regPath))
-        {
-            $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
-        }
-        $keys = Get-Item $regPath | %{$_.GetSubKeyNames()}
-        $Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
-
-        if ([string]::IsNullOrWhiteSpace($Version))
-        {
-            return $null
-        }
+        $Version = Locate-TestVersion
     }
 
     # Lookup the install location
@@ -134,9 +164,14 @@ function Get-TestAgentConfiguration
     else
     {
         Write-Verbose "Parsing configuration output" -Verbose
-
-        # Use -Quiet for simple true/false output
-        $runningAsProcess = ($configOut.CommandOutput | Select-String -Quiet -SimpleMatch "This test agent is running as an interactive process.") -eq $True
+		
+	    $testAgentType = Get-TestAgentType($TestAgentVersion)
+		
+	    $runningAsProcessUsingConfig = ($configOut.CommandOutput | Select-String -Quiet -SimpleMatch "This test agent is running as an interactive process.") -eq $True
+        $runningAsProcessUsingReg = !([string]::IsNullOrEmpty($testAgentType) -or $testAgentType.Equals("AsService"))
+		
+	    $runningAsProcess = $runningAsProcessUsingConfig -or $runningAsProcessUsingReg
+		
         $outputLines = $configOut.CommandOutput.Split("`n`r")
 
         foreach ($line in $outputLines)
@@ -555,9 +590,9 @@ function CanSkipTestAgentConfiguration
         }
     }
 
-    if ($TfsCollection -ne $existingConfiguration.TfsCollection)
+    if ($TfsCollection.Trim("/") -ne $existingConfiguration.TfsCollection.Trim("/"))
     {
-        Write-Verbose -Message ("Tfs Collection Url mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $TfsCollection, $existingConfiguration.TfsCollection) -Verbose
+        Write-Verbose -Message ("Tfs Collection Url mismatch. Expected : {0}, Current {1}. Reconfiguration required." -f $TfsCollection.Trim("/"), $existingConfiguration.TfsCollection.Trim("/")) -Verbose
         return $false
     }
 
@@ -605,14 +640,14 @@ function CanSkipTestAgentConfiguration
         $creds = ReadCredentials -TFSCollectionUrl $TfsCollection -TestAgentVersion $TestAgentVersion
         if ($creds -eq $null)
         {
-         Write-Verbose -Message "No personal access token found in the credential store" -Verbose
-             return $false
+            Write-Verbose -Message "No personal access token found in the credential store" -Verbose
+            return $false
         }
 
         if($creds.Credentials -eq $null)
         {
-         Write-Verbose -Message "No credentials found in stored identity" -Verbose
-             return $false
+            Write-Verbose -Message "No credentials found in stored identity" -Verbose
+            return $false
         }
 
         $storedString = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($creds.Credentials.SecurePassword))
@@ -646,16 +681,20 @@ function EnableTracing
         [String] $TestAgentVersion
     )
 
-    if ($env:processor_architecture -eq "amd64")
+    $configFilePath = Locate-TestVersionAndVsRoot $TestAgentVersion
+    if ([string]::IsNullOrWhiteSpace($configFilePath))
     {
-        $programFilesPath =  ${env:ProgramFiles(x86)}
-    }
-    else
-    {
-        $programFilesPath = ${env:ProgramFiles}
-    }
+        if ($env:processor_architecture -eq "amd64")
+        {
+            $programFilesPath =  ${env:ProgramFiles(x86)}
+        }
+        else
+        {
+            $programFilesPath = ${env:ProgramFiles}
+        }
+        $configFilePath = "$programFilesPath\Microsoft Visual Studio " + $TestAgentVersion + "\Common7\Ide"
+    }    
 
-    $configFilePath = "$programFilesPath\Microsoft Visual Studio " + $TestAgentVersion + "\Common7\Ide"
     $logFilePath = "$env:SystemDrive\DtaLogs"
     $dtaExecutable = "DTAExecutionHost"
     $traceLevel = 4
@@ -726,6 +765,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     {
         throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
     }
+    
     $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
     $exePath = "'" + $exePath + "'"
 
@@ -831,7 +871,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
         $stderr = $p.StandardError.ReadToEnd()
 
         Write-Verbose -Message ("Stdout : {0}" -f $stdout) -Verbose
-        Write-Warning -Message ("Stderr : {0}" -f $stderr)
+        Write-Verbose -Message ("Stderr : {0}" -f $stderr) -Verbose
         Write-Verbose -Message ("Exit code : {0}" -f $p.ExitCode) -Verbose
 
         $out = @{

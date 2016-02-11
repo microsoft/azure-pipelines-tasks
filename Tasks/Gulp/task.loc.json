@@ -15,12 +15,12 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 3
+    "Patch": 10
   },
   "demands": [
-    "gulp"
+    "node.js"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.91.0",
   "groups": [
     {
       "name": "advanced",
@@ -63,6 +63,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "gulpjs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gulpjs",
+      "defaultValue": "node_modules/gulp/bin/gulp.js",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.gulpjs",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -75,5 +84,10 @@
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
+  },
+  "messages": {
+    "GulpNotInstalled": "ms-resource:loc.messages.GulpNotInstalled",
+    "GulpReturnCode": "ms-resource:loc.messages.GulpReturnCode",
+    "GulpFailed": "ms-resource:loc.messages.GulpFailed"
   }
 }

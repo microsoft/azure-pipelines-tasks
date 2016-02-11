@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "D9BAFED4-0B18-4F58-968D-86655B4D2CE9",
     "name": "CmdLine",
     "friendlyName": "Command Line",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 16
     },
     "groups": [
     {
@@ -29,13 +29,14 @@
             "label": "Tool", 
             "defaultValue": "", 
             "required": true,
-            "helpMarkDown": "Tool name to run.  Tool should be found in your path.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent.<br/> Note: You can use **$(agent.builddirectory)**\\\\... if you want the path relative to repo."
+            "helpMarkDown": "Tool name to run.  Tool should be found in your path.  Optionally, a fully qualified path can be supplied but that relies on that being present on the agent.<br/> Note: You can use **$(Build.SourcesDirectory)**\\\\ if you want the path relative to repo."
         },
         { 
             "name": "arguments", 
             "type": "string", 
             "label": "Arguments", 
             "defaultValue": "", 
+            "helpMarkDown": "Arguments passed to the tool",
             "required": false 
         },
         { 
@@ -43,8 +44,7 @@
             "type": "filePath", 
             "label": "Working folder", 
             "defaultValue": "", 
-            "required": false,
-            "helpMarkDown": "Arguments passed to the tool",
+            "required": false,            
             "groupName":"advanced"
         },
         { 
@@ -63,11 +63,15 @@
             "target": "$(filename)",
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
-            "failOnStandardError": "$(failOnStandardError)"
+            "platforms" : ["windows"]
         },
         "Node": {
-            "target": "cmdLine2.js",
+            "target": "cmdlinetask.js",
             "argumentFormat": ""
         }        
+    },
+    "messages": {
+        "CmdLineReturnCode": "%s exited with return code: %d",
+        "CmdLineFailed": "%s failed with error: %s"
     }
 }

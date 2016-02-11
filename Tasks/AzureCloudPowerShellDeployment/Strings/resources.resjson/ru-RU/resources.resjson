@@ -16,5 +16,9 @@
   "loc.input.help.CsCfg": "Путь к CsCfg в каталоге артефактов по умолчанию.",
   "loc.input.label.Slot": "Среда (слот)",
   "loc.input.help.Slot": "**Рабочая среда** или **Промежуточное хранение**",
+  "loc.input.label.DeploymentLabel": "Метка развертывания",
+  "loc.input.help.DeploymentLabel": "Указывает имя метки для нового развертывания. Если оно не указано, используется GUID.",
+  "loc.input.label.AppendDateTimeToLabel": "Добавить текущую дату и время",
+  "loc.input.help.AppendDateTimeToLabel": "Добавляет текущую дату и время в метку развертывания",
   "loc.input.label.AllowUpgrade": "Разрешить обновление"
 }

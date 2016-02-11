@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 7
   },
   "demands": [
     "Xamarin.iOS"
@@ -57,7 +57,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "xamariniOS.js",
+      "target": "xamarinios.js",
       "argumentFormat": ""
     }
   }

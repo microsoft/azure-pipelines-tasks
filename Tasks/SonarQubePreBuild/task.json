@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "EAE5B2CC-AC5E-4CBA-B022-A06621F9C01F",
     "name": "SonarQubePreBuild",
     "friendlyName": "SonarQube for MSBuild - Begin Analysis",
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 19
+        "Patch": 31
     },
     "demands": [
         "msbuild",
@@ -103,7 +103,7 @@
             "type": "string",
             "label": "Additional Settings",
             "required": false,
-            "helpMarkDown": "Pass in settings using the format: /d:propertyName=propertyValue. For more details on the settings please view the [SonarQube docs](http://docs.sonarqube.org/)",
+            "helpMarkDown": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](http://go.microsoft.com/fwlink/?LinkID=624390).",
             "groupName": "advanced"
         },
         {

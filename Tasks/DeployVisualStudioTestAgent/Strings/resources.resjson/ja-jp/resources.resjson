@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent の展開",
-  "loc.helpMarkDown": "ラボのコンピューター グループでテストを実行するために Test Agent を展開および構成します",
+  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "ラボのコンピューター グループでテストを実行するために Test Agent を展開および構成します",
   "loc.instanceNameFormat": "TestAgent を $(testMachineGroup) に展開",
   "loc.group.displayName.testMachineGroups": "テスト コンピューター グループ",
@@ -8,8 +8,9 @@
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.testMachineGroup": "テスト コンピューター グループ",
   "loc.input.help.testMachineGroup": "テストを実行する必要があるテスト コンピューター グループの名前。",
-  "loc.input.label.testMachines": "コンピューターに展開",
-  "loc.input.help.testMachines": "(省略可能) Test Agent を展開する必要があるコンピューターのコンマ区切りのリストを指定します。例: 'Machine1,Machine2,Machine3'。",
+  "loc.input.label.ResourceFilteringMethod": "コンピューターを以下によって選択",
+  "loc.input.label.testMachines": "フィルター条件",
+  "loc.input.help.testMachines": "dbserver.fabrikam.com、dbserver_int.fabrikam.com、192.168.12.34 などのコンピューター、または Role:DB;OS:Win8.1 などのタグのリストを指定します。いずれかのタグを含むコンピューターを返します。Azure リソース グループでは、コンピューター名に VM ホスト名を指定します。既定値はコンピューター グループ内のすべてのコンピューターです。",
   "loc.input.label.machineUserName": "ユーザー名",
   "loc.input.help.machineUserName": "Test Agent を実行する際に必要なユーザー名。",
   "loc.input.label.machinePassword": "パスワード",
@@ -21,5 +22,5 @@
   "loc.input.label.updateTestAgent": "Test Agent の更新",
   "loc.input.help.updateTestAgent": "(省略可能) Test Agent を更新する必要があるかどうかを指定します。",
   "loc.input.label.isDataCollectionOnly": "データの収集のみを有効にする",
-  "loc.input.help.isDataCollectionOnly": "(省略可能) Test Agent を、テストの実行ではなくデータ収集にのみ使用する必要があるかどうかを指定します。一般に、コンピューター グループ test(AUT) のアプリケーションで実行します。"
+  "loc.input.help.isDataCollectionOnly": "(省略可能) Test Agent を、テストの実行ではなくデータ収集にのみ使用する必要があるかどうかを指定します。一般に、テスト対象のアプリケーション (AUT) のコンピューター グループで実行します。"
 }

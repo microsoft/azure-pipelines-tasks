@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Docker-Image auf einem Remotecomputer bereitstellen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Docker-Image auf einem Remotecomputer bereitstellen",
   "loc.instanceNameFormat": "Docker-Bereitstellung: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker-Endpunkt",

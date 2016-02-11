@@ -1,5 +1,9 @@
 ﻿param (
     [string]$environmentName,
+    [string]$adminUserName,
+    [string]$adminPassword,
+    [string]$protocol,
+    [string]$testCertificate,
     [string]$resourceFilteringMethod,
     [string]$machineFilter,
     [string]$dacpacFile,
@@ -16,6 +20,9 @@
 
 Write-Verbose "Entering script DeployToSqlServer.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
+Write-Verbose "adminUserName = $adminUserName" -Verbose
+Write-Verbose "winrm protocol to connect to machine  = $protocol" -Verbose
+Write-Verbose "testCertificate = $testCertificate" -Verbose
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
 Write-Verbose "machineFilter = $machineFilter" -Verbose
 Write-Verbose "dacpacFile = $dacpacFile" -Verbose
@@ -43,11 +50,24 @@ $sqlPackageArguments = Get-SqlPackageCommandArguments -dacpacFile $dacpacFile -t
 
 $scriptArguments = "-sqlPackageArguments $sqlPackageArguments"
 
+$errorMessage = [string]::Empty
+
+Write-Output ( Get-LocalizedString -Key "Starting deployment of Sql Dacpac File : {0}" -ArgumentList $dacpacFile)
+
 if($resourceFilteringMethod -eq "tags")
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $protocol -testCertificate $testCertificate
 }
 else
 {
-    Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -ScriptBlockContent $sqlPackageOnTargetMachineBlock -scriptArguments $scriptArguments -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $protocol -testCertificate $testCertificate 
 }
+
+if(-not [string]::IsNullOrEmpty($errorMessage))
+{
+    $readmelink = "http://aka.ms/sqlserverdacpackreadme"
+    $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
+    throw "$errorMessage $helpMessage"
+}
+
+Write-Output ( Get-LocalizedString -Key "Successfully deployed Sql Dacpac File : {0}" -ArgumentList $dacpacFile)

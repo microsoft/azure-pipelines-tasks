@@ -1,0 +1,86 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "5BFB729A-A7C8-4A78-A7C3-8D717BB7C13C",
+  "name": "CopyFiles",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 9
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "SourceFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourceFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SourceFolder"
+    },
+    {
+      "name": "Contents",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Contents",
+      "defaultValue": "**",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Contents"
+    },
+    {
+      "name": "TargetFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetFolder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetFolder"
+    },
+    {
+      "name": "CleanTargetFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanTargetFolder",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetFolder",
+      "groupName": "advanced"
+    },
+    {
+      "name": "OverWrite",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.OverWrite",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.OverWrite",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "copyfiles.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
+    "CleaningTargetFolder": "ms-resource:loc.messages.CleaningTargetFolder",
+    "FileAlreadyExistAt": "ms-resource:loc.messages.FileAlreadyExistAt",
+    "CopyingTo": "ms-resource:loc.messages.CopyingTo"
+  }
+}

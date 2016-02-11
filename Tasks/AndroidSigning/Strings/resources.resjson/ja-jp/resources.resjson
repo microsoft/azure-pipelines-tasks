@@ -9,7 +9,7 @@
   "loc.input.help.files": "リポジトリのルートを基準としたファイルの相対パス。ワイルドカードを使用できます。たとえば、bin サブフォルダーにあるすべての APK ファイルの場合は `**\\bin\\*.apk` です。",
   "loc.input.label.jarsign": "APK の署名",
   "loc.input.label.keystoreFile": "Keystore ファイル",
-  "loc.input.help.keystoreFile": "キーストア ファイルの完全パス。",
+  "loc.input.help.keystoreFile": "Keystore ファイルの完全パス。",
   "loc.input.label.keystorePass": "Keystore パスワード",
   "loc.input.label.keystoreAlias": "エイリアス",
   "loc.input.label.keyPass": "キー パスワード",

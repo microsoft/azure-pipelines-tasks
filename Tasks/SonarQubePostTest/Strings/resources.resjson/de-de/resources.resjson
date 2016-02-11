@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "SonarQube für MSBuild - Analyse beenden",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.description": "Analyse abschließen und Ergebnisse in SonarQube hochladen",
+  "loc.instanceNameFormat": "Analyse abschließen und Ergebnisse in SonarQube hochladen"
+}

@@ -9,7 +9,7 @@
   "loc.input.label.dsym": "dSYM 檔案 (僅限 iOS)",
   "loc.input.help.dsym": "若要使當機記錄檔更便於閱讀，您可以上傳與該應用程式相關聯的 dSYM 檔案。此欄僅適用於 iOS 應用程式。 例如: *.dSYM",
   "loc.input.label.teamApiKey": "Team API 金鑰",
-  "loc.input.help.teamApiKey": "您的 Xamarin Test Cloud 小組 API 金鑰可在 https://testcloud.xamarin.com/account 的 \"Teams & Apps\" 之下找到。",
+  "loc.input.help.teamApiKey": "您可以在 https://testcloud.xamarin.com/account 的 \"Teams & Apps\" 下找到 Xamarin Test Cloud 小組的 API 金鑰。",
   "loc.input.label.user": "使用者電子郵件",
   "loc.input.help.user": "使用者名稱將執行於此測試之下。",
   "loc.input.label.devices": "裝置",

@@ -1,0 +1,50 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "B7E8B412-0437-4065-9371-EDC5881DE25B",
+  "name": "DeleteFiles",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 2
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.92.0",
+  "inputs": [
+    {
+      "name": "SourceFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourceFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SourceFolder"
+    },
+    {
+      "name": "Contents",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Contents",
+      "defaultValue": "myFileShare",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Contents"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "deletefiles.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CantDeleteFiles": "ms-resource:loc.messages.CantDeleteFiles"
+  }
+}

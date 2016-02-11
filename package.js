@@ -9,6 +9,9 @@ var os = require('os');
 
 var _strRelPath = path.join('Strings', 'resources.resjson', 'en-US');
 
+var _tempPath = path.join(__dirname, '_temp');
+shell.mkdir('-p', _tempPath);
+
 var _divider = '// *******************************************************' + os.EOL;
 var _banner = '' + _divider;
 _banner += '// GENERATED FILE - DO NOT EDIT DIRECTLY' + os.EOL;
@@ -51,6 +54,7 @@ var LOC_INSTFORMAT = 'loc.instanceNameFormat';
 var LOC_GROUPDISPLAYNAME = 'loc.group.displayName.';
 var LOC_INPUTLABEL = 'loc.input.label.';
 var LOC_INPUTHELP = 'loc.input.help.';
+var LOC_MESSAGES = 'loc.messages.';
 
 var createStrings = function(task, pkgPath, srcPath) {
 	var defer = Q.defer();
@@ -102,6 +106,14 @@ var createStrings = function(task, pkgPath, srcPath) {
 		});
 	}	
 
+	if (task.messages) {
+		for(var key in task.messages) {
+			var messageKey = LOC_MESSAGES + key;
+			strings[messageKey] = task.messages[key];
+			task.messages[key] = 'ms-resource:' + messageKey;
+		}
+	}	
+	
 	//
 	// Write the tasks.json and strings file in package and back to source
 	//
@@ -175,6 +187,47 @@ function packageTask(pkgPath){
 	        	shell.cp('-R', path.join(dirName, '*'), tgtPath);
 	        	shell.rm(path.join(tgtPath, '*.csproj'));
 	        	shell.rm(path.join(tgtPath, '*.md'));
+
+
+	        	// 'statically link' libs
+	        	var externals = require('./externals.json');
+
+	        	if (task.execution['Node']) {
+	        		var libVer = externals["vsts-task-lib"];
+					if (!libVer) {
+						throw new Error('External vsts-task-lib not defined in externals.json');
+					}
+
+	        		gutil.log('linking vsts-task-lib ' + libVer + ' into ' + task.name);
+
+	        		var tskLibSrc = path.join(__dirname, '_temp', 'vsts-task-lib', libVer, 'node_modules');
+	        		if (shell.test('-d', tskLibSrc)) {
+	        			new gutil.PluginError('PackageTask', 'vsts-task-lib not found: ' + tskLibSrc);
+	        		}
+
+					shell.cp('-R', tskLibSrc, tgtPath);
+	        	}
+
+	        	if (task.execution['PowerShell3']) {
+	        		var libVer = externals["vsts-task-sdk"];
+					if (!libVer) {
+						throw new Error('External vsts-task-sdk not defined in externals.json');
+					}
+
+	        		gutil.log('linking vsts-task-sdk ' + libVer + ' into ' + task.name);
+
+	        		var tskLibSrc = path.join(__dirname, '_temp', 'vsts-task-sdk', libVer, 'node_modules', 
+	        								  'vsts-task-sdk', 'VstsTaskSdk');
+
+	        		if (shell.test('-d', tskLibSrc)) {
+	        			new gutil.PluginError('PackageTask', 'vsts-task-sdk not found: ' + tskLibSrc);
+	        		}
+
+	        		var cpTarg = path.join(tgtPath, 'ps_modules');
+	        		shell.mkdir('-p', cpTarg);
+					shell.cp('-R', tskLibSrc, cpTarg);
+	        	}
+
 	        	return;        	
 	        })
 	        .then(function() {

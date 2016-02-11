@@ -2,7 +2,7 @@
     "id":"71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
     "name":"VSBuild",
     "friendlyName": "Visual Studio Build",
-    "description": "Build with MSBuild in the Visual Studio Developer Command Prompt",
+    "description": "Build with MSBuild and set the Visual Studio version property",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
     "category": "Build",
     "visibility": [
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 18
     },
     "demands": [
         "msbuild",
@@ -109,10 +109,22 @@
     ],
     "instanceNameFormat": "Build solution $(solution)",
     "execution": {
+        "PowerShell3": {
+            "target": "VSBuild_PS3.ps1"
+        },
         "PowerShell": {
             "target": "$(currentDirectory)\\VSBuild.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "MSBuildLocationDeprecated0": "The MSBuild location parameter has been deprecated. Ignoring value '{0}'",
+        "MSBuildNotFoundVersion0Architecture1": "MSBuild not found for version '{0}' and architecture '{1}'.",
+        "MSBuildVersionDeprecated0": "The MSBuild version parameter has been deprecated. Ignoring value '{0}'.",
+        "UnexpectedVSVersion0": "Unexpected Visual Studio version '{0}'.",
+        "VSLocationDeprecated0": "The Visual Studio location parameter has been deprecated. Ignoring value '{0}'",
+        "VSNotFoundTry": "Visual Studio not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+        "VSVersion0NotFoundLookingForLatest": "Visual Studio version '{0}' not found. Looking for the latest version."
     }
 }

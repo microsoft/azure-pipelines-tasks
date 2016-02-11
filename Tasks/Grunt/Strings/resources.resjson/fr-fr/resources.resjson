@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Grunt",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.description": "The JavaScript Task Runner",
+  "loc.instanceNameFormat": "grunt $(targets)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.gruntFile": "Chemin d'accès du fichier grunt",
+  "loc.input.help.gruntFile": "Chemin d'accès relatif depuis la racine du référentiel au fichier script du fichier grunt à exécuter.",
+  "loc.input.label.targets": "Tâche(s) grunt",
+  "loc.input.help.targets": "Facultatif. Liste des tâches à exécuter délimitées par des espaces. Si elle n'est pas spécifiée, la tâche par défaut est exécutée.",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments supplémentaires passés à grunt.  --gruntfile n'est pas nécessaire, car il est déjà ajouté via l'entrée gruntFile ci-dessus.",
+  "loc.input.label.cwd": "Répertoire de travail",
+  "loc.input.help.cwd": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script."
+}
