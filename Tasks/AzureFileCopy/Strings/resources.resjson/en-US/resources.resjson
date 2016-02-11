@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[More Information](http://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copy files to Azure blob or VM(s)",
   "loc.instanceNameFormat": "$(Destination) File Copy",
+  "loc.group.displayName.output": "Output",
   "loc.input.label.SourcePath": "Source",
   "loc.input.help.SourcePath": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file.",
   "loc.input.label.ConnectedServiceNameSelector": "Azure Connection Type",
@@ -43,5 +44,9 @@
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
   "loc.input.help.CleanTargetBeforeCopy": "Setting it to true will clean-up the destination folder before copying the files.",
   "loc.input.label.skipCACheck": "Test Certificate",
-  "loc.input.help.skipCACheck": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS)."
+  "loc.input.help.skipCACheck": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
+  "loc.input.label.outputStorageUri": "Storage Container URI",
+  "loc.input.help.outputStorageUri": "Provide a name for the variable for the storage container URI that the files were copied to with this task.  Valid only when the selected destination is Azure Blob.",
+  "loc.input.label.outputStorageContainerSasToken": "Storage Container SAS Token",
+  "loc.input.help.outputStorageContainerSasToken": "Provide a name for the variable for the storage container SAS Token used to access the files copied to with this task.  Valid only when the selected destination is Azure Blob."
 }

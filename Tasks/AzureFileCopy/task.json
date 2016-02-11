@@ -18,7 +18,14 @@
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "1.95.0",
+    "groups": [
+         {
+             "name": "output",
+             "displayName": "Output",
+             "isExpanded": true
+         }
+     ],
   "inputs": [
     {
       "name": "SourcePath",
@@ -221,13 +228,31 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "skipCACheck",
-      "type": "boolean",
-      "label": "Test Certificate",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
-      "visibleRule": "Destination = AzureVMs"
+        "name": "skipCACheck",
+        "type": "boolean",
+        "label": "Test Certificate",
+        "defaultValue": "true",
+        "required": false,
+        "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
+        "visibleRule": "Destination = AzureVMs"
+    },
+    {
+        "name": "outputStorageUri",
+        "type": "string",
+        "label": "Storage Container URI",
+        "required": false,
+        "defaultValue": "",
+        "groupName": "output",
+        "helpMarkDown": "Provide a name for the variable for the storage container URI that the files were copied to with this task.  Valid only when the selected destination is Azure Blob."
+    },
+    {
+        "name": "outputStorageContainerSasToken",
+        "type": "string",
+        "label": "Storage Container SAS Token",
+        "required": false,
+        "defaultValue": "",
+        "groupName": "output",
+        "helpMarkDown": "Provide a name for the variable for the storage container SAS Token used to access the files copied to with this task.  Valid only when the selected destination is Azure Blob."
     }
   ],
   "dataSourceBindings": [

@@ -87,14 +87,21 @@ The parameters of the task are described in details, including examples, to show
  * **Blob Prefix**: A prefix for the Blobs that can be used to filter the blobs like appending the Build number to the blobs, so that all the blobs with the same build number can be downloaded from the Container.
 
 * **Additional Arguments**: Additional [AzCopy.exe](https://azure.microsoft.com/en-us/documentation/articles/storage-use-azcopy/) arguments that will be applied for uploading to blob and same will be applied for downloading while copy to VM.
- * **Blob Destination** Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
- * **VM Destination** Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
+* **Blob Destination**: Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
+ 
+ * **VM Destination**: Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
+ 
+* **Output Parameters**
+ * **Storage Container Uri**: When copying files to an Azure container, if you want the task to return the Uri of the container where the files were copied to, provide the name of the output variable you would like to use.
+ 
+ * **Storage Container SasToken**: When copying files to an Azure container, if you want the task to create and return a SasToken for the container, provide the name of the output variable you would like to use.  By default, this token expires after 4 hours.
 
 * **Enable Copy Prerequisites**: Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs.
 
 ### Known Limitations :
 
-If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
+* If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
+* To use Premium storage account, which only support Azure page blobs, please pass /BlobType:Page as additional arguments. 
 
 ### Earlier Versions
 
