@@ -65,7 +65,7 @@
     },
     {
       "name": "DacpacFile",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.DacpacFile",
       "required": true,
       "defaultValue": "",

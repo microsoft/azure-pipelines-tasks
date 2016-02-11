@@ -65,7 +65,7 @@
         },
         {
             "name": "DacpacFile",
-            "type": "string",
+            "type": "filePath",
             "label": "DACPAC File",
             "required": true,
             "defaultValue": "",
