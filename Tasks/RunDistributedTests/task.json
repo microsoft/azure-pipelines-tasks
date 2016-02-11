@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 26
+        "Patch": 27
     },
     "demands": [
     ],
@@ -219,18 +219,6 @@
     ],
 
     "sourceDefinitions": [ 
-     { 
-         "target": "testMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name",
-         "authKey": "tfs:DevTestLabs"
-     },
-     { 
-         "target": "autMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
-     },
      {
          "target": "testPlan",
          "endpoint":"/$(system.teamProject)/_apis/test/plans",
