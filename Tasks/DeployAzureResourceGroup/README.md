@@ -20,7 +20,7 @@ To deploy to Azure, an Azure subscription has to be linked to Team Foundation Se
 
  - **Note** that this tasks creates or updates a resource group using [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) APIs. Actions like starting, stopping, restarting, or deleting resource groups only work on VMs that have been created using the [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) APIs. These tasks do not work with the VMs that have been created using the [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) APIs, e.g. in the [old Azure](https://manage,windowsazure.com/) portal.
 
- - If you are using 'Azure' endpoint type with Certificate based authentication or 'Azure Resource Manager' endpoint, The task automatically filters appropriate fields viz. Cloud Service/Resource Groups respectively & its Virtual Machines. 'Azure' endpoint with Credentials based authentication doesn't filter the Resource Group/Cloud Service, and Virtual Machine fields yet. 
+ - If you are using 'Azure' endpoint type with Certificate based authentication or 'Azure Resource Manager' endpoint, the task automatically filters appropriate fields viz. Cloud Service/Resource Groups respectively & its Virtual Machines. 'Azure' endpoint with Credentials based authentication doesn't filter the Resource Group/Cloud Service, and Virtual Machine fields yet. 
 
 For Azure MSDN accounts, one can either use a [Service Principal](http://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409) or a work account. It's easy to create a work account as shown below:
 
@@ -42,11 +42,11 @@ The parameters of the task are described in details, including examples, to show
  * **Azure Subscription**\*: Select the Azure Subscription where the Resource Group will be created/updated, or where the resource group is located for starting/stopping/restarting/deleting virtual machines in it, or for deleting the resource group. Currently only 'Select' action is supported upon selecting Azure Classic subscription.
  
  * **Action**\*: Select the action to be performed on the resource group. Following actions are available:
-
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
     - Select Resource Group: reads the Resource Group information from Azure and creates an Output Variable with the VMs in the Resource Group. Read more about Output Variables [here](#output-variables).
     - Start, Stop, Restart, Delete Virtual Machines
     - Delete Resource Group
+
  * **Resource Group**\*: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
 
 The following parameters are shown when the selected action is to create or update a resource group:
