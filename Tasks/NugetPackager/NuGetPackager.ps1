@@ -26,7 +26,9 @@ if ($b_versionByBuild)
     
     # Regular expression pattern to find the version in the build number 
     # and then apply it to the assemblies
-    $VersionRegex = "\d+\.\d+\.\d+\.\d+"
+    # supports PreRelease tags e.g. 1.2.3-alpha1, 1.2.3-rc2
+    # in addition to release versions 1.2.3.4 
+    $VersionRegex = "\d+\.\d+\.\d+(?:\.|-)(?:[a-z]+)?\d+"
     
     # If this script is not running on a build server, remind user to 
     # set environment variables so that this script can be debugged
