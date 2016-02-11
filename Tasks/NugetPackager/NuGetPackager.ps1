@@ -82,7 +82,7 @@ if ($outputdir -and !(Test-Path $outputdir))
 }
 
 # check for solution pattern
-if ($searchPattern.Contains("*") -or $searchPattern.Contains("?"))
+if ($searchPattern.Contains("*") -or $searchPattern.Contains("?") -or $searchPattern.Contains(";"))
 {
     Write-Host "Pattern found in solution parameter."
     Write-Host "Find-Files -SearchPattern $searchPattern"
