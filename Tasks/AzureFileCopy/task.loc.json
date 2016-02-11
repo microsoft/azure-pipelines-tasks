@@ -13,12 +13,19 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 36
+    "Patch": 40
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "SourcePath",
@@ -228,6 +235,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
       "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "outputStorageUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputStorageUri",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputStorageUri"
+    },
+    {
+      "name": "outputStorageContainerSasToken",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputStorageContainerSasToken",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputStorageContainerSasToken"
     }
   ],
   "dataSourceBindings": [

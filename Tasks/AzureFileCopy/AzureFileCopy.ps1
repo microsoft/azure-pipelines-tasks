@@ -19,7 +19,9 @@ param (
     [string]$cleanTargetBeforeCopy,
     [string]$copyFilesInParallel,
     [string]$skipCACheck,
-    [string]$enableCopyPrerequisites
+    [string]$enableCopyPrerequisites,
+    [string]$outputStorageContainerSasToken,
+    [string]$outputStorageURI
 )
 
 Write-Verbose "Starting Azure File Copy Task" -Verbose
@@ -44,6 +46,8 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
 Write-Verbose "skipCACheck = $skipCACheck" -Verbose
 Write-Verbose "enableCopyPrerequisites = $enableCopyPrerequisites" -Verbose
+Write-Verbose "outputStorageContainerSASToken = $outputStorageContainerSASToken" -Verbose
+Write-Verbose "outputStorageURI = $outputStorageURI" -Verbose
 
 if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
 {
@@ -53,7 +57,7 @@ if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
 }
 
 # Constants #
-$defaultSasTokenTimeOutInHours = 2
+$defaultSasTokenTimeOutInHours = 4
 $useHttpsProtocolOption = ''
 $ErrorActionPreference = 'Stop'
 $telemetrySet = $false
@@ -124,6 +128,17 @@ Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storag
 # Complete the task if destination is azure blob
 if ($destination -eq "AzureBlob")
 {
+    # Get URI and SaSToken for output if needed
+    if(-not [string]::IsNullOrEmpty($outputStorageURI))
+    {
+        $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName
+        Write-Verbose "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI" -Verbose
+    }
+    if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
+    {
+        $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+        Write-Verbose "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken" -Verbose
+    }
     Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination" -Verbose
     return
 }
