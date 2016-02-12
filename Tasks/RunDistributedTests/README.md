@@ -6,7 +6,7 @@ To learn more about the general usage of the task, please see https://msdn.micro
 
 ###The different parameters of the task are explained below:
 
-- **Test Machine Group:**	Required Field. Name of the Test Machine Group which should be used to run tests. Click on ‘Manage’ to navigate to the Machine Group page and create/manage your machine groups. If you are using Azure Resource Group to dynamically provision machines, 'Resource Group' is same as 'Machine Group'.
+- **Machines:**	Required Field. Provide the comma seperated list of machine names or "Azure Resource Group / Test Machine Group" name or Variable name containing the list of machines which should be used to run tests.
 
 - **Test Drop Location:**	Required Field. Location on the Test machine(s) where the test binaries have been copied to.  ‘Windows Machine File Copy’ task or ‘Azure File Copy’ task (for Azure machines) can be used. System Environment Variables from the agent machines can also be used in specifying the drop location. For example, c:\tests or %systemdrive%\Tests
 
@@ -35,7 +35,7 @@ For example, FullyQualifiedName~Chrome:12 will report all test methods which hav
 
 - **Code Coverage Enabled:**	If set, this will collect code coverage information during the run and upload the results to the server. This is supported for .net and C++ projects only. To customize Code Coverage analysis and manage inclusions and exclusions, please see https://msdn.microsoft.com/library/jj159530.aspx 
 	
-- **Application Under Test Machine Group:**	Machine(s) on which the Application Under Test is deployed. This is used to collect Code Coverage data from those machines. Use this in conjunction with Code Coverage Enabled checkbox. 
+- **Application Under Test Machines:**	Machine(s) on which the Application Under Test is deployed. This is used to collect Code Coverage data from those machines. Use this in conjunction with Code Coverage Enabled checkbox. 
 
 - **Test Adapters:**	There is no explicit field to specify Test Adapter path in the task. The task automatically searches for "packages" directory that exists in the same folder as the .sln file (nuget restored directory structure). If your adapters are in a different directory or you did not copy over the source files, use a runsettings file with TestAdaptersPaths as described at https://msdn.microsoft.com/en-us/library/jj635153.aspx
 
