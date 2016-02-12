@@ -234,10 +234,10 @@
          "authKey": "tfs:teamfoundation"
      },
      {
-         "target": "testSuite",         
+         "target": "testSuite",
          "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
          "selector":"jsonpath:$.value[*]",
-         "authKey": "tfs:DevTestLabs"
+         "authKey": "tfs:teamfoundation"
      }      
     ], 
 
