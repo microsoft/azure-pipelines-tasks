@@ -7,7 +7,7 @@
   "loc.input.label.solution": "Path to Solution",
   "loc.input.help.solution": "The path to the Visual Studio Solution file",
   "loc.input.label.nugetConfigPath": "Path to NuGet.config",
-  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=691232).",
+  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
   "loc.input.label.noCache": "Disable local cache",
   "loc.input.help.noCache": "Equivalent to the -NoCache NuGet.exe command line argument",
   "loc.input.label.nuGetRestoreArgs": "NuGet Arguments",
