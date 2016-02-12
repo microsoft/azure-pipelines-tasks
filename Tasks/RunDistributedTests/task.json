@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 26
     },
     "demands": [
     ],
@@ -247,9 +247,8 @@
      },
      {
          "target": "testSuite",
-         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
-         "selector":"jsonpath:$.value[*].name",
-         "keySelector":"jsonpath:$.value[*].id",
+         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+         "selector":"jsonpath:$.value[*]",
          "authKey": "tfs:DevTestLabs"
      }      
     ], 
