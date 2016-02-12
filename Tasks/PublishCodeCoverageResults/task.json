@@ -12,11 +12,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands" : [
     ],
-    "minimumAgentVersion": "1.88.0",    
+    "minimumAgentVersion": "1.90.0",    
     "instanceNameFormat": "Publish Code Coverage Results $(summaryFileLocation)",
     "inputs": [
         {
