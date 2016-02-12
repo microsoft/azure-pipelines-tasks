@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "demands": [
         "azureps",
@@ -65,7 +65,7 @@
         },
         {
             "name": "DacpacFile",
-            "type": "string",
+            "type": "filePath",
             "label": "DACPAC File",
             "required": true,
             "defaultValue": "",
@@ -109,7 +109,7 @@
         },
         {
             "name": "PublishProfile",
-            "type": "string",
+            "type": "filePath",
             "label": "Publish Profile",
             "required": false,
             "groupName": "target",
