@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 27
+        "Patch": 28
     },
     "demands": [
     ],
@@ -234,11 +234,10 @@
          "authKey": "tfs:teamfoundation"
      },
      {
-         "target": "testSuite",
-         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
-         "selector":"jsonpath:$.value[*].name",
-         "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:teamfoundation"
+         "target": "testSuite",         
+         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+         "selector":"jsonpath:$.value[*]",
+         "authKey": "tfs:DevTestLabs"
      }      
     ], 
 
