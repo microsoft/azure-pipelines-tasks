@@ -48,6 +48,7 @@
             "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is the configured source folder."
         },
         {
+<<<<<<< HEAD
             "name": "SkipIndexing",
             "type": "boolean",
             "label": "Skip indexing",
