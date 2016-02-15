@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 26
+        "Patch": 28
     },
     "demands": [
     ],
@@ -219,18 +219,6 @@
     ],
 
     "sourceDefinitions": [ 
-     { 
-         "target": "testMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name",
-         "authKey": "tfs:DevTestLabs"
-     },
-     { 
-         "target": "autMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
-     },
      {
          "target": "testPlan",
          "endpoint":"/$(system.teamProject)/_apis/test/plans",
@@ -247,9 +235,8 @@
      },
      {
          "target": "testSuite",
-         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
-         "selector":"jsonpath:$.value[*].name",
-         "keySelector":"jsonpath:$.value[*].id",
+         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+         "selector":"jsonpath:$.value[*]",
          "authKey": "tfs:teamfoundation"
      }      
     ], 

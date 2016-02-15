@@ -13,12 +13,19 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 36
+    "Patch": 37
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "SourcePath",

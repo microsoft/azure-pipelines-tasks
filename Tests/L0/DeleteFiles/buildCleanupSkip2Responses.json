@@ -1,0 +1,22 @@
+{
+    "find": {
+        "/someDir": [
+            "/someDir/someNestedDir/000ADmin",
+            "/someDir/someFile"
+        ]
+    },
+    "stats": {
+        "/someDir/someNestedDir": {
+            "isDirectory": true
+        },
+        "/someDir/someNestedDir/000ADmin": {
+            "isDirectory": true
+        },
+        "/someDir/someFile": {
+            "isDirectory": false
+        }
+    },
+    "checkPath" : {
+        "/someDir": true
+    }
+}
