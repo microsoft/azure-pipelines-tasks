@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Azure SQL Database Deployment",
   "loc.helpMarkDown": "[More Information](http://aka.ms/sqlazuredeployreadme)",
@@ -8,8 +5,11 @@
   "loc.instanceNameFormat": "Deploy Azure SQL DACPAC: $(DacpacFile)",
   "loc.group.displayName.target": "Target",
   "loc.group.displayName.firewall": "Firewall",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
-  "loc.input.help.ConnectedServiceName": "Select the Azure subscription for the deployment. Supported Azure service connections are of the authentication type of Credentials or Service Principals.",
+  "loc.input.label.ConnectedServiceNameSelector": "Azure Connection Type",
+  "loc.input.label.ConnectedServiceName": "Azure Classic Subscription",
+  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deploying SQL Dacpac files",
+  "loc.input.label.ConnectedServiceNameARM": "Azure RM Subscription",
+  "loc.input.help.ConnectedServiceNameARM": "Azure Resource Manager subscription to target for deploying SQL Dacpac files",
   "loc.input.label.DacpacFile": "DACPAC File",
   "loc.input.help.DacpacFile": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can be also used here.",
   "loc.input.label.ServerName": "Azure SQL Server Name",
@@ -25,7 +25,7 @@
   "loc.input.label.AdditionalArguments": "Additional SqlPackage.exe Arguments",
   "loc.input.help.AdditionalArguments": "Additional SqlPackage.exe arguments that will be applied when creating or updating the Azure SQL Database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).​",
   "loc.input.label.IpDetectionMethod": "Specify Firewall Rules Using",
-  "loc.input.help.IpDetectionMethod": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Provide the IP Address range of the automation agents, or select to auto-detect the IP Address of the agent where this task will run.",
+  "loc.input.help.IpDetectionMethod": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Provide the IP Address range of the automation agents, or select to auto-detect in case of hosted automation agent.",
   "loc.input.label.StartIpAddress": "Start IP Address",
   "loc.input.help.StartIpAddress": "The starting IP Address of the automation agent machine pool like 196.21.30.50.",
   "loc.input.label.EndIpAddress": "End IP Address",

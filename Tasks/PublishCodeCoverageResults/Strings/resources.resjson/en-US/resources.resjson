@@ -1,10 +1,7 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Publish Code Coverage Results",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish code coverage results to VSO/TFS",
+  "loc.description": "Publish code coverage results to VSTS/TFS",
   "loc.instanceNameFormat": "Publish Code Coverage Results $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code Coverage Tool",
   "loc.input.help.codeCoverageTool": "Select the tool with which code coverage summary files have been generated",

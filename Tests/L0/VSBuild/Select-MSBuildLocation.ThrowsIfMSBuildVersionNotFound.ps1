@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-MSBuildLocation_PS3.ps1
+. $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-MSBuildLocation.ps1
 Register-Mock Get-MSBuildPath
     
 # Act/Assert.

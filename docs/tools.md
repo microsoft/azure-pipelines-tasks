@@ -148,4 +148,3 @@ TODO: flush out how our images run the installers and/or discovery scripts
 TODO: Writing up how to make capabilities extensibile rather than being a hard coded set in the agent (busted).
 
 
-

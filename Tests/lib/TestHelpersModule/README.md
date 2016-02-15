@@ -51,7 +51,7 @@ Parameters:
 
 Examples:
 
-```
+```PowerShell
 Register-Mock Get-Foo
 Register-Mock Get-Foo { 'Some return value' }
 Register-Mock Get-Foo { 'Some return value' } -- -SomeParameter 'Some parameter value'
@@ -65,9 +65,9 @@ Parameters:
  * [scriptblock]$ParametersEvaluator (exposes parameters as variables for complex matching logic)
 
 Examples:
-```
-Register-Mock Get-Foo { 'Some return value' } -ParametersEvaluator { $SomeParameter -like *SomeValue* }
-Register-Mock Get-Foo -ParametersEvaluator { $SomeParameter -like *SomeValue* }
+```PowerShell
+Register-Mock Get-Foo { 'Some return value' } -ParametersEvaluator { $SomeParameter -like '*SomeValue*' }
+Register-Mock Get-Foo -ParametersEvaluator { $SomeParameter -like '*SomeValue*' }
 ```
 
 ### Using an Arguments Evaluator
@@ -77,9 +77,9 @@ Parameters:
  * [scriptblock]$ArgumentsEvaluator (exposes args as a variable for complex matching logic)
 
 Examples:
-```
-Register-Mock Get-Foo { 'return val' } -ArgumentsEvaluator { $args.count -eq 1 -and $args[0] -like *SomeValue* }
-Register-Mock Get-Foo -ArgumentsEvaluator { $args.count -eq 1 -and $args[0] -like *SomeValue* }
+```PowerShell
+Register-Mock Get-Foo { 'return val' } -ArgumentsEvaluator { $args.count -eq 1 -and $args[0] -like '*SomeValue*' }
+Register-Mock Get-Foo -ArgumentsEvaluator { $args.count -eq 1 -and $args[0] -like '*SomeValue*' }
 ```
 
 ## Assert-WasCalled
@@ -92,7 +92,7 @@ Parameters:
 
 Examples:
 
-```
+```PowerShell
 Assert-WasCalled Get-Foo -Times 0
 Assert-WasCalled Get-Foo -- -SomeParameter 'Some parameter value'
 Assert-WasCalled Get-Foo -- -SomeSwitch: $true
@@ -106,8 +106,8 @@ Parameters:
  * [scriptblock]$ParametersEvaluator (exposes parameters as variables for complex matching logic)
 
 Examples:
-```
-Assert-WasCalled Get-Foo -ParametersEvaluator { $SomeParameter -like *SomeValue* }
+```PowerShell
+Assert-WasCalled Get-Foo -ParametersEvaluator { $SomeParameter -like '*SomeValue*' }
 ```
 
 ### Using an Arguments Evaluator
@@ -117,8 +117,8 @@ Parameters:
  * [scriptblock]$ArgumentsEvaluator (exposes args as a variable for complex matching logic)
 
 Examples:
-```
-Assert-WasCalled Get-Foo -ArgumentsEvaluator { $args.count -eq 1 -and $args[0] -like *SomeValue* }
+```PowerShell
+Assert-WasCalled Get-Foo -ArgumentsEvaluator { $args.count -eq 1 -and $args[0] -like '*SomeValue*' }
 ```
 
 ## Unregister-Mock

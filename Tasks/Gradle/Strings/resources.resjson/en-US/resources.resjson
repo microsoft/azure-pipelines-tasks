@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Gradle",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
@@ -15,8 +12,8 @@
   "loc.input.label.tasks": "Tasks",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Working directory to run Gradle build in. Defaults to repository root.",
-  "loc.input.label.publishJUnitResults": "Publish to VSO/TFS",
-  "loc.input.help.publishJUnitResults": "Select this option to publish JUnit Test results produced by the Gradle build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS.",
+  "loc.input.label.publishJUnitResults": "Publish to VSTS/TFS",
+  "loc.input.help.publishJUnitResults": "Select this option to publish JUnit Test results produced by the Gradle build to VSTS/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS/TFS.",
   "loc.input.label.testResultsFiles": "Test Results Files",
   "loc.input.help.testResultsFiles": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
   "loc.input.label.testRunTitle": "Test Run Title",

@@ -23,6 +23,8 @@ Write-Verbose "dbConnectionString = $dbUrl"
 Write-Verbose "breakBuild = $breakBuild"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+
 . ./SonarQubeHelper.ps1
 . ./SonarQubePreBuildImpl.ps1
 

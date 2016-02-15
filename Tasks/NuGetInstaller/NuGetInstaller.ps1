@@ -60,7 +60,9 @@ if($b_noCache)
     $args = (" -NoCache " + $args);
 }
 
-if(!$nuGetPath)
+$useBuiltinNuGetExe = !$nuGetPath
+
+if($useBuiltinNuGetExe)
 {
     $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
 }
@@ -101,17 +103,35 @@ if($nugetConfigPath -and ($nugetConfigPath -ne $env:Build_SourcesDirectory))
     SetCredentialsNuGetConfigAndSaveTemp $nugetConfig $accessToken
 }
 
-if ($env:NUGET_EXTENSIONS_PATH)
+$initialNuGetExtensionsPath = $env:NUGET_EXTENSIONS_PATH
+try
 {
-    Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
-}
-
-foreach($sf in $solutionFiles)
-{
-    if($nuGetPath)
+    if ($env:NUGET_EXTENSIONS_PATH)
     {
-        $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
-        Write-Verbose "Running nuget package restore for $slnFolder"
-        Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" $args" -WorkingFolder $slnFolder
+        if($useBuiltinNuGetExe)
+        {
+            # NuGet.exe extensions only work with a single specific version of nuget.exe. This causes problems
+            # whenever we update nuget.exe on the agent.
+            $env:NUGET_EXTENSIONS_PATH = $null
+            Write-Warning (Get-LocalizedString -Key "The NUGET_EXTENSIONS_PATH environment variable is set, but nuget.exe extensions are not supported when using the built-in NuGet implementation.")   
+        }
+        else
+        {
+            Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
+        }
     }
+
+    foreach($sf in $solutionFiles)
+    {
+        if($nuGetPath)
+        {
+            $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
+            Write-Verbose "Running nuget package restore for $slnFolder"
+            Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" $args" -WorkingFolder $slnFolder
+        }
+    }
+}
+finally
+{
+    $env:NUGET_EXTENSIONS_PATH = $initialNuGetExtensionsPath
 }

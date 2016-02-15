@@ -26,9 +26,8 @@ foreach ($clean in @($true, $false)) {
                 'Clean' = $clean.ToString()
                 'RestoreNuGetPackages' = $restoreNuGetPackages.ToString()
                 'LogProjectEvents' = $logProjectEvents.ToString()
-                'OmitDotSource' = 'true'
             }
-            $output = & $PSScriptRoot\..\..\..\Tasks\VSBuild\VSBuild.ps1 @splat
+            $output = & $PSScriptRoot\..\..\..\Tasks\VSBuild\LegacyVSBuild.ps1 @splat -NoSuchParam ParamValue -NoSuchSwitch
 
             # Assert.
             Assert-AreEqual 'Some build output' $output

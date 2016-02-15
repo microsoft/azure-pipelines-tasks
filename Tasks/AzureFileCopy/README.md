@@ -30,7 +30,7 @@ For Azure MSDN accounts, in addition to the certificates and the Service Princip
 
 **Azure PowerShell**
 
-The task needs the Azure PowerShell version 0.9.8.1 (released on 13th Oct 2015) or a later version to be installed on the automation agent, and that can be done easily using the [Web Platform Installer](https://www.microsoft.com/web/downloads/platform.aspx).
+The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
 
 **Azure Virtual Machines**
 
@@ -96,6 +96,8 @@ The parameters of the task are described in details, including examples, to show
  
  * **Storage Container SasToken**: When copying files to an Azure container, if you want the task to create and return a SasToken for the container, provide the name of the output variable you would like to use.  By default, this token expires after 4 hours.
 
+* **Enable Copy Prerequisites**: Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs.
+
 ### Known Limitations :
 
 If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
@@ -105,5 +107,8 @@ If resource group contains both [resource manager](https://azure.microsoft.com/e
 If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/vso-agent-tasks/tree/releases/m90/Tasks/AzureFileCopy/. 
 
 ### Supported Azure and AzureRM module versions:
-* Azure module version: [0.9.10](http://www.powershellgallery.com/packages/Azure/0.9.10)
-* AzureRM module version: [1.0.0](http://www.powershellgallery.com/packages/AzureRM/1.0.0)
+Recommended: 
+[Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)
+
+Other supported versions:
+[Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)

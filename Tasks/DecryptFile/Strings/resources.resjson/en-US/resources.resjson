@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Decrypt File (OpenSSL)",
   "loc.description": "A thin utility task for file decryption using OpenSSL.",

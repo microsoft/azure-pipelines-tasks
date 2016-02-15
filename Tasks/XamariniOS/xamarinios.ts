@@ -50,7 +50,7 @@ var onFailedExecution = function (err) {
 // Restore NuGet packages of the solution
 var nugetRunner = tl.createToolRunner(nugetPath);
 nugetRunner.arg('restore');
-nugetRunner.arg(solutionPath);
+nugetRunner.pathArg(solutionPath);
 nugetRunner.exec()
 .then(function (code) {
 
@@ -59,7 +59,7 @@ nugetRunner.exec()
     mdtoolRunner.arg('--verbose');
     mdtoolRunner.arg('build');
     mdtoolRunner.arg('--configuration:\"' + configuration + '|' + device + '\"');
-    mdtoolRunner.arg(solutionPath);
+    mdtoolRunner.pathArg(solutionPath);
 
     // Execute build
     mdtoolRunner.exec()

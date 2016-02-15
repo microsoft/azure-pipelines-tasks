@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\MSBuild\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\MSBuild\LegacyHelpers.ps1
 $env:NUGET_EXTENSIONS_PATH = $null
 $directory1 = 'Some drive:\Some directory 1'
 $directory2 = 'Some drive:\Some directory 2'

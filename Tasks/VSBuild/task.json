@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 23
     },
     "demands": [
         "msbuild",
@@ -68,8 +68,10 @@
             "name": "restoreNugetPackages",
             "type": "boolean",
             "label": "Restore NuGet Packages",
-            "defaultValue": "true",
-            "required": false
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build."
         },
         {
             "name": "vsVersion",
@@ -110,10 +112,10 @@
     "instanceNameFormat": "Build solution $(solution)",
     "execution": {
         "PowerShell3": {
-            "target": "VSBuild_PS3.ps1"
+            "target": "VSBuild.ps1"
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\VSBuild.ps1",
+            "target": "$(currentDirectory)\\LegacyVSBuild.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }

@@ -6,9 +6,9 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
     "visibility": [
-                "Build",
-                "Release"
-                  ],
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "demands": [
         "maven"
@@ -16,9 +16,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 30
+        "Patch": 34
     },
-   "minimumAgentVersion": "1.89.0",
+    "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
@@ -43,37 +43,37 @@
         }
     ],
     "inputs": [
-        { 
-            "name": "mavenPOMFile", 
-            "type": "filePath", 
-            "label": "Maven POM file", 
-            "defaultValue": "", 
+        {
+            "name": "mavenPOMFile",
+            "type": "filePath",
+            "label": "Maven POM file",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Relative path from the repo root to the `Maven POM file`."
         },
-        { 
-            "name": "options", 
-            "type": "string", 
-            "label": "Options", 
-             "defaultValue": "", 
-             "required": false
+        {
+            "name": "options",
+            "type": "string",
+            "label": "Options",
+            "defaultValue": "",
+            "required": false
         },
-        { 
+        {
             "name": "goals",
-            "type": "string", 
-            "label": "Goal(s)", 
-            "defaultValue": "package", 
-            "required": false 
-        },        
+            "type": "string",
+            "label": "Goal(s)",
+            "defaultValue": "package",
+            "required": false
+        },
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to VSO/TFS",
+            "label": "Publish to VSTS/TFS",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit Test results produced by the Maven build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
-        }, 
+            "helpMarkDown": "Select this option to publish JUnit Test results produced by the Maven build to VSTS/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS/TFS."
+        },
         {
             "name": "testResultsFiles",
             "type": "filePath",
@@ -90,10 +90,10 @@
             "label": "Test Run Title",
             "defaultValue": "",
             "required": false,
-            "groupName":"junitTestResults",
+            "groupName": "junitTestResults",
             "helpMarkDown": "Provide a name for the Test Run.",
             "visibleRule": "publishJUnitResults = true"
-        },  
+        },
         {
             "name": "codeCoverageTool",
             "type": "pickList",
@@ -117,7 +117,7 @@
             "groupName": "codeCoverage",
             "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example: `+:com.*`,`+:org.*`,`-:my.app*.*`.",
             "visibleRule": "codeCoverageTool != None"
-        }, 
+        },
         {
             "name": "classFilesDirectories",
             "type": "string",
@@ -125,8 +125,8 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify comma seperated list of relative paths from Maven POM file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. For example: target/classes,target/testClasses.",
-	    "visibleRule": "codeCoverageTool = JaCoCo"
-        },	
+            "visibleRule": "codeCoverageTool = JaCoCo"
+        },
         {
             "name": "srcDirectories",
             "type": "string",
@@ -135,30 +135,30 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "This field is required for a multi module project. Code coverage reports are created using ANT task. Specify comma seperated list of relative paths from Maven POM file to source directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.",
-	    "visibleRule": "codeCoverageTool = JaCoCo"
+            "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
-            "name":"javaHomeSelection",
-            "type":"radio",
-            "label":"Set JAVA_HOME by",
-            "required":true,
-            "groupName":"advanced",
-            "defaultValue":"JDKVersion",
+            "name": "javaHomeSelection",
+            "type": "radio",
+            "label": "Set JAVA_HOME by",
+            "required": true,
+            "groupName": "advanced",
+            "defaultValue": "JDKVersion",
             "helpMarkDown": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
             "options": {
-                "JDKVersion":"JDK Version",
-                "Path":"Path"
+                "JDKVersion": "JDK Version",
+                "Path": "Path"
             }
-        },     
+        },
         {
-            "name":"jdkVersion",
-            "type":"pickList",
-            "label":"JDK Version",
-            "required":false,
-            "groupName":"advanced",
-            "defaultValue":"default",
+            "name": "jdkVersion",
+            "type": "pickList",
+            "label": "JDK Version",
+            "required": false,
+            "groupName": "advanced",
+            "defaultValue": "default",
             "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
-            "visibleRule":"javaHomeSelection = JDKVersion",
+            "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
                 "1.8": "JDK 8",
@@ -166,61 +166,61 @@
                 "1.6": "JDK 6"
             }
         },
-        { 
-            "name":"jdkUserInputPath",
-            "type":"string",
-            "label":"JDK Path",
-            "required":true,
-            "groupName":"advanced",
-            "defaultValue":"",
+        {
+            "name": "jdkUserInputPath",
+            "type": "string",
+            "label": "JDK Path",
+            "required": true,
+            "groupName": "advanced",
+            "defaultValue": "",
             "helpMarkDown": "Sets JAVA_HOME to the given path.",
-            "visibleRule":"javaHomeSelection = Path"
+            "visibleRule": "javaHomeSelection = Path"
         },
         {
-          "name": "jdkArchitecture",
-          "type": "pickList",
-          "label": "JDK Architecture",
-          "defaultValue": "x86",
-          "required": false,
-          "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
-          "groupName": "advanced",
-          "options": {
-            "x86": "x86",
-            "x64": "x64"
-          }
+            "name": "jdkArchitecture",
+            "type": "pickList",
+            "label": "JDK Architecture",
+            "defaultValue": "x86",
+            "required": false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
+            }
         },
         {
-          "name": "mavenVersionSelection",
-          "type": "radio",
-          "label": "Maven Version",
-          "defaultValue": "Default",
-          "required": true,
-          "groupName": "advanced",
-          "helpMarkDown": "Uses either the default Maven version or the version in the specified custom path.",
-          "options": {
-            "Default": "Default",
-            "Path": "Custom Path"
-          }
+            "name": "mavenVersionSelection",
+            "type": "radio",
+            "label": "Maven Version",
+            "defaultValue": "Default",
+            "required": true,
+            "groupName": "advanced",
+            "helpMarkDown": "Uses either the default Maven version or the version in the specified custom path.",
+            "options": {
+                "Default": "Default",
+                "Path": "Custom Path"
+            }
         },
         {
-          "name": "mavenPath",
-          "type": "string",
-          "label": "Maven Path",
-          "required": true,
-          "groupName": "advanced",
-          "defaultValue": "",
-          "helpMarkDown": "Supply the custom path to the Maven installation (e.g., /usr/share/maven).",
-          "visibleRule": "mavenVersionSelection = Path"
+            "name": "mavenPath",
+            "type": "string",
+            "label": "Maven Path",
+            "required": true,
+            "groupName": "advanced",
+            "defaultValue": "",
+            "helpMarkDown": "Supply the custom path to the Maven installation (e.g., /usr/share/maven).",
+            "visibleRule": "mavenVersionSelection = Path"
         },
         {
-          "name": "mavenSetM2Home",
-          "type": "boolean",
-          "label": "Set M2_HOME variable",
-          "required": true,
-          "defaultValue": "false",
-          "groupName": "advanced",
-          "helpMarkDown": "Set M2_HOME variable to custom Maven installation path.",
-          "visibleRule": "mavenVersionSelection = Path"
+            "name": "mavenSetM2Home",
+            "type": "boolean",
+            "label": "Set M2_HOME variable",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "helpMarkDown": "Set M2_HOME variable to custom Maven installation path.",
+            "visibleRule": "mavenVersionSelection = Path"
         },
         {
             "name": "sqAnalysisEnabled",
@@ -287,7 +287,9 @@
             "target": "$(currentDirectory)\\maven.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)",
-            "platforms" : ["windows"]
+            "platforms": [
+                "windows"
+            ]
         }
     }
 }

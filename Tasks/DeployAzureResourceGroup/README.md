@@ -25,7 +25,7 @@ For Azure MSDN accounts, one can either use a [Service Principal](http://go.micr
 
 ##### Azure PowerShell
 
-The task needs the Azure PowerShell version 0.9.0 or later to be installed on the automation agent, and that can be done easily using the [Web Platform Installer](https://www.microsoft.com/web/downloads/platform.aspx). Ensure that the Azure PowerShell is installed in the default PSModulePath, that is "C:\Program Files\WindowsPowerShell\Modules" for Azure PowerShell version 1.0.0 or later and in "C:\Program Files\Microsoft SDKs\Azure\PowerShell" for other Azure PowerShell versions.
+The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
 
 ### Parameters of the task:
 
@@ -55,6 +55,7 @@ The following parameters are shown when the selected action is to create or upda
 | Azure DNS Name       | 3-63   | lowercase        | alphanumeric and hyphens                                                              | Yes             |
 
  * **Override Template Parameters**: The Override template parameters is used to override the parameters, like -storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre). To override a secure string like Password please use following format: -Password (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force).
+ * **Enable Deployment Prerequisites**: Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986).
 
 ### Output variables:
  Create/update action of the Azure Resource Group task now produces an output variable during execution. The output variable can be used to refer to the resource group object in the subsequent tasks. For example "PowerShell on Target Machine" task can now refer to resource group output variable as '$(variableName)' so that it can execute the powershell script on the resource group VM targets. 
@@ -67,6 +68,9 @@ The following parameters are shown when the selected action is to create or upda
 Tasks like Azure File Copy, PowerShell on Target Machines, Visual Studio Test Agent Deployment run on the automation agent machine and copy files or deploy apps to Azure VMs using the WinRM HTTPS protocol. For these tasks to work properly, the WinRM HTTPS port (default port is 5986) needs to be opened and configured properly on the virtual machines. Opening the ports and configuring them with the certificates is done using the Azure templates. The [sample template](http://aka.ms/sampletemplate) uploaded on GitHub shows how to enable the WinRM HTTPS protocol on Azure virtual machines and map them to a Public IP using the Azure resource providers' wiz. Network Interfaces, Load Balancers and Virtual Machines. In addition, it also shows how to specify the Azure Key Vault and its secret, and to download and install the certificate on the virtual machine.
 
 ### Supported Azure and AzureRM module versions:
- Azure module version: [0.9.10](http://www.powershellgallery.com/packages/Azure/0.9.10)
- AzureRM module version: [1.0.0](http://www.powershellgallery.com/packages/AzureRM/1.0.0)
+Recommended: 
+[Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)
+
+Other supported versions:
+[Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)
  

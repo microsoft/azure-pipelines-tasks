@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
   "name": "RunVisualStudioTestsusingTestAgent",
@@ -16,10 +13,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 26
   },
   "demands": [],
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "setupOptions",
@@ -37,7 +34,7 @@
       "tags": [
         "Preview"
       ],
-      "isExpanded": false
+      "isExpanded": true
     },
     {
       "name": "reportingOptions",
@@ -48,7 +45,7 @@
   "inputs": [
     {
       "name": "testMachineGroup",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
@@ -147,7 +144,7 @@
     },
     {
       "name": "autMachineGroup",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.autMachineGroup",
       "defaultValue": "",
       "required": false,
@@ -237,21 +234,21 @@
       "endpoint": "/$(system.teamProject)/_apis/test/plans",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs"
+      "authKey": "tfs:teamfoundation"
     },
     {
       "target": "testConfiguration",
       "endpoint": "/$(system.teamProject)/_apis/test/configurations",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs"
+      "authKey": "tfs:teamfoundation"
     },
     {
       "target": "testSuite",
       "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs"
+      "authKey": "tfs:teamfoundation"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

@@ -59,7 +59,7 @@ function Invoke-BuildTools {
         [switch]$Clean,
         [switch]$NoTimelineLogger
     )
-
+    
     $nugetPath = Get-ToolPath -Name 'NuGet.exe'
     if (-not $nugetPath -and $NuGetRestore) {
         Write-Warning (Get-LocalizedString -Key "Unable to locate {0}. Package restore will not be performed for the solutions" -ArgumentList 'nuget.exe')
@@ -67,6 +67,8 @@ function Invoke-BuildTools {
 
     foreach ($file in $SolutionFiles) {
         if ($nugetPath -and $NuGetRestore) {
+            Write-Warning (Get-LocalizedString -Key "The `"Restore NuGet Packages`" option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.")
+
             if ($env:NUGET_EXTENSIONS_PATH) {
                 Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
             }

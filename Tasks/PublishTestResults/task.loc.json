@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
   "name": "PublishTestResults",
@@ -16,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 20
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",

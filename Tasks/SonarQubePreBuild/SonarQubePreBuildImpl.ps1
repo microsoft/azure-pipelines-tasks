@@ -102,7 +102,7 @@ function CreateCommandLineArgs
             throw "Could not find the specified configuration file: $configFile" 
         }
 
-        [void]$sb.Append(" /s:" + (EscapeArg($configFileParam))) 
+        [void]$sb.Append(" /s:" + (EscapeArg($configFile))) 
     }
 
     return $sb.ToString();

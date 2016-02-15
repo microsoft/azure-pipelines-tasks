@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\MSBuild\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\MSBuild\LegacyHelpers.ps1
 $method = ''
 $location = 'some location'
 $version = 'some version'

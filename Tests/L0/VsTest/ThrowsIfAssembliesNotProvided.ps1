@@ -4,7 +4,6 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 Register-Mock Get-LocalizedString { $OFS = " " ; "$args" }
-Register-Mock 
 
 # Act/Assert.
 Assert-Throws {             

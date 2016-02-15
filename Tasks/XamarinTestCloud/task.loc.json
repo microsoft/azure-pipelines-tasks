@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "049918CB-1488-48EB-85E8-C318ECCAAA74",
   "name": "XamarinTestCloud",
@@ -16,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 12
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",

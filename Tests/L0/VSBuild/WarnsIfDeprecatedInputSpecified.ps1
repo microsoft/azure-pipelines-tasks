@@ -23,7 +23,7 @@ Register-Mock Invoke-BuildTools { 'Some build output' }
 Register-Mock Write-Warning
 
 # Act.
-$output = & $PSScriptRoot\..\..\..\Tasks\VSBuild\VSBuild_PS3.ps1
+$output = & $PSScriptRoot\..\..\..\Tasks\VSBuild\VSBuild.ps1
 
 # Assert.
 Assert-AreEqual 'Some build output' $output

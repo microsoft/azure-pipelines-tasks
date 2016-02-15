@@ -183,7 +183,7 @@ function Invoke-MSBuild {
             $MSBuildPath = Get-MSBuildPath
         } else {
             $MSBuildPath = [System.Environment]::ExpandEnvironmentVariables($MSBuildPath)
-            if (!$MSBuildPath -like '*msbuild.exe') {
+            if ($MSBuildPath -notlike '*msbuild.exe') {
                 $MSBuildPath = [System.IO.Path]::Combine($MSBuildPath, 'msbuild.exe')
             }
         }
@@ -300,6 +300,8 @@ function Invoke-NuGetRestore {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
+        Write-Warning (Get-VstsLocString -Key MSB_RestoreNuGetPackagesDeprecated)
+
         $nugetPath = Assert-VstsPath -LiteralPath "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\NuGet.exe" -PathType Leaf -PassThru
         if ($env:NUGET_EXTENSIONS_PATH) {
             Write-Host (Get-VstsLocString -Key MSB_DetectedNuGetExtensionsLoaderPath0 -ArgumentList $env:NUGET_EXTENSIONS_PATH)

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "MSBuild",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
@@ -16,7 +13,7 @@
   "loc.input.label.clean": "Clean",
   "loc.input.help.clean": "Run a clean build (/t:clean) prior to the build.",
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
-  "loc.input.help.restoreNugetPackages": "Run NuGet restore prior to the build.",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.logProjectEvents": "Record Project Details",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild Version",
@@ -24,5 +21,7 @@
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
   "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildLocation": "Path to MSBuild",
-  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild."
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild.",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
 }

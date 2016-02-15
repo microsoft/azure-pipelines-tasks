@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-VSVersion_PS3.ps1
+. $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-VSVersion.ps1
 Register-Mock Write-Warning
 Register-Mock Get-VSPath
 

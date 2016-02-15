@@ -6,57 +6,57 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],    
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 26
     },
-    "demands" : [
+    "demands": [
         "java"
     ],
     "minimumAgentVersion": "1.91.0",
     "groups": [
         {
-            "name":"junitTestResults",
-            "displayName":"JUnit Test Results",
-            "isExpanded":true
+            "name": "junitTestResults",
+            "displayName": "JUnit Test Results",
+            "isExpanded": true
         },
         {
             "name": "codeCoverage",
             "displayName": "Code Coverage",
-            "isExpanded":true
+            "isExpanded": true
         },
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
-        { 
-            "name": "wrapperScript", 
-            "type": "filePath", 
-            "label": "Gradle Wrapper", 
-            "defaultValue": "gradlew", 
+        {
+            "name": "wrapperScript",
+            "type": "filePath",
+            "label": "Gradle Wrapper",
+            "defaultValue": "gradlew",
             "required": true,
             "helpMarkDown": "Relative path from the repository root to the `Gradle Wrapper script`."
         },
-        { 
-            "name": "options", 
-            "type": "string", 
-             "label": "Options", 
-             "defaultValue": "", 
-             "required": false 
+        {
+            "name": "options",
+            "type": "string",
+            "label": "Options",
+            "defaultValue": "",
+            "required": false
         },
-        { 
-            "name": "tasks", 
-            "type": "string", 
-            "label": "Tasks", 
-            "defaultValue": "build", 
-            "required": true  
+        {
+            "name": "tasks",
+            "type": "string",
+            "label": "Tasks",
+            "defaultValue": "build",
+            "required": true
         },
         {
             "name": "cwd",
@@ -68,21 +68,21 @@
             "groupName": "advanced"
         },
         {
-            "name":"publishJUnitResults",
-            "type":"boolean",
-            "label":"Publish to VSO/TFS",
-            "required":true,
-            "defaultValue":"true",
-            "groupName":"junitTestResults",
-            "helpMarkDown":"Select this option to publish JUnit Test results produced by the Gradle build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
-        }, 
+            "name": "publishJUnitResults",
+            "type": "boolean",
+            "label": "Publish to VSTS/TFS",
+            "required": true,
+            "defaultValue": "true",
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Select this option to publish JUnit Test results produced by the Gradle build to VSTS/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS/TFS."
+        },
         {
             "name": "testResultsFiles",
             "type": "filePath",
             "label": "Test Results Files",
             "defaultValue": "**/build/test-results/TEST-*.xml",
             "required": true,
-            "groupName":"junitTestResults",
+            "groupName": "junitTestResults",
             "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
             "visibleRule": "publishJUnitResults = true"
         },
@@ -92,11 +92,11 @@
             "label": "Test Run Title",
             "defaultValue": "",
             "required": false,
-            "groupName":"junitTestResults",
+            "groupName": "junitTestResults",
             "helpMarkDown": "Provide a name for the Test Run.",
             "visibleRule": "publishJUnitResults = true"
         },
-	   {
+        {
             "name": "codeCoverageTool",
             "type": "pickList",
             "label": "CodeCoverage Tool",
@@ -131,55 +131,55 @@
             "visibleRule": "codeCoverageTool != None"
         },
         {
-            "name":"javaHomeSelection",
-            "type":"radio",
-            "label":"Set JAVA_HOME by",
-            "required":true,
-            "groupName":"advanced",
-            "defaultValue":"JDKVersion",
+            "name": "javaHomeSelection",
+            "type": "radio",
+            "label": "Set JAVA_HOME by",
+            "required": true,
+            "groupName": "advanced",
+            "defaultValue": "JDKVersion",
             "helpMarkDown": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
             "options": {
-                "JDKVersion":"JDK Version",
-                "Path":"Path"
+                "JDKVersion": "JDK Version",
+                "Path": "Path"
             }
-        }, 
+        },
         {
-            "name":"jdkVersion",
-            "type":"pickList",
-            "label":"JDK Version",
-            "required":false,
-            "groupName":"advanced",
-            "defaultValue":"default",
+            "name": "jdkVersion",
+            "type": "pickList",
+            "label": "JDK Version",
+            "required": false,
+            "groupName": "advanced",
+            "defaultValue": "default",
             "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
-            "visibleRule":"javaHomeSelection = JDKVersion",
+            "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
-                "default":"default",
-                "1.8":"JDK 8",
-                "1.7":"JDK 7",
-                "1.6":"JDK 6"
+                "default": "default",
+                "1.8": "JDK 8",
+                "1.7": "JDK 7",
+                "1.6": "JDK 6"
             }
         },
         {
-            "name":"jdkUserInputPath",
-            "type":"string",
-            "label":"JDK Path",
-            "required":true,
-            "groupName":"advanced",
-            "defaultValue":"",
+            "name": "jdkUserInputPath",
+            "type": "string",
+            "label": "JDK Path",
+            "required": true,
+            "groupName": "advanced",
+            "defaultValue": "",
             "helpMarkDown": "Sets JAVA_HOME to the given path.",
-            "visibleRule":"javaHomeSelection = Path"
+            "visibleRule": "javaHomeSelection = Path"
         },
-        { 
-            "name": "jdkArchitecture", 
-            "type": "pickList", 
-            "label": "JDK Architecture", 
-            "defaultValue":"x86", 
-            "required":false,
+        {
+            "name": "jdkArchitecture",
+            "type": "pickList",
+            "label": "JDK Architecture",
+            "defaultValue": "x86",
+            "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
-            "groupName":"advanced",
-            "options":{
-                "x86":"x86",
-                "x64":"x64"
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
             }
         }
     ],
@@ -189,7 +189,9 @@
             "target": "$(currentDirectory)\\gradle.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)",
-            "platforms" : ["windows"]
+            "platforms": [
+                "windows"
+            ]
         },
         "Node": {
             "target": "gradletask.js",

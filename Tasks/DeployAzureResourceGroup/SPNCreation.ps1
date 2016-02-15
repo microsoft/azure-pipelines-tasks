@@ -14,20 +14,21 @@ param
 $ErrorActionPreference = "Stop"
 $VerbosePreference = "SilentlyContinue"
 $userName = $env:USERNAME
-$newguid = New-Guid
-$displayName = "VSO." + $userName + '.' + $subscriptionName + '.' + $newguid
+$newguid = [guid]::NewGuid()
+$displayName = [String]::Format("VSO.{0}.{1}.{2}", $userName, $subscriptionName.Replace(' ', ''), $newguid)
 $homePage = "http://" + $displayName
 $identifierUri = $homePage
 
 
 #Initialize subscription
-$isAzureModulePresent = Get-Module -Name AzureRM -ListAvailable
+$isAzureModulePresent = Get-Module -Name AzureRM* -ListAvailable
 if ([String]::IsNullOrEmpty($isAzureModulePresent) -eq $true)
 {
-    Write-Output "Script requires AzureRM module to be present. Obtain AzureRM from https://www.powershellgallery.com/packages/AzureRM/" -Verbose
+    Write-Output "Script requires AzureRM modules to be present. Obtain AzureRM from https://github.com/Azure/azure-powershell/releases. Please refer https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md for recommended AzureRM versions." -Verbose
     return
 }
-Import-Module -Name AzureRM
+
+Import-Module -Name AzureRM.Profile
 Write-Output "Provide your credentials to access Azure subscription $subscriptionName" -Verbose
 Login-AzureRmAccount -SubscriptionName $subscriptionName
 $azureSubscription = Get-AzureRmSubscription -SubscriptionName $subscriptionName

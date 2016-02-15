@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
   "name": "SqlAzureDacpacDeployment",
@@ -9,7 +6,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -17,13 +13,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 9
   },
   "demands": [
     "azureps",
     "sqlpackage"
   ],
-  "minimumAgentVersion": "1.87.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "target",
@@ -38,12 +34,34 @@
   ],
   "inputs": [
     {
+      "name": "ConnectedServiceNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "ConnectedServiceName",
+      "options": {
+        "ConnectedServiceName": "Azure Classic",
+        "ConnectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
       "name": "ConnectedServiceName",
-      "type": "connectedService:Azure:Certificate,UsernamePassword",
+      "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
       "name": "DacpacFile",
