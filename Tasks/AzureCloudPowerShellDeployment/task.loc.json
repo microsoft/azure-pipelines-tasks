@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 19
+    "Patch": 20
   },
   "demands": [
     "azureps"
@@ -136,14 +136,6 @@
       }
     }
   ],
-  "sourceDefinitions": [
-    {
-      "target": "StorageAccount",
-      "endpoint": "https://management.core.windows.net/$(authKey.SubscriptionId)/services/storageservices",
-      "selector": "xpath://ServiceName",
-      "authKey": "$(ConnectedServiceName)"
-    }
-  ],
   "dataSourceBindings": [
     {
       "target": "ServiceName",
@@ -159,6 +151,11 @@
       "target": "NewServiceAffinityGroup",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureAffinityGroups"
+    },
+    {
+      "target": "StorageAccount",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageServiceNames"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
