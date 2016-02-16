@@ -278,7 +278,7 @@
       "resultTemplate": "{{#extractResource resourceGroups}}"
     }
   ],
-  "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
+  "instanceNameFormat": "$(Destination) File Copy",
   "execution": {
     "AzurePowerShell": {
       "target": "$(currentDirectory)\\AzureFileCopy.ps1",
