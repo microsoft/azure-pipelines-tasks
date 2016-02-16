@@ -8,7 +8,7 @@ import path = require('path');
 var shell = require('shelljs');
 var ps = shell.which('powershell');
 
-describe('Common-MSBuildHelpers Suite', function () {
+describe('Common-SonarQubeHelpers Suite', function () {
     this.timeout(20000);
 
     before((done) => {
