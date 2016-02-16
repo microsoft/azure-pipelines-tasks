@@ -13,7 +13,7 @@ Register-Mock Invoke-RestMethod # Hijack the PowerShell function used to make RE
 # Test case 1: unauthenticated users can make calls to the SQ server
 
 # Act - no credentials
-InvokeGetRestMethod "/api/test" $true         
+InvokeGetRestMethod -query "/api/test" -useAuth $true         
 
 # Assert
 Assert-WasCalled Invoke-RestMethod -ParametersEvaluator { 
@@ -31,7 +31,7 @@ Register-Mock Get-TaskVariable { 'pa$$word' } -- -Context $distributedTaskContex
 Register-Mock Invoke-RestMethod
 
 # Act
-InvokeGetRestMethod "/api/test" $true         
+InvokeGetRestMethod -query "/api/test" -useAuth $true               
 
 # Assert
 Assert-WasCalled Invoke-RestMethod -ParametersEvaluator { 
@@ -46,16 +46,18 @@ Unregister-Mock Invoke-RestMethod
 
 # Test case 3: authenticated users can make unauthenicated calls to the SQ server
 
+Register-Mock Get-TaskVariable { 'user' } -- -Context $distributedTaskContext -Name "MSBuild.SonarQube.ServerUsername"
+Register-Mock Get-TaskVariable { 'pa$$word' } -- -Context $distributedTaskContext -Name "MSBuild.SonarQube.ServerPassword"
 Register-Mock Invoke-RestMethod
 
 # Act 
-InvokeGetRestMethod "/api/test" $false         
+InvokeGetRestMethod -query "/api/test" -useAuth $false         
 
 # Assert
 Assert-WasCalled Invoke-RestMethod -ParametersEvaluator { 
                         $Uri -eq 'http://testsqserver:9999/api/test' -and
                         $Method -eq 'Get' -and
-                        $Headers -eq $null                        
+                        $Headers -eq $null  # No (auth) headers                 
                         }
 
 
