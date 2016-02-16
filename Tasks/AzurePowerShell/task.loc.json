@@ -13,10 +13,17 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "demands": [
     "azureps"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
   ],
   "minimumAgentVersion": "1.95.0",
   "inputs": [
@@ -65,14 +72,23 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    },
+    {
+      "name": "WorkingFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.WorkingFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.WorkingFolder",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
-      "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "target": "$(ScriptPath)",
+      "argumentFormat": "$(ScriptArguments)",
+      "workingDirectory": "$(WorkingFolder)"
     }
   }
 }
