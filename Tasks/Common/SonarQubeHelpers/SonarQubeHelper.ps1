@@ -149,8 +149,6 @@ function InvokeGetRestMethod
     $sonarQubeHostUrl = GetTaskContextVariable "MSBuild.SonarQube.HostUrl"     
     $sonarQubeHostUrl  = $sonarQubeHostUrl.TrimEnd("/");
 
-    Write-Verbose "sonarQubeHostUrl $sonarQubeHostUrl"
-
     Assert (![System.String]::IsNullOrWhiteSpace($sonarQubeHostUrl)) "Could not retrieve the SonarQube host url"
 
     $request = $sonarQubeHostUrl + $query;
