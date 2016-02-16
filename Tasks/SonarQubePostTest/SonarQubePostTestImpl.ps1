@@ -1,5 +1,3 @@
-. .\SonarQubeHelper.ps1
-
 function InvokeMSBuildRunnerPostTest
 {
 	$bootstrapperPath = GetBootsrapperPath

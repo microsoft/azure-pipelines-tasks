@@ -25,7 +25,7 @@ Write-Verbose "breakBuild = $breakBuild"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
-. ./SonarQubeHelper.ps1
+. ./Common/SonarQubeHelpers/SonarQubeHelper.ps1
 . ./SonarQubePreBuildImpl.ps1
 
 $serviceEndpoint = GetEndpointData $connectedServiceName
