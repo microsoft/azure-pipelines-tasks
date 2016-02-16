@@ -10,5 +10,17 @@
             "module": "MSBuildHelpers",
             "dest": "ps_modules"
         }
+    ],
+    "SonarQubePreBuild": [
+        {
+            "module": "SonarQubeHelpers",
+            "dest": "Common"
+        }
+    ],
+     "SonarQubePostTest": [
+        {
+            "module": "SonarQubeHelpers",
+            "dest": "Common"
+        }
     ]
 }
