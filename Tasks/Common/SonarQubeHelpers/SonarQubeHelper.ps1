@@ -145,23 +145,28 @@ function InvokeGetRestMethod
         [Parameter(Mandatory=$true)][string]$query, 
         [bool]$useAuth=$false)
 
-    
+                
     $sonarQubeHostUrl = GetTaskContextVariable "MSBuild.SonarQube.HostUrl"     
     $sonarQubeHostUrl  = $sonarQubeHostUrl.TrimEnd("/");
+
+    Write-Verbose "sonarQubeHostUrl $sonarQubeHostUrl"
 
     Assert (![System.String]::IsNullOrWhiteSpace($sonarQubeHostUrl)) "Could not retrieve the SonarQube host url"
 
     $request = $sonarQubeHostUrl + $query;
     
     if ($useAuth)
-    {
-      
+    {      
        $authHeader = CreateBasicAuthHeaderFromEndpoint
-       $allheaders = @{Authorization = $authHeader}   
+
+       if (![String]::IsNullOrWhiteSpace($authHeader))
+       {
+            $allheaders = @{Authorization = $authHeader}        
+       }
+       
     }  
 
-    $response = Invoke-RestMethod $request -Method Get -Headers $allheaders
-
+    $response = Invoke-RestMethod -Uri $request -Method Get -Headers $allheaders
 
     return $response
 }
