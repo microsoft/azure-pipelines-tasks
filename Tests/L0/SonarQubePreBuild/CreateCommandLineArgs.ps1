@@ -2,8 +2,8 @@
 param()
 
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\\SonarQubePreBuild\SonarQubeHelper.ps1
-. $PSScriptRoot\..\..\..\Tasks\\SonarQubePreBuild\SonarQubePreBuildImpl.ps1
+. $PSScriptRoot\..\..\..\Tasks\SonarQubePreBuild\Common\SonarQubeHelpers\SonarQubeHelper.ps1
+. $PSScriptRoot\..\..\..\Tasks\SonarQubePreBuild\SonarQubePreBuildImpl.ps1
 
 
 ## Test Case 1 - Minimum configuration 
