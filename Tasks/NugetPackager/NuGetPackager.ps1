@@ -61,7 +61,7 @@ if ($b_versionByBuild)
        1 {}
        default 
           { 
-             Write-Warning "Found more than instance of version data in BUILD_BUILDNUMBER." 
+             Write-Warning "Found more than one instance of version data in BUILD_BUILDNUMBER." 
              Write-Warning "Will assume first instance is version."
           }
     }
