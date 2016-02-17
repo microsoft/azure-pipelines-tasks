@@ -501,7 +501,7 @@ function Get-MachinesFqdnsForLB
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $publicIPAddressResources -and $networkInterfaceResources -and $frontEndIPConfigs)
     {
-        Write-Verbose "Trying to get FQDN for the RM azureVM resources from resource group: $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the RM azureVM resources under load balancer from resource group: $resourceGroupName" -Verbose
 
         #Map the public ip id to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -551,7 +551,7 @@ function Get-MachinesFqdnsForLB
         }
     }
 
-    Write-Verbose "Got FQDN for the RM azureVM resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName" -Verbose
 
     return $fqdnMap
 }
@@ -648,7 +648,7 @@ function Get-MachineNameFromId
     }
 }
 
-function Get-MachinesFqdns
+function Get-MachinesFqdnsForPublicIP
 {
     param([string]$resourceGroupName,
           [Object]$publicIPAddressResources,
@@ -658,7 +658,7 @@ function Get-MachinesFqdns
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName)-and $publicIPAddressResources -and $networkInterfaceResources)
     {
-        Write-Verbose "Trying to get FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
 
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -689,11 +689,9 @@ function Get-MachinesFqdns
                 }
             }
         }
-
-        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
     }
 
-    Write-Verbose "Got FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
 
     return $fqdnMap
 }
@@ -727,15 +725,16 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
                 $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -frontEndIPConfigs $frontEndIPConfigs -fqdnMap $fqdnMap
                 $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap -networkInterfaceResources $networkInterfaceResources -inboundRules $inboundRules
             }
-
-            $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
+			
             $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $false
         }
         else
         {
-            $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap
             $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
         }
+		
+        $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap
+        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
 
         foreach ($resource in $azureRMVMResources)
         {
