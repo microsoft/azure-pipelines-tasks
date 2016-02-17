@@ -703,7 +703,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
           [string]$enableDeploymentPrerequisites)
 
     [hashtable]$fqdnMap = @{}
-    [hashtable]$winRmHttpsPortMap = @{}
+    $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
     [hashtable]$vmResourcesDetails = @{}
 
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
@@ -727,10 +727,6 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             }
 			
             $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $false
-        }
-        else
-        {
-            $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
         }
 		
         $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap

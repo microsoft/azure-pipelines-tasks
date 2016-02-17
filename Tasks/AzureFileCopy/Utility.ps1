@@ -626,7 +626,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
           [string]$enableCopyPrerequisites)
 
     [hashtable]$fqdnMap = @{}
-    [hashtable]$winRMHttpsPortMap = @{}
+    $winRMHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
     [hashtable]$azureRMVMsDetails = @{}
 
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
@@ -650,10 +650,6 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             }
 			
             $winRMHttpsPortMap = Get-MachineNameFromId -Map $winRMHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $false
-        }
-        else
-        {
-            $winRMHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
         }
 		
         $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap
