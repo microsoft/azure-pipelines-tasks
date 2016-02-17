@@ -661,6 +661,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
         foreach ($resource in $azureRMVMResources)
         {
             $resourceName = $resource.Name
+            $resourceId = $resource.Id
             $resourceFQDN = $fqdnMap[$resourceName]
             $resourceWinRMHttpsPort = $winRMHttpsPortMap[$resourceName]
             if([string]::IsNullOrWhiteSpace($resourceWinRMHttpsPort))
@@ -679,7 +680,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             if ($enableCopyPrerequisites -eq "true")
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
-                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -vmId $resourceId -dnsName $resourceFQDN -location $resource.Location
             }
         }
 
@@ -847,7 +848,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         if ($status -ne "Passed")
         {
-            $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task. If set already, and the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
+            $winrmHelpMsg = Get-LocalizedString -Key "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task. If set already, and the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs."
             $copyErrorMessage =  $copyResponse.Error.Message + $winrmHelpMsg
             Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
 
@@ -1082,10 +1083,33 @@ function Is-WinRMCustomScriptExtensionExists
     $isExtensionExists
 }
 
+function Add-WinRMHttpsNetworkSecurityRuleConfig
+{
+    param([string]$resourceGroupName,
+          [string]$vmId,
+          [string]$ruleName,
+          [string]$rulePriotity,
+          [string]$winrmHttpsPort)
+    
+    Write-Verbose -Verbose "Trying to add a network security group rule"
+
+    $securityGroup = Get-NetworkSecurityGroup -resourceGroupName $resourceGroupName -vmId $vmId
+
+    if($securityGroup)
+    {
+        Add-NetworkSecurityRuleConfig -securityGroup $securityGroup -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+    }
+    else
+    {
+        Write-Verbose -Verbose "Skipping the addition of network security rule '$ruleName' for $securityGroupName as it already exists"
+    }
+}
+
 function Add-AzureVMCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,          
+          [string]$vmId, 
           [string]$dnsName,
           [string]$location)
 
@@ -1094,6 +1118,9 @@ function Add-AzureVMCustomScriptExtension
     $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
+    $ruleName = "VSO-Custom-WinRM-Https-Port"
+    $rulePriotity="3986"
+    $winrmHttpsPort = "5986"
 
     Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
     Write-Verbose -Verbose "VM Location : $location"
@@ -1107,6 +1134,8 @@ function Add-AzureVMCustomScriptExtension
         if($isExtensionExists)
         {
             Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
+            
+            Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
             return
         }
 
@@ -1120,7 +1149,8 @@ function Add-AzureVMCustomScriptExtension
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
         }
 
-        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName        
+        Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
     }
     catch
     {
