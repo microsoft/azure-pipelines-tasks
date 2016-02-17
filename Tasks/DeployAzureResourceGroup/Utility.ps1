@@ -740,6 +740,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
         foreach ($resource in $azureRMVMResources)
         {
             $resourceName = $resource.Name
+            $resourceId = $resource.Id
             $resourceFQDN = $fqdnMap[$resourceName]
             $resourceWinRmHttpsPort = $winRmHttpsPortMap[$resourceName]
             if([string]::IsNullOrWhiteSpace($resourceWinRmHttpsPort))
@@ -758,8 +759,8 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             if ($enableDeploymentPrerequisites -eq "true")
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
-                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
-        }
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -vmId $resourceId -dnsName $resourceFQDN -location $resource.Location
+            }
         }
         return $vmResourcesDetails
     }
@@ -880,6 +881,7 @@ function Add-AzureVMCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,          
+          [string]$vmId, 
           [string]$dnsName,
           [string]$location)
 	
@@ -896,25 +898,30 @@ function Add-AzureVMCustomScriptExtension
     try
     {
         $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
-    Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
+        Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
 	
-    if($isExtensionExists)
-    {
-        Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
-        return
-    }
+        if($isExtensionExists)
+        {
+            Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
+
+            Add-NetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId
+            return
+        }
 	
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
 
-    if($result.Status -ne "Succeeded")
-    {
-        Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
+        if($result.Status -ne "Succeeded")
+        {
+            Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
             $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
-    }
+        }
 	
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+
+        Write-Verbose -Verbose "Trying to add a network security group rule"
+        Add-NetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId
     }
     catch
     {
