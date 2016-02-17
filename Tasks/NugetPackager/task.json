@@ -9,10 +9,15 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 60
+        "Patch": 61
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
+        {
+            "name":"versioning",
+            "displayName":"Versioning",
+            "isExpanded":true
+        },
         {
             "name":"advanced",
             "displayName":"Advanced",
@@ -30,20 +35,67 @@
             "required":true
         },
         {
-            "name": "versionByBuild",
-            "type": "boolean",
-            "label": "Use Build number to version package",
-            "defaultValue":"false",
-            "helpMarkDown": "Will use the build number to version you package. Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'",
-            "required":false
-        },
-        {
             "name": "outputdir",
             "type": "filePath",
             "label": "Package Folder",
             "defaultValue":"",
             "helpMarkDown": "Folder where packages will be created, if empty will be created in the directory of csproj or nuspec file",
             "required":false
+        },
+        {
+            "name": "versionByBuild",
+            "type": "pickList",
+            "label": "Automatic package versioning",
+            "defaultValue":"false",
+            "helpMarkDown": "If you choose 'Generate a prerelease string', this will generate a SemVer-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'From an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'By build number', this will use the build number to version you package. **Note:** Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'.",
+            "required":true,
+            "groupName": "versioning",
+            "options": {
+                "false": "Off",
+                "byPrereleaseNumber": "Generate a prerelease string",
+                "byEnvVar": "From an environment variable",
+                "true": "By build number"
+            }
+        },
+        {
+            "name": "versionEnvVar",
+            "type": "string",
+            "label": "Environment variable",
+            "defaultValue":"",
+            "helpMarkDown": "Enter the variable name without $, $env, or %.",
+            "required":true,
+            "groupName": "versioning",
+            "visibleRule": "versionByBuild = byEnvVar"
+        },
+        {
+            "name": "requestedMajorVersion",
+            "type": "string",
+            "label": "Major",
+            "defaultValue":"1",
+            "helpMarkDown": "The 'X' in version X.Y.Z",
+            "required":true,
+            "groupName": "versioning",
+            "visibleRule": "versionByBuild = byPrereleaseNumber"
+        },
+        {
+            "name": "requestedMinorVersion",
+            "type": "string",
+            "label": "Minor",
+            "defaultValue":"0",
+            "helpMarkDown": "The 'Y' in version X.Y.Z",
+            "required":true,
+            "groupName": "versioning",
+            "visibleRule": "versionByBuild = byPrereleaseNumber"
+        },
+        {
+            "name": "requestedPatchVersion",
+            "type": "string",
+            "label": "Patch",
+            "defaultValue":"0",
+            "helpMarkDown": "The 'Z' in version X.Y.Z",
+            "required":true,
+            "groupName": "versioning",
+            "visibleRule": "versionByBuild = byPrereleaseNumber"
         },
         {
             "name": "configurationToPack",
