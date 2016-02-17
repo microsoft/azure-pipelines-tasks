@@ -885,6 +885,40 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version, [Sys
     throw "Did not find TestAgentConfig.exe at : $exePath. Ensure that TestAgent is installed."
 }
 
+function Locate-TestVersion()
+{
+	#Find the latest version
+	$regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
+	if (-not (Test-Path $regPath))
+	{
+		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
+	}
+	if (-not (Test-Path $regPath))
+	{
+		return $null
+	}
+	
+	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()} -ErrorAction SilentlyContinue
+	$version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
+
+	if ([string]::IsNullOrWhiteSpace($version))
+	{
+		return $null
+	}
+	return $version
+}
+
+function Get-SubKeysInFloatFormat($keys)
+{
+	$targetKeys = @()      # New array
+	foreach ($key in $keys)
+	{
+		$targetKeys += [decimal] $key
+	}
+
+	return $targetKeys
+}
+
 function ConfigureTestAgent
 {
     param
@@ -903,6 +937,13 @@ function ConfigureTestAgent
         [System.Management.Automation.PSCredential] $AgentUserCredential
     )
 
+	$avlVersion = Locate-TestVersion
+	if($avlVersion)
+	{
+		$TestAgentVersion = $avlVersion
+	}
+	Write-Verbose "VS Agent version $version" -verbose
+	
     EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     if ($AsServiceOrProcess -eq "Service")

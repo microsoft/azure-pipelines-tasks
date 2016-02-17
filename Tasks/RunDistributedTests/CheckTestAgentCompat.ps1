@@ -2,6 +2,13 @@ function Check-AgentCompat($ProductVersion)
 {
     try
     {
+        $avlVersion = Locate-TestVersion
+        if($avlVersion)
+        {
+          $ProductVersion = $avlVersion
+        }
+        Write-Verbose "VS Agent version $version" -verbose
+	
         $InstalledVersionRegValueName = "Version"
         $InstalledVersionRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testExecCore" -f $ProductVersion)
 
@@ -71,6 +78,40 @@ function Get-RegistryValue {
 		return $subKey.GetValue($Value)
 	}
 	return $null
+}
+
+function Locate-TestVersion()
+{
+	#Find the latest version
+	$regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
+	if (-not (Test-Path $regPath))
+	{
+		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
+	}
+	if (-not (Test-Path $regPath))
+	{
+		return $null
+	}
+	
+	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()} -ErrorAction SilentlyContinue
+	$version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
+
+	if ([string]::IsNullOrWhiteSpace($version))
+	{
+		return $null
+	}
+	return $version
+}
+
+function Get-SubKeysInFloatFormat($keys)
+{
+	$targetKeys = @()      # New array
+	foreach ($key in $keys)
+	{
+		$targetKeys += [decimal] $key
+	}
+
+	return $targetKeys
 }
 
 Check-AgentCompat -ProductVersion "14.0" 
