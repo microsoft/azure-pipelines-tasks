@@ -773,7 +773,7 @@ function Validate-CustomScriptExecutionStatus
     {
         $status = Get-AzureMachineStatus -resourceGroupName $resourceGroupName -Name $vmName
 
-    # For AzurePS < 1.0.4 $_.ExtensionType is valid.
+    # For AzurePS < 1.0.4 $_.ExtensionType is applicable.
     $customScriptExtension = $status.Extensions | Where-Object { ($_.ExtensionType -eq "Microsoft.Compute.CustomScriptExtension" -or $_.Type -eq "Microsoft.Compute.CustomScriptExtension") -and $_.Name -eq $extensionName }
 
     if($customScriptExtension)
@@ -901,6 +901,8 @@ function Add-AzureVMCustomScriptExtension
     }
 	
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
+        $resultDetails = $result | Out-String
+        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"	
 		
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
     }
