@@ -13,10 +13,17 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "demands" : [
         "azureps"
+    ],
+    "groups": [
+        {
+            "name":"advanced",
+            "displayName":"Advanced",
+            "isExpanded":false
+        }
     ],
     "minimumAgentVersion": "1.95.0",
     "inputs": [
@@ -64,15 +71,24 @@
             "label": "Script Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters"
+        },
+        { 
+            "name": "WorkingFolder", 
+            "type": "filePath", 
+            "label": "Working folder", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+            "groupName":"advanced"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
     "execution": {
         "AzurePowerShell": {
-            "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "target": "$(ScriptPath)",
+            "argumentFormat": "$(ScriptArguments)",
+            "workingDirectory": "$(WorkingFolder)"
         }
     }
 }

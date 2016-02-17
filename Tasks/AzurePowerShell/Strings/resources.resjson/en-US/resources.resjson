@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Run a PowerShell script within an Azure environment",
   "loc.instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.ConnectedServiceNameSelector": "Azure Connection Type",
   "loc.input.label.ConnectedServiceName": "Azure Classic Subscription",
   "loc.input.help.ConnectedServiceName": "Azure Classic subscription to configure before running PowerShell",
@@ -11,5 +12,7 @@
   "loc.input.label.ScriptPath": "Script Path",
   "loc.input.help.ScriptPath": "Path of the script. Should be fully qualified path or relative to the default working directory.",
   "loc.input.label.ScriptArguments": "Script Arguments",
-  "loc.input.help.ScriptArguments": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+  "loc.input.help.ScriptArguments": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters",
+  "loc.input.label.WorkingFolder": "Working folder",
+  "loc.input.help.WorkingFolder": "Current working directory when script is run.  Defaults to the folder where the script is located."
 }
