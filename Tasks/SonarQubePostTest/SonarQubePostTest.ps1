@@ -9,5 +9,4 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 InvokeMSBuildRunnerPostTest
 UploadSummaryMdReport
-HandleCodeAnalysisReporting
 BreakBuildOnQualityGateFailure

@@ -20,9 +20,11 @@ describe('Common-SonarQubeHelpers Suite', function () {
     });
 
     if (ps) {
-        it('A tests', (done) => {
+        it('InvokeRestApi tests', (done) => {
             psm.runPS(path.join(__dirname, 'InvokeRestApi.ps1'), done);
         })
-       
+        it('IsPRBuild tests', (done) => {
+            psm.runPS(path.join(__dirname, 'IsPRBuild.ps1'), done);
+        })
     }
 });

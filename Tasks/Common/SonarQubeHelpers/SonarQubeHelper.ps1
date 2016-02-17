@@ -188,7 +188,6 @@ function CreateBasicAuthHeaderFromEndpoint
     return $basicAuthValue        
 }
 
-
 #
 # C# like assert based on a condition. Note that PowerShell does not support actual assertions so 
 # 
@@ -202,16 +201,21 @@ function Assert
     }
 }
 
-
 #
-# Returns true if this build was triggered in response to a PR 
+# Returns true if this build was triggered in response to a PR
+#
+# Remark: this logic is temporary until the platform provides a more robust way of deteriming PR builds
 #
 function IsPrBuild
 {
-    $prcaEnabledString = GetTaskContextVariable "PullRequestSonarQubeCodeAnalysisEnabled"
-    $isPrBuild = Convert-String $prcaEnabledString Boolean
+    $sourceBranch = $env:Build_SourceBranch
 
-    return $isPrBuild;
+    if ([string]::IsNullOrWhiteSpace($sourceBranch))
+    {
+        throw "Could not determine the source branch, please log a bug"
+    }
+    
+    return $sourceBranch.StartsWith("refs/pull/", [StringComparison]::OrdinalIgnoreCase)
 }
 
 

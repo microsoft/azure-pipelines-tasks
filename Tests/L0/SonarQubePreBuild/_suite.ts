@@ -23,6 +23,8 @@ describe('SonarQubePreBuild Suite', function () {
         it('CreateCommandLineArgs tests', (done) => {
             psm.runPS(path.join(__dirname, 'CreateCommandLineArgs.ps1'), done);
         })
-       
+        it('UpdateArgsForPrAnalysis tests', (done) => {
+            psm.runPS(path.join(__dirname, 'UpdateArgsForPrAnalysis.ps1'), done);
+        })
     }
 });

@@ -75,12 +75,3 @@ function UploadSummaryMdReport
 		 Write-Warning "Could not find the summary report file $summaryMdPath"
 	}
 }
-
-function HandleCodeAnalysisReporting
-{
-	$sonarQubeAnalysisModeIsIncremental = GetTaskContextVariable "MSBuild.SonarQube.AnalysisModeIsIncremental"
-	if ($sonarQubeAnalysisModeIsIncremental -ieq "true")
-	{
-		GenerateCodeAnalysisReport  
-	}
-}
