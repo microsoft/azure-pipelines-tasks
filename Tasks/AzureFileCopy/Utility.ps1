@@ -1109,9 +1109,14 @@ function Add-AzureVMCustomScriptExtension
         }
 
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
-        $resultDetails = $result | Out-String
-        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"		
+        if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
+        {
+            Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
+            $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+            throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
+        }
+		
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
     }
     catch
