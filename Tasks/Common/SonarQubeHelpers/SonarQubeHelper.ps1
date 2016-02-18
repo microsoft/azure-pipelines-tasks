@@ -204,18 +204,18 @@ function Assert
 #
 # Returns true if this build was triggered in response to a PR
 #
-# Remark: this logic is temporary until the platform provides a more robust way of deteriming PR builds
+# Remark: this logic is temporary until the platform provides a more robust way of determining PR builds; 
+# Note that PR builds are only supported on TfsGit
 #
 function IsPrBuild
-{
+{    
     $sourceBranch = $env:Build_SourceBranch
+    $scProvider = $env:Build_Repository_Provider
 
-    if ([string]::IsNullOrWhiteSpace($sourceBranch))
-    {
-        throw "Could not determine the source branch, please log a bug"
-    }
-    
-    return $sourceBranch.StartsWith("refs/pull/", [StringComparison]::OrdinalIgnoreCase)
+    return   $scProvider -and `
+             ($scProvider -eq "TfsGit") -and `
+             $sourceBranch -and `
+             $sourceBranch.StartsWith("refs/pull/", [StringComparison]::OrdinalIgnoreCase)        
 }
 
 
