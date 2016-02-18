@@ -19,8 +19,7 @@ param(
     [string]$codeCoverageEnabledPreview,
     [string]$overrideRunParamsPreview,
     [string]$testMachineGroupPreview,
-    [string]$autMachineGroupPreview,
-
+    [string]$autMachineGroupPreview
 )
 
 Function CmdletHasMember($memberName) {

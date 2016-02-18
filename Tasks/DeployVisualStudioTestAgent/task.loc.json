@@ -48,7 +48,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.testMachineGroupPreview",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testMachineGroupPreview",
       "groupName": "testMachineGroupsPreview"
     },

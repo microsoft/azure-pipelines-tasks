@@ -53,7 +53,7 @@
             "type": "multiLine",
             "label": "Machines",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. `Eg: dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name",
             "groupName": "testMachineGroupsPreview"
         },
