@@ -877,6 +877,28 @@ function Is-WinRMCustomScriptExtensionExists
     $isExtensionExists
 }
 
+function Add-WinRMHttpsNetworkSecurityRuleConfig
+{
+    param([string]$resourceGroupName,
+          [string]$vmId,
+          [string]$ruleName,
+          [string]$rulePriotity,
+          [string]$winrmHttpsPort)
+    
+    Write-Verbose -Verbose "Trying to add a network security group rule"
+
+    $securityGroup = Get-NetworkSecurityGroup -resourceGroupName $resourceGroupName -vmId $vmId
+
+    if($securityGroup)
+    {
+        Add-NetworkSecurityRuleConfig -securityGroup $securityGroup -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+    }
+    else
+    {
+        Write-Verbose -Verbose "Skipping the addition of network security rule '$ruleName' for $securityGroupName as it already exists"
+    }
+}
+
 function Add-AzureVMCustomScriptExtension
 {
     param([string]$resourceGroupName,
@@ -890,6 +912,9 @@ function Add-AzureVMCustomScriptExtension
     $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"		
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
+    $ruleName = "VSO-Custom-WinRM-Https-Port"
+    $rulePriotity="3986"
+    $winrmHttpsPort = "5986"
 
     Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
     Write-Verbose -Verbose "VM Location : $location"
@@ -904,7 +929,7 @@ function Add-AzureVMCustomScriptExtension
         {
             Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
 
-            Add-NetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId
+            Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
             return
         }
 	
@@ -919,9 +944,7 @@ function Add-AzureVMCustomScriptExtension
         }
 	
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
-
-        Write-Verbose -Verbose "Trying to add a network security group rule"
-        Add-NetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId
+        Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
     }
     catch
     {
