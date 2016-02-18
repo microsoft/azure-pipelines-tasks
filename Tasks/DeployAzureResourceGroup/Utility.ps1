@@ -895,7 +895,7 @@ function Add-WinRMHttpsNetworkSecurityRuleConfig
     }
     else
     {
-        Write-Verbose -Verbose "Skipping the addition of network security rule '$ruleName' for $securityGroupName as it already exists"
+        Write-Verbose -Verbose "Skipping the addition of network security rule '$ruleName' as no security group exists"
     }
 }
 

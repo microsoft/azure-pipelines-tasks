@@ -412,6 +412,10 @@ function Add-NetworkSecurityRuleConfig
                 break             
             }
         }
+        else
+        {
+            Write-Verbose -Verbose "Skipping the addition of network security rule '$ruleName' for $securityGroupName as it already exists"
+        }
     }
 }
 
