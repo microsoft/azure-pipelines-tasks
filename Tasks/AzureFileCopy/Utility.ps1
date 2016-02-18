@@ -981,7 +981,8 @@ function Validate-CustomScriptExecutionStatus
     {
         $status = Get-AzureMachineStatus -resourceGroupName $resourceGroupName -Name $vmName
 
-        $customScriptExtension = $status.Extensions | Where-Object { $_.ExtensionType -eq "Microsoft.Compute.CustomScriptExtension" -and $_.Name -eq $extensionName }
+        # For AzurePS < 1.0.4 $_.ExtensionType is applicable.
+        $customScriptExtension = $status.Extensions | Where-Object { ($_.ExtensionType -eq "Microsoft.Compute.CustomScriptExtension" -or $_.Type -eq "Microsoft.Compute.CustomScriptExtension") -and $_.Name -eq $extensionName }
 
         if($customScriptExtension)
         {
@@ -1108,8 +1109,7 @@ function Add-AzureVMCustomScriptExtension
         }
 
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
-
-        if($result.Status -ne "Succeeded")
+        if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
         {
             Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
@@ -1117,6 +1117,8 @@ function Add-AzureVMCustomScriptExtension
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
         }
 
+	    $resultDetails = $result | ConvertTo-Json
+        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
     }
     catch
