@@ -17,7 +17,9 @@ param(
     [string]$testConfiguration,
     [string]$runSettingsFilePreview,
     [string]$codeCoverageEnabledPreview,
-    [string]$overrideRunParamsPreview
+    [string]$overrideRunParamsPreview,
+    [string]$testMachineGroupPreview,
+    [string]$autMachineGroupPreview,
 
 )
 
@@ -43,6 +45,17 @@ Write-Verbose "Application Under Test Machine Group = $autTestMachineGroup"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
+
+if (![string]::IsNullOrWhiteSpace($testMachineGroupPreview))
+{
+    Write-Verbose "Using Azure Resource Group Preview functionality"
+    Write-Verbose "Preview Test Machine = $testMachineGroupPreview"
+    Write-Verbose "Preview AUT Machine = $autMachineGroupPreview"
+
+     ## Re-assign Preview Data to cmdlet parameters
+    $testMachineGroup = $testMachineGroupPreview
+    $autMachineGroup = $autMachineGroupPreview
+}
 
 Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext

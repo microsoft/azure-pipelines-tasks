@@ -16,7 +16,6 @@
         "Patch": 21
     },
     "demands": [
-
     ],
     "minimumAgentVersion": "1.95.0",
     "groups":  [
@@ -34,38 +33,44 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
+        },
+        {
+            "name": "testMachineGroupsPreview",
+            "displayName": "Machine Options -Deploy Test Agent using Azure Resource Group or Flat Machines",
+            "tags" : [ "Preview" ],
+            "isExpanded": true
         }
     ],
     "inputs": [
-		{
-            "name": "testMachineGroup",
+        {
+            "name": "testMachineGroupPreview",
             "type": "multiLine",
             "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. `Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name.",
-            "groupName": "testMachineGroups"
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. `Eg: dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name",
+            "groupName": "testMachineGroupsPreview"
         },
         {
-            "name": "adminUserName",
+            "name": "adminUserNamePreview",
             "type": "string",
             "label": "Admin Login",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Administrator login for the target machines.",
-            "groupName": "testMachineGroups"
+            "groupName": "testMachineGroupsPreview"
         },
         {
-            "name": "adminPassword",
+            "name": "adminPasswordPreview",
             "type": "string",
             "label": "Admin Password",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as `$(passwordVariable)`. <br>You may mark variable type as 'secret' to secure it.",
-            "groupName": "testMachineGroups"
+            "groupName": "testMachineGroupsPreview"
         },
         {
-            "name": "winRmProtocol",
+            "name": "winRmProtocolPreview",
             "type": "radio",
             "label": "Protocol",
             "required": false,
@@ -75,16 +80,48 @@
                 "Https": "HTTPS"
             },
             "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is `HTTPS`.",
-            "groupName": "testMachineGroups"
+            "groupName": "testMachineGroupsPreview"
         },
         {
-            "name": "testCertificate",
+            "name": "testCertificatePreview",
             "type": "boolean",
             "label": "Test Certificate",
             "defaultValue": "true",
-            "visibleRule": "winRmProtocol = Https",
+            "visibleRule": "winRmProtocolPreview = Https",
             "required": false,
             "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.",
+            "groupName": "testMachineGroupsPreview"
+        },
+        {
+            "name":"resourceFilteringMethodPreview",
+            "type":"radio",
+            "label":"Select Machines By",
+            "required":false,
+            "defaultValue":"machineNames",
+            "options": {
+                "machineNames":"Machine Names",
+                "tags":"Tags"
+            },
+            "groupName": "testMachineGroupsPreview"
+        },
+        {
+            "name": "testMachinesPreview",
+            "type": "string",
+            "label": "Filter Criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a list of machines like `dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1`. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is to deploy agent on all machines represented in the Machines field.",
+            "groupName": "testMachineGroupsPreview"
+        },
+        
+        
+        {
+            "name": "testMachineGroup",
+            "type": "pickList",
+            "label": "Test Machine Group / Azure Resource Group",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
             "groupName": "testMachineGroups"
         },
         {
@@ -105,7 +142,7 @@
             "label": "Filter Criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a list of machines like `dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1`. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is to deploy agent on all machines represented in the Machines field.",
+            "helpMarkDown": "Provide a list of machines like `dbserver.fabrikam.com`, `dbserver_int.fabrikam.com`, `192.168.12.34` or tags like `Role:DB;OS:Win8.1`. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is all machines in the machine group.",
             "groupName": "testMachineGroups"
         },
         {
@@ -163,6 +200,16 @@
             "groupName": "advanced"
         }
     ],
+    
+    "sourceDefinitions": [
+     {
+         "target": "testMachineGroup",
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
+      }
+    ],
+    
     "instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
     "execution": {
         "PowerShell": {

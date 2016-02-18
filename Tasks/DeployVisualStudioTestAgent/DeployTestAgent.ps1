@@ -1,9 +1,5 @@
 param(
     [string]$testMachineGroup,
-    [string]$adminUserName,
-    [string]$adminPassword,
-    [string]$winRmProtocol,
-    [string]$testCertificate,
     [string]$resourceFilteringMethod,
     [string]$testMachines,
     [string]$runAsProcess,
@@ -11,7 +7,14 @@ param(
     [string]$machinePassword,
     [string]$agentLocation,
     [string]$updateTestAgent,
-    [string]$isDataCollectionOnly
+    [string]$isDataCollectionOnly,
+    [string]$testMachineGroupPreview,
+    [string]$adminUserNamePreview,
+    [string]$adminPasswordPreview,
+    [string]$winRmProtocolPreview,
+    [string]$testCertificatePreview,
+    [string]$resourceFilteringMethodPreview,
+    [string]$testMachinesPreview
 )
 
 # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
@@ -28,6 +31,31 @@ Function Get-PersonalAccessToken($vssEndPoint) {
 }
 
 Write-Verbose "Entering script DeployTestAgent.ps1"
+
+$adminUserName = ""
+$adminPassword = ""
+$winRmProtocol = ""
+$testCertificate = ""
+
+if (![string]::IsNullOrWhiteSpace($testMachineGroupPreview))
+{
+    Write-Verbose "Using Azure Resource Group Preview functionality"
+    Write-Verbose "Preview Test Machine = $testMachineGroupPreview"
+    Write-Verbose "Preview WinRM = $winRmProtocolPreview"
+    Write-Verbose "Preview Test Cert = $testCertificatePreview"
+    Write-Verbose "Preview Resource Filter = $resourceFilteringMethodPreview"
+    Write-Verbose "Preview Filter Machines = $testMachinesPreview"
+    
+    ## Re-assign Preview Data to cmdlet parameters
+    $testMachineGroup = $testMachineGroupPreview
+    $winRmProtocol = $winRmProtocolPreview
+    $testCertificate = $testCertificatePreview
+    $resourceFilteringMethod = $resourceFilteringMethodPreview
+    $testMachines = $testMachinesPreview
+    $adminUserName = $adminUserNamePreview
+    $adminPassword = $adminPasswordPreview
+}
+
 Write-Verbose "testMachineInput = $testMachineGroup"
 Write-Verbose "WinRmProtocal = $winRmProtocol"
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose

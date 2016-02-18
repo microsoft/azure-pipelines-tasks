@@ -40,12 +40,29 @@
       "name": "reportingOptions",
       "displayName": "ms-resource:loc.group.displayName.reportingOptions",
       "isExpanded": false
+    },
+    {
+      "name": "testMachineGroupsPreview",
+      "displayName": "ms-resource:loc.group.displayName.testMachineGroupsPreview",
+      "tags": [
+        "Preview"
+      ],
+      "isExpanded": true
     }
   ],
   "inputs": [
     {
-      "name": "testMachineGroup",
+      "name": "testMachineGroupPreview",
       "type": "multiLine",
+      "label": "ms-resource:loc.input.label.testMachineGroupPreview",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroupPreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "testMachineGroup",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
@@ -143,8 +160,17 @@
       "groupName": "reportingOptions"
     },
     {
-      "name": "autMachineGroup",
+      "name": "autMachineGroupPreview",
       "type": "multiLine",
+      "label": "ms-resource:loc.input.label.autMachineGroupPreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.autMachineGroupPreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "autMachineGroup",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.autMachineGroup",
       "defaultValue": "",
       "required": false,
@@ -217,6 +243,18 @@
     }
   ],
   "sourceDefinitions": [
+    {
+      "target": "testMachineGroup",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    },
+    {
+      "target": "autMachineGroup",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
+    },
     {
       "target": "testPlan",
       "endpoint": "/$(system.teamProject)/_apis/test/plans",

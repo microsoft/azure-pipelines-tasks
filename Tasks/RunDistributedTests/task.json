@@ -39,16 +39,31 @@
             "name": "reportingOptions",
             "displayName": "Reporting Options",
             "isExpanded": false
+        },
+        {
+            "name": "testMachineGroupsPreview",
+            "displayName": "Machine Options - Run Tests using Azure Resource Group or Flat Machines",
+            "tags" : [ "Preview" ],
+            "isExpanded": true
         }
     ],
     "inputs": [
-        {
-            "name": "testMachineGroup",
+         {
+            "name": "testMachineGroupPreview",
             "type": "multiLine",
             "label": "Machines",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. `Eg: dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name",
+            "groupName": "testMachineGroupsPreview"
+        },
+        {
+            "name": "testMachineGroup",
+            "type": "pickList",
+            "label": "Test Machine Group / Azure Resource Group",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
             "groupName": "setupOptions"
         },
         {
@@ -143,12 +158,21 @@
             "groupName": "reportingOptions"
         },
         {
-            "name": "autMachineGroup",
+            "name": "autMachineGroupPreview",
             "type": "multiLine",
             "label": "Application Under Test Machines",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
+            "groupName": "testMachineGroupsPreview"
+        },
+        {
+            "name": "autMachineGroup",
+            "type": "pickList",
+            "label": "Application Under Test Machine Group",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
             "groupName": "reportingOptions"
         },
         {
@@ -219,6 +243,18 @@
     ],
 
     "sourceDefinitions": [ 
+     { 		
+         "target": "testMachineGroup",
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 		
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
+      },
+      { 		
+         "target": "autMachineGroup", 		
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 		
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
+     },
      {
          "target": "testPlan",
          "endpoint":"/$(system.teamProject)/_apis/test/plans",

@@ -32,57 +32,95 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "testMachineGroupsPreview",
+      "displayName": "ms-resource:loc.group.displayName.testMachineGroupsPreview",
+      "tags": [
+        "Preview"
+      ],
+      "isExpanded": true
     }
   ],
   "inputs": [
     {
-      "name": "testMachineGroup",
+      "name": "testMachineGroupPreview",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.testMachineGroup",
+      "label": "ms-resource:loc.input.label.testMachineGroupPreview",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
-      "groupName": "testMachineGroups"
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroupPreview",
+      "groupName": "testMachineGroupsPreview"
     },
     {
-      "name": "adminUserName",
+      "name": "adminUserNamePreview",
       "type": "string",
-      "label": "ms-resource:loc.input.label.adminUserName",
+      "label": "ms-resource:loc.input.label.adminUserNamePreview",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.adminUserName",
-      "groupName": "testMachineGroups"
+      "helpMarkDown": "ms-resource:loc.input.help.adminUserNamePreview",
+      "groupName": "testMachineGroupsPreview"
     },
     {
-      "name": "adminPassword",
+      "name": "adminPasswordPreview",
       "type": "string",
-      "label": "ms-resource:loc.input.label.adminPassword",
+      "label": "ms-resource:loc.input.label.adminPasswordPreview",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.adminPassword",
-      "groupName": "testMachineGroups"
+      "helpMarkDown": "ms-resource:loc.input.help.adminPasswordPreview",
+      "groupName": "testMachineGroupsPreview"
     },
     {
-      "name": "winRmProtocol",
+      "name": "winRmProtocolPreview",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.winRmProtocol",
+      "label": "ms-resource:loc.input.label.winRmProtocolPreview",
       "required": false,
       "defaultValue": "Https",
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.winRmProtocol",
-      "groupName": "testMachineGroups"
+      "helpMarkDown": "ms-resource:loc.input.help.winRmProtocolPreview",
+      "groupName": "testMachineGroupsPreview"
     },
     {
-      "name": "testCertificate",
+      "name": "testCertificatePreview",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.testCertificate",
+      "label": "ms-resource:loc.input.label.testCertificatePreview",
       "defaultValue": "true",
-      "visibleRule": "winRmProtocol = Https",
+      "visibleRule": "winRmProtocolPreview = Https",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.testCertificate",
+      "helpMarkDown": "ms-resource:loc.input.help.testCertificatePreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "resourceFilteringMethodPreview",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethodPreview",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "testMachinesPreview",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testMachinesPreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testMachinesPreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "testMachineGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testMachineGroup",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
       "groupName": "testMachineGroups"
     },
     {
@@ -159,6 +197,14 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.isDataCollectionOnly",
       "groupName": "advanced"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "testMachineGroup",
+      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
