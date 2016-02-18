@@ -2,7 +2,7 @@
   "loc.friendlyName": "Windows Machine File Copy",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copy files to remote machine(s)",
-  "loc.instanceNameFormat": "Copy files $(SourcePath)",
+  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.SourcePath": "Source",
   "loc.input.help.SourcePath": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber.",

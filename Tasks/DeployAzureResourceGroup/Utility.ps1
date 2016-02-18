@@ -90,6 +90,7 @@ function Get-AzureUtility
 
     $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
     $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
+    $azureUtilityV3 = "AzureUtilityGTE1.1.0.ps1"
 
     if(!$versionCompatible)
     {
@@ -98,7 +99,16 @@ function Get-AzureUtility
     else
     {
         Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
+        $minimumAzureVersion = New-Object System.Version(1, 0, 3)
+        $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+		if(!$versionCompatible)
+		{
+            $azureUtilityRequiredVersion = $azureUtilityNewVersion
+		}
+		else
+		{
+            $azureUtilityRequiredVersion = $azureUtilityV3
+		}
     }
 
     Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
@@ -901,7 +911,7 @@ function Add-AzureVMCustomScriptExtension
     }
 	
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
-    if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
+    if($result.Status -ne "Succeeded")
     {
         Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
