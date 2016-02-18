@@ -1,11 +1,7 @@
 function Check-Installation($ProductVersion)
 {
-	$avlVersion = Locate-TestVersion
-	if($avlVersion)
-	{
-		$ProductVersion = $avlVersion
-	}
-	Write-Verbose "VS Agent version $version" -verbose
+	$ProductVersion = LocateTestVersion $ProductVersion
+	Write-Verbose "VS Agent version $ProductVersion" -verbose
 	
     $InstalledCheckRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testagentcore" -f $ProductVersion)
 	$InstalledCheckRegValueName = "Install"
@@ -95,40 +91,6 @@ function Get-ProductEntry {
 	}
 
 	return $false
-}
-
-function Locate-TestVersion()
-{
-	#Find the latest version
-	$regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
-	if (-not (Test-Path $regPath))
-	{
-		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
-	}
-	if (-not (Test-Path $regPath))
-	{
-		return $null
-	}
-	
-	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()} -ErrorAction SilentlyContinue
-	$version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
-
-	if ([string]::IsNullOrWhiteSpace($version))
-	{
-		return $null
-	}
-	return $version
-}
-
-function Get-SubKeysInFloatFormat($keys)
-{
-	$targetKeys = @()      # New array
-	foreach ($key in $keys)
-	{
-		$targetKeys += [decimal] $key
-	}
-
-	return $targetKeys
 }
 
 Check-Installation  -ProductVersion "14.0"
