@@ -75,19 +75,24 @@ function Get-AzureUtility
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose -Verbose "Installed Azure PowerShell version: $currentVersion"
 
-    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+    $AzureVersion099 = New-Object System.Version(0, 9, 9)
+	$AzureVersion103 = New-Object System.Version(1, 0, 3)
 
-    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
-    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
+    $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
+    $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
 
-    if(!$versionCompatible)
+    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion098
+    }
+    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+    {
+        $azureUtilityRequiredVersion = $azureUtilityVersion100
     }
     else
     {
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion110
     }
 
     Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
@@ -1109,7 +1114,7 @@ function Add-AzureVMCustomScriptExtension
         }
 
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
-        if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
+        if($result.Status -ne "Succeeded")
         {
             Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
