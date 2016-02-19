@@ -195,7 +195,8 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 <p align="left">
-                    artifactname=artifact name (Required)
+                    artifactname=artifact name (Required) <br>
+                    type = artifact type (Required, supported artifact type: container, filepath, versioncontrol, gitref, tfvclabel)<br> 
                 </p>
             </td>
             <td>
