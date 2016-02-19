@@ -97,7 +97,7 @@ function Get-AzureUtility
     {
         $azureUtilityRequiredVersion = $azureUtilityVersion098
     }
-    else if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
     {
         Check-AzureRMInstalled
         $azureUtilityRequiredVersion = $azureUtilityVersion100
