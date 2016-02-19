@@ -75,29 +75,24 @@ function Get-AzureUtility
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose -Verbose "Installed Azure PowerShell version: $currentVersion"
 
-    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+    $AzureVersion099 = New-Object System.Version(0, 9, 9)
+	$AzureVersion103 = New-Object System.Version(1, 0, 3)
 
-    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
-    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
-    $azureUtilityV3 = "AzureUtilityGTE1.1.0.ps1"
+    $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
+    $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
 
-    if(!$versionCompatible)
+    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion098
+    }
+    else if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+    {
+        $azureUtilityRequiredVersion = $azureUtilityVersion100
     }
     else
     {
-        $minimumAzureVersion = New-Object System.Version(1, 0, 3)
-        $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
-		if(!$versionCompatible)
-		{
-            $azureUtilityRequiredVersion = $azureUtilityNewVersion
-		}
-		else
-		{
-            $azureUtilityRequiredVersion = $azureUtilityV3
-		}
+        $azureUtilityRequiredVersion = $azureUtilityVersion110
     }
 
     Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
