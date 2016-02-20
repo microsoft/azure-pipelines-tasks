@@ -7,7 +7,7 @@
   "loc.input.label.solution": "ソリューションへの引数",
   "loc.input.help.solution": "Visual Studio のソリューション ファイルへのパス",
   "loc.input.label.nugetConfigPath": "NuGet.config へのパス",
-  "loc.input.help.nugetConfigPath": "このアカウント内でフィードを使用するには、これらのフィードをソースとしてリストする NuGet.config をここでチェックインして選びます。これによりビルド システムは、閲覧者または共同作成者としてのビルド ID がフィードに追加されていると見なし、これらのフィードを認証できるようになります。\n\nフィードへのアクセス許可については次をご覧ください。[詳細](http://go.microsoft.com/fwlink/?LinkID=691232)",
+  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
   "loc.input.label.noCache": "ローカル キャッシュの無効化",
   "loc.input.help.noCache": "-NoCache NuGet.exe コマンドライン引数と同等です",
   "loc.input.label.nuGetRestoreArgs": "NuGet の引数",

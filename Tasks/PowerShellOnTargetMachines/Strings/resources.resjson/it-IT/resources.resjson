@@ -14,7 +14,7 @@
   "loc.input.label.Protocol": "Protocollo",
   "loc.input.help.Protocol": "Consente di selezionare il protocollo da usare per la connessione WinRM con i computer. Il valore predefinito è HTTPS.",
   "loc.input.label.TestCertificate": "Certificato di test",
-  "loc.input.help.TestCertificate": "Consente di selezionare l'opzione per convalidare l'autenticità del certificato del computer da parte di un'Autorità di certificazione attendibile. Il parametro è obbligatorio per il protocollo HTTPS di WinRM.",
+  "loc.input.help.TestCertificate": "Consente di selezionare l'opzione per ignorare la convalida dell'autenticità del certificato del computer da parte di un'Autorità di certificazione attendibile. Il parametro è obbligatorio per il protocollo HTTPS di WinRM.",
   "loc.input.label.ScriptPath": "Script PowerShell",
   "loc.input.help.ScriptPath": "Percorso dello script PowerShell nei computer di destinazione oppure in un percorso UNC come C:\\BudgetIT\\Web\\Distribuzione\\SitoWeb.ps1",
   "loc.input.label.ScriptArguments": "Argomenti script",

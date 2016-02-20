@@ -43,5 +43,5 @@
   "loc.messages.UnableToIndexSources": "No se pueden indexar los orígenes.",
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "La biblioteca dbghelp.dll ya está cargada desde una ruta inesperada. Se esperaba '{0}'. Real '{0}'.",
   "loc.messages.UnsupportedSourceProvider0": "Proveedor de origen no admitido '{0}' para la indexación de origen.",
-  "loc.messages.Win32Error0FromMethod1": "Error de Win32 error '{0}' del método '{1}'."
+  "loc.messages.Win32Error0FromMethod1": "Error de Win32 '{0}' del método '{1}'."
 }
