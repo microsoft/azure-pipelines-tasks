@@ -25,6 +25,6 @@
   "loc.input.help.cmdLineArgs": "Paramètres séparés par un espace au format suivant : /d:propertyName=propertyValue. Les règles d'échappement normales relatives aux lignes de commande s'appliquent. Pour plus d'informations sur les paramètres, consultez les [documents SonarQube](http://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "Fichier de paramètres",
   "loc.input.help.configFile": "Vous pouvez également spécifier les paramètres à l'aide d'un fichier de configuration. Un modèle est disponible [ici](http://go.microsoft.com/fwlink/?LinkID=620062)",
-  "loc.input.label.breakBuild": "Fail the build on quality gate failure (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. More information"
+  "loc.input.label.breakBuild": "Arrêter la génération en cas d'échec d'un point de contrôle qualité (Quality Gate). (SQ 5.3+)",
+  "loc.input.help.breakBuild": "Cette option est uniquement disponible quand vous utilisez un serveur SonarQube 5.3 (ou une version supérieure). Elle entraîne des retards, car la build doit attendre que SonarQube finisse l'analyse. [Plus d'informations](http://go.microsoft.com/fwlink/?LinkId=722407)"
 }

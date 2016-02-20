@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.gulpFile": "Chemin d'accès du fichier Gulp",
-  "loc.input.help.gulpFile": "Chemin d'accès relatif depuis la racine de référentiel au fichier script du fichier gulp à exécuter.",
+  "loc.input.help.gulpFile": "Chemin relatif de la racine de dépôt du fichier script du fichier gulp à exécuter.",
   "loc.input.label.targets": "Tâche(s) Gulp",
   "loc.input.help.targets": "Facultatif. Liste des tâches à exécuter délimitées par des espaces. Si elle n'est pas spécifiée, la tâche par défaut est exécutée.",
   "loc.input.label.arguments": "Arguments",

@@ -7,7 +7,7 @@
   "loc.input.label.solution": "Percorso della soluzione",
   "loc.input.help.solution": "Percorso del file di soluzione di Visual Studio",
   "loc.input.label.nugetConfigPath": "Percorso di NuGet.config",
-  "loc.input.help.nugetConfigPath": "Per usare i feed in questo account, archiviare un file NuGet.config che elenca tali feed come origini e selezionarlo qui. In questo modo il sistema di compilazione potrà usare i feed per eseguire l'autenticazione, presupponendo che ai feed sia stata aggiunta l'identità di compilazione come lettore o collaboratore.\n\nPer saperne di più sulle autorizzazioni dei feed [Altre informazioni]( http://go.microsoft.com/fwlink/?LinkID=691232).",
+  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
   "loc.input.label.noCache": "Disabilita cache locale",
   "loc.input.help.noCache": "Equivale all'argomento -NoCache della riga di comando di NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Argomenti NuGet",

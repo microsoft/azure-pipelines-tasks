@@ -13,7 +13,7 @@
   "loc.input.label.clean": "消去",
   "loc.input.help.clean": "ビルドの前に、クリーン ビルド (/t:clean) を実行します。",
   "loc.input.label.restoreNugetPackages": "NuGet パッケージの復元",
-  "loc.input.help.restoreNugetPackages": "ビルドの前に、NuGet の復元を実行します。",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.logProjectEvents": "プロジェクトの詳細の記録",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild のバージョン",
@@ -21,5 +21,7 @@
   "loc.input.label.msbuildArchitecture": "MSBuild アーキテクチャ",
   "loc.input.help.msbuildArchitecture": "(省略可能) 実行する MSBuild のアーキテクチャ (x86、x64) を指定します。",
   "loc.input.label.msbuildLocation": "MSBuild へのパス",
-  "loc.input.help.msbuildLocation": "(省略可能) MSBuild へのパスを指定します。"
+  "loc.input.help.msbuildLocation": "(省略可能) MSBuild へのパスを指定します。",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "MSBuild が見つかりません: バージョン = {0}、アーキテクチャ = {1}。最新バージョンを検索しています。",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild が見つかりません: バージョン = {0}、アーキテクチャ = {1}。バージョン/アーキテクチャの別の組み合わせを使ってみるか、ロケーションを指定するか、適切なバージョン/アーキテクチャの MSBuild をインストールしてください。"
 }

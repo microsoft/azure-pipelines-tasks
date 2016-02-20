@@ -7,7 +7,7 @@
   "loc.input.label.solution": "Pfad zur Projektmappe",
   "loc.input.help.solution": "Der Pfad zur Visual Studio-Projektmappendatei",
   "loc.input.label.nugetConfigPath": "Pfad zu \"NuGet.config\"",
-  "loc.input.help.nugetConfigPath": "Wenn Sie Feeds in diesem Konto verwenden möchten, checken Sie eine Datei \"NuGet.config\" ein, die diese Feeds als Quellen auflistet, und wählen sie hier aus. Auf diese Weise kann das Buildsystem eine Authentifizierung für diese Feeds ausführen, wenn Sie dem Feed die Buildidentität als Leser oder Mitwirkender hinzugefügt haben.\n\nMöchten Sie mehr über Feedberechtigungen erfahren? [Weitere Informationen]( http://go.microsoft.com/fwlink/?LinkID=691232).",
+  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
   "loc.input.label.noCache": "Lokalen Cache deaktivieren",
   "loc.input.help.noCache": "Entspricht dem Befehlszeilenargument \"-NoCache\" von \"Nuget.exe\".",
   "loc.input.label.nuGetRestoreArgs": "NuGet-Argumente",

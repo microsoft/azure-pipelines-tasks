@@ -2,7 +2,7 @@
   "loc.friendlyName": "ビルド成果物のコピーと発行",
   "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.description": "ビルド成果物をステージング フォルダーにコピーし、minimatch パターンを使用して、ビルド成果物をサーバーまたはファイル共有に発行する",
-  "loc.instanceNameFormat": "発行成果物のコピー: $(ArtifactName)",
+  "loc.instanceNameFormat": "成果物のコピーと発行: $(ArtifactName)",
   "loc.input.label.CopyRoot": "コピー ルート",
   "loc.input.help.CopyRoot": "コピー パターンの適用先のルート フォルダー。空白はリポジトリのルートです。リポジトリの外部で作成するビルド ステップの場合は、変数を使用します。例: $(agent.builddirectory)",
   "loc.input.label.Contents": "コンテンツ",
