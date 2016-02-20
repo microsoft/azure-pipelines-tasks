@@ -25,7 +25,7 @@ For more information, see https://msdn.microsoft.com/en-us/library/jj155796.aspx
 
 - **Configuration:**	Build Configuration against which the Test Run should be reported. Field is used for reporting purposes only. For example, Debug or Release. If you are using the Deployment – Build, Deploy and Distributed Test template, this is already defined for you. Alternatively, if you have defined a variable for Configuration in your Build task, use that here.
  
-- **Run Settings:** File Path to a runsettings or testsettings file can be specified here. The path can be to a file in the repository or a path to a file on the Build Agent machine. Use $(Build.SourcesDirectory) to access the root project folder. For more information on these files, please see https://msdn.microsoft.com/library/jj635153.aspx
+- **Run Settings File:** File Path to a runsettings or testsettings file can be specified here. The path can be to a file in the repository or a path to a file on the Build Agent machine. Use $(Build.SourcesDirectory) to access the root project folder. For more information on these files, please see https://msdn.microsoft.com/library/jj635153.aspx
 
 - **Override TestRun Parameters:**	Override parameters defined in the TestRunParameters section of the runsettings file. For example: Platform=$(platform);Port=8080 
 For more information, please see http://blogs.msdn.com/b/visualstudioalm/archive/2015/09/04/supplying-run-time-parameters-to-tests.aspx
