@@ -84,7 +84,7 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
             "groupName": "executionOptions"
         },
         {
