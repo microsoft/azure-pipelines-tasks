@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "Tipo dell'artefatto da creare.",
   "loc.input.label.TargetPath": "Percorso",
   "loc.input.help.TargetPath": "Condivisione file in cui copiare i file",
-  "loc.messages.PublishBuildArtifactsFailed": "Pubblicazione degli artefatti di compilazione non riuscita. Errore: %s"
+  "loc.messages.PublishBuildArtifactsFailed": "Pubblicazione degli artefatti di compilazione non riuscita. Errore: %s",
+  "loc.messages.PublishBuildArtifactsNotSupported": "L'attività Pubblica artefatti di compilazione non è supportata nella versione"
 }

@@ -16,7 +16,7 @@
   "loc.input.label.WinRMProtocol": "Protocollo",
   "loc.input.help.WinRMProtocol": "Consente di selezionare il protocollo da usare per la connessione WinRM con i computer. Il valore predefinito è HTTPS.",
   "loc.input.label.TestCertificate": "Certificato di test",
-  "loc.input.help.TestCertificate": "Consente di selezionare l'opzione per convalidare l'autenticità del certificato del computer da parte di un'Autorità di certificazione attendibile. Il parametro è obbligatorio per il protocollo HTTPS di WinRM.",
+  "loc.input.help.TestCertificate": "Consente di selezionare l'opzione per ignorare la convalida dell'autenticità del certificato del computer da parte di un'Autorità di certificazione attendibile. Il parametro è obbligatorio per il protocollo HTTPS di WinRM.",
   "loc.input.label.WebDeployPackage": "Pacchetto Distribuzione Web",
   "loc.input.help.WebDeployPackage": "Percorso del file ZIP di Distribuzione Web (MSDeploy) nei computer di destinazione o in un percorso UNC, ad esempio \\\\\\\\BudgetIT\\WebDeploy\\WebDeployPackage.zip. Il percorso UNC deve essere accessibile all'account Administrator del computer. Sono supportate anche variabili di ambiente come $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\Web.",
   "loc.input.label.WebDeployParamFile": "File di parametri Distribuzione Web",

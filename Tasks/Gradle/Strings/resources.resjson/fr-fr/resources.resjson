@@ -7,7 +7,7 @@
   "loc.group.displayName.codeCoverage": "Couverture du code",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.wrapperScript": "Wrapper Gradle",
-  "loc.input.help.wrapperScript": "Chemin d'accès relatif de la racine du référentiel au 'script du wrapper Gradle'.",
+  "loc.input.help.wrapperScript": "Chemin relatif de la racine de dépôt du 'script du wrapper Gradle'.",
   "loc.input.label.options": "Options",
   "loc.input.label.tasks": "Tâches",
   "loc.input.label.cwd": "Répertoire de travail",

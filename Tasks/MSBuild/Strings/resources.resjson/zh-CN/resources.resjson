@@ -21,5 +21,7 @@
   "loc.input.label.msbuildArchitecture": "MSBuild 体系结构",
   "loc.input.help.msbuildArchitecture": "可以选择提供 MSBuild 的体系结构(x86、x64)进行运行。",
   "loc.input.label.msbuildLocation": "MSBuild 的路径",
-  "loc.input.help.msbuildLocation": "可以选择提供 MSBuild 的路径。"
+  "loc.input.help.msbuildLocation": "可以选择提供 MSBuild 的路径。",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "无法找到 MSBuild: 版本 = {0}，体系结构 = {1}。查找最新版本。",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "找不到 MSBuild: 版本 = {0}，体系结构 = {1}。请尝试其他版本/体系结构组合、指定一个位置或安装适当的 MSBuild 版本/体系结构。"
 }

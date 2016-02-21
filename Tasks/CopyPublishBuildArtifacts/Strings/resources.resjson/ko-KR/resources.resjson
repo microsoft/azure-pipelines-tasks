@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "아티팩트 형식",
   "loc.input.help.ArtifactType": "만들 아티팩트의 형식입니다.",
   "loc.input.label.TargetPath": "경로",
-  "loc.input.help.TargetPath": "파일을 복사할 파일 공유"
+  "loc.input.help.TargetPath": "파일을 복사할 파일 공유",
+  "loc.messages.CopyPublishBuildArtifactsNotSupported": "빌드 아티팩트 작업 복사 밋 게시가 릴리스 내에서 지원되지 않음"
 }

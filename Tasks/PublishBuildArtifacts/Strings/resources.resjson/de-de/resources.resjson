@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "Der Typ des zu erstellenden Artefakts.",
   "loc.input.label.TargetPath": "Pfad",
   "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Dateien kopiert werden sollen",
-  "loc.messages.PublishBuildArtifactsFailed": "Fehler beim Veröffentlichen von Buildartefakten: %s"
+  "loc.messages.PublishBuildArtifactsFailed": "Fehler beim Veröffentlichen von Buildartefakten: %s",
+  "loc.messages.PublishBuildArtifactsNotSupported": "Das Veröffentlichen von Buildartefakten wird im Release nicht unterstützt."
 }

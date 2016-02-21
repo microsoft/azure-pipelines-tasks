@@ -21,5 +21,7 @@
   "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
   "loc.input.help.msbuildArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di MSBuild da eseguire.",
   "loc.input.label.msbuildLocation": "Percorso di MSBuild",
-  "loc.input.help.msbuildLocation": "Consente, facoltativamente, di specificare il percorso di MSBuild."
+  "loc.input.help.msbuildLocation": "Consente, facoltativamente, di specificare il percorso di MSBuild.",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Non è stata trovata alcuna istanza di MSBuild con versione = {0}, architettura = {1}. Verrà cercata la versione più recente.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "La versione {0} di MSBuild con architettura {1} non è stata trovata. Provare con una diversa combinazione di versione/architettura, specificare un percorso o installare MSBuild nella versione/architettura appropriata."
 }

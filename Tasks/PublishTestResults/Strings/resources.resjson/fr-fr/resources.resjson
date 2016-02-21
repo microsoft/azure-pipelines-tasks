@@ -16,6 +16,6 @@
   "loc.input.help.platform": "Plateforme pour laquelle les tests ont été exécutés.",
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Configuration pour laquelle les tests ont été exécutés.",
-  "loc.input.label.publishRunAttachments": "Télécharger les pièces jointes du test",
+  "loc.input.label.publishRunAttachments": "Charger les pièces jointes du test",
   "loc.input.help.publishRunAttachments": "Déploiement"
 }

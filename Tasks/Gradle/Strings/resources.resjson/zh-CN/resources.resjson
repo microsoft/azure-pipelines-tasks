@@ -21,7 +21,7 @@
   "loc.input.label.codeCoverageTool": "CodeCoverage 工具",
   "loc.input.help.codeCoverageTool": "选择代码覆盖率工具。",
   "loc.input.label.classFilesDirectories": "类文件目录",
-  "loc.input.help.classFilesDirectories": "包含类文件、存档文件(jar 和 war 等)的目录列表，以逗号分隔。报告目录中存在的类文件的代码覆盖率。任务在”生成/主/类“下搜索为 Gradle 版本默认类目录的类",
+  "loc.input.help.classFilesDirectories": "包含类文件、存档文件(jar 和 war 等)的目录列表，以逗号分隔。报告目录中存在的类文件的代码覆盖率。任务在“生成/主/类”下搜索类，“生成/主/类”是 Gradle 版本的默认类目录",
   "loc.input.label.classFilter": "类包含/排除筛选器",
   "loc.input.help.classFilter": "用于在收集代码覆盖率时包含或排除类的筛选器列表，以逗号分隔。例如，\"+:com.*\"、\"+:org.*\"、\"-:my.app*.*\"。",
   "loc.input.label.javaHomeSelection": "JAVA_HOME 设置方法",

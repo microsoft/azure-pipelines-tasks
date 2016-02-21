@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "Тип артефакта",
   "loc.input.help.ArtifactType": "Тип создаваемого артефакта.",
   "loc.input.label.TargetPath": "Путь",
-  "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы"
+  "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы",
+  "loc.messages.CopyPublishBuildArtifactsNotSupported": "Задача \"Копировать и опубликовать артефакты сборки\" не поддерживается в выпуске."
 }

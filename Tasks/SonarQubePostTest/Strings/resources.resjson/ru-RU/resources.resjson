@@ -2,8 +2,5 @@
   "loc.friendlyName": "SonarQube для MSBuild — завершить анализ",
   "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Завершение анализа и отправка результатов в SonarQube",
-  "loc.instanceNameFormat": "Завершение анализа и отправка результатов в SonarQube",
-  "loc.group.displayName.extraSettings": "Post Analysis Settings",
-  "loc.input.label.breakBuild": "Break the build on quality gate failure (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](http://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.instanceNameFormat": "Завершение анализа и отправка результатов в SonarQube"
 }

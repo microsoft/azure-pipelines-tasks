@@ -28,7 +28,7 @@
   "loc.input.label.antHomeUserInputPath": "Задать путь ANT_HOME",
   "loc.input.help.antHomeUserInputPath": "Если этот параметр задан, переопределяет любую существующую переменную среды ANT_HOME заданным путем.",
   "loc.input.label.javaHomeSelection": "Установка JAVA_HOME с помощью",
-  "loc.input.help.javaHomeSelection": "Задается JAVA_HOME указанием версии JDK, которая будет обнаруживаться во врем сборок, или указанием пути к JDK вручную.",
+  "loc.input.help.javaHomeSelection": "Задается JAVA_HOME указанием версии JDK, которая будет обнаруживаться во время сборок, или указанием пути к JDK вручную.",
   "loc.input.label.jdkVersion": "Версия JDK",
   "loc.input.help.jdkVersion": "Пытается определить путь к выбранной версии JDK и установить переменную JAVA_HOME соответствующим образом.",
   "loc.input.label.jdkUserInputPath": "Путь к JDK",

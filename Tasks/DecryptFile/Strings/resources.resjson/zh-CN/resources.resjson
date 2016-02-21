@@ -10,7 +10,7 @@
   "loc.input.label.passphrase": "密码",
   "loc.input.help.passphrase": "将用于解密的密码。**使用一个变量对密码加密。**",
   "loc.input.label.outFile": "已解密文件的路径",
-  "loc.input.help.outFile": "已解密文件的可选文件名。默认为使用 \".out\" 作为扩展名的已加密文件。",
+  "loc.input.help.outFile": "已解密文件的可选文件名。默认为使用 \".out\" 作为扩展名的已加密文件",
   "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "用于解密的工作目录。默认为存储库的根目录。"
 }

@@ -25,6 +25,6 @@
   "loc.input.help.cmdLineArgs": "請使用下列格式並以空格分隔設定: /d:propertyName=propertyValue。一般的命令列逸出規則均適用。如需這些設定的詳細資料，請檢視 [SonarQube 文件](http://go.microsoft.com/fwlink/?LinkID=624390)。",
   "loc.input.label.configFile": "設定檔案",
   "loc.input.help.configFile": "您可以透過組態檔指定設定。如需範本，請前往 [這裡](http://go.microsoft.com/fwlink/?LinkID=620062)",
-  "loc.input.label.breakBuild": "Fail the build on quality gate failure (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. More information"
+  "loc.input.label.breakBuild": "組建未通過品質閘門的錯誤 (SQ 5.3+)",
+  "loc.input.help.breakBuild": "只有在使用 SonarQube 伺服器 5.3 或以上版本時，才可使用此選項。這會導致延遲，原因是組建必須等候 SonarQube 完成分析。[更多資訊](http://go.microsoft.com/fwlink/?LinkId=722407)"
 }

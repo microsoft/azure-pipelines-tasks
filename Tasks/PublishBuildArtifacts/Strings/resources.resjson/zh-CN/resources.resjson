@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "要创建的项目的类型。",
   "loc.input.label.TargetPath": "路径",
   "loc.input.help.TargetPath": "要将文件复制到的文件共享",
-  "loc.messages.PublishBuildArtifactsFailed": "发布生成项目失败，出现错误: %s"
+  "loc.messages.PublishBuildArtifactsFailed": "发布生成项目失败，出现错误: %s",
+  "loc.messages.PublishBuildArtifactsNotSupported": "发行版不支持发布生成项目"
 }

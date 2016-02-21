@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "作成する成果物の種類。",
   "loc.input.label.TargetPath": "パス",
   "loc.input.help.TargetPath": "ファイルのコピー先となるファイル共有",
-  "loc.messages.PublishBuildArtifactsFailed": "ビルド成果物の発行でエラーが発生しました: %s"
+  "loc.messages.PublishBuildArtifactsFailed": "ビルド成果物の発行でエラーが発生しました: %s",
+  "loc.messages.PublishBuildArtifactsNotSupported": "リリース内でビルド成果物を発行することはサポートされていません"
 }
