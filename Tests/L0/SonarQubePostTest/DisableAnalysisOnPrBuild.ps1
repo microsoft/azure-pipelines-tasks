@@ -14,8 +14,3 @@ Register-Mock Write-Host
 . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SonarQubePostTest.ps1 -connectedServiceName "service" -projectKey "projectKey" -projectName "projectName" -projectVersion "1"
 
 Assert-WasCalled Write-Host -ArgumentsEvaluator {$args[0] -like "*DisableSQAnalysisOnPrBuilds*"}
-
-
-
-
-
