@@ -354,8 +354,11 @@ function Get-NetworkSecurityGroups
                 $networkSecurityGroupEntry = $networkInterface.NetworkSecurityGroup
                 if($networkSecurityGroupEntry)
                 {
-                    $securityGroupName = $networkSecurityGroupEntry.Id.Split('/')[-1]
-                    $sgResourceGroup = $networkSecurityGroupEntry.Id.Split('/')[4]                    
+                    $nsId = $networkSecurityGroupEntry.Id
+					Write-Verbose -Verbose "Network Security Group Id: $nsId"
+					
+                    $securityGroupName = $nsId.Split('/')[-1]
+                    $sgResourceGroup = $nsId.Split('/')[4]                    
                     Write-Verbose -Verbose "Security Group name is $securityGroupName and the related resource group $sgResourceGroup"
 
                     # Get the network security group object
