@@ -22,7 +22,7 @@ function CreateRandomDir
 #### Test 1 - Uploading fails with a warning if the file is not found
     
 # Arrange
-Register-Mock GetSonarQubeOutDirectory {"%temp%"}
+Register-Mock GetSonarQubeOutDirectory {([IO.Path]::GetRandomFileName())}
 Register-Mock Write-Warning 
 
 # Act
@@ -51,7 +51,7 @@ Register-Mock Write-Host
 UploadSummaryMdReport
 
 # Assert
-Assert-WasCalled Write-Host -ArgumentsEvaluator { $args[0].StartsWith("##vso[task.addattachment type=Distributedtask.Core.Summary;name=") }
+Assert-WasCalled Write-Host -ArgumentsEvaluator { $args[0].StartsWith("##vso[task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report;") }
 
 # Cleanup
 $file.Dispose()
