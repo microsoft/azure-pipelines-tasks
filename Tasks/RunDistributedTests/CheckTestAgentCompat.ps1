@@ -2,6 +2,9 @@ function Check-AgentCompat($ProductVersion)
 {
     try
     {
+	    $ProductVersion = LocateTestVersion $ProductVersion
+        Write-Verbose "VS Agent version $ProductVersion" -verbose
+	
         $InstalledVersionRegValueName = "Version"
         $InstalledVersionRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testExecCore" -f $ProductVersion)
 

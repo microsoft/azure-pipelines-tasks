@@ -1,6 +1,6 @@
 ﻿function Get-TestAgentType([string] $Version)
 {
-	$Version = Locate-TestVersion
+	$Version = LocateTestVersion $Version
 	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
 	
 	if (-not (Test-Path $testAgentPath))
@@ -21,30 +21,11 @@
 	return $testAgentServiceConfig
 }
 
-
-function Locate-TestVersion()
-{
-	#Find the latest version
-	$regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
-	if (-not (Test-Path $regPath))
-	{
-		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
-	}
-	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()}
-	$Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
-
-	if ([string]::IsNullOrWhiteSpace($Version))
-	{
-		return $null
-	}
-	return $Version
-}
-
 function Locate-TestVersionAndVsRoot([string] $Version)
 {
     if ([string]::IsNullOrWhiteSpace($Version))
     {
-        $Version = Locate-TestVersion
+        $Version = LocateTestVersion $Version
     }
 
     # Lookup the install location
@@ -903,6 +884,9 @@ function ConfigureTestAgent
         [System.Management.Automation.PSCredential] $AgentUserCredential
     )
 
+	$TestAgentVersion = LocateTestVersion $TestAgentVersion
+	Write-Verbose "VS Agent version $TestAgentVersion" -verbose
+	
     EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     if ($AsServiceOrProcess -eq "Service")

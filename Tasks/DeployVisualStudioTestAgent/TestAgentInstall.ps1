@@ -1,5 +1,8 @@
 function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arguments)
 {
+	$ProductVersion = LocateTestVersion $ProductVersion
+	Write-Verbose "VS Agent version $ProductVersion" -verbose
+	
 	$InstalledCheckRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testagentcore" -f $ProductVersion)
 	$InstalledCheckRegValueName = "Install"
 	$InstalledCheckRegValueData = "1"
