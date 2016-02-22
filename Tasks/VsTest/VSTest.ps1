@@ -57,6 +57,7 @@ if(!$sourcesDirectory)
     throw (Get-LocalizedString -Key "No source directory found.")
 }
 
+$testAssemblyFiles = @()
 # check for solution pattern
 if ($testAssembly.Contains("*") -Or $testAssembly.Contains("?"))
 {
@@ -68,8 +69,7 @@ if ($testAssembly.Contains("*") -Or $testAssembly.Contains("?"))
 else
 {
     Write-Verbose "No Pattern found in solution parameter."
-    $testAssembly = $testAssembly.Split(";") 
-    $testAssemblyFiles = ,$testAssembly
+    $testAssemblyFiles += ,$testAssembly.Split(";")
 }
 
 $codeCoverage = Convert-String $codeCoverageEnabled Boolean
