@@ -68,6 +68,7 @@ if ($testAssembly.Contains("*") -Or $testAssembly.Contains("?"))
 else
 {
     Write-Verbose "No Pattern found in solution parameter."
+    $testAssembly = $testAssembly.Split(";")
     $testAssemblyFiles = ,$testAssembly
 }
 
