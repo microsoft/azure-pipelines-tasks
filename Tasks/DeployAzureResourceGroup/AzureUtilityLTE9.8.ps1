@@ -351,3 +351,115 @@ function Remove-AzureMachineCustomScriptExtension
 
     return $response
 }
+
+function Get-NetworkSecurityGroups
+{
+     param([string]$resourceGroupName,
+           [string]$vmId)
+
+    $securityGroups = New-Object System.Collections.Generic.List[System.Object]
+
+    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmId))
+    {
+        Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName for vm $vmId"
+        $networkInterfaces = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName | Where-Object { $_.VirtualMachine.Id -eq $vmId }
+        Write-Verbose -Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
+        
+        if($networkInterfaces)
+        {
+            foreach($networkInterface in $networkInterfaces)
+            {
+                $networkSecurityGroupEntry = $networkInterface.NetworkSecurityGroup
+                if($networkSecurityGroupEntry)
+                {
+                    $nsId = $networkSecurityGroupEntry.Id
+					Write-Verbose -Verbose "Network Security Group Id: $nsId"
+					
+                    $securityGroupName = $nsId.Split('/')[-1]
+                    $sgResourceGroup = $nsId.Split('/')[4]                    
+                    Write-Verbose -Verbose "Security Group name is $securityGroupName and the related resource group $sgResourceGroup"
+
+                    # Get the network security group object
+                    Write-Verbose -Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $sgResourceGroup"
+                    $securityGroup = Get-AzureNetworkSecurityGroup -ResourceGroupName $sgResourceGroup -Name $securityGroupName                    
+                    Write-Verbose -Verbose "[Azure Call]Got network security group $securityGroupName in resource group $sgResourceGroup"
+
+                    $securityGroups.Add($securityGroup)
+                }
+            }
+        }
+        else
+        {
+            throw (Get-LocalizedString -Key "[Azure Call]No network interface found with virtual machine id {0} under resource group {1}" -ArgumentList $vmid , $resourceGroupName)
+        }
+    }
+    else
+    {
+        throw (Get-LocalizedString -Key "[Azure Call]Resource group name and virtual machine id should not be null or empty")
+    }
+    
+    return $securityGroups
+}
+
+function Add-NetworkSecurityRuleConfig
+{
+    param([object]$securityGroups,
+          [string]$ruleName,
+          [string]$rulePriotity,
+          [string]$winrmHttpsPort)
+
+    if($securityGroups.Count -gt 0)
+    {
+        foreach($securityGroup in $securityGroups)
+        {
+            $securityGroupName = $securityGroup.Name
+            try
+            {
+                Write-Verbose -Verbose "[Azure Call]Getting network security rule config $ruleName under security group $securityGroupName"
+                $winRMConfigRule = Get-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -EA SilentlyContinue
+                Write-Verbose -Verbose "[Azure Call]Got network security rule config $ruleName under security group $securityGroupName"
+            }
+            catch
+            { 
+                #Ignore the exception
+            }
+
+            # Add the network security rule if it doesn't exists
+            if(-not $winRMConfigRule)                                                              
+            {            
+                for($i=1; $i -le 3; $i++)
+                {
+                    try
+                    {
+                        Write-Verbose -Verbose "[Azure Call]Adding inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"
+                        $result = Add-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -Direction Inbound -Access Allow -SourceAddressPrefix '*' -SourcePortRange '*' -DestinationAddressPrefix '*' -DestinationPortRange $winrmHttpsPort -Protocol * -Priority $rulePriotity | Set-AzureNetworkSecurityGroup
+                        Write-Verbose -Verbose "[Azure Call]Added inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"                         
+                    }
+                    catch
+                    {           
+                        $newPort = [convert]::ToInt32($rulePriotity, 10) + 50;
+                        $rulePriotity = $newPort.ToString()
+
+                        Write-Verbose -Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $resourceGroupName"
+                        $securityGroup = Get-AzureNetworkSecurityGroup -ResourceGroupName $resourceGroupName -Name $securityGroupName
+                        Write-Verbose -Verbose "[Azure Call]Got network security group $securityGroupName in resource group $resourceGroupName"
+
+                        continue
+                    }           
+                        
+                    Write-Verbose -Verbose "Successfully added the network security group rule $ruleName with priority $rulePriotity for port $winrmHttpsPort"
+                    break             
+                }
+            }
+        }
+    }
+}
+
+# Used only in test code
+function Remove-NetworkSecurityRuleConfig
+{
+    param([object] $securityGroup,
+          [string] $ruleName)
+
+    $result = Remove-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName | Set-AzureNetworkSecurityGroup
+}
