@@ -32,7 +32,7 @@ $b_automaticallyVersion = $b_versionByBuild -or $b_versionByEnvVar -or $b_versio
 
 if ($b_versionByBuild)
 {
-    Write-Host "Autoversion: Getting version number from build"
+    Write-Verbose "Autoversion: Getting version number from build"
     ##Get Version from Build
     
     # Regular expression pattern to find the version in the build number 
@@ -77,26 +77,26 @@ if ($b_versionByBuild)
           }
     }
     $NewVersion = $VersionData[0]
-    Write-Host "Version: $NewVersion"
+    Write-Verbose "Version: $NewVersion"
 }
 elseif ($b_versionByEnvVar)
 {
-    Write-Host "Autoversion: Getting version number from environment variable"
-    Write-Host "Requested '$versionEnvVar'"
+    Write-Verbose "Autoversion: Getting version number from environment variable"
+    Write-Verbose "Requested '$versionEnvVar'"
     
     $NewVersion = [environment]::GetEnvironmentVariable($versionEnvVar)
     
-    Write-Host "Version: $NewVersion"
+    Write-Verbose "Version: $NewVersion"
 }
 elseif ($b_versionByPrereleaseNumber)
 {
-    Write-Host "Autoversion: Generating prerelease number"
+    Write-Verbose "Autoversion: Generating prerelease number"
 
     $UtcDateTime = (Get-Date).ToUniversalTime()
     $PreReleaseMoniker = (Get-Date -Date $UtcDateTime -Format "yyyyMMdd-HHmmss")
 
     $NewVersion = "$requestedMajorVersion.$requestedMinorVersion.$requestedPatchVersion-ci-$PreReleaseMoniker"
-    Write-Host "Version: $NewVersion"
+    Write-Verbose "Version: $NewVersion"
 }
 
 Write-Host "Checking pattern is specified"
