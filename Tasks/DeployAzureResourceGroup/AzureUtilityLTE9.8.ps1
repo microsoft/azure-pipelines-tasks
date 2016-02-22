@@ -32,20 +32,20 @@ function Create-AzureResourceGroupIfNotExist
 function Deploy-AzureResourceGroup
 {
     param([string]$csmFile,
-          [System.Collections.Hashtable]$csmParametersObject,
+          [string]$csmParametersFile,
           [string]$resourceGroupName,
           [string]$overrideParameters)
 
     Switch-AzureMode AzureResourceManager
     Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
 
-    if (!$csmParametersObject)
+    if (!$csmParametersFile)
     {
         $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
     else
     {
-        $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterObject `$csmParametersObject $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+        $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `$csmParametersFile $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
 
     Write-Verbose -Verbose "$finalCommand"
