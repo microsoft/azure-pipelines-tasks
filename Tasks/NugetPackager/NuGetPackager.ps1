@@ -82,11 +82,26 @@ if ($outputdir -and !(Test-Path $outputdir))
 }
 
 # check for solution pattern
-if ($searchPattern.Contains("*") -or $searchPattern.Contains("?"))
+if ($searchPattern.Contains("*") -or $searchPattern.Contains("?") -or $searchPattern.Contains(";"))
 {
-    Write-Host "Pattern found in solution parameter."
-    Write-Host "Find-Files -SearchPattern $searchPattern"
-    $foundFiles = Find-Files -SearchPattern $searchPattern 
+    Write-Host "Pattern found in solution parameter."    
+    if ($env:BUILD_SOURCESDIRECTORY)
+    {
+        Write-Verbose "Using build.sourcesdirectory as root folder"
+        Write-Host "Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY"
+        $foundFiles = Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY
+    }
+    elseif ($env:SYSTEM_ARTIFACTSDIRECTORY)
+    {
+        Write-Verbose "Using system.artifactsdirectory as root folder"
+        Write-Host "Find-Files -SearchPattern $searchPattern -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY"
+        $foundFiles = Find-Files -SearchPattern $searchPattern -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY
+    }
+    else
+    {
+        Write-Host "Find-Files -SearchPattern $searchPattern"
+        $foundFiles = Find-Files -SearchPattern $searchPattern
+    }
 }
 else
 {
