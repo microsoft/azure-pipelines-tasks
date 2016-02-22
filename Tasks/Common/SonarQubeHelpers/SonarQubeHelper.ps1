@@ -221,7 +221,7 @@ function IsPrBuild
 
 function GetSonarQubeBuildDirectory
 {
-    $agentBuildDirectory = GetTaskContextVariable "Agent.BuildDirectory" 
+    $agentBuildDirectory = GetTaskContextVariable "Agent.BuildDirectory"
 	if (!$agentBuildDirectory)
 	{
 		throw "Could not retrieve the Agent.BuildDirectory variable";

@@ -58,17 +58,17 @@ function GetMSBuildRunnerPostTestArgs()
 }
 
 function UploadSummaryMdReport
-{
+{    
 	$sonarQubeOutDir = GetSonarQubeOutDirectory
 
 	# Upload the summary markdown file
 	$summaryMdPath = [System.IO.Path]::Combine($sonarQubeOutDir, "summary.md")
-	Write-Verbose "summaryMdPath = $summaryMdPath"
+	Write-Verbose "Looking for a summary report at $summaryMdPath"
 
 	if ([System.IO.File]::Exists($summaryMdPath))
 	{
 		Write-Verbose "Uploading the summary.md file"
-		Write-Host "##vso[build.uploadsummary]$summaryMdPath"
+        Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report;]$summaryMdPath"
 	}
 	else
 	{
