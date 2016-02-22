@@ -1,3 +1,4 @@
+
 function InvokeMSBuildRunnerPostTest
 {
 	$bootstrapperPath = GetBootsrapperPath
@@ -73,5 +74,15 @@ function UploadSummaryMdReport
 	else
 	{
 		 Write-Warning "Could not find the summary report file $summaryMdPath"
+	}
+}
+
+function HandleCodeAnalysisReporting
+{
+	Write-Verbose "hello"
+    if (IsPrBuild)
+    {    	
+		Write-Verbose "Detected a PR build - uploading issues to the code review..."
+		OrchestratePRCA  
 	}
 }
