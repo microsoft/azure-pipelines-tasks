@@ -11,6 +11,7 @@ $telemetryCodes =
 
   "ENABLEWINRM_ProvisionVmCustomScriptFailed" = "ENABLEWINRM_ProvisionVmCustomScriptFailed"
   "ENABLEWINRM_ExecutionOfVmCustomScriptFailed" = "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
+  "ADDWINRM_NetworkSecurityRuleConfigFailed" = "ADDWINRM_NetworkSecurityRuleConfigFailed"
 
   "PREREQ_AzureRMModuleNotFound" = "PREREQ_AzureRMModuleNotFound";
   "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
@@ -85,20 +86,27 @@ function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose -Verbose "Azure PowerShell version: $currentVersion"
-    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
 
-    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
-    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
+    $AzureVersion099 = New-Object System.Version(0, 9, 9)
+    $AzureVersion103 = New-Object System.Version(1, 0, 3)
 
-    if(!$versionCompatible)
+    $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
+    $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
+
+    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion098
+    }
+    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+    {
+        Check-AzureRMInstalled
+        $azureUtilityRequiredVersion = $azureUtilityVersion100
     }
     else
     {
         Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion110
     }
 
     Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
@@ -501,7 +509,7 @@ function Get-MachinesFqdnsForLB
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $publicIPAddressResources -and $networkInterfaceResources -and $frontEndIPConfigs)
     {
-        Write-Verbose "Trying to get FQDN for the RM azureVM resources from resource group: $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the RM azureVM resources under load balancer from resource group: $resourceGroupName" -Verbose
 
         #Map the public ip id to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -551,7 +559,7 @@ function Get-MachinesFqdnsForLB
         }
     }
 
-    Write-Verbose "Got FQDN for the RM azureVM resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName" -Verbose
 
     return $fqdnMap
 }
@@ -648,7 +656,7 @@ function Get-MachineNameFromId
     }
 }
 
-function Get-MachinesFqdns
+function Get-MachinesFqdnsForPublicIP
 {
     param([string]$resourceGroupName,
           [Object]$publicIPAddressResources,
@@ -658,7 +666,7 @@ function Get-MachinesFqdns
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName)-and $publicIPAddressResources -and $networkInterfaceResources)
     {
-        Write-Verbose "Trying to get FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
 
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -689,11 +697,9 @@ function Get-MachinesFqdns
                 }
             }
         }
-
-        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
     }
 
-    Write-Verbose "Got FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
 
     return $fqdnMap
 }
@@ -705,7 +711,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
           [string]$enableDeploymentPrerequisites)
 
     [hashtable]$fqdnMap = @{}
-    [hashtable]$winRmHttpsPortMap = @{}
+    $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
     [hashtable]$vmResourcesDetails = @{}
 
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
@@ -727,15 +733,12 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
                 $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -frontEndIPConfigs $frontEndIPConfigs -fqdnMap $fqdnMap
                 $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap -networkInterfaceResources $networkInterfaceResources -inboundRules $inboundRules
             }
-
-            $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
+			
             $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $false
         }
-        else
-        {
-            $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap
-            $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
-        }
+		
+        $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap
+        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
 
         foreach ($resource in $azureRMVMResources)
         {
@@ -759,8 +762,8 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             if ($enableDeploymentPrerequisites -eq "true")
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
-                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -vmId $resourceId -dnsName $resourceFQDN -location $resource.Location
-            }
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+        }
         }
         return $vmResourcesDetails
     }
@@ -779,7 +782,8 @@ function Validate-CustomScriptExecutionStatus
     {
         $status = Get-AzureMachineStatus -resourceGroupName $resourceGroupName -Name $vmName
 
-    $customScriptExtension = $status.Extensions | Where-Object { $_.ExtensionType -eq "Microsoft.Compute.CustomScriptExtension" -and $_.Name -eq $extensionName }
+    # For AzurePS < 1.0.4 $_.ExtensionType is applicable.
+    $customScriptExtension = $status.Extensions | Where-Object { ($_.ExtensionType -eq "Microsoft.Compute.CustomScriptExtension" -or $_.Type -eq "Microsoft.Compute.CustomScriptExtension") -and $_.Name -eq $extensionName }
 
     if($customScriptExtension)
     {
@@ -887,23 +891,27 @@ function Add-WinRMHttpsNetworkSecurityRuleConfig
     
     Write-Verbose -Verbose "Trying to add a network security group rule"
 
-    $securityGroup = Get-NetworkSecurityGroup -resourceGroupName $resourceGroupName -vmId $vmId
+    try
+    {
+        $securityGroups = Get-NetworkSecurityGroups -resourceGroupName $resourceGroupName -vmId $vmId
 
-    if($securityGroup)
-    {
-        Add-NetworkSecurityRuleConfig -securityGroup $securityGroup -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+        if($securityGroups.Count -gt 0)
+        {
+            Add-NetworkSecurityRuleConfig -securityGroups $securityGroups -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+        }
     }
-    else
+    catch
     {
-        Write-Verbose -Verbose "Skipping the addition of network security rule '$ruleName' as no security group exists"
+        Write-TaskSpecificTelemetry "ADDWINRM_NetworkSecurityRuleConfigFailed"
+        Write-Warning (Get-LocalizedString -Key "Failed to add the network security rule: {0}" -ArgumentList $_.exception.message)
     }
 }
 
 function Add-AzureVMCustomScriptExtension
 {
     param([string]$resourceGroupName,
-          [string]$vmName,          
-          [string]$vmId, 
+          [string]$vmId,
+          [string]$vmName,
           [string]$dnsName,
           [string]$location)
 	
@@ -928,13 +936,12 @@ function Add-AzureVMCustomScriptExtension
         if($isExtensionExists)
         {
             Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
-
+            
             Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
             return
         }
 	
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
-
         if($result.Status -ne "Succeeded")
         {
             Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
@@ -942,7 +949,10 @@ function Add-AzureVMCustomScriptExtension
             $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
         }
-	
+
+	    $resultDetails = $result | ConvertTo-Json
+        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
+
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
         Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
     }
