@@ -26,8 +26,8 @@ describe('SonarQubePostTest Suite', function () {
          it('DisableAnalysisOnPrBuild tests', (done) => {
             psm.runPS(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
         })
-         it('PRCA ReportProcessorTests tests', (done) => {
+        it('PRCA ReportProcessorTests', (done) => {
             psm.runPS(path.join(__dirname, 'PRCA', 'ReportProcessorTests.ps1'), done);
-        })
+        })       
     }
 });

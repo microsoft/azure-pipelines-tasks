@@ -1,12 +1,9 @@
 [CmdletBinding()]
 param()
 
-Write-Host "$PSScriptRoot\..\..\..\..\Tasks\Common\SonarQubeHelpers\SonarQubeHelper.ps1"
-Write-Verbose "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\Common\SonarQubeHelpers.ps1"
-
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\Common\SonarQubeHelpers\SonarQubeHelper.ps1
-. $PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\Orchestrator.ps1
+. $PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\ReportProcessor.ps1
 
 #
 # This test validates the ReportProcessor that is responsible for loading the new issues 
