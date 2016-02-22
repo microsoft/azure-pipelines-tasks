@@ -22,7 +22,7 @@
   "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
   "loc.input.help.codeCoverageEnabled": "Whether code coverage needs to be enabled.",
   "loc.input.label.testRunTitle": "Test Run Title",
-  "loc.input.help.testRunTitle": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+  "loc.input.help.testRunTitle": "Provide a name for the Test Run.",
   "loc.input.label.platform": "Platform",
   "loc.input.help.platform": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
   "loc.input.label.configuration": "Configuration",

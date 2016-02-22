@@ -111,7 +111,7 @@
 	          "label": "Test Run Title", 
 	          "defaultValue":"", 
 	          "required":false,
-              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+              "helpMarkDown": "Provide a name for the Test Run.",
 	          "groupName": "reportingOptions"
 	      },
         {
