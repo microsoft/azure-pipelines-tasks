@@ -67,5 +67,8 @@ describe('VsTest Suite', function () {
         it('ValidateTestAssembliesAreSplit) tests if the input test assembiles are properly passed to cmdlet', (done) => {
             psm.runPS(path.join(__dirname, 'ValidateTestAssembliesAreSplit.ps1'), done);
         })
+         it('ValidateTestAssembliesAreSplit) tests if the input test assembiles are properly passed to cmdlet', (done) => {
+            psm.runPS(path.join(__dirname, 'ValidateTestAssembliesAreNotSplit.ps1'), done);
+        })
     }
 });

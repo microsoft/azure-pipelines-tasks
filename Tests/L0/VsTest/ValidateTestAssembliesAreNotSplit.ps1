@@ -6,12 +6,12 @@ param()
 Register-Mock Get-TaskVariable { "c:\testSource" }
 Register-Mock Convert-String { $true }
 Register-Mock Find-Files { $true }
-Register-Mock Invoke-VSTest { $true } -TestAssemblies @("c:\test1.dll","c:\test2.dll") -VSTestVersion "vsTestVersion" -TestFiltercriteria "testFiltercriteria" -RunSettingsFile "runSettingsFile" -PathtoCustomTestAdapters "pathtoCustomTestAdapters" -CodeCoverageEnabled $true -OverrideTestrunParameters "overrideTestrunParameters" -OtherConsoleOptions "otherConsoleOptions" -WorkingFolder "c:\testSource" -TestResultsFolder "c:\testSource\TestResults" -SourcesDirectory "c:\testSource"
+Register-Mock Invoke-VSTest { $true } -TestAssemblies @("c:\test1.dll,c:\test2.dll") -VSTestVersion "vsTestVersion" -TestFiltercriteria "testFiltercriteria" -RunSettingsFile "runSettingsFile" -PathtoCustomTestAdapters "pathtoCustomTestAdapters" -CodeCoverageEnabled $true -OverrideTestrunParameters "overrideTestrunParameters" -OtherConsoleOptions "otherConsoleOptions" -WorkingFolder "c:\testSource" -TestResultsFolder "c:\testSource\TestResults" -SourcesDirectory "c:\testSource"
 Register-Mock Publish-TestResults { $true }
 
 $splat = @{
     'vsTestVersion' = 'vsTestVersion'
-    'testAssembly' = 'c:\test1.dll;c:\test2.dll' 
+    'testAssembly' = 'c:\test1.dll,c:\test2.dll' 
     'testFiltercriteria' = 'testFiltercriteria' 
     'runSettingsFile' = 'runSettingsFile' 
     'codeCoverageEnabled' = 'true'
