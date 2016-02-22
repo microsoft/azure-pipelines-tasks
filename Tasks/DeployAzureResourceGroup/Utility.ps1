@@ -124,16 +124,6 @@ function Create-AzureResourceGroup
 
     #Create csm parameter object
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
-
-    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
-    {
-        $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
-    }
-    else
-    {
-        $csmParametersFileContent = [String]::Empty
-    }
-
     $csmFile = $csmAndParameterFiles["csmFile"]
 
     if(-not [string]::IsNullOrEmpty($csmFile) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($location))
