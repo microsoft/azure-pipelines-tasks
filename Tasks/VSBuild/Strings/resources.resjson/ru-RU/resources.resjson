@@ -12,6 +12,7 @@
   "loc.input.label.configuration": "Конфигурация",
   "loc.input.label.clean": "Очистить",
   "loc.input.label.restoreNugetPackages": "Восстановить пакеты NuGet",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.vsVersion": "Версия Visual Studio",
   "loc.input.help.vsVersion": "Если не удается найти предпочтительную версию, будет использована последняя найденная версия.",
   "loc.input.label.msbuildArchitecture": "Архитектура MSBuild",

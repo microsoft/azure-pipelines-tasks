@@ -11,6 +11,7 @@ $telemetryCodes =
 
   "ENABLEWINRM_ProvisionVmCustomScriptFailed" = "ENABLEWINRM_ProvisionVmCustomScriptFailed"
   "ENABLEWINRM_ExecutionOfVmCustomScriptFailed" = "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
+  "ADDWINRM_NetworkSecurityRuleConfigFailed" = "ADDWINRM_NetworkSecurityRuleConfigFailed"
 
   "PREREQ_AzureRMModuleNotFound" = "PREREQ_AzureRMModuleNotFound";
   "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
@@ -85,20 +86,27 @@ function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose -Verbose "Azure PowerShell version: $currentVersion"
-    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
 
-    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
-    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
+    $AzureVersion099 = New-Object System.Version(0, 9, 9)
+    $AzureVersion103 = New-Object System.Version(1, 0, 3)
 
-    if(!$versionCompatible)
+    $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
+    $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
+
+    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion098
+    }
+    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+    {
+        Check-AzureRMInstalled
+        $azureUtilityRequiredVersion = $azureUtilityVersion100
     }
     else
     {
         Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion110
     }
 
     Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
@@ -117,17 +125,6 @@ function Create-AzureResourceGroup
 
     #Create csm parameter object
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
-
-    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
-    {
-        $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
-    }
-    else
-    {
-        $csmParametersFileContent = [String]::Empty
-    }
-
-    $csmParametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
     $csmFile = $csmAndParameterFiles["csmFile"]
 
     if(-not [string]::IsNullOrEmpty($csmFile) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($location))
@@ -136,7 +133,7 @@ function Create-AzureResourceGroup
         Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
 
         # Deploying CSM Template
-        $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersObject $csmParametersObject -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters
+        $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters
 
         $azureResourceGroupDeployment = $deploymentDetails["azureResourceGroupDeployment"]
         $deploymentError = $deploymentDetails["deploymentError"]
@@ -268,39 +265,6 @@ function Validate-DeploymentFileAndParameters
     {
          Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
          throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
-    }
-}
-
-function Get-CsmParameterObject
-{
-    param([string]$csmParameterFileContent)
-
-    if (-not [string]::IsNullOrEmpty($csmParameterFileContent))
-    {
-        Write-Verbose "Generating csm parameter object" -Verbose
-
-        $csmJObject = [Newtonsoft.Json.Linq.JObject]::Parse($csmParameterFileContent)
-        $newParametersObject = New-Object System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
-
-        if($csmJObject.ContainsKey("parameters") -eq $true)
-        {
-            $parameters = $csmJObject.GetValue("parameters")
-            $parametersObject  = $parameters.ToObject([System.Collections.Hashtable])
-        }
-        else
-        {
-            $parametersObject = $csmJObject.ToObject([System.Collections.Hashtable])
-        }
-
-        foreach($key in $parametersObject.Keys)
-        {
-            $parameterValue = $parametersObject[$key] -as [Newtonsoft.Json.Linq.JObject]
-            $newParametersObject.Add($key, $parameterValue["value"])
-        }
-
-        Write-Verbose "Generated the parameter object" -Verbose
-
-        return $newParametersObject
     }
 }
 
@@ -735,6 +699,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
         foreach ($resource in $azureRMVMResources)
         {
             $resourceName = $resource.Name
+            $resourceId = $resource.Id
             $resourceFQDN = $fqdnMap[$resourceName]
             $resourceWinRmHttpsPort = $winRmHttpsPortMap[$resourceName]
             if([string]::IsNullOrWhiteSpace($resourceWinRmHttpsPort))
@@ -753,7 +718,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             if ($enableDeploymentPrerequisites -eq "true")
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
-                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
         }
         }
         return $vmResourcesDetails
@@ -872,10 +837,37 @@ function Is-WinRMCustomScriptExtensionExists
     $isExtensionExists
 }
 
+function Add-WinRMHttpsNetworkSecurityRuleConfig
+{
+    param([string]$resourceGroupName,
+          [string]$vmId,
+          [string]$ruleName,
+          [string]$rulePriotity,
+          [string]$winrmHttpsPort)
+    
+    Write-Verbose -Verbose "Trying to add a network security group rule"
+
+    try
+    {
+        $securityGroups = Get-NetworkSecurityGroups -resourceGroupName $resourceGroupName -vmId $vmId
+
+        if($securityGroups.Count -gt 0)
+        {
+            Add-NetworkSecurityRuleConfig -securityGroups $securityGroups -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+        }
+    }
+    catch
+    {
+        Write-TaskSpecificTelemetry "ADDWINRM_NetworkSecurityRuleConfigFailed"
+        Write-Warning (Get-LocalizedString -Key "Failed to add the network security rule: {0}" -ArgumentList $_.exception.message)
+    }
+}
+
 function Add-AzureVMCustomScriptExtension
 {
     param([string]$resourceGroupName,
-          [string]$vmName,          
+          [string]$vmId,
+          [string]$vmName,
           [string]$dnsName,
           [string]$location)
 	
@@ -884,6 +876,9 @@ function Add-AzureVMCustomScriptExtension
     $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"		
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
+    $ruleName = "VSO-Custom-WinRM-Https-Port"
+    $rulePriotity="3986"
+    $winrmHttpsPort = "5986"
 
     Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
     Write-Verbose -Verbose "VM Location : $location"
@@ -892,26 +887,30 @@ function Add-AzureVMCustomScriptExtension
     try
     {
         $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
-    Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
+        Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
 	
-    if($isExtensionExists)
-    {
-        Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
-        return
-    }
+        if($isExtensionExists)
+        {
+            Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
+            
+            Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+            return
+        }
 	
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
-    if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
-    {
-        Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
+        if($result.Status -ne "Succeeded")
+        {
+            Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
             $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
-    }
+        }
 
 	    $resultDetails = $result | ConvertTo-Json
         Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
+
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
     }
     catch
     {

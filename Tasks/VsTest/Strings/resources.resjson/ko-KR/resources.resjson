@@ -13,7 +13,7 @@
   "loc.input.label.runSettingsFile": "실행 설정 파일",
   "loc.input.help.runSettingsFile": "테스트에서 사용할 runsettings 파일의 경로입니다. `$(Build.SourcesDirectory)`을(를) 사용하여 프로젝트 폴더에 액세스합니다.",
   "loc.input.label.overrideTestrunParameters": "TestRun 매개 변수 재정의",
-  "loc.input.help.overrideTestrunParameters": "runsettings 파일의 TestRunParameters 섹션에 정의된 매개 변수를 재정의하세요. 예: `Platform=$(platform);Port=8080`",
+  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "코드 검사 사용",
   "loc.input.help.codeCoverageEnabled": "테스트 실행에서 코드 검사 정보를 수집합니다.",
   "loc.input.label.runInParallel": "병렬로 실행",

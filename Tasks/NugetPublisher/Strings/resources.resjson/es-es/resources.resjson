@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "NuGet Publisher $(solution)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.searchPattern": "Ruta de acceso o patrón para nupkg",
-  "loc.input.help.searchPattern": "Patrón de coincidencia o ruta de acceso a los archivos nupkg que se van a cargar. Se pueden separar varios parones por punto y coma.",
+  "loc.input.help.searchPattern": "Patrón de coincidencia o ruta de acceso a los archivos nupkg que se van a cargar. Se pueden separar varios patrones por punto y coma.",
   "loc.input.label.nuGetFeedType": "Tipo de fuente",
   "loc.input.label.connectedServiceName": "Extremo del servidor de NuGet",
   "loc.input.help.connectedServiceName": "Extremo genérico del servidor de NuGet; establezca el campo \"Contraseña/clave de token\" de la clave en la clave de API de NuGet.",

@@ -9,7 +9,7 @@
   "loc.input.label.versionByBuild": "Usa numero di build per definire la versione del pacchetto",
   "loc.input.help.versionByBuild": "Consente di usare il numero di build per definire la versione del pacchetto. In Generale impostare il formato del numero di build su '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'",
   "loc.input.label.outputdir": "Cartella del pacchetto",
-  "loc.input.help.outputdir": "Cartella in cui verranno creati i pacchetti. Se è vuota, verrà creata nella directory del file csproj o nuspec",
+  "loc.input.help.outputdir": "Cartella in cui verranno creati i pacchetti. Se è vuota, verranno creati nella directory del file csproj o nuspec",
   "loc.input.label.configurationToPack": "Configurazione per cui creare il pacchetto",
   "loc.input.help.configurationToPack": "Quando si usa un file csproj, consente di specificare la configurazione per il pacchetto",
   "loc.input.label.buildProperties": "Proprietà di compilazione aggiuntive",

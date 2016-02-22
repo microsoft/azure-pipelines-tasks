@@ -2,7 +2,7 @@
   "loc.friendlyName": "Copia e pubblica artefatti di compilazione",
   "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.description": "Copia gli artefatti di compilazione nella cartella di gestione temporanea, quindi li pubblica nel server o in una condivisione file usando criteri di corrispondenza minima",
-  "loc.instanceNameFormat": "Copia artefatto pubblicato: $(ArtifactName)",
+  "loc.instanceNameFormat": "Copia e pubblica artefatto: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Copia radice",
   "loc.input.help.CopyRoot": "Cartella radice a cui applicare i criteri di copia. Se non viene specificata, corrisponde alla radice del repository. Usare le variabili se le istruzioni di compilazione vengono compilate all'esterno del repository. Esempio: $(agent.builddirectory)",
   "loc.input.label.Contents": "Contenuti",

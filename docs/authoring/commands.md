@@ -195,14 +195,19 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 <p align="left">
-                    artifactname=artifact name (Required)
+                    artifactname=artifact name (Required) <br>
+                    type = artifact type (Required, supported artifact type: container, filepath, versioncontrol, gitref, tfvclabel)<br> 
                 </p>
             </td>
             <td>
                 <p align="left">
                     Create an artifact link, artifact location is required to be a file container path, VC path or UNC share path. <br>
-                    Example: <br>
-                    ##vso[artifact.associate artifactname=drop;]#/1/build <br>
+                    Examples: <br>
+                    ##vso[artifact.associate type=container;artifactname=MyServerDrop]#/1/build <br>
+                    ##vso[artifact.associate type=filepath;artifactname=MyFileShareDrop]\\MyShare\MyDropLocation <br>
+                    ##vso[artifact.associate type=versioncontrol;artifactname=MyTfvcPath]$/MyTeamProj/MyFolder <br>
+                    ##vso[artifact.associate type=gitref;artifactname=MyTag]refs/tags/MyGitTag <br>
+                    ##vso[artifact.associate type=tfvclabel;artifactname=MyTag]MyTfvcLabel <br>
                 </p>
             </td>
             <td>

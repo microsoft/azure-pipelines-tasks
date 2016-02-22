@@ -13,7 +13,7 @@
   "loc.input.label.sdk": "SDK",
   "loc.input.help.sdk": "Utilisez le SDK spécifié. Exécutez **xcodebuild -showsdks** pour afficher la liste valide des SDK.",
   "loc.input.label.appPath": "Chemin d'accès du fichier .app",
-  "loc.input.help.appPath": "Chemin d'accès relatif au fichier .app généré",
+  "loc.input.help.appPath": "Chemin relatif du fichier .app généré",
   "loc.input.label.ipaPath": "Chemin d'accès ou placer le fichier .ipa",
-  "loc.input.help.ipaPath": "Chemin d'accès relatif dans lequel le fichier .ipa sera placé. Le répertoire est créé s'il n'existe pas."
+  "loc.input.help.ipaPath": "Chemin relatif dans lequel le fichier .ipa sera placé. Le répertoire est créé s'il n'existe pas."
 }

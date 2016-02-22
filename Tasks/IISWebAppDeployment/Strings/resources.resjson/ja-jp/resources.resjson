@@ -55,7 +55,7 @@
   "loc.input.help.HostNameWithSNI": "1 つの IP アドレスを使用するコンピューターに 1 つか複数のホスト名 (ドメイン名) を割り当てるには、ここでホスト名を入力します。ホスト名が指定されると、クライアントが Web サイトにアクセスする際に IP アドレスではなくホスト名が使用されます。",
   "loc.input.label.SSLCertThumbPrint": "SSL 証明書の拇印",
   "loc.input.help.SSLCertThumbPrint": "Web サイトが使用する Secure Socket Layer 証明書の拇印。証明書はあらかじめインストールされ、コンピューターのローカル システムの個人用保存場所に置かれている必要があります。",
-  "loc.input.label.CreateAppPool": "アプリケーション ツールの作成または更新",
+  "loc.input.label.CreateAppPool": "アプリケーション プールの作成または更新",
   "loc.input.help.CreateAppPool": "アプリケーション プールを作成するオプションか、既存のアプリケーション プールを更新するオプションを選択します。",
   "loc.input.label.AppPoolName": "名前",
   "loc.input.help.AppPoolName": "作成または更新する IIS アプリケーション プールの名前。既存のアプリケーション プールはここで指定した設定で更新されます。",

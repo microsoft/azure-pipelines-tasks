@@ -12,6 +12,7 @@
   "loc.input.label.configuration": "組態",
   "loc.input.label.clean": "清除",
   "loc.input.label.restoreNugetPackages": "還原 NuGet 套件",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.vsVersion": "Visual Studio 版本",
   "loc.input.help.vsVersion": "若找不到慣用版本，將會改用所能找到的最新版本。",
   "loc.input.label.msbuildArchitecture": "MSBuild 架構",

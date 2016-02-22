@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Testergebnisse veröffentlichen",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Testergebnisse in VSO/TFS veröffentlichen",
+  "loc.description": "Publish Test Results to VSTS/TFS",
   "loc.instanceNameFormat": "Testergebnisse $(testResultsFiles) veröffentlichen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.testRunner": "Testergebnisformat",
@@ -9,7 +9,7 @@
   "loc.input.label.testResultsFiles": "Testergebnisdateien",
   "loc.input.help.testResultsFiles": "Pfad der Testergebnisdateien. Platzhalter können verwendet werden. Beispiel: \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
   "loc.input.label.mergeTestResults": "Testergebnisse zusammenführen",
-  "loc.input.help.mergeTestResults": "Aktivieren Sie diese Option, um Ergebnisse aus allen Testergebnisdateien zu einem Testlauf in TFS/VSO zusammenzuführen. Deaktivieren Sie die Option, um für jede Testergebnisdatei einen eigenen Testlauf zu erstellen.",
+  "loc.input.help.mergeTestResults": "To merge results from all test results files to one test run in VSTS/TFS, check this option. To create a test run for each test results file, uncheck this option.",
   "loc.input.label.testRunTitle": "Testlauftitel",
   "loc.input.help.testRunTitle": "Geben Sie einen Namen für den Testlauf an.",
   "loc.input.label.platform": "Plattform",
