@@ -16,7 +16,7 @@
   "loc.input.label.testFilterCriteria": "Test Filter criteria",
   "loc.input.help.testFilterCriteria": "Optionally specify the test case filter criteria. For example, `Owner=james&Priority=1`",
   "loc.input.label.runSettingsFile": "Run Settings File",
-  "loc.input.help.runSettingsFile": "Path to runsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+  "loc.input.help.runSettingsFile": "Path to runsettings or testsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
   "loc.input.label.overrideRunParams": "Override Test Run Parameters",
   "loc.input.help.overrideRunParams": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
