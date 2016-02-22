@@ -3,7 +3,6 @@ param()
 
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SonarQubePostTestImpl.ps1
-
     
 function CreateRandomDir
 {
