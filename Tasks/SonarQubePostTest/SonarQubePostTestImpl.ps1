@@ -1,4 +1,3 @@
-
 function InvokeMSBuildRunnerPostTest
 {
 	$bootstrapperPath = GetBootsrapperPath
@@ -78,8 +77,7 @@ function UploadSummaryMdReport
 }
 
 function HandleCodeAnalysisReporting
-{
-	Write-Verbose "hello"
+{	
     if (IsPrBuild)
     {    	
 		Write-Verbose "Detected a PR build - uploading issues to the code review..."
