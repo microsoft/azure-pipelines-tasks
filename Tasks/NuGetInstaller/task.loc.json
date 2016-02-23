@@ -38,6 +38,18 @@
       "required": "false"
     },
     {
+      "name": "restoreMode",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.restoreMode",
+      "defaultValue": "Restore",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreMode",
+      "required": "true",
+      "options": {
+        "restore": "Restore",
+        "install": "Install"
+      }
+    },
+    {
       "name": "noCache",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.noCache",

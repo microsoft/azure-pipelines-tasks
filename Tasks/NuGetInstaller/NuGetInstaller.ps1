@@ -1,8 +1,8 @@
 param(
     [string]$solution,
     [string]$nugetConfigPath,
-    [ValidateSet("Restore", "Install")]
-    [string]$restoreMode = "Restore",
+    [ValidateSet("restore", "install")]
+    [string]$restoreMode,
     [string]$excludeVersion, # Support for excludeVersion has been deprecated.
     [string]$noCache,
     [string]$nuGetRestoreArgs,
@@ -14,7 +14,8 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 . $PSScriptRoot\VsoNuGetHelper.ps1
 
-Write-Verbose "Entering script $MyInvocation.MyCommand.Name"
+$MyCommandName = $MyInvocation.MyCommand.Name
+Write-Verbose "Entering script $MyCommandName"
 Write-Verbose "Parameter Values"
 foreach($key in $PSBoundParameters.Keys)
 {
@@ -134,8 +135,8 @@ try
         if($nuGetPath)
         {
             $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
-            Write-Verbose "Running nuget package restore for $slnFolder"
-            Invoke-Tool -Path $nugetPath -Arguments "restore `"$sf`" $args" -WorkingFolder $slnFolder
+            Write-Verbose "Running nuget package $restoreMode for $slnFolder"
+            Invoke-Tool -Path $nugetPath -Arguments "$restoreMode `"$sf`" $args" -WorkingFolder $slnFolder
         }
     }
 }
