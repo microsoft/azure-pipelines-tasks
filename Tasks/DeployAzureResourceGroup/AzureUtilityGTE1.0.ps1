@@ -397,6 +397,8 @@ function Add-NetworkSecurityRuleConfig
             $securityGroupName = $securityGroup.Name
             try
             {
+                $winRMConfigRule = $null
+
                 Write-Verbose -Verbose "[Azure Call]Getting network security rule config $ruleName under security group $securityGroupName"
                 $winRMConfigRule = Get-AzureRmNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -EA SilentlyContinue
                 Write-Verbose -Verbose "[Azure Call]Got network security rule config $ruleName under security group $securityGroupName"
