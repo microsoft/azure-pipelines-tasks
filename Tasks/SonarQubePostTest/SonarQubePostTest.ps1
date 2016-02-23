@@ -2,10 +2,9 @@ Write-Verbose "Starting SonarQube PostBuild Step"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
-. ./Common/SonarQubeHelpers/SonarQubeHelper.ps1
-. ./SonarQubePostTestImpl.ps1
-. ./SonarQubeBuildBreaker.ps1
-. ./CodeAnalysisFilePathComputation.ps1
+. $PSScriptRoot/Common/SonarQubeHelpers/SonarQubeHelper.ps1
+. $PSScriptRoot//SonarQubePostTestImpl.ps1
+. $PSScriptRoot//SonarQubeBuildBreaker.ps1
 
 InvokeMSBuildRunnerPostTest
 UploadSummaryMdReport
