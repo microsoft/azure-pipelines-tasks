@@ -898,6 +898,9 @@ function Add-AzureVMCustomScriptExtension
         }
 	
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
+	    $resultDetails = $result | ConvertTo-Json
+        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
+
         if($result.Status -ne "Succeeded")
         {
             Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
@@ -905,9 +908,6 @@ function Add-AzureVMCustomScriptExtension
             $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
         }
-
-	    $resultDetails = $result | ConvertTo-Json
-        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
 
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
         Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
