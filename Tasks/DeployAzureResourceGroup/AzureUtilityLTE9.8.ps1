@@ -359,6 +359,7 @@ function Get-NetworkSecurityGroups
 
     $securityGroups = New-Object System.Collections.Generic.List[System.Object]
 
+    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmId))
     {
         Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName for vm $vmId"
@@ -367,12 +368,15 @@ function Get-NetworkSecurityGroups
         
         if($networkInterfaces)
         {
+            $noOfNics = $networkInterfaces.Count
+            Write-Verbose -Verbose "Number of network interface cards present in the vm: $noOfNics"
+
             foreach($networkInterface in $networkInterfaces)
             {
                 $networkSecurityGroupEntry = $networkInterface.NetworkSecurityGroup
                 if($networkSecurityGroupEntry)
                 {
-                    $nsId = $networkSecurityGroupEntry.Id
+					$nsId = $networkSecurityGroupEntry.Id
 					Write-Verbose -Verbose "Network Security Group Id: $nsId"
 					
                     $securityGroupName = $nsId.Split('/')[-1]
@@ -403,11 +407,13 @@ function Get-NetworkSecurityGroups
 
 function Add-NetworkSecurityRuleConfig
 {
-    param([object]$securityGroups,
+    param([string]$resourceGroupName,
+          [object]$securityGroups,
           [string]$ruleName,
           [string]$rulePriotity,
           [string]$winrmHttpsPort)
 
+    Switch-AzureMode AzureResourceManager
     if($securityGroups.Count -gt 0)
     {
         foreach($securityGroup in $securityGroups)
@@ -428,23 +434,36 @@ function Add-NetworkSecurityRuleConfig
 
             # Add the network security rule if it doesn't exists
             if(-not $winRMConfigRule)                                                              
-            {            
-                for($i=1; $i -le 3; $i++)
+            {           
+                $maxRetries = 3
+                for($retryCnt=1; $retryCnt -le $maxRetries; $retryCnt++)
                 {
                     try
                     {
                         Write-Verbose -Verbose "[Azure Call]Adding inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"
-                        $result = Add-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -Direction Inbound -Access Allow -SourceAddressPrefix '*' -SourcePortRange '*' -DestinationAddressPrefix '*' -DestinationPortRange $winrmHttpsPort -Protocol * -Priority $rulePriotity | Set-AzureNetworkSecurityGroup
+                        $securityGroup = Add-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -Direction Inbound -Access Allow -SourceAddressPrefix '*' -SourcePortRange '*' -DestinationAddressPrefix '*' -DestinationPortRange $winrmHttpsPort -Protocol * -Priority $rulePriotity
                         Write-Verbose -Verbose "[Azure Call]Added inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"                         
+
+                        Write-Verbose -Verbose "[Azure Call]Setting the azure network security group"
+                        $result = Set-AzureNetworkSecurityGroup -NetworkSecurityGroup $securityGroup
+                        Write-Verbose -Verbose "[Azure Call]Set the azure network security group"
                     }
                     catch
-                    {           
+                    {
+                        Write-Verbose -Verbose "Failed to add inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName : $_.Exception.Message"
+                            
                         $newPort = [convert]::ToInt32($rulePriotity, 10) + 50;
                         $rulePriotity = $newPort.ToString()
 
                         Write-Verbose -Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $resourceGroupName"
                         $securityGroup = Get-AzureNetworkSecurityGroup -ResourceGroupName $resourceGroupName -Name $securityGroupName
                         Write-Verbose -Verbose "[Azure Call]Got network security group $securityGroupName in resource group $resourceGroupName"
+                        
+
+                        if($retryCnt -eq $maxRetries)
+                        {
+                            throw $_
+                        }
 
                         continue
                     }           
@@ -460,8 +479,14 @@ function Add-NetworkSecurityRuleConfig
 # Used only in test code
 function Remove-NetworkSecurityRuleConfig
 {
-    param([object] $securityGroup,
+    param([object] $securityGroups,
           [string] $ruleName)
 
-    $result = Remove-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName | Set-AzureNetworkSecurityGroup
+    Switch-AzureMode AzureResourceManager
+    foreach($securityGroup in $securityGroups)
+    {
+        Write-Verbose -Verbose "[Azure Call]Removing the Rule $ruleName"
+        $result = Remove-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName | Set-AzureNetworkSecurityGroup
+        Write-Verbose -Verbose "[Azure Call]Removed the Rule $ruleName"
+    }
 }
