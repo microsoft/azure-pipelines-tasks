@@ -27,7 +27,7 @@ function IsVisualStudio2015Update1OrHigherInstalled {
     )
     
     if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
-        $vsTestVersion = Locate-VSVersion()
+        $vsTestVersion = Locate-VSVersion
     }
     
     $version = [int]($vsTestVersion)
