@@ -1103,7 +1103,7 @@ function Add-WinRMHttpsNetworkSecurityRuleConfig
 
         if($securityGroups.Count -gt 0)
         {
-            Add-NetworkSecurityRuleConfig -securityGroups $securityGroups -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+            Add-NetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -securityGroups $securityGroups -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
         }
     }
     catch
@@ -1140,10 +1140,10 @@ function Add-AzureVMCustomScriptExtension
         Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
 
         if($isExtensionExists)
-        {
-            Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
-
+        {            
             Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+            
+            Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
             return
         }
 
