@@ -41,7 +41,7 @@
             "name": "restoreMode",
             "type": "radio",
             "label": "Installation type",
-            "defaultValue":"Restore",
+            "defaultValue":"restore",
             "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.",
             "required":"true",
             "options": {
