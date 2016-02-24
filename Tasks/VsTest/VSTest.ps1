@@ -69,7 +69,11 @@ if ($testAssembly.Contains("*") -Or $testAssembly.Contains("?"))
 else
 {
     Write-Verbose "No Pattern found in solution parameter."
-    $testAssemblyFiles += ,$testAssembly.Split(";")
+    $testAssembly = $testAssembly.Replace(';;', "`0") # Barrowed from Legacy File Handler
+    foreach ($assembly in $testAssembly.Split(";"))
+    {
+        $testAssemblyFiles += ,($assembly.Replace("`0",";"))
+    }
 }
 
 $codeCoverage = Convert-String $codeCoverageEnabled Boolean
