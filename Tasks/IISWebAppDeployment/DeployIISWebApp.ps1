@@ -9,6 +9,7 @@
     [string]$webDeployPackage,
     [string]$webDeployParamFile,
     [string]$overRideParams,
+	[string]$createWebSite,
     [string]$webSiteName,    
     [string]$webSitePhysicalPath,
     [string]$webSitePhysicalPathAuth,
@@ -24,6 +25,7 @@
     [string]$hostNameWithSNI,
     [string]$serverNameIndication,
     [string]$sslCertThumbPrint,
+	[string]$createAppPool,
     [string]$appPoolName,
     [string]$dotNetVersion,
     [string]$pipeLineMode,
@@ -62,10 +64,12 @@ Write-Verbose "webDeployParamFile = $webDeployParamFile" -Verbose
 Write-Verbose "overRideParams = $overRideParams" -Verbose
 Write-Verbose "deployInParallel = $deployInParallel" -Verbose
 
+Write-Verbose "createWebSite = $createWebSite" -Verbose
 Write-Verbose "webSiteName = $webSiteName" -Verbose
 Write-Verbose "webSitePhysicalPath = $webSitePhysicalPath" -Verbose
 Write-Verbose "webSitePhysicalPathAuth = $webSitePhysicalPathAuth" -Verbose
 Write-Verbose "webSiteAuthUserName = $webSiteAuthUserName" -Verbose
+
 Write-Verbose "addBinding = $addBinding" -Verbose
 Write-Verbose "assignDuplicateBinding = $assignDuplicateBinding" -Verbose
 Write-Verbose "protocol = $protocol" -Verbose
@@ -116,7 +120,7 @@ if(![string]::IsNullOrWhiteSpace($webSiteName))
 $overRideParams = $overRideParams.Replace('"', '''')
 
 $msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
-$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`""
+$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`"  -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`" -CreateWebsite `"$createWebsite`" -CreateAppPool `"$createAppPool`""
 
 Write-Verbose "MsDeployOnTargetMachines Script Arguments : $scriptArgs" -Verbose
 Write-Output ( Get-LocalizedString -Key "Starting deployment of IIS Web Deploy Package : {0}" -ArgumentList $webDeployPackage)
