@@ -59,7 +59,7 @@ Write-Host "DacpacFile= Find-Files -SearchPattern $DacpacFile"
 $DacpacFilePath = Find-Files -SearchPattern $DacpacFile
 Write-Host "packageFile= $DacpacFilePath"
 
-#Ensure that at most a single package (.zip) file is found
+#Ensure that at most a single package (.dacpac) file is found
 $DacpacFilePath = Get-SingleFile $DacpacFilePath $DacpacFile
 
 
