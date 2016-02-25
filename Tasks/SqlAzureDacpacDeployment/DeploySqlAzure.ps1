@@ -39,6 +39,30 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 # Load all dependent files for execution
 Import-Module ./Utility.ps1 -Force
 
+function Get-SingleFile($files, $pattern)
+{
+    if ($files -is [system.array])
+    {
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern {0}. There can be only one." -ArgumentList $pattern)
+    }
+    else
+    {
+        if (!$files)
+        {
+            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}" -ArgumentList $pattern)
+        }
+        return $files
+    }
+}
+
+Write-Host "DacpacFile= Find-Files -SearchPattern $DacpacFile"
+$DacpacFilePath = Find-Files -SearchPattern $DacpacFile
+Write-Host "packageFile= $DacpacFilePath"
+
+#Ensure that at most a single package (.zip) file is found
+$DacpacFilePath = Get-SingleFile $DacpacFilePath $DacpacFile
+
+
 $ErrorActionPreference = 'Stop'
 
 $serverFriendlyName = $ServerName.split(".")[0]
@@ -76,7 +100,7 @@ Try
 
     # getting script arguments to execute sqlpackage.exe
     Write-Verbose "Creating SQLPackage.exe agruments" -Verbose
-    $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFile -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
+    $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
                                                      -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfile -additionalArguments $AdditionalArguments
     Write-Verbose "Created SQLPackage.exe agruments" -Verbose
 
