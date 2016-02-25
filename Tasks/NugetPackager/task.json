@@ -47,14 +47,14 @@
             "type": "pickList",
             "label": "Automatic package versioning",
             "defaultValue":"false",
-            "helpMarkDown": "If you choose 'Generate a prerelease string', this will generate a SemVer-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'From an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'By build number', this will use the build number to version you package. **Note:** Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'.",
+            "helpMarkDown": "If you choose 'Use semantic versioning', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'.",
             "required":true,
             "groupName": "versioning",
             "options": {
                 "false": "Off",
-                "byPrereleaseNumber": "Generate a prerelease string",
-                "byEnvVar": "From an environment variable",
-                "true": "By build number"
+                "byPrereleaseNumber": "Use semantic versioning",
+                "byEnvVar": "Use an environment variable",
+                "true": "Use the build number"
             }
         },
         {
@@ -72,7 +72,7 @@
             "type": "string",
             "label": "Major",
             "defaultValue":"1",
-            "helpMarkDown": "The 'X' in version X.Y.Z",
+            "helpMarkDown": "The 'X' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
             "required":true,
             "groupName": "versioning",
             "visibleRule": "versionByBuild = byPrereleaseNumber"
@@ -82,7 +82,7 @@
             "type": "string",
             "label": "Minor",
             "defaultValue":"0",
-            "helpMarkDown": "The 'Y' in version X.Y.Z",
+            "helpMarkDown": "The 'Y' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
             "required":true,
             "groupName": "versioning",
             "visibleRule": "versionByBuild = byPrereleaseNumber"
@@ -92,7 +92,7 @@
             "type": "string",
             "label": "Patch",
             "defaultValue":"0",
-            "helpMarkDown": "The 'Z' in version X.Y.Z",
+            "helpMarkDown": "The 'Z' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
             "required":true,
             "groupName": "versioning",
             "visibleRule": "versionByBuild = byPrereleaseNumber"

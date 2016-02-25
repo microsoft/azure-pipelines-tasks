@@ -52,9 +52,9 @@
       "groupName": "versioning",
       "options": {
         "false": "Off",
-        "byPrereleaseNumber": "Generate a prerelease string",
-        "byEnvVar": "From an environment variable",
-        "true": "By build number"
+        "byPrereleaseNumber": "Use semantic versioning",
+        "byEnvVar": "Use an environment variable",
+        "true": "Use the build number"
       }
     },
     {
