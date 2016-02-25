@@ -13,7 +13,7 @@ param(
     [string]$configuration,
     [string]$publishRunAttachments,
     [string]$runInParallel
-)
+    )
 
 Write-Verbose "Entering script VSTest.ps1"
 Write-Verbose "vsTestVersion = $vsTestVersion"
@@ -36,7 +36,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 . $PSScriptRoot\Helpers.ps1
-    
+
 if (!$testAssembly)
 {
     Write-Host "##vso[task.logissue type=error;code=002001;]" 
@@ -110,7 +110,6 @@ if($testAssemblyFiles)
     if($resultFiles)
     {
         # Remove the below hack once the min agent version is updated to S91 or above
-    
         $runTitleMemberExists = CmdletHasMember "RunTitle"
         $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
         if($runTitleMemberExists)
