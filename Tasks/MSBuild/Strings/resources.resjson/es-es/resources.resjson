@@ -21,5 +21,7 @@
   "loc.input.label.msbuildArchitecture": "Arquitectura MSBuild",
   "loc.input.help.msbuildArchitecture": "Indique opcionalmente la arquitectura (x86, x64) de MSBuild que se va a ejecutar.",
   "loc.input.label.msbuildLocation": "Ruta de acceso de MSBuild",
-  "loc.input.help.msbuildLocation": "Indique opcionalmente la ruta de acceso a MSBuild."
+  "loc.input.help.msbuildLocation": "Indique opcionalmente la ruta de acceso a MSBuild.",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "No se encuentra MSBuild: versión = {0}, arquitectura = {1}. Buscando la última versión.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "No se encuentra MSBuild: versión = {0}, arquitectura = {1}. Pruebe otra combinación de versión y arquitectura, especifique una ubicación o instale la combinación de versión y arquitectura de MSBuild adecuada."
 }

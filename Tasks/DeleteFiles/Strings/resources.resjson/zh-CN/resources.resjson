@@ -7,5 +7,6 @@
   "loc.input.help.SourceFolder": "将在其中运行删除的源文件夹。为空表示存储库的根。如果存储库中没有文件，请使用[变量](http://go.microsoft.com/fwlink/?LinkID=550988)。示例: $(agent.builddirectory)",
   "loc.input.label.Contents": "内容",
   "loc.input.help.Contents": "要删除的文件/文件夹路径。支持多行的最小匹配模式。[详细信息](http://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.messages.CantDeleteFiles": "无法删除一个或多个文件"
+  "loc.messages.CantDeleteFiles": "无法删除一个或多个文件",
+  "loc.messages.SkippingSymbolStore": "跳过删除符号存储文件共享: %s"
 }

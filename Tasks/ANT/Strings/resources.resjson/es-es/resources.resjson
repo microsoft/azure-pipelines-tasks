@@ -9,7 +9,7 @@
   "loc.input.label.antBuildFile": "Archivo de compilación de Ant",
   "loc.input.help.antBuildFile": "Ruta de acceso relativa de la raíz del repositorio al \"archivo de compilación de Ant\".",
   "loc.input.label.options": "Opciones",
-  "loc.input.help.options": "Proporcione las opciones que se van a pasar a la línea de comandos de Ant. Puede proporcionar sus propiedades (por ejemplo, ***-DmyProperty=myPropertyValue***) y también usar variables integradas (por ejemplo, ***-DcollectionId=$(system.collectionId)***). Puede que las variables integradas ya se hayan establecido como variables de entorno durante la compilación y se puedan pasar directamente (por ejemplo, ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***).",
+  "loc.input.help.options": "Proporcione las opciones que se van a pasar a la línea de comandos de Ant. Puede proporcionar sus propiedades (por ejemplo, ***-DmiPropiedad=valorDeMiPropiedad***) y también usar variables integradas (por ejemplo, ***-DcollectionId=$(system.collectionId)***). Puede que las variables integradas ya se hayan establecido como variables de entorno durante la compilación y se puedan pasar directamente (por ejemplo, ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***).",
   "loc.input.label.targets": "Destinos",
   "loc.input.label.publishJUnitResults": "Publicar en VSO o TFS",
   "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar en VSO/TFS los resultados de pruebas JUnit generados por la compilación de Ant. Cada archivo de resultados de prueba que coincida con \"Archivos de resultados de pruebas\" se publicará como una serie de pruebas en VSO/TFS.",

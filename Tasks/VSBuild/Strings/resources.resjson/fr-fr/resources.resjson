@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Générer la solution $(solution)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.solution": "Solution",
-  "loc.input.help.solution": "Chemin d'accès relatif depuis la racine de référentiel aux solutions ou au projet MSBuild à exécuter. Les caractères génériques sont autorisés. Par exemple, '**\\*.sln' pour tous les fichiers sln de tous les sous-dossiers.",
+  "loc.input.help.solution": "Chemin relatif de la racine de dépôt des solutions ou du projet MSBuild à exécuter. Les caractères génériques sont autorisés. Par exemple, '**\\*.sln' pour tous les fichiers sln de tous les sous-dossiers.",
   "loc.input.label.msbuildArgs": "Arguments MSBuild",
   "loc.input.help.msbuildArgs": "Arguments supplémentaires passés à MSBuild.",
   "loc.input.label.platform": "Plateforme",

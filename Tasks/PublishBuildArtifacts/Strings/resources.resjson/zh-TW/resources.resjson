@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "要建立之成品的類型。",
   "loc.input.label.TargetPath": "路徑",
   "loc.input.help.TargetPath": "要接受所複製之檔案的檔案共用",
-  "loc.messages.PublishBuildArtifactsFailed": "發行組建成品失敗，錯誤為: %s"
+  "loc.messages.PublishBuildArtifactsFailed": "發行組建成品失敗，錯誤為: %s",
+  "loc.messages.PublishBuildArtifactsNotSupported": "版本中不支援發行組建成品"
 }

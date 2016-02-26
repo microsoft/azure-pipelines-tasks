@@ -8,7 +8,7 @@
   "loc.group.displayName.advanced": "Avancé",
   "loc.group.displayName.SQAnalysis": "Analyse SonarQube",
   "loc.input.label.mavenPOMFile": "Fichier POM Maven",
-  "loc.input.help.mavenPOMFile": "Chemin d'accès relatif de la racine de référentiel au 'fichier POM Maven'.",
+  "loc.input.help.mavenPOMFile": "Chemin relatif de la racine de dépôt du 'fichier POM Maven'.",
   "loc.input.label.options": "Options",
   "loc.input.label.goals": "Objectif(s)",
   "loc.input.label.publishJUnitResults": "Publier dans VSO/TFS",

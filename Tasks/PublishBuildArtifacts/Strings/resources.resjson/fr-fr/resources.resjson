@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "Type de l'artefact à créer.",
   "loc.input.label.TargetPath": "Chemin d'accès",
   "loc.input.help.TargetPath": "Partage de fichiers dans lequel copier les fichiers",
-  "loc.messages.PublishBuildArtifactsFailed": "Échec de la publication des artefacts de build. Erreur : %s"
+  "loc.messages.PublishBuildArtifactsFailed": "Échec de la publication des artefacts de build. Erreur : %s",
+  "loc.messages.PublishBuildArtifactsNotSupported": "La publication des artefacts de build n'est pas prise en charge dans la mise en production"
 }

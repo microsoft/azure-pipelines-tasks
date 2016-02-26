@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "Тип создаваемого артефакта.",
   "loc.input.label.TargetPath": "Путь",
   "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы",
-  "loc.messages.PublishBuildArtifactsFailed": "Сбой публикации артефактов сборки с ошибкой: %s"
+  "loc.messages.PublishBuildArtifactsFailed": "Сбой публикации артефактов сборки с ошибкой: %s",
+  "loc.messages.PublishBuildArtifactsNotSupported": "Публикация артефактов сборки не поддерживается в выпуске."
 }

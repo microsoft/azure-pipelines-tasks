@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "Type d'artefact",
   "loc.input.help.ArtifactType": "Type de l'artefact à créer.",
   "loc.input.label.TargetPath": "Chemin d'accès",
-  "loc.input.help.TargetPath": "Partage de fichiers dans lequel copier les fichiers"
+  "loc.input.help.TargetPath": "Partage de fichiers dans lequel copier les fichiers",
+  "loc.messages.CopyPublishBuildArtifactsNotSupported": "La tâche de copie et de publication des artefacts de build n'est pas prise en charge dans la mise en production"
 }

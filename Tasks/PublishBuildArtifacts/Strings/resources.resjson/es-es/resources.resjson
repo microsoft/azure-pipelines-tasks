@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "Tipo del artefacto que se va a crear.",
   "loc.input.label.TargetPath": "Ruta de acceso",
   "loc.input.help.TargetPath": "Recurso compartido de archivos en el que copiar los archivos",
-  "loc.messages.PublishBuildArtifactsFailed": "Error al publicar artefactos de compilación: %s"
+  "loc.messages.PublishBuildArtifactsFailed": "Error al publicar artefactos de compilación: %s",
+  "loc.messages.PublishBuildArtifactsNotSupported": "La tarea Publicar artefactos de la compilación no se admite en el proceso de versión."
 }

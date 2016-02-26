@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "Artefakttyp",
   "loc.input.help.ArtifactType": "Der Typ des zu erstellenden Artefakts.",
   "loc.input.label.TargetPath": "Pfad",
-  "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Dateien kopiert werden sollen."
+  "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Dateien kopiert werden sollen.",
+  "loc.messages.CopyPublishBuildArtifactsNotSupported": "Das Kopieren und Veröffentlichen des Tasks zum Erstellen von Artefakten wird in diesem Release nicht unterstützt."
 }

@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "만들 아티팩트의 형식입니다.",
   "loc.input.label.TargetPath": "경로",
   "loc.input.help.TargetPath": "파일을 복사할 파일 공유",
-  "loc.messages.PublishBuildArtifactsFailed": "오류 %s(으)로 빌드 아티팩트 게시 실패"
+  "loc.messages.PublishBuildArtifactsFailed": "오류 %s(으)로 빌드 아티팩트 게시 실패",
+  "loc.messages.PublishBuildArtifactsNotSupported": "빌드 아티팩트 게시가 릴리스 내에서 지원되지 않음"
 }

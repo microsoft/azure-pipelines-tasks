@@ -16,7 +16,7 @@
   "loc.input.label.machinePassword": "Contraseña",
   "loc.input.help.machinePassword": "Contraseña del nombre de usuario especificado anteriormente.",
   "loc.input.label.runAsProcess": "Proceso interactivo",
-  "loc.input.help.runAsProcess": "Denota si es necesario que el agente de pruebas se ejecute como un proceso interactivo, lo cual es preciso en las pruebas de IU codificadas.",
+  "loc.input.help.runAsProcess": "Denota si es necesario que el agente de pruebas se ejecute como un proceso interactivo, lo cual es preciso en las pruebas automatizadas de IU.",
   "loc.input.label.agentLocation": "Ubicación del agente de pruebas",
   "loc.input.help.agentLocation": "Indique opcionalmente la ruta de acceso a vstf_testagent.exe desde una ubicación local o de red. Si no se proporciona una ruta de acceso, se descargará de http://go.microsoft.com/fwlink/?LinkId=536423",
   "loc.input.label.updateTestAgent": "Actualizar agente de pruebas",

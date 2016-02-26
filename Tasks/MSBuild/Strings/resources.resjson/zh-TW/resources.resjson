@@ -21,5 +21,7 @@
   "loc.input.label.msbuildArchitecture": "MSBuild 架構",
   "loc.input.help.msbuildArchitecture": "選擇性地提供 MSBuild 的架構 (x86、x64) 以執行。",
   "loc.input.label.msbuildLocation": "MSBuild 的路徑",
-  "loc.input.help.msbuildLocation": "選擇性地提供 MSBuild 的路徑。"
+  "loc.input.help.msbuildLocation": "選擇性地提供 MSBuild 的路徑。",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "找不到 MSBuild: 版本 = {0}，架構 = {1}。正在尋找最新的版本。",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "找不到 MSBuild: 版本 = {0}，架構 = {1}。請嘗試不同的版本/架構組合、指定位置或是安裝適當的 MSBuild 版本/架構。"
 }

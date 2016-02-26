@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "项目类型",
   "loc.input.help.ArtifactType": "要创建的项目的类型。",
   "loc.input.label.TargetPath": "路径",
-  "loc.input.help.TargetPath": "要将文件复制到的文件共享"
+  "loc.input.help.TargetPath": "要将文件复制到的文件共享",
+  "loc.messages.CopyPublishBuildArtifactsNotSupported": "发行版不支持复制和发布生成项目任务"
 }

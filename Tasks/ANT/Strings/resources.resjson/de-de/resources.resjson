@@ -28,7 +28,7 @@
   "loc.input.label.antHomeUserInputPath": "ANT_HOME-Pfad festlegen",
   "loc.input.help.antHomeUserInputPath": "Wenn festgelegt, werden alle vorhandenen ANT_HOME-Umgebungsvariablen mit dem angegebenen Pfad überschrieben.",
   "loc.input.label.javaHomeSelection": "JAVA_HOME festlegen durch",
-  "loc.input.help.javaHomeSelection": "Legt JAVA_HOME durch Auswählen einer JDK-Version, die während der Erstellung von Builds ermittelt wird, oder durch manuelles Eingeben eines JDK-Pfads fest.",
+  "loc.input.help.javaHomeSelection": "Legt JAVA_HOME durch Auswählen einer JDK-Version fest, die während der Erstellung von Builds oder durch manuelles Eingeben eines JDK-Pfads ermittelt wird.",
   "loc.input.label.jdkVersion": "JDK-Version",
   "loc.input.help.jdkVersion": "Versucht, den Pfad zur ausgewählten JDK-Version zu ermitteln und JAVA_HOME entsprechend festzulegen.",
   "loc.input.label.jdkUserInputPath": "JDK-Pfad",

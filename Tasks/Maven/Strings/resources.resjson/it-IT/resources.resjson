@@ -44,7 +44,7 @@
   "loc.input.label.sqConnectedServiceName": "Endpoint SonarQube",
   "loc.input.help.sqConnectedServiceName": "Endpoint che specifica il server SonarQube da usare",
   "loc.input.label.sqDbDetailsRequired": "La versione del server SonarQube è inferiore alla 5.2",
-  "loc.input.help.sqDbDetailsRequired": "Se si usa un server SonarQube 5.1 o di una versione precedente, è necessario specificare i dettagli della connessione di database.",
+  "loc.input.help.sqDbDetailsRequired": "Se si usa un server SonarQube 5.1 o versione precedente, è necessario specificare i dettagli della connessione di database.",
   "loc.input.label.sqDbUrl": "Stringa di connessione database",
   "loc.input.help.sqDbUrl": "Solo server SonarQube 5.1 e versioni precedenti. Impostazione della connessione di database, ad esempio sonar.jdbc.url. Esempio: jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
   "loc.input.label.sqDbUsername": "Nome utente database",

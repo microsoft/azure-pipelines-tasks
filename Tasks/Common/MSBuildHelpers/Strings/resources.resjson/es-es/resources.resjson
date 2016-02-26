@@ -1,5 +1,5 @@
 {
-  "loc.messages.MSB_Build0": "Build {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'."
+  "loc.messages.MSB_Build0": "Compilación {0}",
+  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Se detectó la ruta de acceso del cargador de extensiones de NuGet. La variable de entorno NUGET_EXTENSIONS_PATH está establecida en '{0}'.",
+  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "No se encontró la solución con el patrón de búsqueda '{0}'."
 }
