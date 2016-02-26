@@ -62,7 +62,7 @@ Write-Host "packageFile= $DacpacFilePath"
 ThrowIfMultipleFilesOrNoFilePresent -files $DacpacFilePath -pattern $DacpacFile
 
 $PublishProfilePath=""
-if( $PublishProfile )
+if( !([string]::IsNullOrWhitespace($PublishProfile)) )
 {
     Write-Host "PublishProfilePath = Find-Files -SearchPattern $PublishProfile"
     $PublishProfilePath = Find-Files -SearchPattern $PublishProfile
