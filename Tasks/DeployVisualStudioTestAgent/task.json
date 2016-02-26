@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 23
     },
     "demands": [
 
@@ -69,7 +69,7 @@
             "type": "radio",
             "label": "Protocol",
             "required": false,
-            "defaultValue": "Https",
+            "defaultValue": "",
             "options": {
                 "Http": "HTTP",
                 "Https": "HTTPS"
