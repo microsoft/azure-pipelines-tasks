@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "demands" : [
         "azureps"
@@ -69,10 +69,17 @@
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
     "execution": {
+        "PowerShell3": {
+            "target": "AzurePowerShell.ps1"
+        },
         "AzurePowerShell": {
-            "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
+            "target": "$(currentDirectory)\\AzurePowerShell-Legacy.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
     }
 }
