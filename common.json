@@ -1,4 +1,10 @@
 {
+    "AzurePowerShell": [
+        {
+            "module": "AzureHelpers",
+            "dest": "ps_modules"
+        }
+    ],
     "MSBuild": [
         {
             "module": "MSBuildHelpers",
