@@ -85,20 +85,27 @@ function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose -Verbose "Azure PowerShell version: $currentVersion"
-    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
 
-    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
-    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
+    $AzureVersion099 = New-Object System.Version(0, 9, 9)
+    $AzureVersion103 = New-Object System.Version(1, 0, 3)
 
-    if(!$versionCompatible)
+    $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
+    $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
+
+    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion098
+    }
+    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+    {
+        Check-AzureRMInstalled
+        $azureUtilityRequiredVersion = $azureUtilityVersion100
     }
     else
     {
         Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
+        $azureUtilityRequiredVersion = $azureUtilityVersion110
     }
 
     Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
@@ -906,16 +913,16 @@ function Add-AzureVMCustomScriptExtension
 	
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
 
-    if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
+	$resultDetails = $result | ConvertTo-Json
+    Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
+
+    if($result.Status -ne "Succeeded")
     {
         Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
             $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
     }
-
-	    $resultDetails = $result | ConvertTo-Json
-        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
     }
     catch
