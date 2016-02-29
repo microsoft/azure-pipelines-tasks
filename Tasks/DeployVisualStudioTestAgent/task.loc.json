@@ -13,10 +13,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 20
+    "Patch": 21
   },
   "demands": [],
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "testMachineGroups",
@@ -32,9 +32,88 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "testMachineGroupsPreview",
+      "displayName": "ms-resource:loc.group.displayName.testMachineGroupsPreview",
+      "tags": [
+        "Preview"
+      ],
+      "isExpanded": true
     }
   ],
   "inputs": [
+    {
+      "name": "testMachineGroupPreview",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.testMachineGroupPreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroupPreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "adminUserNamePreview",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.adminUserNamePreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adminUserNamePreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "adminPasswordPreview",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.adminPasswordPreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adminPasswordPreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "winRmProtocolPreview",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.winRmProtocolPreview",
+      "required": false,
+      "defaultValue": "",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.winRmProtocolPreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "testCertificatePreview",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.testCertificatePreview",
+      "defaultValue": "true",
+      "visibleRule": "winRmProtocolPreview = Https",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testCertificatePreview",
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "resourceFilteringMethodPreview",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethodPreview",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "groupName": "testMachineGroupsPreview"
+    },
+    {
+      "name": "testMachinesPreview",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testMachinesPreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testMachinesPreview",
+      "groupName": "testMachineGroupsPreview"
+    },
     {
       "name": "testMachineGroup",
       "type": "pickList",
@@ -45,9 +124,9 @@
       "groupName": "testMachineGroups"
     },
     {
-      "name": "ResourceFilteringMethod",
+      "name": "resourceFilteringMethod",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethod",
       "required": false,
       "defaultValue": "machineNames",
       "options": {

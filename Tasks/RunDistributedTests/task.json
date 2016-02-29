@@ -13,11 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 24
+        "Patch": 25
     },
     "demands": [
     ],
-    "minimumAgentVersion": "1.88.0",
+    "minimumAgentVersion": "1.95.0",
     "groups": [
         {
             "name": "setupOptions",
@@ -39,9 +39,24 @@
             "name": "reportingOptions",
             "displayName": "Reporting Options",
             "isExpanded": false
+        },
+        {
+            "name": "testMachineGroupsPreview",
+            "displayName": "Machine Options - Run Tests using Azure Resource Group or Flat Machines",
+            "tags" : [ "Preview" ],
+            "isExpanded": true
         }
     ],
     "inputs": [
+         {
+            "name": "testMachineGroupPreview",
+            "type": "multiLine",
+            "label": "Machines",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. `Eg: dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name",
+            "groupName": "testMachineGroupsPreview"
+        },
         {
             "name": "testMachineGroup",
             "type": "pickList",
@@ -57,7 +72,7 @@
             "label": "Test Drop Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy` task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
             "groupName": "setupOptions"
         },
         {
@@ -93,7 +108,7 @@
             "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
             "groupName": "executionOptions"
         },
         {
@@ -141,6 +156,15 @@
             "required": false,
             "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
             "groupName": "reportingOptions"
+        },
+        {
+            "name": "autMachineGroupPreview",
+            "type": "multiLine",
+            "label": "Application Under Test Machines",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
+            "groupName": "testMachineGroupsPreview"
         },
         {
             "name": "autMachineGroup",
@@ -215,19 +239,21 @@
             "helpMarkDown": "Whether code coverage needs to be enabled.",
             "groupName": "runUsingTestPlan"
         }
+
     ],
+
     "sourceDefinitions": [ 
-     { 
-         "target": "testMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+     { 		
+         "target": "testMachineGroup",
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 		
          "selector": "jsonpath:$.value[*].name",
          "authKey": "tfs:DevTestLabs"
-     },
-     { 
-         "target": "autMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
+      },
+      { 		
+         "target": "autMachineGroup", 		
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 		
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
      },
      {
          "target": "testPlan",
@@ -250,6 +276,7 @@
          "authKey": "tfs:teamfoundation"
      }      
     ], 
+
     "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
     "execution": {
         "PowerShell": {

@@ -13,10 +13,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 25
   },
   "demands": [],
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "setupOptions",
@@ -40,9 +40,26 @@
       "name": "reportingOptions",
       "displayName": "ms-resource:loc.group.displayName.reportingOptions",
       "isExpanded": false
+    },
+    {
+      "name": "testMachineGroupsPreview",
+      "displayName": "ms-resource:loc.group.displayName.testMachineGroupsPreview",
+      "tags": [
+        "Preview"
+      ],
+      "isExpanded": true
     }
   ],
   "inputs": [
+    {
+      "name": "testMachineGroupPreview",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.testMachineGroupPreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroupPreview",
+      "groupName": "testMachineGroupsPreview"
+    },
     {
       "name": "testMachineGroup",
       "type": "pickList",
@@ -141,6 +158,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testConfigurations",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "autMachineGroupPreview",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.autMachineGroupPreview",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.autMachineGroupPreview",
+      "groupName": "testMachineGroupsPreview"
     },
     {
       "name": "autMachineGroup",

@@ -1,5 +1,5 @@
 param(
-    [string]$testMachineGroup, 
+    [string]$testMachineGroup,
     [string]$resourceFilteringMethod,
     [string]$testMachines,
     [string]$runAsProcess,
@@ -7,17 +7,59 @@ param(
     [string]$machinePassword,
     [string]$agentLocation,
     [string]$updateTestAgent,
-    [string]$isDataCollectionOnly
+    [string]$isDataCollectionOnly,
+    [string]$testMachineGroupPreview,
+    [string]$adminUserNamePreview,
+    [string]$adminPasswordPreview,
+    [string]$winRmProtocolPreview,
+    [string]$testCertificatePreview,
+    [string]$resourceFilteringMethodPreview,
+    [string]$testMachinesPreview
 )
 
 # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
 $logonAutomatically = $runAsProcess
 $disableScreenSaver = $runAsProcess
 
+Function CmdletHasMember($memberName) {
+    $cmdletParameter = (gcm Invoke-DeployTestAgent).Parameters.Keys.Contains($memberName) 
+    return $cmdletParameter
+}
+
+Function Get-PersonalAccessToken($vssEndPoint) {
+    return $vssEndpoint.Authorization.Parameters.AccessToken
+}
+
 Write-Verbose "Entering script DeployTestAgent.ps1"
-Write-Verbose "testMachineGroup = $testMachineGroup"
+
+$adminUserName = ""
+$adminPassword = ""
+$winRmProtocol = ""
+$testCertificate = ""
+
+if (![string]::IsNullOrWhiteSpace($testMachineGroupPreview))
+{
+    Write-Verbose "Using Azure Resource Group Preview functionality"
+    Write-Verbose "Preview Test Machine = $testMachineGroupPreview"
+    Write-Verbose "Preview WinRM = $winRmProtocolPreview"
+    Write-Verbose "Preview Test Cert = $testCertificatePreview"
+    Write-Verbose "Preview Resource Filter = $resourceFilteringMethodPreview"
+    Write-Verbose "Preview Filter Machines = $testMachinesPreview"
+    
+    ## Re-assign Preview Data to cmdlet parameters
+    $testMachineGroup = $testMachineGroupPreview
+    $winRmProtocol = $winRmProtocolPreview
+    $testCertificate = $testCertificatePreview
+    $resourceFilteringMethod = $resourceFilteringMethodPreview
+    $testMachines = $testMachinesPreview
+    $adminUserName = $adminUserNamePreview
+    $adminPassword = $adminPasswordPreview
+}
+
+Write-Verbose "testMachineInput = $testMachineGroup"
+Write-Verbose "WinRmProtocal = $winRmProtocol"
 Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "testMachines = $testMachines"
+Write-Verbose "filter testMachines = $testMachines"
 Write-Verbose "runAsProcess = $runAsProcess"
 Write-Verbose "logonAutomatically = $logonAutomatically"
 Write-Verbose "disableScreenSaver = $disableScreenSaver"
@@ -47,6 +89,9 @@ Write-Verbose "checkAgentInstallationScriptLocation = $checkAgentInstallationScr
 $downloadTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPath "DownloadTestAgent.ps1"
 Write-Verbose "downloadTestAgentScriptLocation = $downloadTestAgentScriptLocation"
 
+$verifyTestMachinesAreInUse = Join-Path -Path $currentDirectory -ChildPath "VerifyTestMachinesAreInUse.ps1"
+Write-Verbose "VerifyTestMachinesAreInUseScriptLocation = $verifyTestMachinesAreInUse"
+
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -57,22 +102,34 @@ $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
 Write-Verbose "Getting Personal Access Token for the Run"
 $vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
-$personalAccessToken = $vssEndpoint.Authorization.Parameters.AccessToken
+$personalAccessToken = Get-PersonalAccessToken $vssEndpoint
 
-if ( [string]::IsNullOrEmpty($personalAccessToken))
+if (!$personalAccessToken)
 {
     Write-Host "##vso[task.logissue type=error;code=001002;]"
     throw (Get-LocalizedString -Key "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator")
 }
 
-Write-Verbose "Calling Invoke-DeployTestAgent"
-if($resourceFilteringMethod -eq "tags")
-{
-    Invoke-DeployTestAgent -TagFilter $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+$taskContextMemberExists  = CmdletHasMember "TaskContext"
+
+if($taskContextMemberExists){
+    Write-Verbose "Calling Register Environment cmdlet"
+    $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines -DoNotPersist
+    Write-Verbose "Environment details $environment"
+
+    Write-Verbose "Calling Deploy test agent cmdlet"
+    Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly -VerifyTestMachinesAreInUseScriptLocation $verifyTestMachinesAreInUse
+    Write-Verbose "Leaving script DeployTestAgent.ps1"
 }
 else
 {
-    Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+    Write-Verbose "Calling old Invoke-DeployTestAgent"
+    if($resourceFilteringMethod -eq "tags")
+    {
+        Invoke-DeployTestAgent -TagFilter $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+    }
+    else
+    {
+        Invoke-DeployTestAgent -MachineNames $testMachines -UserName $machineUserName -Password $machinePassword -PowerShellPort 5985 -TestMachineGroup $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly
+    }
 }
-
-Write-Verbose "Leaving script DeployTestAgent.ps1"
