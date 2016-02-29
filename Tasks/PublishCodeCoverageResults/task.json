@@ -61,6 +61,10 @@
             "target": "$(currentDirectory)\\PublishCodeCoverageResults.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
-        }
+        },
+        "Node": {
+            "target": "publishcodecoverageresults.js",
+            "argumentFormat": ""
+         }
     }
 }
