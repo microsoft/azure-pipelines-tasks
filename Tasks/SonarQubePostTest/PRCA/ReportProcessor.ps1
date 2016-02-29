@@ -15,22 +15,15 @@ function FetchAnnotatedNewIssues
     $sonarReportFilePath = GetSonarReportFilePath
     if (![System.IO.File]::Exists($sonarReportFilePath))
     {
-            throw "Could not find the SonarQube issue report at $sonarReportFilePath. Unable to post issues to the PR."
+        throw "Could not find the SonarQube issue report at $sonarReportFilePath. Unable to post issues to the PR."
     }
 
     Write-Verbose "Report file found at $sonarReportFilePath"    
         
     CreateProjectGuidAndPathMap    
-    $sonarReportFilePath = GetSonarReportFilePath
-
-    # Read sonar-report.json file as a json object
-    $sonarReportFileContent = Get-Content -Raw $sonarReportFilePath
-    $jsonSer = New-Object -TypeName System.Web.Script.Serialization.JavaScriptSerializer
     
-    # Default value of MaxJsonLength is 2,097,152. Increasing max length by a factor of 10 to handle bigger file sizes
-    $jsonSer.MaxJsonLength = 2097152 * 10
-    $json = $jsonSer.DeserializeObject($sonarReportFileContent)
-
+    $sonarReportFilePath = GetSonarReportFilePath
+    $json = DeserializeReport $sonarReportFilePath
     ConstructComponentKeyAndPathMap $json
 
     # '@' makes sure the result set is returned as an array
@@ -66,6 +59,22 @@ function GetSonarReportFilePath
     return $sonarReportFilePath
 }
 
+function DeserializeReport
+{
+    param ([ValidateNotNullOrEmpty()][string]$sonarReportFilePath)
+    
+    Add-Type -AssemblyName "System.Web.Extensions"
+    
+    # Read sonar-report.json file as a json object
+    $sonarReportFileContent = Get-Content -Raw $sonarReportFilePath
+    $jsonSer = New-Object -TypeName System.Web.Script.Serialization.JavaScriptSerializer
+    
+    # Default value of MaxJsonLength is 2,097,152. Increasing max length by a factor of 10 to handle bigger file sizes
+    $jsonSer.MaxJsonLength = 2097152 * 10
+    $json = $jsonSer.DeserializeObject($sonarReportFileContent)   
+    
+    return $json 
+}
 
 function ConstructComponentKeyAndPathMap($json)
 {
@@ -174,11 +183,11 @@ function GetRelativeFilePath($component)
     $finalFilePath = [System.IO.Path]::Combine($finalFilePath, $ComponentKeyAndPathMap[$component])
     Write-Verbose "GetRelativeFilePath: finalFilePath:$finalFilePath"
 
-    $repoLocalPath = Get-TaskVariable -Context $distributedTaskContext -Name "Build.Repository.LocalPath"
+    $repoLocalPath = GetTaskContextVariable "Build.Repository.LocalPath"
+    
     if (!$repoLocalPath)
     {
-        Write-Verbose "GetRelativeFilePath: Could not get task variable Build.Repository.LocalPath"
-        return $null
+        throw "GetRelativeFilePath: Could not get task variable Build.Repository.LocalPath"
     }
 
     Write-Verbose "GetRelativeFilePath: repoLocalPath:$repoLocalPath"

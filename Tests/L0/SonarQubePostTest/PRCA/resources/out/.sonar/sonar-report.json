@@ -1,36 +1,6 @@
 {
     "version": "5.3",
-    "issues": [
-        {
-            "key": "01532D5DA0E13EE557",
-            "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
-            "line": 13,
-            "startLine": 13,
-            "startOffset": 0,
-            "endLine": 13,
-            "endOffset": 29,
-            "message": "Remove this useless assignment to local variable \"b\".",
-            "severity": "MAJOR",
-            "rule": "csharpsquid:S1854",
-            "status": "OPEN",
-            "isNew": true,
-            "creationDate": "2016-02-29T14:10:20+0000"
-        },
-        {
-            "key": "01532D5DA0E13EE559",
-            "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
-            "line": 13,
-            "startLine": 13,
-            "startOffset": 0,
-            "endLine": 13,
-            "endOffset": 29,
-            "message": "Remove this unused \"b\" local variable.",
-            "severity": "MAJOR",
-            "rule": "csharpsquid:S1481",
-            "status": "OPEN",
-            "isNew": true,
-            "creationDate": "2016-02-29T14:10:20+0000"
-        },
+    "issues": [       
         {
             "key": "01532D5DA0E13EE55C",
             "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
@@ -130,21 +100,7 @@
             "isNew": false,
             "creationDate": "2016-02-29T13:36:02+0000"
         },
-        {
-            "key": "01532D5DA0C93EE54E",
-            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
-            "line": 13,
-            "startLine": 13,
-            "startOffset": 0,
-            "endLine": 13,
-            "endOffset": 24,
-            "message": "Remove this useless assignment to local variable \"a\".",
-            "severity": "MAJOR",
-            "rule": "csharpsquid:S1854",
-            "status": "OPEN",
-            "isNew": true,
-            "creationDate": "2016-02-29T14:10:20+0000"
-        },
+
         {
             "key": "01532D5DA0C93EE550",
             "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
@@ -160,21 +116,7 @@
             "isNew": true,
             "creationDate": "2016-02-29T14:10:20+0000"
         },
-        {
-            "key": "01532D5DA0C93EE555",
-            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
-            "line": 13,
-            "startLine": 13,
-            "startOffset": 0,
-            "endLine": 13,
-            "endOffset": 24,
-            "message": "'Program.Main(string[])' declares a variable, 'a', of type 'int', which is never used or is only assigned to. Use this variable or remove it.",
-            "severity": "MAJOR",
-            "rule": "fxcop:RemoveUnusedLocals",
-            "status": "OPEN",
-            "isNew": true,
-            "creationDate": "2016-02-29T14:10:20+0000"
-        },
+       
         {
             "key": "AVMtPj5g2ux5vOqxVSsC",
             "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
