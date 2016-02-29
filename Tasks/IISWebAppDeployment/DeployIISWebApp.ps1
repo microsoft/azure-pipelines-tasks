@@ -78,6 +78,7 @@ Write-Verbose "port = $port" -Verbose
 Write-Verbose "hostName = $hostName" -Verbose
 Write-Verbose "serverNameIndication = $serverNameIndication" -Verbose
 
+Write-Verbose "createAppPool = $createAppPool" -Verbose
 Write-Verbose "appPoolName = $appPoolName" -Verbose
 Write-Verbose "dotNetVersion = $dotNetVersion" -Verbose
 Write-Verbose "pipeLineMode = $pipeLineMode" -Verbose
@@ -103,6 +104,16 @@ $appPoolName = $appPoolName.Trim('"', ' ')
 $appPoolUsername = $appPoolUsername.Trim()
 
 $appCmdCommands = $appCmdCommands.Replace('"', '`"')
+
+if ($createWebsite -ieq "true" -and [string]::IsNullOrWhiteSpace($webSiteName))
+{
+	throw "WebSiteName cannot be empty if you want to create or update the target website."
+}
+
+if ($createAppPool -ieq "true" -and [string]::IsNullOrWhiteSpace($appPoolName))
+{
+	throw "AppPoolName cannot be empty if you want to create or update the target app pool."
+}
 
 if(![string]::IsNullOrWhiteSpace($webSiteName))
 {

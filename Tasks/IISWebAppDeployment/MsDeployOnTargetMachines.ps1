@@ -596,36 +596,33 @@ function Execute-Main
 {
     Write-Verbose "Entering Execute-Main function" -Verbose
 
-    if(-not (IsInputNullOrEmpty -str $AppPoolName) -and $CreateAppPool -ieq "true")
+    if($CreateAppPool -ieq "true")
     {
         Create-And-Update-AppPool -appPoolName $AppPoolName -clrVersion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
     }
 
-    if(-not (IsInputNullOrEmpty -str $WebSiteName))
-    {
-		if ($CreateWebSite -ieq "true")
+	if ($CreateWebSite -ieq "true")
+	{
+		Create-And-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
+			-password $WebSiteAuthUserPassword -addBinding $AddBinding -protocol $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -assignDupBindings $AssignDuplicateBinding
+
+		if($Protocol -eq "https")
 		{
-			Create-And-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
-			 -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocol $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -assignDupBindings $AssignDuplicateBinding
-
-			if($Protocol -eq "https")
-			{
-				$appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
-				Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVersion
-				Enable-SNI -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
-			}
+			$appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
+			Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVersion
+			Enable-SNI -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
 		}
-		else
+	}
+	else
+	{
+		$doesWebSiteExists = Does-WebSiteExists -siteName $siteName
+
+		if (-not $doesWebSiteExists)
 		{
-			$doesWebSiteExists = Does-WebSiteExists -siteName $siteName
-
-			if (-not $doesWebSiteExists)
-			{
-				throw "The web site '$siteName' does not exist and you did not request to create it - deployment cannot continue."
-			}
-
+			throw "The web site '$siteName' does not exist and you did not request to create it - deployment cannot continue."
 		}
-    }
+
+	}
 
     Run-AdditionalCommands -additionalCommands $AppCmdCommands
 

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 9
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [
   ],
@@ -112,16 +112,7 @@
       "required": false,
       "groupName": "deployment",
       "defaultValue": "",
-      "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. To override more than one parameter use line separator, e.g., <br/> \"IIS Web Application Name\"=\"Fabrikam\" <br/> \"ConnectionString\"=\"Server=localhost;Database=Fabrikam;\""
-    },
-    {
-      "name": "CreateWebSite",
-      "type": "boolean",
-      "label": "Create or Update Website",
-      "required": false,
-      "groupName": "website",
-      "defaultValue": "false",
-      "helpMarkDown": "Select the option to create a website or to update an existing website."
+      "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. To override more than one parameter use line separator, e.g., <br/> \"IIS Web Application Name\"=\"Fabrikam\" <br/> \"ConnectionString\"=\"Server=localhost;Database=Fabrikam;"
     },
     {
       "name": "WebSiteName",
@@ -130,8 +121,16 @@
       "required": true,
       "groupName": "website",
       "defaultValue": "",
-      "visibleRule": "CreateWebSite = true",
-      "helpMarkDown": "Name of the IIS website that will be created if it does not exist, or it will be updated if it is already present on the IIS server. The name of the website should be same as that specified in the web deploy zip package file. If a Parameter file and override Parameters setting is also specified, then the name of the website should be same as that in the override Parameters setting."
+      "helpMarkDown": "Name of the target IIS website. The name of the website should be same as that specified in the web deploy zip package file. If a Parameter file and override Parameters setting is also specified, then the name of the website should be same as that in the override Parameters setting."
+    },
+    {
+      "name": "CreateWebSite",
+      "type": "boolean",
+      "label": "Create or Update Website",
+      "required": false,
+      "groupName": "website",
+      "defaultValue": "false",
+      "helpMarkDown": "Select the option to create a website or to update an existing website. If not selected, then the target website must already exist."
     },
     {
       "name": "WebSitePhysicalPath",
@@ -288,7 +287,7 @@
       "required": false,
       "groupName": "applicationPool",
       "defaultValue": "false",
-      "helpMarkDown": "Select the option to create an application pool or to update an existing application pool."
+      "helpMarkDown": "Select the option to create an application pool or to update an existing application pool. If not selected, the existing app pool for the target site/application will not be modified."
     },
     {
       "name": "AppPoolName",
