@@ -324,7 +324,8 @@ try
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName" -Verbose
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TaskContext $distributedTaskContext
+    # $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TaskContext $distributedTaskContext
+    $resources = $environment.Resources;
     if ($resources.Count -eq 0)
     {
         Write-TaskSpecificTelemetry "PREREQ_NoResources"
