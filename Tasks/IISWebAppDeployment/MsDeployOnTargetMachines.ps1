@@ -573,7 +573,7 @@ function Create-And-Update-AppPool
 {
     param(
         [string]$appPoolName,
-        [string]$clrVerion,
+        [string]$clrVersion,
         [string]$pipeLineMode,
         [string]$identity,
         [string]$userName,
