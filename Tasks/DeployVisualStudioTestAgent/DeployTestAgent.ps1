@@ -68,6 +68,7 @@ Write-Verbose "VerifyTestMachinesAreInUseScriptLocation = $verifyTestMachinesAre
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
