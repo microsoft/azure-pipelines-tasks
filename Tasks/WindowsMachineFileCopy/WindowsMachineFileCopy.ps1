@@ -60,7 +60,7 @@ function Get-ResourceConnectionDetails
     $resourceId = $resource.Id
 
     Write-Verbose "`t`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
-    $fqdn = Get-EnvironmentProperty -EnvironmentName $envName -Key $resourceFQDNKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId -ErrorAction Stop
+    $fqdn = Get-EnvironmentProperty -Environment $environment -Key $resourceFQDNKeyName -ResourceId $resourceId -ErrorAction Stop
     Write-Verbose "`t`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
 
     Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose	
@@ -157,7 +157,7 @@ else
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName" -Verbose
     #$resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -TaskContext $distributedTaskContext
-    $resources = $environment.Resources
+    $resources = Get-EnvironmentResources -Environment $environment
     Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName" -Verbose
 
     if ($resources.Count -eq 0)
