@@ -138,16 +138,12 @@ function Get-ResourceWinRmConfig
     $winrmPortToUse = ''
     $protocolToUse = ''
 
-    #Write-Verbose "Starting Get-Environment cmdlet call on environment name: $environmentName" -Verbose
-    #$environment = Get-Environment -environmentName $environmentName -TaskContext $distributedTaskContext
-    #Write-Verbose "Completed Get-Environment cmdlet call on environment name: $environmentName" -Verbose
 
     if($protocol -eq "HTTPS")
     {
         $protocolToUse = $useHttpsProtocolOption
     
         Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
-        #$winrmPortToUse = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
         $winrmPortToUse = Get-EnvironmentProperty -Environment $environment -Key $resourceWinRMHttpsPortKeyName -ResourceId $resourceId
         Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId (Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
     
@@ -325,7 +321,6 @@ try
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName" -Verbose
-    #$resources = Get-EnvironmentResources -EnvironmentName $environmentName -TaskContext $distributedTaskContext
     $resources = Get-EnvironmentResources -Environment $environment
     if ($resources.Count -eq 0)
     {
