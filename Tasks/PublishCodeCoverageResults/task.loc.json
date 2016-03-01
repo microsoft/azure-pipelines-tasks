@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "1.90.0",
@@ -64,9 +64,6 @@
     "Node": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
-    },
-    "messages": {
-      "PublishCodeCoverageResultsCommandNotFound": "Code coverage publisher is not found. Latest agent is required"
     }
   }
 }

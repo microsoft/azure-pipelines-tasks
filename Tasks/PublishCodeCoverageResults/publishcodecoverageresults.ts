@@ -1,9 +1,6 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import tl = require('vsts-task-lib/task');
-import path = require('path');
-
-tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 var codeCoverageTool = tl.getInput('codeCoverageTool', true);
 var summaryFileLocation = tl.getInput('summaryFileLocation', true);
@@ -22,13 +19,5 @@ if(additionalCodeCoverageFiles)
   var codeCoverageFiles = tl.match(allFiles, additionalCodeCoverageFiles, { matchBase: true });
 }
 
-try
-{
-	var tp = new tl.CodeCoveragePublisher();
-}
-catch (ex)
-{
-	tl.error(tl.loc('PublishCodeCoverageResultsCommandNotFound'));
-	throw ex;
-}
+var tp = new tl.CodeCoveragePublisher();
 tp.publish(codeCoverageTool, summaryFileLocation, reportDirectory, codeCoverageFiles);
