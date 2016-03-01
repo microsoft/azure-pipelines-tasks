@@ -84,8 +84,8 @@ gulp.task('ps1tests', ['compileTests'], function (cb) {
         .pipe(gulp.dest(_testRoot));
 });
 
-gulp.task('copyTestRes', ['compileTests'], function (cb) {
-    return gulp.src(['Tests/**/resources/**'],{ dot: true })
+gulp.task('copyTestData', ['compileTests'], function (cb) {
+    return gulp.src(['Tests/**/data/**'],{ dot: true })
         .pipe(gulp.dest(_testRoot));
 });
 
@@ -99,7 +99,7 @@ gulp.task('testLib_NodeModules', ['testLib'], function (cb) {
         .pipe(gulp.dest(path.join(_testRoot, 'lib/node_modules/vsts-task-lib')));
 });
 
-gulp.task('testResources', ['testLib_NodeModules', 'ps1tests', 'copyTestRes']);
+gulp.task('testResources', ['testLib_NodeModules', 'ps1tests', 'copyTestData']);
 
 // compile tasks inline
 gulp.task('compileTasks', ['clean'], function (cb) {
