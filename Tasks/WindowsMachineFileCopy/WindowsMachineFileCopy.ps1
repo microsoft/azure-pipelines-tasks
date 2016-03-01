@@ -156,7 +156,8 @@ else
     $fetchedEnvironmentName = $environment.Name
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName" -Verbose
-    $resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -TaskContext $distributedTaskContext
+    #$resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -TaskContext $distributedTaskContext
+    $resources = $environment.Resources
     Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName" -Verbose
 
     if ($resources.Count -eq 0)
