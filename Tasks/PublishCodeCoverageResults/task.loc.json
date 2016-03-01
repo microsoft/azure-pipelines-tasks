@@ -64,6 +64,9 @@
     "Node": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
+    },
+    "messages": {
+      "PublishCodeCoverageResultsCommandNotFound": "Code coverage publisher is not found. Latest agent is required"
     }
   }
 }

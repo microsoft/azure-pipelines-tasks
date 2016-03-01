@@ -1,6 +1,9 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import tl = require('vsts-task-lib/task');
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 var codeCoverageTool = tl.getInput('codeCoverageTool', true);
 var summaryFileLocation = tl.getInput('summaryFileLocation', true);
@@ -21,11 +24,11 @@ if(additionalCodeCoverageFiles)
 
 try
 {
-var tp = new tl.CodeCoveragePublisher();
+	var tp = new tl.CodeCoveragePublisher();
 }
-catch
+catch (ex)
 {
-	tl.error("Code coverage publisher not found. Latest agent is required");
-	throw;
+	tl.error(tl.loc('PublishCodeCoverageResultsCommandNotFound'));
+	throw ex;
 }
 tp.publish(codeCoverageTool, summaryFileLocation, reportDirectory, codeCoverageFiles);
