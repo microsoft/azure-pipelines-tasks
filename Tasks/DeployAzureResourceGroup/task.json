@@ -198,22 +198,20 @@
             "target": "cloudService",
             "endpointId": "$(ConnectedServiceNameClassic)",
             "dataSourceName": "AzureHostedServiceNames"
-        }
-    ],
-    "sourceDefinitions": [
+        },
         {
             "target": "resourceGroupName",
-            "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "$(ConnectedServiceName)"
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureVirtualMachinesV2Id",
+            "resultTemplate": "{{#extractResource resourceGroups}}"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
-  "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  }
 }
