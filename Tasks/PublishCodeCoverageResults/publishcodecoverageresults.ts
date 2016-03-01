@@ -19,5 +19,13 @@ if(additionalCodeCoverageFiles)
   var codeCoverageFiles = tl.match(allFiles, additionalCodeCoverageFiles, { matchBase: true });
 }
 
+try
+{
 var tp = new tl.CodeCoveragePublisher();
+}
+catch
+{
+	tl.error("Code coverage publisher not found. Latest agent is required");
+	throw;
+}
 tp.publish(codeCoverageTool, summaryFileLocation, reportDirectory, codeCoverageFiles);
