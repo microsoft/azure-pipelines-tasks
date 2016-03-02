@@ -51,10 +51,6 @@ function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
         {
             throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}" -ArgumentList $pattern)
         }
-        elseif(Test-Path -Path $files -PathType Leaf -eq $false)
-        {
-            throw (Get-LocalizedString -Key "Please specify a complete and a valid deployment file path")
-        }    
     }
 }
 
