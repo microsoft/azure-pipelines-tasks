@@ -2,7 +2,6 @@ $ProjectGuidAndFilePathMap = @{}
 $ComponentKeyAndPathMap = @{}
 $ComponentKeyAndRelativePathCache = @{}
 
-
 #region Public
 
 #
@@ -78,6 +77,10 @@ function CreateComponentKeyToPathMap($json)
         {
             $ComponentKeyAndPathMap.Add($component.key, $component.path)
         }
+        else 
+        {
+            Write-Verbose "Found a duplicate component key: $($component.key)"    
+        }
     }
 }
 
@@ -98,10 +101,17 @@ function CreateProjectGuidToProjectPathMap
         {
             Write-Verbose "CreateProjectGuidToProjectPathMap: Processing project info file: $projectInfoFilePath"
             [xml]$xmlContent = Get-Content $projectInfoFilePath
+            
+            Assert ($xmlContent -ne $null) "Internal error: could not read $projectInfoFilePath"
+            Assert ($xmlContent.ProjectInfo.ProjectGuid -ne $null) "Internal error: could not read the ProjectGuid from $projectInfoFilePath"
 
-            if ($xmlContent -and !$ProjectGuidAndFilePathMap.ContainsKey($xmlContent.ProjectInfo.ProjectGuid))
+            if (!$ProjectGuidAndFilePathMap.ContainsKey($xmlContent.ProjectInfo.ProjectGuid))
             {
                 $ProjectGuidAndFilePathMap.Add($xmlContent.ProjectInfo.ProjectGuid, $xmlContent.ProjectInfo.FullPath)
+            }
+            else
+            {
+                Write-Verbose "Duplicate ProjectGuid found in $projectInfoFilePath"
             }
         }
     }
@@ -114,7 +124,7 @@ function GetComponentGuid
 {
     param ([ValidateNotNullOrEmpty()][string]$component)    
   
-    $tokens = $component.ToString().Split(":")
+    $tokens = $component.Split(":")
 
     if ($tokens.Count -ne 4) 
     {
@@ -136,8 +146,10 @@ function GetComponentGuid
 #
 # Returns a path relative to the repo root for a file which has new code analysis issue(s)
 #
-function GetPathRelativeToRepoRoot($component)
+function GetPathRelativeToRepoRoot
 {
+    param ([ValidateNotNullOrEmpty()][string]$component)
+    
     if ($component -and $ComponentKeyAndRelativePathCache.ContainsKey($component))
     {
         $relativeFilePath = $ComponentKeyAndRelativePathCache[$component]
@@ -146,11 +158,9 @@ function GetPathRelativeToRepoRoot($component)
         return $relativeFilePath
     }
 
-    #sonar runner creates the component value as '[SonarQube project key]:[SonarQube project value]:[MSBuild project guid]:[file name relative to MSBuild project file path]'
-   
-    #third token must be guid
-    $guidToken = $tokens[2]
-    Write-Verbose "GetPathRelativeToRepoRoot: guidToken:$guidToken"
+    $guidToken = GetComponentGuid
+    
+    Write-Verbose "GetPathRelativeToRepoRoot: guidToken is $guidToken"
 
     if (!$ProjectGuidAndFilePathMap.ContainsKey($guidToken))
     {
@@ -163,7 +173,7 @@ function GetPathRelativeToRepoRoot($component)
         return $null
     }
 
-    #This stores the full on-disk path of the *.xxproj file
+    # This stores the full on-disk path of the *.xxproj file
     $projectPath = $($ProjectGuidAndFilePathMap[$guidToken])
 
     $finalFilePath = [System.IO.Path]::GetDirectoryName($projectPath)
@@ -183,10 +193,10 @@ function GetPathRelativeToRepoRoot($component)
     #this will remove from the file path, the part upto the repo name. 
     #e.g. finalFilePath=C:\Agent\_work\ef030e14\s\Mail2Bug\Main.cs and repoLocalPath=C:\Agent\_work\ef030e14\s
     #after the SubString() call finalFilePath=\Mail2Bug\Main.cs
-    $finalFilePath = $finalFilePath.ToString().SubString($repoLocalPath.Length);
+    $finalFilePath = $finalFilePath.SubString($repoLocalPath.Length);
 
     #Replace '\' with '/'. VSO expects file path like /Mail2Bug/Main.cs (\Mail2Bug\Main.cs does not work)
-    $finalFilePath = $finalFilePath.ToString().Replace([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+    $finalFilePath = $finalFilePath.Replace([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
     Write-Verbose "GetPathRelativeToRepoRoot: Returning finalFilePath:$finalFilePath"
 
     #save data into cache so next time we don't have to compute
@@ -209,4 +219,5 @@ function AnnotateIssuesWithRelativePath
     
     return $issues
 }
+
 #endregion
