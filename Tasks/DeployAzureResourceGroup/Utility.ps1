@@ -85,27 +85,20 @@ function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose -Verbose "Azure PowerShell version: $currentVersion"
+    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
+    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
 
-    $AzureVersion099 = New-Object System.Version(0, 9, 9)
-    $AzureVersion103 = New-Object System.Version(1, 0, 3)
+    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
 
-    $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
-    $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
-    $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
-
-    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
+    if(!$versionCompatible)
     {
-        $azureUtilityRequiredVersion = $azureUtilityVersion098
-    }
-    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
-    {
-        Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityVersion100
+        $azureUtilityRequiredVersion = $azureUtilityOldVersion
     }
     else
     {
         Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityVersion110
+        $azureUtilityRequiredVersion = $azureUtilityNewVersion
     }
 
     Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
@@ -397,7 +390,7 @@ function Invoke-OperationOnResourceGroup
         $machineName = $machine.Name
         $response = Invoke-OperationOnMachine -resourceGroupName $resourceGroupName -machineName $machine.Name -operationName $operationName
 
-        if($response.Status -ne "Succeeded")
+        if(-not [string]::IsNullOrEmpty($response.Status) -and  $response.Status -ne "Succeeded")
         {
             Write-TaskSpecificTelemetry "DEPLOYMENT_PerformActionFailed"
             Write-Error (Get-LocalizedString -Key "Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
@@ -432,7 +425,7 @@ function Invoke-OperationOnMachine
          "Restart" {
              $response = Stop-Machine -resourceGroupName $resourceGroupName -machineName $machineName             
 
-             if($response.Status -eq "Succeeded")
+             if([string]::IsNullOrEmpty($response.Status) -or $response.Status -eq "Succeeded")
              {
                 $response = Start-Machine -resourceGroupName $resourceGroupName -machineName $machineName
              }
@@ -913,16 +906,16 @@ function Add-AzureVMCustomScriptExtension
 	
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
 
-	$resultDetails = $result | ConvertTo-Json
-    Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
-
-    if($result.Status -ne "Succeeded")
+    if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
     {
         Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
             $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
     }
+
+	    $resultDetails = $result | ConvertTo-Json
+        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
     }
     catch
