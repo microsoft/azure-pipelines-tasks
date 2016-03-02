@@ -17,7 +17,7 @@
     "Patch": 9
   },
   "demands": [],
-  "minimumAgentVersion": "1.96.1",
+  "minimumAgentVersion": "1.96.2",
   "groups": [
     {
       "name": "deployment",
