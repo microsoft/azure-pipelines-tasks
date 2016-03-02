@@ -50,7 +50,7 @@ function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
         if (!$files)
         {
             throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}" -ArgumentList $pattern)
-        }
+        }        
     }
 }
 
@@ -61,8 +61,8 @@ Write-Host "packageFile= $DacpacFilePath"
 #Ensure that a single package (.dacpac) file is found
 ThrowIfMultipleFilesOrNoFilePresent -files $DacpacFilePath -pattern $DacpacFile
 
-$PublishProfilePath=""
-if( !([string]::IsNullOrWhitespace($PublishProfile)) )
+$PublishProfilePath = ""
+if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY )
 {
     Write-Host "PublishProfilePath = Find-Files -SearchPattern $PublishProfile"
     $PublishProfilePath = Find-Files -SearchPattern $PublishProfile
