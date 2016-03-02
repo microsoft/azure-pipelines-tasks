@@ -87,7 +87,7 @@ function Get-AzureUtility
     Write-Verbose -Verbose "Azure PowerShell version: $currentVersion"
 
     $AzureVersion099 = New-Object System.Version(0, 9, 9)
-    $AzureVersion103 = New-Object System.Version(1, 0, 3)
+    $AzureVersion1025 = New-Object System.Version(1, 0, 2, 5)
 
     $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
     $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
@@ -97,7 +97,7 @@ function Get-AzureUtility
     {
         $azureUtilityRequiredVersion = $azureUtilityVersion098
     }
-    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion1025))
     {
         Check-AzureRMInstalled
         $azureUtilityRequiredVersion = $azureUtilityVersion100
