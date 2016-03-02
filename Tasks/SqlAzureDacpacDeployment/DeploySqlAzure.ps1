@@ -74,6 +74,11 @@ Try
     $firewallRuleName = $firewallSettings.RuleName
     $isFirewallConfigured = $firewallSettings.IsConfigured
 
+    if($PublishProfile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $PublishProfile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
+    {
+        $PublishProfile = ""
+    }
+
     # getting script arguments to execute sqlpackage.exe
     Write-Verbose "Creating SQLPackage.exe agruments" -Verbose
     $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFile -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
