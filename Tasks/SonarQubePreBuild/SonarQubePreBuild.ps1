@@ -25,8 +25,15 @@ Write-Verbose "breakBuild = $breakBuild"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
-. ./Common/SonarQubeHelpers/SonarQubeHelper.ps1
-. ./SonarQubePreBuildImpl.ps1
+. $PSScriptRoot/Common/SonarQubeHelpers/SonarQubeHelper.ps1
+
+if ( (IsPrBuild) -and ((GetTaskContextVariable "DisableSQAnalysisOnPrBuilds") -eq "true"))
+{
+	Write-Host "DisableSQAnalysisOnPrBuilds is set and this is a PR build - ignoring the analysis tasks"	
+	return
+}
+
+. $PSScriptRoot/SonarQubePreBuildImpl.ps1
 
 $serviceEndpoint = GetEndpointData $connectedServiceName
 Write-Verbose "serverUrl = $($serviceEndpoint.Url)"
