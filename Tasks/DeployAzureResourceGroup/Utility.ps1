@@ -390,7 +390,7 @@ function Invoke-OperationOnResourceGroup
         $machineName = $machine.Name
         $response = Invoke-OperationOnMachine -resourceGroupName $resourceGroupName -machineName $machine.Name -operationName $operationName
 
-        if($response.Status -ne "Succeeded")
+        if(-not [string]::IsNullOrEmpty($response.Status) -and  $response.Status -ne "Succeeded")
         {
             Write-TaskSpecificTelemetry "DEPLOYMENT_PerformActionFailed"
             Write-Error (Get-LocalizedString -Key "Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
@@ -425,7 +425,7 @@ function Invoke-OperationOnMachine
          "Restart" {
              $response = Stop-Machine -resourceGroupName $resourceGroupName -machineName $machineName             
 
-             if($response.Status -eq "Succeeded")
+             if([string]::IsNullOrEmpty($response.Status) -or $response.Status -eq "Succeeded")
              {
                 $response = Start-Machine -resourceGroupName $resourceGroupName -machineName $machineName
              }
