@@ -29,7 +29,7 @@ function FetchAnnotatedNewIssues
 
     # '@' makes sure the result set is returned as an array
     $newIssues = @($json.issues | Where {$_.isNew -eq $true})
-    Write-Host "Found $($json.issues.Count) issues out of which $($newIssues.Count) are new"
+    Write-Host "SonarQube found $($json.issues.Count) issues out of which $($newIssues.Count) are new"
 
     $newIssues = AnnotateIssuesWithRelativePath $newIssues
     
