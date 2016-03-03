@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 59
+        "Patch": 60
     },
     "demands": [
         "azureps"
@@ -198,14 +198,12 @@
             "target": "cloudService",
             "endpointId": "$(ConnectedServiceNameClassic)",
             "dataSourceName": "AzureHostedServiceNames"
-        }
-    ],
-    "sourceDefinitions": [
+        },
         {
             "target": "resourceGroupName",
-            "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "$(ConnectedServiceName)"
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureVirtualMachinesV2Id",
+            "resultTemplate": "{{#extractResource resourceGroups}}"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",

@@ -13,9 +13,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 26
   },
-  "minimumAgentVersion": "1.97.0",
+  "minimumAgentVersion": "1.96.3",
   "groups": [
     {
       "name": "deployment",
@@ -130,8 +130,8 @@
         "machineNames": "Machine Names",
         "tags": "Tags"
       },
-	  "groupName": "advanced",
-	  "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
+      "groupName": "advanced",
+      "helpMarkDown": "Optionally, select a subset of machines either by providing machine names or tags."
     },
     {
       "name": "MachineNames",
@@ -139,8 +139,8 @@
       "label": "Filter Criteria",
       "defaultValue": "",
       "required": false,
-	  "groupName": "advanced",
-      "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
+      "groupName": "advanced",
+      "helpMarkDown": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
     }
   ],
   "instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
