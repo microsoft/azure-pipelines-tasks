@@ -13,7 +13,6 @@ if ( (IsPrBuild) -and ((GetTaskContextVariable "DisableSQAnalysisOnPrBuilds") -e
 . $PSScriptRoot/SonarQubePostTestImpl.ps1
 . $PSScriptRoot/SonarQubeBuildBreaker.ps1
 
-# TODO transform this whole thing to a module and import it so that you can hide some complexity ???
 . $PSScriptRoot/PRCA/Orchestrator.ps1
 
 InvokeMSBuildRunnerPostTest

@@ -1,8 +1,3 @@
-#region Constants
-
-
-#endregion 
-
 #region Private Members
 
 $script:gitClient = $null
@@ -10,7 +5,6 @@ $script:discussionClient = $null
 $script:codeReviewClient = $null
 $script:project = $null
 $script:pullRequest = $null
-
 
 #endregion
 
