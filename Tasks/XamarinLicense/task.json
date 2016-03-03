@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -33,7 +33,7 @@
             "options": {
                 "Activate":"Activate",
                 "Deactivate":"Deactivate"
-            }   
+            }
         },
         {
             "name": "email",
@@ -52,12 +52,17 @@
             "helpMarkDown": "Xamarin account password."
         },
         {
-            "name": "activateAndroid",
-            "type": "boolean",
-            "label": "Activate Xamarin.Android",
-            "defaultValue": true,
-            "required": true,
-            "visibleRule": "action = Activate"
+          "name": "product",
+          "type": "pickList",
+          "label": "Xamarin Product",
+          "defaultValue": "MA",
+          "required": true,
+          "helpMarkDown": "Xamarin product name.",
+          "options": {
+            "MA": "Xamarin.Android",
+            "MT": "Xamarin.iOS",
+            "MM": "Xamarin.Mac"
+          }
         },
         {
             "name": "timeout",
@@ -65,7 +70,7 @@
             "label": "Timeout in Seconds",
             "groupName": "advanced",
             "defaultValue": "30",
-            "required": false 
+            "required": false
         }
     ],
     "instanceNameFormat": "$(action) Xamarin license",
@@ -74,6 +79,10 @@
             "target": "$(currentDirectory)\\XamarinLicense.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
+        },
+        "Node": {
+            "target": "xamarinlicense.js",
+            "argumentFormat": ""
         }
     }
 }
