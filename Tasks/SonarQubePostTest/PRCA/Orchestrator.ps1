@@ -4,9 +4,9 @@ function HandleCodeAnalysisReporting
     Write-Verbose "HandleCodeAnalysisReporting"
     if (IsPrBuild)
     {   
-        Write-Host "Fetching code analysis issues and posting them to the PR..."   
-        . $PSScriptRoot/ReportProcessor.ps1
-        
+        Write-Host "Fetching code analysis issues and posting them to the PR..."  
+         
+        Import-Module -Name "$PSScriptRoot/ReportProcessor-Module.psm1"
         Import-Module -Name "$PSScriptRoot/PostComments-Module.psm1"
              
         $newIssues = FetchAnnotatedNewIssues                

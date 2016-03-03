@@ -1,9 +1,10 @@
 [CmdletBinding()]
 param()
 
+Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\ReportProcessor-Module.psm1" -Verbose
+Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\PostComments-Module.psm1" -Verbose
+
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\Common\SonarQubeHelpers\SonarQubeHelper.ps1
-. $PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\ReportProcessor.ps1
 
 #
 # This test validates the ReportProcessor that is responsible for loading the new issues 

@@ -1,6 +1,8 @@
-$ProjectGuidAndFilePathMap = @{}
-$ComponentKeyAndPathMap = @{}
-$ComponentKeyAndRelativePathCache = @{}
+$script:ProjectGuidAndFilePathMap = @{}
+$script:ComponentKeyAndPathMap = @{}
+$script:ComponentKeyAndRelativePathMap = @{}
+
+. $PSScriptRoot\..\Common\SonarQubeHelpers\SonarQubeHelper.ps1
 
 #region Public
 
@@ -73,9 +75,9 @@ function CreateComponentKeyToPathMap($json)
 {
     foreach ($component in $json.components)
     {
-        if (!$ComponentKeyAndPathMap.ContainsKey($component.key))
+        if (!$script:ComponentKeyAndPathMap.ContainsKey($component.key))
         {
-            $ComponentKeyAndPathMap.Add($component.key, $component.path)
+            $script:ComponentKeyAndPathMap.Add($component.key, $component.path)
         }
         else 
         {
@@ -105,9 +107,9 @@ function CreateProjectGuidToProjectPathMap
             Assert ($xmlContent -ne $null) "Internal error: could not read $projectInfoFilePath"
             Assert ($xmlContent.ProjectInfo.ProjectGuid -ne $null) "Internal error: could not read the ProjectGuid from $projectInfoFilePath"
 
-            if (!$ProjectGuidAndFilePathMap.ContainsKey($xmlContent.ProjectInfo.ProjectGuid))
+            if (!$script:ProjectGuidAndFilePathMap.ContainsKey($xmlContent.ProjectInfo.ProjectGuid))
             {
-                $ProjectGuidAndFilePathMap.Add($xmlContent.ProjectInfo.ProjectGuid, $xmlContent.ProjectInfo.FullPath)
+                $script:ProjectGuidAndFilePathMap.Add($xmlContent.ProjectInfo.ProjectGuid, $xmlContent.ProjectInfo.FullPath)
             }
             else
             {
@@ -150,9 +152,9 @@ function GetPathRelativeToRepoRoot
 {
     param ([ValidateNotNullOrEmpty()][string]$component)
     
-    if ($component -and $ComponentKeyAndRelativePathCache.ContainsKey($component))
+    if ($component -and $script:ComponentKeyAndRelativePathMap.ContainsKey($component))
     {
-        $relativeFilePath = $ComponentKeyAndRelativePathCache[$component]
+        $relativeFilePath = $script:ComponentKeyAndRelativePathMap[$component]
         Write-Verbose "GetPathRelativeToRepoRoot: Found cached entry, returning data from cache, relativePath:$relativeFilePath"
 
         return $relativeFilePath
@@ -162,23 +164,23 @@ function GetPathRelativeToRepoRoot
     
     Write-Verbose "GetPathRelativeToRepoRoot: guidToken is $guidToken"
 
-    if (!$ProjectGuidAndFilePathMap.ContainsKey($guidToken))
+    if (!$script:ProjectGuidAndFilePathMap.ContainsKey($guidToken))
     {
         Write-Verbose "GetPathRelativeToRepoRoot: An entry for project guid $guidToken could not be found, check ProjectInfo.xml file"
         return $null
     }
-    if (!$ComponentKeyAndPathMap.ContainsKey($component))
+    if (!$script:ComponentKeyAndPathMap.ContainsKey($component))
     {
         Write-Verbose "GetPathRelativeToRepoRoot: An entry for component key $component could not be found, check sonar-report.json file"
         return $null
     }
 
     # This stores the full on-disk path of the *.xxproj file
-    $projectPath = $($ProjectGuidAndFilePathMap[$guidToken])
+    $projectPath = $($script:ProjectGuidAndFilePathMap[$guidToken])
 
     $finalFilePath = [System.IO.Path]::GetDirectoryName($projectPath)
     
-    $finalFilePath = [System.IO.Path]::Combine($finalFilePath, $ComponentKeyAndPathMap[$component])
+    $finalFilePath = [System.IO.Path]::Combine($finalFilePath, $script:ComponentKeyAndPathMap[$component])
     Write-Verbose "GetPathRelativeToRepoRoot: finalFilePath:$finalFilePath"
 
     $repoLocalPath = GetTaskContextVariable "Build.Repository.LocalPath"
@@ -194,7 +196,7 @@ function GetPathRelativeToRepoRoot
     Write-Verbose "GetPathRelativeToRepoRoot: $relativePath"
        
     #save data into cache so next time we don't have to compute
-    $ComponentKeyAndRelativePathCache.Add($component, $relativePath)
+    $script:ComponentKeyAndRelativePathMap.Add($component, $relativePath)
 
     return $relativePath
 }
@@ -232,3 +234,6 @@ function AnnotateIssuesWithRelativePath
 }
 
 #endregion
+
+# Export the public functions 
+Export-ModuleMember -Function 'FetchAnnotatedNewIssues'
