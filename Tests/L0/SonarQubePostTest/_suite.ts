@@ -20,8 +20,12 @@ describe('SonarQubePostTest Suite', function () {
     });
 
     if (ps) {
+
         it('UploadSumamryMdFile tests', (done) => {
             psm.runPS(path.join(__dirname, 'UploadSumamryMdFile.ps1'), done);
+        })
+        it('TopLevelOrchestration tests', (done) => {
+            psm.runPS(path.join(__dirname, 'TopLevelOrchestration.ps1'), done);
         })
     }
 });
