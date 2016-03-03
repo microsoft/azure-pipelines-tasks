@@ -30,7 +30,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     type=error or warning (Required) <br>
                     sourcepath=source file location <br>
                     linenumber=line number <br>
-                    columnumber=colum number <br>
+                    columnnumber=column number <br>
                     code=error or warning code <br>
                 </p>
             </td>
@@ -38,7 +38,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 <p align="left">
                     Log error or warning issue to timeline record of current task.<br>
                     Example: <br>
-                    ##vso[task.logissue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnumber=1;code=100;]this is an error
+                    ##vso[task.logissue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnnumber=1;code=100;]this is an error
                 </p>
             </td>
             <td>
