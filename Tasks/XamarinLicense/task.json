@@ -78,10 +78,7 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\XamarinLicense.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": [
-              "windows"
-            ]
+            "workingDirectory": "$(currentDirectory)"
         },
         "Node": {
             "target": "xamarinlicense.js",

@@ -50,18 +50,18 @@ if (isNaN(Number(timeout))) {
 }
 var timeoutInSecs = Number(timeout);
 
-var getLicenseLocation = function(product) {
+var getLicenseLocation = function (product) {
     var licenseLocation;
     if (product == 'MA' && os.platform() == 'darwin') {
-        licenseLocation = process.env.HOME + '/Library/MonoAndroid/License.v2/monoandroid.licx';
+        licenseLocation = process.env.HOME + '/Library/MonoAndroid/License.v2';
     } else if (product == 'MT' && os.platform() == 'darwin') {
-        licenseLocation = process.env.HOME + '/Library/MonoTouch/License.v2/monotouch.licx';
+        licenseLocation = process.env.HOME + '/Library/MonoTouch/License.v2';
     } else if (product == 'MM' && os.platform() == 'darwin') {
-        licenseLocation = process.env.HOME + '/Library/Xamarin.Mac/License.v2/monomac.licx'
+        licenseLocation = process.env.HOME + '/Library/Xamarin.Mac/License.v2'
     } else if (product == 'MA' && os.platform() == 'win32') {
-        licenseLocation = 'C:\\ProgramData\\Mono For Android\\License\\monoandroid.licx';
+        licenseLocation = process.env.PROGRAMDATA + '\\Mono For Android\\License\\monoandroid.licx';
     } else if (product == 'MT' && os.platform() == 'win32') {
-        licenseLocation = 'C:\\ProgramData\\MonoTouch\\License\\monotouch.licx';
+        licenseLocation = process.env.PROGRAMDATA + '\\MonoTouch\\License\\monotouch.licx';
     }
 
     return licenseLocation;
@@ -175,10 +175,17 @@ var activateLicense = function (email, password, product, callback) {
         var mToolPath;
         if (product == 'MA') {
             //find path to mandroid
+            var programFiles = 'C:\\Program Files (x86)';
+            if (os.platform() == 'win32' && os.arch() == 'x64') {
+                programFiles = process.env['PROGRAMFILES(X86)'];
+            } else if (os.platform() == 'win32' && os.arch() == 'ia32') {
+                programFiles = process.env.PROGRAMFILES;
+            }
+
             if (os.platform() == 'darwin') {
                 mToolPath = '/Library/Frameworks/Xamarin.Android.framework/Commands/mandroid';
             } else if (os.platform() == 'win32') {
-                mToolPath = 'C:\\Program Files (x86)\\MSBuild\\Xamarin\\Android\\mandroid.exe';
+                mToolPath = programFiles + '\\MSBuild\\Xamarin\\Android\\mandroid.exe';
             }
             if (!fs.existsSync(mToolPath)) {
                 tl.debug('The path to mandroid does not exist: ' + mToolPath);
@@ -189,7 +196,7 @@ var activateLicense = function (email, password, product, callback) {
             if (os.platform() == 'darwin') {
                 mToolPath = '/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch';
             } else {
-                mToolPath = 'C:\\Program Files (x86)\\MSBuild\\Xamarin\\iOS\\mtouch.exe';
+                mToolPath = programFiles + '\\MSBuild\\Xamarin\\iOS\\mtouch.exe';
             }
             if (!fs.existsSync(mToolPath)) {
                 tl.debug('The path to mtouch does not exist: ' + mToolPath);
@@ -202,11 +209,11 @@ var activateLicense = function (email, password, product, callback) {
         var mToolRunner = tl.createToolRunner(mToolPath);
         mToolRunner.arg('--datafile');
         var toolOutput = mToolRunner.execSync(null); //We need the stdout, so use the sync version
-        if(!toolOutput || !toolOutput.stdout) {
+        if (!toolOutput || !toolOutput.stdout) {
             tl.debug('Failed to generate data file using: ' + mToolPath);
             callback('Failed to activate Xamarin license.');
         }
-        fs.writeFile(dataFileLocation, toolOutput.stdout, function(err) {
+        fs.writeFile(dataFileLocation, toolOutput.stdout, function (err) {
             if (err) {
                 tl.debug('Failed to write data file: ' + err);
                 callback('Failed to activate Xamarin license.');
