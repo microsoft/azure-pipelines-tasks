@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 25
   },
   "demands": [
     "msbuild"
