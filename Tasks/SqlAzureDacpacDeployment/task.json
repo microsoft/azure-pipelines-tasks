@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
     "name": "SqlAzureDacpacDeployment",
     "friendlyName": "Azure SQL Database Deployment",
@@ -19,7 +19,7 @@
         "azureps",
         "sqlpackage"
     ],
-    "minimumAgentVersion": "1.96.3",
+    "minimumAgentVersion": "1.95.0",
     "groups": [
         {
             "name": "target",

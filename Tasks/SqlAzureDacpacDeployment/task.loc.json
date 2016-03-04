@@ -19,7 +19,7 @@
     "azureps",
     "sqlpackage"
   ],
-  "minimumAgentVersion": "1.96.3",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "target",
