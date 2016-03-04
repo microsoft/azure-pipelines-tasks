@@ -11,9 +11,9 @@
                   ],    
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 0
     },
     "demands": [
         "DotNetFramework"
@@ -26,13 +26,26 @@
         }
     ],
     "inputs": [
+        {
+            "name": "type",
+            "type": "pickList",
+            "label": "Type",
+            "defaultValue": "FilePath",
+            "required": true,
+            "helpMarkDown": "File Path or Inline Script",
+            "options": {
+                "InlineScript": "Inline Script",
+                "FilePath": "File Path"
+            }
+        },
         { 
             "name": "scriptName", 
             "type": "filePath", 
             "label": "Script filename", 
             "defaultValue":"", 
             "required":true,
-            "helpMarkDown": "Path of the script to execute. Should be fully qualified path or relative to the default working directory." 
+            "helpMarkDown": "Path of the script to execute. Should be fully qualified path or relative to the default working directory.",
+            "visibleRule": "type = FilePath"
         },
         { 
             "name": "arguments", 
@@ -40,7 +53,8 @@
             "label": "Arguments", 
             "defaultValue":"", 
             "required":false,
-            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters" 
+            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters",
+            "visibleRule": "type = FilePath"
         },
         { 
             "name": "workingFolder", 
@@ -50,13 +64,25 @@
             "required":false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
             "groupName":"advanced"
+        },
+        {
+            "name": "script",
+            "type": "multiLine",
+            "label": "Script",
+            "defaultValue": "Write-Host 'Hello World'",
+            "required": true,
+            "helpMarkDown": "Write your scripts and have fun",
+            "visibleRule": "type = InlineScript",
+            "properties": {
+                "rows": 5
+            }
         }
     ],
     "instanceNameFormat": "Powershell: $(scriptName)",
     "execution": {
-        "PowerShellExe": {
-            "target": "$(scriptName)",
-            "argumentFormat": "$(arguments)",
+        "PowerShell": {
+            "target": "$(currentDirectory)\\powershell.ps1",
+            "argumentFormat": "",
             "workingDirectory": "$(workingFolder)"
         }
     }
