@@ -58,33 +58,33 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
-            "name": "action", 
-            "type": "pickList", 
+            "name": "action",
+            "type": "pickList",
             "label": "Action",
             "defaultValue": "Create Or Update Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
+            "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
-                 "Create Or Update Resource Group": "Create Or Update Resource Group",
-                 "Select Resource Group": "Select Resource Group",
-                 "Start": "Start Virtual Machines",
-                 "Stop": "Stop Virtual Machines",
-                 "Restart": "Restart Virtual Machines",
-                 "Delete": "Delete Virtual Machines",
-                 "DeleteRG": "Delete Resource Group"
-                },
+                "Create Or Update Resource Group": "Create Or Update Resource Group",
+                "Select Resource Group": "Select Resource Group",
+                "Start": "Start Virtual Machines",
+                "Stop": "Stop Virtual Machines",
+                "Restart": "Restart Virtual Machines",
+                "Delete": "Delete Virtual Machines",
+                "DeleteRG": "Delete Resource Group"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
-            "name": "actionClassic", 
-            "type": "pickList", 
+            "name": "actionClassic",
+            "type": "pickList",
             "label": "Action",
             "defaultValue": "Select Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or cloud service.",
+            "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
             "options": {
-                 "Select Resource Group": "Select Cloud Service"
-                },
+                "Select Resource Group": "Select Cloud Service"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
@@ -94,7 +94,7 @@
             "required": true,
             "helpMarkDown": "Provide the name of the resource group.",
             "properties": {
-              "EditableOptions": "True"
+                "EditableOptions": "True"
             },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
@@ -105,7 +105,7 @@
             "required": true,
             "helpMarkDown": "Provide the name of the cloud service.",
             "properties": {
-              "EditableOptions": "True"
+                "EditableOptions": "True"
             },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
@@ -134,15 +134,15 @@
                 "West US": "West US"
             },
             "properties": {
-                "EditableOptions": "True" 
+                "EditableOptions": "True"
             },
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "csmFile", 
-            "type": "filePath", 
-            "label": "Template", 
-            "defaultValue":"",
+            "name": "csmFile",
+            "type": "filePath",
+            "label": "Template",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates. To get started immediately use template http://aka.ms/sampletemplate.",
             "visibleRule": "action = Create Or Update Resource Group"
@@ -198,22 +198,21 @@
             "target": "cloudService",
             "endpointId": "$(ConnectedServiceNameClassic)",
             "dataSourceName": "AzureHostedServiceNames"
-        }
-    ],
-    "sourceDefinitions": [
+        },
         {
             "target": "resourceGroupName",
-            "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "$(ConnectedServiceName)"
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureVirtualMachinesV2Id",
+            "resultTemplate": "{{#extractResource resourceGroups}}"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
-  "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  }
 }
+

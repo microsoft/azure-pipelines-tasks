@@ -458,6 +458,7 @@ function Instantiate-Environment
     {
         $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
         $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $enableDeploymentPrerequisites
+        $tagsList = Get-AzureResourcesTags -azureVMResources $azureVMResources -azureVMsDetails $azureVMsDetails
     }
 
     if ($azureVMsDetails.Count -eq 0)
@@ -483,12 +484,39 @@ function Instantiate-Environment
     $machineSpecification = $resources -join ","
 
     Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
-    $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext
+    $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -TagsList  $tagsList
     Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
 
     Write-Verbose "Adding environment $outputVariable to output variables" -Verbose
     Set-TaskVariable -Variable $outputVariable -Value $outputVariable
     Write-Verbose "Added the environmnent $outputVariable to output variable" -Verbose
+}
+
+function Get-AzureResourcesTags
+{
+    param([object]$azureVMResources,
+          [object]$azureVMsDetails)
+
+    $tagsList = New-Object 'system.collections.generic.dictionary[[string],[system.collections.generic.dictionary[[string],[string]]]]'
+
+    if ($azureVMResources)
+    {
+        foreach($resource in $azureVMResources)
+        {
+            $resourceName = $resource.Name
+            if(-not ($resource.Tags -eq $null -or $resource.Tags.Count -eq 0))
+            {
+                $resourceFqdn = ($azureVMsDetails[$resourceName]).fqdn
+                $resourcePort = ($azureVMsDetails[$resourceName]).winRMHttpsPort
+                $resourceTags = $resource.Tags
+
+                Write-Verbose -Verbose "Adding tags: '$resourceTags' for resource: '$resourceFqdn + ':' + $resourcePort'"
+                $tagsList.Add($resourceFqdn + ':' + $resourcePort, $resource.Tags)
+            }
+        }
+    }
+
+    return $tagsList
 }
 
 function Get-MachinesFqdnsForLB
