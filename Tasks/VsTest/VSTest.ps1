@@ -12,8 +12,9 @@ param(
     [string]$platform,
     [string]$configuration,
     [string]$publishRunAttachments,
-    [string]$runInParallel
-    )
+    [string]$runInParallel,
+    [string]$skipConfigurationPlatform
+)
 
 Write-Verbose "Entering script VSTest.ps1"
 Write-Verbose "vsTestVersion = $vsTestVersion"
@@ -28,6 +29,8 @@ Write-Verbose "testRunTitle = $testRunTitle"
 Write-Verbose "platform = $platform"
 Write-Verbose "configuration = $configuration"
 Write-Verbose "publishRunAttachments = $publishRunAttachments"
+Write-Verbose "runInParallel = $runInParallel"
+Write-Verbose "skipConfigurationPlatform = $skipConfigurationPlatform"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -36,6 +39,13 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 . $PSScriptRoot\Helpers.ps1
+
+if (SkipTestsForConfigurationPlatform -skipConfigPlatformPermutations $skipConfigurationPlatform -config $configuration -platform $platform)
+{
+    # exit the script early - no need to continue on.
+    Write-Host "##vso[task.complete result=Skipped;]Skipped running VsTest task for '$configuration|$platform'"    
+    exit
+}
 
 if (!$testAssembly)
 {
