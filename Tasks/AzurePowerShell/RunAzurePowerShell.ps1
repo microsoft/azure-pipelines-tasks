@@ -26,5 +26,8 @@ Write-Host "ScriptPath= $ScriptPath"
 $scriptCommand = "& `"$ScriptPath`" $scriptArguments"
 Write-Host "scriptCommand= $scriptCommand"
 Invoke-Expression -Command $scriptCommand
+if ($LASTEXITCODE -ne 0) {
+    Write-Error -Message "##[error]BUILD FAILED: $LASTEXITCODE"
+}
 
 Write-Verbose "Leaving script RunAzurePowerShell.ps1"
