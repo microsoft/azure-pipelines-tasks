@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [],
   "minimumAgentVersion": "1.90.0",
@@ -60,6 +60,10 @@
       "target": "$(currentDirectory)\\PublishCodeCoverageResults.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
+    },
+    "Node": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
     }
   }
 }

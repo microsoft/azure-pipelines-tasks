@@ -6,17 +6,16 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=626485)",
     "category": "Test",
     "visibility": [
-                "Build"
-                  ],    
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
-    "demands" : [
-    ],
-    "minimumAgentVersion": "1.90.0",    
+    "demands": [],
+    "minimumAgentVersion": "1.90.0",
     "instanceNameFormat": "Publish Code Coverage Results $(summaryFileLocation)",
     "inputs": [
         {
@@ -54,13 +53,17 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Regular expression specifying the additional code coverage files to be published as an artifact against the build. For example, `$(Build.Repository.LocalPath)\\**\\*.exec`"
-        }        
+        }
     ],
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\PublishCodeCoverageResults.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
+        },
+        "Node": {
+            "target": "publishcodecoverageresults.js",
+            "argumentFormat": ""
         }
     }
 }
