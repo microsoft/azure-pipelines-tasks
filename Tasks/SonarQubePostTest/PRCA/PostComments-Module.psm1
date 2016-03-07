@@ -39,7 +39,9 @@ function InitPostCommentsModule
 }
 
 #
-# Initializes the module  
+# Initializes the module. 
+#
+# Remark: for test purposes only
 #
 function Test-InitPostCommentsModule
 {
@@ -52,6 +54,9 @@ function Test-InitPostCommentsModule
     $script:artifactUri = $artifacturi
 }
 
+#
+# Posts new comments, ignoring duplicate comments and resolves comments that were open in an old iteration of the PR
+#
 function PostAndResolveComments
 {
     param ([Array][ValidateNotNull()]$comments)
@@ -197,10 +202,7 @@ function CreateDiscussionThreads
     param ([ValidateNotNull()][Array]$comments)
     
     Write-Verbose "Creating new discussion threads"
-    Write-Host $script:discussionWebApiNS
-    
     $discussionThreadCollection = New-Object "$script:discussionWebApiNS.DiscussionThreadCollection"
-    
     $discussionId = -1
     
     #TODO: add support for new style PR 
