@@ -25,7 +25,7 @@
             "name": "solution",
             "type": "filePath",
             "label": "Path to Solution",
-            "defaultValue":"**\\*.sln",
+            "defaultValue":"**/*.sln",
             "helpMarkDown": "The path to the Visual Studio Solution file",
             "required":"true"
         },
@@ -69,6 +69,10 @@
             "target": "$(currentDirectory)\\NuGetInstaller.ps1",
             "argumentFormat": "",
             "workingDirectory": ""
+        },
+        "Node": {
+            "target": "nugetinstaller.js",
+            "argumentFormat": ""
         }
     }
 }

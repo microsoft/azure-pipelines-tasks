@@ -25,7 +25,7 @@
       "name": "solution",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
-      "defaultValue": "**\\*.sln",
+      "defaultValue": "**/*.sln",
       "helpMarkDown": "ms-resource:loc.input.help.solution",
       "required": "true"
     },
@@ -68,6 +68,10 @@
       "target": "$(currentDirectory)\\NuGetInstaller.ps1",
       "argumentFormat": "",
       "workingDirectory": ""
+    },
+    "Node": {
+      "target": "nugetinstaller.js",
+      "argumentFormat": ""
     }
   }
 }
