@@ -14,7 +14,7 @@ param(
     [string]$testSelection,
     [string]$testPlan,
     [string]$testSuite,
-    [string]$testConfiguration,
+    [string]$testConfiguration
 
 )
 
