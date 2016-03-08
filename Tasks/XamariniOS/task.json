@@ -12,10 +12,17 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [
         "Xamarin.iOS"
+    ],
+    "groups": [
+        {
+            "name": "sign",
+            "displayName": "Signing & Provisioning",
+            "isExpanded": true
+        }
     ],
     "inputs": [
         {
@@ -37,10 +44,10 @@
         {
             "name": "mdtoolLocation",
             "type": "string",
-            "label": "Override path to mdtool",
+            "label": "Override path to xbuild",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally supply the path to mdtool, the Xamarin Studio build tool. When empty, the default path will be used: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool"
+            "helpMarkDown": "Optionally supply the path to xbuild, the Xamarin Studio mono build tool. When empty, the default xbuild path is used."
         },
         {
             "name": "forSimulator",
