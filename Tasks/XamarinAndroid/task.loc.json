@@ -53,14 +53,14 @@
       "name": "outputDir",
       "type": "string",
       "label": "ms-resource:loc.input.label.outputDir",
-      "defaultValue": "$(Agent.BuildDirectory)/bin/Release",
+      "defaultValue": "",
       "required": false
     },
     {
       "name": "configuration",
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
-      "defaultValue": "Release",
+      "defaultValue": "",
       "required": false
     },
     {
