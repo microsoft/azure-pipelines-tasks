@@ -6,29 +6,23 @@ import tl = require('vsts-task-lib/task');
 
 // Get configuration
 var configuration = tl.getInput('configuration', true);
-tl.debug('Configuration: ' + configuration);
-
 // Get and check path to solution file (.sln)
 var solutionPath = tl.getPathInput('solution', true, true);
-tl.debug('Solution path: ' + solutionPath);
-
 // Get whether to build for the iOS Simulator
 var buildForSimulator = tl.getInput('forSimulator', false);
 var device = (buildForSimulator == 'true') ? 'iPhoneSimulator' : 'iPhone';
 tl.debug('Build for iOS Simulator: ' + buildForSimulator);
 tl.debug('Device: ' + device);
 
-// Get path to mdtool
-var mdtoolPath = tl.getInput('mdtoolLocation', false);
-if (!mdtoolPath) {
-    // When no override location is provided, use the standard mdtool installation path
-    mdtoolPath = '/Applications/Xamarin Studio.app/Contents/MacOS/mdtool';
+// Get path to xbuild
+var xbuildToolPath = tl.which('xbuild');
+var xbuildLocation = tl.getInput('mdtoolLocation', false);
+if (xbuildLocation) {
+    xbuildToolPath = xbuildLocation + '/xbuild';
+    tl.checkPath(xbuildToolPath, 'xbuild');
 }
-tl.debug('mdtool path: ' + mdtoolPath);
-
-// Check path to mdtool
-if (!fs.existsSync(mdtoolPath)) {
-    tl.error('The path to mdtool does not exist: ' + mdtoolPath);
+if (!xbuildToolPath) {
+    tl.error('xbuild was not found in the path.');
     tl.exit(1);
 }
 
@@ -52,21 +46,23 @@ var nugetRunner = tl.createToolRunner(nugetPath);
 nugetRunner.arg('restore');
 nugetRunner.pathArg(solutionPath);
 nugetRunner.exec()
-.then(function (code) {
-
-    // Prepare build command line
-    var mdtoolRunner = tl.createToolRunner(mdtoolPath);
-    mdtoolRunner.arg('--verbose');
-    mdtoolRunner.arg('build');
-    mdtoolRunner.arg('--configuration:\"' + configuration + '|' + device + '\"');
-    mdtoolRunner.pathArg(solutionPath);
-
-    // Execute build
-    mdtoolRunner.exec()
     .then(function (code) {
-        // Executed successfully
-        tl.exit(code);
+
+        // Prepare build command line
+        var xbuildRunner = tl.createToolRunner(xbuildToolPath);
+        xbuildRunner.pathArg(solutionPath);
+        if (configuration) {
+            xbuildRunner.arg('/p:Configuration=\"' + configuration + '\"');
+        }
+        if (device) {
+            xbuildRunner.arg('/p:Platform=\"' + device + '\"');
+        }
+        // Execute build
+        xbuildRunner.exec()
+            .then(function (code) {
+                // Executed successfully
+                tl.exit(code);
+            })
+            .fail(onFailedExecution)
     })
     .fail(onFailedExecution)
-})
-.fail(onFailedExecution)
