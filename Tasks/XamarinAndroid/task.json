@@ -16,14 +16,15 @@
     },
     "demands": [
         "AndroidSDK",
+        "MSBuild",
         "Xamarin.Android"
     ],
     "minimumAgentVersion": "1.83.0",
     "groups":  [
         {
-            "name": "msbuildOptions", 
-            "displayName":"MSBuild Options",
-            "isExpanded": true 
+            "name": "msbuildOptions",
+            "displayName":"MSBuild/xbuild Options",
+            "isExpanded": true
         },
         {
             "name": "jdkOptions",

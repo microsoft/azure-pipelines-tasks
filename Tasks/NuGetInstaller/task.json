@@ -68,7 +68,10 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\NuGetInstaller.ps1",
             "argumentFormat": "",
-            "workingDirectory": ""
+            "workingDirectory": "",
+            "platforms": [
+                "windows"
+            ]
         },
         "Node": {
             "target": "nugetinstaller.js",
