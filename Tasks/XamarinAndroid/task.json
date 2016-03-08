@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [
         "AndroidSDK",
@@ -23,7 +23,7 @@
     "groups":  [
         {
             "name": "msbuildOptions",
-            "displayName":"MSBuild/xbuild Options",
+            "displayName":"MSBuild Options",
             "isExpanded": true
         },
         {

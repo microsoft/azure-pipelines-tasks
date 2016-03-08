@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613728)",
   "loc.description": "Build an Android app with Xamarin",
   "loc.instanceNameFormat": "Build Xamarin.Android Project $(project)",
-  "loc.group.displayName.msbuildOptions": "MSBuild/xbuild Options",
+  "loc.group.displayName.msbuildOptions": "MSBuild Options",
   "loc.group.displayName.jdkOptions": "JDK Options",
   "loc.input.label.project": "Project",
   "loc.input.help.project": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target.",
