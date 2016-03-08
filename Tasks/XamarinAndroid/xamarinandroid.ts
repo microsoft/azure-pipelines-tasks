@@ -69,6 +69,9 @@ var runxbuild = function (fn) {
         if (outputDir) {
             xbuild.arg('/p:OutputPath=\"' + outputDir + '\"');
         }
+        if(configuration) {
+            xbuild.arg('/p:Configuration=\"' + configuration + '\"');
+        }
         if (specifiedJavaHome) {
             xbuild.arg('/p:JavaSdkDirectory=\"' + specifiedJavaHome + '\"');
         }

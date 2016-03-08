@@ -16,6 +16,7 @@
   },
   "demands": [
     "AndroidSDK",
+    "MSBuild",
     "Xamarin.Android"
   ],
   "minimumAgentVersion": "1.83.0",
