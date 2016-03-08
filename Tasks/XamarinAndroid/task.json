@@ -53,14 +53,14 @@
             "name": "outputDir",
             "type": "string",
             "label": "Output Directory",
-            "defaultValue": "$(Agent.BuildDirectory)/bin/Release",
+            "defaultValue": "",
             "required": false
         },
         {
             "name": "configuration",
             "type": "string",
             "label": "Configuration",
-            "defaultValue": "Release",
+            "defaultValue": "",
             "required": false
         },
         {
