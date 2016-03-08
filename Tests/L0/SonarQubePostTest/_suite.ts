@@ -28,6 +28,9 @@ describe('SonarQubePostTest Suite', function () {
         })
         it('PRCA ReportProcessorTests', (done) => {
             psm.runPS(path.join(__dirname, 'PRCA', 'ReportProcessorTests.ps1'), done);
-        })       
+        }) 
+        it('PRCA PostCommentsTests', (done) => {
+            psm.runPS(path.join(__dirname, 'PRCA', 'PostCommentsTests.ps1'), done);
+        })      
     }
 });

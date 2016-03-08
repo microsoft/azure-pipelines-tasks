@@ -2,7 +2,6 @@
 param()
 
 Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\ReportProcessor-Module.psm1" -Verbose
-Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\PostComments-Module.psm1" -Verbose
 
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
 
