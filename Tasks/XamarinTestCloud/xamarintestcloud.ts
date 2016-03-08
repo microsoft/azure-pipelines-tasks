@@ -16,7 +16,7 @@ var series = tl.getInput('series', true);
 var testDir = tl.getPathInput('testDir', true);
 var parallelization = tl.getInput('parallelization', true);
 var locale = tl.getInput('locale', true);
-var userDefinedLocale = tl.getInput('userDefinedLocale', true);
+var userDefinedLocale = tl.getInput('userDefinedLocale', false);
 var testCloudLocation = tl.getInput('testCloudLocation', true);
 var optionalArgs = tl.getInput('optionalArgs', false);
 var publishNUnitResults = tl.getInput('publishNUnitResults', false);
@@ -56,7 +56,7 @@ else {
     tl.debug('Pattern found in app parameter');
     var buildFolder = tl.getVariable('agent.buildDirectory');
     var allappFiles = tl.find(buildFolder);
-    var appFiles = tl.match(allappFiles, app, { matchBase: true });    
+    var appFiles = tl.match(allappFiles, app, {matchBase: true});
 
     // Fail if no matching app files were found
     if (!appFiles || appFiles.length == 0) {
@@ -89,7 +89,7 @@ else {
     tl.debug('Pattern found in testCloudLocation parameter');
     var buildFolder = tl.getVariable('agent.buildDirectory');
     var allexeFiles = tl.find(buildFolder);
-    var testCloudExecutables = tl.match(allexeFiles, testCloudLocation, { matchBase: true }); 
+    var testCloudExecutables = tl.match(allexeFiles, testCloudLocation, {matchBase: true});
 
     // Fail if not found
     if (!testCloudExecutables || testCloudExecutables.length == 0) {
@@ -107,41 +107,41 @@ if (!monoPath) {
 }
 
 // Invoke test-cloud.exe for each app file
-var buildId = tl.getVariable('build.buildId');        
+var buildId = tl.getVariable('build.buildId');
 var appFileIndex = 0;
 var runFailures;
-var onRunComplete = function() {
+var onRunComplete = function () {
     appFileIndex++;
 
     if (appFileIndex >= appFiles.length) {
         publishTestResults();
 
-        if(runFailures == 'true') {
+        if (runFailures == 'true') {
             // Error executing
             tl.exit(1);
         }
         else {
             tl.exit(0); // Done submitting all app files
         }
+    } else {
+        // Submit next app file
+        submitToTestCloud(appFileIndex);
     }
-
-    // Submit next app file
-    submitToTestCloud(appFileIndex);
 }
 var onFailedExecution = function (err) {
     runFailures = 'true';
     tl.debug('Error executing test run: ' + err);
-    onRunComplete();    
+    onRunComplete();
 }
 function publishTestResults() {
-  if(publishNUnitResults == 'true') {
-    
-    var allFiles = tl.find(testDir);
-    var matchingTestResultsFiles = tl.match(allFiles, 'xamarintest_' + buildId + '*.xml', { matchBase: true });    
+    if (publishNUnitResults == 'true') {
 
-    var tp = new tl.TestPublisher("NUnit");
-    tp.publish(matchingTestResultsFiles, false, "", "", "", "");
-  } 
+        var allFiles = tl.find(testDir);
+        var matchingTestResultsFiles = tl.match(allFiles, 'xamarintest_' + buildId + '*.xml', {matchBase: true});
+
+        var tp = new tl.TestPublisher("NUnit");
+        tp.publish(matchingTestResultsFiles, false, "", "", "", "");
+    }
 }
 var submitToTestCloud = function (index) {
     // Form basic arguments
@@ -157,12 +157,10 @@ var submitToTestCloud = function (index) {
     monoToolRunner.arg('--series');
     monoToolRunner.arg(series);
     monoToolRunner.arg('--locale');
-    if(locale == 'user')
-    {
+    if (locale == 'user') {
         monoToolRunner.arg(userDefinedLocale);
     }
-    else
-    {
+    else {
         monoToolRunner.arg(locale);
     }
     monoToolRunner.arg('--assembly-dir');
@@ -173,17 +171,17 @@ var submitToTestCloud = function (index) {
     if (optionalArgs) {
         monoToolRunner.arg(optionalArgs.split(' '));
     }
-    if(publishNUnitResults == 'true') {
+    if (publishNUnitResults == 'true') {
         var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');
         monoToolRunner.arg('--nunit-xml');
-        monoToolRunner.pathArg(nunitFile);    
+        monoToolRunner.pathArg(nunitFile);
     }
 
     // For an iOS .ipa app, look for an accompanying dSYM file
     if (dsym && path.extname(appFiles[index]) == '.ipa') {
         // Find dSYM files matching the specified pattern
         var alldsymFiles = tl.find(path.dirname(appFiles[index]));
-        var dsymFiles = tl.match(alldsymFiles, dsym, { matchBase: true }); 
+        var dsymFiles = tl.match(alldsymFiles, dsym, {matchBase: true});
 
         if (!dsymFiles || dsymFiles.length == 0) {
             tl.warning('No matching dSYM files were found with pattern: ' + dsym);
