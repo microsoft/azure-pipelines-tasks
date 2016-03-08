@@ -197,44 +197,44 @@
           "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
           "groupName": "reportingOptions"
         }
-        ],
-        "sourceDefinitions": [
-          {
-            "target": "testMachineGroup",
-            "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "tfs:DevTestLabs"
-          },
-          {
-            "target": "autMachineGroup",
-            "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "tfs:DevTestLabs"
-          },
-          {
-            "target": "testPlan",
-            "endpoint": "/$(system.teamProject)/_apis/test/plans",
-            "selector": "jsonpath:$.value[*].name",
-            "keySelector": "jsonpath:$.value[*].id",
-            "authKey": "tfs:teamfoundation"
-          },
-          {
-            "target": "testConfiguration",
-            "endpoint": "/$(system.teamProject)/_apis/test/configurations",
-            "selector": "jsonpath:$.value[*].name",
-            "keySelector": "jsonpath:$.value[*].id",
-            "authKey": "tfs:teamfoundation"
-          },
-          {
-            "target": "testSuite",
-            "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
-            "selector": "jsonpath:$.value[*]",
-            "authKey": "tfs:teamfoundation"
-          }
-        ],
-        "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)",
-        "execution": {
-          "PowerShell": {
+    ],
+    "sourceDefinitions": [ 
+     { 
+         "target": "testMachineGroup", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name",
+         "authKey": "tfs:DevTestLabs"
+     },
+     { 
+         "target": "autMachineGroup", 
+         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
+         "selector": "jsonpath:$.value[*].name", 
+         "authKey": "tfs:DevTestLabs" 
+     },
+     {
+         "target": "testPlan",
+         "endpoint":"/$(system.teamProject)/_apis/test/plans",
+         "selector":"jsonpath:$.value[*].name",
+         "keySelector":"jsonpath:$.value[*].id",
+         "authKey": "tfs:teamfoundation"
+     },
+     {
+         "target": "testConfiguration",
+         "endpoint":"/$(system.teamProject)/_apis/test/configurations",
+         "selector":"jsonpath:$.value[*].name",
+         "keySelector":"jsonpath:$.value[*].id",
+         "authKey": "tfs:teamfoundation"
+     },
+     {
+         "target": "testSuite",
+         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+         "selector":"jsonpath:$.value[*]",
+         "authKey": "tfs:teamfoundation"
+     }      
+    ], 
+    "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
+    "execution": {
+        "PowerShell": {
             "target": "$(currentDirectory)\\RunDistributedTests.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
