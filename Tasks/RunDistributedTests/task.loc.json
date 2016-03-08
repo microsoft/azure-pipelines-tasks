@@ -29,14 +29,6 @@
       "isExpanded": true
     },
     {
-      "name": "runUsingTestPlan",
-      "displayName": "ms-resource:loc.group.displayName.runUsingTestPlan",
-      "tags": [
-        "Preview"
-      ],
-      "isExpanded": true
-    },
-    {
       "name": "reportingOptions",
       "displayName": "ms-resource:loc.group.displayName.reportingOptions",
       "isExpanded": false

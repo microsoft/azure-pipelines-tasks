@@ -30,12 +30,6 @@
             "isExpanded": true
         },
         {
-            "name": "runUsingTestPlan",
-            "displayName": "Execution Options - Run using Test Plan",
-            "tags" : [ "Preview" ],
-            "isExpanded": true
-        },
-        {
             "name": "reportingOptions",
             "displayName": "Reporting Options",
             "isExpanded": false
@@ -66,7 +60,7 @@
             "label": "Test Selection",
             "defaultValue": "testAssembly",
             "required": true,
-            "helpMarkDown": "Select the way you want to run tests – using Test Assemblies or using Test Plan.",
+            "helpMarkDown": "Select the way you want to run tests : using Test Assemblies or using Test Plan.",
             "options": { "testAssembly" : "Test Assembly", "testPlan" : "Test Plan" },
             "groupName": "executionOptions"
         },
