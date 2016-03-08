@@ -14,10 +14,7 @@ param(
     [string]$testSelection,
     [string]$testPlan,
     [string]$testSuite,
-    [string]$testConfiguration,
-    [string]$runSettingsFilePreview,
-    [string]$codeCoverageEnabledPreview,
-    [string]$overrideRunParamsPreview
+    [string]$testConfiguration
 
 )
 
@@ -77,12 +74,11 @@ if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
 
 if($runTitleMemberExists)
 {
-   if(![string]::IsNullOrWhiteSpace($testSuite))  
-   {
-     $testSelection = "testPlan"
+   if([string]::Equals($testSelection, "testPlan"))  
+   {     
      if($checkTestAgentCompatScriptLocationMemberExists)
      {     
-       Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFilePreview -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabledPreview -TestRunParams $overrideRunParamsPreview -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
+       Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
      }
      else
      {
