@@ -29,7 +29,7 @@ if(msbuildLocationMethod == 'location') {
 var runxbuild = function (fn, clean) {
     return Q.fcall( () => {
         var xbuild = tl.createToolRunner(xbuildToolPath);
-        xbuild.arg(fn);
+        xbuild.pathArg(fn);
         if(clean) {
             xbuild.arg('/t:Clean');
         }

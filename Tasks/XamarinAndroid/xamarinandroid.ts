@@ -57,7 +57,7 @@ if(!xbuildToolPath) {
 var runxbuild = function (fn) {
     return Q.fcall( () => {
         var xbuild = tl.createToolRunner(xbuildToolPath);
-        xbuild.arg(fn);
+        xbuild.pathArg(fn);
 
         if (target) {
             xbuild.arg('/t:' + target);
