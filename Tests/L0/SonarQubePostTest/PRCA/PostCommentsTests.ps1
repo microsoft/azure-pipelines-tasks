@@ -125,13 +125,13 @@ function BuildTestComment
 #
 function ValidateDiscussionThreadCollection
 {
-    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [Array]$inputComments)
+    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [Array]$inputComments, [string]$commentSource)
     
     $endLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::EndLine
     $startLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartLine
     $itemPathName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::ItemPath
     
-    ValidateCommonThreadAttributes $threadCollection
+    ValidateCommonThreadAttributes $threadCollection $commentSource
     Assert-AreEqual $inputComments.Count $threadCollection.Count "Inconsistent number of threads. There should be 1 thread for each comment."    
     foreach ($inputComment in $inputComments)
     {
@@ -152,7 +152,7 @@ function ValidateDiscussionThreadCollection
 #
 function ValidateCommonThreadAttributes
 {
-    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection)
+    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [string]$commentSource)
     
     $startColumnName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartColumn
     $positionContextName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::PositionContext
@@ -172,7 +172,8 @@ function ValidateCommonThreadAttributes
     $threadCollection | ForEach-Object {Assert-AreEqual "Target Commit" $_.Properties["CodeReviewTargetCommit"] "Invalid CodeReviewTargetCommit property"}
     $threadCollection | ForEach-Object { Assert-AreEqual 1 $_.Properties[$startColumnName] "Invalid StartColumn property."}
     $threadCollection | ForEach-Object { Assert-AreEqual "RightBuffer" $_.Properties[$positionContextName] "Invalid PositionContext property."}
-    $threadCollection | ForEach-Object { Assert-AreEqual "CodeAnalysisIssue" $_.Properties["CodeAnalysisThreadType"] "Invalid CodeAnalysisThreadType property."}
+    
+    $threadCollection | ForEach-Object { Assert-AreEqual $commentSource $_.Properties[$PostCommentsModule_CommentSourcePropertyName] "Invalid CodeAnalysisThreadType property."}
 }
 
 function InitPostCommentsModule 
@@ -190,23 +191,36 @@ function InitPostCommentsModule
 
 InitPostCommentsModule
 
-# Test 1 (happy path) - Post 2 comments 
+# Test 1 (happy path) - Post 2 new comments with no existing comments 
 
 # Arrange
-Register-Mock PostDiscussionThreads
+$discussionThreads = New-Object "System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]"
+$discussionComments = New-Object "System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]"
+$modifiedFilesinPr = @("some/path1/file.cs", "some/path2/file.cs")
 
-$comment1 = BuildTestComment "CA issue 1" 14 "some/path1" 1 
-$comment2 = BuildTestComment "CA issue 2" 15 "some/path2" 5
+Register-Mock PostDiscussionThreads
+Register-Mock FetchDiscussionThreads { $discussionThreads }
+Register-Mock FetchDiscussionComments { $discussionComments }
+Register-Mock GetModifiedFilesInPR { $modifiedFilesinPr }
+
+Write-Host "hello!"
+Write-Host $PostCommentsModule_CommentSourcePropertyName
+
+$comment1 = BuildTestComment "CA issue 1" 14 "some/path1/file.cs" 1 
+$comment2 = BuildTestComment "CA issue 2" 15 "some/path2/file.cs" 5
 $inputComments = @($comment1, $comment2) 
 
 # Act
-PostAndResolveComments $inputComments
+PostAndResolveComments $inputComments "TestSource"
 
 # Assert
-Assert-WasCalled PostDiscussionThreads -ArgumentsEvaluator {ValidateDiscussionThreadCollection $args[0] $inputComments}
+Assert-WasCalled PostDiscussionThreads -ArgumentsEvaluator {ValidateDiscussionThreadCollection $args[0] $inputComments "TestSource"}
 
 #Cleanup 
 Unregister-Mock PostDiscussionThreads
+Unregister-Mock FetchDiscussionThreads
+Unregister-Mock FetchDiscussionComments 
+Unregister-Mock GetModifiedFilesInPR 
 
 #
 # Test 2 - Post more than the maximum allowed comments and test that the comments posted are ordered by priority
@@ -214,18 +228,26 @@ Unregister-Mock PostDiscussionThreads
 
 # Arrange 
 Register-Mock PostDiscussionThreads
+$discussionThreads = New-Object "System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]"
+$discussionComments = New-Object "System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]"
+
+Register-Mock FetchDiscussionThreads { $discussionThreads }
+Register-Mock FetchDiscussionComments { $discussionComments }
+Register-Mock GetModifiedFilesInPR { @("some/path/file.cs") }
+
 $inputComments = New-Object "Collections.ArrayList"
 
 # Add max number of allowed comments 
-for($i=1; $i -le $PostCommentsModule_MaxIssuesToPost; $i++)
+for($i=1; $i -le $PostCommentsModule_MaxMessagesToPost; $i++)
 {
     $priority = Get-Random -Minimum 1 -Maximum 10
-    $comment = BuildTestComment "CA issue $i" $i "some/path" $priority
+    $comment = BuildTestComment "CA issue $i" $i "some/path/file.cs" $priority
     $inputComments.Add($comment) 
 }
 
-$comment2 = BuildTestComment "CA issue that will be ignored 1" 1 "some/path" 15
-$comment3 = BuildTestComment "CA issue that will be ignored 2" 2 "some/path" 16
+$comment2 = BuildTestComment "CA issue that will be ignored 1" 20 "some/path/file.cs" 15
+$comment3 = BuildTestComment "CA issue that will be ignored 2" 10 "some/path/file.cs" 16
+
 $inputComments.Add($comment2)
 $inputComments.Add($comment3)
 
@@ -233,12 +255,19 @@ $inputComments.Add($comment3)
 $inputComments = [System.Collections.ArrayList]($inputComments | Sort-Object {Get-Random})
 
 # Act
-PostAndResolveComments $inputComments
+PostAndResolveComments $inputComments "SQ Test Source"
 
 # Assert
 $inputComments.Remove($comment2)
 $inputComments.Remove($comment3)
-Assert-WasCalled PostDiscussionThreads -ArgumentsEvaluator {ValidateDiscussionThreadCollection $args[0] $inputComments}
+Assert-WasCalled PostDiscussionThreads -ArgumentsEvaluator {ValidateDiscussionThreadCollection $args[0] $inputComments "SQ Test Source"}
 
 #Cleanup 
 Unregister-Mock PostDiscussionThreads
+Unregister-Mock FetchDiscussionThreads 
+Unregister-Mock FetchDiscussionComments
+Unregister-Mock GetModifiedFilesInPR 
+
+#
+# Test 2 - Post more than the maximum allowed comments and test that the comments posted are ordered by priority
+#
