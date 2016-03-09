@@ -20,7 +20,7 @@ To deploy to Azure, an Azure subscription has to be linked to Team Foundation Se
 
  - If you are using 'Azure' endpoint type with Certificate based authentication or 'Azure Resource Manager' endpoint type, the task automatically filters appropriate [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) storage account and the newer [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) storage accounts and other fields viz. Resource Group/Cloud Service & Virtual Machines. 
 
- - *Note*: 'Azure' endpoint with Credentials based authentication doesn't filter the Storage, Resource Group/Cloud Service, and Virtual Machine fields yet.
+ - *Note*: If you use a Credentials-based 'Azure' endpoint we don't automatically populate the **Storage** & **Resource Group/Cloud Service** fields for you yet. You will need to manually enter values for now. With Certificate-based endpoints we query Azure and populate these dropdowns for you.
 
 The following table lists the storage accounts and the service connections that with them. To identify whether a storage account is based on the classic APIs or the resource manager APIs, log into [https://portal.azure.com/](https://portal.azure.com/) and browse for storage accounts (classic) or storage accounts.
 
