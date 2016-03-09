@@ -365,7 +365,7 @@ function Add-SslCert
         $addCertCmd = [string]::Format("netsh http add sslcert ipport=0.0.0.0:{0} certhash={1} appid={{{2}}}", $port, $certhash, [System.Guid]::NewGuid().toString())
     }
 
-    $isItSameCert = $result.Get(5).Contains([string]::Format("{0}", $certhash))
+    $isItSameCert = $result.Get(5).ToLower().Contains([string]::Format("{0}", $certhash.ToLower()))
 
     if($isItSameBinding -and $isItSameCert)
     {
