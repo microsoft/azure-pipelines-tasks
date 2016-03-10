@@ -109,7 +109,7 @@ function PostAndResolveComments
 
 #endregion
 
-#region Public for test purposes
+#region Private
 
 
 #
@@ -211,10 +211,6 @@ function FetchDiscussionComments
     Write-Host "Found $($comments.Count) existing comment(s)" 
     return $comments
 }       
-
-#endregion 
-
-#region Private
 
 function LoadTfsClientAssemblies
 {
