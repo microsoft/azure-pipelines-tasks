@@ -111,23 +111,10 @@ function PostAndResolveComments
 
 #region Private
 
-
 #
-# Posts the discussion threads loaded with comments to the PR
-#
-function PostDiscussionThreads
-{
-    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
-    
-    $vssJsonThreadCollection = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.VssJsonCollectionWrapper[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]" -ArgumentList @(,$threads)
-    [void]$script:discussionClient.CreateThreadsAsync($vssJsonThreadCollection, $null, [System.Threading.CancellationToken]::None).Result
-    
-    Write-Host "Posted $($threads.Count) discussion threads"
-}
-
-#
-# Returns a list of files that have been changed in this PR 
-#
+# Returns a list of files that have been changed in this PR
+# 
+# Remark: public for test purposes
 function GetModifiedFilesInPR 
 {
     Write-Verbose "Computing the list of files changed in this PR"
@@ -164,6 +151,20 @@ function GetModifiedFilesInPR
 
     return $sourceFiles
 }
+
+#
+# Posts the discussion threads loaded with comments to the PR
+#
+function PostDiscussionThreads
+{
+    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
+    
+    $vssJsonThreadCollection = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.VssJsonCollectionWrapper[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]" -ArgumentList @(,$threads)
+    [void]$script:discussionClient.CreateThreadsAsync($vssJsonThreadCollection, $null, [System.Threading.CancellationToken]::None).Result
+    
+    Write-Host "Posted $($threads.Count) discussion threads"
+}
+
 
 #
 # Retrieve existing discussion threads. 
@@ -570,4 +571,4 @@ function Assert
 
 # Export the public functions 
 Export-ModuleMember -Variable PostCommentsModule_CommentSourcePropertyName, PostCommentsModule_MaxMessagesToPost 
-Export-ModuleMember -Function InitPostCommentsModule, Test-InitPostCommentsModule, PostAndResolveComments, PostDiscussionThreads, FetchDiscussionThreads, FetchDiscussionComments, GetModifiedFilesInPR 
+Export-ModuleMember -Function InitPostCommentsModule, Test-InitPostCommentsModule, GetModifiedFilesInPR 
