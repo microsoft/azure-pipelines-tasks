@@ -114,7 +114,7 @@ function PostAndResolveComments
 
 #
 # Posts the discussion threads loaded with comments to the PR
-# Remark: public for test purposes
+#
 function PostDiscussionThreads
 {
     param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
@@ -127,7 +127,7 @@ function PostDiscussionThreads
 
 #
 # Returns a list of files that have been changed in this PR 
-# Remark: public for test purposes
+#
 function GetModifiedFilesInPR 
 {
     Write-Verbose "Computing the list of files changed in this PR"
@@ -168,7 +168,6 @@ function GetModifiedFilesInPR
 #
 # Retrieve existing discussion threads. 
 #
-# Remark: public for testing purposes
 function FetchDiscussionThreads
 {
     $a =  $script:discussionClient.GetPostedThreads()
@@ -192,7 +191,6 @@ function FetchDiscussionThreads
 #
 # Fetch existing discussion comments
 #
-# Remark: public for testing purposes
 function FetchDiscussionComments
 {
     param ([System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$discussionThreads)
