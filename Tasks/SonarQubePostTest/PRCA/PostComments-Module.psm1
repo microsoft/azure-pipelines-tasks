@@ -311,8 +311,6 @@ function InternalPostNewMessages
     
     $messages | ForEach {Write-Verbose $_} 
     
-    # TODO: check that the comments aren't already present before posting
-    
     $newDiscussionThreads = CreateDiscussionThreads $messages $messageSource
     PostDiscussionThreads $newDiscussionThreads 
 }
