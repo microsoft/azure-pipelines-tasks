@@ -171,7 +171,6 @@ function PostDiscussionThreads
 #
 function FetchDiscussionThreads
 {
-    $a =  $script:discussionClient.GetPostedThreads()
     $threadsDictionary = $script:discussionClient.GetThreadsAsync( @($script:artifactUri)).Result
     
     $threadList = New-Object "System.Collections.Generic.List[$script:discussionWebApiNS.DiscussionThread]"
