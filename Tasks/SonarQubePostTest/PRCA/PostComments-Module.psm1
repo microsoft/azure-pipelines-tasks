@@ -93,7 +93,7 @@ function Test-InitPostCommentsModule
 #
 function PostAndResolveComments
 {
-    param ([Array][ValidateNotNull()]$messages, [string][ValidateNotNullOrEmpty()]$commentSource)
+    param ([Array][ValidateNotNull()]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
     ValidateMessages $messages
     
@@ -103,7 +103,7 @@ function PostAndResolveComments
     
     if ($messages.Count -gt 0)
     {
-        InternalPostNewMessages $messages $commentSource
+        InternalPostNewMessages $messages $messageSource
     }
 }
 
@@ -301,19 +301,19 @@ function GetPullRequestId
 
 function InternalPostNewMessages
 {
-    param ([ValidateNotNull()][Array]$messages, [string][ValidateNotNullOrEmpty()]$commentSource)
+    param ([ValidateNotNull()][Array]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
     Write-Verbose "Fetching existing threads and comments..."
     $existingThreads = FetchDiscussionThreads 
     $existingComments = FetchDiscussionComments $existingThreads    
     
-    $messages = FilterComments $messages $commentSource $existingThreads $existingComments
+    $messages = FilterComments $messages $messageSource $existingThreads $existingComments
     
     $messages | ForEach {Write-Verbose $_} 
     
     # TODO: check that the comments aren't already present before posting
     
-    $newDiscussionThreads = CreateDiscussionThreads $messages $commentSource
+    $newDiscussionThreads = CreateDiscussionThreads $messages $messageSource
     PostDiscussionThreads $newDiscussionThreads 
 }
 
@@ -321,14 +321,14 @@ function InternalPostNewMessages
 function FilterComments 
 {
     param ([Array]$messages, 
-    [ValidateNotNullOrEmpty()][string]$commentSource, 
+    [ValidateNotNullOrEmpty()][string]$messageSource, 
     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads,
     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
     
     Write-Verbose "Filtering comments before posting"
     
     $messages = FilterCommentsByPath $messages
-    $messages = FilterPreExistingComments $messages $commentSource $existingThreads $existingComments
+    $messages = FilterPreExistingComments $messages $messageSource $existingThreads $existingComments
     $messages = FilterMessagesByNumber $messages
     
     return $messages
@@ -361,7 +361,7 @@ function FilterCommentsByPath
 function FilterPreExistingComments
 {
      param ([Array]$messages, 
-     [ValidateNotNullOrEmpty()][string]$commentSource, 
+     [ValidateNotNullOrEmpty()][string]$messageSource, 
      [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads,
      [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
      
@@ -382,7 +382,7 @@ function MessageHasMatchingComments
 {
     param ([ValidateNotNull()][PSObject]$message)
     
-    $matchingComments = GetMatchingComments $_ $commentSource $existingThreads $existingComments
+    $matchingComments = GetMatchingComments $_ $messageSource $existingThreads $existingComments
     
     return ($matchingComments.Count -gt 0)
 }
@@ -391,7 +391,7 @@ function MessageHasMatchingComments
 function GetMatchingComments
 {
      param ([ValidateNotNull()][PSObject]$message, 
-     [ValidateNotNullOrEmpty()][string]$commentSource, 
+     [ValidateNotNullOrEmpty()][string]$messageSource, 
      [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads,
      [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
      
@@ -400,7 +400,7 @@ function GetMatchingComments
      # select threads that are not "fixed", that point to the same file and have been marked with the given comment source
      $matchingThreads = $existingThreads | Where-Object {
             ($_ -ne $null) -and
-            (ThreadMatchesCommentSource $_ $commentSource) -and
+            (ThreadMatchesCommentSource $_ $messageSource) -and
             (ThreadMatchesItemPath $_ $message.RelativePath) -and 
             ($_.Status -ne [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus]::Fixed)}
             
@@ -433,11 +433,11 @@ function GetMatchingComments
 function ThreadMatchesCommentSource
 {
     param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]$thread, 
-           [ValidateNotNullOrEmpty()][string]$commentSource)
+           [ValidateNotNullOrEmpty()][string]$messageSource)
     
     return (($thread.Properties -ne $null) -and
              ($thread.Properties.ContainsKey($PostCommentsModule_CommentSourcePropertyName)) -and
-             ($thread.Properties[$PostCommentsModule_CommentSourcePropertyName] -eq $commentSource))
+             ($thread.Properties[$PostCommentsModule_CommentSourcePropertyName] -eq $messageSource))
 }
 
 function ThreadMatchesItemPath
@@ -470,7 +470,7 @@ function FilterMessagesByNumber
 
 function CreateDiscussionThreads
 {
-    param ([ValidateNotNull()][Array]$messages, [string][ValidateNotNullOrEmpty()]$commentSource)
+    param ([ValidateNotNull()][Array]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
     Write-Verbose "Creating new discussion threads"
     $discussionThreadCollection = New-Object "$script:discussionWebApiNS.DiscussionThreadCollection"
@@ -501,7 +501,7 @@ function CreateDiscussionThreads
         AddLegacyProperties $message $properties 
         
         # add a custom property to be able to distinguish all comments created this way        
-        $properties.Add($PostCommentsModule_CommentSourcePropertyName, $commentSource)
+        $properties.Add($PostCommentsModule_CommentSourcePropertyName, $messageSource)
         
         $newThread.Properties = $properties
         
