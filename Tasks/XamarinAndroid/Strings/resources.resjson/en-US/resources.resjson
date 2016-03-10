@@ -11,7 +11,7 @@
   "loc.input.help.target": "Build these targets in this project. Use a semicolon to separate multiple targets.",
   "loc.input.label.outputDir": "Output Directory",
   "loc.input.label.configuration": "Configuration",
-  "loc.input.label.msbuildLocation": "Location",
+  "loc.input.label.msbuildLocation": "MSBuild Location",
   "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).  It defaults to searching for latest version.",
   "loc.input.label.msbuildArguments": "Additional Arguments",
   "loc.input.help.msbuildArguments": "Additional arguments passed to MSBuild (on Windows) or xbuild (on Mac).",

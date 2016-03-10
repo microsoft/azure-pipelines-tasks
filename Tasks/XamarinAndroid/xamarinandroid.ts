@@ -67,13 +67,13 @@ var runxbuild = function (fn) {
             xbuild.arg(msbuildArguments);
         }
         if (outputDir) {
-            xbuild.arg('/p:OutputPath=\"' + outputDir + '\"');
+            xbuild.arg('/p:OutputPath="' + outputDir + '"');
         }
         if(configuration) {
-            xbuild.arg('/p:Configuration=\"' + configuration + '\"');
+            xbuild.arg('/p:Configuration="' + configuration + '"');
         }
         if (specifiedJavaHome) {
-            xbuild.arg('/p:JavaSdkDirectory=\"' + specifiedJavaHome + '\"');
+            xbuild.arg('/p:JavaSdkDirectory="' + specifiedJavaHome + '"');
         }
 
         return xbuild.exec();

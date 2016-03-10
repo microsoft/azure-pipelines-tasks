@@ -92,26 +92,16 @@ if (solution.indexOf('*') == -1 && solution.indexOf('?') == -1) {
     }
 }
 
-var result = Q({});
-if(clean) {
-    filesList.forEach((fn) => {
-        result = result.then(() => {
-            return runxbuild(fn, true);
-        })
-    })
-    result.then(() => {
-        tl.exit(0);
-    })
-    .fail((err) => {
-        tl.error(err);
-        tl.exit(1);
-    });
-}
-
-result = Q({});
+var result = Q(<any>{});
 filesList.forEach((fn) => {
     result = result.then(() => {
-        return runxbuild(fn, false);
+        if (clean) {
+            runxbuild(fn, true).then( () => {
+                return runxbuild(fn, false);
+            });
+        } else {
+            return runxbuild(fn, false);
+        }
     })
 })
 result.then(() => {
