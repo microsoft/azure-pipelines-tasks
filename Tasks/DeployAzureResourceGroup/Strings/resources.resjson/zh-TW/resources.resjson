@@ -7,8 +7,8 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 連接類型",
   "loc.input.label.ConnectedServiceName": "Azure RM 訂用帳戶",
   "loc.input.help.ConnectedServiceName": "選取部署的 Azure 資源管理員訂用帳戶。",
-  "loc.input.label.ConnectedServiceNameClassic": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceNameClassic": "Select the Azure Classic subscription for the deployment.",
+  "loc.input.label.ConnectedServiceNameClassic": "Azure 傳統訂用帳戶",
+  "loc.input.help.ConnectedServiceNameClassic": "選取欲部署的 Azure 傳統訂用帳戶。",
   "loc.input.label.action": "動作",
   "loc.input.help.action": "要在 Azure 資源或資源群組上執行的動作。",
   "loc.input.label.actionClassic": "動作",
@@ -26,9 +26,9 @@
   "loc.input.label.overrideParameters": "覆寫範本參數",
   "loc.input.help.overrideParameters": "指定要覆寫的範本參數，例如: <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre)。",
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "啟用部署必要條件",
-  "loc.input.help.enableDeploymentPrerequisitesForCreate": "啟用此選項即可使用自我簽署憑證，透過連接埠 5986 上的 HTTPS 通訊協定來設定 Windows 遠端管理 (WinRM) 接聽程式。必須要有此設定，才能在 Azure 機器上執行部署作業。如果目標虛擬機器是由負載平衡器備份，請確認已設定目標連接埠 (5986) 的輸入 NAT 規則。若目標虛擬機器已與網路安全性群組 (NSG) 建立關聯，則請設定目的連接埠 (5986) 的輸入安全性規則。",
+  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "啟用部署必要條件",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "啟用此選項即可使用自我簽署憑證，透過連接埠 5986 上的 HTTPS 通訊協定來設定 Windows 遠端管理 (WinRM) 接聽程式。必須要有此設定，才能在 Azure 機器上執行部署作業。如果目標虛擬機器是由負載平衡器備份，請確認已設定目標連接埠 (5986) 的輸入 NAT 規則。若目標虛擬機器已與網路安全性群組 (NSG) 建立關聯，則請設定目的連接埠 (5986) 的輸入安全性規則。僅適用於 ARM VM。",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.outputVariable": "資源群組",
   "loc.input.help.outputVariable": "提供資源群組之變數的名稱。您可以 $(variableName) 形式使用變數，以參考後續工作中的資源群組，例如在 PowerShell 中部署應用程式時，參考目標電腦工作。<br>僅當選取「建立」、「更新」或「選取」動作時，此選項才有效，而此選項在選取現有的資源群組時為必要選項。"
 }

@@ -9,6 +9,7 @@
   "loc.input.help.email": "Adresse e-mail du compte Xamarin.",
   "loc.input.label.password": "Mot de passe",
   "loc.input.help.password": "Mot de passe du compte Xamarin.",
-  "loc.input.label.activateAndroid": "Activer Xamarin.Android",
+  "loc.input.label.product": "Xamarin Product",
+  "loc.input.help.product": "Xamarin product name.",
   "loc.input.label.timeout": "Délai d'expiration en secondes"
 }

@@ -7,7 +7,7 @@
   "loc.input.label.app": "应用文件",
   "loc.input.help.app": "要测试的应用的存储库根路径的相对路径。可以使用通配符。例如，\"**\\*.apk\" 表示所有子文件夹中的所有 APK 文件。",
   "loc.input.label.dsym": "dSYM 文件(仅 iOS)",
-  "loc.input.help.dsym": "要使崩溃日志更易于读取，可以上载与应用关联的 dSYM 文件。此字段仅应用于 iOS 应用。示例: *.dSYM",
+  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "团队 API 密钥",
   "loc.input.help.teamApiKey": "可以在 https://testcloud.xamarin.com/account 处的“团队和应用”下找到 Xamarin 测试云团队 API 密钥。",
   "loc.input.label.user": "用户电子邮件",

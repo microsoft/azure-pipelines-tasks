@@ -7,7 +7,7 @@
   "loc.input.label.app": "Fichier d'application",
   "loc.input.help.app": "Chemin relatif de la racine de dépôt des applications à tester. Les caractères génériques sont autorisés. Par exemple, '**\\*.apk' pour tous les fichiers APK de tous les sous-dossiers.",
   "loc.input.label.dsym": "Fichier dSYM (iOS uniquement)",
-  "loc.input.help.dsym": "Pour que les journaux d'incidents soient plus faciles à lire, vous pouvez télécharger un fichier dSYM associé à votre application. Ce champ s'applique uniquement aux applications iOS. Exemple : *.dSYM",
+  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "Clé API d'équipe",
   "loc.input.help.teamApiKey": "Votre clé API de l'équipe Xamarin Test Cloud est disponible sous \"Teams & Apps\" à l'adresse https://testcloud.xamarin.com/account.",
   "loc.input.label.user": "Adresse de messagerie de l'utilisateur",

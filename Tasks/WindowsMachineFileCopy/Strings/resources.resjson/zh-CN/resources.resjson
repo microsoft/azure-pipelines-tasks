@@ -2,7 +2,7 @@
   "loc.friendlyName": "Windows 计算机文件复制",
   "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "将文件复制到远程计算机",
-  "loc.instanceNameFormat": "复制文件 $(SourcePath)",
+  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "高级选项",
   "loc.input.label.SourcePath": "源",
   "loc.input.help.SourcePath": "本地计算机上的源文件夹或文件的绝对路径或 UNC 共享，如 c:\\fabrikamfiber 或 \\\\\\\\fabrikamshare\\fabrikamfiber。",
@@ -22,5 +22,5 @@
   "loc.input.help.AdditionalArguments": "复制文件时将应用的其他 robocopy 参数，如 /min:33553332 /l。",
   "loc.input.label.ResourceFilteringMethod": "计算机选择依据",
   "loc.input.label.MachineNames": "筛选条件",
-  "loc.input.help.MachineNames": "此输入仅对计算机组有效，且尚不支持计算机或输出变量的简单列表。提供计算机列表(如 dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34)或标记列表(如 Role:DB; OS:Win8.1)。如果提供了多个标记，则任务将在具有指定标记的所有计算机中运行。对于 Azure 资源组，提供虚拟机的名称，如 ffweb、ffdb。默认为在所有计算机中运行任务。"
+  "loc.input.help.MachineNames": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }

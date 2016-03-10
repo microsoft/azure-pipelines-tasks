@@ -28,5 +28,5 @@
   "loc.input.label.ResourceFilteringMethod": "计算机选择依据",
   "loc.input.help.ResourceFilteringMethod": "(可选)通过提供计算机名或标记来选择计算机的子集。",
   "loc.input.label.MachineNames": "筛选条件",
-  "loc.input.help.MachineNames": "此输入仅对计算机组有效，且尚不支持计算机或输出变量的简单列表。提供计算机列表(如 dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34)或标记列表(如 Role:DB; OS:Win8.1)。如果提供了多个标记，则任务将在具有指定标记的所有计算机中运行。对于 Azure 资源组，提供虚拟机的名称，如 ffweb、ffdb。默认为在所有计算机中运行任务。"
+  "loc.input.help.MachineNames": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }

@@ -7,7 +7,7 @@
   "loc.input.label.app": "App-Datei",
   "loc.input.help.app": "Der relative Pfad vom Repositorystamm der zu testenden Apps. Platzhalter können verwendet werden. Beispiel: \"**\\*.apk\" für alle APK-Dateien in allen Unterordnern.",
   "loc.input.label.dsym": "dSYM-Datei (nur iOS)",
-  "loc.input.help.dsym": "Um Absturzprotokolle besser verständlich zu machen, können Sie eine Ihrer App zugeordnete dSYM-Datei hochladen. Dieses Feld gilt nur für iOS-Apps. Beispiel: *.dSYM",
+  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "Team-API-Schlüssel",
   "loc.input.help.teamApiKey": "Sie finden den Team-API-Schlüssel für die Xamarin-Testcloud unter \"Teams & Apps\" unter \"https://testcloud.xamarin.com/account\".",
   "loc.input.label.user": "Benutzer-E-Mail",
