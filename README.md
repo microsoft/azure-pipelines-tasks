@@ -50,5 +50,7 @@ Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in 
 
 For uploading custom tasks to VSO use the [TFS Cross Platform Command Line utility](https://github.com/Microsoft/tfs-cli).
 
+Tasks can also be deployed with an Visual Studio Team Service Extension. See [this tutorial](https://www.visualstudio.com/en-us/integrate/extensions/develop/add-build-task) how to package tasks inside an extension.
+
 ## Contributing
 We take contributions.  [Read here](docs/contribute.md) how to contribute.
