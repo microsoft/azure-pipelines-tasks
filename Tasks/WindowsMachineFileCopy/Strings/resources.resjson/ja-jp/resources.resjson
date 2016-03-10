@@ -2,7 +2,7 @@
   "loc.friendlyName": "Windows コンピューターのファイル コピー",
   "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "ファイルをリモート コンピューター (複数可) にコピーします",
-  "loc.instanceNameFormat": "ファイルのコピー $(SourcePath)",
+  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "詳細設定のオプション",
   "loc.input.label.SourcePath": "ソース",
   "loc.input.help.SourcePath": "ローカル コンピューターまたは UNC 共有にあるソース フォルダーまたはファイルの絶対パス。たとえば、c:\\fabrikamfiber または \\\\\\\\fabrikamshare\\fabrikamfiber など。",
@@ -22,5 +22,5 @@
   "loc.input.help.AdditionalArguments": "ファイルをコピーする場合に適用される追加の robocopy 引数 (/min:33553332 /l など)。",
   "loc.input.label.ResourceFilteringMethod": "以下の条件でコンピューターを選択",
   "loc.input.label.MachineNames": "フィルター条件",
-  "loc.input.help.MachineNames": "この入力はコンピューター グループでのみ使用でき、コンピューターまたは出力変数の単純なリストではまだサポートされていません。コンピューターのリスト (dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34 など)、またはタグのリスト (Role:DB; OS:Win8.1) をご指定ください。複数のタグを指定した場合、指定されたタグを持つすべてのコンピューターでタスクが実行されます。Azure リソース グループの場合は、ffweb または ffdb のような仮想マシン名をご指定ください。既定値ではタスクがすべてのコンピューターで実行されます。"
+  "loc.input.help.MachineNames": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }

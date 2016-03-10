@@ -7,8 +7,8 @@
   "loc.input.label.ConnectedServiceNameSelector": "Tipo di connessione ad Azure",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Gestione risorse di Azure",
   "loc.input.help.ConnectedServiceName": "Selezionare la sottoscrizione di Gestione risorse di Azure per la distribuzione.",
-  "loc.input.label.ConnectedServiceNameClassic": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceNameClassic": "Select the Azure Classic subscription for the deployment.",
+  "loc.input.label.ConnectedServiceNameClassic": "Sottoscrizione di Azure classico",
+  "loc.input.help.ConnectedServiceNameClassic": "Selezionare la sottoscrizione di Azure classico per la distribuzione.",
   "loc.input.label.action": "Azione",
   "loc.input.help.action": "Azione da eseguire sulle risorse o sul gruppo di risorse di Azure.",
   "loc.input.label.actionClassic": "Azione",
@@ -26,9 +26,9 @@
   "loc.input.label.overrideParameters": "Esegui override dei parametri del modello",
   "loc.input.help.overrideParameters": "Consente di specificare i parametri del modello da sovrascrivere come: <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre).",
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "Abilita prerequisiti di distribuzione",
-  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Se si abilita questa opzione, il listener di Gestione remota Windows (WinRM) verrà configurato con il protocollo HTTPS sulla porta 5986 usando un certificato autofirmato. Questa configurazione è necessaria per eseguire l'operazione di distribuzione su computer Azure. Se le macchine di destinazione sono supportate da un'utilità di bilanciamento del carico, assicurarsi che le regole NAT in ingresso siano configurate per la porta di destinazione (5986). Se le macchine virtuali di destinazione sono associate a un gruppo di sicurezza di rete, configurare le regole di sicurezza in ingresso per la porta di destinazione (5986).",
+  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "Abilita prerequisiti di distribuzione",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Se si abilita questa opzione, il listener di Gestione remota Windows (WinRM) verrà configurato con il protocollo HTTPS sulla porta 5986 usando un certificato autofirmato. Questa configurazione è necessaria per eseguire l'operazione di distribuzione su computer Azure. Se le macchine di destinazione sono supportate da un'utilità di bilanciamento del carico, assicurarsi che le regole NAT in ingresso siano configurate per la porta di destinazione (5986). Se le macchine virtuali di destinazione sono associate a un gruppo di sicurezza di rete, configurare le regole di sicurezza in ingresso per la porta di destinazione (5986). Applicabile solo per le macchine virtuali ARM.",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.outputVariable": "Gruppo di risorse",
   "loc.input.help.outputVariable": "Consente di specificare un nome per la variabile relativa al gruppo di risorse. È possibile usare la variabile come $(variableName) per fare riferimento al gruppo di risorse nelle attività successive, ad esempio nell'attività PowerShell in computer di destinazione per la distribuzione di applicazioni. <br>Valido solo quando l'azione selezionata è Create, Update o Select e obbligatorio quando è selezionato un gruppo di risorse esistente."
 }

@@ -7,8 +7,8 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 接続の種類",
   "loc.input.label.ConnectedServiceName": "Azure RM サブスクリプション",
   "loc.input.help.ConnectedServiceName": "デプロイ用の Azure リソース マネージャー サブスクリプションを選択します。",
-  "loc.input.label.ConnectedServiceNameClassic": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceNameClassic": "Select the Azure Classic subscription for the deployment.",
+  "loc.input.label.ConnectedServiceNameClassic": "Azure クラシック サブスクリプション",
+  "loc.input.help.ConnectedServiceNameClassic": "配置用の Azure クラシック サブスクリプションを選びます。",
   "loc.input.label.action": "アクション",
   "loc.input.help.action": "Azure リソースまたはリソース グループで実行されるアクション。",
   "loc.input.label.actionClassic": "アクション",
@@ -26,9 +26,9 @@
   "loc.input.label.overrideParameters": "テンプレート パラメーターのオーバーライド",
   "loc.input.help.overrideParameters": "上書きするテンプレート パラメーターを次のように指定します<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre)。",
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "配置の前提条件を有効にする",
-  "loc.input.help.enableDeploymentPrerequisitesForCreate": "このオプションを有効にすると、自己署名証明書を使用して、Windows リモート管理 (WinRM) リスナーをポート 5986 上に HTTPS プロトコル経由で構成できます。この構成は Azure コンピューター上で配置操作を実行するために必要とされます。ターゲットの仮想マシンがロード バランサーでバックアップされている場合は、受信の NAT 規則 がターゲット ポート (5986) に対して構成されていることを確認します。ターゲットの仮想マシンがネットワーク セキュリティ グループ (NSG) に関連付けられている場合は、受信のセキュリティ規則を宛先ポート (5986) に対して構成します。",
+  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "配置の前提条件を有効にする",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "このオプションを有効にすると、自己署名証明書を使用して、Windows リモート管理 (WinRM) リスナーをポート 5986 上に HTTPS プロトコル経由で構成できます。この構成は Azure コンピューター上で配置操作を実行するために必要とされます。ターゲットの仮想マシンがロード バランサーでバックアップされている場合は、受信の NAT 規則 がターゲット ポート (5986) に対して構成されていることを確認します。ターゲットの仮想マシンがネットワーク セキュリティ グループ (NSG) に関連付けられている場合は、受信のセキュリティ規則を宛先ポート (5986) に対して構成します。適用対象は、ARM VM のみです。",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.outputVariable": "リソース グループ",
   "loc.input.help.outputVariable": "リソース グループの変数の名前を指定します。変数を $(variableName) として使用して、後続のタスクでリソース グループを参照できます (アプリケーションの展開の「ターゲット コンピューターでの PowerShell」タスクなど)。<br>選んだアクションが [作成]、[更新]、または [選択] のいずれかである場合のみ使用でき、既存のリソース グループが選ばれた場合は必須です。"
 }

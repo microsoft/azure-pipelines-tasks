@@ -7,8 +7,8 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 연결 형식",
   "loc.input.label.ConnectedServiceName": "Azure RM 구독",
   "loc.input.help.ConnectedServiceName": "배포에 대한 Azure 리소스 관리자 구독을 선택합니다.",
-  "loc.input.label.ConnectedServiceNameClassic": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceNameClassic": "Select the Azure Classic subscription for the deployment.",
+  "loc.input.label.ConnectedServiceNameClassic": "Azure 클래식 구독",
+  "loc.input.help.ConnectedServiceNameClassic": "배포에 대한 Azure 클래식 구독을 선택합니다.",
   "loc.input.label.action": "작업",
   "loc.input.help.action": "Azure 리소스 또는 리소스 그룹에서 수행할 작업입니다.",
   "loc.input.label.actionClassic": "작업",
@@ -26,9 +26,9 @@
   "loc.input.label.overrideParameters": "템플릿 매개 변수 재정의",
   "loc.input.help.overrideParameters": "다음과 같은 형식으로 재정의할 템플릿 매개 변수를 지정하세요. <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre)",
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "배포 필수 구성 요소 사용",
-  "loc.input.help.enableDeploymentPrerequisitesForCreate": "이 옵션을 사용하도록 설정하면 자체 서명된 인증서를 사용하여 포트 5986의 HTTP 프로토콜에서 WinRM(Windows 원격 관리)을 구성합니다. 이 구성은 Azure 컴퓨터에서 배포 작업을 수행하는 데 필요합니다. 대상 가상 컴퓨터가 부하 분산 장치를 지원하지 않는 경우 인바운드 NAT 규칙이 대상 포트(5986)에 대하여 구성되었는지 확인합니다. 대상 가상 컴퓨터가 NSG(네트워크 보안 그룹)와 연결된 경우 대상 포트(5986)에 대한 인바운드 보안 규칙을 구성하세요.",
+  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "배포 필수 구성 요소 사용",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "이 옵션을 사용하도록 설정하면 자체 서명된 인증서를 사용하여 포트 5986의 HTTP 프로토콜에서 WinRM(Windows 원격 관리)을 구성합니다. 이 구성은 Azure 컴퓨터에서 배포 작업을 수행하는 데 필요합니다. 대상 가상 컴퓨터가 부하 분산 장치를 지원하지 않는 경우 인바운드 NAT 규칙이 대상 포트(5986)에 대하여 구성되었는지 확인합니다. 대상 가상 컴퓨터가 NSG(네트워크 보안 그룹)와 연결된 경우 대상 포트(5986)에 대한 인바운드 보안 규칙을 구성하세요. ARM VM에 대해서만 적용할 수 있습니다.",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.outputVariable": "리소스 그룹",
   "loc.input.help.outputVariable": "리소스 그룹에 대한 변수 이름을 제공하세요. 변수는 응용 프로그램을 배포하기 위한 대상 컴퓨터의 PowerShell에서와 같은 후속 작업에서 리소스 그룹을 참조하는 $(variableName)(으)로 사용될 수 있습니다. <br>선택한 작업이 [만들기], [업데이트] 또는 [선택]인 경우에만 유효하며 기존 리소스 그룹이 선택된 경우 필요합니다."
 }
