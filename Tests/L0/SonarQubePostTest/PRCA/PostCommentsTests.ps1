@@ -1,10 +1,7 @@
 [CmdletBinding()]
 param()
 
-# import the module before initializing the test library to avoid "import-module" being mocked
-Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\PostComments-Module.psm1" -Verbose
 
-. $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
 
 #
 # The tests do not have access to the TFS client assemblies because those live only on the build agent. As such instead of mocking 
@@ -15,6 +12,10 @@ $source = @"
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Linq;
+using System;
 
 namespace Microsoft.VisualStudio.Services.WebApi
 {
@@ -22,10 +23,27 @@ namespace Microsoft.VisualStudio.Services.WebApi
     {
         
     }
+    
+    public class VssJsonCollectionWrapper<T>
+    {
+        #region test interface
+        
+        public IEnumerable Value { get; set; }
+        
+        #endregion
+        
+        public VssJsonCollectionWrapper(IEnumerable source)
+        {
+            Value = source;
+        }
+    }
 }
 
 namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
 {
+
+    using Microsoft.VisualStudio.Services.WebApi;
+    
     public enum DiscussionStatus
     {
         Unknown = 0,
@@ -64,7 +82,14 @@ namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
     
     public class DiscussionThreadCollection : List<DiscussionThread>
     {
-        
+        public DiscussionThreadCollection() {}
+        public DiscussionThreadCollection(IList<DiscussionThread> collection) :base(collection) {}
+    }
+    
+    public class DiscussionCommentCollection : List<DiscussionComment>
+    {
+        public DiscussionCommentCollection() {}
+        public DiscussionCommentCollection(IList<DiscussionComment> collection) : base(collection) {}
     }
            
     public enum CommentType
@@ -81,7 +106,69 @@ namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
         public CommentType CommentType { get; set; }
         public string Content { get; set; }
         public bool IsDeleted { get; set; }
+        
+        public int DiscussionId { get; set; }
     }
+    
+    public class DiscussionHttpClient
+    {
+        // The mock implementation keeps a list of threads that were posted and uses it to get requests
+        List<DiscussionThread> postedThreads = new List<DiscussionThread>();
+        int lastDiscussionId = 1;
+        
+        // For test - to be able to easily get to the threads that were posted
+        public List<DiscussionThread> GetPostedThreads()
+        {
+            return postedThreads;
+        }
+        
+        // This mock implementation simply records the threads that are posted to the PR
+        // It also rewrites the discussion IDs as the server would do and links the comment's discussion id to the parent thread discussion id
+        public Task<DiscussionThreadCollection> CreateThreadsAsync(VssJsonCollectionWrapper<DiscussionThreadCollection> newThreads, object userState = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            TaskCompletionSource<DiscussionThreadCollection> tsc = new TaskCompletionSource<DiscussionThreadCollection>();
+            DiscussionThreadCollection threads = newThreads.Value as DiscussionThreadCollection;
+            
+            foreach (var thread in threads)
+            {
+                thread.DiscussionId = lastDiscussionId++;
+                foreach (var comment in thread.Comments)
+                {
+                    comment.DiscussionId = thread.DiscussionId;
+                }
+            }
+            
+            this.postedThreads.AddRange(threads);
+            tsc.SetResult(threads);
+
+            return tsc.Task;
+        }
+
+        public Task<Dictionary<string, List<DiscussionThread>>> GetThreadsAsync(string[] artifactUris, object userState = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Dictionary<string, List<DiscussionThread>> result = new Dictionary<string, List<DiscussionThread>>();
+            var tsc = new TaskCompletionSource<Dictionary<string, List<DiscussionThread>>>();
+
+            foreach (string artifactUri in artifactUris)
+            {
+                result.Add(artifactUri, postedThreads.Where(pt => pt.ArtifactUri == artifactUri).ToList());
+            }
+
+            tsc.SetResult(result);
+
+            return tsc.Task;
+        }
+
+        public Task<DiscussionCommentCollection> GetCommentsAsync(int discussionId, object userState = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            TaskCompletionSource<DiscussionCommentCollection> tsc = new TaskCompletionSource<DiscussionCommentCollection>();
+
+            var comments = postedThreads.Where(t => t.DiscussionId == discussionId).SelectMany(t => t.Comments).ToList();
+            tsc.SetResult(new DiscussionCommentCollection(comments));
+
+            return tsc.Task;        
+        }
+    }   
 }
 
 namespace Microsoft.TeamFoundation.SourceControl.WebApi
@@ -94,18 +181,25 @@ namespace Microsoft.TeamFoundation.SourceControl.WebApi
     public class GitPullRequest
     {
         public int CodeReviewId { get; set; }
-        
+            
         // These are actually of type GitCommitRef, but for test purposes strings are enough
         public string LastMergeSourceCommit { get; set; }
         public string LastMergeTargetCommit { get; set; }
-    }
+    }        
 }
 "@
 
 Add-Type -TypeDefinition $source -Language CSharp
 
+
+# import the module before initializing the test library to avoid "import-module" being mocked
+Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\PostComments-Module.psm1" -Verbose
+. $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
+
+
+
 # Builds the input, similar to the ReportProcessor module output 
-function BuildTestComment 
+function BuildTestMessage 
 {
     param ($message, $line, $relativePath, $priority)
     
@@ -125,26 +219,26 @@ function BuildTestComment
 #
 function ValidateDiscussionThreadCollection
 {
-    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [Array]$inputComments, [string]$commentSource)
+    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [Array]$messages, [string]$commentSource)
     
     $endLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::EndLine
     $startLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartLine
     $itemPathName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::ItemPath
     
     ValidateCommonThreadAttributes $threadCollection $commentSource
-    Assert-AreEqual $inputComments.Count $threadCollection.Count "Inconsistent number of threads. There should be 1 thread for each comment."    
-    foreach ($inputComment in $inputComments)
+    Assert-AreEqual $messages.Count $threadCollection.Count "Inconsistent number of threads. There should be 1 thread for each comment."    
+    
+    foreach ($message in $messages)
     {
         $thread = $threadCollection | Where-Object {
-            ($_.Comments[0].Content -eq $inputComment.Content) -and 
-            ($_.Properties[$startLineName] -eq $inputComment.Line) }
+            ($_.Comments[0].Content -eq $message.Content) -and 
+            ($_.Properties[$itemPathName] -eq $message.RelativePath) }
             
-        Assert-IsNotNullOrEmpty $thread "Could not find a thread associated with the comment on line $($inputComment.Line) with message $($inputComment.Content)"
-        Assert-AreEqual $inputComment.RelativePath $thread.Properties[$itemPathName] "Invalid ItemPath property"
-        Assert-AreEqual $inputComment.Line $thread.Properties[$endLineName] "The EndLine should be the same as the comment's line"
+        Assert-IsNotNullOrEmpty $thread "Could not find a thread associated with the comment on line $($message.Line) with message $($message.Content)"
+        Assert-AreEqual 1 $thread.Count "A single thread associated with this message should have been found"
+        
+        Assert-AreEqual $thread.Properties[$endLineName] $thread.Properties[$startLineName] "The StartLine should be the same as the comment's line"
     }
-    
-    return $true
 }
 
 #
@@ -158,11 +252,7 @@ function ValidateCommonThreadAttributes
     $positionContextName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::PositionContext
     
     $threadCollection | ForEach-Object {Assert-AreEqual "artifact uri" $_.ArtifactUri "Each thread should have the same ArtifactUri"}
-    $threadCollection | ForEach-Object {
-        Assert-AreEqual 
-        [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus]::Active 
-        $_.Status 
-        "Each thread should be active"}
+    $threadCollection | ForEach-Object {Assert-AreEqual "Active" $_.Status "Each thread should be active"}
     $threadCollection | ForEach-Object {Assert-AreEqual 1 $_.Comments.Count "Each thread should have a single comment"}
     $threadCollection | ForEach-Object {Assert-AreEqual $false $_.Comments.IsDeleted "Each thread should be marked as not deleted"}
     
@@ -176,98 +266,96 @@ function ValidateCommonThreadAttributes
     $threadCollection | ForEach-Object { Assert-AreEqual $commentSource $_.Properties[$PostCommentsModule_CommentSourcePropertyName] "Invalid CodeAnalysisThreadType property."}
 }
 
+
 function InitPostCommentsModule 
 {
     $mockGitClient = New-Object -TypeName "Microsoft.TeamFoundation.SourceControl.WebApi.GitHttpClient"
+    $mockDiscussionClient = New-Object -TypeName "Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionHttpClient"
     $mockPullRequest = New-Object -TypeName "Microsoft.TeamFoundation.SourceControl.WebApi.GitPullRequest"
-
+    
     # Legacy PR
     $mockPullRequest.CodeReviewId = 0
     $mockPullRequest.LastMergeSourceCommit = "Source Commit"
     $mockPullRequest.LastMergeTargetCommit = "Target Commit"
 
-    Test-InitPostCommentsModule $mockGitClient $mockPullRequest "artifact uri"
+    Test-InitPostCommentsModule $mockGitClient $mockDiscussionClient $mockPullRequest "artifact uri"
+    
+    return $mockDiscussionClient
 }
 
-InitPostCommentsModule
-
-# Test 1 (happy path) - Post 2 new comments with no existing comments 
+#
+# Test - Post messages where existing messages are already present
+#
 
 # Arrange
-$discussionThreads = New-Object "System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]"
-$discussionComments = New-Object "System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]"
+$mockDiscussionClient = InitPostCommentsModule
 $modifiedFilesinPr = @("some/path1/file.cs", "some/path2/file.cs")
 
-Register-Mock PostDiscussionThreads
-Register-Mock FetchDiscussionThreads { $discussionThreads }
-Register-Mock FetchDiscussionComments { $discussionComments }
 Register-Mock GetModifiedFilesInPR { $modifiedFilesinPr }
 
-Write-Host "hello!"
-Write-Host $PostCommentsModule_CommentSourcePropertyName
-
-$comment1 = BuildTestComment "CA issue 1" 14 "some/path1/file.cs" 1 
-$comment2 = BuildTestComment "CA issue 2" 15 "some/path2/file.cs" 5
-$inputComments = @($comment1, $comment2) 
+$comment1 = BuildTestMessage "CA issue 1" 14 "some/path1/file.cs" 1 
+$comment2 = BuildTestMessage "CA issue 2" 15 "some/path2/file.cs" 5
+$comment3 = BuildTestMessage "CA issue 3" 15 "some/path3/file.cs" 5  # issue in a file not changed by the PR 
 
 # Act
-PostAndResolveComments $inputComments "TestSource"
+PostAndResolveComments @($comment1, $comment2, $comment3) "TestSource"
 
 # Assert
-Assert-WasCalled PostDiscussionThreads -ArgumentsEvaluator {ValidateDiscussionThreadCollection $args[0] $inputComments "TestSource"}
+$postedThreads = $mockDiscussionClient.GetPostedThreads()
+ValidateDiscussionThreadCollection $postedThreads @($comment1, $comment2) "TestSource"
+
+# Post some other messages, similar to pushing another commit to the PR branch
+$comment4 = BuildTestMessage "CA issue 1" 14 "some/path1/file.cs" 1  # same message as comment1 and the same line
+$comment5 = BuildTestMessage "CA issue 1" 18 "some/path1/file.cs" 1  # same message as comment 1 and different line
+$comment6 = BuildTestMessage "CA issue 1" 14 "some/path2/file.cs" 1  # same message as comment 1 but different file
+
+# Act 
+PostAndResolveComments @($comment4, $comment5, $comment6) "TestSource"
+
+# Assert
+$postedThreads = $mockDiscussionClient.GetPostedThreads()
+ValidateDiscussionThreadCollection $postedThreads @($comment1, $comment2, $comment6) "TestSource"
 
 #Cleanup 
-Unregister-Mock PostDiscussionThreads
-Unregister-Mock FetchDiscussionThreads
-Unregister-Mock FetchDiscussionComments 
 Unregister-Mock GetModifiedFilesInPR 
+
 
 #
 # Test 2 - Post more than the maximum allowed comments and test that the comments posted are ordered by priority
 #
 
 # Arrange 
-Register-Mock PostDiscussionThreads
-$discussionThreads = New-Object "System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]"
-$discussionComments = New-Object "System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]"
-
-Register-Mock FetchDiscussionThreads { $discussionThreads }
-Register-Mock FetchDiscussionComments { $discussionComments }
+$mockDiscussionClient = InitPostCommentsModule
 Register-Mock GetModifiedFilesInPR { @("some/path/file.cs") }
 
-$inputComments = New-Object "Collections.ArrayList"
+$messages = New-Object "Collections.ArrayList"
 
 # Add max number of allowed comments 
 for($i=1; $i -le $PostCommentsModule_MaxMessagesToPost; $i++)
 {
     $priority = Get-Random -Minimum 1 -Maximum 10
-    $comment = BuildTestComment "CA issue $i" $i "some/path/file.cs" $priority
-    $inputComments.Add($comment) 
+    $message = BuildTestMessage "CA issue $i" $i "some/path/file.cs" $priority
+    $messages.Add($message) 
 }
 
-$comment2 = BuildTestComment "CA issue that will be ignored 1" 20 "some/path/file.cs" 15
-$comment3 = BuildTestComment "CA issue that will be ignored 2" 10 "some/path/file.cs" 16
+$message2 = BuildTestMessage "CA issue that will be ignored 1" 20 "some/path/file.cs" 15
+$message3 = BuildTestMessage "CA issue that will be ignored 2" 10 "some/path/file.cs" 16
 
-$inputComments.Add($comment2)
-$inputComments.Add($comment3)
+$messages.Add($message2)
+$messages.Add($message3)
 
 # Shuffle the array 
-$inputComments = [System.Collections.ArrayList]($inputComments | Sort-Object {Get-Random})
+$messages = [System.Collections.ArrayList]($messages | Sort-Object {Get-Random})
 
 # Act
-PostAndResolveComments $inputComments "SQ Test Source"
+PostAndResolveComments $messages "SQ Test Source"
 
 # Assert
-$inputComments.Remove($comment2)
-$inputComments.Remove($comment3)
-Assert-WasCalled PostDiscussionThreads -ArgumentsEvaluator {ValidateDiscussionThreadCollection $args[0] $inputComments "SQ Test Source"}
+$messages.Remove($message2)
+$messages.Remove($message3)
+$postedThreads = $mockDiscussionClient.GetPostedThreads()
+ValidateDiscussionThreadCollection $postedThreads $messages "SQ Test Source"
 
 #Cleanup 
-Unregister-Mock PostDiscussionThreads
-Unregister-Mock FetchDiscussionThreads 
-Unregister-Mock FetchDiscussionComments
 Unregister-Mock GetModifiedFilesInPR 
 
-#
-# Test 2 - Post more than the maximum allowed comments and test that the comments posted are ordered by priority
-#
