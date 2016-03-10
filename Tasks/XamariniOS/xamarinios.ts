@@ -133,10 +133,6 @@ nugetRunner.exec()
                 }
                 // Execute build
                 xbuildRunner.exec()
-                    .then(function (code) {
-                        // Executed successfully
-                        tl.exit(code);
-                    })
                     .fin(function () {
                         tl.debug('deleteKeychain = ' + deleteKeychain);
                         tl.debug('deleteProvProfile = ' + deleteProvProfile);
