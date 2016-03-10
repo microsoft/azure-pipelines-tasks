@@ -87,7 +87,7 @@ $taskContextMemberExists  = CmdletHasMember "TaskContext"
 
 if($taskContextMemberExists){
     Write-Verbose "Calling Register Environment cmdlet"
-    $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines -DoNotPersist
+    $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines -Persist
     Write-Verbose "Environment details $environment"
 
     Write-Verbose "Calling Deploy test agent cmdlet"
