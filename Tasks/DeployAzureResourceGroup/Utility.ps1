@@ -843,18 +843,18 @@ function Add-AzureVMCustomScriptExtension
     Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
     Write-Verbose -Verbose "VM Location : $location"
     Write-Verbose -Verbose "VM DNS : $dnsName"
-	
+
     try
     {
         $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
     Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
-	
+
     if($isExtensionExists)
     {
         Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
         return
     }
-	
+
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
     if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
     {
