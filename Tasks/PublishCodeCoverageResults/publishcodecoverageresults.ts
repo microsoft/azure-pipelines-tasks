@@ -21,5 +21,5 @@ else if(additionalCodeCoverageFiles) {
   var  codeCoverageFiles = [additionalCodeCoverageFiles];
 }
 
-var tp = new tl.CodeCoveragePublisher();
-tp.publish(codeCoverageTool, summaryFileLocation, reportDirectory, codeCoverageFiles);
+var ccp = new tl.CodeCoveragePublisher();
+ccp.publish(codeCoverageTool, summaryFileLocation, reportDirectory, codeCoverageFiles);
