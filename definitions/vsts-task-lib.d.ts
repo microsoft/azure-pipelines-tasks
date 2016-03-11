@@ -405,5 +405,9 @@ declare module 'vsts-task-lib/task' {
 	    testRunner: string;
 	    publish(resultFiles: any, mergeResults: any, platform: any, config: any, runTitle: any, publishRunAttachments: any): void;
 	}
+	export class CodeCoveragePublisher {
+	    constructor();
+	    publish(codeCoverageTool: any, summaryFileLocation: any, reportDirectory: any, additionalCodeCoverageFiles: any): void;
+	}
 
 }
