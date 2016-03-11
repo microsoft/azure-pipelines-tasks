@@ -117,17 +117,6 @@ function Create-AzureResourceGroup
 
     #Create csm parameter object
     $csmAndParameterFiles = Get-CsmAndParameterFiles -csmFile $csmFile -csmParametersFile $csmParametersFile
-
-    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
-    {
-        $csmParametersFileContent = [System.IO.File]::ReadAllText($csmAndParameterFiles["csmParametersFile"])
-    }
-    else
-    {
-        $csmParametersFileContent = [String]::Empty
-    }
-
-    $csmParametersObject = Get-CsmParameterObject -csmParameterFileContent $csmParametersFileContent
     $csmFile = $csmAndParameterFiles["csmFile"]
 
     if(-not [string]::IsNullOrEmpty($csmFile) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($location))
@@ -136,7 +125,7 @@ function Create-AzureResourceGroup
         Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
 
         # Deploying CSM Template
-        $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersObject $csmParametersObject -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters
+        $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters
 
         $azureResourceGroupDeployment = $deploymentDetails["azureResourceGroupDeployment"]
         $deploymentError = $deploymentDetails["deploymentError"]
@@ -172,7 +161,6 @@ function Create-AzureResourceGroup
         }
     }
 }
-
 function Get-MachineLogs
 {
     param([string]$resourceGroupName)
@@ -268,39 +256,6 @@ function Validate-DeploymentFileAndParameters
     {
          Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
          throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
-    }
-}
-
-function Get-CsmParameterObject
-{
-    param([string]$csmParameterFileContent)
-
-    if (-not [string]::IsNullOrEmpty($csmParameterFileContent))
-    {
-        Write-Verbose "Generating csm parameter object" -Verbose
-
-        $csmJObject = [Newtonsoft.Json.Linq.JObject]::Parse($csmParameterFileContent)
-        $newParametersObject = New-Object System.Collections.Hashtable([System.StringComparer]::InvariantCultureIgnoreCase)
-
-        if($csmJObject.ContainsKey("parameters") -eq $true)
-        {
-            $parameters = $csmJObject.GetValue("parameters")
-            $parametersObject  = $parameters.ToObject([System.Collections.Hashtable])
-        }
-        else
-        {
-            $parametersObject = $csmJObject.ToObject([System.Collections.Hashtable])
-        }
-
-        foreach($key in $parametersObject.Keys)
-        {
-            $parameterValue = $parametersObject[$key] -as [Newtonsoft.Json.Linq.JObject]
-            $newParametersObject.Add($key, $parameterValue["value"])
-        }
-
-        Write-Verbose "Generated the parameter object" -Verbose
-
-        return $newParametersObject
     }
 }
 
@@ -918,7 +873,7 @@ function Add-AzureVMCustomScriptExtension
          Write-TaskSpecificTelemetry "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"    
         throw (Get-LocalizedString -Key "Failed to enable deployment prerequisites. {0}" -ArgumentList $_.exception.message)
     }
-	
+
     Write-Verbose -Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
 }
 
@@ -931,9 +886,9 @@ function Enable-WinRMHttpsListener
     if ($azureVMResources.Count -eq 0)
     {
         Write-Verbose "No VMs found in resource group: $resourceGroupName"
-        return		
+        return
     }
-	
+
     # Below call enables the winrm custom script extension
     $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $true
 }
