@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 60
+        "Patch": 61
     },
     "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "1.96.3",
     "groups": [
         {
             "name": "output",
