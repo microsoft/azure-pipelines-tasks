@@ -500,27 +500,33 @@ function Get-MachinesFqdnsForLB
         {
             if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
             {
-                $fqdnMap[$publicIp.Id] =  $publicIP.DnsSettings.Fqdn
+                $fqdnMap[$publicIp.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
             }
             else
             {
-                $fqdnMap[$publicIp.Id] =  $publicIP.IpAddress
+                $fqdnMap[$publicIp.Id.ToLower()] =  $publicIP.IpAddress
             }
         }
+
+        Write-Verbose "fqdnMap for MachinesFqdnsForLB after mapping ip configuration to fqdn: " -Verbose
+        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
 
         #Get the NAT rule for a given ip id
         foreach($config in $frontEndIPConfigs)
         {
-            $fqdn = $fqdnMap[$config.PublicIpAddress.Id]
+            $fqdn = $fqdnMap[$config.PublicIpAddress.Id.ToLower()]
             if(-not [string]::IsNullOrEmpty($fqdn))
             {
-                $fqdnMap.Remove($config.PublicIpAddress.Id)
+                $fqdnMap.Remove($config.PublicIpAddress.Id.ToLower())
                 foreach($rule in $config.InboundNatRules)
                 {
-                    $fqdnMap[$rule.Id] =  $fqdn
+                    $fqdnMap[$rule.Id.ToLower()] =  $fqdn
                 }
             }
         }
+
+        Write-Verbose "fqdnMap for MachinesFqdnsForLB after getting NAT rule for given ip configuration: " -Verbose
+        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
 
         #Find out the NIC, and thus the corresponding machine to which the NAT rule belongs
         foreach($nic in $networkInterfaceResources)
@@ -529,18 +535,21 @@ function Get-MachinesFqdnsForLB
             {
                 foreach($rule in $ipc.LoadBalancerInboundNatRules)
                 {
-                    $fqdn = $fqdnMap[$rule.Id]
+                    $fqdn = $fqdnMap[$rule.Id.ToLower()]
                     if(-not [string]::IsNullOrEmpty($fqdn))
                     {
-                        $fqdnMap.Remove($rule.Id)
+                        $fqdnMap.Remove($rule.Id.ToLower())
                         if($nic.VirtualMachine)
                         {
-                            $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+                            $fqdnMap[$nic.VirtualMachine.Id.ToLower()] = $fqdn
                         }
                     }
                 }
             }
         }
+
+        Write-Verbose "final fqdnMap for MachinesFqdnsForLB after getting vm id corresponding to NAT rule for given ip configuration: " -Verbose
+        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
     }
 
     Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName" -Verbose
@@ -566,30 +575,35 @@ function Get-FrontEndPorts
         {
             if($rule.BackendIPConfiguration)
             {
-                $portList[$rule.BackendIPConfiguration.Id] = $rule.FrontendPort
+                $portList[$rule.BackendIPConfiguration.Id.ToLower()] = $rule.FrontendPort
             }
         }
+
+        Write-Verbose "portList for FrontEndPorts after mapping front end port to backend ip configuration: " -Verbose
+        Write-Verbose ($portList | Format-List | Out-String) -Verbose
 
         #Get the nic, and the corresponding machine id for a given back end ipc
         foreach($nic in $networkInterfaceResources)
         {
             foreach($ipConfig in $nic.IpConfigurations)
             {
-                $frontEndPort = $portList[$ipConfig.Id]
+                $frontEndPort = $portList[$ipConfig.Id.ToLower()]
                 if(-not [string]::IsNullOrEmpty($frontEndPort))
                 {
-                    $portList.Remove($ipConfig.Id)
+                    $portList.Remove($ipConfig.Id.ToLower())
                     if($nic.VirtualMachine)
                     {
-                        $portList[$nic.VirtualMachine.Id] = $frontEndPort
+                        $portList[$nic.VirtualMachine.Id.ToLower()] = $frontEndPort
                     }
                 }
             }
         }
+
+        Write-Verbose "portList for FrontEndPorts after getting vm id corresponding to given backend ip configuration, after finding nic: " -Verbose
+        Write-Verbose ($portList | Format-List | Out-String) -Verbose
     }
     
     Write-Verbose "Got front end ports for $backEndPort" -Verbose
-
     return $portList
 }
 
@@ -603,15 +617,23 @@ function Get-MachineNameFromId
 
     if($map)
     {
+        Write-Verbose "Map for $mapParameter : " -Verbose
+        Write-Verbose ($map | Format-List | Out-String) -Verbose
+
+        Write-Verbose "azureRMVMResources: " -Verbose
+        Write-Verbose ($azureRMVMResources | Format-List | Out-String) -Verbose
+
+        Write-Verbose "throwOnTotalUnavaialbility: $throwOnTotalUnavaialbility" -Verbose
+
         $errorCount = 0
         foreach($vm in $azureRMVMResources)
         {
-            $value = $map[$vm.Id]
+            $value = $map[$vm.Id.ToLower()]
             $resourceName = $vm.Name
             if(-not [string]::IsNullOrEmpty($value))
             {
                 Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
-                $map.Remove($vm.Id)
+                $map.Remove($vm.Id.ToLower())
                 $map[$resourceName] = $value
             }
             else
@@ -657,30 +679,36 @@ function Get-MachinesFqdnsForPublicIP
         {
             if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
             {
-                $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
+                $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
             }
             else
             {
-                $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.IpAddress
+                $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.IpAddress
             }
         }
+
+        Write-Verbose "fqdnMap for MachinesFqdnsForPublicIP after mapping ip configuration to fqdn: " -Verbose
+        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
 
         #Find out the NIC, and thus the VM corresponding to a given ipc
         foreach($nic in $networkInterfaceResources)
         {
             foreach($ipc in $nic.IpConfigurations)
             {
-                $fqdn =  $fqdnMap[$ipc.Id]
+                $fqdn =  $fqdnMap[$ipc.Id.ToLower()]
                 if(-not [string]::IsNullOrEmpty($fqdn))
                 {
-                    $fqdnMap.Remove($ipc.Id)
+                    $fqdnMap.Remove($ipc.Id.ToLower())
                     if($nic.VirtualMachine)
                     {
-                        $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+                        $fqdnMap[$nic.VirtualMachine.Id.ToLower()] = $fqdn
                     }
                 }
             }
         }
+
+        Write-Verbose "final fqdnMap for MachinesFqdnsForPublicIP after finding vm id corresponding to ip configuration: " -Verbose
+        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
     }
 
     Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
@@ -747,8 +775,9 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
                 Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+            }
         }
-        }
+
         return $vmResourcesDetails
     }
 }
