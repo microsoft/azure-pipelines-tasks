@@ -6,17 +6,16 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=626485)",
     "category": "Test",
     "visibility": [
-                "Build"
-                  ],    
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
-    "demands" : [
-    ],
-    "minimumAgentVersion": "1.90.0",    
+    "demands": [],
+    "minimumAgentVersion": "1.90.0",
     "instanceNameFormat": "Publish Code Coverage Results $(summaryFileLocation)",
     "inputs": [
         {
@@ -37,7 +36,7 @@
             "label": "Summary File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path of code coverage summary file, which has code coverage statistics like line, method, class coverage. For example, $(Build.Repository.LocalPath)\\CodeCoverage\\Summary.xml"
+            "helpMarkDown": "Path of code coverage summary file, which has code coverage statistics like line, method, class coverage. For example, $(Build.SourcesDirectory)/CodeCoverage/Summary.xml"
         },
         {
             "name": "reportDirectory",
@@ -45,7 +44,7 @@
             "label": "Report Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path of code coverage report directory. The report directory is published as an artifact against the build. For example, $(Build.Repository.LocalPath)\\CodeCoverageReport"
+            "helpMarkDown": "Path of code coverage report directory. The report directory is published as an artifact against the build. For example, $(Build.SourcesDirectory)/CodeCoverageReport"
         },
         {
             "name": "additionalCodeCoverageFiles",
@@ -53,14 +52,21 @@
             "label": "Additional Files",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Regular expression specifying the additional code coverage files to be published as an artifact against the build. For example, `$(Build.Repository.LocalPath)\\**\\*.exec`"
-        }        
+            "helpMarkDown": "Regular expression specifying the additional code coverage files to be published as an artifact against the build. For example, `$(Build.SourcesDirectory)/**/*.exec`"
+        }
     ],
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\PublishCodeCoverageResults.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": "$(currentDirectory)",
+            "platforms": [
+                "windows"
+            ]
+        },
+        "Node": {
+            "target": "publishcodecoverageresults.js",
+            "argumentFormat": ""
         }
     }
 }
