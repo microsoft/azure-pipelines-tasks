@@ -7,7 +7,7 @@
   "loc.input.label.app": "アプリ ファイル",
   "loc.input.help.app": "リポジトリのルートを基準に指定した、テストするアプリ (複数可) の相対パス。ワイルドカードを使用できます。たとえば、すべてのサブフォルダー内のすべての APK ファイルの場合、`**\\*.apk` となります。",
   "loc.input.label.dsym": "dSYM ファイル (iOS のみ)",
-  "loc.input.help.dsym": "クラッシュ ログを読みやすくするために、アプリに関連付けられた dSYM ファイルをアップロードできます。このフィールドは、iOS アプリにのみ適用されます。例: *.dSYM",
+  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "チーム API キー",
   "loc.input.help.teamApiKey": "Xamarin Test Cloud チームの API キーは、https://testcloud.xamarin.com/account の「Teams & Apps」で見つけることができます。",
   "loc.input.label.user": "ユーザーの電子メール",

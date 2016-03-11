@@ -75,6 +75,7 @@ if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfil
 
 $ErrorActionPreference = 'Stop'
 
+$ServerName = $ServerName.ToLower()
 $serverFriendlyName = $ServerName.split(".")[0]
 Write-Verbose "Server friendly name is $serverFriendlyName" -Verbose
 

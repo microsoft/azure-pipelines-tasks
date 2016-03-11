@@ -14,10 +14,7 @@ param(
     [string]$testSelection,
     [string]$testPlan,
     [string]$testSuite,
-    [string]$testConfiguration,
-    [string]$runSettingsFilePreview,
-    [string]$codeCoverageEnabledPreview,
-    [string]$overrideRunParamsPreview
+    [string]$testConfiguration
 
 )
 
@@ -76,16 +73,15 @@ $testConfigurationId = 0
 if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
  
  
-if(![string]::IsNullOrWhiteSpace($testSuite))  
+if([string]::Equals($testSelection, "testPlan")) 
 {
-    $testSelection = "testPlan"
     if($checkTestAgentCompatScriptLocationMemberExists)
     {   
         if($taskContextMemberExists)
         {
             Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
     
-            Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFilePreview -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabledPreview -TestRunParams $overrideRunParamsPreview -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation        
+            Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation        
         }
         else
         {

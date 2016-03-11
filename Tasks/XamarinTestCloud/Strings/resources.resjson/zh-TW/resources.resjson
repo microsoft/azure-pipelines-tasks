@@ -7,7 +7,7 @@
   "loc.input.label.app": "應用程式檔案",
   "loc.input.help.app": "要測試的應用程式之儲存機制根路徑的相對路徑。可使用萬用字元。例如，`**\\*.apk` 即適用於所有子資料夾中的所有 APK 檔 。",
   "loc.input.label.dsym": "dSYM 檔案 (僅限 iOS)",
-  "loc.input.help.dsym": "若要使當機記錄檔更便於閱讀，您可以上傳與該應用程式相關聯的 dSYM 檔案。此欄僅適用於 iOS 應用程式。 例如: *.dSYM",
+  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "Team API 金鑰",
   "loc.input.help.teamApiKey": "您可以在 https://testcloud.xamarin.com/account 的 \"Teams & Apps\" 下找到 Xamarin Test Cloud 小組的 API 金鑰。",
   "loc.input.label.user": "使用者電子郵件",

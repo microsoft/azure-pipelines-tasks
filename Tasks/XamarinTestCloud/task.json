@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -39,7 +39,7 @@
             "label": "dSYM File (iOS only)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Example: *.dSYM"
+            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM"
         },
         {
             "name": "teamApiKey",

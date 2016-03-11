@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 14
   },
   "demands": [
     "azureps"
@@ -69,10 +69,17 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "PowerShell3": {
+      "target": "AzurePowerShell.ps1"
+    },
     "AzurePowerShell": {
-      "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
+      "target": "$(currentDirectory)\\AzurePowerShell-Legacy.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
+  },
+  "messages": {
+    "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0"
   }
 }

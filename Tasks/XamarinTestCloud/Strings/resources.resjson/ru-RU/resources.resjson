@@ -7,7 +7,7 @@
   "loc.input.label.app": "Файл приложения",
   "loc.input.help.app": "Относительный путь от корня репозитория к тестируемым приложениям. Можно использовать подстановочные знаки. Пример: \"**\\*.apk\" для всех файлов APK во всех вложенных папках.",
   "loc.input.label.dsym": "dSYM-файл (только iOS)",
-  "loc.input.help.dsym": "Чтобы журналы аварийных завершений было легче читать, можно отправить файл dSYM, связанный с приложением. Это поле применяется только к приложениям для iOS. Пример: *.dSYM",
+  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "Ключ API группы",
   "loc.input.help.teamApiKey": "Ключ Xamarin Test Cloud Team API можно найти в разделе \"Teams & Apps\" на странице https://testcloud.xamarin.com/account.",
   "loc.input.label.user": "Адрес электронной почты пользователя",

@@ -28,5 +28,5 @@
   "loc.input.label.ResourceFilteringMethod": "컴퓨터 선택 기준",
   "loc.input.help.ResourceFilteringMethod": "필요한 경우 컴퓨터 이름 또는 태그를 제공하여 컴퓨터의 하위 집합을 선택합니다.",
   "loc.input.label.MachineNames": "필터 조건",
-  "loc.input.help.MachineNames": "이 입력은 컴퓨터 그룹에만 유효하며 컴퓨터 또는 변수의 단순 목록에는 아직 지원되지 않습니다. dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34 등과 같은 컴퓨터나 Role:DB; OS:Win8.1 등과 같은 태그 목록을 지정하세요 여러 태그를 지정하는 경우 지정된 태그가 포함된 모든 컴퓨터에서 작업이 실행됩니다. Azure 리소스 그룹의 경우 ffweb, ffdb 등과 같은 가상 컴퓨터 이름을 지정하세요. 기본값은 모든 컴퓨터에서 실행하는 것입니다."
+  "loc.input.help.MachineNames": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }
