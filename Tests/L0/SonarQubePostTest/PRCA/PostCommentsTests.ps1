@@ -196,8 +196,6 @@ Add-Type -TypeDefinition $source -Language CSharp
 Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\PostComments-Module.psm1" -Verbose
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
 
-
-
 # Builds the input, similar to the ReportProcessor module output 
 function BuildTestMessage 
 {
@@ -284,37 +282,62 @@ function InitPostCommentsModule
 }
 
 #
-# Test - Post messages where existing messages are already present
+# Test - E2E test that goes through several iterations of posting messages. Note  
 #
 
 # Arrange
 $mockDiscussionClient = InitPostCommentsModule
-$modifiedFilesinPr = @("some/path1/file.cs", "some/path2/file.cs")
-
+$modifiedFilesinPr = @("some/path1/file.cs", "some/path2/file.cs") # p1 and p2 are the only files modified by this PR
 Register-Mock GetModifiedFilesInPR { $modifiedFilesinPr }
 
-$comment1 = BuildTestMessage "CA issue 1" 14 "some/path1/file.cs" 1 
-$comment2 = BuildTestMessage "CA issue 2" 15 "some/path2/file.cs" 5
-$comment3 = BuildTestMessage "CA issue 3" 15 "some/path3/file.cs" 5  # issue in a file not changed by the PR 
+# Iteration 1: 
+# - Current state: {no existing comments}
+# - Messages to be posted: path1:A, path2:B, otherPath:C
+# - Expected comments after posting: path1:A, path2:B
+
+$p1A = BuildTestMessage "A" 14 "some/path1/file.cs" 1 
+$p2B = BuildTestMessage "B" 15 "some/path2/file.cs" 5
+$messageFromOtherFile = BuildTestMessage "C" 15 "some/path3/file.cs" 5  # issue in a file not changed by the PR so it should be ignored
 
 # Act
-PostAndResolveComments @($comment1, $comment2, $comment3) "TestSource"
+PostAndResolveComments @($p1A, $p2B, $messageFromOtherFile) "TestSource"
 
 # Assert
 $postedThreads = $mockDiscussionClient.GetPostedThreads()
-ValidateDiscussionThreadCollection $postedThreads @($comment1, $comment2) "TestSource"
+ValidateDiscussionThreadCollection $postedThreads @($p1A, $p2B) "TestSource"
 
-# Post some other messages, similar to pushing another commit to the PR branch
-$comment4 = BuildTestMessage "CA issue 1" 14 "some/path1/file.cs" 1  # same message as comment1 and the same line
-$comment5 = BuildTestMessage "CA issue 1" 18 "some/path1/file.cs" 1  # same message as comment 1 and different line
-$comment6 = BuildTestMessage "CA issue 1" 14 "some/path2/file.cs" 1  # same message as comment 1 but different file
+# Iteration 2: post the same message and check that new comments are not created 
+# - Current state:                      path1:A, path2:B
+# - Messages to be posted:              path1:A, path1:A (different line), path2:B
+# - Expected comments after posting:    path1:A, path2:B  
+
+$p1A = BuildTestMessage "A" 14 "some/path1/file.cs" 1  
+$p1ABis = BuildTestMessage "A" 18 "some/path1/file.cs" 1  # same as p1A but on a different line
+$p2B = BuildTestMessage "B" 14 "some/path2/file.cs" 1  # same message as comment 1 but different file
 
 # Act 
-PostAndResolveComments @($comment4, $comment5, $comment6) "TestSource"
+PostAndResolveComments @($p1A, $p1ABis, $p2B) "TestSource"
 
 # Assert
 $postedThreads = $mockDiscussionClient.GetPostedThreads()
-ValidateDiscussionThreadCollection $postedThreads @($comment1, $comment2, $comment6) "TestSource"
+ValidateDiscussionThreadCollection $postedThreads @($p1A, $p2B) "TestSource"
+
+
+# # Iteration 3: 
+# # - Current state:                      path1:A, path2:B
+# # - Messages to be posted:              path1:A, path1:A (different line), path2:A
+# # - Expected comments after posting:    path1:A, path2:B (resolved), path2:A 
+# 
+# $message2A = BuildTestMessage "A" 14 "some/path1/file.cs" 1  # same message as message1 and the same line
+# $message2AdifferentLine = BuildTestMessage "CA issue 1" 18 "some/path1/file.cs" 1  # same message as comment 1 and different line
+# $message2B = BuildTestMessage "CA issue 1" 14 "some/path2/file.cs" 1  # same message as comment 1 but different file
+# 
+# # Act 
+# PostAndResolveComments @($message2A, $message2AdifferentLine, $message2B) "TestSource"
+# 
+# # Assert
+# $postedThreads = $mockDiscussionClient.GetPostedThreads()
+# ValidateDiscussionThreadCollection $postedThreads @($message1A, $message1B, $comment6) "TestSource"
 
 #Cleanup 
 Unregister-Mock GetModifiedFilesInPR 
