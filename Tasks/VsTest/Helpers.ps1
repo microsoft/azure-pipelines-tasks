@@ -29,7 +29,7 @@ function IsVisualStudio2015Update1OrHigherInstalled {
     if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
         $vsTestVersion = Locate-VSVersion
     }
-    
+
     $version = [int]($vsTestVersion)
     if($version -ge 14)
     {
@@ -126,3 +126,47 @@ function Locate-VSVersion()
 	return $version
 }
 
+<#
+    .SYNOPSIS
+    Check wether or not to skip a test run.
+    
+    
+    .DESCRIPTION
+    
+    Given a string containing configuration|platform permutations, and the current configuration and platform being run, determine whether
+    or not to actually run the tests. All string comparisons are case insensitive.
+    
+    .PARAMETER skipConfigPlatformPermutations
+    Comma or semicolon delimited string containing configuration platform permutations. String should look like so: "Debug|ARM,Release|ARM,Profile|x86".
+    .PARAMETER config
+    Current build configuration being tested against.
+    .PARAMETER platform
+    Current build platform being tested against.
+#>
+function SkipTestsForConfigurationPlatform  {
+    [cmdletbinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [string]$skipConfigPlatformPermutations,
+        [string]$config,
+        [string]$platform
+    )
+
+    [System.Boolean]$skip = $false
+        
+    # Test to see if we need to do anything at all based on the skipConfigPlatformPermutations setting...
+    if ($skipConfigPlatformPermutations)
+    {
+        Write-Verbose "Checking if Config:$config and Platform:$platform is in the list of skip-combos '$skipConfigPlatformPermutations'"
+        $matchConfigPlat = $skipConfigPlatformPermutations -split "[,;]" | Where-Object -FilterScript { $_ -ieq "$config|$platform" }
+        $skip = ($matchConfigPlat -ne $null)
+         
+        if ($skip)
+        {
+            #Write-Host "Skipping this Configuration|Platform combination as per the 'Skip Configuration|Platform' setting."
+            Write-Verbose "Skipping Configuration|Platform = $config|$platform (matches '$matchConfigPlat')"
+        }
+    }
+    
+    return $skip
+}
