@@ -489,7 +489,8 @@ function Get-MachinesFqdnsForLB
           [Object]$publicIPAddressResources,
           [Object]$networkInterfaceResources,
           [Object]$frontEndIPConfigs,
-          [System.Collections.Hashtable]$fqdnMap)
+          [System.Collections.Hashtable]$fqdnMap,
+          [string]$debugLogsFlag)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $publicIPAddressResources -and $networkInterfaceResources -and $frontEndIPConfigs)
     {
@@ -508,8 +509,11 @@ function Get-MachinesFqdnsForLB
             }
         }
 
-        Write-Verbose "fqdnMap for MachinesFqdnsForLB after mapping ip configuration to fqdn: " -Verbose
-        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "fqdnMap for MachinesFqdnsForLB after mapping ip configuration to fqdn: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        }
 
         #Get the NAT rule for a given ip id
         foreach($config in $frontEndIPConfigs)
@@ -525,8 +529,11 @@ function Get-MachinesFqdnsForLB
             }
         }
 
-        Write-Verbose "fqdnMap for MachinesFqdnsForLB after getting NAT rule for given ip configuration: " -Verbose
-        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "fqdnMap for MachinesFqdnsForLB after getting NAT rule for given ip configuration: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        }
 
         #Find out the NIC, and thus the corresponding machine to which the NAT rule belongs
         foreach($nic in $networkInterfaceResources)
@@ -548,8 +555,11 @@ function Get-MachinesFqdnsForLB
             }
         }
 
-        Write-Verbose "final fqdnMap for MachinesFqdnsForLB after getting vm id corresponding to NAT rule for given ip configuration: " -Verbose
-        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "final fqdnMap for MachinesFqdnsForLB after getting vm id corresponding to NAT rule for given ip configuration: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        }
     }
 
     Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName" -Verbose
@@ -562,7 +572,8 @@ function Get-FrontEndPorts
     param([string]$backEndPort,
           [System.Collections.Hashtable]$portList,
           [Object]$networkInterfaceResources,
-          [Object]$inboundRules)
+          [Object]$inboundRules,
+          [string]$debugLogsFlag)
 
     if(-not [string]::IsNullOrEmpty($backEndPort) -and $networkInterfaceResources -and $inboundRules)
     {
@@ -579,8 +590,11 @@ function Get-FrontEndPorts
             }
         }
 
-        Write-Verbose "portList for FrontEndPorts after mapping front end port to backend ip configuration: " -Verbose
-        Write-Verbose ($portList | Format-List | Out-String) -Verbose
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "portList for FrontEndPorts after mapping front end port to backend ip configuration: " -Verbose
+            Write-Verbose ($portList | Format-List | Out-String) -Verbose
+        }
 
         #Get the nic, and the corresponding machine id for a given back end ipc
         foreach($nic in $networkInterfaceResources)
@@ -599,8 +613,11 @@ function Get-FrontEndPorts
             }
         }
 
-        Write-Verbose "portList for FrontEndPorts after getting vm id corresponding to given backend ip configuration, after finding nic: " -Verbose
-        Write-Verbose ($portList | Format-List | Out-String) -Verbose
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "portList for FrontEndPorts after getting vm id corresponding to given backend ip configuration, after finding nic: " -Verbose
+            Write-Verbose ($portList | Format-List | Out-String) -Verbose
+        }
     }
     
     Write-Verbose "Got front end ports for $backEndPort" -Verbose
@@ -613,15 +630,19 @@ function Get-MachineNameFromId
           [System.Collections.Hashtable]$map,
           [string]$mapParameter,
           [Object]$azureRMVMResources,
-          [boolean]$throwOnTotalUnavaialbility)
+          [boolean]$throwOnTotalUnavaialbility,
+          [string]$debugLogsFlag)
 
     if($map)
     {
-        Write-Verbose "Map for $mapParameter : " -Verbose
-        Write-Verbose ($map | Format-List | Out-String) -Verbose
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "Map for $mapParameter : " -Verbose
+            Write-Verbose ($map | Format-List | Out-String) -Verbose
 
-        Write-Verbose "azureRMVMResources: " -Verbose
-        Write-Verbose ($azureRMVMResources | Format-List | Out-String) -Verbose
+            Write-Verbose "azureRMVMResources: " -Verbose
+            Write-Verbose ($azureRMVMResources | Format-List | Out-String) -Verbose
+        }
 
         Write-Verbose "throwOnTotalUnavaialbility: $throwOnTotalUnavaialbility" -Verbose
 
@@ -668,7 +689,8 @@ function Get-MachinesFqdnsForPublicIP
           [Object]$publicIPAddressResources,
           [Object]$networkInterfaceResources,
           [Object]$azureRMVMResources,
-          [System.Collections.Hashtable]$fqdnMap)
+          [System.Collections.Hashtable]$fqdnMap,
+          [string]$debugLogsFlag)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName)-and $publicIPAddressResources -and $networkInterfaceResources)
     {
@@ -687,8 +709,11 @@ function Get-MachinesFqdnsForPublicIP
             }
         }
 
-        Write-Verbose "fqdnMap for MachinesFqdnsForPublicIP after mapping ip configuration to fqdn: " -Verbose
-        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "fqdnMap for MachinesFqdnsForPublicIP after mapping ip configuration to fqdn: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        }
 
         #Find out the NIC, and thus the VM corresponding to a given ipc
         foreach($nic in $networkInterfaceResources)
@@ -707,8 +732,11 @@ function Get-MachinesFqdnsForPublicIP
             }
         }
 
-        Write-Verbose "final fqdnMap for MachinesFqdnsForPublicIP after finding vm id corresponding to ip configuration: " -Verbose
-        Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "final fqdnMap for MachinesFqdnsForPublicIP after finding vm id corresponding to ip configuration: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        }
     }
 
     Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
@@ -725,6 +753,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     [hashtable]$fqdnMap = @{}
     $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
     [hashtable]$vmResourcesDetails = @{}
+    $debugLogsFlag= $env:system_debug
 
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
@@ -742,15 +771,20 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
                 $frontEndIPConfigs = $lbDetails["frontEndIPConfigs"]
                 $inboundRules = $lbDetails["inboundRules"]
 
-                $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -frontEndIPConfigs $frontEndIPConfigs -fqdnMap $fqdnMap
-                $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap -networkInterfaceResources $networkInterfaceResources -inboundRules $inboundRules
+                $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources `
+                                                  -networkInterfaceResources $networkInterfaceResources -frontEndIPConfigs $frontEndIPConfigs -fqdnMap $fqdnMap -debugLogsFlag $debugLogsFlag
+                $winRmHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRmHttpsPortMap -networkInterfaceResources $networkInterfaceResources `
+                                                       -inboundRules $inboundRules -debugLogsFlag $debugLogsFlag
             }
 
-            $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $false
+            $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources `
+                                                       -ThrowOnTotalUnavaialbility $false -debugLogsFlag $debugLogsFlag
         }
 
-        $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap
-        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
+        $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources `
+                                                -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap -debugLogsFlag $debugLogsFlag
+        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources `
+                                                -ThrowOnTotalUnavaialbility $true -debugLogsFlag $debugLogsFlag
 
         foreach ($resource in $azureRMVMResources)
         {
