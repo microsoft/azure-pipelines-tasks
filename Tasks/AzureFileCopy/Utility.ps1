@@ -780,32 +780,6 @@ function Check-AzureCloudServiceExists
     }
 }
 
-function Check-AzureCloudServiceExists
-{
-    param([string]$cloudServiceName,
-          [string]$connectionType)
-
-    if(-not [string]::IsNullOrEmpty($cloudServiceName) -and -not [string]::IsNullOrEmpty($connectionType))
-    {
-        try
-        {
-            $azureCloudService = Get-AzureCloudService -cloudServiceName $cloudServiceName
-        }
-        catch [Hyak.Common.CloudException]
-        {
-            $exceptionMessage = $_.Exception.Message.ToString()
-            Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
-
-            # throwing only in case of Certificate authentication, Since userNamePassword authentication works with ARM resources also
-            if($connectionType -eq 'Certificate')
-            {
-                Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
-                throw (Get-LocalizedString -Key "Using selected Connection '{0}' unable to find the resource '{1}'. Selected connection '{0}' supports classic resources only (Service Management model)." -ArgumentList $connectionType, $cloudServiceName)
-            }
-        }
-    }
-}
-
 function Get-AzureVMResourcesProperties
 {
     param([string]$resourceGroupName,
