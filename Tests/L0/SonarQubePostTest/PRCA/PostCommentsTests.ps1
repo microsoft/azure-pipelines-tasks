@@ -66,6 +66,7 @@ namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
     
     public class DiscussionThread
     {
+        public bool IsDirty { get; set; }
         public string ArtifactUri { get; set; }
         public int DiscussionId { get; set; }
         public DiscussionStatus Status { get; set; }
@@ -106,6 +107,7 @@ namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
         public CommentType CommentType { get; set; }
         public string Content { get; set; }
         public bool IsDeleted { get; set; }
+        public DateTime PublishedDate { get; set; }
         
         public int DiscussionId { get; set; }
     }
@@ -213,29 +215,47 @@ function BuildTestMessage
 }
 
 #
+# Returns an object with the exepcted message state - the message, the number of matching comments and the state of those comments (e.g. active / resolved)
+#
+function GetExpectedMessageState
+{
+    param ($message, [int]$numberOfMatchingComments, [string]$state)
+    
+    $properties = @{
+            Message = $message
+            NumberOfMatchingComments = $numberOfMatchingComments
+            State = $state
+        }
+        
+   return  (new-object PSObject -Property $properties)
+}
+
+#
 # Validates the discussion threads that are to be posted to the PR
 #
 function ValidateDiscussionThreadCollection
 {
-    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [Array]$messages, [string]$commentSource)
+    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [Array]$messageStateArray, [string]$commentSource)
     
     $endLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::EndLine
     $startLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartLine
     $itemPathName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::ItemPath
     
     ValidateCommonThreadAttributes $threadCollection $commentSource
-    Assert-AreEqual $messages.Count $threadCollection.Count "Inconsistent number of threads. There should be 1 thread for each comment."    
+    Assert-AreEqual $messageStateArray.Count $threadCollection.Count "Inconsistent number of threads. There should be 1 thread for each comment."    
     
-    foreach ($message in $messages)
+    foreach ($messageState in $messageStateArray)
     {
-        $thread = $threadCollection | Where-Object {
-            ($_.Comments[0].Content -eq $message.Content) -and 
-            ($_.Properties[$itemPathName] -eq $message.RelativePath) }
+        $threads = $threadCollection | Where-Object {
+            ($_.Comments[0].Content -eq $messageState.Message.Content) -and 
+            ($_.Properties[$itemPathName] -eq $messageState.Message.RelativePath) }
             
-        Assert-IsNotNullOrEmpty $thread "Could not find a thread associated with the comment on line $($message.Line) with message $($message.Content)"
-        Assert-AreEqual 1 $thread.Count "A single thread associated with this message should have been found"
+        Assert-IsNotNullOrEmpty $threads "Could not find a thread associated with the comment on line $($messageState.Message.Line) with message $($messageState.Message.Content)"
+        Assert-AreEqual $messageState.NumberOfMatchingComments $threads.Count "A single thread associated with this message should have been found"
         
-        Assert-AreEqual $thread.Properties[$endLineName] $thread.Properties[$startLineName] "The StartLine should be the same as the comment's line"
+        Assert-AreEqual $threads.Properties[$endLineName] $threads.Properties[$startLineName] "The StartLine should be the same as the comment's line"
+        
+        $threads | ForEach-Object {Assert-AreEqual $messageState.State $_.Status "Invalid message state"}
     }
 }
 
@@ -250,7 +270,7 @@ function ValidateCommonThreadAttributes
     $positionContextName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::PositionContext
     
     $threadCollection | ForEach-Object {Assert-AreEqual "artifact uri" $_.ArtifactUri "Each thread should have the same ArtifactUri"}
-    $threadCollection | ForEach-Object {Assert-AreEqual "Active" $_.Status "Each thread should be active"}
+   
     $threadCollection | ForEach-Object {Assert-AreEqual 1 $_.Comments.Count "Each thread should have a single comment"}
     $threadCollection | ForEach-Object {Assert-AreEqual $false $_.Comments.IsDeleted "Each thread should be marked as not deleted"}
     
@@ -304,7 +324,8 @@ PostAndResolveComments @($p1A, $p2B, $messageFromOtherFile) "TestSource"
 
 # Assert
 $postedThreads = $mockDiscussionClient.GetPostedThreads()
-ValidateDiscussionThreadCollection $postedThreads @($p1A, $p2B) "TestSource"
+# GetExpectedMessageState params: the message itself, the number of matching comments, the state of those comments
+ValidateDiscussionThreadCollection $postedThreads @((GetExpectedMessageState $p1a 1 "Active"), (GetExpectedMessageState $p2B 1 "Active")) "TestSource"
 
 # Iteration 2: post the same message and check that new comments are not created 
 # - Current state:                      path1:A, path2:B
@@ -320,17 +341,23 @@ PostAndResolveComments @($p1A, $p1ABis, $p2B) "TestSource"
 
 # Assert
 $postedThreads = $mockDiscussionClient.GetPostedThreads()
-ValidateDiscussionThreadCollection $postedThreads @($p1A, $p2B) "TestSource"
+ValidateDiscussionThreadCollection $postedThreads @( (GetExpectedMessageState $p1A 1 "Active") , (GetExpectedMessageState $p2B 1 "Active") ) "TestSource"
 
 
-# # Iteration 3: 
-# # - Current state:                      path1:A, path2:B
-# # - Messages to be posted:              path1:A, path1:A (different line), path2:A
-# # - Expected comments after posting:    path1:A, path2:B (resolved), path2:A 
-# 
-# $message2A = BuildTestMessage "A" 14 "some/path1/file.cs" 1  # same message as message1 and the same line
-# $message2AdifferentLine = BuildTestMessage "CA issue 1" 18 "some/path1/file.cs" 1  # same message as comment 1 and different line
-# $message2B = BuildTestMessage "CA issue 1" 14 "some/path2/file.cs" 1  # same message as comment 1 but different file
+# Iteration 3: 
+# - Current state:                      path1:A, path2:B
+# - Messages to be posted:              path1:A
+# - Expected comments after posting:    path1:A, path2:B (resolved) 
+ 
+$p1A = BuildTestMessage "A" 24 "some/path1/file.cs" 1  # same message as message1 and the same line
+
+# Act
+PostAndResolveComments @($p1A) "TestSource"
+
+# Assert
+$postedThreads = $mockDiscussionClient.GetPostedThreads()
+ValidateDiscussionThreadCollection $postedThreads @( (GetExpectedMessageState $p1A 1 "Active") , (GetExpectedMessageState $p2B 1 "Resolved") ) "TestSource"
+
 # 
 # # Act 
 # PostAndResolveComments @($message2A, $message2AdifferentLine, $message2B) "TestSource"

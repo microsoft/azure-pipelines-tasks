@@ -4,7 +4,7 @@
 #    content - the actual string message
 #    relativePath - path to the file where the message should be posted; the path should be relative to the repo root
 #    line - where the message should be posted in the file
-#    priority - used to filter out message if there are too many of them so as to not overwhelm the user
+#    priority - used to filter out message if there are too mHasElements of them so as to not overwhelm the user
 #         
 # Comment or DiscussionComment - TFS data structure that describes the comment. Has properties such as content or state (e.g. Active, Resolved) 
 # Thread or DiscussionThread - TFS data structure that encapsulates a collection of comments. Threads have properties such as Path
@@ -109,13 +109,21 @@ function InternalPostAndResolveComments
     ResolveExistingComments $messages $existingThreads $existingComments
     
     # Remove messages that cannot be posted
-    $messages = FilterMessages $messages 
-        
-    # Debug: print remaining messages 
-    #$messages | ForEach {Write-Verbose $_} 
+    $remainingMessages = FilterMessages $messages 
     
-    $newDiscussionThreads = CreateDiscussionThreads $messages
-    PostDiscussionThreads $newDiscussionThreads 
+    if (HasElements $remainingMessages )
+    {
+         # Debug: print remaining messages 
+        $remainingMessages | ForEach {Write-Verbose $_} 
+        
+        $newDiscussionThreads = CreateDiscussionThreads $remainingMessages
+        PostDiscussionThreads $newDiscussionThreads 
+    }
+    else
+    {
+        Write-Verbose "All messages were filtered. Nothing new to post."
+    }
+   
 }
 
 #region Resolve Comments
@@ -126,19 +134,19 @@ function ResolveExistingComments
     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads, 
     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments) 
     
-    if ( ($existingComments -eq $null) -or ($existingComments.Count -eq 0) )
+    if ( !(HasElements $existingComments) )
     {
-        Write-Verbose "There are no existing messages. Not attempting to resolve any."
+        Write-Verbose "There are no existing messages. Not attempting to resolve HasElements."
         return    
     }
     
-    # Comments that do not match any input messages are said to be resolved
+    # Comments that do not match HasElements input messages are said to be resolved
     $resolvedComments = GetResolvedComments $existingComments
     Write-Verbose "Found $($resolvedComments.Count) existing comments that do not match any new message and can be resolved"
     
     foreach ($resolvedComment in $resolvedComments)
     {
-        $thread = GetExistingCommentThread
+        $thread = GetParentThread $resolvedComment $existingThreads
         
         # the resolving comment is a new comment that markes the thread as resolved when pushed to the server
         $resolvingComment = MarkThreadAsResolved $thread
@@ -165,14 +173,14 @@ function MarkThreadAsResolved
     return $resolvedComment
 }
 
-function GetExistingCommentThread
+function GetParentThread
 {
     param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]$comment, 
     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads)
     
-    $thread = $existingThreads | Where-Object {$_DiscussionId -eq $comment.DiscussionId}
+    $thread = $existingThreads | Where-Object {$_.DiscussionId -eq $comment.DiscussionId}
     
-    Assert (($thread -ne $null) -and ($thread.Count -eq 1)) "Expecting to find a (single) thread for this comment "
+    Assert (($thread -ne $null) -and ($thread.Count -eq 1)) "Expecting to find a single thread for this comment "
     return $thread
 }
 
@@ -261,7 +269,7 @@ function FilterPreExistingComments
      return $messages
 }
 
-# Limit the number of messages so as to not overload the PR with too many comments
+# Limit the number of messages so as to not overload the PR with too mHasElements comments
 function FilterMessagesByNumber
 {
     param ([Array]$messages)
@@ -300,7 +308,7 @@ function BuildMessageToCommentDictonary
      [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads,
      [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
      
-     # reset any previous map
+     # reset HasElements previous map
      $script:messageToCommentListMap = @{}
      
      $sw = new-object "Diagnostics.Stopwatch"
@@ -310,7 +318,7 @@ function BuildMessageToCommentDictonary
      {
          $matchingComments = GetMatchingComments $message $existingThreads $existingComments
          
-         if (($matchingComments -ne $null ) -and ($matchingComments.Count -gt 0))
+         if (HasElements $matchingComments)
          {
              [void]$script:messageToCommentListMap.Add($message, $matchingComments)
          }
@@ -369,7 +377,7 @@ function GetMatchingComments
 
 function CreateDiscussionThreads
 {
-    param ([ValidateNotNull()][Array]$messages)
+    param ([Array]$messages)
     
     Write-Verbose "Creating new discussion threads"
     $discussionThreadCollection = New-Object "$script:discussionWebApiNS.DiscussionThreadCollection"
@@ -460,6 +468,13 @@ function Assert
     {
         throw $message
     }
+}
+
+function HasElements
+{
+    param ([Array]$arr)
+    
+    return ($arr -ne $null) -and ($arr.Count -gt 0)
 }
 
 #endregion
