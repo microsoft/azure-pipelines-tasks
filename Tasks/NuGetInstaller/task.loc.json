@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 20
+    "Patch": 21
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -25,7 +25,7 @@
       "name": "solution",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
-      "defaultValue": "**\\*.sln",
+      "defaultValue": "**/*.sln",
       "helpMarkDown": "ms-resource:loc.input.help.solution",
       "required": "true"
     },
@@ -67,7 +67,14 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\NuGetInstaller.ps1",
       "argumentFormat": "",
-      "workingDirectory": ""
+      "workingDirectory": "",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node": {
+      "target": "nugetinstaller.js",
+      "argumentFormat": ""
     }
   }
 }
