@@ -1,3 +1,6 @@
+#
+# Main entry point into the PRCA experience
+#
 function HandleCodeAnalysisReporting
 {	
     Write-Verbose "HandleCodeAnalysisReporting"
@@ -14,7 +17,7 @@ function HandleCodeAnalysisReporting
         InitPostCommentsModule $vssConnection
         $comments = GetCommentsFromIssues $newIssues
         
-        PostAndResolveComments $comments "SonarQube Code Analysis"
+        PostAndResolveComments $comments "SonarQube Code Analysis" "This code analysis issue was resolved by recent changes"
     }	
 }
 
