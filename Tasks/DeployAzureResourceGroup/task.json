@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 60
+        "Patch": 62
     },
     "demands": [
         "azureps"
