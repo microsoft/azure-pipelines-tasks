@@ -49,7 +49,7 @@
             "label": "Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Xamarin account password. Use a Build Variable to encrypt."
+            "helpMarkDown": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value."
         },
         {
           "name": "product",
