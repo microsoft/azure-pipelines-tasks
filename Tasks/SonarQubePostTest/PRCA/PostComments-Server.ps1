@@ -134,9 +134,9 @@ function PostDiscussionThreads
 }
 
 #
-# Retrieve existing discussion threads that were created by this module
+# Retrieve existing discussion threads that were created by this module and that are active (i.e. not fixed)
 #
-function FetchDiscussionThreads
+function FetchActiveDiscussionThreads
 {
     $threadsDictionary = $script:discussionClient.GetThreadsAsync( @($script:artifactUri)).Result
     
@@ -146,7 +146,7 @@ function FetchDiscussionThreads
     {
         foreach ($thread in $threads)
         {
-            if (ThreadMatchesCommentSource $thread)
+            if ((ThreadMatchesCommentSource $thread) -and ($thread.Status -eq [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus]::Active))
             {            
                 [void]$threadList.Add($thread);
             }

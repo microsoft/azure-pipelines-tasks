@@ -100,7 +100,7 @@ function InternalPostAndResolveComments
     Write-Verbose "Fetching existing threads and comments..."
     
     # TODO: are these needed here or can the build dictionary fetch them? 
-    $existingThreads = FetchDiscussionThreads 
+    $existingThreads = FetchActiveDiscussionThreads 
     $existingComments = FetchDiscussionComments $existingThreads    
 
     BuildMessageToCommentDictonary $messages $existingThreads $existingComments
@@ -108,8 +108,14 @@ function InternalPostAndResolveComments
     # Comments that were created by this logic but do not have corresponding messages can be marked as 'Resolved'
     ResolveExistingComments $messages $existingThreads $existingComments
     
+    if (!(HasElements $messages))
+    {
+        Write-Host "No new messages were posted"
+        return
+    } 
+    
     # Remove messages that cannot be posted
-    $remainingMessages = FilterMessages $messages 
+    $remainingMessages = FilterMessages $messages
     
     if (HasElements $remainingMessages )
     {
@@ -148,6 +154,8 @@ function ResolveExistingComments
     {
         $thread = GetParentThread $resolvedComment $existingThreads
         
+        Assert ($thread -ne $null) "An existing comment should belong to a thread"
+        
         # the resolving comment is a new comment that markes the thread as resolved when pushed to the server
         $resolvingComment = MarkThreadAsResolved $thread
         
@@ -160,6 +168,7 @@ function MarkThreadAsResolved
 {
     param([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]$thread)
      
+    $thread.Status = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus]::Fixed
     $thread.IsDirty = $true
     $resolvedComment = New-Object "Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment"
                         
@@ -188,9 +197,9 @@ function GetResolvedComments
 {
     param ([System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
     
-    # start with all the existing comments
+    # start with all the existing comments, but ignore the already fixed ones
     $existingCommentSet = New-Object "System.Collections.Generic.HashSet[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]"
-    $existingComments | ForEach-Object {[void]$existingCommentSet.Add($_)}
+    $existingComments |Where-Object {$_} | ForEach-Object {[void]$existingCommentSet.Add($_)}
     Assert ($existingComments.Count -eq $existingCommentSet.Count) "Expecting existing messages to be different objects"
 
     # take all the comments that were matched by messages since we have a dictionary that holds them  
