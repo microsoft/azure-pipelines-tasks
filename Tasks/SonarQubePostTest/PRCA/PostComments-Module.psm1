@@ -142,7 +142,7 @@ function ResolveExistingComments
     
     if ( !(HasElements $existingComments) )
     {
-        Write-Verbose "There are no existing messages. Not attempting to resolve HasElements."
+        Write-Verbose "No messages to resolve"
         return    
     }
     
@@ -159,8 +159,11 @@ function ResolveExistingComments
         # the resolving comment is a new comment that markes the thread as resolved when pushed to the server
         $resolvingComment = MarkThreadAsResolved $thread
         
+        Write-host "1"
         $script:discussionClient.AddCommentAsync($resolvingComment, $resolvingComment.DiscussionId, $null, [System.Threading.CancellationToken]::None).Wait();
+        Write-host "2"
         $script:discussionClient.UpdateThreadAsync($thread, $thread.DiscussionId, $null, [System.Threading.CancellationToken]::None).Wait();
+        Write-host "3"
     }
 }
 
@@ -170,16 +173,16 @@ function MarkThreadAsResolved
      
     $thread.Status = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus]::Fixed
     $thread.IsDirty = $true
-    $resolvedComment = New-Object "Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment"
+    $resolvingComment = New-Object "Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment"
                         
-    $resolvedComment.DiscussionId = $thread.DiscussionId
-    $resolvedComment.CommentId = -1
-    $resolvedComment.CommentType = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.CommentType]::System
-    $resolvedComment.PublishedDate = [System.DateTime]::Now
-    $resolvedComment.IsDeleted = $false    
-    $resolvedComment.Content = $script:resolvedComment
+    $resolvingComment.DiscussionId = $thread.DiscussionId
+    $resolvingComment.CommentId = -1
+    $resolvingComment.CommentType = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.CommentType]::System
+    $resolvingComment.PublishedDate = [System.DateTime]::Now
+    $resolvingComment.IsDeleted = $false    
+    $resolvingComment.Content = $script:resolvedComment
     
-    return $resolvedComment
+    return $resolvingComment
 }
 
 function GetParentThread
@@ -367,8 +370,7 @@ function GetMatchingComments
                 
         if ($matchingComments -ne $null)
         {
-            #todo: verbose
-            Write-Host "Found $($matchingComments.Count) matching comment(s) for the message $($message.Content) at $($message.RelativePath) line $($message.Line)"
+            Write-Verbose "Found $($matchingComments.Count) matching comment(s) for the message at $($message.RelativePath) line $($message.Line)"
             
             foreach ($matchingComment in $matchingComments)
             {

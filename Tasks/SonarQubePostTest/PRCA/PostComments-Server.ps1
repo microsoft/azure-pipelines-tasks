@@ -175,7 +175,7 @@ function FetchDiscussionComments
         }
     }
     
-    Write-Host "Found $($comments.Count) existing comment(s)" 
+    Write-Verbose "Found $($comments.Count) existing comment(s)" 
     return $comments
 }  
 
