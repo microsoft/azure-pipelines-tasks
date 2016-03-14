@@ -325,10 +325,14 @@ var deactivateLicense = function (email, password, product, callback) {
 
                 //delete license file
                 var licenseLocation = getLicenseLocation(product);
-                fs.unlink(licenseLocation, function (err) {
-                    if (err) {
-                        tl.debug('Failed to delete license file on disk: ' + err);
-                        tl.warning('Failed to delete license file on disk: ' + licenseLocation);
+                fs.exists(licenseLocation, function (exists) {
+                    if (exists) {
+                        fs.unlink(licenseLocation, function (err) {
+                            if (err) {
+                                tl.debug('Failed to delete license file on disk: ' + err);
+                                tl.warning('Failed to delete license file on disk: ' + licenseLocation);
+                            }
+                        });
                     }
                 });
             });
