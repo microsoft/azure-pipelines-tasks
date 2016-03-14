@@ -12,10 +12,22 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [
         "Xamarin.iOS"
+    ],
+    "groups": [
+        {
+            "name": "sign",
+            "displayName": "Signing & Provisioning",
+            "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
     ],
     "inputs": [
         {
@@ -35,12 +47,38 @@
             "helpMarkDown": "Standard configurations are Ad-Hoc, AppStore, Debug, Release."
         },
         {
-            "name": "mdtoolLocation",
+            "name": "args",
             "type": "string",
-            "label": "Override path to mdtool",
+            "label": "Arguments",
+            "required": false,
+            "helpMarkDown": "Additional command line arguments that should be used to build.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally supply the path to mdtool, the Xamarin Studio build tool. When empty, the default path will be used: /Applications/Xamarin Studio.app/Contents/MacOS/mdtool"
+            "helpMarkDown": "Working directory for build runs. Defaults to the root of the repository.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "mdtoolLocation",
+            "type": "string",
+            "label": "Xbuild Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to xbuild, the Xamarin Studio mono build tool. When empty, the default xbuild path is used.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "packageApp",
+            "type": "boolean",
+            "label": "Create App Package",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
         },
         {
             "name": "forSimulator",
@@ -49,6 +87,93 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Optionally builds for the iOS Simulator instead of physical iOS devices."
+        },
+        {
+            "name": "signMethod",
+            "type": "radio",
+            "label": "Override Using",
+            "required": false,
+            "groupName": "sign",
+            "defaultValue": "file",
+            "helpMarkDown": "Indicates that the build should use different signing and/or mobile provisioning settings. Leave fields blank if you do not wish to override.",
+            "options": {
+                "file": "File Contents",
+                "id": "Identifiers"
+            }
+        },
+        {
+            "name": "iosSigningIdentity",
+            "type": "string",
+            "label": "Signing Identity",
+            "required": false,
+            "helpMarkDown": "Optional signing identity override that should be used to sign the build. Defaults to Xcode Project setting. You may need to select Unlock Default Keychain if you use this option.",
+            "groupName": "sign",
+            "visibleRule": "signMethod = id"
+        },
+        {
+            "name": "unlockDefaultKeychain",
+            "type": "boolean",
+            "label": "Unlock Default Keychain",
+            "defaultValue": false,
+            "required": true,
+            "helpMarkDown": "Resolve \"User interaction is not allowed\" errors by unlocking the default keychain.",
+            "groupName": "sign",
+            "visibleRule": "signMethod = id"
+        },
+        {
+            "name": "defaultKeychainPassword",
+            "type": "string",
+            "label": "Default Keychain Password",
+            "required": false,
+            "helpMarkDown": "Password to unlock the default keychain when this option is set.",
+            "groupName": "sign",
+            "visibleRule": "signMethod = id"
+        },
+        {
+            "name": "provProfileUuid",
+            "type": "string",
+            "label": "Provisioning Profile UUID",
+            "required": false,
+            "helpMarkDown": "Optional UUID of an installed provisioning profile to be used for this build.",
+            "groupName": "sign",
+            "visibleRule": "signMethod = id"
+        },
+        {
+            "name": "p12",
+            "type": "filePath",
+            "label": "P12 Certificate File",
+            "required": false,
+            "helpMarkDown": "Optional relative path to a PKCS12 formatted p12 certificate file containing a signing certificate to be used for this build.",
+            "groupName": "sign",
+            "visibleRule": "signMethod = file"
+        },
+        {
+            "name": "p12pwd",
+            "type": "string",
+            "label": "P12 Password",
+            "required": false,
+            "helpMarkDown": "Password to P12 Certificate File if specified. Use a Build Variable to encrypt.",
+            "groupName": "sign",
+            "visibleRule": "signMethod = file"
+        },
+        {
+            "name": "provProfile",
+            "type": "filePath",
+            "label": "Provisioning Profile File",
+            "required": false,
+            "helpMarkDown": "Optional relative path to file containing provisioning profile override to be used for this build.",
+            "groupName": "sign",
+            "visibleRule": "signMethod = file"
+        },
+        {
+            "name": "removeProfile",
+            "type": "boolean",
+            "label": "Remove Profile After Build",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
+            "groupName": "sign",
+            "visibleRule": "signMethod = file"
         }
     ],
     "instanceNameFormat": "Build Xamarin.iOS solution $(solution)",
