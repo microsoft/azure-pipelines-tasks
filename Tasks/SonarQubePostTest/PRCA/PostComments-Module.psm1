@@ -1,10 +1,41 @@
-#region constants
+# Terminology: 
+#
+# Message - input data structure that should have: 
+#    content - the actual string message
+#    relativePath - path to the file where the message should be posted; the path should be relative to the repo root
+#    line - where the message should be posted in the file
+#    priority - used to filter out message if there are too many of them so as to not overwhelm the user
+#         
+# Comment or DiscussionComment - TFS data structure that describes the comment. Has properties such as content or state (e.g. Active, Resolved) 
+# Thread or DiscussionThread - TFS data structure that encapsulates a collection of comments. Threads have properties such as Path
+# Comment Source - a custom property used to identify comments that were posted using the same logic.   
+#
+# Note: this module will create a separate thread and comment for each message 
+#
+# Module logic:  
+#
+# PRs have iterations, i.e. if the user pushes another commit to branch then the PR is re-evaluated (e.g. new PR build occurs) and new comments might be added
+# This modules does not re-post a message if it already exists. 
+# If a message no longer exists, this module will mark the message as resolved.   
+#
+# Note that in order to tie a message to a comment the line number cannot be used because comments move around as code is inserted / deleted. Only the
+# message content and the file path can be used, which is likely to create conflicts if the same message is posted multiple times in the same file.    
+# This might be improved in the future by storing the line content with the message.
+
+#region Public Constants
+
+# Limit the number of issues to be posted to this number
+$PostCommentsModule_MaxMessagesToPost = 100
+
+# Annotate threads with this property 
+$PostCommentsModule_CommentSourcePropertyName = "CommentSource"
+
+#endregion
+
+#region private constants
 
 $script:discussionWebApiNS = "Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi"
-
-# Limit the number of issues to be posted to this number 
-$PostCommentsModule_MaxIssuesToPost = 100
-
+ 
 $CodeReviewSourceCommit = "CodeReviewSourceCommit"
 $CodeReviewTargetCommit = "CodeReviewTargetCommit"
 
@@ -41,56 +72,143 @@ function InitPostCommentsModule
 #
 # Initializes the module. 
 #
-# Remark: for test purposes only
+# Remark: for test only
 #
 function Test-InitPostCommentsModule
 {
-    param ([Microsoft.TeamFoundation.SourceControl.WebApi.GitHttpClient]$gitClient, 
+    param ([Microsoft.TeamFoundation.SourceControl.WebApi.GitHttpClient]$gitClient,
+    [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionHttpClient]$discussionClient, 
     [Microsoft.TeamFoundation.SourceControl.WebApi.GitPullRequest]$pullRequest, 
     [string]$artifactUri)
     
     $script:gitClient = $gitClient
+    $script:discussionClient = $discussionClient
     $script:pullRequest = $pullRequest
     $script:artifactUri = $artifacturi
 }
 
 #
-# Posts new comments, ignoring duplicate comments and resolves comments that were open in an old iteration of the PR
+# Posts new messages, ignoring duplicate comments and resolves comments that were open in an old iteration of the PR.
+# Comment source is used to decorate comments created by this logic. Only comments with the same source will be resolved.
 #
 function PostAndResolveComments
 {
-    param ([Array][ValidateNotNull()]$comments)
+    param ([Array][ValidateNotNull()]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
-    ValidateComments $comments
+    ValidateMessages $messages
     
-    Write-Host "Processing $($comments.Count) new comments"
+    Write-Host "Processing $($messages.Count) new messages"
     
     #TODO: ResolveExistingIssues
     
-    if ($comments.Count -gt 0)
+    if ($messages.Count -gt 0)
     {
-        InternalPostNewComments $comments
+        InternalPostNewMessages $messages $messageSource
     }
 }
-
-#
-# Posts the discussion threads loaded with comments to the PR
-# Remark: public for test purposes
-function PostDiscussionThreads
-{
-    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
-    
-    $vssJsonThreadCollection = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.VssJsonCollectionWrapper[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]" -ArgumentList @(,$threads)
-    $script:discussionClient.CreateThreadsAsync($vssJsonThreadCollection, $null, [System.Threading.CancellationToken]::None).Result
-    
-    Write-Host "Posted $($threads.Count) discussion threads"
-}
-
 
 #endregion
 
 #region Private
 
+#
+# Returns a list of files that have been changed in this PR
+# 
+# Remark: public for test purposes
+function GetModifiedFilesInPR 
+{
+    Write-Verbose "Computing the list of files changed in this PR"
+    $sourceFiles = @()
+
+    $targetVersionDescriptor = New-Object -TypeName "Microsoft.TeamFoundation.SourceControl.WebApi.GitTargetVersionDescriptor"
+    $targetVersionDescriptor.VersionType = [Microsoft.TeamFoundation.SourceControl.WebApi.GitVersionType]::Commit
+    $targetVersionDescriptor.Version = $script:pullRequest.LastMergeSourceCommit.CommitId
+    
+    $baseVersionDescriptor = New-Object -TypeName "Microsoft.TeamFoundation.SourceControl.WebApi.GitBaseVersionDescriptor"
+    $baseVersionDescriptor.VersionType = [Microsoft.TeamFoundation.SourceControl.WebApi.GitVersionType]::Commit
+    $baseVersionDescriptor.Version = $script:pullRequest.LastMergeTargetCommit.CommitId
+    
+    $commitDiffs = $script:gitClient.GetCommitDiffsAsync(
+        $script:project, # string project 
+        $script:pullRequest.Repository.Name, # string repositoryId 
+        $true, # bool? diffCommonCommit
+        $null, # int? top 
+        $null, # int? skip
+        $baseVersionDescriptor, 
+        $targetVersionDescriptor, 
+        $null, # object userState
+        [System.Threading.CancellationToken]::None # CancellationToken cancellationToken
+        ).Result
+    
+    if ($commitDiffs.ChangeCounts.Count -gt 0)
+    {
+        Write-Verbose "Found $($commitDiffs.ChangeCounts.Count) changed file(s) in the PR"
+        
+        $sourceFiles = $commitDiffs.Changes | 
+            Where-Object { ($_ -ne $null) -and ($_.Item.IsFolder -eq $false) }  | 
+            ForEach-Object { $_.Item.Path.Replace("\", "/") }
+    }
+
+    return $sourceFiles
+}
+
+#
+# Posts the discussion threads loaded with comments to the PR
+#
+function PostDiscussionThreads
+{
+    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
+    
+    $vssJsonThreadCollection = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.VssJsonCollectionWrapper[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]" -ArgumentList @(,$threads)
+    [void]$script:discussionClient.CreateThreadsAsync($vssJsonThreadCollection, $null, [System.Threading.CancellationToken]::None).Result
+    
+    Write-Host "Posted $($threads.Count) discussion threads"
+}
+
+
+#
+# Retrieve existing discussion threads. 
+#
+function FetchDiscussionThreads
+{
+    $threadsDictionary = $script:discussionClient.GetThreadsAsync( @($script:artifactUri)).Result
+    
+    $threadList = New-Object "System.Collections.Generic.List[$script:discussionWebApiNS.DiscussionThread]"
+    
+    foreach ($threads in $threadsDictionary.Values)
+    {
+        if ($threads -ne $null)
+        {
+            Write-Verbose "Threads in current pair $($threads.Count)"
+            $threadList.AddRange($threads);
+        }
+    }
+    
+    Write-Verbose "Found $($threadList.Count) discussion thread(s)"
+    return $threadList;
+}
+
+#
+# Fetch existing discussion comments
+#
+function FetchDiscussionComments
+{
+    param ([System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$discussionThreads)
+    
+    $comments = New-Object "System.Collections.Generic.List[$script:discussionWebApiNS.DiscussionComment]"
+    
+    foreach ($discussionThread in $discussionThreads)
+    {
+        $commentsFromThread = $script:discussionClient.GetCommentsAsync($discussionThread.DiscussionId).Result
+        if ($commentsFromThread -ne $null)
+        {
+            $comments.AddRange($commentsFromThread)
+        }
+    }
+    
+    Write-Host "Found $($comments.Count) existing comment(s)" 
+    return $comments
+}       
 
 function LoadTfsClientAssemblies
 {
@@ -151,15 +269,15 @@ function GetArtifactUri
     return $artifactUri
 }
 
-function ValidateComments
+function ValidateMessages
 {
-    param ([ValidateNotNull()][Array]$comments)
+    param ([ValidateNotNull()][Array]$messages)
     
-    foreach ($comment in $comments)
+    foreach ($message in $messages)
     {
-        Assert (![String]::IsNullOrEmpty($comment.RelativePath)) "A comment doesn't have a RelativePath property"
-        Assert (![String]::IsNullOrEmpty($comment.Priority)) "A comment doesn't have a Priority property"
-        Assert (![String]::IsNullOrEmpty($comment.Content)) "A comment doesn't have content "
+        Assert (![String]::IsNullOrEmpty($message.RelativePath)) "A message doesn't have a RelativePath property"
+        Assert (![String]::IsNullOrEmpty($message.Priority)) "A message doesn't have a Priority property"
+        Assert (![String]::IsNullOrEmpty($message.Content)) "A message doesn't have content "
     }
 }
 
@@ -181,39 +299,190 @@ function GetPullRequestId
 }
 
 
-function InternalPostNewComments
+function InternalPostNewMessages
 {
-    param ([ValidateNotNull()][Array]$comments)
+    param ([ValidateNotNull()][Array]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
-    # Limit the number of messages so as to not overload the PR with too many comments
-    $comments = $comments | Sort-Object Priority | Select-Object -first $PostCommentsModule_MaxIssuesToPost
-    Write-Host "Sorting comments and filtering before postng"
+    Write-Verbose "Fetching existing threads and comments..."
+    $existingThreads = FetchDiscussionThreads 
+    $existingComments = FetchDiscussionComments $existingThreads    
     
-    $comments | ForEach {Write-Verbose $_} 
+    $messages = FilterComments $messages $messageSource $existingThreads $existingComments
     
-    # TODO: check that the comments aren't already present before posting
+    $messages | ForEach {Write-Verbose $_} 
     
-    $newDiscussionThreads = CreateDiscussionThreads $comments
+    $newDiscussionThreads = CreateDiscussionThreads $messages $messageSource
     PostDiscussionThreads $newDiscussionThreads 
 }
 
+# region Filter Comments
+function FilterComments 
+{
+    param ([Array]$messages, 
+    [ValidateNotNullOrEmpty()][string]$messageSource, 
+    [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads,
+    [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
+    
+    Write-Verbose "Filtering comments before posting"
+    
+    $messages = FilterCommentsByPath $messages
+    $messages = FilterPreExistingComments $messages $messageSource $existingThreads $existingComments
+    $messages = FilterMessagesByNumber $messages
+    
+    return $messages
+}
+
+function FilterCommentsByPath
+{
+    param ([Array]$messages)
+    
+    $modifiedFilesInPr = GetModifiedFilesInPR
+    Write-Verbose "Files changed in this PR: $modifiedFilesInPr"
+    
+    $countBefore = $messages.Count
+    $messages = $messages | Where-Object {$modifiedFilesInPr.Contains($_.RelativePath)}
+    $commentsFiltered = $countBefore - $messages.Count 
+    
+    Write-Host "$commentsFiltered message(s) were filtered because they do not belong to files that were changed in this PR"
+    
+    return $messages
+}
+
+#
+# A message is said to be pre-existing if:
+# 1. a comment with the same content exists 
+# 2. and it belongs to the same file 
+# 3. and the thread was created by the same logic, i.e. the same commentSource 
+#
+# Remark: comments move arround so Line cannot be used. 
+#
+function FilterPreExistingComments
+{
+     param ([Array]$messages, 
+     [ValidateNotNullOrEmpty()][string]$messageSource, 
+     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads,
+     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
+     
+     $sw = new-object "Diagnostics.Stopwatch"
+     $sw.Start();
+     
+     $countBefore = $messages.Count
+     $messages = $messages | Where-Object { !(MessageHasMatchingComments $_)}
+     $commentsFiltered = $countBefore - $messages.Count 
+     
+     Write-Host "$commentsFiltered message(s) were filtered because they were already present"
+     Write-Verbose "Filtering out $($existingComments.Count) existing comments took $($sw.ElapsedMilliseconds) ms"
+     
+     return $messages
+}
+
+function MessageHasMatchingComments
+{
+    param ([ValidateNotNull()][PSObject]$message)
+    
+    $matchingComments = GetMatchingComments $_ $messageSource $existingThreads $existingComments
+    
+    return ($matchingComments.Count -gt 0)
+}
+
+#TODO: can be optimized by using a map of <Thread,List<Comments>> instead of 2 flat lists
+function GetMatchingComments
+{
+     param ([ValidateNotNull()][PSObject]$message, 
+     [ValidateNotNullOrEmpty()][string]$messageSource, 
+     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads,
+     [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
+     
+     $resultList = @()
+     
+     # select threads that are not "fixed", that point to the same file and have been marked with the given comment source
+     $matchingThreads = $existingThreads | Where-Object {
+            ($_ -ne $null) -and
+            (ThreadMatchesCommentSource $_ $messageSource) -and
+            (ThreadMatchesItemPath $_ $message.RelativePath) -and 
+            ($_.Status -ne [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus]::Fixed)}
+            
+     Write-Verbose "Found $($matchingThreads.Count) matching thread(s) for the message at $($message.RelativePath) line $($message.Line)"
+        
+     foreach ($matchingThread in $matchingThreads)
+     {
+         # select comments from this thread that are not deleted and that match the given message 
+         $matchingComments = $existingComments | Where-Object { 
+            ($_ -ne $null) -and
+            ($_.DiscussionId -eq $matchingThread.DiscussionId) -and 
+            (!$_.IsDeleted) -and 
+            ($_.Content -eq $message.Content)}
+                
+        if ($matchingComments -ne $null)
+        {
+            Write-Host "Found $($matchingComments.Count) matching comment(s) for the message at $($message.RelativePath) line $($message.Line)"
+            
+            foreach ($matchingComment in $matchingComments)
+            {
+                $resultList += $matchingComment
+            }
+        }
+     }
+        
+     return $resultList
+}
+
+# Returns true if a discussion thread was decorated with the given comment source
+function ThreadMatchesCommentSource
+{
+    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]$thread, 
+           [ValidateNotNullOrEmpty()][string]$messageSource)
+    
+    return (($thread.Properties -ne $null) -and
+             ($thread.Properties.ContainsKey($PostCommentsModule_CommentSourcePropertyName)) -and
+             ($thread.Properties[$PostCommentsModule_CommentSourcePropertyName] -eq $messageSource))
+}
+
+function ThreadMatchesItemPath
+{
+    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]$thread, 
+           [ValidateNotNullOrEmpty()][string]$itemPath)
+    
+    $itemPathName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::ItemPath
+    
+    return (($thread.Properties -ne $null) -and
+             ($thread.Properties.ContainsKey($itemPathName)) -and
+             ($thread.Properties[$itemPathName] -eq $itemPath))
+}
+
+# Limit the number of messages so as to not overload the PR with too many comments
+function FilterMessagesByNumber
+{
+    param ([ValidateNotNull()][Array]$messages)
+    
+    $countBefore = $messages.Count
+    $messages = $messages | Sort-Object Priority | Select-Object -first $PostCommentsModule_MaxMessagesToPost
+    $commentsFiltered = $countBefore - $messages.Count
+    
+    Write-Host "$commentsFiltered message(s) were filtered to match the maximum $PostCommentsModule_MaxMessagesToPost comments limit"
+    
+    return $messages
+}
+
+#endregion
+
 function CreateDiscussionThreads
 {
-    param ([ValidateNotNull()][Array]$comments)
+    param ([ValidateNotNull()][Array]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
     Write-Verbose "Creating new discussion threads"
     $discussionThreadCollection = New-Object "$script:discussionWebApiNS.DiscussionThreadCollection"
     $discussionId = -1
     
     #TODO: add support for new style PR 
-    if ($script:pullRequest.CodeReviewId > 0)
+    if ($script:pullRequest.CodeReviewId -gt 0)
     {
         throw "This PR engine is not supported yet"
     }
     
-    foreach ($comment in $comments)
+    foreach ($message in $messages)
     {
-        Write-Host "Creating a discussion comment for the comment at line $($comment.Line) from $($comment.RelativePath)"
+        Write-Host "Creating a discussion comment for the comment at line $($message.Line) from $($message.RelativePath)"
         
         $newThread = New-Object "$script:discussionWebApiNS.ArtifactDiscussionThread"
         $newThread.DiscussionId = $discussionId
@@ -224,13 +493,13 @@ function CreateDiscussionThreads
         $discussionComment.CommentId = $newThread.DiscussionId
         $discussionComment.CommentType = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.CommentType]::System
         $discussionComment.IsDeleted = $false;
-        $discussionComment.Content = $comment.Content
+        $discussionComment.Content = $message.Content
      
         $properties = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.PropertiesCollection"
-        AddLegacyProperties $comment $properties 
+        AddLegacyProperties $message $properties 
         
-        # TODO: these could be inputs to the module
-        $properties.Add("CodeAnalysisThreadType", "CodeAnalysisIssue")
+        # add a custom property to be able to distinguish all comments created this way        
+        $properties.Add($PostCommentsModule_CommentSourcePropertyName, $messageSource)
         
         $newThread.Properties = $properties
         
@@ -244,22 +513,22 @@ function CreateDiscussionThreads
 
 function AddLegacyProperties
 {
-    param ([object]$comment, [Microsoft.VisualStudio.Services.WebApi.PropertiesCollection]$properties)
+    param ([object]$message, [Microsoft.VisualStudio.Services.WebApi.PropertiesCollection]$properties)
  
     $properties.Add($CodeReviewSourceCommit, $script:pullRequest.LastMergeSourceCommit.ToString())
     $properties.Add($CodeReviewTargetCommit, $script:pullRequest.LastMergeTargetCommit.ToString())
     
     $properties.Add(
         ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::ItemPath), 
-        $comment.RelativePath)
+        $message.RelativePath)
         
     $properties.Add(
         ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartLine), 
-        $comment.Line)
+        $message.Line)
         
     $properties.Add(
         ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::EndLine), 
-        $comment.Line)
+        $message.Line)
         
     $properties.Add(
         ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartColumn), 
@@ -269,7 +538,6 @@ function AddLegacyProperties
         ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::PositionContext), 
         "RightBuffer")
 }
-
 
 
 #region Common Helpers 
@@ -299,4 +567,5 @@ function Assert
 #endregion
 
 # Export the public functions 
-Export-ModuleMember -Function 'InitPostCommentsModule', 'Test-InitPostCommentsModule', 'PostAndResolveComments', 'PostDiscussionThreads' -Variable 'PostCommentsModule_MaxIssuesToPost'
+Export-ModuleMember -Variable PostCommentsModule_CommentSourcePropertyName, PostCommentsModule_MaxMessagesToPost 
+Export-ModuleMember -Function InitPostCommentsModule, Test-InitPostCommentsModule, GetModifiedFilesInPR 
