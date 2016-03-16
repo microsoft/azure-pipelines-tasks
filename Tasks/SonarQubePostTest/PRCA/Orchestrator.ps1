@@ -1,3 +1,6 @@
+#
+# Main entry point into the PRCA experience
+#
 function HandleCodeAnalysisReporting
 {	
     Write-Verbose "HandleCodeAnalysisReporting"
