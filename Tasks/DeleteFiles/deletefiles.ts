@@ -28,8 +28,10 @@ for (var i = 0; i < contents.length; i++) {
 var files = [];
 var allPaths = tl.find(sourceFolder);
 tl.debug('allPaths: ' + allPaths);
-if (allPaths.length === 0) {
+if (!allPaths || allPaths.length === 0) {
     tl.debug('source folder not found. nothing to delete.');
+    tl.setResult(tl.TaskResult.Succeeded, tl.loc("NoFiles"));
+    process.exit(0);
 }
 
 var allFiles: string[] = [];
