@@ -43,6 +43,7 @@
   },
   "messages": {
     "CantDeleteFiles": "ms-resource:loc.messages.CantDeleteFiles",
-    "SkippingSymbolStore": "ms-resource:loc.messages.SkippingSymbolStore"
+    "SkippingSymbolStore": "ms-resource:loc.messages.SkippingSymbolStore",
+    "NoFiles": "ms-resource:loc.messages.NoFiles"
   }
 }

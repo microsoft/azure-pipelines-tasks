@@ -8,5 +8,6 @@
   "loc.input.label.Contents": "Contents",
   "loc.input.help.Contents": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=722333)",
   "loc.messages.CantDeleteFiles": "Couldn't delete one or more files",
-  "loc.messages.SkippingSymbolStore": "Skipping delete for symbol store file share: %s"
+  "loc.messages.SkippingSymbolStore": "Skipping delete for symbol store file share: %s",
+  "loc.messages.NoFiles": "No files to delete."
 }
