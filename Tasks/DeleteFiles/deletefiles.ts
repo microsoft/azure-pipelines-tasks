@@ -7,7 +7,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 // contents is a multiline input containing glob patterns
 var contents: string[] = tl.getDelimitedInput('Contents', '\n', true);
-var sourceFolder = tl.getPathInput('SourceFolder', true, true);
+var sourceFolder = tl.getPathInput('SourceFolder', true, false);
 
 // Input that is used for backward compatibility with pre-sprint 95 symbol store artifacts.
 // Pre-95 symbol store artifacts were simply file path artifacts, so we need to make sure
