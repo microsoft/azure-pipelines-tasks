@@ -72,7 +72,7 @@ namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
         public string ArtifactUri { get; set; }
         public int DiscussionId { get; set; }
         public DiscussionStatus Status { get; set; }
-        
+        public string ItemPath { get; set; }
         public DiscussionComment[] Comments { get; set; }
         
         public Microsoft.VisualStudio.Services.WebApi.PropertiesCollection Properties { get; set; }
@@ -140,6 +140,21 @@ namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
                 {
                     comment.DiscussionId = thread.DiscussionId;
                 }
+                
+                // Note that ItemPath only has a getter on the actual object so it's being set from elsewhere
+                object itemPath;
+                if ((thread.Properties as IDictionary<string, object>).TryGetValue("Microsoft.VisualStudio.Services.CodeReview.ItemPath", out itemPath))
+                {
+                    thread.ItemPath = (string)itemPath;
+                }
+                else if (thread.Properties.TryGetValue(DiscussionThreadPropertyNames.ItemPath, out itemPath))
+                {
+                    thread.ItemPath = (string)itemPath;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Cannot create thread - no location specified");
+                }
             }
             
             this.postedThreads.AddRange(threads);
@@ -172,8 +187,7 @@ namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
 
             return tsc.Task;        
         }
-        
-        /*  
+       
           public Task<DiscussionComment> AddCommentAsync(DiscussionComment newComment, int discussionId, object userState = null, CancellationToken cancellationToken = default(CancellationToken))
             {
                 TaskCompletionSource<DiscussionComment> tsc = new TaskCompletionSource<DiscussionComment>();
@@ -189,7 +203,7 @@ namespace Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi
                 tsc.SetResult(newComment);
                 return tsc.Task;
             }
-            */
+            
             
            public Task<DiscussionThread> UpdateThreadAsync(DiscussionThread newThread, int discussionId, object userState = null, CancellationToken cancellationToken = default(CancellationToken))
             {
@@ -237,6 +251,15 @@ namespace Microsoft.TeamFoundation.SourceControl.WebApi
         public string LastMergeTargetCommit { get; set; }
     }        
 }
+
+namespace Microsoft.VisualStudio.Services.CodeReview.WebApi
+{
+    public class IterationChanges
+    {
+        
+    }    
+}
+
 "@
 
 Add-Type -TypeDefinition $source -Language CSharp
@@ -286,24 +309,22 @@ function ValidateDiscussionThreadCollection
     param (
         [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection,
         [Array]$messageStateArray,
-        [string]$commentSource)
+        [string]$commentSource, 
+        [bool]$legacyPr = $true)
     
     $endLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::EndLine
     $startLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartLine
-    $itemPathName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::ItemPath
     
-    ValidateCommonThreadAttributes $threadCollection $commentSource
+    ValidateCommonThreadAttributes $threadCollection $commentSource $legacyPr
     
     foreach ($messageState in $messageStateArray)
     {
         $threads = $threadCollection | Where-Object {
             ($_.Comments[0].Content -eq $messageState.Message.Content) -and 
-            ($_.Properties[$itemPathName] -eq $messageState.Message.RelativePath) }
+            ($_.ItemPath -eq $messageState.Message.RelativePath) }
             
         Assert-IsNotNullOrEmpty $threads "Could not find a thread associated with the comment on line $($messageState.Message.Line) with message $($messageState.Message.Content)"
         Assert-AreEqual $messageState.NumberOfMatchingComments $threads.Count "A single thread associated with this message should have been found"
-        
-        Assert-AreEqual $threads.Properties[$endLineName] $threads.Properties[$startLineName] "The StartLine should be the same as the comment's line"
         
         $threads | ForEach-Object {Assert-AreEqual $messageState.State $_.Status "Invalid message state"}
     }
@@ -314,21 +335,20 @@ function ValidateDiscussionThreadCollection
 #
 function ValidateCommonThreadAttributes
 {
-    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [string]$commentSource)
-    
-    $startColumnName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartColumn
-    $positionContextName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::PositionContext
+    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threadCollection, [string]$commentSource, [bool]$legacyPr)
     
     $threadCollection | ForEach-Object {Assert-AreEqual "artifact uri" $_.ArtifactUri "Each thread should have the same ArtifactUri"}    
     $threadCollection | ForEach-Object {Assert-AreEqual $false $_.IsDirty "Not expecting dirty threads"}
-    $threadCollection | ForEach-Object {Assert-AreEqual 8 $_.Properties.Count "Each thread should have 8 properties"}
+    $threadCollection | ForEach-Object {Assert-AreEqual $commentSource $_.Properties[$PostCommentsModule_CommentSourcePropertyName] "Invalid CodeAnalysisThreadType property."}
     
-    $threadCollection | ForEach-Object {Assert-AreEqual "Source Commit" $_.Properties["CodeReviewSourceCommit"] "Invalid CodeReviewSourceCommit property"}
-    $threadCollection | ForEach-Object {Assert-AreEqual "Target Commit" $_.Properties["CodeReviewTargetCommit"] "Invalid CodeReviewTargetCommit property"}
-    $threadCollection | ForEach-Object { Assert-AreEqual 1 $_.Properties[$startColumnName] "Invalid StartColumn property."}
-    $threadCollection | ForEach-Object { Assert-AreEqual "RightBuffer" $_.Properties[$positionContextName] "Invalid PositionContext property."}
-    
-    $threadCollection | ForEach-Object { Assert-AreEqual $commentSource $_.Properties[$PostCommentsModule_CommentSourcePropertyName] "Invalid CodeAnalysisThreadType property."}
+    if ($legacyPr)
+    {
+        $threadCollection | ForEach-Object {ValidateLegacyProperties $_}
+    }
+    else
+    {
+        $threadCollection | ForEach-Object {ValidateCodeFlowProperties $_}        
+    }
     
     $fixedThreads = $threadCollection | Where-Object {$_.Status -eq "Fixed"}
     foreach ($fixedThread in $fixedThreads)
@@ -337,18 +357,66 @@ function ValidateCommonThreadAttributes
     }
 }
 
+function ValidateLegacyProperties
+{
+    param ($thread)
+    
+    $startColumnName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartColumn
+    $positionContextName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::PositionContext
+    $startLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartLine
+    $endLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::EndLine
+    
+    Assert-AreEqual 8 $thread.Properties.Count "Each thread should have 8 properties"
+    Assert-AreEqual $thread.Properties[$endLineName] $thread.Properties[$startLineName] "The StartLine should be the same as the comment's line"
+    Assert-AreEqual "Source Commit" $thread.Properties["CodeReviewSourceCommit"] "Invalid CodeReviewSourceCommit property"
+    Assert-AreEqual "Target Commit" $thread.Properties["CodeReviewTargetCommit"] "Invalid CodeReviewTargetCommit property"
+    Assert-AreEqual 1 $thread.Properties[$startColumnName] "Invalid StartColumn property."
+    Assert-AreEqual "RightBuffer" $thread.Properties[$positionContextName] "Invalid PositionContext property."
+}
+
+function ValidateCodeFlowProperties
+{
+    param ($thread)
+    
+    $properties = $thread.Properties
+    
+    Assert-AreEqual 9 $properties.Count "Each thread should have 9 properties"
+    
+    Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.ItemPath") "No ItemPath"
+    Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.Right.StartLine") "No Start Line"
+    Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.Right.EndLine") "No End Line"
+    Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.Right.StartOffset") "No StartOffset"
+    Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.Right.EndOffset") "No EndOffset"
+    Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.FirstComparingIteration") "No FirstComparingIteration"
+    Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.SecondComparingIteration") "No SecondComparingIteration"
+    Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.ChangeTrackingId") "No ChangeTrackingId"
+    
+    Assert-AreEqual $properties["Microsoft.VisualStudio.Services.CodeReview.StartLine"] $properties["Microsoft.VisualStudio.Services.CodeReview.EndLine"] "Invalid line"
+    Assert-AreEqual $properties["Microsoft.VisualStudio.Services.CodeReview.FirstComparingIteration"] $properties["Microsoft.VisualStudio.Services.CodeReview.SecondComparingIteration"] "Invalid iteration id"
+    Assert-AreEqual 0 $properties["Microsoft.VisualStudio.Services.CodeReview.Right.StartOffset"] "Invalid StartOffset"
+    Assert-AreEqual 1 $properties["Microsoft.VisualStudio.Services.CodeReview.Right.EndOffset"] "Invalid EndOffset"
+}
+
 
 function InitPostCommentsModule 
 {
+    param ([bool]$useLegacyPr)
+    
     $mockGitClient = New-Object -TypeName "Microsoft.TeamFoundation.SourceControl.WebApi.GitHttpClient"
     $mockDiscussionClient = New-Object -TypeName "Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionHttpClient"
     $mockPullRequest = New-Object -TypeName "Microsoft.TeamFoundation.SourceControl.WebApi.GitPullRequest"
     
-    # Legacy PR
-    $mockPullRequest.CodeReviewId = 0
-    $mockPullRequest.LastMergeSourceCommit = "Source Commit"
-    $mockPullRequest.LastMergeTargetCommit = "Target Commit"
-
+    if ($useLegacyPr)
+    {
+        $mockPullRequest.CodeReviewId = 0
+        $mockPullRequest.LastMergeSourceCommit = "Source Commit"
+        $mockPullRequest.LastMergeTargetCommit = "Target Commit"
+    }
+    else 
+    {
+        $mockPullRequest.CodeReviewId = 1
+    }
+    
     Test-InitPostCommentsModule $mockGitClient $mockDiscussionClient $mockPullRequest "artifact uri"
     
     return $mockDiscussionClient
@@ -359,7 +427,7 @@ function InitPostCommentsModule
 #
 
 # Arrange
-$mockDiscussionClient = InitPostCommentsModule
+$mockDiscussionClient = InitPostCommentsModule $true
 $modifiedFilesinPr = @("some/path1/file.cs", "some/path2/file.cs") # p1 and p2 are the only files modified by this PR
 Register-Mock GetModifiedFilesInPR { $modifiedFilesinPr }
 
@@ -455,7 +523,7 @@ Unregister-Mock GetModifiedFilesInPR
 #
 
 # Arrange 
-$mockDiscussionClient = InitPostCommentsModule
+$mockDiscussionClient = InitPostCommentsModule $true
 Register-Mock GetModifiedFilesInPR { @("some/path/file.cs") }
 
 $messages = New-Object "Collections.ArrayList"
@@ -492,3 +560,27 @@ ValidateDiscussionThreadCollection $postedThreads $expected "SQ Test Source"
 # Cleanup 
 Unregister-Mock GetModifiedFilesInPR 
 
+
+#
+# Test 3 - Post a code flow style message
+#
+$mockDiscussionClient = InitPostCommentsModule $false
+Register-Mock GetModifiedFilesInPR { @("some/path1/file.cs") }
+Register-Mock GetCodeFlowLatestIterationId 
+Register-Mock GetCodeFlowChanges
+Register-Mock GetCodeFlowChangeTrackingId {100}
+
+# Iteration 1: 
+# - Current state: {no existing comments}
+# - Messages to be posted: path1:A, path2:B, otherPath:C
+# - Expected comments after posting: path1:A, path2:B
+
+$p1A = BuildTestMessage "A" 14 "some/path1/file.cs" 1 
+
+# Act
+PostAndResolveComments @($p1A) "TestSource"
+
+# Assert
+$postedThreads = $mockDiscussionClient.GetPostedThreads()
+# GetExpectedMessageState params: the message itself, the number of matching comments, the state of those comments
+ValidateDiscussionThreadCollection $postedThreads @((GetExpectedMessageState $p1a 1 "Active")) "TestSource" $false

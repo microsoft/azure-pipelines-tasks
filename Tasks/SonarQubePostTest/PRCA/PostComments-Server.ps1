@@ -223,18 +223,55 @@ function ThreadMatchesCommentSource
              ($thread.Properties[$PostCommentsModule_CommentSourcePropertyName] -eq $script:messageSource))
 }
 
-# Returns true if a discussion thread matches the given path
-function ThreadMatchesItemPath
+#region Code Flow
+
+function GetCodeFlowLatestIterationId
 {
-    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]$thread, 
-           [ValidateNotNullOrEmpty()][string]$itemPath)
+    $review = $script:codeReviewClient.GetReviewAsync(
+        $script:pullRequest.Repository.ProjectReference.Id,  # Guid project
+        $script:pullRequest.CodeReviewId, # int reviewId
+        $null, # bool? includeAllProperties
+        0, # int? maxChangesCount
+        $null, # DateTimeOffset? ifModifiedSince
+        $null, # object userState
+        [System.Threading.CancellationToken]::None).Result
     
-    $itemPathName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::ItemPath
+    Assert ($review -ne $null) "Could not retrieve the review"
+    Assert (HasElements $review.Iterations) "No iterations found on the review"
     
-    return (($thread.Properties -ne $null) -and
-             ($thread.Properties.ContainsKey($itemPathName)) -and
-             ($thread.Properties[$itemPathName] -eq $itemPath))
+    # TODO: is this the best way to find the id ?
+    $lastIterationId = ($review.Iterations.Id | Measure -Maximum).Maximum
+    
+    return $lastIterationId
 }
+
+function GetCodeFlowChanges
+{
+     param ([int]$iterationId)
+     
+     $changes = $script:codeReviewClient.GetChangesAsync(
+        $script:pullRequest.Repository.ProjectReference.Id, 
+        $script:pullRequest.CodeReviewId, 
+        $iterationId,
+        $null, $null, $null, [System.Threading.CancellationToken]::None).Result
+        
+     return $changes
+}
+
+function GetCodeFlowChangeTrackingId
+{
+    param ([Microsoft.VisualStudio.Services.CodeReview.WebApi.IterationChanges]$changes, [string]$path)
+    
+    $change = $changes | Where-Object {$_.Modified.Path -eq $path}
+    
+    Assert ($change -ne $null) "No changes found for $path"
+    Assert ($change.Count -eq 1) "Expecting exactly 1 change for $path but found $($change.Count)"
+    
+    Write-Verbose "Found a change for message at $path - $($change.ChangeTrackingId)"
+    return $change.ChangeTrackingId
+} 
+
+#endregion 
 
 
      

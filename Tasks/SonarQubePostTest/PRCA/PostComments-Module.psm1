@@ -225,6 +225,11 @@ function FilterMessagesByPath
 {
     param ([Array]$messages)
     
+    if (!(HasElements $messages))
+    {
+        return;
+    }
+    
     $modifiedFilesInPr = GetModifiedFilesInPR
     Write-Verbose "Files changed in this PR: $modifiedFilesInPr"
     
@@ -249,6 +254,11 @@ function FilterPreExistingComments
 {
      param ([Array]$messages) 
      
+     if (!(HasElements $messages))
+     {
+         return;
+     }
+     
      $sw = new-object "Diagnostics.Stopwatch"
      $sw.Start();
      
@@ -267,6 +277,11 @@ function FilterMessagesByNumber
 {
     param ([Array]$messages)
     
+    if (!(HasElements $messages))
+    {
+        return;
+    }
+     
     $countBefore = $messages.Count
     $messages = $messages | Sort-Object Priority | Select-Object -first $PostCommentsModule_MaxMessagesToPost
     $commentsFiltered = $countBefore - $messages.Count
@@ -317,8 +332,7 @@ function BuildMessageToCommentDictonary
          }
      }
      
-     # TODO: Write-Verbose
-     Write-Host "Built a message to comment dictionary in $($sw.ElapsedMilliseconds) ms"
+     Write-Verbose "Built a message to comment dictionary in $($sw.ElapsedMilliseconds) ms"
 }
 
 #TODO: can be optimized by using a map of <Thread,List<Comments>> instead of 2 flat lists
@@ -334,8 +348,8 @@ function GetMatchingComments
      $matchingThreads = $existingThreads | Where-Object {
             ($_ -ne $null) -and
             ($_.Status -ne [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus]::Fixed) -and
-            (ThreadMatchesCommentSource $_ $script:messageSource) -and
-            (ThreadMatchesItemPath $_ $message.RelativePath)}
+            ($_.ItemPath -eq $message.RelativePath) -and
+            (ThreadMatchesCommentSource $_ $script:messageSource)}
 
      Write-Verbose "Found $($matchingThreads.Count) matching thread(s) for the message at $($message.RelativePath) line $($message.Line)"
         
@@ -372,10 +386,14 @@ function CreateDiscussionThreads
     $discussionThreadCollection = New-Object "$script:discussionWebApiNS.DiscussionThreadCollection"
     $discussionId = -1
     
-    #TODO: add support for new style PR 
+    # code flow properties
+    $iterationId = 0
+    $changes = $null
+    
     if ($script:pullRequest.CodeReviewId -gt 0)
     {
-        throw "This PR engine is not supported yet"
+        $iterationId = GetCodeFlowLatestIterationId
+        $changes = GetCodeFlowChanges $iterationId
     }
     
     foreach ($message in $messages)
@@ -394,7 +412,16 @@ function CreateDiscussionThreads
         $discussionComment.Content = $message.Content
      
         $properties = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.PropertiesCollection"
-        AddLegacyProperties $message $properties 
+        
+        if ($script:pullRequest.CodeReviewId -gt 0)
+        {
+            $changeTrackingId = GetCodeFlowChangeTrackingId $changes $message.RelativePath
+            AddCodeFlowProperties $message $iterationId $changeTrackingId $properties
+        } 
+        else
+        {
+            AddLegacyProperties $message $properties
+        }
         
         # add a custom property to be able to distinguish all comments created this way        
         $properties.Add($PostCommentsModule_CommentSourcePropertyName, $script:messageSource)
@@ -407,6 +434,21 @@ function CreateDiscussionThreads
     }
     
     return $discussionThreadCollection
+}
+
+
+function AddCodeFlowProperties
+{
+    param ([object]$message, [int]$iterationId, [int]$changeTrackingId, [Microsoft.VisualStudio.Services.WebApi.PropertiesCollection]$properties)
+        
+    $properties.Add("Microsoft.VisualStudio.Services.CodeReview.ItemPath", $message.RelativePath)
+    $properties.Add("Microsoft.VisualStudio.Services.CodeReview.Right.StartLine", $message.Line)
+    $properties.Add("Microsoft.VisualStudio.Services.CodeReview.Right.EndLine", $message.Line)
+    $properties.Add("Microsoft.VisualStudio.Services.CodeReview.Right.StartOffset", 0)
+    $properties.Add("Microsoft.VisualStudio.Services.CodeReview.Right.EndOffset", 1)        
+    $properties.Add("Microsoft.VisualStudio.Services.CodeReview.FirstComparingIteration", $iterationId)
+    $properties.Add("Microsoft.VisualStudio.Services.CodeReview.SecondComparingIteration", $iterationId)
+    $properties.Add("Microsoft.VisualStudio.Services.CodeReview.ChangeTrackingId", $changeTrackingId)
 }
 
 function AddLegacyProperties
