@@ -68,6 +68,9 @@ function GetCommentsFromIssues
     return $comments
 }
 
+#
+# The rule string is of form <repository>:<ruleId>. This function extracts the ruleId
+#
 function GetRuleId
 {
     param($issue)
