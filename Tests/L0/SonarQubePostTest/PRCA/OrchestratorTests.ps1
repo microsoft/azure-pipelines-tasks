@@ -9,7 +9,7 @@ param()
 
 function BuildIssue
 {    
-    param ([string]$message, [int]$line, [string]$severity, [string]$relativePath)
+    param ([string]$message, [int]$line, [string]$severity, [string]$relativePath, [string]$rule)
     
     $issue = New-Object -TypeName "Collections.Generic.Dictionary[String,Object]"
     
@@ -17,6 +17,7 @@ function BuildIssue
     $issue["message"] = $message
     $issue["severity"] = $severity
     $issue["relativePath"] = $relativePath
+    $issue["rule"] = $rule
         
     return $issue   
 }
@@ -26,13 +27,12 @@ function BuildIssue
 #
 
 # Arrange 
-$issue1 = BuildIssue "CA issue 1" 14 "maJor" "some/path"
-$issue2 = BuildIssue "CA issue 2" 15 "INfO" "some/other/path"
+$issue1 = BuildIssue "CA issue 1" 14 "maJor" "some/path" "fxcop:RemoveUnusedLocals"
+$issue2 = BuildIssue "CA issue 2" 15 "INfO" "some/other/path" "csharpsquid:S1481"
 
 # Act
 $comments = GetCommentsFromIssues @($issue1, $issue2)
 
- 
 # Assert
 Assert-AreEqual 2 $comments.Count "Expected to find 2 comments"
 
@@ -43,8 +43,8 @@ $comment2 = $comments | Where-Object {$_.line -eq 15}
 Assert-AreEqual "some/path" $comment1.RelativePath "Expecting the RelativePath to be set"
 Assert-AreEqual "some/other/path" $comment2.RelativePath "Expecting the RelativePath to be set"
 
-Assert-AreEqual "CA issue 1" $comment1.Content "Expecting the Content to be set"
-Assert-AreEqual "CA issue 2" $comment2.Content "Expecting the Content to be set"
+Assert-AreEqual "CA issue 1 (RemoveUnusedLocals)" $comment1.Content "Expecting the Content to be set"
+Assert-AreEqual "CA issue 2 (S1481)" $comment2.Content "Expecting the Content to be set"
 
 Assert-AreEqual 3 $comment1.Priority "Expecting the Priority to be 3 for a major issue"
 Assert-AreEqual 5 $comment2.Priority "Expecting the Priority to be 5 for an info issue"
@@ -53,31 +53,35 @@ Assert-AreEqual 5 $comment2.Priority "Expecting the Priority to be 5 for an info
 # Test 2 - issues must have a "message", a "line" and a "relativePath" property
 #
 
-$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path"
+$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue.Remove("message")
 Assert-Throws { GetCommentsFromIssues @($issue) } "*message*"
 
-$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path"
+$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue.Remove("line")
 Assert-Throws { GetCommentsFromIssues @($issue) } "*line*"
 
-$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path"
+$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue.Remove("relativePath")
 Assert-Throws { GetCommentsFromIssues @($issue) } "*relativePath*"
+
+$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
+$issue.Remove("rule")
+Assert-Throws { GetCommentsFromIssues @($issue) } "*rule*"
 
 #
 # Test 3: Priority
 #
 
 # Arrange
-$blockerIssue = BuildIssue "CA issue" 1 "blocker" "some/path"
-$criticalIssue = BuildIssue "CA issue" 2 "critical" "some/path"
-$majorIssue = BuildIssue "CA issue" 3 "major" "some/path"
-$minorIssue = BuildIssue "CA issue" 4 "minor" "some/path"
-$infoIssue = BuildIssue "CA issue" 5 "info" "some/path"
+$blockerIssue = BuildIssue "CA issue" 1 "blocker" "some/path" "csharpsquid:S1481"
+$criticalIssue = BuildIssue "CA issue" 2 "critical" "some/path" "csharpsquid:S1481"
+$majorIssue = BuildIssue "CA issue" 3 "major" "some/path" "csharpsquid:S1481"
+$minorIssue = BuildIssue "CA issue" 4 "minor" "some/path" "csharpsquid:S1481"
+$infoIssue = BuildIssue "CA issue" 5 "info" "some/path" "csharpsquid:S1481"
 
-$noSeverityIssue = BuildIssue "CA issue" 6 "" "some/path"
-$otherSeverityIssue = BuildIssue "CA issue" 7 "extremely important" "some/path"
+$noSeverityIssue = BuildIssue "CA issue" 6 "" "some/path" "csharpsquid:S1481"
+$otherSeverityIssue = BuildIssue "CA issue" 7 "extremely important" "some/path" "csharpsquid:S1481"
 
 # Act
 $comments = GetCommentsFromIssues @($blockerIssue, $criticalIssue, $majorIssue, $minorIssue, $infoIssue, $noSeverityIssue, $otherSeverityIssue)

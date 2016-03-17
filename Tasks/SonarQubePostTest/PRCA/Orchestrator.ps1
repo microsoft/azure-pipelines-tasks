@@ -49,9 +49,12 @@ function GetCommentsFromIssues
         Assert ( ![String]::IsNullOrWhiteSpace($issue.message) ) "Internal error: the SonarQube reported issues do not have a property named 'message'"
         Assert ( ![String]::IsNullOrWhiteSpace($issue.line) ) "Internal error: the SonarQube reported issues do not have a property named 'line'"        
         Assert ( ![String]::IsNullOrWhiteSpace($issue.relativePath) ) "Internal error: the SonarQube reported issues do not have a property named 'relativePath'"
+        Assert ( ![String]::IsNullOrWhiteSpace($issue.rule) ) "Internal error: the SonarQube reported issues do not have a property named 'rule'"
+        
+        $ruleId = GetRuleId $issue
         
         $properties = @{
-            Content = $issue.message
+            Content = $issue.message + " ($ruleId)"
             Line = $issue.line
             RelativePath = $issue.relativePath
             Priority = $priority 
@@ -63,6 +66,19 @@ function GetCommentsFromIssues
     }
     
     return $comments
+}
+
+#
+# The rule string is of form <repository>:<ruleId>. This function extracts the ruleId
+#
+function GetRuleId
+{
+    param($issue)
+    
+    $parts = $issue.rule.Split(':')
+    Assert (($parts -ne $null) -and ($parts.Count -ge 2))  "Could not extract the rule id from $($issue.Rule)"
+    
+    return $parts[1]
 }
 
 #

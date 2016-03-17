@@ -26,6 +26,9 @@ $actualIssues | ForEach-Object {Assert-AreEqual $_.isNew $true "All identified i
 $issue1 = $actualIssues | Where-Object {$_.key -eq "01532D5DA0E13EE55C"}
 $issue2 = $actualIssues | Where-Object {$_.key -eq "01532D5DA0C93EE550"}
 
+Assert-AreEqual "fxcop:RemoveUnusedLocals" $issue1.rule "Invalid rule string"
+Assert-AreEqual "csharpsquid:S1481" $issue2.rule "Invalid rule string"
+
 # the relativePath property is added by matching the component with the path using ProjectInfo.xml
 Assert-AreEqual "/CSProj2/Class1.cs" $issue1.relativePath "Expecting the relativePath property to be correctly on an issue"
 Assert-AreEqual "/ConsoleApplication1/Program.cs" $issue2.relativePath "Expecting the relativePath property to be correctly on an issue"
