@@ -152,7 +152,7 @@ function uploadTestSummary() {
     tl.debug('reportdata = ' + reportData);
     fs.writeFile(mdReportFile, reportData, function (err) {
         if (err) {
-            tl.warning('Failed to create xamarin test cloud run summary report. ' + err);
+            tl.warning('Failed to create Xamarin Test Cloud run summary report. ' + err);
         } else {
             tl.command('task.addattachment', {
                 name: "Xamarin Test Cloud Results",
