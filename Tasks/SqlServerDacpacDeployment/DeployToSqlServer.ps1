@@ -42,6 +42,10 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDe
 
 $ErrorActionPreference = 'Stop'
 
+if( $publishProfile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $publishProfile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")){
+    $publishProfile = ""
+}
+
 $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
 
 $sqlPackageOnTargetMachineBlock = Get-Content $sqlDeploymentScriptPath | Out-String
