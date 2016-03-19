@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 36
+        "Patch": 37
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -47,7 +47,7 @@
             "name": "mavenPOMFile",
             "type": "filePath",
             "label": "Maven POM file",
-            "defaultValue": "",
+            "defaultValue": "pom.xml",
             "required": true,
             "helpMarkDown": "Relative path from the repo root to the `Maven POM file`."
         },
