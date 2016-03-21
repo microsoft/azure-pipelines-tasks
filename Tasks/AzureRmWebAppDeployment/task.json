@@ -1,0 +1,94 @@
+{
+  "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
+  "name": "AzureRmWebAppDeployment",
+  "friendlyName": "Azure Rm Web App Deployment",
+  "description": "",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.97.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "Azure RM Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "WebSiteName",
+      "type": "pickList",
+      "label": "Web App Name",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+          "EditableOptions": "True"
+      },
+      "helpMarkDown": ""
+    },
+    {
+      "name": "Files",
+      "type": "filePath",
+      "label": "Files",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "RemoveAdditionalFilesFlag",
+      "type": "boolean",
+      "label": "Remove Additional Files at Destination",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "DeleteFilesInAppDataFlag",
+      "type": "boolean",
+      "label": "Delete Files in the App Data Folder",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "Take App Offline",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "PhysicalPath",
+      "type": "string",
+      "label": "Physical Path",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": ""
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "WebSiteName",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureWebSiteNamesRM"
+    }
+  ],
+  "instanceNameFormat": "Deploy Web App: $(WebSiteName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\AzureRmWebAppDeployment.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
