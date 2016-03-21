@@ -1,60 +1,4 @@
-﻿param (
-    [string]$WebDeployPackage,
-    [string]$WebDeployParamFile,
-    [string]$OverRideParams,
-    [string]$CreateWebSite,
-    [string]$WebSiteName,
-    [string]$WebSitePhysicalPath,
-    [string]$WebSitePhysicalPathAuth,
-    [string]$WebSiteAuthUserName,
-    [string]$WebSiteAuthUserPassword,
-    [string]$AddBinding,
-    [string]$AssignDuplicateBinding,
-    [string]$Protocol,
-    [string]$IpAddress,
-    [string]$Port,
-    [string]$HostName,
-    [string]$ServerNameIndication,
-    [string]$SslCertThumbPrint,
-    [string]$createAppPool,
-    [string]$AppPoolName,
-    [string]$DotNetVersion,
-    [string]$PipeLineMode,
-    [string]$AppPoolIdentity,
-    [string]$AppPoolUsername,
-    [string]$AppPoolPassword,
-    [string]$AppCmdCommands,
-    [string]$MethodToInvoke = "Execute-Main"
-    )
-
-Write-Verbose "Entering script MsDeployOnTargetMachines.ps1" -Verbose
-Write-Verbose "WebDeployPackage = $WebDeployPackage" -Verbose
-Write-Verbose "WebDeployParamFile = $WebDeployParamFile" -Verbose
-Write-Verbose "OverRideParams = $OverRideParams" -Verbose
-
-Write-Verbose "WebSiteName = $WebSiteName" -Verbose
-
-Write-Verbose "WebSitePhysicalPath = $WebSitePhysicalPath" -Verbose
-Write-Verbose "WebSitePhysicalPathAuth = $WebSitePhysicalPathAuth" -Verbose
-Write-Verbose "WebSiteAuthUserName = $WebSiteAuthUserName" -Verbose
-Write-Verbose "WebSiteAuthUserPassword = $WebSiteAuthUserPassword" -Verbose
-Write-Verbose "AddBinding = $AddBinding" -Verbose
-Write-Verbose "AssignDuplicateBinding = $AssignDuplicateBinding" -Verbose
-Write-Verbose "Protocol = $Protocol" -Verbose
-Write-Verbose "IpAddress = $IpAddress" -Verbose
-Write-Verbose "Port = $Port" -Verbose
-Write-Verbose "HostName = $HostName" -Verbose
-Write-Verbose "ServerNameIndication = $ServerNameIndication" -Verbose
-
-Write-Verbose "AppPoolName = $AppPoolName" -Verbose
-Write-Verbose "DotNetVersion = $DotNetVersion" -Verbose
-Write-Verbose "PipeLineMode = $PipeLineMode" -Verbose
-Write-Verbose "AppPoolIdentity = $AppPoolIdentity" -Verbose
-Write-Verbose "AppPoolUsername = $AppPoolUsername" -Verbose
-
-Write-Verbose "AppCmdCommands = $AppCmdCommands" -Verbose
-Write-Verbose "MethodToInvoke = $MethodToInvoke" -Verbose
-
+﻿Write-Verbose "Entering script MsDeployOnTargetMachines.ps1" -Verbose
 $AppCmdRegKey = "HKLM:\SOFTWARE\Microsoft\InetStp"
 $MsDeployInstallPathRegKey = "HKLM:\SOFTWARE\Microsoft\IIS Extensions\MSDeploy"
 
@@ -84,15 +28,6 @@ function Run-Command
     }
     
     return $result
-}
-
-function IsInputNullOrEmpty
-{
-    param(
-        [string]$str
-    )
-
-    return ([string]::IsNullOrEmpty($str) -or $str -eq "`"`"")
 }
 
 function Get-MsDeployLocation
@@ -173,7 +108,7 @@ function Get-MsDeployCmdArgs
     }
 
     $msDeployCmdArgs = [string]::Empty
-    if(-not (IsInputNullOrEmpty -str $webDeployParamFile))
+    if(-not [string]::IsNullOrWhiteSpace($webDeployParamFile))
     {   
     
         if(-not ( Test-Path -Path $webDeployParamFile))
@@ -187,7 +122,7 @@ function Get-MsDeployCmdArgs
     foreach($setParam in $setParams)
     {
         $setParam = $setParam.Trim()
-        if(-not [string]::IsNullOrEmpty($setParam))
+        if(-not [string]::IsNullOrWhiteSpace($setParam))
         {
             $msDeployCmdArgs = [string]::Format('{0} -setParam:{1}', $msDeployCmdArgs, $setParam)
         }
@@ -306,13 +241,13 @@ function Enable-SNI
 
     $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
 
-    if( -not ($sni -eq "true" -and $iisVersion -ge 8 -and -not (IsInputNullOrEmpty -str $hostname)))
+    if( -not ($sni -eq "true" -and $iisVersion -ge 8 -and -not [string]::IsNullOrWhiteSpace($hostname)))
     {
         Write-Verbose "Not Enabling SNI : sni : $sni, iisVersion : $iisVersion, hostname : $hostname. Possible Reasons: `n 1. IIS Version is less than 8 `n 2. HostName input is not provided `n 3. SNI input is set to false" -Verbose
         return
     }
     
-    if($ipAddress -eq "`"All Unassigned`"")
+    if($ipAddress -eq "All Unassigned")
     {
         $ipAddress = "*"
     }
@@ -335,7 +270,7 @@ function Add-SslCert
         [string]$iisVersion
     )
 
-    if(IsInputNullOrEmpty -str $certhash)
+    if([string]::IsNullOrWhiteSpace($certhash))
     {
         Write-Verbose "CertHash is empty .. returning" -Verbose
         return
@@ -346,7 +281,7 @@ function Add-SslCert
     $addCertCmd = [string]::Empty
 
     #SNI is supported IIS 8 and above. To enable SNI hostnameport option should be used
-    if($sni -eq "true" -and $iisVersion -ge 8 -and (-not (IsInputNullOrEmpty -str $hostname)))
+    if($sni -eq "true" -and $iisVersion -ge 8 -and -not [string]::IsNullOrWhiteSpace($hostname))
     {
         $showCertCmd = [string]::Format("netsh http show sslcert hostnameport={0}:{1}", $hostname, $port)
         Write-Verbose "Checking SslCert binding already Present. Running Command : $showCertCmd" -Verbose
@@ -435,7 +370,7 @@ function Run-AdditionalCommands
 
     foreach($appCmdCommand in $appCmdCommands)
     {
-        if(-not [string]::IsNullOrEmpty($appCmdCommand.Trim(' ')))
+        if(-not [string]::IsNullOrWhiteSpace($appCmdCommand.Trim(' ')))
         {
             $command = "`"$appCmdPath`" $appCmdCommand"
 
@@ -464,27 +399,27 @@ function Update-WebSite
 
     $appCmdArgs = [string]::Format(' set site /site.name:{0}', $siteName)
 
-    if(-not (IsInputNullOrEmpty -str $appPoolName))
+    if(-not [string]::IsNullOrWhiteSpace($appPoolName))
     {    
         $appCmdArgs = [string]::Format('{0} -applicationDefaults.applicationPool:{1}', $appCmdArgs, $appPoolName)
     }
 
-    if(-not (IsInputNullOrEmpty -str $physicalPath))
+    if(-not [string]::IsNullOrWhiteSpace($physicalPath))
     {
         $appCmdArgs = [string]::Format("{0} -[path='/'].[path='/'].physicalPath:{1}", $appCmdArgs, $physicalPath)
     }
 
-    if(-not (IsInputNullOrEmpty -str $userName) -and $authType -eq "WebSiteWindowsAuth")
+    if(-not [string]::IsNullOrWhiteSpace($userName) -and $authType -eq "WebSiteWindowsAuth")
     {
         $appCmdArgs = [string]::Format("{0} -[path='/'].[path='/'].userName:{1}", $appCmdArgs, $userName)
     }
 
-    if(-not (IsInputNullOrEmpty -str $password) -and $authType -eq "WebSiteWindowsAuth")
+    if(-not [string]::IsNullOrWhiteSpace($password) -and $authType -eq "WebSiteWindowsAuth")
     {
         $appCmdArgs = [string]::Format("{0} -[path='/'].[path='/'].password:{1}", $appCmdArgs, $password)
     }
 
-    if($ipAddress -eq "`"All Unassigned`"")
+    if($ipAddress -eq "All Unassigned")
     {
         $ipAddress = "*"
     }
@@ -516,17 +451,17 @@ function Update-AppPool
 
     $appCmdArgs = ' set config  -section:system.applicationHost/applicationPools'
 
-    if(-not (IsInputNullOrEmpty -str $clrVersion))
+    if(-not [string]::IsNullOrWhiteSpace($clrVersion))
     {    
         $appCmdArgs = [string]::Format('{0} /[name=''{1}''].managedRuntimeVersion:{2}', $appCmdArgs, $appPoolName, $clrVersion)
     }
 
-    if(-not (IsInputNullOrEmpty -str $pipeLineMode))
+    if(-not [string]::IsNullOrWhiteSpace($pipeLineMode))
     {
         $appCmdArgs = [string]::Format('{0} /[name=''{1}''].managedPipelineMode:{2}', $appCmdArgs, $appPoolName, $pipeLineMode)
     }
 
-    if($identity -eq "SpecificUser" -and -not (IsInputNullOrEmpty -str $userName) -and -not (IsInputNullOrEmpty -str $password))
+    if($identity -eq "SpecificUser" -and -not [string]::IsNullOrWhiteSpace($userName) -and -not [string]::IsNullOrWhiteSpace($password))
     {
         $appCmdArgs = [string]::Format('{0} /[name=''{1}''].processModel.identityType:SpecificUser /[name=''{1}''].processModel.userName:{2} /[name=''{1}''].processModel.password:{3}',`
                                 $appCmdArgs, $appPoolName, $userName, $password)
@@ -594,8 +529,61 @@ function Create-And-Update-AppPool
 
 function Execute-Main
 {
-    Write-Verbose "Entering Execute-Main function" -Verbose
+    param (
+        [string]$WebDeployPackage,
+        [string]$WebDeployParamFile,
+        [string]$OverRideParams,
+        [string]$CreateWebSite,
+        [string]$WebSiteName,
+        [string]$WebSitePhysicalPath,
+        [string]$WebSitePhysicalPathAuth,
+        [string]$WebSiteAuthUserName,
+        [string]$WebSiteAuthUserPassword,
+        [string]$AddBinding,
+        [string]$AssignDuplicateBinding,
+        [string]$Protocol,
+        [string]$IpAddress,
+        [string]$Port,
+        [string]$HostName,
+        [string]$ServerNameIndication,
+        [string]$SslCertThumbPrint,
+        [string]$createAppPool,
+        [string]$AppPoolName,
+        [string]$DotNetVersion,
+        [string]$PipeLineMode,
+        [string]$AppPoolIdentity,
+        [string]$AppPoolUsername,
+        [string]$AppPoolPassword,
+        [string]$AppCmdCommands
+        )
 
+    Write-Verbose "Entering Execute-Main function" -Verbose
+    Write-Verbose "WebDeployPackage = $WebDeployPackage" -Verbose
+    Write-Verbose "WebDeployParamFile = $WebDeployParamFile" -Verbose
+    Write-Verbose "OverRideParams = $OverRideParams" -Verbose
+
+    Write-Verbose "CreateWebSite = $CreateWebSite" -Verbose
+    Write-Verbose "WebSiteName = $WebSiteName" -Verbose
+    Write-Verbose "WebSitePhysicalPath = $WebSitePhysicalPath" -Verbose
+    Write-Verbose "WebSitePhysicalPathAuth = $WebSitePhysicalPathAuth" -Verbose
+    Write-Verbose "WebSiteAuthUserName = $WebSiteAuthUserName" -Verbose
+    Write-Verbose "WebSiteAuthUserPassword = $WebSiteAuthUserPassword" -Verbose
+    Write-Verbose "AddBinding = $AddBinding" -Verbose
+    Write-Verbose "AssignDuplicateBinding = $AssignDuplicateBinding" -Verbose
+    Write-Verbose "Protocol = $Protocol" -Verbose
+    Write-Verbose "IpAddress = $IpAddress" -Verbose
+    Write-Verbose "Port = $Port" -Verbose
+    Write-Verbose "HostName = $HostName" -Verbose
+    Write-Verbose "ServerNameIndication = $ServerNameIndication" -Verbose
+
+    Write-Verbose "CreateAppPool = $CreateAppPool" -Verbose
+    Write-Verbose "AppPoolName = $AppPoolName" -Verbose
+    Write-Verbose "DotNetVersion = $DotNetVersion" -Verbose
+    Write-Verbose "PipeLineMode = $PipeLineMode" -Verbose
+    Write-Verbose "AppPoolIdentity = $AppPoolIdentity" -Verbose
+    Write-Verbose "AppPoolUsername = $AppPoolUsername" -Verbose
+    Write-Verbose "AppCmdCommands = $AppCmdCommands" -Verbose
+    
     if($createAppPool -ieq "true")
     {
         Create-And-Update-AppPool -appPoolName $AppPoolName -clrVersion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
@@ -623,10 +611,6 @@ function Execute-Main
     }
 
     Run-AdditionalCommands -additionalCommands $AppCmdCommands
-
     Deploy-WebSite -webDeployPkg $WebDeployPackage -webDeployParamFile $WebDeployParamFile -overRiderParams $OverRideParams
-
     Write-Verbose "Exiting Execute-Main function" -Verbose
 }
-
-Invoke-Expression $MethodToInvoke
