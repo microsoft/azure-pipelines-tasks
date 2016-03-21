@@ -145,7 +145,7 @@ function uploadTestSummary() {
     var reportData = '';
     if (testCloudResults != null && testCloudResults.length > 0) {
         for (var i = 0; i < testCloudResults.length; i++) {
-            reportData = reportData.concat('* ' + testCloudResults[i]);
+            reportData = reportData.concat(testCloudResults[i] + '<br>');
         }
     }
 
