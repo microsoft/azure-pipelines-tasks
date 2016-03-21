@@ -16,7 +16,7 @@
     [string]$HostName,
     [string]$ServerNameIndication,
     [string]$SslCertThumbPrint,
-    [string]$createAppPool,
+    [string]$CreateAppPool,
     [string]$AppPoolName,
     [string]$DotNetVersion,
     [string]$PipeLineMode,
@@ -596,7 +596,7 @@ function Execute-Main
 {
     Write-Verbose "Entering Execute-Main function" -Verbose
 
-    if($createAppPool -ieq "true")
+    if($CreateAppPool -ieq "true")
     {
         Create-And-Update-AppPool -appPoolName $AppPoolName -clrVersion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
     }
