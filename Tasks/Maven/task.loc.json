@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 36
+    "Patch": 37
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -47,7 +47,7 @@
       "name": "mavenPOMFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.mavenPOMFile",
-      "defaultValue": "",
+      "defaultValue": "pom.xml",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile"
     },

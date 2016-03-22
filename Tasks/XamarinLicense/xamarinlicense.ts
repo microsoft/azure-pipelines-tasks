@@ -53,11 +53,11 @@ var timeoutInSecs = Number(timeout);
 var getLicenseLocation = function (product) {
     var licenseLocation;
     if (product == 'MA' && os.platform() == 'darwin') {
-        licenseLocation = process.env.HOME + '/Library/MonoAndroid/License.v2';
+        licenseLocation = process.env.HOME + '/Library/MonoAndroid/License';
     } else if (product == 'MT' && os.platform() == 'darwin') {
         licenseLocation = process.env.HOME + '/Library/MonoTouch/License.v2';
     } else if (product == 'MM' && os.platform() == 'darwin') {
-        licenseLocation = process.env.HOME + '/Library/Xamarin.Mac/License.v2'
+        licenseLocation = process.env.HOME + '/Library/Xamarin.Mac/License'
     } else if (product == 'MA' && os.platform() == 'win32') {
         licenseLocation = process.env.PROGRAMDATA + '\\Mono For Android\\License\\monoandroid.licx';
     } else if (product == 'MT' && os.platform() == 'win32') {
