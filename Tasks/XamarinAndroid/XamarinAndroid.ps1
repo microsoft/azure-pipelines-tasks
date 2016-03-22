@@ -99,7 +99,7 @@ foreach ($pf in $projectFiles)
 }
 
 if ($exitCode -ne 0) {
-    Write-Error "For information on troubleshooting common Xamarin issues, see http://go.microsoft.com/fwlink/?LinkId=760847"
+    Write-Error "See http://go.microsoft.com/fwlink/?LinkId=760847"
 }
 
 Write-Verbose "Leaving script XamarinAndroid.ps1"
