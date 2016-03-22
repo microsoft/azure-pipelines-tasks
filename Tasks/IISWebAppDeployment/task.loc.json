@@ -114,67 +114,67 @@
       "helpMarkDown": "ms-resource:loc.input.help.OverRideParams"
     },
     {
-      "name": "CreateWebSite",
+      "name": "CreateWebsite",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.CreateWebSite",
+      "label": "ms-resource:loc.input.label.CreateWebsite",
       "required": false,
       "groupName": "website",
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.CreateWebSite"
+      "helpMarkDown": "ms-resource:loc.input.help.CreateWebsite"
     },
     {
-      "name": "WebSiteName",
+      "name": "WebsiteName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.WebSiteName",
+      "label": "ms-resource:loc.input.label.WebsiteName",
       "required": true,
       "groupName": "website",
       "defaultValue": "",
-      "visibleRule": "CreateWebSite = true",
-      "helpMarkDown": "ms-resource:loc.input.help.WebSiteName"
+      "visibleRule": "CreateWebsite = true",
+      "helpMarkDown": "ms-resource:loc.input.help.WebsiteName"
     },
     {
-      "name": "WebSitePhysicalPath",
+      "name": "WebsitePhysicalPath",
       "type": "string",
-      "label": "ms-resource:loc.input.label.WebSitePhysicalPath",
+      "label": "ms-resource:loc.input.label.WebsitePhysicalPath",
       "required": true,
       "groupName": "website",
       "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
-      "visibleRule": "CreateWebSite = true",
-      "helpMarkDown": "ms-resource:loc.input.help.WebSitePhysicalPath"
+      "visibleRule": "CreateWebsite = true",
+      "helpMarkDown": "ms-resource:loc.input.help.WebsitePhysicalPath"
     },
     {
-      "name": "WebSitePhysicalPathAuth",
+      "name": "WebsitePhysicalPathAuth",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebSitePhysicalPathAuth",
+      "label": "ms-resource:loc.input.label.WebsitePhysicalPathAuth",
       "required": true,
       "groupName": "website",
       "defaultValue": "Application User (Pass-through)",
-      "visibleRule": "CreateWebSite = true",
+      "visibleRule": "CreateWebsite = true",
       "options": {
-        "WebSiteUserPassThrough": "Application User (Pass-through)",
-        "WebSiteWindowsAuth": "Windows Authentication"
+        "WebsiteUserPassThrough": "Application User (Pass-through)",
+        "WebsiteWindowsAuth": "Windows Authentication"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.WebSitePhysicalPathAuth"
+      "helpMarkDown": "ms-resource:loc.input.help.WebsitePhysicalPathAuth"
     },
     {
-      "name": "WebSiteAuthUserName",
+      "name": "WebsiteAuthUserName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.WebSiteAuthUserName",
+      "label": "ms-resource:loc.input.label.WebsiteAuthUserName",
       "required": true,
       "groupName": "website",
       "defaultValue": "",
-      "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
-      "helpMarkDown": "ms-resource:loc.input.help.WebSiteAuthUserName"
+      "visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
+      "helpMarkDown": "ms-resource:loc.input.help.WebsiteAuthUserName"
     },
     {
-      "name": "WebSiteAuthUserPassword",
+      "name": "WebsiteAuthUserPassword",
       "type": "string",
-      "label": "ms-resource:loc.input.label.WebSiteAuthUserPassword",
+      "label": "ms-resource:loc.input.label.WebsiteAuthUserPassword",
       "required": true,
       "groupName": "website",
       "defaultValue": "",
-      "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
-      "helpMarkDown": "ms-resource:loc.input.help.WebSiteAuthUserPassword"
+      "visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
+      "helpMarkDown": "ms-resource:loc.input.help.WebsiteAuthUserPassword"
     },
     {
       "name": "AddBinding",
@@ -183,7 +183,7 @@
       "required": false,
       "groupName": "website",
       "defaultValue": "true",
-      "visibleRule": "CreateWebSite = true",
+      "visibleRule": "CreateWebsite = true",
       "helpMarkDown": "ms-resource:loc.input.help.AddBinding"
     },
     {

@@ -9,12 +9,12 @@
     [string]$webDeployPackage,
     [string]$webDeployParamFile,
     [string]$overRideParams,
-    [string]$createWebSite,
-    [string]$webSiteName,    
-    [string]$webSitePhysicalPath,
-    [string]$webSitePhysicalPathAuth,
-    [string]$webSiteAuthUserName,
-    [string]$webSiteAuthUserPassword,
+    [string]$createWebsite,
+    [string]$websiteName,
+    [string]$websitePhysicalPath,
+    [string]$websitePhysicalPathAuth,
+    [string]$websiteAuthUserName,
+    [string]$websiteAuthUserPassword,
     [string]$addBinding,
     [string]$assignDuplicateBinding,
     [string]$protocol,
@@ -64,11 +64,11 @@ Write-Verbose "webDeployParamFile = $webDeployParamFile" -Verbose
 Write-Verbose "overRideParams = $overRideParams" -Verbose
 Write-Verbose "deployInParallel = $deployInParallel" -Verbose
 
-Write-Verbose "createWebSite = $createWebSite" -Verbose
-Write-Verbose "webSiteName = $webSiteName" -Verbose
-Write-Verbose "webSitePhysicalPath = $webSitePhysicalPath" -Verbose
-Write-Verbose "webSitePhysicalPathAuth = $webSitePhysicalPathAuth" -Verbose
-Write-Verbose "webSiteAuthUserName = $webSiteAuthUserName" -Verbose
+Write-Verbose "createWebsite = $createWebsite" -Verbose
+Write-Verbose "websiteName = $websiteName" -Verbose
+Write-Verbose "websitePhysicalPath = $websitePhysicalPath" -Verbose
+Write-Verbose "websitePhysicalPathAuth = $websitePhysicalPathAuth" -Verbose
+Write-Verbose "websiteAuthUserName = $websiteAuthUserName" -Verbose
 Write-Verbose "addBinding = $addBinding" -Verbose
 Write-Verbose "assignDuplicateBinding = $assignDuplicateBinding" -Verbose
 Write-Verbose "protocol = $protocol" -Verbose
@@ -95,16 +95,16 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDe
 
 $webDeployPackage = $webDeployPackage.Trim('"', ' ')
 $webDeployParamFile = $webDeployParamFile.Trim('"', ' ')
-$webSiteName = $webSiteName.Trim('"', ' ')
-$webSitePhysicalPath = $webSitePhysicalPath.Trim('"', ' ')
-$webSiteAuthUserName = $webSiteAuthUserName.Trim()
+$websiteName = $websiteName.Trim('"', ' ')
+$websitePhysicalPath = $websitePhysicalPath.Trim('"', ' ')
+$websiteAuthUserName = $websiteAuthUserName.Trim()
 
 $appPoolName = $appPoolName.Trim('"', ' ')
 $appPoolUsername = $appPoolUsername.Trim()
 
 $appCmdCommands = $appCmdCommands.Replace('"', '`"')
 
-if($createWebSite -ieq "true" -and [string]::IsNullOrWhiteSpace($webSiteName))
+if($createWebsite -ieq "true" -and [string]::IsNullOrWhiteSpace($websiteName))
 { 
     throw "Website Name cannot be empty if you want to create or update the target website."
 }
@@ -114,23 +114,23 @@ if($createAppPool -ieq "true" -and [string]::IsNullOrWhiteSpace($appPoolName))
     throw "Application pool name cannot be empty if you want to create or update the target app pool."
 }
 
-if(![string]::IsNullOrWhiteSpace($webSiteName))
+if(![string]::IsNullOrWhiteSpace($websiteName))
 {
     if([string]::IsNullOrWhiteSpace($overRideParams))
     {
-        Write-Verbose "Adding override params to ensure deployment happens on $webSiteName" -Verbose
-        $overRideParams = [string]::Format('name="IIS Web Application Name",value="{0}"', $webSiteName)
+        Write-Verbose "Adding override params to ensure deployment happens on $websiteName" -Verbose
+        $overRideParams = [string]::Format('name="IIS Web Application Name",value="{0}"', $websiteName)
     }
     elseif(!$overRideParams.Contains("IIS Web Application Name")) 
     {
-        $overRideParams = $overRideParams + [string]::Format('{0}name="IIS Web Application Name",value="{1}"',  [System.Environment]::NewLine, $webSiteName)
+        $overRideParams = $overRideParams + [string]::Format('{0}name="IIS Web Application Name",value="{1}"',  [System.Environment]::NewLine, $websiteName)
     }
 }
 
-$overRideParams = $overRideParams.Replace('"', '''')
+$overRideParams = $overRideParams.Replace('"', '`"')
 
 $msDeployOnTargetMachinesScript = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
-$invokeMain = "Execute-Main -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`" -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName `"$webSiteAuthUserName`" -WebSiteAuthUserPassword `"$webSiteAuthUserPassword`" -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName `"$hostName`" -ServerNameIndication $serverNameIndication -SslCertThumbPrint `"$sslCertThumbPrint`" -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`" -CreateWebSite `"$createWebSite`" -CreateAppPool `"$createAppPool`""
+$invokeMain = "Execute-Main -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`" -WebsiteName `"$websiteName`" -WebsitePhysicalPath `"$websitePhysicalPath`" -WebsitePhysicalPathAuth `"$websitePhysicalPathAuth`" -WebsiteAuthUserName `"$websiteAuthUserName`" -WebsiteAuthUserPassword `"$websiteAuthUserPassword`" -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName `"$hostName`" -ServerNameIndication $serverNameIndication -SslCertThumbPrint `"$sslCertThumbPrint`" -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`" -CreateWebsite $createWebsite -CreateAppPool $createAppPool"
 
 Write-Verbose "Executing main funnction in MsDeployOnTargetMachines : $invokeMain" -Verbose
 $msDeployOnTargetMachinesScriptBlock = [string]::Format("{0} {1} ( {2} )", $msDeployOnTargetMachinesScript,  [Environment]::NewLine,  $invokeMain)

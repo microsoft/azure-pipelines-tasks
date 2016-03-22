@@ -115,7 +115,7 @@
       "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. To override more than one parameter use line separator, e.g., <br/> \"IIS Web Application Name\"=\"Fabrikam\" <br/> \"ConnectionString\"=\"Server=localhost;Database=Fabrikam;\""
     },
     {
-      "name": "CreateWebSite",
+      "name": "CreateWebsite",
       "type": "boolean",
       "label": "Create or Update Website",
       "required": false,
@@ -124,57 +124,57 @@
       "helpMarkDown": "Select the option to create a website or to update an existing website."
     },
     {
-      "name": "WebSiteName",
+      "name": "WebsiteName",
       "type": "string",
       "label": "Website Name",
       "required": true,
       "groupName": "website",
       "defaultValue": "",
-      "visibleRule": "CreateWebSite = true",
+      "visibleRule": "CreateWebsite = true",
       "helpMarkDown": "Name of the IIS website that will be created if it does not exist, or it will be updated if it is already present on the IIS server. The name of the website should be same as that specified in the web deploy zip package file. If a Parameter file and override Parameters setting is also specified, then the name of the website should be same as that in the override Parameters setting."
     },
     {
-      "name": "WebSitePhysicalPath",
+      "name": "WebsitePhysicalPath",
       "type": "string",
       "label": "Physical Path",
       "required": true,
       "groupName": "website",
       "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
-      "visibleRule": "CreateWebSite = true",
+      "visibleRule": "CreateWebsite = true",
       "helpMarkDown": "Physical path where the website content is stored. The content can reside on the local computer or on a remote directory or share like, C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
     },
     {
-      "name": "WebSitePhysicalPathAuth",
+      "name": "WebsitePhysicalPathAuth",
       "type": "pickList",
       "label": "Physical Path Authentication",
       "required": true,
       "groupName": "website",
       "defaultValue": "Application User (Pass-through)",
-      "visibleRule": "CreateWebSite = true",
+      "visibleRule": "CreateWebsite = true",
       "options": {
-        "WebSiteUserPassThrough": "Application User (Pass-through)",
-        "WebSiteWindowsAuth": "Windows Authentication"
+        "WebsiteUserPassThrough": "Application User (Pass-through)",
+        "WebsiteWindowsAuth": "Windows Authentication"
       },
       "helpMarkDown": "Authentication mechanism for accessing the physical path of the website."
     },
     {
-      "name": "WebSiteAuthUserName",
+      "name": "WebsiteAuthUserName",
       "type": "string",
       "label": "User Name",
       "required": true,
       "groupName": "website",
       "defaultValue": "",
-      "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
+      "visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
       "helpMarkDown": "User name for accessing the website's physical path."
     },
     {
-      "name": "WebSiteAuthUserPassword",
+      "name": "WebsiteAuthUserPassword",
       "type": "string",
       "label": "Password",
       "required": true,
       "groupName": "website",
       "defaultValue": "",
-      "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
+      "visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
       "helpMarkDown": "Password for accessing the website's physical path."
     },
     {
@@ -184,7 +184,7 @@
       "required": false,
       "groupName": "website",
       "defaultValue": "true",
-      "visibleRule": "CreateWebSite = true",
+      "visibleRule": "CreateWebsite = true",
       "helpMarkDown": "Select the option to add port binding for the website."
     },
     {
