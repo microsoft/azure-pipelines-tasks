@@ -203,7 +203,7 @@ try
         }
         elseif(-not $useExternalFeed)
         {
-            $argsUpload = $argsUpload + "  -ConfigFile `"$tempNuGetConfigPath`" -ApiKey VssSessionKey"
+            $argsUpload = $argsUpload + "  -ConfigFile `"$tempNuGetConfigPath`" -ApiKey VssSessionKey -NonInteractive"
         }
 
         if($nuGetAdditionalArgs)
