@@ -41,10 +41,8 @@ $envOperationStatus = 'Passed'
 function ThrowError
 {
     param([string]$errorMessage)
-    
-        $readmelink = "http://aka.ms/windowsfilecopyreadme"
-        $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
-        throw "$errorMessage $helpMessage"
+  
+        throw "$errorMessage"
 }
 
 function Get-ResourceConnectionDetails
