@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 26
   },
   "demands": [
     "msbuild",
@@ -113,11 +113,6 @@
   "execution": {
     "PowerShell3": {
       "target": "VSBuild.ps1"
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\LegacyVSBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
     }
   },
   "messages": {
