@@ -5,8 +5,6 @@ param()
 . $PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\Orchestrator.ps1
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
 
-
-
 function BuildIssue
 {    
     param ([string]$message, [int]$line, [string]$severity, [string]$relativePath, [string]$rule)
@@ -31,7 +29,7 @@ $issue1 = BuildIssue "CA issue 1" 14 "maJor" "some/path" "fxcop:RemoveUnusedLoca
 $issue2 = BuildIssue "CA issue 2" 15 "INfO" "some/other/path" "csharpsquid:S1481"
 
 # Act
-$comments = GetCommentsFromIssues @($issue1, $issue2)
+$comments = GetMessagesFromIssues @($issue1, $issue2)
 
 # Assert
 Assert-AreEqual 2 $comments.Count "Expected to find 2 comments"
@@ -55,19 +53,16 @@ Assert-AreEqual 5 $comment2.Priority "Expecting the Priority to be 5 for an info
 
 $issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue.Remove("message")
-Assert-Throws { GetCommentsFromIssues @($issue) } "*message*"
-
-$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
-$issue.Remove("line")
-Assert-Throws { GetCommentsFromIssues @($issue) } "*line*"
+Assert-Throws { GetMessagesFromIssues @($issue) } "*message*"
 
 $issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue.Remove("relativePath")
-Assert-Throws { GetCommentsFromIssues @($issue) } "*relativePath*"
+Assert-Throws { GetMessagesFromIssues @($issue) } "*relativePath*"
 
 $issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue.Remove("rule")
-Assert-Throws { GetCommentsFromIssues @($issue) } "*rule*"
+Assert-Throws { GetMessagesFromIssues @($issue) } "*rule*"
+
 
 #
 # Test 3: Priority
@@ -84,7 +79,7 @@ $noSeverityIssue = BuildIssue "CA issue" 6 "" "some/path" "csharpsquid:S1481"
 $otherSeverityIssue = BuildIssue "CA issue" 7 "extremely important" "some/path" "csharpsquid:S1481"
 
 # Act
-$comments = GetCommentsFromIssues @($blockerIssue, $criticalIssue, $majorIssue, $minorIssue, $infoIssue, $noSeverityIssue, $otherSeverityIssue)
+$comments = GetMessagesFromIssues @($blockerIssue, $criticalIssue, $majorIssue, $minorIssue, $infoIssue, $noSeverityIssue, $otherSeverityIssue)
 
 # Assert
 Assert-AreEqual 1 ($comments | Where-Object {$_.line -eq 1}).Priority "Blocker issue - priority 1"
@@ -95,3 +90,17 @@ Assert-AreEqual 5 ($comments | Where-Object {$_.line -eq 5}).Priority "Info issu
 
 Assert-AreEqual 6 ($comments | Where-Object {$_.line -eq 6}).Priority "No severity issue - priority 6"
 Assert-AreEqual 6 ($comments | Where-Object {$_.line -eq 7}).Priority "Other severity issue - priority 6"
+
+#
+# Test 4 - Missing and empty line numbers should be reported as zero 
+#
+
+$issue1 = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
+$issue1.Remove("line")
+$issue2 = BuildIssue "CA issue 1" "" "maJor" "some/path" "csharpsquid:S1481"
+$issue3 = BuildIssue "CA issue 1" -5 "maJor" "some/path" "csharpsquid:S1481"
+
+$comments = GetMessagesFromIssues @($issue1, $issue2, $issue3)
+
+Assert-AreEqual 3 $comments.Count "Expected 3 comments"
+$comments | ForEach-Object  { Assert-AreEqual 0 $_.Line "Expected the line to be set to 0"}

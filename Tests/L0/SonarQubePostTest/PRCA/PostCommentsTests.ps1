@@ -239,7 +239,10 @@ namespace Microsoft.TeamFoundation.SourceControl.WebApi
 {
     public class GitHttpClient
     {
-        
+        public Task<GitPullRequest> GetPullRequestAsync (string project, Guid repositoryId, int pullRequestId)
+        {
+            return null;
+        }
     }
     
     public class GitPullRequest
@@ -258,6 +261,30 @@ namespace Microsoft.VisualStudio.Services.CodeReview.WebApi
     {
         
     }    
+}
+
+namespace PsWorkarounds
+{
+    using Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi;
+    using Microsoft.TeamFoundation.SourceControl.WebApi;
+
+    public class Helper
+    {
+        public static GitPullRequest GetPullRequestObject(GitHttpClient gitClient, string project, Guid repositoryId, int pullRequestId)
+        {
+            return gitClient.GetPullRequestAsync(project, repositoryId, pullRequestId).Result;
+        }
+        
+        public static Dictionary<string, List<DiscussionThread>> GetThreadsDictionary(DiscussionHttpClient discussionClient, string artifactUri)
+        {
+            return discussionClient.GetThreadsAsync(new string[] { artifactUri }).Result;
+        }
+        
+        public static DiscussionCommentCollection GetComments(DiscussionHttpClient discussionClient, int discussionId)
+        {
+            return discussionClient.GetCommentsAsync(discussionId).Result;
+        }
+    }
 }
 
 "@
@@ -340,6 +367,7 @@ function ValidateCommonThreadAttributes
     $threadCollection | ForEach-Object {Assert-AreEqual "artifact uri" $_.ArtifactUri "Each thread should have the same ArtifactUri"}    
     $threadCollection | ForEach-Object {Assert-AreEqual $false $_.IsDirty "Not expecting dirty threads"}
     $threadCollection | ForEach-Object {Assert-AreEqual $commentSource $_.Properties[$PostCommentsModule_CommentSourcePropertyName] "Invalid CodeAnalysisThreadType property."}
+    $threadCollection | ForEach-Object {Assert-AreEqual "CodeAnalysisIssue" $_.Properties["CodeAnalysisThreadType"] "Invalid CodeAnalysisThreadType property."}
     
     if ($legacyPr)
     {
@@ -366,7 +394,7 @@ function ValidateLegacyProperties
     $startLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::StartLine
     $endLineName = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadPropertyNames]::EndLine
     
-    Assert-AreEqual 8 $thread.Properties.Count "Each thread should have 8 properties"
+    Assert-AreEqual 9 $thread.Properties.Count "Each thread should have 9 properties"
     Assert-AreEqual $thread.Properties[$endLineName] $thread.Properties[$startLineName] "The StartLine should be the same as the comment's line"
     Assert-AreEqual "Source Commit" $thread.Properties["CodeReviewSourceCommit"] "Invalid CodeReviewSourceCommit property"
     Assert-AreEqual "Target Commit" $thread.Properties["CodeReviewTargetCommit"] "Invalid CodeReviewTargetCommit property"
@@ -380,7 +408,7 @@ function ValidateCodeFlowProperties
     
     $properties = $thread.Properties
     
-    Assert-AreEqual 9 $properties.Count "Each thread should have 9 properties"
+    Assert-AreEqual 10 $properties.Count "Each thread should have 10 properties"
     
     Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.ItemPath") "No ItemPath"
     Assert-AreEqual $true $properties.ContainsKey("Microsoft.VisualStudio.Services.CodeReview.Right.StartLine") "No Start Line"
@@ -479,7 +507,6 @@ PostAndResolveComments @($p1A) "TestSource"
 $postedThreads = $mockDiscussionClient.GetPostedThreads()
 ValidateDiscussionThreadCollection $postedThreads @( (GetExpectedMessageState $p1A 1 "Active") , (GetExpectedMessageState $p2B 1 "Fixed") ) "TestSource"
 
-
 # Iteration 4: 
 # - Current state:                      path1:A, path2:B (resolved)
 # - Messages to be posted:              path1:C:50 path1:C:60
@@ -504,15 +531,13 @@ ValidateDiscussionThreadCollection $postedThreads $expectedComments "TestSource"
  
 
 # Act
-PostAndResolveComments @() "TestSource"
+PostAndResolveComments $null "TestSource"
 
 # Assert
 $postedThreads = $mockDiscussionClient.GetPostedThreads()
 $expectedComments = @( (GetExpectedMessageState $p1C50 2 "Fixed"), (GetExpectedMessageState $p1A 1 "Fixed"), (GetExpectedMessageState $p2B 1 "Fixed") )
 
 ValidateDiscussionThreadCollection $postedThreads $expectedComments "TestSource"
-
-
 
 #Cleanup 
 Unregister-Mock GetModifiedFilesInPR 

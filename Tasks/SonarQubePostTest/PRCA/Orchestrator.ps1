@@ -15,9 +15,9 @@ function HandleCodeAnalysisReporting
         
         $vssConnection = GetVssConnection 
         InitPostCommentsModule $vssConnection
-        $comments = GetCommentsFromIssues $newIssues
+        $messages = GetMessagesFromIssues $newIssues
         
-        PostAndResolveComments $comments "SonarQube Code Analysis"
+        PostAndResolveComments $messages "SonarQube Code Analysis"
     }	
 }
 
@@ -34,22 +34,30 @@ function GetVssConnection
 #
 # The issues, as reported by SonarQube, need to be transformed to a simpler structure that the PostComments module can consume
 # 
-function GetCommentsFromIssues
+function GetMessagesFromIssues
 {
     param ([Array]$issues)
     
+    $sw = new-object "Diagnostics.Stopwatch"
+    $sw.Start();
+     
     Write-Verbose "Transforming SonarQube analysis issues to PR comments"
     
     $comments = New-Object System.Collections.ArrayList
-
+    
     foreach ($issue in $issues)
     {
         $priority = GetCommentPriority $issue
 
-        Assert ( ![String]::IsNullOrWhiteSpace($issue.message) ) "Internal error: the SonarQube reported issues do not have a property named 'message'"
-        Assert ( ![String]::IsNullOrWhiteSpace($issue.line) ) "Internal error: the SonarQube reported issues do not have a property named 'line'"        
-        Assert ( ![String]::IsNullOrWhiteSpace($issue.relativePath) ) "Internal error: the SonarQube reported issues do not have a property named 'relativePath'"
-        Assert ( ![String]::IsNullOrWhiteSpace($issue.rule) ) "Internal error: the SonarQube reported issues do not have a property named 'rule'"
+        if ([String]::IsNullOrWhiteSpace($issue.line) -or $issue.line -lt 0)
+        {
+            Write-Verbose "A SonarQube issue - $($issue.message) from $($issue.relativePath) - has no line associated with it. Placing it at the beginning of the file."
+            $issue.line = 0
+        }
+        
+        Assert ( ![String]::IsNullOrWhiteSpace($issue.message) ) ("Internal error: a SonarQube issue does not have a property named 'message' " + (DumpObject($issue)))
+        Assert ( ![String]::IsNullOrWhiteSpace($issue.relativePath) ) ("Internal error: a SonarQube issue does not have a property named 'relativePath' " +(DumpObject($issue)))
+        Assert ( ![String]::IsNullOrWhiteSpace($issue.rule) ) ("Internal error: a SonarQube issue does not have a property named 'rule' " + (DumpObject($issue)))
         
         $ruleId = GetRuleId $issue
         
@@ -65,6 +73,8 @@ function GetCommentsFromIssues
         [void]$comments.Add($comment)
     }
     
+    Write-Verbose "Creating $($issues.Count) messages from issues took $($sw.ElapsedMilliseconds) ms"
+         
     return $comments
 }
 
@@ -100,3 +110,15 @@ function GetCommentPriority
 }
 
 #endregion
+
+function DumpObject()
+{
+    param ($obj)
+    
+    if ($obj -eq $null)
+    {
+        return "Null"
+    }
+    
+    return ($obj | Format-Table | Out-String)   
+}

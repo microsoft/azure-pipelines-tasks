@@ -155,15 +155,11 @@ function GetPathRelativeToRepoRoot
     if ($component -and $script:ComponentKeyAndRelativePathMap.ContainsKey($component))
     {
         $relativeFilePath = $script:ComponentKeyAndRelativePathMap[$component]
-        Write-Verbose "GetPathRelativeToRepoRoot: Found cached entry, returning data from cache, relativePath:$relativeFilePath"
-
         return $relativeFilePath
     }
 
     $guidToken = GetComponentGuid $component
     
-    Write-Verbose "GetPathRelativeToRepoRoot: guidToken is $guidToken"
-
     if (!$script:ProjectGuidAndFilePathMap.ContainsKey($guidToken))
     {
         Write-Verbose "GetPathRelativeToRepoRoot: An entry for project guid $guidToken could not be found, check ProjectInfo.xml file"
@@ -181,7 +177,6 @@ function GetPathRelativeToRepoRoot
     $finalFilePath = [System.IO.Path]::GetDirectoryName($projectPath)
     
     $finalFilePath = [System.IO.Path]::Combine($finalFilePath, $script:ComponentKeyAndPathMap[$component])
-    Write-Verbose "GetPathRelativeToRepoRoot: finalFilePath:$finalFilePath"
 
     $repoLocalPath = GetTaskContextVariable "Build.Repository.LocalPath"
     
@@ -190,10 +185,7 @@ function GetPathRelativeToRepoRoot
         throw "GetPathRelativeToRepoRoot: Could not get task variable Build.Repository.LocalPath"
     }
 
-    Write-Verbose "GetPathRelativeToRepoRoot: repoLocalPath:$repoLocalPath"
-
     $relativePath = GetRelativePath $finalFilePath $repoLocalPath
-    Write-Verbose "GetPathRelativeToRepoRoot: $relativePath"
        
     #save data into cache so next time we don't have to compute
     $script:ComponentKeyAndRelativePathMap.Add($component, $relativePath)

@@ -16,7 +16,6 @@ function InitPostCommentsModule
     InternalInit            
 }
 
-
 #
 # Initializes the module. 
 #
@@ -37,6 +36,7 @@ function Test-InitPostCommentsModule
 
 function InternalInit
 {
+    Write-Verbose "Fetching VSS clients"
     $script:gitClient = $vssConnection.GetClient("Microsoft.TeamFoundation.SourceControl.WebApi.GitHttpClient")            
     $script:discussionClient = $vssConnection.GetClient("Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionHttpClient")    
     $script:codeReviewClient = $vssConnection.GetClient("Microsoft.VisualStudio.Services.CodeReview.WebApi.CodeReviewHttpClient") 
@@ -45,6 +45,7 @@ function InternalInit
     Assert ( $script:discussionClient -ne $null ) "Internal error: could not retrieve the DiscussionHttpClient object"
     Assert ( $script:codeReviewClient -ne $null ) "Internal error: could not retrieve the CodeReviewHttpClient object"
                  
+    Write-Verbose "Fetching data from build variables"
     $repositoryId = GetTaskContextVariable "build.repository.id"    
     $script:project = GetTaskContextVariable "system.teamProject"
 
@@ -52,7 +53,17 @@ function InternalInit
     Assert (![String]::IsNullOrWhiteSpace($script:project)) "Internal error: could not determine the system.teamProject"   
 
     $pullRequestId = GetPullRequestId
-    $script:pullRequest = $script:gitClient.GetPullRequestAsync($script:project, $repositoryId, $pullRequestId).Result;    
+    $repositoryIdGuid = [Guid]::Parse($repositoryId);
+    Write-Verbose "Fetching the pull request object with id $pullRequestId"
+
+    $script:pullRequest = [PsWorkarounds.Helper]::GetPullRequestObject($script:gitClient, $script:project, $repositoryIdGuid, $pullRequestId);
+     
+    Assert ($script:pullRequest -ne $null) "Internal error: could not retrieve the pull request object" 
+    Assert ($script:pullRequest.CodeReviewId -ne $null) "Internal error: could not retrieve the code review id" 
+    Assert ($script:pullRequest.Repository -ne $null) "Internal error: could not retrieve the repository object" 
+    Assert ($script:pullRequest.Repository.ProjectReference -ne $null) "Internal error: could not retrieve the project reference object" 
+    Assert ($script:pullRequest.Repository.ProjectReference.Id -ne $null) "Internal error: could not retrieve the project reference ID " 
+     
     $script:artifactUri = GetArtifactUri $script:pullRequest.CodeReviewId $script:pullRequest.Repository.ProjectReference.Id $pullRequestId
 }
 
@@ -76,6 +87,43 @@ function LoadTfsClientAssemblies
     $externalAssemblyPaths | foreach {Add-Type -Path $_} 
     
     Write-Verbose "Loaded $externalAssemblyPaths"
+    
+    # Workaround: PowerShell 4 seems to have a problem finding the right method from a list of overloaded .net methods. This is because
+    # PS converts variables to its own PSObject type and it then gets confused when trying to coerce the values to determine the right method candidate.
+    # To work around this I create a .net helper method that calls the actual helper. The code bellow is built into an temp assembly
+    # and it can be accessed directly from this script.
+    $source = @"
+
+using Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi;
+using Microsoft.TeamFoundation.SourceControl.WebApi;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace PsWorkarounds
+{
+    public class Helper
+    {
+        public static GitPullRequest GetPullRequestObject(GitHttpClient gitClient, string project, Guid repositoryId, int pullRequestId)
+        {
+            return gitClient.GetPullRequestAsync(project, repositoryId, pullRequestId).Result;
+        }
+        
+        public static Dictionary<string, List<DiscussionThread>> GetThreadsDictionary(DiscussionHttpClient discussionClient, string artifactUri)
+        {
+            return discussionClient.GetThreadsAsync(new string[] { artifactUri }).Result;
+        }
+        
+        public static DiscussionCommentCollection GetComments(DiscussionHttpClient discussionClient, int discussionId)
+        {
+            return discussionClient.GetCommentsAsync(discussionId).Result;
+        }
+    }
+}
+"@
+    
+    (Add-Type -TypeDefinition $source -ReferencedAssemblies $externalAssemblyPaths) | out-null
 }
 
 
@@ -138,8 +186,7 @@ function PostDiscussionThreads
 #
 function FetchActiveDiscussionThreads
 {
-    $threadsDictionary = $script:discussionClient.GetThreadsAsync( @($script:artifactUri)).Result
-    
+    $threadsDictionary = [PsWorkarounds.Helper]::GetThreadsDictionary($script:discussionClient, $script:artifactUri)
     $threadList = New-Object "System.Collections.Generic.List[$script:discussionWebApiNS.DiscussionThread]"
     
     foreach ($threads in $threadsDictionary.Values)
@@ -168,7 +215,8 @@ function FetchDiscussionComments
     
     foreach ($discussionThread in $discussionThreads)
     {
-        $commentsFromThread = $script:discussionClient.GetCommentsAsync($discussionThread.DiscussionId).Result
+        $commentsFromThread = [PsWorkarounds.Helper]::GetComments($script:discussionClient, $discussionThread.DiscussionId)
+        
         if ($commentsFromThread -ne $null)
         {
             $comments.AddRange($commentsFromThread)
@@ -190,8 +238,9 @@ function GetArtifactUri
         return $artifactUri
     }
 
-    $artifactUri = [Microsoft.VisualStudio.Services.CodeReview.WebApi.CodeReviewSdkArtifactId]::GetArtifactUri($teamProjectId, $pullRequestId)
+    $artifactUri = [Microsoft.VisualStudio.Services.CodeReview.WebApi.CodeReviewSdkArtifactId]::GetArtifactUri($teamProjectId, $codeReviewId)
     Write-Verbose "New style code review. The artifact uri is $artifactUri"
+    
     return $artifactUri
 }
 
@@ -239,9 +288,8 @@ function GetCodeFlowLatestIterationId
     Assert ($review -ne $null) "Could not retrieve the review"
     Assert (HasElements $review.Iterations) "No iterations found on the review"
     
-    # TODO: is this the best way to find the id ?
     $lastIterationId = ($review.Iterations.Id | Measure -Maximum).Maximum
-    
+
     return $lastIterationId
 }
 
@@ -254,7 +302,9 @@ function GetCodeFlowChanges
         $script:pullRequest.CodeReviewId, 
         $iterationId,
         $null, $null, $null, [System.Threading.CancellationToken]::None).Result
-        
+     
+     Write-Verbose "Change count: $($changes.Count)"
+     
      return $changes
 }
 
@@ -262,12 +312,11 @@ function GetCodeFlowChangeTrackingId
 {
     param ([Microsoft.VisualStudio.Services.CodeReview.WebApi.IterationChanges]$changes, [string]$path)
     
-    $change = $changes | Where-Object {$_.Modified.Path -eq $path}
+    $change = $changes.ChangeEntries | Where-Object {$_.Modified.Path -eq $path}
     
     Assert ($change -ne $null) "No changes found for $path"
     Assert ($change.Count -eq 1) "Expecting exactly 1 change for $path but found $($change.Count)"
     
-    Write-Verbose "Found a change for message at $path - $($change.ChangeTrackingId)"
     return $change.ChangeTrackingId
 } 
 
