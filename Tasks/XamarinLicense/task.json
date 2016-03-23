@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 9
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -49,7 +49,7 @@
             "label": "Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Xamarin account password."
+            "helpMarkDown": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value."
         },
         {
           "name": "product",

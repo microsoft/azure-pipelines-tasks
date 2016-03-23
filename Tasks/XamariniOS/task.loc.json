@@ -12,10 +12,22 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [
     "Xamarin.iOS"
+  ],
+  "groups": [
+    {
+      "name": "sign",
+      "displayName": "ms-resource:loc.group.displayName.sign",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
   ],
   "inputs": [
     {
@@ -35,12 +47,38 @@
       "helpMarkDown": "ms-resource:loc.input.help.configuration"
     },
     {
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.args",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
       "name": "mdtoolLocation",
       "type": "string",
       "label": "ms-resource:loc.input.label.mdtoolLocation",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.mdtoolLocation"
+      "helpMarkDown": "ms-resource:loc.input.help.mdtoolLocation",
+      "groupName": "advanced"
+    },
+    {
+      "name": "packageApp",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.packageApp",
+      "defaultValue": true,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageApp"
     },
     {
       "name": "forSimulator",
@@ -49,6 +87,93 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.forSimulator"
+    },
+    {
+      "name": "signMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.signMethod",
+      "required": false,
+      "groupName": "sign",
+      "defaultValue": "file",
+      "helpMarkDown": "ms-resource:loc.input.help.signMethod",
+      "options": {
+        "file": "File Contents",
+        "id": "Identifiers"
+      }
+    },
+    {
+      "name": "iosSigningIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.iosSigningIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.iosSigningIdentity",
+      "groupName": "sign",
+      "visibleRule": "signMethod = id"
+    },
+    {
+      "name": "unlockDefaultKeychain",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.unlockDefaultKeychain",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.unlockDefaultKeychain",
+      "groupName": "sign",
+      "visibleRule": "signMethod = id"
+    },
+    {
+      "name": "defaultKeychainPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.defaultKeychainPassword",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.defaultKeychainPassword",
+      "groupName": "sign",
+      "visibleRule": "signMethod = id"
+    },
+    {
+      "name": "provProfileUuid",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.provProfileUuid",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileUuid",
+      "groupName": "sign",
+      "visibleRule": "signMethod = id"
+    },
+    {
+      "name": "p12",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.p12",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.p12",
+      "groupName": "sign",
+      "visibleRule": "signMethod = file"
+    },
+    {
+      "name": "p12pwd",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.p12pwd",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.p12pwd",
+      "groupName": "sign",
+      "visibleRule": "signMethod = file"
+    },
+    {
+      "name": "provProfile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.provProfile",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfile",
+      "groupName": "sign",
+      "visibleRule": "signMethod = file"
+    },
+    {
+      "name": "removeProfile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.removeProfile",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.removeProfile",
+      "groupName": "sign",
+      "visibleRule": "signMethod = file"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

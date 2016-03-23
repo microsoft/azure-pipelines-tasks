@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -31,7 +31,7 @@
             "label": "App File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**\\*.apk` for all APK files in all subfolders."
+            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders."
         },
         {
             "name": "dsym",

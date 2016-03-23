@@ -12,11 +12,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "AndroidSDK",
-    "JDK",
     "MSBuild",
     "Xamarin.Android"
   ],
@@ -38,7 +37,7 @@
       "name": "project",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.project",
-      "defaultValue": "**\\*.csproj",
+      "defaultValue": "**/*.csproj",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.project"
     },
@@ -54,14 +53,15 @@
       "name": "outputDir",
       "type": "string",
       "label": "ms-resource:loc.input.label.outputDir",
-      "defaultValue": "$(Agent.BuildDirectory)\\bin\\Release",
-      "required": false
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.outputDir"
     },
     {
       "name": "configuration",
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
-      "defaultValue": "Release",
+      "defaultValue": "",
       "required": false
     },
     {
@@ -83,6 +83,19 @@
       "groupName": "msbuildOptions"
     },
     {
+      "name": "jdkSelection",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.jdkSelection",
+      "required": true,
+      "groupName": "jdkOptions",
+      "defaultValue": "JDKVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkSelection",
+      "options": {
+        "JDKVersion": "JDK Version",
+        "Path": "Path"
+      }
+    },
+    {
       "name": "jdkVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
@@ -90,12 +103,23 @@
       "groupName": "jdkOptions",
       "defaultValue": "default",
       "helpMarkDown": "ms-resource:loc.input.help.jdkVersion",
+      "visibleRule": "jdkSelection = JDKVersion",
       "options": {
         "default": "default",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
         "1.6": "JDK 6"
       }
+    },
+    {
+      "name": "jdkUserInputPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jdkUserInputPath",
+      "required": true,
+      "groupName": "jdkOptions",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkUserInputPath",
+      "visibleRule": "jdkSelection = Path"
     },
     {
       "name": "jdkArchitecture",
@@ -116,7 +140,14 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\XamarinAndroid.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node": {
+      "target": "xamarinandroid.js",
+      "argumentFormat": ""
     }
   }
 }

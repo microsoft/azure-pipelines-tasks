@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.app": "App File",
-  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**\\*.apk` for all APK files in all subfolders.",
+  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders.",
   "loc.input.label.dsym": "dSYM File (iOS only)",
   "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "Team API Key",
