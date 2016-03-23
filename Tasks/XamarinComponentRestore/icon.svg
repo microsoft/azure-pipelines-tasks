@@ -1,12 +1,104 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="203px" height="203px" viewBox="0 0 203 203" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.2 (9961) - http://www.bohemiancoding.com/sketch -->
-    <title>xamagon</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="xamagon" sketch:type="MSArtboardGroup" fill="#3498DB">
-            <path d="M75.64462,45 C72.2146221,45.0072736 68.8570407,46.9542688 67.1303574,49.9244767 L40.2748461,96.5755051 C38.5750513,99.5536654 38.5750513,103.446335 40.2748461,106.424495 L67.1303574,153.075523 C68.8572221,156.045755 72.2146221,157.993272 75.64462,158 L129.355453,158 C132.785451,157.992726 136.142849,156.045755 137.869714,153.075523 L164.725221,106.424495 C166.425014,103.446335 166.424839,99.5536654 164.725221,96.5755051 L137.869714,49.9244767 C136.142849,46.9542688 132.785451,45.0067281 129.355453,45 L75.64462,45 L75.64462,45 Z M76.1320485,72.2914163 C76.2058317,72.2841427 76.2832193,72.2841427 76.3572323,72.2914163 L85.6215431,72.2914163 C86.0316324,72.2999021 86.4294204,72.5369 86.634211,72.8928696 L102.350001,100.898541 C102.429106,101.037006 102.480077,101.191278 102.499418,101.349625 C102.518771,101.191242 102.569693,101.036957 102.648835,100.898541 L118.327009,72.8928696 C118.538298,72.5261109 118.95472,72.2878037 119.37712,72.2914163 L128.641435,72.2914163 C129.4618,72.2986899 130.076151,73.3319643 129.69172,74.0582204 L114.351216,101.500006 L129.69172,128.904199 C130.112538,129.634626 129.48307,130.715809 128.641435,130.708584 L119.37712,130.708584 C118.947338,130.704947 118.528454,130.450153 118.327009,130.069538 L102.648835,102.063867 C102.569729,101.925402 102.518759,101.771117 102.499418,101.612783 C102.480065,101.771153 102.429142,101.925463 102.350001,102.063867 L86.634211,130.069538 C86.4387461,130.439388 86.0388414,130.691745 85.6215431,130.708584 L76.3572323,130.708584 C75.5155962,130.715857 74.8862984,129.634626 75.3071165,128.904199 L90.647616,101.500006 L75.3071165,74.0582204 C74.939386,73.3955961 75.388036,72.4328513 76.1320485,72.2914163 L76.1320485,72.2914163 Z" id="Logo" sketch:type="MSShapeGroup"></path>
-        </g>
-    </g>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   viewBox="0 0 1024 1024"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="C:\Users\Jamie\Sources\vso-agent-tasks\Tasks\XamarinTestCloud\icon.png"
+   inkscape:export-xdpi="2.8125"
+   inkscape:export-ydpi="2.8125">
+  <defs
+     id="defs4">
+    <pattern
+       y="0"
+       x="0"
+       height="6"
+       width="6"
+       patternUnits="userSpaceOnUse"
+       id="EMFhbasepattern" />
+    <pattern
+       y="0"
+       x="0"
+       height="6"
+       width="6"
+       patternUnits="userSpaceOnUse"
+       id="EMFhbasepattern-4" />
+    <pattern
+       y="0"
+       x="0"
+       height="6"
+       width="6"
+       patternUnits="userSpaceOnUse"
+       id="EMFhbasepattern-0" />
+    <pattern
+       y="0"
+       x="0"
+       height="6"
+       width="6"
+       patternUnits="userSpaceOnUse"
+       id="EMFhbasepattern-6" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="303.79693"
+     inkscape:cy="269.97925"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     units="px"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:window-width="3440"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4136"
+       spacingx="16"
+       spacingy="16"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-28.362251)">
+    <path
+       inkscape:connector-curvature="0"
+       id="path4220"
+       d="m 298.99553,92.362251 c -27.48371,0 -52.22018,16.449389 -65.96204,41.236909 L 18.654486,501.87638 c -13.7456383,24.74971 -13.7456383,54.98255 0,79.71336 L 233.03349,949.867 c 13.74564,24.7497 38.47833,38.4953 65.96204,38.4953 l 426.0089,0 c 27.4856,0 54.96743,-13.8024 68.71306,-38.4953 L 1005.3455,581.58974 c 13.7456,-24.73081 13.7456,-54.96365 0,-79.71336 L 793.71749,133.59916 C 779.97186,108.84945 752.49003,92.362251 725.00443,92.362251 l -426.0089,0 z m 5.50204,217.131919 c 0,0 0,0 0,0 l 74.20943,0 c 2.74156,0 5.50204,2.64703 8.2436,5.48313 l 123.68238,222.61505 c 0,0 2.74157,0 2.74157,2.64703 0,-2.64703 0,-2.64703 0,-2.64703 L 637.05314,314.9773 c 2.74157,-2.64703 5.50204,-5.48313 8.24361,-5.48313 l 74.20753,0 c 5.50204,0 10.98517,8.31923 8.2436,13.80236 L 606.81841,540.42845 727.74978,757.54146 c 2.74156,8.31923 -2.74157,16.44939 -8.24361,16.44939 l -74.20753,0 c -2.74157,0 -5.50204,-2.64703 -8.2436,-5.48313 L 513.37644,545.89267 c 0,0 0,-2.64702 0,-2.64702 0,0 -2.74157,2.64702 -2.74157,2.64702 L 386.95249,768.50772 c -2.74156,2.64703 -5.50203,5.48313 -8.2436,5.48313 l -74.20943,0 c -5.50203,0 -10.98516,-8.31923 -8.2436,-16.44939 L 417.18722,540.42845 296.25586,323.29653 c -2.74156,-5.48313 0,-10.96626 8.2436,-13.80236 z"
+       style="fill:#3498db;fill-opacity:1;fill-rule:evenodd;stroke:none" />
+  </g>
 </svg>
