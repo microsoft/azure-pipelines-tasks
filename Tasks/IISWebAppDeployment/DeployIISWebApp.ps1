@@ -36,7 +36,7 @@
     [string]$deployInParallel
     )
 
-Write-Verbose "Entering script DeployIISWebApp.ps1" -Verbose
+Write-Verbose "Entering script DeployIISWebApp.ps1"
 
 $hostName = [string]::Empty
 
@@ -53,39 +53,39 @@ else
     $hostName = $hostNameWithOutSNI
 }
 
-Write-Verbose "environmentName = $environmentName" -Verbose
-Write-Verbose "adminUserName = $adminUserName" -Verbose
-Write-Verbose "winrm protocol to connect to machine  = $winrmProtocol" -Verbose
-Write-Verbose "testCertificate = $testCertificate" -Verbose
-Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter" -Verbose
-Write-Verbose "webDeployPackage = $webDeployPackage" -Verbose
-Write-Verbose "webDeployParamFile = $webDeployParamFile" -Verbose
-Write-Verbose "overRideParams = $overRideParams" -Verbose
-Write-Verbose "deployInParallel = $deployInParallel" -Verbose
+Write-Verbose "environmentName = $environmentName"
+Write-Verbose "adminUserName = $adminUserName"
+Write-Verbose "winrm protocol to connect to machine  = $winrmProtocol"
+Write-Verbose "testCertificate = $testCertificate"
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod"
+Write-Verbose "machineFilter = $machineFilter"
+Write-Verbose "webDeployPackage = $webDeployPackage"
+Write-Verbose "webDeployParamFile = $webDeployParamFile"
+Write-Verbose "overRideParams = $overRideParams"
+Write-Verbose "deployInParallel = $deployInParallel"
 
-Write-Verbose "createWebsite = $createWebsite" -Verbose
-Write-Verbose "websiteName = $websiteName" -Verbose
-Write-Verbose "websitePhysicalPath = $websitePhysicalPath" -Verbose
-Write-Verbose "websitePhysicalPathAuth = $websitePhysicalPathAuth" -Verbose
-Write-Verbose "websiteAuthUserName = $websiteAuthUserName" -Verbose
-Write-Verbose "addBinding = $addBinding" -Verbose
-Write-Verbose "assignDuplicateBinding = $assignDuplicateBinding" -Verbose
-Write-Verbose "protocol = $protocol" -Verbose
-Write-Verbose "ipAddress = $ipAddress" -Verbose
-Write-Verbose "port = $port" -Verbose
-Write-Verbose "hostName = $hostName" -Verbose
-Write-Verbose "serverNameIndication = $serverNameIndication" -Verbose
+Write-Verbose "createWebsite = $createWebsite"
+Write-Verbose "websiteName = $websiteName"
+Write-Verbose "websitePhysicalPath = $websitePhysicalPath"
+Write-Verbose "websitePhysicalPathAuth = $websitePhysicalPathAuth"
+Write-Verbose "websiteAuthUserName = $websiteAuthUserName"
+Write-Verbose "addBinding = $addBinding"
+Write-Verbose "assignDuplicateBinding = $assignDuplicateBinding"
+Write-Verbose "protocol = $protocol"
+Write-Verbose "ipAddress = $ipAddress"
+Write-Verbose "port = $port"
+Write-Verbose "hostName = $hostName"
+Write-Verbose "serverNameIndication = $serverNameIndication"
 
-Write-Verbose "createAppPool = $createAppPool" -Verbose
-Write-Verbose "appPoolName = $appPoolName" -Verbose
-Write-Verbose "dotNetVersion = $dotNetVersion" -Verbose
-Write-Verbose "pipeLineMode = $pipeLineMode" -Verbose
-Write-Verbose "appPoolIdentity = $appPoolIdentity" -Verbose
-Write-Verbose "appPoolUsername = $appPoolUsername" -Verbose
+Write-Verbose "createAppPool = $createAppPool"
+Write-Verbose "appPoolName = $appPoolName"
+Write-Verbose "dotNetVersion = $dotNetVersion"
+Write-Verbose "pipeLineMode = $pipeLineMode"
+Write-Verbose "appPoolIdentity = $appPoolIdentity"
+Write-Verbose "appPoolUsername = $appPoolUsername"
 
-Write-Verbose "appCmdCommands = $appCmdCommands" -Verbose
-Write-Verbose "deployInParallel = $deployInParallel" -Verbose
+Write-Verbose "appCmdCommands = $appCmdCommands"
+Write-Verbose "deployInParallel = $deployInParallel"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -118,7 +118,7 @@ if(![string]::IsNullOrWhiteSpace($websiteName))
 {
     if([string]::IsNullOrWhiteSpace($overRideParams))
     {
-        Write-Verbose "Adding override params to ensure deployment happens on $websiteName" -Verbose
+        Write-Verbose "Adding override params to ensure deployment happens on $websiteName"
         $overRideParams = [string]::Format('name="IIS Web Application Name",value="{0}"', $websiteName)
     }
     elseif(!$overRideParams.Contains("IIS Web Application Name")) 
@@ -132,7 +132,7 @@ $overRideParams = $overRideParams.Replace('"', '`"')
 $msDeployOnTargetMachinesScript = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
 $invokeMain = "Execute-Main -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`" -WebsiteName `"$websiteName`" -WebsitePhysicalPath `"$websitePhysicalPath`" -WebsitePhysicalPathAuth `"$websitePhysicalPathAuth`" -WebsiteAuthUserName `"$websiteAuthUserName`" -WebsiteAuthUserPassword `"$websiteAuthUserPassword`" -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName `"$hostName`" -ServerNameIndication $serverNameIndication -SslCertThumbPrint `"$sslCertThumbPrint`" -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`" -CreateWebsite $createWebsite -CreateAppPool $createAppPool"
 
-Write-Verbose "Executing main funnction in MsDeployOnTargetMachines : $invokeMain" -Verbose
+Write-Verbose "Executing main funnction in MsDeployOnTargetMachines : $invokeMain"
 $msDeployOnTargetMachinesScriptBlock = [string]::Format("{0} {1} ( {2} )", $msDeployOnTargetMachinesScript,  [Environment]::NewLine,  $invokeMain)
 
 Write-Output ( Get-LocalizedString -Key "Starting deployment of IIS Web Deploy Package : {0}" -ArgumentList $webDeployPackage)
