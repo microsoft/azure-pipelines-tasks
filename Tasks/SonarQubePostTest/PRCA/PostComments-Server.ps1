@@ -190,8 +190,9 @@ function GetArtifactUri
         return $artifactUri
     }
 
-    $artifactUri = [Microsoft.VisualStudio.Services.CodeReview.WebApi.CodeReviewSdkArtifactId]::GetArtifactUri($teamProjectId, $pullRequestId)
+    $artifactUri = [Microsoft.VisualStudio.Services.CodeReview.WebApi.CodeReviewSdkArtifactId]::GetArtifactUri($teamProjectId, $codeReviewId)
     Write-Verbose "New style code review. The artifact uri is $artifactUri"
+    
     return $artifactUri
 }
 
@@ -239,9 +240,8 @@ function GetCodeFlowLatestIterationId
     Assert ($review -ne $null) "Could not retrieve the review"
     Assert (HasElements $review.Iterations) "No iterations found on the review"
     
-    # TODO: is this the best way to find the id ?
     $lastIterationId = ($review.Iterations.Id | Measure -Maximum).Maximum
-    
+
     return $lastIterationId
 }
 
@@ -254,7 +254,9 @@ function GetCodeFlowChanges
         $script:pullRequest.CodeReviewId, 
         $iterationId,
         $null, $null, $null, [System.Threading.CancellationToken]::None).Result
-        
+     
+     Write-Verbose "Change count: $($changes.Count)"
+     
      return $changes
 }
 
@@ -262,7 +264,7 @@ function GetCodeFlowChangeTrackingId
 {
     param ([Microsoft.VisualStudio.Services.CodeReview.WebApi.IterationChanges]$changes, [string]$path)
     
-    $change = $changes | Where-Object {$_.Modified.Path -eq $path}
+    $change = $changes.ChangeEntries | Where-Object {$_.Modified.Path -eq $path}
     
     Assert ($change -ne $null) "No changes found for $path"
     Assert ($change.Count -eq 1) "Expecting exactly 1 change for $path but found $($change.Count)"
