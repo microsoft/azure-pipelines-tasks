@@ -9,12 +9,12 @@
     [string]$webDeployPackage,
     [string]$webDeployParamFile,
     [string]$overRideParams,
-    [string]$createWebSite,
-    [string]$webSiteName,    
-    [string]$webSitePhysicalPath,
-    [string]$webSitePhysicalPathAuth,
-    [string]$webSiteAuthUserName,
-    [string]$webSiteAuthUserPassword,
+    [string]$createWebsite,
+    [string]$websiteName,
+    [string]$websitePhysicalPath,
+    [string]$websitePhysicalPathAuth,
+    [string]$websiteAuthUserName,
+    [string]$websiteAuthUserPassword,
     [string]$addBinding,
     [string]$assignDuplicateBinding,
     [string]$protocol,
@@ -36,7 +36,7 @@
     [string]$deployInParallel
     )
 
-Write-Verbose "Entering script DeployIISWebApp.ps1" -Verbose
+Write-Verbose "Entering script DeployIISWebApp.ps1"
 
 $hostName = [string]::Empty
 
@@ -53,39 +53,39 @@ else
     $hostName = $hostNameWithOutSNI
 }
 
-Write-Verbose "environmentName = $environmentName" -Verbose
-Write-Verbose "adminUserName = $adminUserName" -Verbose
-Write-Verbose "winrm protocol to connect to machine  = $winrmProtocol" -Verbose
-Write-Verbose "testCertificate = $testCertificate" -Verbose
-Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineFilter = $machineFilter" -Verbose
-Write-Verbose "webDeployPackage = $webDeployPackage" -Verbose
-Write-Verbose "webDeployParamFile = $webDeployParamFile" -Verbose
-Write-Verbose "overRideParams = $overRideParams" -Verbose
-Write-Verbose "deployInParallel = $deployInParallel" -Verbose
+Write-Verbose "environmentName = $environmentName"
+Write-Verbose "adminUserName = $adminUserName"
+Write-Verbose "winrm protocol to connect to machine  = $winrmProtocol"
+Write-Verbose "testCertificate = $testCertificate"
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod"
+Write-Verbose "machineFilter = $machineFilter"
+Write-Verbose "webDeployPackage = $webDeployPackage"
+Write-Verbose "webDeployParamFile = $webDeployParamFile"
+Write-Verbose "overRideParams = $overRideParams"
+Write-Verbose "deployInParallel = $deployInParallel"
 
-Write-Verbose "createWebSite = $createWebSite" -Verbose
-Write-Verbose "webSiteName = $webSiteName" -Verbose
-Write-Verbose "webSitePhysicalPath = $webSitePhysicalPath" -Verbose
-Write-Verbose "webSitePhysicalPathAuth = $webSitePhysicalPathAuth" -Verbose
-Write-Verbose "webSiteAuthUserName = $webSiteAuthUserName" -Verbose
-Write-Verbose "addBinding = $addBinding" -Verbose
-Write-Verbose "assignDuplicateBinding = $assignDuplicateBinding" -Verbose
-Write-Verbose "protocol = $protocol" -Verbose
-Write-Verbose "ipAddress = $ipAddress" -Verbose
-Write-Verbose "port = $port" -Verbose
-Write-Verbose "hostName = $hostName" -Verbose
-Write-Verbose "serverNameIndication = $serverNameIndication" -Verbose
+Write-Verbose "createWebsite = $createWebsite"
+Write-Verbose "websiteName = $websiteName"
+Write-Verbose "websitePhysicalPath = $websitePhysicalPath"
+Write-Verbose "websitePhysicalPathAuth = $websitePhysicalPathAuth"
+Write-Verbose "websiteAuthUserName = $websiteAuthUserName"
+Write-Verbose "addBinding = $addBinding"
+Write-Verbose "assignDuplicateBinding = $assignDuplicateBinding"
+Write-Verbose "protocol = $protocol"
+Write-Verbose "ipAddress = $ipAddress"
+Write-Verbose "port = $port"
+Write-Verbose "hostName = $hostName"
+Write-Verbose "serverNameIndication = $serverNameIndication"
 
-Write-Verbose "createAppPool = $createAppPool" -Verbose
-Write-Verbose "appPoolName = $appPoolName" -Verbose
-Write-Verbose "dotNetVersion = $dotNetVersion" -Verbose
-Write-Verbose "pipeLineMode = $pipeLineMode" -Verbose
-Write-Verbose "appPoolIdentity = $appPoolIdentity" -Verbose
-Write-Verbose "appPoolUsername = $appPoolUsername" -Verbose
+Write-Verbose "createAppPool = $createAppPool"
+Write-Verbose "appPoolName = $appPoolName"
+Write-Verbose "dotNetVersion = $dotNetVersion"
+Write-Verbose "pipeLineMode = $pipeLineMode"
+Write-Verbose "appPoolIdentity = $appPoolIdentity"
+Write-Verbose "appPoolUsername = $appPoolUsername"
 
-Write-Verbose "appCmdCommands = $appCmdCommands" -Verbose
-Write-Verbose "deployInParallel = $deployInParallel" -Verbose
+Write-Verbose "appCmdCommands = $appCmdCommands"
+Write-Verbose "deployInParallel = $deployInParallel"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -95,16 +95,16 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDe
 
 $webDeployPackage = $webDeployPackage.Trim('"', ' ')
 $webDeployParamFile = $webDeployParamFile.Trim('"', ' ')
-$webSiteName = $webSiteName.Trim('"', ' ')
-$webSitePhysicalPath = $webSitePhysicalPath.Trim('"', ' ')
-$webSiteAuthUserName = $webSiteAuthUserName.Trim()
+$websiteName = $websiteName.Trim('"', ' ')
+$websitePhysicalPath = $websitePhysicalPath.Trim('"', ' ')
+$websiteAuthUserName = $websiteAuthUserName.Trim()
 
 $appPoolName = $appPoolName.Trim('"', ' ')
 $appPoolUsername = $appPoolUsername.Trim()
 
 $appCmdCommands = $appCmdCommands.Replace('"', '`"')
 
-if($createWebSite -ieq "true" -and [string]::IsNullOrWhiteSpace($webSiteName))
+if($createWebsite -ieq "true" -and [string]::IsNullOrWhiteSpace($websiteName))
 { 
     throw "Website Name cannot be empty if you want to create or update the target website."
 }
@@ -114,37 +114,37 @@ if($createAppPool -ieq "true" -and [string]::IsNullOrWhiteSpace($appPoolName))
     throw "Application pool name cannot be empty if you want to create or update the target app pool."
 }
 
-
-if(![string]::IsNullOrWhiteSpace($webSiteName))
+if(![string]::IsNullOrWhiteSpace($websiteName))
 {
     if([string]::IsNullOrWhiteSpace($overRideParams))
     {
-        Write-Verbose "Adding override params to ensure deployment happens on $webSiteName" -Verbose
-        $overRideParams = [string]::Format('name="IIS Web Application Name",value="{0}"', $webSiteName)
+        Write-Verbose "Adding override params to ensure deployment happens on $websiteName"
+        $overRideParams = [string]::Format('name="IIS Web Application Name",value="{0}"', $websiteName)
     }
     elseif(!$overRideParams.Contains("IIS Web Application Name")) 
     {
-        $overRideParams = $overRideParams + [string]::Format('{0}name="IIS Web Application Name",value="{1}"',  [System.Environment]::NewLine, $webSiteName)
+        $overRideParams = $overRideParams + [string]::Format('{0}name="IIS Web Application Name",value="{1}"',  [System.Environment]::NewLine, $websiteName)
     }
 }
 
-$overRideParams = $overRideParams.Replace('"', '''')
+$overRideParams = $overRideParams.Replace('"', '`"')
 
-$msDeployOnTargetMachinesBlock = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
-$scriptArgs = " -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`" -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`" -CreateWebSite $createWebSite -CreateAppPool $createAppPool"
+$msDeployOnTargetMachinesScript = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
+$invokeMain = "Execute-Main -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`" -WebsiteName `"$websiteName`" -WebsitePhysicalPath `"$websitePhysicalPath`" -WebsitePhysicalPathAuth `"$websitePhysicalPathAuth`" -WebsiteAuthUserName `"$websiteAuthUserName`" -WebsiteAuthUserPassword `"$websiteAuthUserPassword`" -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName `"$hostName`" -ServerNameIndication $serverNameIndication -SslCertThumbPrint `"$sslCertThumbPrint`" -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`" -CreateWebsite $createWebsite -CreateAppPool $createAppPool"
 
-Write-Verbose "MsDeployOnTargetMachines Script Arguments : $scriptArgs" -Verbose
+Write-Verbose "Executing main funnction in MsDeployOnTargetMachines : $invokeMain"
+$msDeployOnTargetMachinesScriptBlock = [string]::Format("{0} {1} ( {2} )", $msDeployOnTargetMachinesScript,  [Environment]::NewLine,  $invokeMain)
+
 Write-Output ( Get-LocalizedString -Key "Starting deployment of IIS Web Deploy Package : {0}" -ArgumentList $webDeployPackage)
-
 $errorMessage = [string]::Empty
 
 if($resourceFilteringMethod -eq "tags")
 {
-    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlockContent $msDeployOnTargetMachinesBlock -scriptArguments $scriptArgs -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlockContent $msDeployOnTargetMachinesScriptBlock -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
 }
 else
 {
-    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlockContent $msDeployOnTargetMachinesBlock -scriptArguments $scriptArgs -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlockContent $msDeployOnTargetMachinesScriptBlock -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
 }
 
 if(-not [string]::IsNullOrEmpty($errorMessage))
