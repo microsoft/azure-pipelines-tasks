@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   viewBox="0 0 1024 1024"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="C:\Users\Jamie\Sources\vso-agent-tasks\Tasks\XamarinTestCloud\icon.png"
+   inkscape:export-xdpi="2.8125"
+   inkscape:export-ydpi="2.8125">
+  <defs
+     id="defs4">
+    <pattern
+       y="0"
+       x="0"
+       height="6"
+       width="6"
+       patternUnits="userSpaceOnUse"
+       id="EMFhbasepattern" />
+    <pattern
+       y="0"
+       x="0"
+       height="6"
+       width="6"
+       patternUnits="userSpaceOnUse"
+       id="EMFhbasepattern-4" />
+    <pattern
+       y="0"
+       x="0"
+       height="6"
+       width="6"
+       patternUnits="userSpaceOnUse"
+       id="EMFhbasepattern-0" />
+    <pattern
+       y="0"
+       x="0"
+       height="6"
+       width="6"
+       patternUnits="userSpaceOnUse"
+       id="EMFhbasepattern-6" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="303.79693"
+     inkscape:cy="269.97925"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     units="px"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:window-width="3440"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4136"
+       spacingx="16"
+       spacingy="16"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-28.362251)">
+    <path
+       inkscape:connector-curvature="0"
+       id="path4220"
+       d="m 298.99553,92.362251 c -27.48371,0 -52.22018,16.449389 -65.96204,41.236909 L 18.654486,501.87638 c -13.7456383,24.74971 -13.7456383,54.98255 0,79.71336 L 233.03349,949.867 c 13.74564,24.7497 38.47833,38.4953 65.96204,38.4953 l 426.0089,0 c 27.4856,0 54.96743,-13.8024 68.71306,-38.4953 L 1005.3455,581.58974 c 13.7456,-24.73081 13.7456,-54.96365 0,-79.71336 L 793.71749,133.59916 C 779.97186,108.84945 752.49003,92.362251 725.00443,92.362251 l -426.0089,0 z m 5.50204,217.131919 c 0,0 0,0 0,0 l 74.20943,0 c 2.74156,0 5.50204,2.64703 8.2436,5.48313 l 123.68238,222.61505 c 0,0 2.74157,0 2.74157,2.64703 0,-2.64703 0,-2.64703 0,-2.64703 L 637.05314,314.9773 c 2.74157,-2.64703 5.50204,-5.48313 8.24361,-5.48313 l 74.20753,0 c 5.50204,0 10.98517,8.31923 8.2436,13.80236 L 606.81841,540.42845 727.74978,757.54146 c 2.74156,8.31923 -2.74157,16.44939 -8.24361,16.44939 l -74.20753,0 c -2.74157,0 -5.50204,-2.64703 -8.2436,-5.48313 L 513.37644,545.89267 c 0,0 0,-2.64702 0,-2.64702 0,0 -2.74157,2.64702 -2.74157,2.64702 L 386.95249,768.50772 c -2.74156,2.64703 -5.50203,5.48313 -8.2436,5.48313 l -74.20943,0 c -5.50203,0 -10.98516,-8.31923 -8.2436,-16.44939 L 417.18722,540.42845 296.25586,323.29653 c -2.74156,-5.48313 0,-10.96626 8.2436,-13.80236 z"
+       style="fill:#3498db;fill-opacity:1;fill-rule:evenodd;stroke:none" />
+  </g>
+</svg>

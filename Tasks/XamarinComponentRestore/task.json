@@ -1,0 +1,53 @@
+{
+    "id": "ff50fc97-da8c-4683-b014-34c15315ee5f",
+    "name": "XamarinComponentRestore",
+    "friendlyName": "Xamarin Component Restore",
+    "description": "Restores Xamarin components for the specified solution",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "minimumAgentVersion": "1.96.0",
+    "instanceNameFormat": "Xamarin component restore $(solution)",
+    "inputs": [
+        {
+            "name": "solution",
+            "type": "filePath",
+            "label": "Path to Solution",
+            "defaultValue":"**/*.sln",
+            "helpMarkDown": "The path to the Visual Studio Solution file",
+            "required":"true"
+        },
+        {
+            "name": "email",
+            "type": "string",
+            "label": "Email",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Xamarin account email address."
+        },
+        {
+            "name": "password",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value."
+        }
+
+    ],
+    "execution": {
+       "Node": {
+            "target": "xamarincomponent.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "XamarinComponentRestoreReturnCode": "xamarin-component.exe exited with return code: %d",
+        "XamarinComponentRestoreFailed": "xamarin-component.exe failed with error: %s"
+    }
+}
