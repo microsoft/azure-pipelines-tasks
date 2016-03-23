@@ -8,7 +8,7 @@
   "loc.input.label.email": "Email",
   "loc.input.help.email": "Xamarin account email address.",
   "loc.input.label.password": "Password",
-  "loc.input.help.password": "Xamarin account password.",
+  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
   "loc.input.label.product": "Xamarin Product",
   "loc.input.help.product": "Xamarin product name.",
   "loc.input.label.timeout": "Timeout in Seconds"

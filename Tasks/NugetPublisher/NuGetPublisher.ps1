@@ -203,7 +203,7 @@ try
         }
         elseif(-not $useExternalFeed)
         {
-            $argsUpload = $argsUpload + "  -ConfigFile `"$tempNuGetConfigPath`" -ApiKey VssSessionKey"
+            $argsUpload = $argsUpload + "  -ConfigFile `"$tempNuGetConfigPath`" -ApiKey VssSessionKey -NonInteractive"
         }
 
         if($nuGetAdditionalArgs)
@@ -236,7 +236,11 @@ try
                     [uri]$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI,
                     $cred)
 
-                $connectionData = $locationClient.GetConnectionDataAsync("None", -1).Result
+                $connectionData = $locationClient.GetConnectionDataAsync(
+                    [Microsoft.VisualStudio.Services.WebApi.ConnectOptions]::None,
+                    -1,
+                    [System.Threading.CancellationToken]::None,
+                    $null).Result
 
                 $builderDisplayName = $connectionData.AuthorizedUser.DisplayName
                 $builderAccountName = $connectionData.AuthorizedUser.Properties["Account"]

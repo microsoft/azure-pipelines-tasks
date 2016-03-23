@@ -1,152 +1,154 @@
 {
-    "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
-    "name": "MSBuild",
-    "friendlyName": "MSBuild",
-    "description": "Build with MSBuild",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
-    "category": "Build",
-    "visibility": [
-                "Build"
-                  ],    
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 25
-    },
-    "demands" : [
-        "msbuild"
-    ],
-    "minimumAgentVersion": "1.83.0",
-    "groups": [
-        {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
-        }
-    ],
-    "inputs": [
-        { 
-            "name": "solution", 
-            "type": "filePath", 
-            "label": "Project", 
-            "defaultValue":"**\\*.sln", 
-            "required":true,
-            "helpMarkDown": "Relative path from repo root of the project(s) or solution(s) to run.  Wildcards can be used.  For example, `**\\*.csproj` for all csproj files in all sub folders."  
-        },
-        { 
-            "name": "platform", 
-            "type": "string", 
-            "label": "Platform", 
-            "defaultValue":"", 
-            "required":false
-        },
-        { 
-            "name": "configuration", 
-            "type": "string", 
-            "label": "Configuration", 
-            "defaultValue":"", 
-            "required":false 
-        },
-        { 
-            "name": "msbuildArguments", 
-            "type": "string", 
-            "label": "MSBuild Arguments", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Additional arguments passed to MSBuild."
-        },
-        {
-            "name": "clean", 
-            "type": "boolean", 
-            "label": "Clean", 
-            "defaultValue": "false", 
-            "required": false,
-            "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
-        },
-        { 
-            "name": "restoreNugetPackages", 
-            "type": "boolean", 
-            "label": "Restore NuGet Packages", 
-            "defaultValue": "false", 
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build."
-        },
-        { 
-            "name": "logProjectEvents", 
-            "type": "boolean", 
-            "label": "Record Project Details", 
-            "defaultValue": "false", 
-            "required": false,
-            "groupName":"advanced" 
-        },
-        {
-            "name":"msbuildLocationMethod",
-            "type":"radio",
-            "label":"MSBuild",
-            "required":false,
-            "groupName":"advanced",
-            "defaultValue":"version",
-            "options": {
-                "version":"Version",
-                "location":"Specify Location"
-            }   
-        },
-        {
-            "name":"msbuildVersion",
-            "type":"pickList",
-            "label":"MSBuild Version",
-            "required":false,
-            "groupName":"advanced",
-            "defaultValue":"14.0",
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
-            "visibleRule": "msbuildLocationMethod = version",
-            "options": {
-                "latest":"Latest",
-                "14.0":"MSBuild 14.0",
-                "12.0":"MSBuild 12.0",
-                "4.0":"MSBuild 4.0"
-            }
-        },
-        { 
-            "name": "msbuildArchitecture", 
-            "type": "pickList", 
-            "label": "MSBuild Architecture", 
-            "defaultValue":"x86", 
-            "required":false,
-            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
-            "groupName":"advanced",
-            "visibleRule": "msbuildLocationMethod = version",
-            "options":{
-                "x86":"MSBuild x86",
-                "x64":"MSBuild x64"
-            }
-        },
-        { 
-            "name": "msbuildLocation", 
-            "type": "string", 
-            "label": "Path to MSBuild", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Optionally supply the path to MSBuild.",  
-            "visibleRule": "msbuildLocationMethod = location",
-            "groupName":"advanced"
-        }
-    ],
-    "instanceNameFormat": "Build solution $(solution)",
-    "execution": {
-        "PowerShell3": {
-            "target": "MSBuild.ps1"
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\LegacyMSBuild.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
-        }
-    },
-    "messages": {
-        "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
-        "MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
+  "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
+  "name": "MSBuild",
+  "friendlyName": "MSBuild",
+  "description": "Build with MSBuild",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 27
+  },
+  "demands": [
+    "msbuild"
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "solution",
+      "type": "filePath",
+      "label": "Project",
+      "defaultValue": "**/*.sln",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of the project(s) or solution(s) to run.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all sub folders."
+    },
+    {
+      "name": "platform",
+      "type": "string",
+      "label": "Platform",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "Configuration",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "msbuildArguments",
+      "type": "string",
+      "label": "MSBuild Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) and xbuild (on Mac)."
+    },
+    {
+      "name": "clean",
+      "type": "boolean",
+      "label": "Clean",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
+    },
+    {
+      "name": "restoreNugetPackages",
+      "type": "boolean",
+      "label": "Restore NuGet Packages",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build."
+    },
+    {
+      "name": "logProjectEvents",
+      "type": "boolean",
+      "label": "Record Project Details",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced"
+    },
+    {
+      "name": "msbuildLocationMethod",
+      "type": "radio",
+      "label": "MSBuild",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "version",
+      "options": {
+        "version": "Version",
+        "location": "Specify Location"
+      }
+    },
+    {
+      "name": "msbuildVersion",
+      "type": "pickList",
+      "label": "MSBuild Version",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "14.0",
+      "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild(Mono) will be used.",
+      "visibleRule": "msbuildLocationMethod = version",
+      "options": {
+        "latest": "Latest",
+        "14.0": "MSBuild 14.0",
+        "12.0": "MSBuild 12.0",
+        "4.0": "MSBuild 4.0"
+      }
+    },
+    {
+      "name": "msbuildArchitecture",
+      "type": "pickList",
+      "label": "MSBuild Architecture",
+      "defaultValue": "x86",
+      "required": false,
+      "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+      "groupName": "advanced",
+      "visibleRule": "msbuildLocationMethod = version",
+      "options": {
+        "x86": "MSBuild x86",
+        "x64": "MSBuild x64"
+      }
+    },
+    {
+      "name": "msbuildLocation",
+      "type": "string",
+      "label": "Path to MSBuild",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optionally supply the path to MSBuild.",
+      "visibleRule": "msbuildLocationMethod = location",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "Build solution $(solution)",
+  "execution": {
+    "PowerShell3": {
+      "target": "MSBuild.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node": {
+      "target": "msbuild.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+    "MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
+  }
 }

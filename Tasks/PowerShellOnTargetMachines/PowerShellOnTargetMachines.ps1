@@ -116,15 +116,6 @@ function Write-TaskSpecificTelemetry
     Write-Telemetry "$codeKey" "3B5693D4-5777-4FEE-862A-BD2B7A374C68"
 }
 
-function ThrowError
-{
-    param([string]$errorMessage)
-    
-        $readmelink = "http://aka.ms/powershellontargetmachinesreadme"
-        $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
-        throw "$errorMessage $helpMessage"
-}
-
 function Get-ResourceWinRmConfig
 {
     param
@@ -360,7 +351,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
             Write-TaskSpecificTelemetry "DEPLOYMENT_Failed"
             Write-Verbose $deploymentResponse.Error.ToString() -Verbose
             $errorMessage =  $deploymentResponse.Error.Message
-            ThrowError -errorMessage $errorMessage
+            throw $errorMessage
         }
     }
 }
@@ -412,7 +403,7 @@ if($envOperationStatus -ne "Passed")
 {
     Write-TaskSpecificTelemetry "DEPLOYMENT_Failed"
     $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
-    ThrowError -errorMessage $errorMessage
+    throw $errorMessage
 }
 
 Write-Verbose "Leaving script PowerShellOnTargetMachines.ps1" -Verbose

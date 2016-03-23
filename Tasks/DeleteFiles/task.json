@@ -43,6 +43,7 @@
     },
     "messages": {
         "CantDeleteFiles": "Couldn't delete one or more files",
-        "SkippingSymbolStore": "Skipping delete for symbol store file share: %s"
+        "SkippingSymbolStore": "Skipping delete for symbol store file share: %s",
+        "NoFiles": "No files to delete."
     }
 }

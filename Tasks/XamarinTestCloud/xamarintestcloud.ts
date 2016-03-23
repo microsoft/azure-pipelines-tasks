@@ -110,11 +110,14 @@ if (!monoPath) {
 var buildId = tl.getVariable('build.buildId');
 var appFileIndex = 0;
 var runFailures;
+var testCloudResults:string[] = [];
+
 var onRunComplete = function () {
     appFileIndex++;
 
     if (appFileIndex >= appFiles.length) {
         publishTestResults();
+        uploadTestSummary();
 
         if (runFailures == 'true') {
             // Error executing
@@ -133,6 +136,33 @@ var onFailedExecution = function (err) {
     tl.debug('Error executing test run: ' + err);
     onRunComplete();
 }
+
+function uploadTestSummary() {
+    tl.debug('Upload test cloud run results summary. testCloudResults = ' + testCloudResults);
+
+    //create a .md file
+    var mdReportFile = path.join(testDir, '/xamarintestcloud_' + buildId + '.md');
+    var reportData = '';
+    if (testCloudResults != null && testCloudResults.length > 0) {
+        for (var i = 0; i < testCloudResults.length; i++) {
+            reportData = reportData.concat(testCloudResults[i] + '<br>');
+        }
+    }
+
+    tl.debug('reportdata = ' + reportData);
+    fs.writeFile(mdReportFile, reportData, function (err) {
+        if (err) {
+            tl.warning('Failed to create Xamarin Test Cloud run summary report. ' + err);
+        } else {
+            tl.command('task.addattachment', {
+                name: "Xamarin Test Cloud Results",
+                type: "Distributedtask.Core.Summary"
+            }, mdReportFile);
+        }
+    })
+
+}
+
 function publishTestResults() {
     if (publishNUnitResults == 'true') {
 
@@ -143,6 +173,7 @@ function publishTestResults() {
         tp.publish(matchingTestResultsFiles, false, "", "", "", "");
     }
 }
+
 var submitToTestCloud = function (index) {
     // Form basic arguments
     var monoToolRunner = tl.createToolRunner(monoPath);
@@ -196,10 +227,22 @@ var submitToTestCloud = function (index) {
         }
     }
 
+    //read stdout
+    monoToolRunner.on('stdout', function (data) {
+        if (data) {
+            var matches = data.toString().toLowerCase().match(/https:\/\/testcloud.xamarin.com\/test\/.+\//g);
+            if (matches != null) {
+                testCloudResults = testCloudResults.concat(matches);
+            }
+        }
+    });
+
+
     // Submit to Test Cloud
     tl.debug('Submitting to Xamarin Test Cloud: ' + appFiles[index]);
     monoToolRunner.exec()
         .then(onRunComplete)
         .fail(onFailedExecution)
 }
+
 submitToTestCloud(appFileIndex);

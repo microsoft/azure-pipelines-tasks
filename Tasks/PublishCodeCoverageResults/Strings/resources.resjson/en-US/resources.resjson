@@ -6,9 +6,9 @@
   "loc.input.label.codeCoverageTool": "Code Coverage Tool",
   "loc.input.help.codeCoverageTool": "Select the tool with which code coverage summary files have been generated",
   "loc.input.label.summaryFileLocation": "Summary File",
-  "loc.input.help.summaryFileLocation": "Path of code coverage summary file, which has code coverage statistics like line, method, class coverage. For example, $(Build.Repository.LocalPath)\\CodeCoverage\\Summary.xml",
+  "loc.input.help.summaryFileLocation": "Path of code coverage summary file, which has code coverage statistics like line, method, class coverage. For example, $(Build.SourcesDirectory)/CodeCoverage/Summary.xml",
   "loc.input.label.reportDirectory": "Report Directory",
-  "loc.input.help.reportDirectory": "Path of code coverage report directory. The report directory is published as an artifact against the build. For example, $(Build.Repository.LocalPath)\\CodeCoverageReport",
+  "loc.input.help.reportDirectory": "Path of code coverage report directory. The report directory is published as an artifact against the build. For example, $(Build.SourcesDirectory)/CodeCoverageReport",
   "loc.input.label.additionalCodeCoverageFiles": "Additional Files",
-  "loc.input.help.additionalCodeCoverageFiles": "Regular expression specifying the additional code coverage files to be published as an artifact against the build. For example, `$(Build.Repository.LocalPath)\\**\\*.exec`"
+  "loc.input.help.additionalCodeCoverageFiles": "Regular expression specifying the additional code coverage files to be published as an artifact against the build. For example, `$(Build.SourcesDirectory)/**/*.exec`"
 }

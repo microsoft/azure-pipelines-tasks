@@ -53,11 +53,11 @@ var timeoutInSecs = Number(timeout);
 var getLicenseLocation = function (product) {
     var licenseLocation;
     if (product == 'MA' && os.platform() == 'darwin') {
-        licenseLocation = process.env.HOME + '/Library/MonoAndroid/License.v2';
+        licenseLocation = process.env.HOME + '/Library/MonoAndroid/License';
     } else if (product == 'MT' && os.platform() == 'darwin') {
         licenseLocation = process.env.HOME + '/Library/MonoTouch/License.v2';
     } else if (product == 'MM' && os.platform() == 'darwin') {
-        licenseLocation = process.env.HOME + '/Library/Xamarin.Mac/License.v2'
+        licenseLocation = process.env.HOME + '/Library/Xamarin.Mac/License'
     } else if (product == 'MA' && os.platform() == 'win32') {
         licenseLocation = process.env.PROGRAMDATA + '\\Mono For Android\\License\\monoandroid.licx';
     } else if (product == 'MT' && os.platform() == 'win32') {
@@ -240,8 +240,7 @@ var activateLicense = function (email, password, product, callback) {
 
                 doHttpRequest(options, data, timeoutInSecs, function (err, res, output) {
                     if (err) {
-                        tl.debug('License activation failed: ' + err);
-                        callback('Failed to activate Xamarin license.');
+                       callback('Failed to activate Xamarin license. ' + err);
                     }
                     if (!output) {
                         tl.debug('License activation failed. Response code = ' + res.ResponseCode);
@@ -250,8 +249,7 @@ var activateLicense = function (email, password, product, callback) {
 
                     var jsonResponse = JSON.parse(output);
                     if (!jsonResponse || !jsonResponse.license) {
-                        tl.debug('License activation failed. Response not as expected: ' + output);
-                        callback('Failed to activate Xamarin license.');
+                        callback('Failed to activate Xamarin license. ' + output);
                     }
 
                     //Activation succeeded
@@ -262,8 +260,7 @@ var activateLicense = function (email, password, product, callback) {
                     tl.mkdirP(path.dirname(licenseLocation));
                     fs.writeFile(licenseLocation, licenseDecoded, function (err) {
                         if (err) {
-                            tl.debug('Failed to save license file: ' + err);
-                            callback('Failed to save Xamarin license.');
+                            callback('Failed to save Xamarin license. ' + err);
                         }
                         callback(null);
                     }); //writeFile
@@ -307,28 +304,30 @@ var deactivateLicense = function (email, password, product, callback) {
 
             doHttpRequest(options, data, timeoutInSecs, function (err, res, output) {
                 if (err) {
-                    tl.debug('License deactivation failed: ' + err);
-                    callback("Failed to deactivate Xamarin license.");
+                    callback('Failed to deactivate Xamarin license. ' + err);
                 }
                 if (!output) {
                     tl.debug('License deactivation failed. Response code = ' + res.ResponseCode);
-                    callback("Failed to deactivate Xamarin license.");
+                    callback('Failed to deactivate Xamarin license.');
                 }
 
                 var jsonResponse = JSON.parse(output);
                 if (!jsonResponse || !jsonResponse.success) {
-                    tl.debug('License deactivation failed. Response not as expected: ' + output);
-                    callback("Failed to deactivate Xamarin license.");
+                    callback('Failed to deactivate Xamarin license. ' + output);
                 }
 
                 //Deactivation succeeded
 
                 //delete license file
                 var licenseLocation = getLicenseLocation(product);
-                fs.unlink(licenseLocation, function (err) {
-                    if (err) {
-                        tl.debug('Failed to delete license file on disk: ' + err);
-                        tl.warning('Failed to delete license file on disk: ' + licenseLocation);
+                fs.exists(licenseLocation, function (exists) {
+                    if (exists) {
+                        fs.unlink(licenseLocation, function (err) {
+                            if (err) {
+                                tl.debug('Failed to delete license file on disk: ' + err);
+                                tl.warning('Failed to delete license file on disk: ' + licenseLocation);
+                            }
+                        });
                     }
                 });
             });

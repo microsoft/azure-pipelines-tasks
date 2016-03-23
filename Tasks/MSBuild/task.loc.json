@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 27
   },
   "demands": [
     "msbuild"
@@ -30,7 +30,7 @@
       "name": "solution",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
-      "defaultValue": "**\\*.sln",
+      "defaultValue": "**/*.sln",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.solution"
     },
@@ -137,12 +137,14 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell3": {
-      "target": "MSBuild.ps1"
+      "target": "MSBuild.ps1",
+      "platforms": [
+        "windows"
+      ]
     },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\LegacyMSBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "Node": {
+      "target": "msbuild.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

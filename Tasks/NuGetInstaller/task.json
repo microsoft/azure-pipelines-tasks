@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 20
+        "Patch": 21
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -25,7 +25,7 @@
             "name": "solution",
             "type": "filePath",
             "label": "Path to Solution",
-            "defaultValue":"**\\*.sln",
+            "defaultValue":"**/*.sln",
             "helpMarkDown": "The path to the Visual Studio Solution file",
             "required":"true"
         },
@@ -68,7 +68,14 @@
         "PowerShell": {
             "target": "$(currentDirectory)\\NuGetInstaller.ps1",
             "argumentFormat": "",
-            "workingDirectory": ""
+            "workingDirectory": "",
+            "platforms": [
+                "windows"
+            ]
+        },
+        "Node": {
+            "target": "nugetinstaller.js",
+            "argumentFormat": ""
         }
     }
 }
