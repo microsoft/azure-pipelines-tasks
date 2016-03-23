@@ -12,12 +12,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 38
+    "Patch": 39
   },
+  "minimumAgentVersion": "1.95.0",
   "demands": [
     "msbuild",
     "java"
-  ], 
+  ],
   "instanceNameFormat": "Finish the analysis and upload the results to SonarQube",
   "execution": {
     "PowerShell": {
@@ -26,5 +27,4 @@
       "workingDirectory": "$(currentDirectory)"
     }
   }
-
 }
