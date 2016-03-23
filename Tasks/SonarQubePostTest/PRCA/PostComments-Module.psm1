@@ -65,7 +65,7 @@ $script:messageToCommentListMap = $null
 # Comment source is used to decorate comments created by this logic. Only comments with the same source will be resolved.
 function PostAndResolveComments
 {
-    param ([Array][ValidateNotNull()]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
+    param ([Array]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
     $script:messageSource = $messageSource
     
@@ -80,7 +80,7 @@ function PostAndResolveComments
 
 function ValidateMessages
 {
-    param ([ValidateNotNull()][Array]$messages)
+    param ([Array]$messages)
     
     foreach ($message in $messages)
     {
@@ -92,7 +92,7 @@ function ValidateMessages
 
 function InternalPostAndResolveComments
 {
-    param ([ValidateNotNull()][Array]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
+    param ([Array]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
     Write-Verbose "Fetching existing threads and comments..."
     
@@ -312,7 +312,7 @@ function MessageHasMatchingComments
 
 function BuildMessageToCommentDictonary
 {
-    param ([ValidateNotNull()][Array]$messages,      
+    param ([Array]$messages,      
      [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThread]]$existingThreads,
      [System.Collections.Generic.List[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionComment]]$existingComments)
      
@@ -398,19 +398,19 @@ function CreateDiscussionThreads
     
     foreach ($message in $messages)
     {
-        Write-Host "Creating a discussion comment for the comment at line $($message.Line) from $($message.RelativePath)"
+        Write-Host "Creating a discussion comment for the message at line $($message.Line) from $($message.RelativePath)"
         
         $newThread = New-Object "$script:discussionWebApiNS.ArtifactDiscussionThread"
         $newThread.DiscussionId = $discussionId
         $newThread.ArtifactUri = $script:artifactUri        
         $newThread.Status = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus]::Active;
-        
+
         $discussionComment = New-Object "$script:discussionWebApiNS.DiscussionComment"
         $discussionComment.CommentId = $newThread.DiscussionId
         $discussionComment.CommentType = [Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.CommentType]::System
         $discussionComment.IsDeleted = $false;
         $discussionComment.Content = $message.Content
-     
+
         $properties = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.PropertiesCollection"
         
         if ($script:pullRequest.CodeReviewId -gt 0)
@@ -425,6 +425,9 @@ function CreateDiscussionThreads
         
         # add a custom property to be able to distinguish all comments created this way        
         $properties.Add($PostCommentsModule_CommentSourcePropertyName, $script:messageSource)
+        
+        # A VSTS UI extension will recognize this and format the comments differently
+        $properties.Add("CodeAnalysisThreadType", "CodeAnalysisIssue");
         
         $newThread.Properties = $properties
         
