@@ -158,7 +158,14 @@ foreach ($ap in $appFiles)
         $argument = "$argument --nunit-xml ""$nunitFileCurrent"""
     }
     Write-Host "Submit $ap to Xamarin Test Cloud."
-    Invoke-Tool -Path $testCloud -Arguments $argument 
+    Invoke-Tool -Path $testCloud -Arguments $argument -OutVariable toolOutput
+    foreach($line in $toolOutput)
+    {
+        if($line -imatch "https://testcloud.xamarin.com/test/(.+)/")
+        {
+            $testCloudResults = ,$matches[0]
+        }
+    }
 }
 
 # Publish nunit test results to VSO
@@ -170,6 +177,19 @@ if($publishResults)
     {
         Publish-TestResults -TestRunner "NUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
     }
+}
+
+# Upload test summary section
+if($testCloudResults)
+{
+    Write-Verbose "Upload Test Cloud run results summary. testCloudResults = $testCloudResults"
+    $mdReportFile = Join-Path $testDir "xamarintestcloud_$buildId.md"
+    foreach($result in $testCloudResults)
+    {
+       Write-Output $result | Out-File $mdReportFile -Append
+       Write-Output [Environment]::NewLine | Out-File $mdReportFile -Append
+    }
+    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Xamarin Test Cloud Results;]$mdReportFile"
 }
 
 Write-Verbose "Leaving script XamarinTestCloud.ps1"
