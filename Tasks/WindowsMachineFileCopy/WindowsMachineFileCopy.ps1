@@ -38,6 +38,8 @@ $resourceFQDNKeyName = Get-ResourceFQDNTagKey
 
 $envOperationStatus = 'Passed'
 
+$isAgentVersion97 = ((gcm Register-Environment).Parameters.ContainsKey("Persist"));
+
 function ThrowError
 {
     param([string]$errorMessage)
@@ -60,7 +62,14 @@ function Get-ResourceConnectionDetails
     $resourceId = $resource.Id
 
     Write-Verbose "`t`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
-    $fqdn = Get-EnvironmentProperty -Environment $environment -Key $resourceFQDNKeyName -ResourceId $resourceId -ErrorAction Stop
+    if($isAgentVersion97)
+    {
+        $fqdn = Get-EnvironmentProperty -Environment $environment -Key $resourceFQDNKeyName -ResourceId $resourceId -ErrorAction Stop
+    }
+    else
+    {
+        $fqdn = Get-EnvironmentProperty -EnvironmentName $envName -Key $resourceFQDNKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId -ErrorAction Stop 
+    }
     Write-Verbose "`t`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
 
     Write-Verbose "`t`t Resource fqdn - $fqdn" -Verbose	
@@ -156,7 +165,14 @@ else
     $fetchedEnvironmentName = $environment.Name
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName" -Verbose
-    $resources = Get-EnvironmentResources -Environment $environment
+    if($isAgentVersion97)
+    {
+        $resources = Get-EnvironmentResources -Environment $environment
+    }
+    else
+    {
+        $resources = Get-EnvironmentResources -EnvironmentName $fetchedEnvironmentName -TaskContext $distributedTaskContext
+    }
     Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName" -Verbose
 
     if ($resources.Count -eq 0)
