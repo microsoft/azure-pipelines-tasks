@@ -8,7 +8,7 @@ Register-Mock Get-VssConnection { $connection } -TaskContext $distributedTaskCon
 Register-Mock Get-ServiceEndPoint { $vssEndPoint } -Context $distributedTaskContext -Name "SystemVssConnection"
 Register-Mock Get-PersonalAccessToken { 'Some token' }
 Register-Mock CmdletHasMember { $true }
-Register-Mock RegisterEnvCmdletHasMember { $true }
+Register-Mock RegisterEnvCmdletHasMember { $false }
 Register-Mock Invoke-DeployTestAgent
 Register-Mock Register-Environment { $true } -EnvironmentName 'testMachineGroup' -EnvironmentSpecification 'testMachineGroup' -UserName 'adminUserName' -Password 'adminPassword' -TestCertificate 'testCertificate' -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol 'winRmProtocol' -ResourceFilter 'resourceFileteringMethod'
 
