@@ -23,6 +23,11 @@ Function CmdletHasMember($memberName) {
     return $cmdletParameter
 }
 
+Function RegisterEnvCmdletHasMember($memberName){
+    $cmdletParameter = (gcm Register-Environment).Parameters.Keys.Contains($memberName)
+    return $cmdletParameter
+}
+
 Function Get-PersonalAccessToken($vssEndPoint) {
     return $vssEndpoint.Authorization.Parameters.AccessToken
 }
@@ -84,11 +89,20 @@ if (!$personalAccessToken)
 }
 
 $taskContextMemberExists  = CmdletHasMember "TaskContext"
+$persistFlagExists = RegisterEnvCmdletHasMember "Persist"
 
 if($taskContextMemberExists){
-    Write-Verbose "Calling Register Environment cmdlet"
-    $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines -Persist
-    Write-Verbose "Environment details $environment"
+    if($persistFlagExists){
+	Write-Verbose "Calling Register Environment cmdlet with persist"
+    	$environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines -Persist
+    	Write-Verbose "Environment details $environment"
+    }
+    else
+    {
+	Write-Verbose "Calling Register Environment cmdlet"
+	$environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines
+        Write-Verbose "Environment details $environment"
+    }
 
     Write-Verbose "Calling Deploy test agent cmdlet"
     Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly -VerifyTestMachinesAreInUseScriptLocation $verifyTestMachinesAreInUse
