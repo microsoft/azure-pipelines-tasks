@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 33
+    "Patch": 34
   },
   "demands": [
     "ant"
@@ -100,8 +100,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
         "None": "None",
-        "JaCoCo": "JaCoCo",
-        "Cobertura": "Cobertura"
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
       }
     },
     {
