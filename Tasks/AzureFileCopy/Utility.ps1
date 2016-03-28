@@ -74,7 +74,7 @@ function Write-TaskSpecificTelemetry
 function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose -Verbose "Installed Azure PowerShell version: $currentVersion"
+    Write-Verbose "Installed Azure PowerShell version: $currentVersion"
 
     $AzureVersion099 = New-Object System.Version(0, 9, 9)
     $AzureVersion103 = New-Object System.Version(1, 0, 3)
@@ -96,7 +96,7 @@ function Get-AzureUtility
         $azureUtilityRequiredVersion = $azureUtilityVersion110
     }
 
-    Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
+    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
     return $azureUtilityRequiredVersion
 }
 
@@ -108,16 +108,16 @@ function Get-ConnectionType
     $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
     $connectionType = $serviceEndpoint.Authorization.Scheme
 
-    Write-Verbose -Verbose "Connection type used is $connectionType"
+    Write-Verbose "Connection type used is $connectionType"
     return $connectionType
 }
 
 function Validate-AzurePowershellVersion
 {
-    Write-Verbose "Validating minimum required azure powershell version is greater than or equal to 0.9.0" -Verbose
+    Write-Verbose "Validating minimum required azure powershell version is greater than or equal to 0.9.0"
 
     $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose -Verbose "Installed Azure PowerShell version: $currentVersion"
+    Write-Verbose "Installed Azure PowerShell version: $currentVersion"
 
     $minimumAzureVersion = New-Object System.Version(0, 9, 0)
     $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
@@ -128,7 +128,7 @@ function Validate-AzurePowershellVersion
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
     }
 
-    Write-Verbose -Verbose "Validated the required azure powershell version is greater than or equal to 0.9.0"
+    Write-Verbose "Validated the required azure powershell version is greater than or equal to 0.9.0"
 }
 
 function Get-StorageKey
@@ -147,7 +147,7 @@ function Get-StorageKey
         catch [Hyak.Common.CloudException]
         {
             $exceptionMessage = $_.Exception.Message.ToString()
-            Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage" -Verbose
+            Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage"
 
             if($connectionType -eq 'Certificate')
             {
@@ -231,7 +231,7 @@ function Upload-FilesToAzureContainer
         }
 
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
+        Write-Verbose "ExceptionMessage: $exceptionMessage"
 
         $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $exceptionMessage)
         Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
@@ -248,10 +248,10 @@ function Upload-FilesToAzureContainer
             }
 
             $uploadErrorMessage = $uploadResponse.Error
-            Write-Verbose "UploadErrorMessage: $uploadErrorMessage" -Verbose
+            Write-Verbose "UploadErrorMessage: $uploadErrorMessage"
 
             $uploadResponseLog = $uploadResponse.Log
-            Write-Verbose "UploadResponseLog: $uploadResponseLog" -Verbose
+            Write-Verbose "UploadResponseLog: $uploadResponseLog"
 
             $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $uploadErrorMessage)
             Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
@@ -399,7 +399,7 @@ function Get-FilteredAzureClassicVMsInResourceGroup
 
     if($azureClassicVMResources -and -not [string]::IsNullOrEmpty($resourceFilteringMethod))
     {
-        Write-Verbose -Verbose "Filtering azureClassicVM resources with filtering option:'$resourceFilteringMethod' and filters:'$filter'"
+        Write-Verbose "Filtering azureClassicVM resources with filtering option:'$resourceFilteringMethod' and filters:'$filter'"
         $filteredAzureClassicVMResources = Get-FilteredAzureVMsInResourceGroup -azureVMResources $azureClassicVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $filter
 
         return $filteredAzureClassicVMResources
@@ -414,7 +414,7 @@ function Get-FilteredAzureRMVMsInResourceGroup
 
     if($azureRMVMResources -and -not [string]::IsNullOrEmpty($resourceFilteringMethod))
     {
-        Write-Verbose -Verbose "Filtering azureRMVM resources with filtering option:$resourceFilteringMethod and filters:$filter"
+        Write-Verbose "Filtering azureRMVM resources with filtering option:$resourceFilteringMethod and filters:$filter"
         $filteredAzureRMVMResources = Get-FilteredAzureVMsInResourceGroup -azureVMResources $azureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $filter
 
         return $filteredAzureRMVMResources
@@ -434,14 +434,14 @@ function Get-MachineNameFromId
     {
         if($debugLogsFlag -eq "true")
         {
-            Write-Verbose "Map for $mapParameter : " -Verbose
-            Write-Verbose ($map | Format-List | Out-String) -Verbose
+            Write-Verbose "Map for $mapParameter : " -verbose
+            Write-Verbose ($map | Format-List | Out-String) -verbose
 
-            Write-Verbose "azureRMVMResources: " -Verbose
-            Write-Verbose ($azureRMVMResources | Format-List | Out-String) -Verbose
+            Write-Verbose "azureRMVMResources: " -verbose
+            Write-Verbose ($azureRMVMResources | Format-List | Out-String) -verbose
         }
 
-        Write-Verbose "throwOnTotalUnavaialbility: $throwOnTotalUnavaialbility" -Verbose
+        Write-Verbose "throwOnTotalUnavaialbility: $throwOnTotalUnavaialbility"
 
         $errorCount = 0
         foreach($vm in $azureRMVMResources)
@@ -450,14 +450,14 @@ function Get-MachineNameFromId
             $resourceName = $vm.Name
             if(-not [string]::IsNullOrEmpty($value))
             {
-                Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
+                Write-Verbose "$mapParameter value for resource $resourceName is $value"
                 $map.Remove($vm.Id.ToLower())
                 $map[$resourceName] = $value
             }
             else
             {
                 $errorCount = $errorCount + 1
-                Write-Verbose "Unable to find $mapParameter for resource $resourceName" -Verbose
+                Write-Verbose "Unable to find $mapParameter for resource $resourceName"
             }
         }
 
@@ -536,7 +536,7 @@ function Get-MachinesFqdnsForPublicIP
         }
     }
 
-    Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName"
 
     return $fqdnMap
 }
@@ -552,7 +552,7 @@ function Get-MachinesFqdnsForLB
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $publicIPAddressResources -and $networkInterfaceResources -and $frontEndIPConfigs)
     {
-        Write-Verbose "Trying to get FQDN for the RM azureVM resources under load balancer from resource group: $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the RM azureVM resources under load balancer from resource group: $resourceGroupName"
 
         #Map the public ip id to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -635,7 +635,7 @@ function Get-FrontEndPorts
 
     if(-not [string]::IsNullOrEmpty($backEndPort) -and $networkInterfaceResources -and $inboundRules)
     {
-        Write-Verbose "Trying to get front end ports for $backEndPort" -Verbose
+        Write-Verbose "Trying to get front end ports for $backEndPort"
 
         $filteredRules = $inboundRules | Where-Object {$_.BackendPort -eq $backEndPort}
 
@@ -873,7 +873,7 @@ function Get-AzureVMsCredentials
     param([string][Parameter(Mandatory=$true)]$vmsAdminUserName,
           [string][Parameter(Mandatory=$true)]$vmsAdminPassword)
 
-    Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName" -Verbose
+    Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName"ssss
     $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassword
 
     return $azureVmsCredentials
@@ -1044,7 +1044,7 @@ function Validate-CustomScriptExecutionStatus
           [string]$vmName,
           [string]$extensionName)
 
-    Write-Verbose -Verbose "Validating the winrm configuration custom script extension status"
+    Write-Verbose "Validating the winrm configuration custom script extension status"
 
     $isScriptExecutionPassed = $true
     try
@@ -1059,7 +1059,7 @@ function Validate-CustomScriptExecutionStatus
             $subStatuses = $customScriptExtension.SubStatuses
             $subStatusesStr = $subStatuses | Out-String
 
-            Write-Verbose -Verbose "Custom script extension execution statuses: $subStatusesStr"
+            Write-Verbose "Custom script extension execution statuses: $subStatusesStr"
 
             if($subStatuses)
             {
@@ -1097,7 +1097,7 @@ function Validate-CustomScriptExecutionStatus
         throw (Get-LocalizedString -Key "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}" -ArgumentList $extensionName, $vmName, $errMessage)
     }
 
-    Write-Verbose -Verbose "Validated the script execution successfully"
+    Write-Verbose "Validated the script execution successfully"
 }
 
 function Is-WinRMCustomScriptExtensionExists
@@ -1158,7 +1158,7 @@ function Add-WinRMHttpsNetworkSecurityRuleConfig
           [string]$rulePriotity,
           [string]$winrmHttpsPort)
     
-    Write-Verbose -Verbose "Trying to add a network security group rule"
+    Write-Verbose "Trying to add a network security group rule"
 
     try
     {
@@ -1193,9 +1193,9 @@ function Add-AzureVMCustomScriptExtension
     $rulePriotity="3986"
     $winrmHttpsPort = "5986"
 
-    Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
-    Write-Verbose -Verbose "VM Location : $location"
-    Write-Verbose -Verbose "VM DNS : $dnsName"
+    Write-Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
+    Write-Verbose "VM Location : $location"
+    Write-Verbose "VM DNS : $dnsName"
 
     try
     {
@@ -1206,13 +1206,13 @@ function Add-AzureVMCustomScriptExtension
         {            
             Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
             
-            Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
+            Write-Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
             return
         }
 
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
         $resultDetails = $result | ConvertTo-Json
-        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
+        Write-Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
 
         if($result.Status -ne "Succeeded")
         {
@@ -1231,5 +1231,5 @@ function Add-AzureVMCustomScriptExtension
         throw (Get-LocalizedString -Key "Failed to enable copy prerequisites. {0}" -ArgumentList $_.exception.message)
     }
 
-    Write-Verbose -Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
+    Write-Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
 }

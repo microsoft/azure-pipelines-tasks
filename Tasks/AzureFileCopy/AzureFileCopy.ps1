@@ -24,30 +24,30 @@ param (
     [string]$outputStorageURI
 )
 
-Write-Verbose "Starting Azure File Copy Task" -Verbose
+Write-Verbose "Starting Azure File Copy Task"
 
-Write-Verbose "connectedServiceNameSelector = $connectedServiceNameSelector" -Verbose
-Write-Verbose "connectedServiceName = $connectedServiceName" -Verbose
-Write-Verbose "connectedServiceNameARM = $connectedServiceNameARM" -Verbose
-Write-Verbose "sourcePath = $sourcePath" -Verbose
-Write-Verbose "storageAccount = $storageAccount" -Verbose
-Write-Verbose "storageAccountRM = $storageAccountRM" -Verbose
-Write-Verbose "destination type = $destination" -Verbose
-Write-Verbose "containerName = $containerName" -Verbose
-Write-Verbose "blobPrefix = $blobPrefix" -Verbose
-Write-Verbose "environmentName = $environmentName" -Verbose
-Write-Verbose "environmentNameRM = $environmentNameRM" -Verbose
-Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "machineNames = $machineNames" -Verbose
-Write-Verbose "vmsAdminUserName = $vmsAdminUserName" -Verbose
-Write-Verbose "targetPath = $targetPath" -Verbose
-Write-Verbose "additionalArguments = $additionalArguments" -Verbose
-Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
-Write-Verbose "copyFilesInParallel = $copyFilesInParallel" -Verbose
-Write-Verbose "skipCACheck = $skipCACheck" -Verbose
-Write-Verbose "enableCopyPrerequisites = $enableCopyPrerequisites" -Verbose
-Write-Verbose "outputStorageContainerSASToken = $outputStorageContainerSASToken" -Verbose
-Write-Verbose "outputStorageURI = $outputStorageURI" -Verbose
+Write-Verbose "connectedServiceNameSelector = $connectedServiceNameSelector"
+Write-Verbose "connectedServiceName = $connectedServiceName"
+Write-Verbose "connectedServiceNameARM = $connectedServiceNameARM"
+Write-Verbose "sourcePath = $sourcePath"
+Write-Verbose "storageAccount = $storageAccount"
+Write-Verbose "storageAccountRM = $storageAccountRM"
+Write-Verbose "destination type = $destination"
+Write-Verbose "containerName = $containerName"
+Write-Verbose "blobPrefix = $blobPrefix"
+Write-Verbose "environmentName = $environmentName"
+Write-Verbose "environmentNameRM = $environmentNameRM"
+Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod"
+Write-Verbose "machineNames = $machineNames"
+Write-Verbose "vmsAdminUserName = $vmsAdminUserName"
+Write-Verbose "targetPath = $targetPath"
+Write-Verbose "additionalArguments = $additionalArguments"
+Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
+Write-Verbose "copyFilesInParallel = $copyFilesInParallel"
+Write-Verbose "skipCACheck = $skipCACheck"
+Write-Verbose "enableCopyPrerequisites = $enableCopyPrerequisites"
+Write-Verbose "outputStorageContainerSASToken = $outputStorageContainerSASToken"
+Write-Verbose "outputStorageURI = $outputStorageURI"
 
 if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
 {
@@ -132,14 +132,14 @@ if ($destination -eq "AzureBlob")
     if(-not [string]::IsNullOrEmpty($outputStorageURI))
     {
         $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName
-        Write-Verbose "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI" -Verbose
+        Write-Verbose "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
     }
     if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
     {
         $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
-        Write-Verbose "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken" -Verbose
+        Write-Verbose "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
     }
-    Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination" -Verbose
+    Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
     return
 }
 

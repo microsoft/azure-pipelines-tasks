@@ -15,27 +15,27 @@ param (
     [string]$additionalArguments
     )
 
-    Write-Verbose "fqdn = $fqdn" -Verbose
-    Write-Verbose "storageAccount = $storageAccount" -Verbose
-    Write-Verbose "containerName = $containerName" -Verbose
-    Write-Verbose "sasToken = $sasToken" -Verbose
-    Write-Verbose "azCopyLocation = $azCopyLocation" -Verbose
-    Write-Verbose "targetPath = $targetPath" -Verbose
-    Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
-    Write-Verbose "winRMPort = $winRMPort" -Verbose
-    Write-Verbose "httpProtocolOption = $httpProtocolOption" -Verbose
-    Write-Verbose "skipCACheckOption = $skipCACheckOption" -Verbose
-    Write-Verbose "enableDetailedLogging = $enableDetailedLogging" -Verbose
-    Write-Verbose "additionalArguments = $additionalArguments" -Verbose
+    Write-Verbose "fqdn = $fqdn"
+    Write-Verbose "storageAccount = $storageAccount"
+    Write-Verbose "containerName = $containerName"
+    Write-Verbose "sasToken = $sasToken"
+    Write-Verbose "azCopyLocation = $azCopyLocation"
+    Write-Verbose "targetPath = $targetPath"
+    Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
+    Write-Verbose "winRMPort = $winRMPort"
+    Write-Verbose "httpProtocolOption = $httpProtocolOption"
+    Write-Verbose "skipCACheckOption = $skipCACheckOption"
+    Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
+    Write-Verbose "additionalArguments = $additionalArguments"
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
         [void][reflection.assembly]::LoadFrom( $_.FullName )
-        Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
+        Write-Verbose "Loading .NET assembly:`t$($_.name)"
     }
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\*.dll | % {
         [void][reflection.assembly]::LoadFrom( $_.FullName )
-        Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
+        Write-Verbose "Loading .NET assembly:`t$($_.name)"
     }
 
     $cleanTargetPathOption = ''
@@ -50,7 +50,7 @@ param (
         $enableDetailedLoggingOption = '-EnableDetailedLogging'
     }
 
-    Write-Verbose "Initiating copy on $fqdn " -Verbose
+    Write-Verbose "Initiating copy on $fqdn "
 
     [String]$copyToAzureMachinesBlockString = [string]::Empty
     if([string]::IsNullOrWhiteSpace($additionalArguments))
