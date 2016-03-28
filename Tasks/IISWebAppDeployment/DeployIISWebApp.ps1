@@ -71,16 +71,17 @@ function Get-HostName
     return $hostName
 }
 
-function Trim-Inputs([ref]$package, [ref]$paramFile, [ref]$siteName, [ref]$physicalPath, [ref]$userName, [ref]$poolName, [ref]$poolUserName)
+function Trim-Inputs([ref]$package, [ref]$paramFile, [ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$websitePathAuthuser, [ref]$appPoolUser, [ref]$adminUser)
 {    
     $package.Value = $package.Value.Trim('"', ' ')
     $paramFile.Value = $paramFile.Value.Trim('"', ' ')
     $siteName.Value = $siteName.Value.Trim('"', ' ')
     $physicalPath.Value = $physicalPath.Value.Trim('"', ' ')
-    $userName.Value = $userName.Value.Trim()
-
     $poolName.Value = $poolName.Value.Trim('"', ' ')
-    $poolUserName.Value = $poolUserName.Value.Trim()
+    
+    $appPoolUser.Value = $appPoolUser.Value.Trim()
+    $websitePathAuthuser.Value = $websitePathAuthuser.Value.Trim()
+    $adminUser.Value = $adminUser.Value.Trim()
 }
 
 function Validate-Inputs
@@ -217,7 +218,7 @@ function Main
     Write-Verbose "appCmdCommands = $appCmdCommands"
     Write-Verbose "deployInParallel = $deployInParallel"
 
-    Trim-Inputs -package ([ref]$webDeployPackage) -paramFile ([ref]$webDeployParamFile) -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath) -userName ([ref]$websiteAuthUserName) -poolName ([ref]$appPoolName) -poolUserName ([ref]$appPoolUsername)
+    Trim-Inputs -package ([ref]$webDeployPackage) -paramFile ([ref]$webDeployParamFile) -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolName) -websitePathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsername) -adminUser ([ref]$adminUserName)
 
     Validate-Inputs -createWebsite $createWebsite -websiteName $websiteName -createAppPool $createAppPool -appPoolName $appPoolName
     $overRideParams = Compute-MsDeploy-SetParams -websiteName $websiteName -overRideParams $overRideParams
