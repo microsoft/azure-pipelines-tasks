@@ -4,12 +4,19 @@
   "loc.description": "Implementar, iniciar, detener, eliminar grupos de recursos de Azure",
   "loc.instanceNameFormat": "Implementación en Azure: acción $(action) en $(resourceGroupName)",
   "loc.group.displayName.output": "Salida",
-  "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
-  "loc.input.help.ConnectedServiceName": "Seleccione la suscripción de Azure para la implementación. Solo se muestran las conexiones de servicio de Azure compatibles y son del tipo de autenticación Credenciales o Entidades de seguridad.",
+  "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",
+  "loc.input.label.ConnectedServiceName": "Suscripción del Administrador de recursos de Azure",
+  "loc.input.help.ConnectedServiceName": "Seleccione la suscripción del Administrador de recursos de Azure para la implementación.",
+  "loc.input.label.ConnectedServiceNameClassic": "Azure Classic Subscription",
+  "loc.input.help.ConnectedServiceNameClassic": "Select the Azure Classic subscription for the deployment.",
   "loc.input.label.action": "Acción",
   "loc.input.help.action": "Acción que se va a ejecutar en los recursos o el grupo de recursos de Azure.",
+  "loc.input.label.actionClassic": "Acción",
+  "loc.input.help.actionClassic": "Acción que se realizará en los recursos o el servicio en la nube de Azure.",
   "loc.input.label.resourceGroupName": "Grupo de recursos",
   "loc.input.help.resourceGroupName": "Proporcione el nombre del grupo de recursos.",
+  "loc.input.label.cloudService": "Servicio en la nube",
+  "loc.input.help.cloudService": "Proporcione el nombre del servicio en la nube.",
   "loc.input.label.location": "Ubicación",
   "loc.input.help.location": "Ubicación para implementar el grupo de recursos. Si el grupo de recursos ya existe en la suscripción, este valor se ignorará.",
   "loc.input.label.csmFile": "Plantilla",
@@ -23,5 +30,5 @@
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "Habilitar los requisitos previos de implementación",
   "loc.input.help.enableDeploymentPrerequisitesForSelect": "Al habilitar esta opción, se configura el agente de escucha de Administración remota de Windows (WinRM) a través del protocolo HTTPS en el puerto 5986, mediante un certificado autofirmado. Esta configuración es necesaria para realizar operaciones de implementación en máquinas de Azure. Si las máquinas virtuales de destino están respaldadas por un equilibrador de carga, asegúrese de que las reglas NAT de entrada estén configuradas para el puerto de destino (5986). Si las máquinas virtuales de destino están asociadas a un grupo de seguridad de red (NSG), configure reglas de seguridad de entrada para el puerto de destino (5986). Solo se aplica a máquinas virtuales de ARM.",
   "loc.input.label.outputVariable": "Grupo de recursos",
-  "loc.input.help.outputVariable": "Ponga un nombre a la variable del grupo de recursos. La variable se puede usar como $(variableName) para hacer referencia al grupo de recursos en tareas posteriores, como en PowerShell en la tarea de las máquinas de destino para implementar aplicaciones. <br>Solo es válido cuando la acción seleccionada es Crear, Actualizar o Seleccionar, y se requiere cuando se selecciona un grupo de recursos existente."
+  "loc.input.help.outputVariable": "Ponga un nombre a la variable del grupo de recursos. La variable se puede usar como $(nombreDeVariable) para hacer referencia al grupo de recursos en tareas posteriores, como en PowerShell en la tarea de las máquinas de destino para implementar aplicaciones. <br>Solo es válido cuando la acción seleccionada es Crear, Actualizar o Seleccionar, y se requiere cuando se selecciona un grupo de recursos existente."
 }

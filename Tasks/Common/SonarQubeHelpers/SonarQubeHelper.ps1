@@ -145,7 +145,7 @@ function InvokeGetRestMethod
         [Parameter(Mandatory=$true)][string]$query, 
         [bool]$useAuth=$false)
 
-    
+                
     $sonarQubeHostUrl = GetTaskContextVariable "MSBuild.SonarQube.HostUrl"     
     $sonarQubeHostUrl  = $sonarQubeHostUrl.TrimEnd("/");
 
@@ -154,14 +154,17 @@ function InvokeGetRestMethod
     $request = $sonarQubeHostUrl + $query;
     
     if ($useAuth)
-    {
-      
+    {      
        $authHeader = CreateBasicAuthHeaderFromEndpoint
-       $allheaders = @{Authorization = $authHeader}   
+
+       if (![String]::IsNullOrWhiteSpace($authHeader))
+       {
+            $allheaders = @{Authorization = $authHeader}        
+       }
+       
     }  
 
-    $response = Invoke-RestMethod $request -Method Get -Headers $allheaders
-
+    $response = Invoke-RestMethod -Uri $request -Method Get -Headers $allheaders
 
     return $response
 }
@@ -185,7 +188,6 @@ function CreateBasicAuthHeaderFromEndpoint
     return $basicAuthValue        
 }
 
-
 #
 # C# like assert based on a condition. Note that PowerShell does not support actual assertions so 
 # 
@@ -199,22 +201,27 @@ function Assert
     }
 }
 
-
 #
-# Returns true if this build was triggered in response to a PR 
+# Returns true if this build was triggered in response to a PR
+#
+# Remark: this logic is temporary until the platform provides a more robust way of determining PR builds; 
+# Note that PR builds are only supported on TfsGit
 #
 function IsPrBuild
-{
-    $prcaEnabledString = GetTaskContextVariable "PullRequestSonarQubeCodeAnalysisEnabled"
-    $isPrBuild = Convert-String $prcaEnabledString Boolean
+{    
+    $sourceBranch = $env:Build_SourceBranch
+    $scProvider = $env:Build_Repository_Provider
 
-    return $isPrBuild;
+    return   $scProvider -and `
+             ($scProvider -eq "TfsGit") -and `
+             $sourceBranch -and `
+             $sourceBranch.StartsWith("refs/pull/", [StringComparison]::OrdinalIgnoreCase)        
 }
 
 
 function GetSonarQubeBuildDirectory
 {
-    $agentBuildDirectory = GetTaskContextVariable "Agent.BuildDirectory" 
+    $agentBuildDirectory = GetTaskContextVariable "Agent.BuildDirectory"
 	if (!$agentBuildDirectory)
 	{
 		throw "Could not retrieve the Agent.BuildDirectory variable";

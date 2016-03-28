@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "코드 검사 결과 게시",
   "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "VSO/TFS에 코드 검사 결과 게시",
+  "loc.description": "Publish code coverage results to VSTS/TFS",
   "loc.instanceNameFormat": "코드 검사 결과 $(summaryFileLocation) 게시",
   "loc.input.label.codeCoverageTool": "코드 검사 도구",
   "loc.input.help.codeCoverageTool": "코드 검사 요약 파일을 생성하는 데 사용한 도구를 선택하세요.",

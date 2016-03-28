@@ -12,7 +12,7 @@
   "loc.input.help.SymbolsFolder": "Путь к папке, в которой ищутся файлы символов. По умолчанию используется настроенная исходная папка.",
   "loc.input.label.SkipIndexing": "Пропустить индексацию",
   "loc.input.help.SkipIndexing": "Указывает, следует ли пропустить внедрение сведений об исходном сервере в PDB-файле.",
-  "loc.input.label.TreatNotIndexedAsWarning": "Предупредить, есть не проиндексированы",
+  "loc.input.label.TreatNotIndexedAsWarning": "Предупредить, если не проиндексированы",
   "loc.input.help.TreatNotIndexedAsWarning": "Выводится предупреждение, если ресурсы не проиндексированы для PDB-файла. В противном случае сообщения записываются в виде нормального вывода.",
   "loc.input.label.SymbolsMaximumWaitTime": "Максимальное время ожидания (в минутах)",
   "loc.input.help.SymbolsMaximumWaitTime": "Количество минут, по истечении которого происходит сбой этапа",

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 28
+        "Patch": 29
     },
     "demands": [
     ],
@@ -84,7 +84,7 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
             "groupName": "executionOptions"
         },
         {
@@ -111,7 +111,7 @@
 	          "label": "Test Run Title", 
 	          "defaultValue":"", 
 	          "required":false,
-              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+              "helpMarkDown": "Provide a name for the Test Run.",
 	          "groupName": "reportingOptions"
 	      },
         {

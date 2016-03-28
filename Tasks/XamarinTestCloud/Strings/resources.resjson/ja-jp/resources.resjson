@@ -20,7 +20,7 @@
   "loc.input.help.testDir": "テスト アセンブリを含むフォルダーへの相対パス。例: SolutionName/TestsProjectName/bin/Release",
   "loc.input.label.parallelization": "並列処理",
   "loc.input.label.locale": "システム言語",
-  "loc.input.help.locale": "言語が表示されない場合は、[その他] を選択して、en_US など、以下のロケールを入力してください。",
+  "loc.input.help.locale": "言語が表示されない場合は、[その他] を選択して、en_US などのロケールを下に入力してください。",
   "loc.input.label.userDefinedLocale": "その他のロケール",
   "loc.input.help.userDefinedLocale": "2 文字の ISO-639 言語コードと 2 文字の ISO 3166 国コードを、en_US のように [言語]_[国] の形式で入力します。",
   "loc.input.label.testCloudLocation": "test-cloud.exe の場所",

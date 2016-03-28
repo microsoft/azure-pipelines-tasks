@@ -21,7 +21,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 $b_versionByBuild = Convert-String $versionByBuild Boolean    
 if ($b_versionByBuild)
 {
-    Write-Host "Getting version number from build"
+    Write-Verbose "Getting version number from build"
     ##Get Version from Build
     
     # Regular expression pattern to find the version in the build number 
@@ -32,22 +32,19 @@ if ($b_versionByBuild)
     # set environment variables so that this script can be debugged
     if(-not ($Env:BUILD_SOURCESDIRECTORY -and $Env:BUILD_BUILDNUMBER))
     {
-        Write-Error "You must set the following environment variables"
-        Write-Error "to test this script interactively."
-        Write-Host '$Env:BUILD_SOURCESDIRECTORY - For example, enter something like:'
-        Write-Host '$Env:BUILD_SOURCESDIRECTORY = "C:\code\FabrikamTFVC\HelloWorld"'
-        Write-Host '$Env:BUILD_BUILDNUMBER - For example, enter something like:'
-        Write-Host '$Env:BUILD_BUILDNUMBER = "Build HelloWorld_0000.00.00.0"'
+        Write-Error (Get-LocalizedString -Key "To test this script interactively, set these environment variables.")
+        Write-Host (Get-LocalizedString -Key '{0} (example: "C:\code\FabrikamTFVC\HelloWorld")' -ArgumentList '$Env:BUILD_SOURCESDIRECTORY')
+        Write-Host (Get-LocalizedString -Key '{0} (example: "Build HelloWorld_0000.00.00.0")' -ArgumentList '$Env:BUILD_BUILDNUMBER')
         exit 1
     }
     
     #Make sure there is a build number
     if (-not $Env:BUILD_BUILDNUMBER)
     {
-        Write-Error ("BUILD_BUILDNUMBER environment variable is missing.")
+        Write-Error (Get-LocalizedString -Key "BUILD_BUILDNUMBER environment variable is missing.")
         exit 1
     }
-    Write-Host "BUILD_BUILDNUMBER: $Env:BUILD_BUILDNUMBER"
+    Write-Verbose "BUILD_BUILDNUMBER: $Env:BUILD_BUILDNUMBER"
     
     # Get and validate the version data
     $VersionData = [regex]::matches($Env:BUILD_BUILDNUMBER,$VersionRegex)
@@ -55,50 +52,65 @@ if ($b_versionByBuild)
     {
        0        
           { 
-             Write-Error "Could not find version number data in BUILD_BUILDNUMBER."
+             Write-Error (Get-LocalizedString -Key "Could not find version number data in BUILD_BUILDNUMBER.")
              exit 1
           }
        1 {}
        default 
           { 
-             Write-Warning "Found more than instance of version data in BUILD_BUILDNUMBER." 
-             Write-Warning "Will assume first instance is version."
+             Write-Warning (Get-LocalizedString -Key "Found more than one instance of version data in BUILD_BUILDNUMBER.")
+             Write-Warning (Get-LocalizedString -Key "Assuming first instance is version.")
           }
     }
     $NewVersion = $VersionData[0]
-    Write-Host "Version: $NewVersion"
+    Write-Verbose "Version: $NewVersion"
 }
 
-Write-Host "Checking pattern is specified"
+Write-Verbose "Checking pattern is specified"
 if(!$searchPattern)
 {
-    throw (Get-LocalizedString -Key "Search Pattern parameter must be set")
+    throw (Get-LocalizedString -Key "Search pattern parameter must be set")
 }
 
 if ($outputdir -and !(Test-Path $outputdir))
 {
-    Write-Host "Output folder used but doesn't exists, creating it"
+    Write-Verbose "Output folder selected but doesn't exist. Creating it."
     New-Item $outputdir -type directory
 }
 
 # check for solution pattern
-if ($searchPattern.Contains("*") -or $searchPattern.Contains("?"))
+if ($searchPattern.Contains("*") -or $searchPattern.Contains("?") -or $searchPattern.Contains(";"))
 {
-    Write-Host "Pattern found in solution parameter."
-    Write-Host "Find-Files -SearchPattern $searchPattern"
-    $foundFiles = Find-Files -SearchPattern $searchPattern 
+    Write-Verbose "Pattern found in solution parameter."    
+    if ($env:BUILD_SOURCESDIRECTORY)
+    {
+        Write-Verbose "Using build.sourcesdirectory as root folder"
+        Write-Host "Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY"
+        $foundFiles = Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY
+    }
+    elseif ($env:SYSTEM_ARTIFACTSDIRECTORY)
+    {
+        Write-Verbose "Using system.artifactsdirectory as root folder"
+        Write-Host "Find-Files -SearchPattern $searchPattern -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY"
+        $foundFiles = Find-Files -SearchPattern $searchPattern -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY
+    }
+    else
+    {
+        Write-Host "Find-Files -SearchPattern $searchPattern"
+        $foundFiles = Find-Files -SearchPattern $searchPattern
+    }
 }
 else
 {
-    Write-Host "No Pattern found in solution parameter."
+    Write-Verbose "No pattern found in solution parameter."
     $foundFiles = ,$searchPattern
 }
 
-$foundCount = $foundFiles.Count 
-Write-Host "Found files: $foundCount"
+$foundCount = $foundFiles.Count
+Write-Verbose "Found files: $foundCount"
 foreach ($fileToPackage in $foundFiles)
 {
-    Write-Host "--File: `"$fileToPackage`""
+    Write-Verbose "--File: `"$fileToPackage`""
 }
 
 $useBuiltinNuGetExe = !$nuGetPath
@@ -135,7 +147,7 @@ try
     {
         $slnFolder = $(Get-ItemProperty -Path $fileToPackage -Name 'DirectoryName').DirectoryName
         #Setup Nuget
-        Write-Host "Creating Nuget Arguments:"
+
         $buildProps = "Configuration=$configurationToPack";
         if ([string]::IsNullOrEmpty($buildProperties) -eq $false)
         {
@@ -152,9 +164,9 @@ try
             $argsPack = ($argsPack + " " + $nuGetAdditionalArgs);
         }    
          
-        Write-Host "--ARGS: $argsPack"
+        Write-Verbose "NuGet arguments: $argsPack"
 
-        Write-Host "Invoking nuget with $argsPack on $slnFolder"
+        Write-Verbose "Invoking nuget with $argsPack on $slnFolder"
         Invoke-Tool -Path $nugetPath -Arguments "$argsPack" -WorkingFolder $slnFolder
     }
 }

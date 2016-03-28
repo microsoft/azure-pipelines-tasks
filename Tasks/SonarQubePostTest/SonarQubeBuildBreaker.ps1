@@ -1,5 +1,3 @@
-. ./SonarQubeHelper.ps1
-
 #
 # Top-level orchestrating logic
 # 

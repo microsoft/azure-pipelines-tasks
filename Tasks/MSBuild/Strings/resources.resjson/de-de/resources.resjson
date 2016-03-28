@@ -13,7 +13,7 @@
   "loc.input.label.clean": "Bereinigen",
   "loc.input.help.clean": "Führt einen bereinigten Build (\"/t:clean\") vor dem Build aus.",
   "loc.input.label.restoreNugetPackages": "NuGet-Pakete wiederherstellen",
-  "loc.input.help.restoreNugetPackages": "Führt eine NuGet-Wiederherstellung vor dem Build aus.",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.logProjectEvents": "Projektdetails aufzeichnen",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild-Version",
@@ -21,5 +21,7 @@
   "loc.input.label.msbuildArchitecture": "MSBuild-Architektur",
   "loc.input.help.msbuildArchitecture": "Geben Sie optional die auszuführende MSBuild-Architektur an (x86, x64).",
   "loc.input.label.msbuildLocation": "Pfad zu MSBuild",
-  "loc.input.help.msbuildLocation": "Geben Sie optional den Pfad zu MSBuild an."
+  "loc.input.help.msbuildLocation": "Geben Sie optional den Pfad zu MSBuild an.",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "MSBuild wurde nicht gefunden: Version = {0}, Architektur = {1}. Es wird nach der aktuellen Version gesucht.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild wurde nicht gefunden: Version = {0}, Architektur = {1}. Versuchen Sie eine andere Kombination aus Version/Architektur, geben Sie einen Speicherort an, oder installieren Sie die entsprechende MSBuild-Version/-Architektur."
 }

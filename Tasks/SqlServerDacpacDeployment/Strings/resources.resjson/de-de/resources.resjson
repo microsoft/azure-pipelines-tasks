@@ -37,7 +37,7 @@
   "loc.input.label.DeployInParallel": "Parallel bereitstellen",
   "loc.input.help.DeployInParallel": "Wenn diese Option auf \"true\" festgelegt wird, wird der Datenbankbereitstellungstask parallel auf den Zielcomputern ausgeführt.",
   "loc.input.label.ResourceFilteringMethod": "Computer auswählen nach",
-  "loc.input.help.ResourceFilteringMethod": "Wählen Sie optional einer Teilmenge der Computer durch Angeben von Computernamen oder Tags aus.",
+  "loc.input.help.ResourceFilteringMethod": "Wählen Sie optional eine Teilmenge der Computer durch Angeben von Computernamen oder Tags aus.",
   "loc.input.label.MachineFilter": "Auf Computern bereitstellen",
-  "loc.input.help.MachineFilter": "Diese Eingabe ist nur gültig für Computergruppen und wird noch nicht für flache Listen von Computern oder Ausgabevariablen unterstützt. Geben Sie eine Liste von Computern (z. B. \"dbserver.fabrikam.com\", \"webserver.fabrikam.com\", \"192.168.12.34\") oder Tags (z. B. \"Role:DB\", \"OS:Win8.1\") an. Wenn mehrere Tags angegeben werden, wird der Task auf allen Computern mit den angegebenen Tags ausgeführt. Geben Sie für Azure-Ressourcengruppen den Namen des virtuellen Computers an, z. B. \"ffweb\" oder \"ffdb\". Standardmäßig wird der Task auf allen Computern ausgeführt."
+  "loc.input.help.MachineFilter": "Diese Eingabe ist nur gültig für Computergruppen und wird noch nicht für flache Listen von Computern oder Ausgabevariablen unterstützt. Geben Sie eine Liste von Computern (z. B. \"dbserver.fabrikam.com\", \"webserver.fabrikam.com\", \"192.168.12.34\") oder Tags (z. B. \"Role:DB\", \"OS:Win8.1\") an. Wenn mehrere Tags angegeben werden, wird der Task auf allen Computern mit den angegebenen Tags ausgeführt. Geben Sie für Azure-Ressourcengruppen den Namen der virtuellen Maschine an, z. B. \"ffweb\" oder \"ffdb\". Standardmäßig wird der Task auf allen Computern ausgeführt."
 }

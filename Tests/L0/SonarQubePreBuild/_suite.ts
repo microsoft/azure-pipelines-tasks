@@ -8,7 +8,7 @@ import path = require('path');
 var shell = require('shelljs');
 var ps = shell.which('powershell');
 
-describe('Common-MSBuildHelpers Suite', function () {
+describe('SonarQubePreBuild Suite', function () {
     this.timeout(20000);
 
     before((done) => {
@@ -23,6 +23,8 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('CreateCommandLineArgs tests', (done) => {
             psm.runPS(path.join(__dirname, 'CreateCommandLineArgs.ps1'), done);
         })
-       
+        it('UpdateArgsForPrAnalysis tests', (done) => {
+            psm.runPS(path.join(__dirname, 'UpdateArgsForPrAnalysis.ps1'), done);
+        })
     }
 });

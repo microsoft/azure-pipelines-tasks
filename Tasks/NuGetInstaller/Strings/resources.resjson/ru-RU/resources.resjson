@@ -7,7 +7,7 @@
   "loc.input.label.solution": "Путь к решению",
   "loc.input.help.solution": "Путь к файлу решения Visual Studio",
   "loc.input.label.nugetConfigPath": "Путь к файлу NuGet.config",
-  "loc.input.help.nugetConfigPath": "Чтобы использовать веб-каналы в этой учетной записи, зарегистрируйте файл NuGet.config, который содержит список этих веб-каналов, и выберите его. Это позволит системе сборки проверить подлинность этих каналов, подразумевая, что удостоверение сборки добавлено в веб-канал в качестве подписчика или соавтора.\n\nХотите узнать больше о разрешениях для веб-канала? [Подробнее](http://go.microsoft.com/fwlink/?LinkID=691232).",
+  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
   "loc.input.label.noCache": "Отключить локальный кэш",
   "loc.input.help.noCache": "Эквивалентно аргументу -NoCache командной строки NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Аргументы NuGet",

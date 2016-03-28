@@ -13,7 +13,7 @@
   "loc.input.label.runSettingsFile": "実行設定ファイル",
   "loc.input.help.runSettingsFile": "テストで使用される runsettings ファイルへのパス。`$(Build.SourcesDirectory)` を使用してプロジェクト フォルダーにアクセスします。",
   "loc.input.label.overrideTestrunParameters": "TestRun パラメーターのオーバーライド",
-  "loc.input.help.overrideTestrunParameters": "runsettings ファイルの TestRunParameters セクションで定義されたパラメーターをオーバーライドします。例: `Platform=$(platform);Port=8080`",
+  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "コード カバレッジ有効",
   "loc.input.help.codeCoverageEnabled": "実行テストでコード カバレッジ情報を収集します。",
   "loc.input.label.runInParallel": "並列実行する",

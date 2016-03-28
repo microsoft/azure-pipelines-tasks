@@ -17,7 +17,7 @@
   "loc.input.label.TestCertificate": "証明書のテスト",
   "loc.input.help.TestCertificate": "信頼された証明機関によるコンピューターの証明書の信頼性の検証をスキップするにはこのオプションを選びます。WinRM HTTPS プロトコルにはこのパラメーターが必要です。",
   "loc.input.label.DacpacFile": "DACPAC ファイル",
-  "loc.input.help.DacpacFile": "ターゲット コンピューターまたは UNC パス (\\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac など) 上の DACPAC ファイルの場所。この UNC パスはコンピューターの管理者アカウントにアクセスできる必要があります。また、環境変数 ($env:windir、$env:systemroot、$env:windir\\FabrikamFibre\\Web など) もサポートされます。",
+  "loc.input.help.DacpacFile": "対象のコンピューターまたは UNC パス上の DACPAC ファイルの場所 (\\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac など)。この UNC パスはコンピューターの管理者アカウントでアクセスできる必要があります。また、環境変数 ($env:windir、$env:systemroot、$env:windir\\FabrikamFibre\\Web など) もサポートされます。",
   "loc.input.label.TargetMethod": "次を使用して、SQL を指定します",
   "loc.input.help.TargetMethod": "対象の SQL Server Database に接続するオプションを選択します。このオプションを選ぶと SQL Server Database の詳細か SQL Server 接続文字列、または発行プロファイル XML ファイルが提供されます。",
   "loc.input.label.ServerName": "サーバー名 ",

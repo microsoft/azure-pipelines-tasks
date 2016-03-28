@@ -13,7 +13,7 @@
   "loc.input.label.configurationToPack": "包的配置",
   "loc.input.help.configurationToPack": "使用 csproj 文件时，这指定包的配置",
   "loc.input.label.buildProperties": "其他生成属性",
-  "loc.input.help.buildProperties": "用于生成包的属性的分号分隔列表。",
+  "loc.input.help.buildProperties": "用于生成包的属性列表，采用分号分隔。",
   "loc.input.label.nuGetAdditionalArgs": "NuGet 参数",
   "loc.input.help.nuGetAdditionalArgs": "传递给 NuGet.exe pack 的其他参数。[详细信息](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command)。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路径",

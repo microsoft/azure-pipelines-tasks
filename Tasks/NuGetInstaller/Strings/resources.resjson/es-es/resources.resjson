@@ -7,7 +7,7 @@
   "loc.input.label.solution": "Ruta de acceso de la solución",
   "loc.input.help.solution": "Ruta de acceso al archivo de solución de Visual Studio",
   "loc.input.label.nugetConfigPath": "Ruta de acceso a NuGet.config",
-  "loc.input.help.nugetConfigPath": "Para utilizar fuentes dentro de esta cuenta, inserte en el repositorio un NuGet.config que enumere tales fuentes como orígenes y selecciónelo aquí. Esto permitirá al sistema de compilación autenticar tales fuentes, suponiendo que haya agregado la identidad de compilación como lector o colaborador de la fuente.\n\n¿Quiere obtener más información sobre los permisos de fuentes? [Más información]( http://go.microsoft.com/fwlink/?LinkID=691232).",
+  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
   "loc.input.label.noCache": "Deshabilitar la caché local",
   "loc.input.help.noCache": "Equivalente al argumento de línea de comandos -NoCache de NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Argumentos de NuGet",

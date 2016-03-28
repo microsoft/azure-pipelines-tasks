@@ -2,7 +2,7 @@
   "loc.friendlyName": "IIS Web 應用程式部署",
   "loc.helpMarkDown": "[詳細資訊](http://aka.ms/iiswebappdeployreadme)",
   "loc.description": "使用 MSDeploy 部署，建立/更新網站和 app 集區",
-  "loc.instanceNameFormat": "部署 IIS App: $(WebDeployPackage)",
+  "loc.instanceNameFormat": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example: `+:com.*`,`+:org.*`,`-:my.app*.*`.",
   "loc.group.displayName.deployment": "部署",
   "loc.group.displayName.website": "網站",
   "loc.group.displayName.applicationPool": "應用程式集區",
@@ -30,7 +30,7 @@
   "loc.input.label.WebSitePhysicalPath": "實體路徑",
   "loc.input.help.WebSitePhysicalPath": "儲存網站內容所在的實體路徑。內容可以存放在本機電腦上或遠端目錄或是共用上，如 C:\\Fabrikam 或 \\\\\\\\ContentShare\\Fabrikam。",
   "loc.input.label.WebSitePhysicalPathAuth": "實體路徑驗證",
-  "loc.input.help.WebSitePhysicalPathAuth": "存取網站實體路徑的驗證機制。",
+  "loc.input.help.WebSitePhysicalPathAuth": "存取網站實體路徑時，所使用的驗證機制。",
   "loc.input.label.WebSiteAuthUserName": "使用者名稱",
   "loc.input.help.WebSiteAuthUserName": "用以存取網站實體路徑的使用者名稱。",
   "loc.input.label.WebSiteAuthUserPassword": "密碼",
@@ -42,7 +42,7 @@
   "loc.input.label.Protocol": "通訊協定",
   "loc.input.help.Protocol": "選取網站的 HTTP 以建立 HTTP 繫結，或者選取網站的 HTTPS 以建立 Secure Sockets Layer (SSL) 繫結。",
   "loc.input.label.IPAddress": "IP 位址",
-  "loc.input.help.IPAddress": "輸入使用者可以用來存取這個網站的 IP 位址。如果選取 [全部未指派]，則針對連接埠以及指定給此網站之選用主機名稱上的所有 IP 位址的要求，網站都會予以回應，除非伺服器上的另一個網站在相同連接埠上具有繫結，但使用特定 IP 位址。",
+  "loc.input.help.IPAddress": "輸入使用者可以用來存取這個網站的 IP 位址。如果選取 [全部未指派]，則當任一 IP 位址位於連接埠上，或位於指定給此網站的選用主機名稱上，該網站便會為其回應所有要求，除非伺服器上的另一個網站在相同連接埠上具有繫結，卻使用特定的 IP 位址。",
   "loc.input.label.Port": "連接埠",
   "loc.input.help.Port": "輸入超文字傳輸通訊協定堆疊 (HTTP.sys) 務必接聽對此網站提出之要求時所使用的連接埠。",
   "loc.input.label.ServerNameIndication": "需要有伺服器名稱指示",
@@ -74,5 +74,5 @@
   "loc.input.label.ResourceFilteringMethod": "選取電腦依據",
   "loc.input.help.ResourceFilteringMethod": "選擇性地提供電腦名稱或標記來選取電腦的子集。",
   "loc.input.label.MachineFilter": "部署至電腦",
-  "loc.input.help.MachineFilter": "此輸入只對電腦群組有效，電腦的簡單列表或輸出變目前尚無法支援。請以 dbserver.fabrikam.com、webserver.fabrikam.com、192.168.12.34 等形式提供電腦清單，或以 Role:DB; OS:Win8.1 等提供標記清單。若提供多個標記，工作會在所有具有指定標記的電腦上執行。若為 Azure 資源群組，請提供虛擬機器的名稱 (例如 ffweb、ffdb)。預設會在所有電腦上執行此工作。"
+  "loc.input.help.MachineFilter": "此輸入只對電腦群組有效，電腦的簡單列表或輸出變數目前尚無法支援。請以 dbserver.fabrikam.com、webserver.fabrikam.com、192.168.12.34 等形式提供電腦清單，或以 Role:DB; OS:Win8.1 等提供標記清單。若提供多個標記，工作會在所有具有指定標記的電腦上執行。若為 Azure 資源群組，請提供虛擬機器的名稱 (例如 ffweb、ffdb)。預設會在所有電腦上執行此工作。"
 }

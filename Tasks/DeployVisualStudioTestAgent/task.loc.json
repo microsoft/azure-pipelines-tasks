@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 23
   },
   "demands": [],
   "minimumAgentVersion": "1.95.0",
@@ -67,7 +67,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.winRmProtocol",
       "required": false,
-      "defaultValue": "Https",
+      "defaultValue": "",
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"

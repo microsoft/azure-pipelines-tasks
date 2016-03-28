@@ -13,7 +13,7 @@ param(
     [string]$configuration,
     [string]$publishRunAttachments,
     [string]$runInParallel
-)
+    )
 
 Write-Verbose "Entering script VSTest.ps1"
 Write-Verbose "vsTestVersion = $vsTestVersion"
@@ -36,7 +36,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 . $PSScriptRoot\Helpers.ps1
-    
+
 if (!$testAssembly)
 {
     Write-Host "##vso[task.logissue type=error;code=002001;]" 
@@ -57,6 +57,7 @@ if(!$sourcesDirectory)
     throw (Get-LocalizedString -Key "No source directory found.")
 }
 
+$testAssemblyFiles = @()
 # check for solution pattern
 if ($testAssembly.Contains("*") -Or $testAssembly.Contains("?"))
 {
@@ -68,7 +69,11 @@ if ($testAssembly.Contains("*") -Or $testAssembly.Contains("?"))
 else
 {
     Write-Verbose "No Pattern found in solution parameter."
-    $testAssemblyFiles = ,$testAssembly
+    $testAssembly = $testAssembly.Replace(';;', "`0") # Barrowed from Legacy File Handler
+    foreach ($assembly in $testAssembly.Split(";"))
+    {
+        $testAssemblyFiles += ,($assembly.Replace("`0",";"))
+    }
 }
 
 $codeCoverage = Convert-String $codeCoverageEnabled Boolean
@@ -110,7 +115,6 @@ if($testAssemblyFiles)
     if($resultFiles)
     {
         # Remove the below hack once the min agent version is updated to S91 or above
-    
         $runTitleMemberExists = CmdletHasMember "RunTitle"
         $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
         if($runTitleMemberExists)

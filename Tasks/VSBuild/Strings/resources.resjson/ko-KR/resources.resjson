@@ -12,6 +12,7 @@
   "loc.input.label.configuration": "구성",
   "loc.input.label.clean": "클린",
   "loc.input.label.restoreNugetPackages": "NuGet 패키지 복원",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.vsVersion": "Visual Studio 버전",
   "loc.input.help.vsVersion": "기본 설정 버전을 찾을 수 없는 경우 발견된 최신 버전이 대신 사용됩니다.",
   "loc.input.label.msbuildArchitecture": "MSBuild 아키텍처",

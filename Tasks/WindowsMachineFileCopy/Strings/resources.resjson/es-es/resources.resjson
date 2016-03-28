@@ -7,7 +7,7 @@
   "loc.input.label.SourcePath": "Origen",
   "loc.input.help.SourcePath": "Ruta de acceso absoluta del archivo o carpeta de origen en el equipo local, o un recurso compartido UNC, como c:\\fabrikamfiber o \\\\\\\\fabrikamshare\\fabrikamfiber.",
   "loc.input.label.EnvironmentName": "Equipos",
-  "loc.input.help.EnvironmentName": "Proporcione una lista separada por comas de direcciones IP de equipos o nombres de dominio completos.<br>Ejemplo: dbserver.fabrikam.com,192.168.12.34 <br>O bien proporcione la variable de salida de otras tareas. Ejemplo: $(variableName)",
+  "loc.input.help.EnvironmentName": "Proporcione una lista separada por comas de direcciones IP de equipos o nombres de dominio completos.<br>Ejemplo: dbserver.fabrikam.com,192.168.12.34 <br>O bien proporcione la variable de salida de otras tareas. Ejemplo: $(nombreDeVariable)",
   "loc.input.label.AdminUserName": "Inicio de sesión del administrador",
   "loc.input.help.AdminUserName": "Inicio de sesión del administrador para los equipos de destino.",
   "loc.input.label.AdminPassword": "Contraseña",

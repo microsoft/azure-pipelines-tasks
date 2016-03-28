@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "發行程式碼涵蓋範圍結果",
   "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "將程式碼涵蓋範圍結果發行至 VSO/TFS",
+  "loc.description": "Publish code coverage results to VSTS/TFS",
   "loc.instanceNameFormat": "發行程式碼涵蓋範圍結果 $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "程式碼涵蓋範圍工具",
   "loc.input.help.codeCoverageTool": "選取已產生程式碼涵蓋範圍摘要檔的工具",

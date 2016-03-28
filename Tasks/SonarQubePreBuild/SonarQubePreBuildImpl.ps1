@@ -138,9 +138,6 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs)
         {
             $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=incremental"
         }
-
-		#use this variable in post-test task
-		SetTaskContextVariable "MSBuild.SonarQube.AnalysisModeIsIncremental" "true"
 	}
 
 	return $cmdLineArgs
