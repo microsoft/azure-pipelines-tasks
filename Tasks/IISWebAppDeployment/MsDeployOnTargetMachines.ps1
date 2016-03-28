@@ -193,7 +193,7 @@ function Get-MsDeployCmdArgs
         }
     }
     
-    $msDeployCmdArgs = [string]::Format(' -verb:sync -source:package="{0}" {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000', $webDeployPackage, $msDeployCmdArgs)
+    $msDeployCmdArgs = [string]::Format(' -verb:sync -source:package="{0}" {1} -dest:auto -verbose -retryAttempts:3 -retryInterval:3000 -enableRule:DoNotDeleteRule', $webDeployPackage, $msDeployCmdArgs)
     return $msDeployCmdArgs
 }
 
