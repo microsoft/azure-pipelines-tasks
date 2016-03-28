@@ -52,7 +52,7 @@
       "groupName": "versioning",
       "options": {
         "false": "Off",
-        "byPrereleaseNumber": "Use semantic versioning",
+        "byPrereleaseNumber": "Use the date and time",
         "byEnvVar": "Use an environment variable",
         "true": "Use the build number"
       }

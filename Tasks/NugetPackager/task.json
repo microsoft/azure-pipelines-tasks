@@ -47,12 +47,12 @@
             "type": "pickList",
             "label": "Automatic package versioning",
             "defaultValue":"false",
-            "helpMarkDown": "If you choose 'Use semantic versioning', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'.",
+            "helpMarkDown": "If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'.",
             "required":true,
             "groupName": "versioning",
             "options": {
                 "false": "Off",
-                "byPrereleaseNumber": "Use semantic versioning",
+                "byPrereleaseNumber": "Use the date and time",
                 "byEnvVar": "Use an environment variable",
                 "true": "Use the build number"
             }
