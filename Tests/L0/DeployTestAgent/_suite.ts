@@ -31,5 +31,11 @@ describe('Deploy Test Agent Suite', function () {
         it('(DeployTestAgent-VerifyAzureCompat.OldResource) verifies if old deploy test agent is called for non-supported flat machine env', (done) => {
             psm.runPS(path.join(__dirname, 'VerifyAzureCompat.OldResource.ps1'), done);
         })
+	it('(DeployTestAgent-VerifyRegisterEnvrionmentWithPersist) verifies if new DTL Register Environment flow is being called', (done) => {
+            psm.runPS(path.join(__dirname, 'VerifyRegisterEnvrionmentWithPersist.ps1'), done);
+        })
+	it('(DeployTestAgent-VerifyRegisterEnvrionmentWithoutPersist) verifies if old DTL Register Environment flow is being called', (done) => {
+            psm.runPS(path.join(__dirname, 'VerifyRegisterEnvrionmentWithoutPersist.ps1'), done);
+        })
     }
 });
