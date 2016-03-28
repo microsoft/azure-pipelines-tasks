@@ -873,7 +873,7 @@ function Get-AzureVMsCredentials
     param([string][Parameter(Mandatory=$true)]$vmsAdminUserName,
           [string][Parameter(Mandatory=$true)]$vmsAdminPassword)
 
-    Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName"ssss
+    Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName"
     $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassword
 
     return $azureVmsCredentials

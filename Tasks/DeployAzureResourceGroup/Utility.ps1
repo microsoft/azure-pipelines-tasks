@@ -70,7 +70,7 @@ function Validate-AzurePowerShellVersion
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "http://aka.ms/azps")
     }
 
-    Write-Verbose -Verbose "Validated the required azure powershell version"
+    Write-Verbose "Validated the required azure powershell version"
 }
 
 function Check-AzureRMInstalled
@@ -85,7 +85,7 @@ function Check-AzureRMInstalled
 function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose -Verbose "Azure PowerShell version: $currentVersion"
+    Write-Verbose "Azure PowerShell version: $currentVersion"
 
     $AzureVersion099 = New-Object System.Version(0, 9, 9)
     $AzureVersion103 = New-Object System.Version(1, 0, 3)
@@ -109,7 +109,7 @@ function Get-AzureUtility
         $azureUtilityRequiredVersion = $azureUtilityVersion110
     }
 
-    Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
+    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
     return $azureUtilityRequiredVersion
 }
 
@@ -140,7 +140,7 @@ function Create-AzureResourceGroup
 
         if ($azureResourceGroupDeployment)
         {
-            Write-Verbose -Verbose "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
+            Write-Host "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
             Get-MachineLogs -ResourceGroupName $resourceGroupName
 
             if($deploymentError)
@@ -159,7 +159,7 @@ function Create-AzureResourceGroup
                 Write-Host (Get-LocalizedString -Key "Successfully created resource group deployment with name '{0}'" -ArgumentList $resourceGroupName)
             }
 
-            Write-Verbose -Verbose "End of resource group deployment logs"
+            Write-Verbose "End of resource group deployment logs"
             return $azureResourceGroupDeployment
         }
         else
@@ -182,7 +182,7 @@ function Get-MachineLogs
         {
             $vmInstanceView = $VmInstanceViews[$vmName]
 
-            Write-Verbose -Verbose "Machine $vmName status:"
+            Write-Verbose "Machine $vmName status:"
             foreach($status in $vmInstanceView.Statuses)
             {
                 Print-OperationLog -Log $status
@@ -190,7 +190,7 @@ function Get-MachineLogs
 
             if($vmInstanceView.VMAgent.ExtensionHandlers)
             {
-                Write-Verbose -Verbose "Machine $name VM agent status:"
+                Write-Verbose "Machine $name VM agent status:"
                 foreach($extensionHandler in $vmInstanceView.VMAgent.ExtensionHandlers)
                 {
                     Print-OperationLog -Log $extensionHandler.Status
@@ -239,10 +239,10 @@ function Get-SingleFile($files, $pattern)
 function Get-File($pattern)
 {
     #Find the File based on pattern
-    Write-Verbose -Verbose "Finding files based on $pattern"
+    Write-Verbose "Finding files based on $pattern"
     $filesMatchingPattern = Find-Files -SearchPattern "$pattern"
 
-    Write-Verbose -Verbose "Files Matching Pattern: $filesMatchingPattern"
+    Write-Verbose "Files Matching Pattern: $filesMatchingPattern"
 
     #Ensure that at most a single file is found
     $file = Get-SingleFile $filesMatchingPattern $pattern
@@ -277,13 +277,13 @@ function Print-OperationLog
         $status = $log.DisplayStatus
         if(-not [string]::IsNullOrEmpty($status))
         {
-            Write-Verbose -Verbose "Status: $status"
+            Write-Verbose "Status: $status" -verbose
         }
 
         $message = $log.Message
         if(-not [string]::IsNullOrEmpty($message))
         {
-            Write-Verbose -Verbose "Message: $message"
+            Write-Verbose "Message: $message" -verbose
         }
     }
 }
@@ -295,14 +295,14 @@ function Get-CsmAndParameterFiles
 
     #Find the matching deployment definition File
     $csmFile = Get-File $csmFile
-    Write-Verbose -Verbose "deploymentDefinitionFile = $csmFile"
+    Write-Verbose "deploymentDefinitionFile = $csmFile"
 
     # csmParametersFile value would be  SYSTEM_DEFAULTWORKINGDIRECTORY when left empty in UI.
     if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
     {
         #Find the matching deployment definition Parameter File
         $csmParametersFile = Get-File $csmParametersFile
-        Write-Verbose -Verbose "deploymentDefinitionParametersFile = $csmParametersFile"
+        Write-Verbose "deploymentDefinitionParametersFile = $csmParametersFile"
     }
 
     Validate-DeploymentFileAndParameters -csmFile $csmFile -csmParametersFile $csmParametersFile
@@ -339,13 +339,13 @@ function Invoke-OperationOnResourceGroup
      param([string]$resourceGroupName,
            [string]$operationName)
 
-    Write-Verbose "Entered perform action $operationName on machines for resource group $resourceGroupName" -Verbose
+    Write-Verbose "Entered perform action $operationName on machines for resource group $resourceGroupName"
 
     $machines = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
 
     if(! $machines)
     {
-        Write-Verbose "Resource group $resourceGroupName has no machines in it" -Verbose
+        Write-Host "Resource group $resourceGroupName has no machines in it"
         return
     }
 
@@ -362,7 +362,7 @@ function Invoke-OperationOnResourceGroup
         }
         else
         {
-            Write-Verbose "'$operationName' operation on the machine '$machineName' succeeded" -Verbose
+            Write-Host "'$operationName' operation on the machine '$machineName' succeeded"
         }
         
         Write-Verbose "Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
@@ -447,13 +447,13 @@ function Instantiate-Environment
 
     $machineSpecification = $resources -join ","
 
-    Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
+    Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName"
     $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -TagsList $tagsList -Persist
-    Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
+    Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName"
 
-    Write-Verbose "Adding environment $outputVariable to output variables" -Verbose
+    Write-Verbose "Adding environment $outputVariable to output variables"
     Set-TaskVariable -Variable $outputVariable -Value $outputVariable
-    Write-Verbose "Added the environmnent $outputVariable to output variable" -Verbose
+    Write-Verbose "Added the environmnent $outputVariable to output variable"
 }
 
 function Get-AzureResourcesTags
@@ -474,7 +474,7 @@ function Get-AzureResourcesTags
                 $resourcePort = ($azureVMsDetails[$resourceName]).winRMHttpsPort
                 $resourceTags = $resource.Tags
 
-                Write-Verbose -Verbose "Adding tags: '$resourceTags' for resource: '$resourceFqdn + ':' + $resourcePort'"
+                Write-Verbose "Adding tags: '$resourceTags' for resource: '$resourceFqdn + ':' + $resourcePort'"
                 $tagsList.Add($resourceFqdn + ':' + $resourcePort, $resource.Tags)
             }
         }
@@ -577,7 +577,7 @@ function Get-FrontEndPorts
 
     if(-not [string]::IsNullOrEmpty($backEndPort) -and $networkInterfaceResources -and $inboundRules)
     {
-        Write-Verbose "Trying to get front end ports for $backEndPort" -Verbose
+        Write-Verbose "Trying to get front end ports for $backEndPort"
 
         $filteredRules = $inboundRules | Where-Object {$_.BackendPort -eq $backEndPort}
 
@@ -620,7 +620,7 @@ function Get-FrontEndPorts
         }
     }
     
-    Write-Verbose "Got front end ports for $backEndPort" -Verbose
+    Write-Verbose "Got front end ports for $backEndPort"
     return $portList
 }
 
@@ -653,14 +653,14 @@ function Get-MachineNameFromId
             $resourceName = $vm.Name
             if(-not [string]::IsNullOrEmpty($value))
             {
-                Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
+                Write-Verbose "$mapParameter value for resource $resourceName is $value"
                 $map.Remove($vm.Id.ToLower())
                 $map[$resourceName] = $value
             }
             else
             {
                 $errorCount = $errorCount + 1
-                Write-Verbose "Unable to find $mapParameter for resource $resourceName" -Verbose
+                Write-Verbose "Unable to find $mapParameter for resource $resourceName"
             }
         }
 
@@ -739,7 +739,7 @@ function Get-MachinesFqdnsForPublicIP
         }
     }
 
-    Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName"
 
     return $fqdnMap
 }
@@ -794,7 +794,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             $resourceWinRmHttpsPort = $winRmHttpsPortMap[$resourceName]
             if([string]::IsNullOrWhiteSpace($resourceWinRmHttpsPort))
             {
-                Write-Verbose -Verbose "Defaulting WinRmHttpsPort of $resourceName to 5986"
+                Write-Verbose "Defaulting WinRmHttpsPort of $resourceName to 5986"
                 $resourceWinRmHttpsPort = "5986"
             }
 
@@ -807,7 +807,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
 
             if ($enableDeploymentPrerequisites -eq "true")
             {
-                Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
+                Write-Verbose "Enabling winrm for virtual machine $resourceName"
                 Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
             }
         }
@@ -822,7 +822,7 @@ function Validate-CustomScriptExecutionStatus
           [string]$vmName,
           [string]$extensionName)
 
-    Write-Verbose -Verbose "Validating the winrm configuration custom script extension status"
+    Write-Verbose "Validating the winrm configuration custom script extension status"
 
     $isScriptExecutionPassed = $true
     try
@@ -837,7 +837,7 @@ function Validate-CustomScriptExecutionStatus
             $subStatuses = $customScriptExtension.SubStatuses
             $subStatusesStr = $subStatuses | Out-String
 
-            Write-Verbose -Verbose "Custom script extension execution statuses: $subStatusesStr"
+            Write-Verbose "Custom script extension execution statuses: $subStatusesStr"
 
             if($subStatuses)
             {
@@ -875,7 +875,7 @@ function Validate-CustomScriptExecutionStatus
         throw (Get-LocalizedString -Key "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}" -ArgumentList $extensionName, $vmName, $errMessage)
     }
 
-    Write-Verbose -Verbose "Validated the script execution successfully"
+    Write-Verbose "Validated the script execution successfully"
 }
 
 function Is-WinRMCustomScriptExtensionExists
@@ -935,7 +935,7 @@ function Add-WinRMHttpsNetworkSecurityRuleConfig
           [string]$rulePriotity,
           [string]$winrmHttpsPort)
     
-    Write-Verbose -Verbose "Trying to add a network security group rule"
+    Write-Verbose "Trying to add a network security group rule"
 
     try
     {
@@ -970,26 +970,26 @@ function Add-AzureVMCustomScriptExtension
     $rulePriotity="3986"
     $winrmHttpsPort = "5986"
 
-    Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
-    Write-Verbose -Verbose "VM Location : $location"
-    Write-Verbose -Verbose "VM DNS : $dnsName"
+    Write-Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
+    Write-Verbose "VM Location : $location"
+    Write-Verbose "VM DNS : $dnsName"
 
     try
     {
         $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
-        Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
+        Write-Verbose "IsExtensionExists: $isExtensionExists"
 
         if($isExtensionExists)
         {
             Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort                     
             
-            Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
+            Write-Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
             return
         }
 
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
         $resultDetails = $result | ConvertTo-Json
-        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
+        Write-Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
 
         if($result.Status -ne "Succeeded")
         {
@@ -1008,7 +1008,7 @@ function Add-AzureVMCustomScriptExtension
         throw (Get-LocalizedString -Key "Failed to enable deployment prerequisites. {0}" -ArgumentList $_.exception.message)
     }
 
-    Write-Verbose -Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
+    Write-Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
 }
 
 function Enable-WinRMHttpsListener
