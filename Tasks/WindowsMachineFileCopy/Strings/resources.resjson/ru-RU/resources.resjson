@@ -2,7 +2,7 @@
   "loc.friendlyName": "Копирование файлов на компьютер Windows",
   "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Копировать файлы на удаленные компьютеры",
-  "loc.instanceNameFormat": "Копировать файлы $(SourcePath)",
+  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.SourcePath": "Источник",
   "loc.input.help.SourcePath": "Абсолютный путь к исходной папке или файлу на локальном компьютере либо общий ресурс UNC, например c:\\fabrikamfiber или \\\\\\\\fabrikamshare\\fabrikamfiber.",
@@ -22,5 +22,5 @@
   "loc.input.help.AdditionalArguments": "Дополнительные аргументы robocopy, которые будут применены при копировании файлов, например /min:33553332 /l.",
   "loc.input.label.ResourceFilteringMethod": "Выбор компьютеров по",
   "loc.input.label.MachineNames": "Условия фильтра",
-  "loc.input.help.MachineNames": "Входные данные допустимы только для групп компьютеров и пока не поддерживаются для плоского списка компьютеров или выходных переменных. Укажите список компьютеров, например dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, или теги, такие как Role:DB; OS:Win8.1. Если указано несколько тегов, задача будет выполняться на всех компьютерах с указанными тегами. Для групп ресурсов Azure укажите имя виртуальной машины (например, ffweb, ffdb). Поведение по умолчанию — запуск задачи на всех компьютерах."
+  "loc.input.help.MachineNames": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }

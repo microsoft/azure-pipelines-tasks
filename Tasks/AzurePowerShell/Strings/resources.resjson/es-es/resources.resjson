@@ -4,12 +4,14 @@
   "loc.description": "Ejecutar un script de PowerShell en un entorno de Azure",
   "loc.instanceNameFormat": "Script de PowerShell de Azure: $(ScriptPath)",
   "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",
-  "loc.input.label.ConnectedServiceName": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to configure before running PowerShell",
+  "loc.input.label.ConnectedServiceName": "Suscripción de Azure clásico",
+  "loc.input.help.ConnectedServiceName": "Suscripción de Azure clásico para configurar antes de ejecutar PowerShell",
   "loc.input.label.ConnectedServiceNameARM": "Suscripción del Administrador de recursos de Azure",
   "loc.input.help.ConnectedServiceNameARM": "Suscripción del Administrador de recursos de Azure para configurar antes de ejecutar PowerShell",
   "loc.input.label.ScriptPath": "Ruta de acceso del script",
   "loc.input.help.ScriptPath": "Ruta de acceso del script. Debe ser una ruta de acceso completa o relativa al directorio de trabajo predeterminado.",
   "loc.input.label.ScriptArguments": "Argumentos del script",
-  "loc.input.help.ScriptArguments": "Parámetros adicionales que pasar a PowerShell. Pueden ser parámetros ordinales o con nombre."
+  "loc.input.help.ScriptArguments": "Parámetros adicionales que pasar a PowerShell. Pueden ser parámetros ordinales o con nombre.",
+  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
 }

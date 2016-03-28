@@ -9,6 +9,7 @@
   "loc.input.help.email": "Xamarin 帐户电子邮件地址。",
   "loc.input.label.password": "密码",
   "loc.input.help.password": "Xamarin 帐户密码。",
-  "loc.input.label.activateAndroid": "激活 Xamarin.Android",
+  "loc.input.label.product": "Xamarin Product",
+  "loc.input.help.product": "Xamarin product name.",
   "loc.input.label.timeout": "超时秒数"
 }

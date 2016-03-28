@@ -30,7 +30,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     type=error or warning (Required) <br>
                     sourcepath=source file location <br>
                     linenumber=line number <br>
-                    columnumber=colum number <br>
+                    columnnumber=column number <br>
                     code=error or warning code <br>
                 </p>
             </td>
@@ -38,7 +38,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 <p align="left">
                     Log error or warning issue to timeline record of current task.<br>
                     Example: <br>
-                    ##vso[task.logissue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnumber=1;code=100;]this is an error
+                    ##vso[task.logissue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnnumber=1;code=100;]this is an error
                 </p>
             </td>
             <td>
@@ -164,12 +164,32 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     Upload and attach attachment to current timeline record. <br>
                     Example: <br>
 					##vso[task.addattachment type=myattachmenttype;name=myattachmentname;]c:\myattachment.txt<br> 
-                    Upload and attach summary markdown to current timeline record. <br>
-                    Example: <br>
-					##vso[task.addattachment type=Distributedtask.Core.Summary;name=myattachmentname;]c:\myattachment.md<br> 
                 </p>
             </td>
             <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="left">
+                    ##vso[task.uploadsummary]local file path
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Upload and attach summary markdown to current timeline record. <br>
+                    Example: <br>
+                    ##vso[task.uploadsummary]c:\testsummary.md <br>
+                    It is a short hand form for the command <br>
+                    ##vso[task.addattachment type=Distributedtask.Core.Summary;name=testsummaryname;]c:\testsummary.md<br> 
+                </p>
+            </td>
+            <td>
+               0.5.6
             </td>
         </tr>
     </tbody>
@@ -264,25 +284,6 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     Upload user interested log to build’s container “logs\tool” folder.<br>
                     Example: <br>
                     ##vso[build.uploadlog]c:\msbuild.log
-                </p>
-            </td>
-            <td>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p align="left">
-                    ##vso[build.uploadsummary]local file path
-                </p>
-            </td>
-            <td>
-                <p align="left">
-                </p>
-            </td>
-            <td>
-                <p align="left">
-                    <b>Deprecated.</b> <br>Markdown uploaded through this command won't show up in build summary view. <br>
-                    Use <i>##vso[task.addattachment type=Distributedtask.Core.Summary;name=myattachmentname;]c:\myattachment.md</i> instead. <br />
                 </p>
             </td>
             <td>

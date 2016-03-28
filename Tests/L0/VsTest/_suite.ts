@@ -64,5 +64,11 @@ describe('VsTest Suite', function () {
         it('(RunSettingsForParallel.ReturnsNewFileIfParallelIsTrueAndFileNameIsANonRunsettingsFile) returns new file if parallel flag is true and runsettings input is not a runsettings file', (done) => {
             psm.runPS(path.join(__dirname, 'RunSettingsForParallel.ReturnsNewFileIfParallelIsTrueAndFileNameIsANonRunsettingsFile.ps1'), done);
         })
+        it('ValidateTestAssembliesAreSplit) tests if the input test assembiles are properly passed to cmdlet', (done) => {
+            psm.runPS(path.join(__dirname, 'ValidateTestAssembliesAreSplit.ps1'), done);
+        })
+         it('ValidateTestAssembliesAreSplit) tests if the input test assembiles are properly passed to cmdlet', (done) => {
+            psm.runPS(path.join(__dirname, 'ValidateTestAssembliesAreNotSplit.ps1'), done);
+        })
     }
 });

@@ -12,7 +12,7 @@ VSTest task can be used to run tests on Build agent machines. Using the appropri
 
 For example, `**\commontests\*test*.dll; **\frontendtests\*test*.dll;-:**\obj\**` or `$(Build.SourcesDirectory)\Tests\*tests*.dll;-:$(Build.SourcesDirectory)\Tests\Integrationtests.dll`
 
-Include patterns start with ‘+:’, and exclude patterns with ‘-:’ (Default is include). For Javascript tests, this will point to .js files containing the tests
+Include patterns start with ‘+:’, and exclude patterns with ‘-:’ (Default is include). For Javascript tests, this will point to .js files containing the tests. Folders/Files which are having ";" in their names should be given as ";;" in input.
 
 - **Test Filter Criteria:**	Filters tests from within the test assembly files. For example, “Priority=1 | Name=MyTestMethod”. This option works the same way as the console option /TestCaseFilter of vstest.console.exe
 

@@ -168,17 +168,15 @@ describe('Delete Files Suite', function() {
 		});
 	})
 	
-	it('fails if SourceFolder not found', (done) => {
+	it('succeeds if SourceFolder not found', (done) => {
 		setResponseFile('deleteFilesResponsesGood.json');
 		
 		var tr = new trm.TaskRunner('DeleteFiles');
 		tr.setInput('Contents', '**');
-		tr.setInput('SourceFolder', '/notExistDir');
+        tr.setInput('SourceFolder', '/notExistDir');
 		tr.run()
 		.then(() => {
-			assert(tr.failed, 'should have failed');
-            var expectedErr = 'not found SourceFolder';
-            assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
+			assert(tr.succeeded, 'should have succeeded');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.invokedToolCount == 0, 'should exit before running DeleteFiles');
 			done();

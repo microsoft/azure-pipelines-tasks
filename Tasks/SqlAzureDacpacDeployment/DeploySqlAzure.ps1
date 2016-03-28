@@ -39,8 +39,43 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 # Load all dependent files for execution
 Import-Module ./Utility.ps1 -Force
 
+function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
+{
+    if ($files -is [system.array])
+    {
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern {0}. There can be only one." -ArgumentList $pattern)
+    }
+    else
+    {
+        if (!$files)
+        {
+            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}" -ArgumentList $pattern)
+        }
+    }
+}
+
+Write-Host "DacpacFilePath= Find-Files -SearchPattern $DacpacFile"
+$DacpacFilePath = Find-Files -SearchPattern $DacpacFile
+Write-Host "packageFile= $DacpacFilePath"
+
+#Ensure that a single package (.dacpac) file is found
+ThrowIfMultipleFilesOrNoFilePresent -files $DacpacFilePath -pattern $DacpacFile
+
+$PublishProfilePath = ""
+if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $PublishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
+{
+    Write-Host "PublishProfilePath = Find-Files -SearchPattern $PublishProfile"
+    $PublishProfilePath = Find-Files -SearchPattern $PublishProfile
+    Write-Host "Publish profile path = $PublishProfilePath"
+
+    #Ensure that only one publish profile file is found
+    ThrowIfMultipleFilesOrNoFilePresent -files $PublishProfilePath -pattern $PublishProfile
+}
+
+
 $ErrorActionPreference = 'Stop'
 
+$ServerName = $ServerName.ToLower()
 $serverFriendlyName = $ServerName.split(".")[0]
 Write-Verbose "Server friendly name is $serverFriendlyName" -Verbose
 
@@ -76,8 +111,8 @@ Try
 
     # getting script arguments to execute sqlpackage.exe
     Write-Verbose "Creating SQLPackage.exe agruments" -Verbose
-    $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFile -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
-                                                     -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfile -additionalArguments $AdditionalArguments
+    $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
+                                                     -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
     Write-Verbose "Created SQLPackage.exe agruments" -Verbose
 
     $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"

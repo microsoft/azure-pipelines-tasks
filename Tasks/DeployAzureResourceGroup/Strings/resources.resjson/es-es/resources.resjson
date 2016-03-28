@@ -7,8 +7,8 @@
   "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",
   "loc.input.label.ConnectedServiceName": "Suscripción del Administrador de recursos de Azure",
   "loc.input.help.ConnectedServiceName": "Seleccione la suscripción del Administrador de recursos de Azure para la implementación.",
-  "loc.input.label.ConnectedServiceNameClassic": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceNameClassic": "Select the Azure Classic subscription for the deployment.",
+  "loc.input.label.ConnectedServiceNameClassic": "Suscripción de Azure clásico",
+  "loc.input.help.ConnectedServiceNameClassic": "Seleccione la suscripción de Azure clásico para la implementación.",
   "loc.input.label.action": "Acción",
   "loc.input.help.action": "Acción que se va a ejecutar en los recursos o el grupo de recursos de Azure.",
   "loc.input.label.actionClassic": "Acción",
@@ -26,9 +26,9 @@
   "loc.input.label.overrideParameters": "Reemplazar parámetros de plantilla",
   "loc.input.help.overrideParameters": "Especifique los parámetros de plantilla que se reemplazarán, como <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre).",
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "Habilitar los requisitos previos de implementación",
-  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Al habilitar esta opción, se configura el agente de escucha de Administración remota de Windows (WinRM) a través del protocolo HTTPS en el puerto 5986, mediante un certificado autofirmado. Esta configuración es necesaria para realizar operaciones de implementación en máquinas de Azure. Si las máquinas virtuales de destino están respaldadas por un equilibrador de carga, asegúrese de que las reglas NAT de entrada estén configuradas para el puerto de destino (5986). Si las máquinas virtuales de destino están asociadas a un grupo de seguridad de red (NSG), configure reglas de seguridad de entrada para el puerto de destino (5986).",
+  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "Habilitar los requisitos previos de implementación",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Al habilitar esta opción, se configura el agente de escucha de Administración remota de Windows (WinRM) a través del protocolo HTTPS en el puerto 5986, mediante un certificado autofirmado. Esta configuración es necesaria para realizar operaciones de implementación en máquinas de Azure. Si las máquinas virtuales de destino están respaldadas por un equilibrador de carga, asegúrese de que las reglas NAT de entrada estén configuradas para el puerto de destino (5986). Si las máquinas virtuales de destino están asociadas a un grupo de seguridad de red (NSG), configure reglas de seguridad de entrada para el puerto de destino (5986). Solo se aplica a máquinas virtuales de ARM.",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.outputVariable": "Grupo de recursos",
   "loc.input.help.outputVariable": "Ponga un nombre a la variable del grupo de recursos. La variable se puede usar como $(nombreDeVariable) para hacer referencia al grupo de recursos en tareas posteriores, como en PowerShell en la tarea de las máquinas de destino para implementar aplicaciones. <br>Solo es válido cuando la acción seleccionada es Crear, Actualizar o Seleccionar, y se requiere cuando se selecciona un grupo de recursos existente."
 }

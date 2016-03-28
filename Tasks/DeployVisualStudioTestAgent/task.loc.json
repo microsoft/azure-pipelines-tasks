@@ -13,10 +13,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 26
   },
   "demands": [],
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "1.97.0",
   "groups": [
     {
       "name": "testMachineGroups",
@@ -67,7 +67,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.winRmProtocol",
       "required": false,
-      "defaultValue": "Https",
+      "defaultValue": "",
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"

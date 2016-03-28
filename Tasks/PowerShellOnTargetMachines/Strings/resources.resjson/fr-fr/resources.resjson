@@ -28,5 +28,5 @@
   "loc.input.label.ResourceFilteringMethod": "Sélectionner les machines par",
   "loc.input.help.ResourceFilteringMethod": "Vous pouvez également sélectionner un sous-ensemble de machines en spécifiant les noms des machines ou les balises associées.",
   "loc.input.label.MachineNames": "Critères de filtre",
-  "loc.input.help.MachineNames": "Cette entrée est valide uniquement pour les groupes de machines. Elle n'est pas encore prise en charge pour une liste plate de machines ou de variables de sortie. Indiquez une liste de machines, par exemple dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, ou utilisez des balises telles que Role:DB; OS:Win8.1. Si plusieurs balises sont indiquées, la tâche s'exécute sur toutes les machines correspondant aux balises spécifiées. Pour les groupes de ressources Azure, indiquez le nom de la machine virtuelle, par exemple ffweb, ffdb. Par défaut, la tâche s'exécute sur toutes les machines."
+  "loc.input.help.MachineNames": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }

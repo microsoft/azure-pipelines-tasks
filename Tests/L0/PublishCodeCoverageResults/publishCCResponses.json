@@ -1,0 +1,18 @@
+{
+    "getVariable": {
+        "agent.buildDirectory": "/someDir"
+    },
+    "find": {
+        "/someDir": [
+            "someDir/someFile2",
+            "/someDir/someFile1"
+        ]
+    },
+    "match": {
+        "/some/*pattern": [
+            "some/path/one",
+            "some/path/two"
+        ],
+        "/other/*pattern": []
+    }
+}

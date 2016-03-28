@@ -28,5 +28,5 @@
   "loc.input.label.ResourceFilteringMethod": "Seleziona computer per",
   "loc.input.help.ResourceFilteringMethod": "Selezionare, facoltativamente, un sottoinsieme di computer specificando nomi o tag dei computer.",
   "loc.input.label.MachineNames": "Criteri di filtro",
-  "loc.input.help.MachineNames": "Questo input è valido solo per gruppi di computer e non è ancora supportato per elenchi semplici di computer o variabili di output. Consente di specificare un elenco di computer come dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34 o tag come Role:DB; OS:Win8.1. Se vengono specificati più tag, l'attività verrà eseguita in tutti i computer con i tag specificati. Per Gruppo di risorse di Azure specificare il nome della macchina virtuale, ad esempio ffweb o ffdb. Per impostazione predefinita, l'attività viene eseguita in tutti i computer."
+  "loc.input.help.MachineNames": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }

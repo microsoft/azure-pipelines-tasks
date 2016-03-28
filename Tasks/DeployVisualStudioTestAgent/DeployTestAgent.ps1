@@ -68,6 +68,7 @@ Write-Verbose "VerifyTestMachinesAreInUseScriptLocation = $verifyTestMachinesAre
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
@@ -86,7 +87,7 @@ $taskContextMemberExists  = CmdletHasMember "TaskContext"
 
 if($taskContextMemberExists){
     Write-Verbose "Calling Register Environment cmdlet"
-    $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines
+    $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines -Persist
     Write-Verbose "Environment details $environment"
 
     Write-Verbose "Calling Deploy test agent cmdlet"

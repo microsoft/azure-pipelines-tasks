@@ -14,11 +14,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 12
   },
   "demands": [
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.96.2",
   "groups": [
     {
       "name": "deployment",

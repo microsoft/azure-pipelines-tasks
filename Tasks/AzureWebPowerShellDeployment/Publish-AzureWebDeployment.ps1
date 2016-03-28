@@ -145,20 +145,17 @@ if($azureWebSite) {
             }
         }
         
-        $deploymentId = Get-TaskVariable $distributedTaskContext "build.sourceVersion" #let's use commitId as unique deploymentId in build context
+        $deploymentId = Get-TaskVariable $distributedTaskContext "release.releaseUri" #let's use releaseUri as unique deploymentId in release context
         if([string]::IsNullOrEmpty($deploymentId)) {
-            $deploymentId = Get-TaskVariable $distributedTaskContext "release.releaseUri" #let's use releaseUri as unique deploymentId in release context
-        }        
+            $deploymentId = Get-TaskVariable $distributedTaskContext "build.buildUri" #let's use buildUri as unique deploymentId in build context
+        }
         if([string]::IsNullOrEmpty($deploymentId)) {
             #No point in proceeding further
             Write-Warning (Get-LocalizedString -Key "Cannot update deployment status, unique deploymentId cannot be retrieved")  
             Return
         }
         
-        $message = Get-TaskVariable $distributedTaskContext "build.sourceVersionMessage"
-        if([string]::IsNullOrEmpty($message)) {
-            $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $deploymentId
-        }
+        $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $deploymentId
         
         $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
         

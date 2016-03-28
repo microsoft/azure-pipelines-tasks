@@ -2,7 +2,7 @@
   "loc.friendlyName": "Copie des fichiers de l'ordinateur Windows",
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copier les fichiers sur les ordinateurs distants",
-  "loc.instanceNameFormat": "Copier les fichiers $(Source Path)",
+  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "Options avancées",
   "loc.input.label.SourcePath": "Source",
   "loc.input.help.SourcePath": "Chemin d'accès absolu au dossier ou fichier source sur l'ordinateur local, ou partage UNC, par ex. c:\\fabrikamfiber ou \\\\\\\\fabrikamshare\\fabrikamfiber.",
@@ -22,5 +22,5 @@
   "loc.input.help.AdditionalArguments": "Arguments robocopy supplémentaires qui seront appliqués lors de la copie des fichiers, par exemple /min:33553332 /l.",
   "loc.input.label.ResourceFilteringMethod": "Sélectionner les machines par",
   "loc.input.label.MachineNames": "Critères de filtre",
-  "loc.input.help.MachineNames": "Cette entrée est valide uniquement pour les groupes de machines. Elle n'est pas encore prise en charge pour une liste plate de machines ou de variables de sortie. Indiquez une liste de machines, par exemple dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, ou utilisez des balises telles que Role:DB; OS:Win8.1. Si plusieurs balises sont indiquées, la tâche s'exécute sur toutes les machines correspondant aux balises spécifiées. Pour les groupes de ressources Azure, indiquez le nom de la machine virtuelle, par exemple ffweb, ffdb. Par défaut, la tâche s'exécute sur toutes les machines."
+  "loc.input.help.MachineNames": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }
