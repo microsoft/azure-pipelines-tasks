@@ -39,8 +39,16 @@ if ($excludeVersion -and "$excludeVersion".ToUpperInvariant() -ne 'FALSE')
 if ($solution.Contains("*") -or $solution.Contains("?"))
 {
     Write-Verbose "Pattern found in solution parameter."
-    Write-Verbose "Find-Files -SearchPattern $solution"
-    $solutionFiles = Find-Files -SearchPattern $solution
+    if ($env:BUILD_SOURCESDIRECTORY)
+    {
+        Write-Verbose "Find-Files -SearchPattern $solution -RootFolder $env:BUILD_SOURCESDIRECTORY"
+        $solutionFiles = Find-Files -SearchPattern $solution -RootFolder $env:BUILD_SOURCESDIRECTORY
+    }
+    else
+    {
+        Write-Verbose "Find-Files -SearchPattern $solution"
+        $solutionFiles = Find-Files -SearchPattern $solution
+    }
     Write-Verbose "solutionFiles = $solutionFiles"
 }
 else
