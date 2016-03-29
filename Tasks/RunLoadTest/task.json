@@ -2,8 +2,8 @@
   "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
   "name": "CloudLoadTest",
   "friendlyName": "Cloud-based Load Test",
-  "description": "Runs the load test in cloud, with Visual Studio Online",
-  "helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "description": "Runs the load test in the cloud with Visual Studio Team Services",
+  "helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
   "category": "Test",
   "visibility": [
     "Build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [
     "msbuild",

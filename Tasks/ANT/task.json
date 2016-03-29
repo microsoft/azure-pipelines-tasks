@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 33
+        "Patch": 34
     },
     "demands": [
         "ant"
@@ -64,7 +64,7 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to VSTS/TFS",
+            "label": "Publish to TFS/Team Services",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
@@ -100,8 +100,8 @@
             "helpMarkDown": "Select the code coverage tool. For on premise agent setup please refer to the more information link below.",
             "options": {
                 "None": "None",
-                "JaCoCo": "JaCoCo",
-                "Cobertura": "Cobertura"
+                "Cobertura": "Cobertura",
+                "JaCoCo": "JaCoCo"
             }
         },
         {

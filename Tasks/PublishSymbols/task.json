@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 23
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -35,7 +35,7 @@
             "name": "SearchPattern",
             "type": "string",
             "label": "Search pattern",
-            "defaultValue": "**\\bin\\**\\*.pdb",
+            "defaultValue": "**/bin/**/*.pdb",
             "required": true,
             "helpMarkDown": "The pattern used to discover the pdb files to publish."
         },
