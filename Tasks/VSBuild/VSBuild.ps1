@@ -36,7 +36,7 @@ try {
     $VSVersion = Select-VSVersion -PreferredVersion $VSVersion
     $MSBuildLocation = Select-MSBuildLocation -VSVersion $VSVersion -Architecture $MSBuildArchitecture
     $MSBuildArgs = Format-MSBuildArguments -MSBuildArguments $MSBuildArgs -Platform $Platform -Configuration $Configuration -VSVersion $VSVersion
-    $ErrorActionPreference = 'Continue'
+    $global:ErrorActionPreference = 'Continue'
     Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents)
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
