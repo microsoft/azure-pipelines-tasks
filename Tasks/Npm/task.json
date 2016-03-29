@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 7
+        "Patch": 9
     },
     "demands": [
         "npm"
@@ -55,11 +55,6 @@
         "Node": {
             "target": "npmtask.js",
             "argumentFormat": ""
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\Npm.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(cwd)"
         }
     },
     "messages": {
