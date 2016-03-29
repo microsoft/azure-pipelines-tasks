@@ -58,19 +58,13 @@ function Initialize-AzureSubscription {
         $store.Add($certificate)
         $store.Close()
         $additional = @{ }
-        if ($script:isClassic -and $script:classicVersion -lt ([version]'0.8.8')) {
-            $additional['ServiceEndpoint'] = $Endpoint.Url
-        } else {
-            $additional['Environment'] = 'AzureCloud'
-        }
-
         if ($StorageAccount) {
             $additional['CurrentStorageAccountName'] = $StorageAccount
         }
 
-        Write-Host "##[command]Set-AzureSubscription -SubscriptionName $($Endpoint.Data.SubscriptionName) -SubscriptionId $($Endpoint.Data.SubscriptionId) -Certificate ******** $(Format-Splat $additional)"
-        Set-AzureSubscription -SubscriptionName $Endpoint.Data.SubscriptionName -SubscriptionId $Endpoint.Data.SubscriptionId -Certificate $certificate @additional
-        Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId
+        Write-Host "##[command]Set-AzureSubscription -SubscriptionName $($Endpoint.Data.SubscriptionName) -SubscriptionId $($Endpoint.Data.SubscriptionId) -Certificate ******** -Environment AzureCloud $(Format-Splat $additional)"
+        Set-AzureSubscription -SubscriptionName $Endpoint.Data.SubscriptionName -SubscriptionId $Endpoint.Data.SubscriptionId -Certificate $certificate -Environment AzureCloud @additional
+        Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
     } elseif ($Endpoint.Auth.Scheme -eq 'UserNamePassword') {
         $psCredential = New-Object System.Management.Automation.PSCredential(
             $Endpoint.Auth.Parameters.UserName,
