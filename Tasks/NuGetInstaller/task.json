@@ -2,14 +2,14 @@
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
-    "description": "Installs and updates missing NuGet packages",
+    "description": "Installs or restores missing NuGet packages",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 21
+        "Patch": 23
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -19,14 +19,14 @@
             "isExpanded":false
         }
     ],    
-    "instanceNameFormat": "NuGet restore $(solution)",
+    "instanceNameFormat": "NuGet $(restoreMode) $(solution)",
     "inputs": [
         {
             "name": "solution",
             "type": "filePath",
-            "label": "Path to Solution",
+            "label": "Path to solution or packages.config",
             "defaultValue":"**/*.sln",
-            "helpMarkDown": "The path to the Visual Studio Solution file",
+            "helpMarkDown": "The path to the Visual Studio solution file or NuGet packages.config",
             "required":"true"
         },
         {
@@ -36,6 +36,18 @@
             "defaultValue":"",
             "helpMarkDown": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
             "required":"false"
+        },
+        {
+            "name": "restoreMode",
+            "type": "radio",
+            "label": "Installation type",
+            "defaultValue":"restore",
+            "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.",
+            "required":"true",
+            "options": {
+                "restore": "Restore",
+                "install": "Install"
+            }
         },
         {
             "name": "noCache",
@@ -48,10 +60,10 @@
         {
             "name": "nuGetRestoreArgs",
             "type": "string",
-            "label": "NuGet Arguments",
+            "label": "NuGet arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)."
+            "helpMarkDown": "Additional arguments passed to NuGet.exe restore or install. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)."
         },
         {
             "name": "nuGetPath",
