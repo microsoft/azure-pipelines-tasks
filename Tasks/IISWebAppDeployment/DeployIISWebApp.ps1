@@ -1,42 +1,4 @@
-﻿param (
-    [string]$environmentName,
-    [string]$adminUserName,
-    [string]$adminPassword,
-    [string]$winrmProtocol,
-    [string]$testCertificate,
-    [string]$resourceFilteringMethod,
-    [string]$machineFilter,
-    [string]$webDeployPackage,
-    [string]$webDeployParamFile,
-    [string]$overRideParams,
-    [string]$createWebsite,
-    [string]$websiteName,
-    [string]$websitePhysicalPath,
-    [string]$websitePhysicalPathAuth,
-    [string]$websiteAuthUserName,
-    [string]$websiteAuthUserPassword,
-    [string]$addBinding,
-    [string]$assignDuplicateBinding,
-    [string]$protocol,
-    [string]$ipAddress,
-    [string]$port,
-    [string]$hostNameWithHttp,
-    [string]$hostNameWithOutSNI,
-    [string]$hostNameWithSNI,
-    [string]$serverNameIndication,
-    [string]$sslCertThumbPrint,
-    [string]$createAppPool,
-    [string]$appPoolName,
-    [string]$dotNetVersion,
-    [string]$pipeLineMode,
-    [string]$appPoolIdentity,
-    [string]$appPoolUsername,
-    [string]$appPoolPassword,
-    [string]$appCmdCommands,
-    [string]$deployInParallel
-    )
-
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+﻿import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
@@ -182,6 +144,44 @@ function Run-RemoteDeployment
 
 function Main
 {
+    param (
+    [string]$environmentName,
+    [string]$adminUserName,
+    [string]$adminPassword,
+    [string]$winrmProtocol,
+    [string]$testCertificate,
+    [string]$resourceFilteringMethod,
+    [string]$machineFilter,
+    [string]$webDeployPackage,
+    [string]$webDeployParamFile,
+    [string]$overRideParams,
+    [string]$createWebsite,
+    [string]$websiteName,
+    [string]$websitePhysicalPath,
+    [string]$websitePhysicalPathAuth,
+    [string]$websiteAuthUserName,
+    [string]$websiteAuthUserPassword,
+    [string]$addBinding,
+    [string]$assignDuplicateBinding,
+    [string]$protocol,
+    [string]$ipAddress,
+    [string]$port,
+    [string]$hostNameWithHttp,
+    [string]$hostNameWithOutSNI,
+    [string]$hostNameWithSNI,
+    [string]$serverNameIndication,
+    [string]$sslCertThumbPrint,
+    [string]$createAppPool,
+    [string]$appPoolName,
+    [string]$dotNetVersion,
+    [string]$pipeLineMode,
+    [string]$appPoolIdentity,
+    [string]$appPoolUsername,
+    [string]$appPoolPassword,
+    [string]$appCmdCommands,
+    [string]$deployInParallel
+    )
+
     $hostName = Get-HostName -protocol $protocol -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -hostNameWithOutSNI $hostNameWithOutSNI -sni $serverNameIndication
 
     Write-Verbose "environmentName = $environmentName"
@@ -227,6 +227,3 @@ function Main
     $script = Get-ScriptToRun
     Run-RemoteDeployment -scriptToRun $script -filteringMethod $resourceFilteringMethod -filter $machineFilter -envName $environmentName -deployInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -winrmProtocol $winrmProtocol -testCertificate $testCertificate
 }
-
-Invoke-Expression Main
-

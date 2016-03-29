@@ -1,6 +1,6 @@
 {
-  "id": "89A3A82D-4B3E-4A09-8D40-A793849DC94F",
-  "name": "IISWebAppDeployment",
+  "id": "50ACC50F-7D15-470B-83C1-578B3F3EEBA2",
+  "name": "ExtensionIISWebAppDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -407,7 +407,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell": {
-      "target": "$(currentDirectory)\\DeployIISWebApp.ps1",
+      "target": "$(currentDirectory)\\InvokeDeployIISWebApp.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }

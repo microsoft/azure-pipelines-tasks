@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web Application Deployment",
+  "loc.friendlyName": "Extension IIS Web Application Deployment",
   "loc.helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Deploy by MSDeploy, create/update website & app pools",
   "loc.instanceNameFormat": "Deploy IIS App: $(WebDeployPackage)",
