@@ -6,7 +6,6 @@
   "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
