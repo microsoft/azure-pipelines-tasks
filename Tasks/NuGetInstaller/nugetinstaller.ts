@@ -85,7 +85,6 @@ else {
     restorePacakages();
 }
 
-
 function restorePacakages() {
     // Resolve files for the specified value or pattern
     var filesList: string[];
