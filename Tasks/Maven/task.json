@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 37
+        "Patch": 40
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -68,7 +68,7 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to VSTS/TFS",
+            "label": "Publish to TFS/Team Services",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
@@ -97,15 +97,15 @@
         {
             "name": "codeCoverageTool",
             "type": "pickList",
-            "label": "CodeCoverage Tool",
+            "label": "Code Coverage Tool",
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "None",
             "helpMarkDown": "Select the code coverage tool.",
             "options": {
                 "None": "None",
-                "JaCoCo": "JaCoCo",
-                "Cobertura": "Cobertura"
+                "Cobertura": "Cobertura",
+                "JaCoCo": "JaCoCo"
             }
         },
         {

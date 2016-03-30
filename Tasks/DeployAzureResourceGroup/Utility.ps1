@@ -1,4 +1,4 @@
-# Telemetr
+# Telemetry
 $telemetryCodes =
 @{
   "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
@@ -22,7 +22,7 @@ $telemetryCodes =
   "PREREQ_NoWinRMHTTP_Port" = "PREREQ001";
   "PREREQ_NoWinRMHTTPSPort" = "PREREQ002";
   "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
-  "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
+  "PREREQ_UnsupportedAzurePSVersion" = "PREREQ_UnsupportedAzurePSVersion";
 
   "UNKNOWNDEP_Error" = "UNKNOWNDEP_Error";
   "UNKNOWNPREDEP_Error" = "UNKNOWNPREDEP001";
@@ -66,7 +66,7 @@ function Validate-AzurePowerShellVersion
 
     if(!$versionCompatible)
     {
-        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVerion"
+        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVersion"
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "http://aka.ms/azps")
     }
 
@@ -453,7 +453,7 @@ function Instantiate-Environment
 
     Write-Verbose "Adding environment $outputVariable to output variables"
     Set-TaskVariable -Variable $outputVariable -Value $outputVariable
-    Write-Verbose "Added the environmnent $outputVariable to output variable"
+    Write-Verbose "Added the environment $outputVariable to output variable"
 }
 
 function Get-AzureResourcesTags
@@ -630,7 +630,7 @@ function Get-MachineNameFromId
           [System.Collections.Hashtable]$map,
           [string]$mapParameter,
           [Object]$azureRMVMResources,
-          [boolean]$throwOnTotalUnavaialbility,
+          [boolean]$throwOnTotalUnavailability,
           [string]$debugLogsFlag)
 
     if($map)
@@ -644,7 +644,7 @@ function Get-MachineNameFromId
             Write-Verbose ($azureRMVMResources | Format-List | Out-String) -Verbose
         }
 
-        Write-Verbose "throwOnTotalUnavaialbility: $throwOnTotalUnavaialbility" -Verbose
+        Write-Verbose "throwOnTotalUnavailability: $throwOnTotalUnavailability" -Verbose
 
         $errorCount = 0
         foreach($vm in $azureRMVMResources)
@@ -664,7 +664,7 @@ function Get-MachineNameFromId
             }
         }
 
-        if($throwOnTotalUnavaialbility -eq $true)
+        if($throwOnTotalUnavailability -eq $true)
         {
             if($errorCount -eq $azureRMVMResources.Count -and $azureRMVMResources.Count -ne 0)
             {
@@ -860,7 +860,7 @@ function Validate-CustomScriptExecutionStatus
         else
         {
             $isScriptExecutionPassed = $false
-            $errMessage = "No custom script extension '$extensionName' exists"     
+            $errMessage = "No custom script extension '$extensionName' exists"
         }
     }
     catch
