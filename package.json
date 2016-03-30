@@ -40,7 +40,8 @@
     "through2": "^0.6.3",
     "typescript": "1.8.0",
     "validator": "^3.33.0",
-    "vsts-task-lib": "^0.5.6"
+    "vsts-task-lib": "^0.5.6",
+    "uuid": "^2.0.1"
   },
   "dependencies": {
     "archiver": "^0.14.3",
