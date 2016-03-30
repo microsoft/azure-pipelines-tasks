@@ -69,11 +69,12 @@ function Validate-Inputs
 function Compute-MsDeploy-SetParams
 {
     param(
+        [string]$createWebsite,
         [string]$websiteName,
         [string]$overRideParams
     )
 
-    if(![string]::IsNullOrWhiteSpace($websiteName))
+    if($createWebsite -ieq "true")
     {
         if([string]::IsNullOrWhiteSpace($overRideParams))
         {
@@ -98,6 +99,34 @@ function Escape-DoubleQuotes
 
 function Get-ScriptToRun
 {
+    param (
+        [string]$webDeployPackage,
+        [string]$webDeployParamFile,
+        [string]$overRideParams,
+        [string]$websiteName,
+        [string]$websitePhysicalPath,
+        [string]$websitePhysicalPathAuth,
+        [string]$websiteAuthUserName,
+        [string]$websiteAuthUserPassword,
+        [string]$addBinding,
+        [string]$assignDuplicateBinding,
+        [string]$protocol,
+        [string]$ipAddress,
+        [string]$port,
+        [string]$hostName,
+        [string]$serverNameIndication,
+        [string]$sslCertThumbPrint,
+        [string]$appPoolName,
+        [string]$pipeLineMode,
+        [string]$dotNetVersion,
+        [string]$appPoolIdentity,
+        [string]$appPoolUsername,
+        [string]$appPoolPassword,
+        [string]$appCmdCommands,
+        [string]$createWebsite,
+        [string]$createAppPool
+    )
+
     $msDeployScript = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
     $invokeMain = "Execute-Main -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`" -WebsiteName `"$websiteName`" -WebsitePhysicalPath `"$websitePhysicalPath`" -WebsitePhysicalPathAuth `"$websitePhysicalPathAuth`" -WebsiteAuthUserName `"$websiteAuthUserName`" -WebsiteAuthUserPassword `"$websiteAuthUserPassword`" -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName `"$hostName`" -ServerNameIndication $serverNameIndication -SslCertThumbPrint `"$sslCertThumbPrint`" -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`" -CreateWebsite $createWebsite -CreateAppPool $createAppPool"
 
@@ -221,9 +250,9 @@ function Main
     Trim-Inputs -package ([ref]$webDeployPackage) -paramFile ([ref]$webDeployParamFile) -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolName) -websitePathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsername) -adminUser ([ref]$adminUserName)
 
     Validate-Inputs -createWebsite $createWebsite -websiteName $websiteName -createAppPool $createAppPool -appPoolName $appPoolName
-    $overRideParams = Compute-MsDeploy-SetParams -websiteName $websiteName -overRideParams $overRideParams
+    $overRideParams = Compute-MsDeploy-SetParams -createWebsite $createWebsite -websiteName $websiteName -overRideParams $overRideParams
     $appCmdCommands = Escape-DoubleQuotes -str $appCmdCommands
     $overRideParams = Escape-DoubleQuotes -str $overRideParams    
-    $script = Get-ScriptToRun
+    $script = Get-ScriptToRun -webDeployPackage $webDeployPackage -webDeployParamFile $webDeployParamFile -overRideParams $overRideParams -websiteName $websiteName -websitePhysicalPath $websitePhysicalPath -websitePhysicalPathAuth $websitePhysicalPathAuth -websiteAuthUserName $websiteAuthUserName -websiteAuthUserPassword $websiteAuthUserPassword -addBinding $addBinding -assignDuplicateBinding $assignDuplicateBinding -protocol $protocol -ipAddress $ipAddress -port $port -hostName $hostName -serverNameIndication $serverNameIndication -sslCertThumbPrint $sslCertThumbPrint -appPoolName $appPoolName -pipeLineMode $pipeLineMode -dotNetVersion $dotNetVersion -appPoolIdentity $appPoolIdentity -appPoolUsername $appPoolUsername -appPoolPassword $appPoolPassword -appCmdCommands $appCmdCommands -createWebsite $createWebsite -createAppPool $createAppPool
     Run-RemoteDeployment -scriptToRun $script -filteringMethod $resourceFilteringMethod -filter $machineFilter -envName $environmentName -deployInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -winrmProtocol $winrmProtocol -testCertificate $testCertificate
 }
