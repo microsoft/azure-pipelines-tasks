@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 64
+    "Patch": 65
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -30,9 +30,16 @@
       "name": "searchPattern",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPattern",
-      "defaultValue": "**\\*.nuspec",
+      "defaultValue": "**\\*.csproj",
       "helpMarkDown": "ms-resource:loc.input.help.searchPattern",
       "required": true
+    },
+    {
+      "name": "includeReferencedProjects",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeReferencedProjects",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.includeReferencedProjects"
     },
     {
       "name": "outputdir",
@@ -101,7 +108,7 @@
       "name": "configurationToPack",
       "type": "string",
       "label": "ms-resource:loc.input.label.configurationToPack",
-      "defaultValue": "Release",
+      "defaultValue": "$(BuildConfiguration)",
       "helpMarkDown": "ms-resource:loc.input.help.configurationToPack",
       "required": false,
       "groupName": "advanced"
