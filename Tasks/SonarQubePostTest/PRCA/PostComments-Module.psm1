@@ -84,9 +84,9 @@ function ValidateMessages
     
     foreach ($message in $messages)
     {
-        Assert (![String]::IsNullOrEmpty($message.RelativePath)) "A message doesn't have a RelativePath property"
-        Assert (![String]::IsNullOrEmpty($message.Priority)) "A message doesn't have a Priority property"
-        Assert (![String]::IsNullOrEmpty($message.Content)) "A message doesn't have content "
+        Assert (![String]::IsNullOrEmpty($message.RelativePath)) ("A message doesn't have a RelativePath property " + (DumpObject $message))
+        Assert (![String]::IsNullOrEmpty($message.Priority)) ("A message doesn't have a Priority property " + (DumpObject $message))
+        Assert (![String]::IsNullOrEmpty($message.Content)) ("A message doesn't have content " + (DumpObject $message))
     }
 }
 
@@ -351,8 +351,11 @@ function GetMatchingComments
             ($_.ItemPath -eq $message.RelativePath) -and
             (ThreadMatchesCommentSource $_ $script:messageSource)}
 
-     Write-Verbose "Found $($matchingThreads.Count) matching thread(s) for the message at $($message.RelativePath) line $($message.Line)"
-        
+     if ($matchingThreads.Count -gt 0)
+     {
+        Write-Verbose "Found $($matchingThreads.Count) matching thread(s) for the message at $($message.RelativePath) line $($message.Line)"
+     }  
+     
      foreach ($matchingThread in $matchingThreads)
      {
          # select comments from this thread that are not deleted and that match the given message 
@@ -502,6 +505,18 @@ function Assert
     {
         throw $message
     }
+}
+
+function DumpObject()
+{
+    param ($obj)
+    
+    if ($obj -eq $null)
+    {
+        return "Null"
+    }
+    
+    return ($obj | Format-Table | Out-String)   
 }
 
 function HasElements

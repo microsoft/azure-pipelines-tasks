@@ -5,8 +5,6 @@ param()
 . $PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\Orchestrator.ps1
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
 
-
-
 function BuildIssue
 {    
     param ([string]$message, [int]$line, [string]$severity, [string]$relativePath, [string]$rule)
@@ -58,16 +56,13 @@ $issue.Remove("message")
 Assert-Throws { GetCommentsFromIssues @($issue) } "*message*"
 
 $issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
-$issue.Remove("line")
-Assert-Throws { GetCommentsFromIssues @($issue) } "*line*"
-
-$issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue.Remove("relativePath")
 Assert-Throws { GetCommentsFromIssues @($issue) } "*relativePath*"
 
 $issue = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue.Remove("rule")
 Assert-Throws { GetCommentsFromIssues @($issue) } "*rule*"
+
 
 #
 # Test 3: Priority
@@ -95,3 +90,17 @@ Assert-AreEqual 5 ($comments | Where-Object {$_.line -eq 5}).Priority "Info issu
 
 Assert-AreEqual 6 ($comments | Where-Object {$_.line -eq 6}).Priority "No severity issue - priority 6"
 Assert-AreEqual 6 ($comments | Where-Object {$_.line -eq 7}).Priority "Other severity issue - priority 6"
+
+#
+# Test 4 - Missing and empty line numbers should be reported as zero 
+#
+
+$issue1 = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
+$issue1.Remove("line")
+$issue2 = BuildIssue "CA issue 1" "" "maJor" "some/path" "csharpsquid:S1481"
+$issue3 = BuildIssue "CA issue 1" -5 "maJor" "some/path" "csharpsquid:S1481"
+
+$comments = GetCommentsFromIssues @($issue1, $issue2, $issue3)
+
+Assert-AreEqual 3 $comments.Count "Expected 3 comments"
+$comments | ForEach-Object  { Assert-AreEqual 0 $_.Line "Expected the line to be set to 0"}

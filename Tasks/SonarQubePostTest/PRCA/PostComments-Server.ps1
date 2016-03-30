@@ -16,7 +16,6 @@ function InitPostCommentsModule
     InternalInit            
 }
 
-
 #
 # Initializes the module. 
 #
@@ -37,6 +36,7 @@ function Test-InitPostCommentsModule
 
 function InternalInit
 {
+    Write-Verbose "Fetching VSS clients"
     $script:gitClient = $vssConnection.GetClient("Microsoft.TeamFoundation.SourceControl.WebApi.GitHttpClient")            
     $script:discussionClient = $vssConnection.GetClient("Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionHttpClient")    
     $script:codeReviewClient = $vssConnection.GetClient("Microsoft.VisualStudio.Services.CodeReview.WebApi.CodeReviewHttpClient") 
@@ -45,6 +45,7 @@ function InternalInit
     Assert ( $script:discussionClient -ne $null ) "Internal error: could not retrieve the DiscussionHttpClient object"
     Assert ( $script:codeReviewClient -ne $null ) "Internal error: could not retrieve the CodeReviewHttpClient object"
                  
+    Write-Verbose "Fetching data from build variables"
     $repositoryId = GetTaskContextVariable "build.repository.id"    
     $script:project = GetTaskContextVariable "system.teamProject"
 
@@ -52,7 +53,15 @@ function InternalInit
     Assert (![String]::IsNullOrWhiteSpace($script:project)) "Internal error: could not determine the system.teamProject"   
 
     $pullRequestId = GetPullRequestId
+    Write-Verbose "Fetching the pull request object with id $pullRequestId"
+    
     $script:pullRequest = $script:gitClient.GetPullRequestAsync($script:project, $repositoryId, $pullRequestId).Result;    
+    Assert ($script:pullRequest -ne $null) "Internal error: could not retrieve the pull request object" 
+    Assert ($script:pullRequest.CodeReviewId -ne $null) "Internal error: could not retrieve the code review id" 
+    Assert ($script:pullRequest.Repository -ne $null) "Internal error: could not retrieve the repository object" 
+    Assert ($script:pullRequest.Repository.ProjectReference -ne $null) "Internal error: could not retrieve the project reference object" 
+    Assert ($script:pullRequest.Repository.ProjectReference.Id -ne $null) "Internal error: could not retrieve the project reference ID " 
+     
     $script:artifactUri = GetArtifactUri $script:pullRequest.CodeReviewId $script:pullRequest.Repository.ProjectReference.Id $pullRequestId
 }
 
