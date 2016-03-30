@@ -15,6 +15,13 @@ var noCache = tl.getBoolInput('noCache');
 var nuGetRestoreArgs = tl.getInput('nuGetRestoreArgs');
 var nuGetPath = tl.getPathInput('nuGetPath', false, true);
 
+// find mono to use
+var monoToUse = tl.which('mono');
+if (!monoToUse) {
+    tl.error('Failed to find mono. Please visit http://www.mono-project.com/ to install mono.');
+    tl.exit(1);
+}
+
 //find nuget location to use
 var nuGetPathToUse = tl.which('nuget');
 if(nuGetPath) {
