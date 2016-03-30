@@ -132,7 +132,7 @@ This section of the task is used to deploy the web application to an existing II
  - **Test Certificate**: Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.
  - **Web Deploy Package\*:** Location of the web deploy zip package file on the target machine or on a UNC path that is accessible to the administrator credentials of the machine like, \\\\BudgetIT\Web\Deploy\FabrikamWeb.zip. Environment variables are also supported like $env:windir, $env:systemroot etc. For example, $env:windir\FabrikamFibre\Web.
   - **Web Deploy Parameters File:** The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment. The parameter takes in the location of the parameter file on the target machines or on a UNC path.
-  - **Override Parameters:** Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. The format followed here is same as that for [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDepoy.exe. For example, name="IIS Web Application Name",value="Fabrikam/MyApplication"
+  - **Override Parameters:** Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. The format followed here is same as that for [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDeploy.exe. For example, name="IIS Web Application Name",value="Fabrikam/MyApplication"
  
 ### Website
 The section of the task is used to create a new IIS website or to update an existing one by using the IIS Server's AppCmd.exe command line tool. For more information about the parameters see the [websites](https://technet.microsoft.com/library/hh831681.aspx#Add_Site) page on MSDN.
@@ -176,4 +176,4 @@ The section provides for advanced options.
 ## Known Issues
 
   - The IIS Web Application Deployment task does not provide support for Web Deploy manifest files and has not been tested and verified for ASP.NET 5 and MVC 6 web application. Please send us feedback for the task and for the support for manifest files, ASP.NET 5/MVC 6 we applications at RM\_Customer\_Queries at microsoft dot com.
-  - The Override Parameters can take only one parameter based on the [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDepoy.exe
+  - The Override Parameters can take only one parameter based on the [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDeploy.exe
