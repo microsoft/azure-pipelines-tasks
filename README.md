@@ -13,7 +13,7 @@ Before you run the builds, you need to configure an agent:
 [OSX/Linux](https://github.com/Microsoft/vso-agent)
 
 ## Overview
-This repo contains the tasks that are provided out of the box with Visual Studio Online and Team Foundation Server.
+This repo contains the tasks that are provided out of the box with Visual Studio Team Services and Team Foundation Server.
 
 This provides open examples on how we write tasks which will help you write other tasks which can be uploaded to your account or server.  See writing tasks below.
 
