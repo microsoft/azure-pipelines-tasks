@@ -92,14 +92,15 @@ Assert-AreEqual 6 ($comments | Where-Object {$_.line -eq 6}).Priority "No severi
 Assert-AreEqual 6 ($comments | Where-Object {$_.line -eq 7}).Priority "Other severity issue - priority 6"
 
 #
-# Test 4 - Line 
+# Test 4 - Missing and empty line numbers should be reported as zero 
 #
 
 $issue1 = BuildIssue "CA issue 1" 14 "maJor" "some/path" "csharpsquid:S1481"
 $issue1.Remove("line")
 $issue2 = BuildIssue "CA issue 1" "" "maJor" "some/path" "csharpsquid:S1481"
+$issue3 = BuildIssue "CA issue 1" -5 "maJor" "some/path" "csharpsquid:S1481"
 
-$comments = GetCommentsFromIssues @($issue1, $issue2)
+$comments = GetCommentsFromIssues @($issue1, $issue2, $issue3)
 
-Assert-AreEqual 2 $comments.Count "Expected 2 comments"
+Assert-AreEqual 3 $comments.Count "Expected 3 comments"
 $comments | ForEach-Object  { Assert-AreEqual 0 $_.Line "Expected the line to be set to 0"}

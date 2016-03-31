@@ -51,9 +51,9 @@ function GetCommentsFromIssues
             $issue.line = 0
         }
         
-        Assert ( ![String]::IsNullOrWhiteSpace($issue.message) ) ("Internal error: a SonarQube issue do not have a property named 'message' " + (DumpObject($issue)))
-        Assert ( ![String]::IsNullOrWhiteSpace($issue.relativePath) ) ("Internal error: the SonarQube reported issues do not have a property named 'relativePath' " +(DumpObject($issue)))
-        Assert ( ![String]::IsNullOrWhiteSpace($issue.rule) ) ("Internal error: the SonarQube reported issues do not have a property named 'rule' " + (DumpObject($issue)))
+        Assert ( ![String]::IsNullOrWhiteSpace($issue.message) ) ("Internal error: a SonarQube issue does not have a property named 'message' " + (DumpObject($issue)))
+        Assert ( ![String]::IsNullOrWhiteSpace($issue.relativePath) ) ("Internal error: a SonarQube issue does not have a property named 'relativePath' " +(DumpObject($issue)))
+        Assert ( ![String]::IsNullOrWhiteSpace($issue.rule) ) ("Internal error: a SonarQube issue does not have a property named 'rule' " + (DumpObject($issue)))
         
         $ruleId = GetRuleId $issue
         
