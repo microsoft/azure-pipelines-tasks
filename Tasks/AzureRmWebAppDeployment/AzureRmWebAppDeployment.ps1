@@ -1,7 +1,7 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
-    $ConnectedServiceNameARM,
+    $ConnectedServiceName,
 
     [String] [Parameter(Mandatory = $true)]
     $WebSiteName,
@@ -24,7 +24,7 @@ param
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task" -Verbose
 
-Write-Verbose "ConnectedServiceNameARM = $ConnectedServiceNameARM" -Verbose
+Write-Verbose "ConnectedServiceName = $ConnectedServiceName" -Verbose
 Write-Verbose "WebSiteName = $WebSiteName" -Verbose
 Write-Verbose "File = $File" -Verbose
 Write-Verbose "RemoveAdditionalFilesFlag = $RemoveAdditionalFilesFlag" -Verbose

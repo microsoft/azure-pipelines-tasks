@@ -17,9 +17,9 @@
   "minimumAgentVersion": "1.98.0",
   "inputs": [
     {
-      "name": "ConnectedServiceNameARM",
+      "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": ""
@@ -79,7 +79,7 @@
   "dataSourceBindings": [
     {
       "target": "WebSiteName",
-      "endpointId": "$(ConnectedServiceNameARM)",
+      "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureWebSiteNamesRM"
     }
   ],

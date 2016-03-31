@@ -17,7 +17,7 @@
   "minimumAgentVersion": "1.98.0",
   "inputs": [
     {
-      "name": "ConnectedServiceNameARM",
+      "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "Azure RM Subscription",
       "defaultValue": "",
@@ -79,7 +79,7 @@
   "dataSourceBindings": [
     {
       "target": "WebSiteName",
-      "endpointId": "$(ConnectedServiceNameARM)",
+      "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureWebSiteNamesRM"
     }
   ],
