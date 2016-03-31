@@ -207,17 +207,18 @@ else
             $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
 
             $Jobs.Add($job.Id, $resourceProperties)
-        }
+        }        
 
-        While (Get-Job)
+        While ($Jobs.Count -gt 0)
         {
             Start-Sleep 10 
             foreach($job in Get-Job)
             {
-                if($job.State -ne "Running")
+                if($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
                 {
                     Receive-Job -Id $job.Id
                     Remove-Job $Job                 
+                    $Jobs.Remove($job.Id)
                 } 
             }
         }
