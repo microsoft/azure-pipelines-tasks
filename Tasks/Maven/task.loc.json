@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 37
+    "Patch": 40
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -104,8 +104,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
         "None": "None",
-        "JaCoCo": "JaCoCo",
-        "Cobertura": "Cobertura"
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
       }
     },
     {

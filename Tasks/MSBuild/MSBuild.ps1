@@ -20,7 +20,7 @@ try {
     $solutionFiles = Get-SolutionFiles -Solution $solution
     $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msBuildArguments -Platform $platform -Configuration $configuration
     $msBuildLocation = Select-MSBuildLocation -Method $msBuildLocationMethod -Location $msBuildLocation -Version $msBuildVersion -Architecture $msBuildArchitecture
-    $ErrorActionPreference = 'Continue'
+    $global:ErrorActionPreference = 'Continue'
     Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -NoTimelineLogger:(!$logProjectEvents)
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation

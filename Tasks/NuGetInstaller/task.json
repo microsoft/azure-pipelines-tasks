@@ -9,41 +9,41 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 23
+        "Patch": 25
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
-    ],    
+    ],
     "instanceNameFormat": "NuGet $(restoreMode) $(solution)",
     "inputs": [
         {
             "name": "solution",
             "type": "filePath",
             "label": "Path to solution or packages.config",
-            "defaultValue":"**/*.sln",
+            "defaultValue": "**/*.sln",
             "helpMarkDown": "The path to the Visual Studio solution file or NuGet packages.config",
-            "required":"true"
+            "required": "true"
         },
         {
             "name": "nugetConfigPath",
             "type": "filePath",
             "label": "Path to NuGet.config",
-            "defaultValue":"",
+            "defaultValue": "",
             "helpMarkDown": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
-            "required":"false"
+            "required": "false"
         },
         {
             "name": "restoreMode",
             "type": "radio",
             "label": "Installation type",
-            "defaultValue":"restore",
+            "defaultValue": "restore",
             "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.",
-            "required":"true",
+            "required": "true",
             "options": {
                 "restore": "Restore",
                 "install": "Install"
@@ -55,7 +55,7 @@
             "label": "Disable local cache",
             "defaultValue": "false",
             "helpMarkDown": "Equivalent to the -NoCache NuGet.exe command line argument",
-            "required":"false"
+            "required": "false"
         },
         {
             "name": "nuGetRestoreArgs",
@@ -74,7 +74,6 @@
             "helpMarkDown": "Optionally supply the path to NuGet.exe",
             "groupName": "advanced"
         }
-
     ],
     "execution": {
         "PowerShell": {

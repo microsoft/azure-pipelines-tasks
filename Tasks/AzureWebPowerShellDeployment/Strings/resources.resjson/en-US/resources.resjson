@@ -13,6 +13,6 @@
   "loc.input.label.Package": "Web Deploy Package",
   "loc.input.help.Package": "Path to the Visual Studio Web Deploy package under the default artifact directory.",
   "loc.input.label.doNotDelete": "Set DoNotDelete flag",
-  "loc.input.help.doNotDelete": "By enabling this, additonal files in web deployment package are preserved while publishing website.",
+  "loc.input.help.doNotDelete": "By enabling this, additional files in web deployment package are preserved while publishing website.",
   "loc.input.label.AdditionalArguments": "Additional Arguments"
 }
