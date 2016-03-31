@@ -15,9 +15,9 @@ function HandleCodeAnalysisReporting
         
         $vssConnection = GetVssConnection 
         InitPostCommentsModule $vssConnection
-        $comments = GetCommentsFromIssues $newIssues
+        $messages = GetMessagesFromIssues $newIssues
         
-        PostAndResolveComments $comments "SonarQube Code Analysis"
+        PostAndResolveComments $messages "SonarQube Code Analysis"
     }	
 }
 
@@ -34,13 +34,17 @@ function GetVssConnection
 #
 # The issues, as reported by SonarQube, need to be transformed to a simpler structure that the PostComments module can consume
 # 
-function GetCommentsFromIssues
+function GetMessagesFromIssues
 {
     param ([Array]$issues)
     
+    $sw = new-object "Diagnostics.Stopwatch"
+    $sw.Start();
+     
     Write-Verbose "Transforming SonarQube analysis issues to PR comments"
     
     $comments = New-Object System.Collections.ArrayList
+    
     foreach ($issue in $issues)
     {
         $priority = GetCommentPriority $issue
@@ -69,6 +73,8 @@ function GetCommentsFromIssues
         [void]$comments.Add($comment)
     }
     
+    Write-Verbose "Creating $($issues.Count) messages from issues took $($sw.ElapsedMilliseconds) ms"
+         
     return $comments
 }
 
