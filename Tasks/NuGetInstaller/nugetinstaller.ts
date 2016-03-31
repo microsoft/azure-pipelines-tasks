@@ -2,7 +2,6 @@
 /// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import fs = require('fs');
 import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
@@ -14,13 +13,6 @@ var nugetConfigPath = tl.getPathInput('nugetConfigPath', false, true);
 var noCache = tl.getBoolInput('noCache');
 var nuGetRestoreArgs = tl.getInput('nuGetRestoreArgs');
 var nuGetPath = tl.getPathInput('nuGetPath', false, true);
-
-// find mono to use
-var monoToUse = tl.which('mono');
-if (!monoToUse) {
-    tl.error('Failed to find mono. Please visit http://www.mono-project.com/ to install mono.');
-    tl.exit(1);
-}
 
 //find nuget location to use
 var nuGetPathToUse = tl.which('nuget');
@@ -84,7 +76,6 @@ if (nugetConfigPath && nugetConfigPath.toLowerCase() != sourcesFolder.toLowerCas
     },
     (err) => {
         tl.error(err);
-        removeTempConfig();
         tl.exit(1);
     });
 }
@@ -146,22 +137,12 @@ function restorePacakages() {
     })
 
     result.then(() => {
-        removeTempConfig();
         tl._writeLine("packages are installed successfully.");
         tl.exit(0);
     })
         .fail((err) => {
-            tl.error(err)
-            removeTempConfig();
+            tl.error(err);
             tl.error("packages failed to install.");
             tl.exit(1);
         });
-}
-
-function removeTempConfig() {
-    if (tempNugetConfigPath.length > 0) {
-        if (fs.existsSync(tempNugetConfigPath)) {        
-            fs.unlinkSync(tempNugetConfigPath);
-        };
-    };
 }

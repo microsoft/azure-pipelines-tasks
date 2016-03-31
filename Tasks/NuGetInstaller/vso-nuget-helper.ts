@@ -42,7 +42,7 @@ export class VsoNuGetHelper {
 
         // get package sources
         xmlreader.read(xml, (err, res) => {
-            if (err) return tl.error(err);
+            if (err) return tl.error('configure file error: ' + err);
 
             var packageSources = [];
             var packageSource: IPackageSource;
@@ -83,7 +83,6 @@ export class VsoNuGetHelper {
                 };
                 // small file, use writeFileSync
                 fs.writeFileSync(this.tempNugetConfigPath, xml);
-                fs.chmodSync(this.tempNugetConfigPath, parseInt('0600', 8));
          
                 // remove sources
                 tl._writeLine('remove sources in the config file');
@@ -133,7 +132,6 @@ export class VsoNuGetHelper {
             nugetTool.arg('VssSessionToken');
             nugetTool.arg('-password');
             nugetTool.arg(this._accessToken);
-            nugetTool.arg('-StorePasswordInClearText');
             nugetTool.arg('-Configfile')
             nugetTool.pathArg(this.tempNugetConfigPath);
 
