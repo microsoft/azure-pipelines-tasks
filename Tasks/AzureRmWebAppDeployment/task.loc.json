@@ -14,7 +14,7 @@
     "Minor": 0,
     "Patch": 0
   },
-  "minimumAgentVersion": "1.97.0",
+  "minimumAgentVersion": "1.98.0",
   "inputs": [
     {
       "name": "ConnectedServiceNameARM",
@@ -36,9 +36,9 @@
       "helpMarkDown": ""
     },
     {
-      "name": "Files",
+      "name": "File",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.Files",
+      "label": "ms-resource:loc.input.label.File",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": ""
@@ -86,7 +86,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AzurePowerShell": {
-      "target": "$(currentDirectory)\\AzureRmWebAppDeployment.ps1",
+      "target": "$(currentDirectory)\\AzureRMWebAppDeployment.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }

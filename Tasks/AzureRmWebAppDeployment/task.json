@@ -1,7 +1,7 @@
 {
   "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
   "name": "AzureRmWebAppDeployment",
-  "friendlyName": "Azure Rm Web App Deployment",
+  "friendlyName": "AzureRM Web App Deployment",
   "description": "",
   "category": "Deploy",
   "visibility": [
@@ -14,7 +14,7 @@
     "Minor": 0,
     "Patch": 0
   },
-  "minimumAgentVersion": "1.97.0",
+  "minimumAgentVersion": "1.98.0",
   "inputs": [
     {
       "name": "ConnectedServiceNameARM",
@@ -36,9 +36,9 @@
       "helpMarkDown": ""
     },
     {
-      "name": "Files",
+      "name": "File",
       "type": "filePath",
-      "label": "Files",
+      "label": "File",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": ""
@@ -86,7 +86,7 @@
   "instanceNameFormat": "Deploy Web App: $(WebSiteName)",
   "execution": {
     "AzurePowerShell": {
-      "target": "$(currentDirectory)\\AzureRmWebAppDeployment.ps1",
+      "target": "$(currentDirectory)\\AzureRMWebAppDeployment.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }

@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Azure Rm Web App Deployment",
+  "loc.friendlyName": "AzureRM Web App Deployment",
   "loc.description": "",
   "loc.instanceNameFormat": "Deploy Web App: $(WebSiteName)",
   "loc.input.label.ConnectedServiceNameARM": "Azure RM Subscription",
   "loc.input.label.WebSiteName": "Web App Name",
-  "loc.input.label.Files": "Files",
+  "loc.input.label.File": "File",
   "loc.input.label.RemoveAdditionalFilesFlag": "Remove Additional Files at Destination",
   "loc.input.label.DeleteFilesInAppDataFlag": "Delete Files in the App Data Folder",
   "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
