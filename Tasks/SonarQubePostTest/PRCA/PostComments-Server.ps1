@@ -53,9 +53,11 @@ function InternalInit
     Assert (![String]::IsNullOrWhiteSpace($script:project)) "Internal error: could not determine the system.teamProject"   
 
     $pullRequestId = GetPullRequestId
+    $repositoryIdGuid = [Guid]::Parse($repositoryId);
     Write-Verbose "Fetching the pull request object with id $pullRequestId"
-    
-    $script:pullRequest = $script:gitClient.GetPullRequestAsync($script:project, $repositoryId, $pullRequestId).Result;    
+
+    $script:pullRequest = [PsWorkarounds.Helper]::GetPullRequestObject($script:gitClient, $script:project, $repositoryIdGuid, $pullRequestId);
+     
     Assert ($script:pullRequest -ne $null) "Internal error: could not retrieve the pull request object" 
     Assert ($script:pullRequest.CodeReviewId -ne $null) "Internal error: could not retrieve the code review id" 
     Assert ($script:pullRequest.Repository -ne $null) "Internal error: could not retrieve the repository object" 
@@ -85,6 +87,43 @@ function LoadTfsClientAssemblies
     $externalAssemblyPaths | foreach {Add-Type -Path $_} 
     
     Write-Verbose "Loaded $externalAssemblyPaths"
+    
+    # Workaround: PowerShell 4 seems to have a problem finding the right method from a list of overloaded .net methods. This is because
+    # PS converts variables to its own PSObject type and it then gets confused when trying to coerce the values to determine the right method candidate.
+    # To work around this I create a .net helper method that calls the actual helper. The code bellow is built into an temp assembly
+    # and it can be accessed directly from this script.
+    $source = @"
+
+using Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi;
+using Microsoft.TeamFoundation.SourceControl.WebApi;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace PsWorkarounds
+{
+    public class Helper
+    {
+        public static GitPullRequest GetPullRequestObject(GitHttpClient gitClient, string project, Guid repositoryId, int pullRequestId)
+        {
+            return gitClient.GetPullRequestAsync(project, repositoryId, pullRequestId).Result;
+        }
+        
+        public static Dictionary<string, List<DiscussionThread>> GetThreadsDictionary(DiscussionHttpClient discussionClient, string artifactUri)
+        {
+            return discussionClient.GetThreadsAsync(new string[] { artifactUri }).Result;
+        }
+        
+        public static DiscussionCommentCollection GetComments(DiscussionHttpClient discussionClient, int discussionId)
+        {
+            return discussionClient.GetCommentsAsync(discussionId).Result;
+        }
+    }
+}
+"@
+    
+    (Add-Type -TypeDefinition $source -ReferencedAssemblies $externalAssemblyPaths) | out-null
 }
 
 
@@ -147,8 +186,7 @@ function PostDiscussionThreads
 #
 function FetchActiveDiscussionThreads
 {
-    $threadsDictionary = $script:discussionClient.GetThreadsAsync( @($script:artifactUri)).Result
-    
+    $threadsDictionary = [PsWorkarounds.Helper]::GetThreadsDictionary($script:discussionClient, $script:artifactUri)
     $threadList = New-Object "System.Collections.Generic.List[$script:discussionWebApiNS.DiscussionThread]"
     
     foreach ($threads in $threadsDictionary.Values)
@@ -177,7 +215,8 @@ function FetchDiscussionComments
     
     foreach ($discussionThread in $discussionThreads)
     {
-        $commentsFromThread = $script:discussionClient.GetCommentsAsync($discussionThread.DiscussionId).Result
+        $commentsFromThread = [PsWorkarounds.Helper]::GetComments($script:discussionClient, $discussionThread.DiscussionId)
+        
         if ($commentsFromThread -ne $null)
         {
             $comments.AddRange($commentsFromThread)
@@ -278,7 +317,6 @@ function GetCodeFlowChangeTrackingId
     Assert ($change -ne $null) "No changes found for $path"
     Assert ($change.Count -eq 1) "Expecting exactly 1 change for $path but found $($change.Count)"
     
-    Write-Verbose "Found a change for message at $path - $($change.ChangeTrackingId)"
     return $change.ChangeTrackingId
 } 
 
