@@ -440,12 +440,12 @@ else
         $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables
         $Jobs.Add($job.Id, $resourceProperties)
     }
-    While (Get-Job)
+    While ($Jobs.Count -gt 0)
     {
          Start-Sleep 10 
          foreach($job in Get-Job)
          {
-             if($job.State -ne "Running")
+             if($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
              {
                 $output = Receive-Job -Id $job.Id
                 Remove-Job $Job
@@ -465,6 +465,7 @@ else
                     }
                     Write-Output (Get-LocalizedString -Key "Deployment failed on machine '{0}' with following message : '{1}'" -ArgumentList $displayName, $errorMessage)
                 }
+                $Jobs.Remove($job.Id)
             }
         }
     }
