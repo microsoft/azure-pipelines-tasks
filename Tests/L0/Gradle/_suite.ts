@@ -53,7 +53,7 @@ describe('Gradle Build Task Tests', function() {
         tr.setInput('classFilesDirectories', 'build/classes/main');
         tr.setInput('classFilter', '');
         tr.setInput('tasks', 'build');
-        tr.setInput('testResultsFiles', '/var/folders/y8/w2g4zyzx09v55c0h4ppw0f2w0000gq/T/build.gradle');
+        tr.setInput('testResultsFiles', buildFile);
 
         tr.run()
             .then(() => {
@@ -83,7 +83,7 @@ describe('Gradle Build Task Tests', function() {
         tr.setInput('classFilesDirectories', 'build/classes/main');
         tr.setInput('classFilter', '');
         tr.setInput('tasks', 'build');
-        tr.setInput('testResultsFiles', '/var/folders/y8/w2g4zyzx09v55c0h4ppw0f2w0000gq/T/build.gradle');
+        tr.setInput('testResultsFiles', buildFile);
 
         tr.run()
             .then(() => {
@@ -117,7 +117,7 @@ describe('Gradle Build Task Tests', function() {
         tr.setInput('classFilesDirectories', 'build/classes/main');
         tr.setInput('classFilter', '');
         tr.setInput('tasks', 'build');
-        tr.setInput('testResultsFiles', '/var/folders/y8/w2g4zyzx09v55c0h4ppw0f2w0000gq/T/build.gradle');
+        tr.setInput('testResultsFiles', buildFile);
 
         tr.run()
             .then(() => {
@@ -152,7 +152,7 @@ describe('Gradle Build Task Tests', function() {
         tr.setInput('classFilter', '');
         tr.setInput('tasks', 'build');
         tr.setInput('publishJUnitResults', 'true');
-        tr.setInput('testResultsFiles', '/var/folders/y8/w2g4zyzx09v55c0h4ppw0f2w0000gq/T/build.gradle');
+        tr.setInput('testResultsFiles', buildFile);
 
         tr.run()
             .then(() => {
