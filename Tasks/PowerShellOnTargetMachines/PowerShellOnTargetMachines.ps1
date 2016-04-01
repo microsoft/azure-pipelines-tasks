@@ -133,9 +133,9 @@ function Get-ResourceWinRmConfig
 
     if(-not $isAgentVersion97)
     {
-        Write-Verbose "Starting Get-Environment cmdlet call on environment name: $environmentName" -Verbose
+        Write-Verbose "Starting Get-Environment cmdlet call on environment name: $environmentName"
         $environment = Get-Environment -environmentName $environmentName -TaskContext $distributedTaskContext
-        Write-Verbose "Completed Get-Environment cmdlet call on environment name: $environmentName" -Verbose
+        Write-Verbose "Completed Get-Environment cmdlet call on environment name: $environmentName"
     }
     
     if($protocol -eq "HTTPS")
