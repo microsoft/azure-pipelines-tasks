@@ -25,7 +25,6 @@ var jdkVersion = tl.getInput('jdkVersion');
 var jdkArchitecture = tl.getInput('jdkArchitecture');
 var buildFolder = tl.getVariable('agent.buildDirectory');
 var publishJUnitResults = tl.getInput('publishJUnitResults');
-var testResultsFiles = tl.getInput('testResultsFiles', true);
 var buildTool = "gradle";
 var ccTool = tl.getInput('codeCoverageTool');
 var classFileDirs = tl.getInput('classFilesDirectories');
@@ -51,20 +50,21 @@ gb.arg(gbTasks);
 gb.arg(ccReportingTask)
 gb.exec()
     .then(function(code) {
-        publishTestResults(publishJUnitResults, testResultsFiles);
+        publishTestResults(publishJUnitResults);
         publishCodeCoverage();
         tl.exit(code);
     })
     .fail(function(err) {
-        publishTestResults(publishJUnitResults, testResultsFiles);
+        publishTestResults(publishJUnitResults);
         publishCodeCoverage();
-        console.error(err.message);
+        tl.error(err.message);
         tl.debug('taskRunner fail');
         tl.exit(1);
     })
 
-function publishTestResults(publishJUnitResults, testResultsFiles: string) {
-    if (publishJUnitResults == 'true') {
+function publishTestResults(publishJUnitResults: string) {
+    if (publishJUnitResults && publishJUnitResults.toLowerCase() == 'true') {
+        var testResultsFiles = tl.getInput('testResultsFiles', true);
         //check for pattern in testResultsFiles
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
@@ -116,7 +116,7 @@ function enableCodeCoverage() {
     var reportDir = path.join(cwd + "/" + uuid.v1());
     fs.mkdirSync(reportDir);
 
-    var isMultiModule = isMultiModuleProject();
+    var isMultiModule = isMultiModuleProject(wrapperScript);
 
     if (ccTool.toLowerCase() == "jacoco") {
         if (isMultiModule) {
@@ -143,21 +143,26 @@ function enableCodeCoverage() {
     ccEnabler.enableCodeCoverage(buildProps);
 }
 
-function publishCodeCoverage() {
+function publishCodeCoverage() { 
     if (codeCoverageOpted) {
         var ccPublisher = new tl.CodeCoveragePublisher();
         ccPublisher.publish(ccTool, summaryFile, reportDir, "");
-    }
+    }   
 }
 
-function isMultiModuleProject(): boolean {
+function isMultiModuleProject(wrapperScript: string): boolean {
     var gradleBuild = tl.createToolRunner(wrapperScript);
     gradleBuild.arg("properties");
 
     var data = gradleBuild.execSync().stdout;
     var regex = new RegExp("subprojects: .*");
     var subProjects = regex.exec(data);
-    tl.debug("Sub Projects info: " + subProjects.toString());
+    tl.debug("Data: " + subProjects);
 
-    return (subProjects.toString().toLowerCase() != "subprojects: []");
+    if (subProjects && subProjects.length > 0) {
+        tl.debug("Sub Projects info: " + subProjects.toString());
+        return (subProjects.join(',').toLowerCase() != "subprojects: []");
+    }
+
+    return false;
 }

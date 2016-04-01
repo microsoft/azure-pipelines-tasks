@@ -250,6 +250,11 @@ export function filePathSupplied(name: string): boolean {
 }
 
 export function getPathInput(name: string, required?: boolean, check?: boolean): string {
+    var mockValue  = mock.getResponse('getPathInput', name);
+    if(mockValue){
+        return mockValue;
+    }
+    
     var inval = getInput(name, required);
     if (inval) {
         if (check) {
@@ -533,6 +538,7 @@ export function globFirst(pattern: string): string {
 // Exec convenience wrapper
 //-----------------------------------------------------
 export function exec(tool: string, args: any, options?: trm.IExecOptions): Q.Promise<number> {
+    debug('tool ' + tool);
     var toolPath = which(tool, true);
     var tr: trm.ToolRunner = createToolRunner(toolPath);
     if (args) {
@@ -635,6 +641,25 @@ export class CodeCoveragePublisher {
         }
 
         command('codecoverage.publish', properties, "");        
+    }
+}
+
+//-----------------------------------------------------
+// Code coverage Publisher
+//-----------------------------------------------------
+export class CodeCoverageEnabler {
+    private buildTool: string;
+    private ccTool: string;
+
+    constructor(buildTool: string, ccTool: string) {
+        this.buildTool = buildTool;
+        this.ccTool = ccTool;
+    }
+
+    public enableCodeCoverage(buildProps: { [key: string]: string }) {
+        buildProps['buildtool'] = this.buildTool;
+        buildProps['codecoveragetool'] = this.ccTool;
+        command('codecoverage.enable', buildProps, "");
     }
 }
 

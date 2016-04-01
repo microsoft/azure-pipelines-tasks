@@ -1,0 +1,52 @@
+{
+    "getPathInput": {
+        "wrapperScript": "${buildfolder}gradlew",
+        "jdkUserInputPath": "/var/folders/"
+    },
+    "getInput": {
+        "wrapperScript": "/someDir/gradlew"
+    },
+    "checkPath" : {
+        "/tmp/gradlew": "true"
+    },
+    "find": {
+        "/someDir": [
+            "someDir/someFile2",
+            "/someDir/someFile1"
+        ]
+    },
+    "match": {
+        "/some/*pattern": [
+            "some/path/one",
+            "some/path/two"
+        ],
+        "/other/*pattern": []
+    },
+    "exec": {
+        "${buildfolder}gradlew clean build": {
+            "code": 0,
+            "stdout": "Success",
+            "stderr": ""
+        },
+        "${buildfolder}gradlew properties": {
+            "code": 0,
+            "stdout": "Something subprojects",
+            "stderr": ""
+        },
+        "${buildfolder}gradlew clean build jacocoTestReport": {
+            "code": 0,
+            "stdout": "Success",
+            "stderr": ""
+        },
+        "${buildfolder}gradlew clean build2 jacocoRootReport": {
+            "code": 0,
+            "stdout": "Success",
+            "stderr": ""
+        },
+        "${buildfolder}gradlew clean build cobertura": {
+            "code": 0,
+            "stdout": "Success",
+            "stderr": ""
+        }
+    }
+}

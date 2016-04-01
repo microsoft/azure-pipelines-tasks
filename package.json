@@ -41,12 +41,13 @@
     "typescript": "1.8.0",
     "validator": "^3.33.0",
     "vsts-task-lib": "^0.5.6",
-    "uuid": "^2.0.1"
+    "string": "^3.3.1"
   },
   "dependencies": {
     "archiver": "^0.14.3",
     "process": "^0.10.1",
     "q": "^1.2.0",
-    "read": "^1.0.5"
+    "read": "^1.0.5",
+    "uuid": "^2.0.1"
   }
 }
