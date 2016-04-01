@@ -239,7 +239,10 @@ namespace Microsoft.TeamFoundation.SourceControl.WebApi
 {
     public class GitHttpClient
     {
-        
+        public Task<GitPullRequest> GetPullRequestAsync (string project, Guid repositoryId, int pullRequestId)
+        {
+            return null;
+        }
     }
     
     public class GitPullRequest
@@ -258,6 +261,30 @@ namespace Microsoft.VisualStudio.Services.CodeReview.WebApi
     {
         
     }    
+}
+
+namespace PsWorkarounds
+{
+    using Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi;
+    using Microsoft.TeamFoundation.SourceControl.WebApi;
+
+    public class Helper
+    {
+        public static GitPullRequest GetPullRequestObject(GitHttpClient gitClient, string project, Guid repositoryId, int pullRequestId)
+        {
+            return gitClient.GetPullRequestAsync(project, repositoryId, pullRequestId).Result;
+        }
+        
+        public static Dictionary<string, List<DiscussionThread>> GetThreadsDictionary(DiscussionHttpClient discussionClient, string artifactUri)
+        {
+            return discussionClient.GetThreadsAsync(new string[] { artifactUri }).Result;
+        }
+        
+        public static DiscussionCommentCollection GetComments(DiscussionHttpClient discussionClient, int discussionId)
+        {
+            return discussionClient.GetCommentsAsync(discussionId).Result;
+        }
+    }
 }
 
 "@
