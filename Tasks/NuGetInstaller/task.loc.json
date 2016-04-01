@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 21
+    "Patch": 25
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -36,6 +36,18 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.nugetConfigPath",
       "required": "false"
+    },
+    {
+      "name": "restoreMode",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.restoreMode",
+      "defaultValue": "restore",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreMode",
+      "required": "true",
+      "options": {
+        "restore": "Restore",
+        "install": "Install"
+      }
     },
     {
       "name": "noCache",

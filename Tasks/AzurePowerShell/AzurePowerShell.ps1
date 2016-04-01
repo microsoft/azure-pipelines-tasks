@@ -31,7 +31,7 @@ Get-ChildItem -LiteralPath function: |
 # For compatibility with the legacy handler implementation, set the error action
 # preference to continue. An implication of changing the preference to Continue,
 # is that Invoke-VstsTaskScript will no longer handle setting the result to failed.
-$ErrorActionPreference = 'Continue'
+$global:ErrorActionPreference = 'Continue'
 
 # Run the user's script. Redirect the error pipeline to the output pipeline to enable
 # a couple goals due to compatibility with the legacy handler implementation:

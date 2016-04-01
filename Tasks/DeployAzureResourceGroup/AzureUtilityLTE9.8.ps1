@@ -10,9 +10,9 @@ function Create-AzureResourceGroupIfNotExist
     {
         try
         {
-            Write-Verbose -Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName"
+            Write-Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName"
             $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlyContinue
-            Write-Verbose -Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
+            Write-Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
         }
         catch
         {
@@ -21,7 +21,7 @@ function Create-AzureResourceGroupIfNotExist
 
         if(-not $azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
         {
-            Write-Verbose -Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
+            Write-Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
             $azureResourceGroup = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
             Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
         }
@@ -37,18 +37,21 @@ function Deploy-AzureResourceGroup
           [string]$overrideParameters)
 
     Switch-AzureMode AzureResourceManager
-    Write-Host "[Azure Resource Manager]Creating resource group deployment with name $resourceGroupName"
+
+    $deploymentName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile) + '-' + ((Get-Date).ToUniversalTime()).ToString('yyyyMMdd-HHmm')
+
+    Write-Host "[Azure Resource Manager]Creating resource group deployment with name $deploymentName"
 
     if (!$csmParametersFile)
     {
-        $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+        $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
     else
     {
-        $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$resourceGroupName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `$csmParametersFile $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+        $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `$csmParametersFile $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
 
-    Write-Verbose -Verbose "$finalCommand"
+    Write-Verbose "$finalCommand"
     Invoke-Expression -Command $finalCommand
 
     @{"azureResourceGroupDeployment" = $($azureResourceGroupDeployment); "deploymentError" = $($deploymentError)}
@@ -62,18 +65,18 @@ function Get-AllVMInstanceView
     $VmInstanceViews = @{}
     if (-not [string]::IsNullOrEmpty($resourceGroupName))
     {
-        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
+        Write-Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
         $azureVMResources = Get-AzureVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
+        Write-Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
 
         if($azureVMResources)
         {
             foreach($resource in $azureVMResources)
             {
                 $name = $resource.Name
-                Write-Verbose -Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
+                Write-Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
                 $vmInstanceView = Get-AzureVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
-                Write-Verbose -Verbose "[Azure Resource Manager]Got VM $name from resource group $resourceGroupName"
+                Write-Verbose "[Azure Resource Manager]Got VM $name from resource group $resourceGroupName"
                 $VmInstanceViews.Add($name, $vmInstanceView)
             }
         }
@@ -149,13 +152,13 @@ function Get-AzureRMVMsInResourceGroup
     {
         try
         {
-            Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
+            Write-Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
             $azureVMResources = Get-AzureVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-            Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
+            Write-Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
         }
         catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException], [Hyak.Common.CloudException]
         {
-            Write-Verbose $_.Exception.Message -Verbose
+            Write-Verbose $_.Exception.Message
             throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has atleast one virtual machine in it" -ArgumentList $resourceGroupName)
         }
         catch
@@ -177,36 +180,36 @@ function Get-AzureRMResourceGroupResourcesDetails
     [hashtable]$LoadBalancerDetails = @{}
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
-        Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
         $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose -Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         $ResourcesDetails.Add("networkInterfaceResources", $networkInterfaceResources)
 
-        Write-Verbose -Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
         $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose -Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
         $ResourcesDetails.Add("publicIPAddressResources", $publicIPAddressResources)
 
-        Write-Verbose -Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
         $lbGroup = Get-AzureLoadBalancer -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose -Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
         if($lbGroup)
         {
             foreach($lb in $lbGroup)
             {
                 $lbDetails = @{}
-                Write-Verbose -Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
+                Write-Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
                 $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-                Write-Verbose -Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
+                Write-Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
 
-                Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config" -Verbose
+                Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config"
                 $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
-                Write-Verbose "[Azure Call]Got LoadBalancer Frontend Ip Config" -Verbose
+                Write-Verbose "[Azure Call]Got LoadBalancer Frontend Ip Config"
 
-                Write-Verbose "[Azure Call]Getting Azure LoadBalancer Inbound NatRule Config" -Verbose
+                Write-Verbose "[Azure Call]Getting Azure LoadBalancer Inbound NatRule Config"
                 $inboundRules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
-                Write-Verbose "[Azure Call]Got Azure LoadBalancer Inbound NatRule Config" -Verbose
+                Write-Verbose "[Azure Call]Got Azure LoadBalancer Inbound NatRule Config"
 
                 $lbDetails.Add("frontEndIPConfigs", $frontEndIPConfigs)
                 $lbDetails.Add("inboundRules", $inboundRules)
@@ -227,9 +230,9 @@ function Get-AzureClassicVMsInResourceGroup
     Switch-AzureMode AzureServiceManagement
     if(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
-        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
+        Write-Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
         $azureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
-        Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName classic virtual machines type resource is $($azureClassicVMResources.Count)"
+        Write-Verbose "[Azure Call]Count of resource group:$resourceGroupName classic virtual machines type resource is $($azureClassicVMResources.Count)"
     }
 
     return $azureClassicVMResources
@@ -244,18 +247,18 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
     [hashtable]$classicVMsDetails = @{}
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureClassicVMResources)
     {
-        Write-Verbose -Verbose "Trying to get FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
+        Write-Verbose "Trying to get FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
         foreach($azureClassicVm in $azureClassicVMResources)
         {
             $resourceName = $azureClassicVm.Name
 
-            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            Write-Verbose "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
             $azureClassicVM = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -ErrorAction Stop -Verbose
-            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            Write-Verbose "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
             
-            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
+            Write-Verbose "[Azure Call]Getting classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
             $azureClassicVMEndpoint = $azureClassicVM | Get-AzureEndpoint | Where-Object {$_.LocalPort -eq '5986'}
-            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
+            Write-Verbose "[Azure Call]Got classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
 
             $fqdnUri = [System.Uri]$azureClassicVM.DNSName
             $resourceFQDN = $fqdnUri.Host
@@ -263,12 +266,12 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
             $resourceWinRmHttpsPort = $azureClassicVMEndpoint.Port
             if([string]::IsNullOrWhiteSpace($resourceWinRMHttpsPort))
             {
-                Write-Verbose -Verbose "Defaulting WinRMHttpsPort of $resourceName to 5986"
+                Write-Verbose "Defaulting WinRMHttpsPort of $resourceName to 5986"
                 $resourceWinRMHttpsPort = "5986"
             }
 
-            Write-Verbose -Verbose "FQDN value for resource $resourceName is $resourceFQDN"
-            Write-Verbose -Verbose "WinRM HTTPS Port for resource $resourceName is $resourceWinRmHttpsPort"
+            Write-Verbose "FQDN value for resource $resourceName is $resourceFQDN"
+            Write-Verbose "WinRM HTTPS Port for resource $resourceName is $resourceWinRmHttpsPort"
 
             $resourceProperties = @{}
             $resourceProperties.Name = $resourceName
@@ -362,14 +365,14 @@ function Get-NetworkSecurityGroups
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmId))
     {
-        Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName for vm $vmId"
+        Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName for vm $vmId"
         $networkInterfaces = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName | Where-Object { $_.VirtualMachine.Id -eq $vmId }
-        Write-Verbose -Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         
         if($networkInterfaces)
         {
             $noOfNics = $networkInterfaces.Count
-            Write-Verbose -Verbose "Number of network interface cards present in the vm: $noOfNics"
+            Write-Verbose "Number of network interface cards present in the vm: $noOfNics"
 
             foreach($networkInterface in $networkInterfaces)
             {
@@ -377,16 +380,16 @@ function Get-NetworkSecurityGroups
                 if($networkSecurityGroupEntry)
                 {
 					$nsId = $networkSecurityGroupEntry.Id
-					Write-Verbose -Verbose "Network Security Group Id: $nsId"
+					Write-Verbose "Network Security Group Id: $nsId"
 					
                     $securityGroupName = $nsId.Split('/')[-1]
                     $sgResourceGroup = $nsId.Split('/')[4]                    
-                    Write-Verbose -Verbose "Security Group name is $securityGroupName and the related resource group $sgResourceGroup"
+                    Write-Verbose "Security Group name is $securityGroupName and the related resource group $sgResourceGroup"
 
                     # Get the network security group object
-                    Write-Verbose -Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $sgResourceGroup"
+                    Write-Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $sgResourceGroup"
                     $securityGroup = Get-AzureNetworkSecurityGroup -ResourceGroupName $sgResourceGroup -Name $securityGroupName                    
-                    Write-Verbose -Verbose "[Azure Call]Got network security group $securityGroupName in resource group $sgResourceGroup"
+                    Write-Verbose "[Azure Call]Got network security group $securityGroupName in resource group $sgResourceGroup"
 
                     $securityGroups.Add($securityGroup)
                 }
@@ -423,9 +426,9 @@ function Add-NetworkSecurityRuleConfig
             {
                 $winRMConfigRule = $null
 
-                Write-Verbose -Verbose "[Azure Call]Getting network security rule config $ruleName under security group $securityGroupName"
+                Write-Verbose "[Azure Call]Getting network security rule config $ruleName under security group $securityGroupName"
                 $winRMConfigRule = Get-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -EA SilentlyContinue
-                Write-Verbose -Verbose "[Azure Call]Got network security rule config $ruleName under security group $securityGroupName"
+                Write-Verbose "[Azure Call]Got network security rule config $ruleName under security group $securityGroupName"
             }
             catch
             { 
@@ -440,24 +443,24 @@ function Add-NetworkSecurityRuleConfig
                 {
                     try
                     {
-                        Write-Verbose -Verbose "[Azure Call]Adding inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"
+                        Write-Verbose "[Azure Call]Adding inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"
                         $securityGroup = Add-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -Direction Inbound -Access Allow -SourceAddressPrefix '*' -SourcePortRange '*' -DestinationAddressPrefix '*' -DestinationPortRange $winrmHttpsPort -Protocol * -Priority $rulePriotity
-                        Write-Verbose -Verbose "[Azure Call]Added inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"                         
+                        Write-Verbose "[Azure Call]Added inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"                         
 
-                        Write-Verbose -Verbose "[Azure Call]Setting the azure network security group"
+                        Write-Verbose "[Azure Call]Setting the azure network security group"
                         $result = Set-AzureNetworkSecurityGroup -NetworkSecurityGroup $securityGroup
-                        Write-Verbose -Verbose "[Azure Call]Set the azure network security group"
+                        Write-Verbose "[Azure Call]Set the azure network security group"
                     }
                     catch
                     {
-                        Write-Verbose -Verbose "Failed to add inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName : $_.Exception.Message"
+                        Write-Verbose "Failed to add inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName : $_.Exception.Message"
                             
                         $newPort = [convert]::ToInt32($rulePriotity, 10) + 50;
                         $rulePriotity = $newPort.ToString()
 
-                        Write-Verbose -Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $resourceGroupName"
+                        Write-Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $resourceGroupName"
                         $securityGroup = Get-AzureNetworkSecurityGroup -ResourceGroupName $resourceGroupName -Name $securityGroupName
-                        Write-Verbose -Verbose "[Azure Call]Got network security group $securityGroupName in resource group $resourceGroupName"
+                        Write-Verbose "[Azure Call]Got network security group $securityGroupName in resource group $resourceGroupName"
                         
 
                         if($retryCnt -eq $maxRetries)
@@ -468,7 +471,7 @@ function Add-NetworkSecurityRuleConfig
                         continue
                     }           
                         
-                    Write-Verbose -Verbose "Successfully added the network security group rule $ruleName with priority $rulePriotity for port $winrmHttpsPort"
+                    Write-Verbose "Successfully added the network security group rule $ruleName with priority $rulePriotity for port $winrmHttpsPort"
                     break             
                 }
             }
@@ -485,8 +488,8 @@ function Remove-NetworkSecurityRuleConfig
     Switch-AzureMode AzureResourceManager
     foreach($securityGroup in $securityGroups)
     {
-        Write-Verbose -Verbose "[Azure Call]Removing the Rule $ruleName"
+        Write-Verbose "[Azure Call]Removing the Rule $ruleName"
         $result = Remove-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName | Set-AzureNetworkSecurityGroup
-        Write-Verbose -Verbose "[Azure Call]Removed the Rule $ruleName"
+        Write-Verbose "[Azure Call]Removed the Rule $ruleName"
     }
 }
