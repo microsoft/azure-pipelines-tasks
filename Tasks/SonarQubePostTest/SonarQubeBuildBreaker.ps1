@@ -2,7 +2,9 @@
 # Top-level orchestrating logic
 # 
 function BreakBuildOnQualityGateFailure
-{    
+{
+    param ([string]$analysisId)
+
     $breakBuild = GetTaskContextVariable "MSBuild.SonarQube.BreakBuild"            
     $breakBuildEnabled = Convert-String $breakBuild Boolean    
 
@@ -13,15 +15,13 @@ function BreakBuildOnQualityGateFailure
             Write-Host "Ignoring the setting of breaking the build on quality gate failure because the build was triggered by a pull request."
             return;
         }
-       
-        $analysisId = WaitForAnalysisToFinish
+        Write-Host "Checking quality gate on Analsysis $analysisId"
         $qualityGateStatus = QueryQualityGateStatus $analysisId
         FailBuildOnQualityGateStatus $qualityGateStatus
-
     }
     else
     {
-        Write-Host "The build was not set to fail if the associated quality gate fails."
+        Write-Host "The build was not set to fail if the associated quality gate fails." 
     }
 }
 
