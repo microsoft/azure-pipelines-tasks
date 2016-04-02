@@ -2,8 +2,8 @@
 param()
 
 [hashtable]$script:mocks = @{ }
-. $PSScriptRoot\PrivateFunctions.ps1
-. $PSScriptRoot\PublicFunctions.ps1
+. $PSScriptRoot/PrivateFunctions.ps1
+. $PSScriptRoot/PublicFunctions.ps1
 
 Export-ModuleMember -Verbose:$false -Function @(
     'Assert-AreEqual'
