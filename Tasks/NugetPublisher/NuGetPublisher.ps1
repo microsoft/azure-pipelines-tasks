@@ -81,25 +81,27 @@ if($connectedServiceName -and $useExternalFeed)
 }
 elseif($feedName -and (-not $useExternalFeed))
 {
+    if (-not [URI]::IsWellFormedUriString($feedName, [UriKind]::Absolute))
+    {
+        throw (Get-LocalizedString -Key "Feed URI is not properly formatted {0}" -ArgumentList $nugetServer)
+    }
+
     Write-Verbose "Using provided feed URL"
     $nugetServer = $feedName
 
     #check if nuget config exists
-    if(-not (Test-Path -Path $tempNuGetConfigPath))
+    if((Test-Path -Path $tempNuGetConfigPath))
     {
-        Write-Verbose "Creating NuGet.config file"
-        # Create basic NuGet config file if it doesn't exist
-        [System.Xml.XmlDocument] $nuGetConfig = New-Object System.Xml.XmlDocument
+        Write-Verbose "Deleting previous NuGet.config file"
+        Remove-Item $tempNuGetConfigPath
+    }
 
-        $configurationSection = $nuGetConfig.CreateElement("configuration")
-        [void]$nuGetConfig.AppendChild($configurationSection)
-    }
-    else
-    {
-        Write-Verbose "Loading existing NuGet.config file"
-        $nuGetConfig = [xml](Get-Content $tempNuGetConfigPath)
-        $configurationSection = $nuGetConfig.configuration
-    }
+    Write-Verbose "Creating NuGet.config file"
+    # Create basic NuGet config file
+    [System.Xml.XmlDocument] $nuGetConfig = New-Object System.Xml.XmlDocument
+
+    $configurationSection = $nuGetConfig.CreateElement("configuration")
+    [void]$nuGetConfig.AppendChild($configurationSection)
 
     $packageSourcesSection = $nuGetConfig.SelectSingleNode("configuration/packageSources")
     if($packageSourcesSection -eq $null)
