@@ -9,7 +9,8 @@ param(
     [string]$dbPassword,
     [string]$cmdLineArgs,
     [string]$configFile,
-    [string]$breakBuild
+    [string]$breakBuild,
+    [string]$provideAnalysisId 
 )
 
 Write-Verbose "Starting SonarQube Pre-Build Setup Step"
@@ -21,6 +22,7 @@ Write-Verbose "cmdLineArgs = $cmdLineArgs"
 Write-Verbose "configFile = $configFile"
 Write-Verbose "dbConnectionString = $dbUrl"
 Write-Verbose "breakBuild = $breakBuild"
+Write-Verbose "provideAnalysisId = $provideAnalysisId"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -35,7 +37,7 @@ $currentDir = (Get-Item -Path ".\" -Verbose).FullName
 $bootstrapperDir = [System.IO.Path]::Combine($currentDir, "MSBuild.SonarQube.Runner-1.1") # the MSBuild.SonarQube.Runner is version specific
 $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQube.Runner.exe")
 
-StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath "$($serviceEndpoint.Url)/dashboard/index?id=$($projectKey)" $breakBuild
+StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath "$($serviceEndpoint.Url)/dashboard/index?id=$($projectKey)" $breakBuild $provideAnalysisId
 StoreSensitiveParametersInTaskContext $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUsername $dbPassword
 
 $cmdLineArgs = UpdateArgsForPullRequestAnalysis $cmdLineArgs $serviceEndpoint
@@ -43,7 +45,7 @@ Write-Verbose -Verbose $cmdLineArgs
 
 $arguments = CreateCommandLineArgs $projectKey $projectName $projectVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUrl $dbUsername $dbPassword $cmdLineArgs $configFile
 
-Invoke-BatchScript $bootstrapperPath –Arguments $arguments
+Invoke-BatchScript $bootstrapperPath -Arguments $arguments
 
 
 

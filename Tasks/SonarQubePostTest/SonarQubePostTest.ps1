@@ -5,7 +5,9 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 . $PSScriptRoot/Common/SonarQubeHelpers/SonarQubeHelper.ps1
 . $PSScriptRoot//SonarQubePostTestImpl.ps1
 . $PSScriptRoot//SonarQubeBuildBreaker.ps1
+. $PSScriptRoot//SonarQubeBuildIntegration.ps1
 
 InvokeMSBuildRunnerPostTest
 UploadSummaryMdReport
-BreakBuildOnQualityGateFailure
+$analysisId = GetAnalysisId
+BreakBuildOnQualityGateFailure $analysisId

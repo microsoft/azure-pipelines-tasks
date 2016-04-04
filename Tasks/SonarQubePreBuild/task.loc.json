@@ -123,6 +123,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.breakBuild",
       "groupName": "advanced"
+    },
+    {
+      "name": "provideAnalysisId",
+      "type": "boolean",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.provideAnalysisId",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provideAnalysisId",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

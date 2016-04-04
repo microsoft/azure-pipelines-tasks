@@ -7,12 +7,14 @@ function StoreParametersInTaskContext
 		  [string]$hostUrl,
 		  [string]$bootstrapperPath,
 		  [string]$dahsboardUrl, 
-          [string]$breakBuild)
+          [string]$breakBuild,
+          [string]$provideAnalysisId)
 	
     SetTaskContextVariable "MSBuild.SonarQube.BootstrapperPath" $bootstrapperPath    
     SetTaskContextVariable "MSBuild.SonarQube.HostUrl" $hostUrl   
     SetTaskContextVariable "MSBuild.SonarQube.BreakBuild" $breakBuild    
     SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dahsboardUrl
+    SetTaskContextVariable "MSBuild.SonarQube.ProvideAnalysisId" $provideAnalysisId
 }
 
 
