@@ -59,7 +59,7 @@ $azureRMWebsiteConnectionDetails = Get-AzureRMWebsiteConnectionDetails -websiteN
 
 # Construct arguments for msdeploy command
 $msDeployCmdArgs = Get-MsDeployCmdArgs -file $File -webSiteName $WebSiteName -azureRMWebsiteConnectionDetails $azureRMWebsiteConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
-                                       -deleteFilesInAppDataFlag $DeleteFilesInAppDataFlag -takeAppOfflineFlag T$akeAppOfflineFlag -physicalPath $PhysicalPath
+                                       -deleteFilesInAppDataFlag $DeleteFilesInAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -physicalPath $PhysicalPath
 
 # Deploy azureRM WebApp using msdeploy Command
 Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs
