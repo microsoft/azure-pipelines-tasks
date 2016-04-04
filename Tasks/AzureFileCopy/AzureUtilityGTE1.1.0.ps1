@@ -10,16 +10,16 @@ function Get-AzureRMVMsInResourceGroup
     {
         try
         {
-            Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
+            Write-Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
             $azureRMVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-            Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureRMVMResources.Count)"
+            Write-Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureRMVMResources.Count)"
 
             return $azureRMVMResources
         }
         catch [Hyak.Common.CloudException], [Microsoft.Rest.Azure.CloudException]
         {
             $exceptionMessage = $_.Exception.Message.ToString()
-            Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
+            Write-Verbose "ExceptionMessage: $exceptionMessage"
 
             Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
             throw (Get-LocalizedString -Key "Provided resource group '{0}' does not exist." -ArgumentList $resourceGroupName)
@@ -40,7 +40,7 @@ function Set-AzureMachineCustomScriptExtension
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-LocalizedString -Key "[Azure Call]Setting the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
-        Write-Verbose -Verbose "Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose"
+        Write-Verbose "Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose"
         $result = Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
         Write-Host (Get-LocalizedString -Key "[Azure Call]Set the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
         if($result.IsSuccessStatusCode -eq $true)

@@ -159,8 +159,16 @@ else
 if ($searchPattern.Contains("*") -or $searchPattern.Contains("?"))
 {
     Write-Host (Get-LocalizedString -Key "Pattern found in solution parameter.")
-    Write-Host "Find-Files -SearchPattern $searchPattern"
-    $packagesToPush = Find-Files -SearchPattern $searchPattern
+    if ($env:BUILD_SOURCESDIRECTORY)
+    {
+        Write-Verbose "Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY"
+        $packagesToPush = Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY
+    }
+    else
+    {
+        Write-Verbose "Find-Files -SearchPattern $searchPattern"
+        $packagesToPush = Find-Files -SearchPattern $searchPattern
+    }
 }
 else
 {
@@ -203,7 +211,7 @@ try
         }
         elseif(-not $useExternalFeed)
         {
-            $argsUpload = $argsUpload + "  -ConfigFile `"$tempNuGetConfigPath`" -ApiKey VssSessionKey"
+            $argsUpload = $argsUpload + "  -ConfigFile `"$tempNuGetConfigPath`" -ApiKey VssSessionKey -NonInteractive"
         }
 
         if($nuGetAdditionalArgs)

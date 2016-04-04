@@ -137,6 +137,7 @@ result.then(() => {
 })
 .fail((err) => {
     tl.error(err);
+    tl.error('See http://go.microsoft.com/fwlink/?LinkId=760847');
     tl.exit(1);
 });
 

@@ -24,19 +24,19 @@ param(
 	[string]$enableDeploymentPrerequisitesForSelect
 )
 
-Write-Verbose -Verbose "Starting Azure Resource Group Deployment Task"
-Write-Verbose -Verbose "ConnectedServiceNameSelector = $connectedServiceNameSelector"
-Write-Verbose -Verbose "ConnectedServiceName = $ConnectedServiceName"
-Write-Verbose -Verbose "ConnectedServiceNameClassic = $connectedServiceNameClassic"
-Write-Verbose -Verbose "Action = $action"
-Write-Verbose -Verbose "ActionClassic = $actionClassic"
-Write-Verbose -Verbose "ResourceGroupName = $resourceGroupName"
-Write-Verbose -Verbose "CloudService = $cloudService"
-Write-Verbose -Verbose "Location = $location"
-Write-Verbose -Verbose "OverrideParameters = $overrideParameters"
-Write-Verbose -Verbose "OutputVariable = $outputVariable"
-Write-Verbose -Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
-Write-Verbose -Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
+Write-Verbose "Starting Azure Resource Group Deployment Task"
+Write-Verbose "ConnectedServiceNameSelector = $connectedServiceNameSelector"
+Write-Verbose "ConnectedServiceName = $ConnectedServiceName"
+Write-Verbose "ConnectedServiceNameClassic = $connectedServiceNameClassic"
+Write-Verbose "Action = $action"
+Write-Verbose "ActionClassic = $actionClassic"
+Write-Verbose "ResourceGroupName = $resourceGroupName"
+Write-Verbose "CloudService = $cloudService"
+Write-Verbose "Location = $location"
+Write-Verbose "OverrideParameters = $overrideParameters"
+Write-Verbose "OutputVariable = $outputVariable"
+Write-Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
+Write-Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
 
 if($connectedServiceNameSelector -eq "ConnectedServiceNameClassic")
 {
@@ -106,7 +106,7 @@ try
     Validate-AzurePowerShellVersion
 
     $azureUtility = Get-AzureUtility
-    Write-Verbose -Verbose "Loading $azureUtility"
+    Write-Verbose "Loading $azureUtility"
     Import-Module ./$azureUtility -Force
 
     switch ($action)
@@ -122,7 +122,7 @@ try
         }
     }
 	
-	Write-Verbose -Verbose "Completing Azure Resource Group Deployment Task"
+	Write-Verbose "Completing Azure Resource Group Deployment Task"
 }
 catch
 {

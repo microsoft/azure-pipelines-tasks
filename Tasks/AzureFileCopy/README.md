@@ -12,7 +12,7 @@ Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are 
 
 **Azure Subscription**
 
-To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Online using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. 
+To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Team Services using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. 
 
  - For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported. 
 
@@ -20,7 +20,7 @@ To deploy to Azure, an Azure subscription has to be linked to Team Foundation Se
 
  - If you are using 'Azure' endpoint type with Certificate based authentication or 'Azure Resource Manager' endpoint type, the task automatically filters appropriate [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) storage account and the newer [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) storage accounts and other fields viz. Resource Group/Cloud Service & Virtual Machines. 
 
- - *Note*: 'Azure' endpoint with Credentials based authentication doesn't filter the Storage, Resource Group/Cloud Service, and Virtual Machine fields yet.
+ - *Note*: If you use a Credentials-based 'Azure' endpoint we don't automatically populate the **Storage** & **Resource Group/Cloud Service** fields for you yet. You will need to manually enter values for now. With Certificate-based endpoints we query Azure and populate these dropdowns for you.
 
 The following table lists the storage accounts and the service connections that with them. To identify whether a storage account is based on the classic APIs or the resource manager APIs, log into [https://portal.azure.com/](https://portal.azure.com/) and browse for storage accounts (classic) or storage accounts.
 
@@ -76,7 +76,7 @@ The parameters of the task are described in details, including examples, to show
 
  * **Select Machines By**: The parameter is used to copy the files to a subset of VMs and the subset can be specified by the host name of the VMs or the tags on them. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.
 
- * **Filter Criteria**: If you are copying to a subset of VMs using machine names filter, you can provide a comma separated list of the VM host names for example, ffweb, ffdb1, ffdb2. If you are using tags then you can specify tags in the format “<Key1>:<Value1>, <Key2>:<Value2>” for example, role:web, db; OS:win7. The default behaviour is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon).
+ * **Filter Criteria**: If you are copying to a subset of VMs using machine names filter, you can provide a comma separated list of the VM host names for example, ffweb, ffdb1, ffdb2. If you are using tags then you can specify tags in the format “<Key1>:<Value1>, <Key2>:<Value2>” for example, role:web, db; OS:win7. The default behavior is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon).
 
  * **Admin Login**: Administrator Username for all the Azure VMs in the Resource Group.
 

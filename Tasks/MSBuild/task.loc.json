@@ -12,12 +12,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 26
+    "Patch": 30
   },
   "demands": [
     "msbuild"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
@@ -138,14 +138,6 @@
   "execution": {
     "PowerShell3": {
       "target": "MSBuild.ps1",
-      "platforms": [
-        "windows"
-      ]
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\LegacyMSBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
       "platforms": [
         "windows"
       ]

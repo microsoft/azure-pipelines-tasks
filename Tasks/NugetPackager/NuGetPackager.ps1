@@ -2,6 +2,10 @@ param(
     [string]$searchPattern,
     [string]$outputdir,
     [string]$versionByBuild,
+    [string]$versionEnvVar,
+    [string]$requestedMajorVersion,
+    [string]$requestedMinorVersion,
+    [string]$requestedPatchVersion,    
     [string]$configurationToPack,
     [string]$buildProperties,
     [string]$nuGetAdditionalArgs,
@@ -18,10 +22,17 @@ foreach($key in $PSBoundParameters.Keys)
 Write-Verbose "Importing modules"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-$b_versionByBuild = Convert-String $versionByBuild Boolean    
+
+# the string for versionByBuild is "true" for back-compat
+$b_versionByBuild = $versionByBuild -eq "true"    
+$b_versionByEnvVar = $versionByBuild -eq "byEnvVar"
+$b_versionByPrereleaseNumber = $versionByBuild -eq "byPrereleaseNumber"
+
+$b_automaticallyVersion = $b_versionByBuild -or $b_versionByEnvVar -or $b_versionByPrereleaseNumber
+
 if ($b_versionByBuild)
 {
-    Write-Verbose "Getting version number from build"
+    Write-Verbose "Autoversion: Getting version number from build"
     ##Get Version from Build
     
     # Regular expression pattern to find the version in the build number 
@@ -63,6 +74,25 @@ if ($b_versionByBuild)
           }
     }
     $NewVersion = $VersionData[0]
+    Write-Verbose "Version: $NewVersion"
+}
+elseif ($b_versionByEnvVar)
+{
+    Write-Verbose "Autoversion: Getting version number from environment variable"
+    Write-Verbose "Requested '$versionEnvVar'"
+    
+    $NewVersion = [environment]::GetEnvironmentVariable($versionEnvVar)
+    
+    Write-Verbose "Version: $NewVersion"
+}
+elseif ($b_versionByPrereleaseNumber)
+{
+    Write-Verbose "Autoversion: Generating prerelease number"
+
+    $UtcDateTime = (Get-Date).ToUniversalTime()
+    $PreReleaseMoniker = (Get-Date -Date $UtcDateTime -Format "yyyyMMdd-HHmmss")
+
+    $NewVersion = "$requestedMajorVersion.$requestedMinorVersion.$requestedPatchVersion-ci-$PreReleaseMoniker"
     Write-Verbose "Version: $NewVersion"
 }
 
@@ -155,7 +185,7 @@ try
         }
         $argsPack = "pack `"$fileToPackage`" -OutputDirectory `"$outputdir`" -Properties $buildProps";
         
-        if ($b_versionByBuild)
+        if ($b_automaticallyVersion)
         {
             $argsPack = ($argsPack + " -version $NewVersion")
         }
