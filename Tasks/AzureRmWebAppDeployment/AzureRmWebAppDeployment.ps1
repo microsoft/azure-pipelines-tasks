@@ -55,7 +55,7 @@ if ($enableDetailedLoggingFlag -ne "true")
 $msDeployExePath = Get-MsDeployExePath
 
 # Get destination azureRM website connection details
-$azureRMWebsiteConnectionDetails = Get-AzureRMWebsiteConnectionDetails -websiteName $WebSiteName -enableDetailedLoggingFlag $enableDetailedLoggingFlag
+$azureRMWebsiteConnectionDetails = Get-AzureRMWebsiteConnectionDetails -websiteName $WebSiteName
 
 # Construct arguments for msdeploy command
 $msDeployCmdArgs = Get-MsDeployCmdArgs -file $File -webSiteName $WebSiteName -azureRMWebsiteConnectionDetails $azureRMWebsiteConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `

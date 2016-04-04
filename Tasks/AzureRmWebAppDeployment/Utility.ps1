@@ -15,16 +15,17 @@ function Get-MsDeployCmdArgs
 {
     param([String][Parameter(Mandatory=$true)] $file,
           [String][Parameter(Mandatory=$true)] $webSiteName,
-          [String][Parameter(Mandatory=$true)] $azureRMWebsiteConnectionDetails,
+          [Object][Parameter(Mandatory=$true)] $azureRMWebsiteConnectionDetails,
           [String][Parameter(Mandatory=$true)] $removeAdditionalFilesFlag,
           [String][Parameter(Mandatory=$true)] $deleteFilesInAppDataFlag,
           [String][Parameter(Mandatory=$true)] $takeAppOfflineFlag,
           [String][Parameter(Mandatory=$false)] $physicalPath)
 
     $msDeployCmdArgs = [String]::Empty
+    Write-Verbose "Constructing msdeploy command arguments to deploy to azureRM website: '$websiteName' from sourceFile: '$file'" -Verbose
 
     # msdeploy argument containing source and destination details to sync
-    $msDeployCmdArgs = [String]::Format(' -verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
+    $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
                                         , $file, $azureRMWebsiteConnectionDetails.KuduHostName, $webSiteName, $azureRMWebsiteConnectionDetails.UserName, $azureRMWebsiteConnectionDetails.UserPassword)
 
     # msdeploy argument to set destination IIS App Name for deploy
@@ -55,6 +56,7 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webSiteName)
     }
 
+    Write-Verbose "Constructed msdeploy command arguments to deploy to azureRM website: '$websiteName' from sourceFile: '$file'" -Verbose
     return $msDeployCmdArgs
 }
 
@@ -88,7 +90,8 @@ function Run-MsDeployCommand
           [String][Parameter(Mandatory=$true)] $msDeployCmdArgs)
 
     $msDeployCmd = "`"$msDeployExePath`" $msDeployCmdArgs"
-    Write-Verbose "Deploying AzureRM WebApp. Running Command: $msDeployCmd" -Verbose
 
+    Write-Verbose "Running msdeploy command." -Verbose
     Run-Command -command $msDeployCmd
+    Write-Verbose "msdeploy command ran successfully." -Verbose
 }
