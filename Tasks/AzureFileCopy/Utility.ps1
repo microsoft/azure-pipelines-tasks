@@ -956,15 +956,15 @@ function Copy-FilesParallellyToAzureVMs
         $Jobs.Add($job.Id, $resourceProperties)
     }
 
-    While (Get-Job)
+    While ($Jobs.Count -gt 0)
     {
         Start-Sleep 10
         foreach ($job in Get-Job)
         {
-            if ($job.State -ne "Running")
+            if ($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
             {
                 $output = Receive-Job -Id $job.Id
-                Remove-Job $Job
+                Remove-Job $Job                
 
                 $status = $output.Status
                 $resourceName = $Jobs.Item($job.Id).Name
@@ -984,6 +984,7 @@ function Copy-FilesParallellyToAzureVMs
 
                     Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
                 }
+                $Jobs.Remove($job.Id)
             }
         }
     }
