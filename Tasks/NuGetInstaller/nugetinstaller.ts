@@ -17,7 +17,7 @@ var nuGetPath = tl.getPathInput('nuGetPath', false, true);
 //find nuget location to use
 var nuGetPathToUse = tl.which('nuget');
 if(nuGetPath) {
-    nuGetPathToUse = nuGetPath + '/nuget';
+    nuGetPathToUse = nuGetPath;
 }
 if(!nuGetPathToUse) {
     tl.error('Failed to find nuget.');
