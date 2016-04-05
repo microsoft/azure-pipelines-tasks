@@ -52,7 +52,7 @@
             "label": "URL",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include DICT://, FILE://, FTP://, FTPS://, GOPHER://, HTTP://, HTTPS://, IMAP://, IMAPS://, LDAP://, LDAPS://, POP3://, POP3S://, RTMP://, RTSP://, SCP://, SFTP://, SMTP://, SMTPS://, TELNET:// and TFTP://."
+            "helpMarkDown": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`."
         },
         {
             "name": "options",

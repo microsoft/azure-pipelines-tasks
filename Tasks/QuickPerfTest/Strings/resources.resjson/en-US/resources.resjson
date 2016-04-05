@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Cloud-based Web Performance Test",
-  "loc.helpMarkDown": "Trriggers a cloud-based load test using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?linkid=613203).",
   "loc.description": "Runs a quick web performance test in the cloud with Visual Studio Team Services",
   "loc.instanceNameFormat": "Quick Web Performance Test $(testName)",
   "loc.input.label.connectedServiceName": "Registered connection",
