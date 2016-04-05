@@ -116,7 +116,7 @@ Try
     Write-Verbose "Created SQLPackage.exe arguments" -Verbose
 
     $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
-    $SqlPackageCommand = "& '$(`"$sqlDeploymentScriptPath`" -replace "['���`]", '$&$&')' '$($scriptArgument -replace "['���`]", '$&$&')'"
+    $SqlPackageCommand = "& '$(`"$sqlDeploymentScriptPath`" -replace "['`]", '$&$&')' '$($scriptArgument -replace "['`]", '$&$&')'"
 
     Write-Verbose "Executing SQLPackage.exe"  -Verbose
 
