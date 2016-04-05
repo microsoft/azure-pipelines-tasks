@@ -207,12 +207,12 @@ function processMavenOutput(data) {
     data = data.toString();
     var input = data;
     var severity = 'NONE';
-    if(data.substring(0, 1) == '[') {
+    if(data.charAt(0) === '[') {
         var rightIndex = data.indexOf(']');
         if(rightIndex > 0) {
             severity = data.substring(1, rightIndex);
 
-            if(severity == 'ERROR' || severity == 'WARNING') {
+            if(severity === 'ERROR' || severity === 'WARNING') {
                 // Try to match output like
                 // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // A successful match will return an array of 5 strings - full matched string, file path, line number, column number, error message
@@ -232,8 +232,6 @@ function processMavenOutput(data) {
                         tl.debug('line number = ' + matches[index + 2]);
                         tl.debug('column number = ' + matches[index + 3]);
                         tl.debug('message = ' + matches[index + 4]);
-                        var messageToLog = matches[index + 1] + '(' + matches[index + 2] + ',' + matches[index + 3] +
-                            '): ' + severity.toLowerCase() + ' : ' + matches[index + 4];
 
                         // task.issue is only for xplat agent and doesn't provide the sourcepath link on summary page
                         // we should use task.logissue when xplat agent is not used anymore so this will workon the coreCLR agent
@@ -242,7 +240,7 @@ function processMavenOutput(data) {
                             sourcepath: matches[index + 1],
                             linenumber: matches[index + 2],
                             columnnumber: matches[index + 3]
-                        }, messageToLog);
+                        }, matches[index + 0]);
 
                         index = index + 5;
                     }
