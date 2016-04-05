@@ -16,7 +16,6 @@
     "Patch": 0
   },
   "demands": [
-    "msbuild",
     "azureps"
   ],
   "minimumAgentVersion": "1.83.0",
