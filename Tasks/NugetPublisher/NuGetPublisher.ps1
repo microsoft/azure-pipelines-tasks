@@ -81,13 +81,14 @@ if($connectedServiceName -and $useExternalFeed)
 }
 elseif($feedName -and (-not $useExternalFeed))
 {
-    if (-not [URI]::IsWellFormedUriString($feedName, [UriKind]::Absolute))
-    {
-        throw (Get-LocalizedString -Key "Feed URI is not properly formatted {0}" -ArgumentList $nugetServer)
-    }
 
     Write-Verbose "Using provided feed URL"
     $nugetServer = $feedName
+    
+    if (-not [URI]::IsWellFormedUriString($nugetServer, [UriKind]::Absolute))
+    {
+        throw (Get-LocalizedString -Key "Feed URI is not properly formatted {0}" -ArgumentList $nugetServer)
+    }
 
     #check if nuget config exists
     if((Test-Path -Path $tempNuGetConfigPath))
