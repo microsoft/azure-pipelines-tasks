@@ -2,6 +2,12 @@
 $script:isClassic = $null
 $script:classicVersion = $null
 
+# Override the DebugPreference.
+if ($global:DebugPreference -eq 'Continue') {
+    Write-Verbose '$OVERRIDING $global:DebugPreference from ''Continue'' to ''SilentlyContinue''.'
+    $global:DebugPreference = 'SilentlyContinue'
+}
+
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
