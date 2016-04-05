@@ -84,56 +84,30 @@ elseif($feedName -and (-not $useExternalFeed))
     Write-Verbose "Using provided feed URL"
     $nugetServer = $feedName
 
-    #check if nuget config exists
-    if(-not (Test-Path -Path $tempNuGetConfigPath))
+    if (-not [URI]::IsWellFormedUriString($nugetServer, [UriKind]::Absolute))
     {
-        Write-Verbose "Creating NuGet.config file"
-        # Create basic NuGet config file if it doesn't exist
-        [System.Xml.XmlDocument] $nuGetConfig = New-Object System.Xml.XmlDocument
+        throw (Get-LocalizedString -Key "Feed URI is not properly formatted {0}" -ArgumentList $nugetServer)
+    }
 
-        $configurationSection = $nuGetConfig.CreateElement("configuration")
-        [void]$nuGetConfig.AppendChild($configurationSection)
-    }
-    else
-    {
-        Write-Verbose "Loading existing NuGet.config file"
-        $nuGetConfig = [xml](Get-Content $tempNuGetConfigPath)
-        $configurationSection = $nuGetConfig.configuration
-    }
+    Write-Verbose "Creating NuGet.config file"
+    # Create basic NuGet config file
+    [System.Xml.XmlDocument] $nuGetConfig = New-Object System.Xml.XmlDocument
+
+    $configurationSection = $nuGetConfig.CreateElement("configuration")
+    [void]$nuGetConfig.AppendChild($configurationSection)
 
     $packageSourcesSection = $nuGetConfig.SelectSingleNode("configuration/packageSources")
-    if($packageSourcesSection -eq $null)
-    {
-        Write-Verbose "Creating package sources section"
-        $packageSourcesSection = $nuGetConfig.CreateElement("packageSources")
-        [void]$configurationSection.AppendChild($packageSourcesSection)   
-    }
-    
-    #check if URL in packageSources
-    $nuGetSources = $nuGetConfig.SelectNodes("configuration/packageSources/add")
-    $sourceExists = $false
+    Write-Verbose "Creating package sources section"
+    $packageSourcesSection = $nuGetConfig.CreateElement("packageSources")
+    [void]$configurationSection.AppendChild($packageSourcesSection)
 
-    foreach($source in $nuGetSources)
-    {
-        $lowerTrimmedSource = ([string]$source.value).ToLowerInvariant().Trim('/')
-        $lowerTrimmedTargetSource = $nugetServer.ToLowerInvariant().Trim('/')
-        if($lowerTrimmedSource.Equals($lowerTrimmedTargetSource))
-        {
-            Write-Verbose "Source exists in NuGet.config file"
-            $sourceExists = $true
-            break
-        }   
-    }
-
-    if(-not $sourceExists)
-    {
-        Write-Verbose "Adding source to NuGet.config file"
-        $alphanumericSource = $nugetServer -replace "[^a-zA-Z0-9]", ""
-        $nuGetSource = $nuGetConfig.CreateElement("add")
-        $nuGetSource.SetAttribute("key", $alphanumericSource)
-        $nuGetSource.SetAttribute("value", $nugetServer)
-        [void]$packageSourcesSection.AppendChild($nuGetSource) 
-    }
+    # add URL to packageSources
+    Write-Verbose "Adding source to NuGet.config file"
+    $alphanumericSource = $nugetServer -replace "[^a-zA-Z0-9]", ""
+    $nuGetSource = $nuGetConfig.CreateElement("add")
+    $nuGetSource.SetAttribute("key", $alphanumericSource)
+    $nuGetSource.SetAttribute("value", $nugetServer)
+    [void]$packageSourcesSection.AppendChild($nuGetSource)
 
     $endpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
     if($endpoint.Authorization.Scheme -eq 'OAuth')
