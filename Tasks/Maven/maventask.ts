@@ -204,6 +204,10 @@ function createMavenSQRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?
 }
 
 function processMavenOutput(data) {
+    if(data == null) {
+        return;
+    }
+
     data = data.toString();
     var input = data;
     var severity = 'NONE';
