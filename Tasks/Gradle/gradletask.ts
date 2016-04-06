@@ -82,7 +82,7 @@ function publishTestResults(publishJUnitResultsOpted: boolean) {
         }
 
         var tp = new tl.TestPublisher("JUnit");
-        tp.publish(matchingTestResultsFiles, false, "", "", "", "");
+        tp.publish(matchingTestResultsFiles, true, "", "", "", true);
     }
 }
 

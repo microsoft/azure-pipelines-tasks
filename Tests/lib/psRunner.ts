@@ -52,7 +52,7 @@ export class PSRunner extends events.EventEmitter {
 		var wd = path.dirname(this._psPath);
 		
 		var psPath = shell.which('powershell');	
-		var cmdLine = psPath + ' -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$env:PSModulePath = [System.IO.Path]::Combine($env:windir, \'system32\\windowspowershell\\v1.0\\Modules\\\') ; Import-Module -Name ([System.IO.Path]::Combine($env:windir, \'system32\\windowspowershell\\v1.0\\Modules\\Microsoft.PowerShell.Management\\Microsoft.PowerShell.Management.psd1\')), ([System.IO.Path]::Combine($env:windir, \'system32\\windowspowershell\\v1.0\\Modules\\Microsoft.PowerShell.Utility\\Microsoft.PowerShell.Utility.psd1\')) ; $VerbosePreference = [System.Management.Automation.ActionPreference]::Continue ; $PSModuleAutoloadingPreference = \'None\' ; & \'' + this._psPath + '\'"';
+		var cmdLine = psPath + ' -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Import-Module -Name Microsoft.PowerShell.Management, Microsoft.PowerShell.Utility ; Set-Content variable:ErrorActionPreference \'Stop\' ; Set-Content variable:VerbosePreference ([System.Management.Automation.ActionPreference]::Continue) ; Set-Content variable:PSModuleAutoloadingPreference \'None\' ; & \'' + this._psPath + '\'"';
 		var child = exec(cmdLine, 
 						{ 
 							cwd: wd, 
