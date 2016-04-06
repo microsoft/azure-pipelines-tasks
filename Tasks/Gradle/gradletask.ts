@@ -55,8 +55,6 @@ gb.exec()
         tl.exit(code);
     })
     .fail(function(err) {
-        publishTestResults(publishJUnitResults);
-        publishCodeCoverage();
         tl.error(err.message);
         tl.debug('taskRunner fail');
         tl.exit(1);
