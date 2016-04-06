@@ -6,13 +6,30 @@ param(
     [string]$excludeVersion, # Support for excludeVersion has been deprecated.
     [string]$noCache,
     [string]$nuGetRestoreArgs,
-    [string]$nuGetPath
+    [string]$nuGetPath,
+    [string]$connectedServiceName
+   
 )
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 . $PSScriptRoot\VsoNuGetHelper.ps1
+
+
+function GetEndpointData
+{
+	param([string][ValidateNotNullOrEmpty()]$connectedServiceName)
+
+	$serviceEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+
+	if (!$serviceEndpoint)
+	{
+		throw "A Connected Service with name '$ConnectedServiceName' could not be found.  Ensure that this Connected Service was successfully provisioned using the services tab in the Admin UI."
+	}
+
+    return $serviceEndpoint
+}
 
 $MyCommandName = $MyInvocation.MyCommand.Name
 Write-Verbose "Entering script $MyCommandName"
@@ -66,7 +83,14 @@ if (!$solutionFiles)
 $args = " -NonInteractive";
 if($b_noCache)
 {
+
     $args = (" -NoCache " + $args);
+}
+  
+if($restoreMode = "restore")
+{
+    $serviceEndpoint = GetEndpointData $connectedServiceName
+    $args = ("-source " + $serviceEndpoint.url + $args);
 }
 
 $useBuiltinNuGetExe = !$nuGetPath
