@@ -202,7 +202,7 @@
         {
             "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureResourceGroupRM"
+            "dataSourceName": "AzureResourceGroups"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",

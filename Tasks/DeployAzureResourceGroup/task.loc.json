@@ -202,7 +202,7 @@
     {
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureResourceGroupRM"
+      "dataSourceName": "AzureResourceGroups"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
