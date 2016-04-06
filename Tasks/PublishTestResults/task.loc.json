@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 22
+    "Patch": 25
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -34,8 +34,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.testRunner",
       "options": {
         "JUnit": "JUnit",
-        "VSTest": "VSTest",
         "NUnit": "NUnit",
+        "VSTest": "VSTest",
         "XUnit": "XUnit"
       }
     },

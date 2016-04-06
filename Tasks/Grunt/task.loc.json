@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 13
+    "Patch": 16
   },
   "demands": [
     "node.js"
@@ -75,11 +75,6 @@
     "Node": {
       "target": "grunttask.js",
       "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\Grunttask.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
     }
   },
   "messages": {

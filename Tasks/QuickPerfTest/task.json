@@ -2,8 +2,8 @@
   "id": "9648625C-1523-4EB5-B015-DFE7C685840C",
   "name": "QuickPerfTest",
   "friendlyName": "Cloud-based Web Performance Test",
-  "description": "Runs the quick web performance test in cloud, with Visual Studio Online",
-  "helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "description": "Runs a quick web performance test in the cloud with Visual Studio Team Services",
+  "helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?linkid=613203).",
   "category": "Test",
   "visibility": [
                   "Build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "msbuild",
@@ -27,7 +27,7 @@
       "label": "Registered connection",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Select a previously registered service connection to talk to the Cloud-based Load Test service. Choose 'Manage' to register a new connection."
+      "helpMarkDown": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new connection."
     },
     {
       "name": "websiteUrl",
@@ -35,7 +35,7 @@
       "label": "Website Url",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Enter your application website url as http://www.your.app/home.html"
+      "helpMarkDown": "Enter your application website URL as http://www.your.app/home.html"
     },
     {
       "name": "testName",
@@ -79,7 +79,7 @@
       "type": "pickList",
       "label": "Load Location",
       "required": false,
-      "helpMarkDown": "Geographical region to generate the load from. See task help for more details.",
+      "helpMarkDown": "Geographical region to generate the load from. See help for more details.",
       "defaultValue": "Default",
       "options": {
         "Default":"Default",

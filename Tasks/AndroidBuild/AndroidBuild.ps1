@@ -16,6 +16,8 @@ param(
     [string]$deleteAvd         # Delete AVD
 )
 
+Write-Warning "The Android Build task has been deprecated. Use the Gradle task instead. See http://go.microsoft.com/fwlink/?LinkID=613720."
+
 Write-Verbose "Entering script AndroidBuild.ps1"
 Write-Verbose "gradleWrapper = $gradleWrapper"
 Write-Verbose "gradleProj = $gradleProj"

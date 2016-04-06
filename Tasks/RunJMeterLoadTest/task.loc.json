@@ -1,0 +1,86 @@
+{
+  "id": "F20661EB-E0F7-4AFD-9A86-9FE9D1A93382",
+  "name": "ApacheJMeterLoadTest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "TestDrop",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.TestDrop",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TestDrop"
+    },
+    {
+      "name": "LoadTest",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.LoadTest",
+      "defaultValue": "jmeter.jmx",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.LoadTest"
+    },
+    {
+      "name": "agentCount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.agentCount",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.agentCount",
+      "defaultValue": "1",
+      "options": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5"
+      }
+    },
+    {
+      "name": "runDuration",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.runDuration",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.runDuration",
+      "defaultValue": "60",
+      "options": {
+        "60": "60",
+        "120": "120",
+        "180": "180",
+        "240": "240",
+        "300": "300"
+      }
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Start-ApacheJMeterTest.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

@@ -12,9 +12,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 24
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.95.0",
     "groups": [
         {
             "name": "advanced",
@@ -35,7 +35,7 @@
             "name": "SearchPattern",
             "type": "string",
             "label": "Search pattern",
-            "defaultValue": "**\\bin\\**\\*.pdb",
+            "defaultValue": "**/bin/**/*.pdb",
             "required": true,
             "helpMarkDown": "The pattern used to discover the pdb files to publish."
         },
@@ -106,11 +106,6 @@
     "execution": {
         "PowerShell3": {
             "target": "PublishSymbols.ps1"
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\LegacyPublishSymbols.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
     },
     "messages": {

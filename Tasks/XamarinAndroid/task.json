@@ -6,13 +6,13 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613728)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 11
     },
     "demands": [
         "AndroidSDK",
@@ -20,15 +20,15 @@
         "Xamarin.Android"
     ],
     "minimumAgentVersion": "1.83.0",
-    "groups":  [
+    "groups": [
         {
             "name": "msbuildOptions",
-            "displayName":"MSBuild Options",
+            "displayName": "MSBuild Options",
             "isExpanded": true
         },
         {
             "name": "jdkOptions",
-            "displayName":"JDK Options",
+            "displayName": "JDK Options",
             "isExpanded": true
         }
     ],
@@ -54,7 +54,8 @@
             "type": "string",
             "label": "Output Directory",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Optionally provide the output directory for the build. Example: $(build.binariesDirectory)/bin/Release."
         },
         {
             "name": "configuration",
@@ -67,10 +68,10 @@
             "name": "msbuildLocation",
             "type": "string",
             "label": "MSBuild Location",
-            "defaultValue":"",
-            "required":false,
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).  It defaults to searching for latest version.",
-            "groupName":"msbuildOptions"
+            "groupName": "msbuildOptions"
         },
         {
             "name": "msbuildArguments",
@@ -82,55 +83,55 @@
             "groupName": "msbuildOptions"
         },
         {
-          "name": "jdkSelection",
-          "type": "radio",
-          "label": "Select JDK to use for the build",
-          "required": true,
-          "groupName": "jdkOptions",
-          "defaultValue": "JDKVersion",
-          "helpMarkDown": "Pick the JDK to be used during the build by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
-          "options": {
-            "JDKVersion": "JDK Version",
-            "Path": "Path"
-          }
-        },
-        {
-            "name":"jdkVersion",
-            "type":"pickList",
-            "label":"JDK Version",
-            "required":false,
-            "groupName":"jdkOptions",
-            "defaultValue":"default",
-            "helpMarkDown": "Use the selected JDK version during build.",
-            "visibleRule": "jdkSelection = JDKVersion",
+            "name": "jdkSelection",
+            "type": "radio",
+            "label": "Select JDK to use for the build",
+            "required": true,
+            "groupName": "jdkOptions",
+            "defaultValue": "JDKVersion",
+            "helpMarkDown": "Pick the JDK to be used during the build by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
             "options": {
-                "default":"default",
-                "1.8":"JDK 8",
-                "1.7":"JDK 7",
-                "1.6":"JDK 6"
+                "JDKVersion": "JDK Version",
+                "Path": "Path"
             }
         },
         {
-          "name": "jdkUserInputPath",
-          "type": "string",
-          "label": "JDK Path",
-          "required": true,
-          "groupName": "jdkOptions",
-          "defaultValue": "",
-          "helpMarkDown": "Use the JDK version at specified path during build.",
-          "visibleRule": "jdkSelection = Path"
+            "name": "jdkVersion",
+            "type": "pickList",
+            "label": "JDK Version",
+            "required": false,
+            "groupName": "jdkOptions",
+            "defaultValue": "default",
+            "helpMarkDown": "Use the selected JDK version during build.",
+            "visibleRule": "jdkSelection = JDKVersion",
+            "options": {
+                "default": "default",
+                "1.8": "JDK 8",
+                "1.7": "JDK 7",
+                "1.6": "JDK 6"
+            }
+        },
+        {
+            "name": "jdkUserInputPath",
+            "type": "string",
+            "label": "JDK Path",
+            "required": true,
+            "groupName": "jdkOptions",
+            "defaultValue": "",
+            "helpMarkDown": "Use the JDK version at specified path during build.",
+            "visibleRule": "jdkSelection = Path"
         },
         {
             "name": "jdkArchitecture",
             "type": "pickList",
             "label": "JDK Architecture",
-            "defaultValue":"x86",
-            "required":false,
+            "defaultValue": "x86",
+            "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
-            "groupName":"jdkOptions",
-            "options":{
-                "x86":"x86",
-                "x64":"x64"
+            "groupName": "jdkOptions",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
             }
         }
     ],
@@ -141,12 +142,12 @@
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)",
             "platforms": [
-              "windows"
+                "windows"
             ]
         },
         "Node": {
-          "target": "xamarinandroid.js",
-          "argumentFormat": ""
-      }
+            "target": "xamarinandroid.js",
+            "argumentFormat": ""
+        }
     }
 }

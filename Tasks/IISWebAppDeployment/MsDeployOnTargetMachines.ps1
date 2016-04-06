@@ -2,6 +2,7 @@
     [string]$WebDeployPackage,
     [string]$WebDeployParamFile,
     [string]$OverRideParams,
+    [string]$CreateWebSite,
     [string]$WebSiteName,
     [string]$WebSitePhysicalPath,
     [string]$WebSitePhysicalPathAuth,
@@ -15,6 +16,7 @@
     [string]$HostName,
     [string]$ServerNameIndication,
     [string]$SslCertThumbPrint,
+    [string]$CreateAppPool,
     [string]$AppPoolName,
     [string]$DotNetVersion,
     [string]$PipeLineMode,
@@ -212,7 +214,7 @@ function Does-WebSiteExists
         return $true
     }
     
-    Write-Verbose "WebSite does not exist" -Verbose
+    Write-Verbose "Website ($siteName) does not exist" -Verbose
     return $false
 }
 
@@ -594,12 +596,12 @@ function Execute-Main
 {
     Write-Verbose "Entering Execute-Main function" -Verbose
 
-    if(-not (IsInputNullOrEmpty -str $AppPoolName))
+    if($CreateAppPool -ieq "true")
     {
         Create-And-Update-AppPool -appPoolName $AppPoolName -clrVersion $DotNetVersion -pipeLineMode $PipeLineMode -identity $AppPoolIdentity -userName $AppPoolUsername -password $AppPoolPassword
     }
 
-    if(-not (IsInputNullOrEmpty -str $WebSiteName))
+    if($CreateWebSite -ieq "true")
     {
         Create-And-Update-WebSite -siteName $WebSiteName -appPoolName $AppPoolName -physicalPath $WebSitePhysicalPath -authType $WebSitePhysicalPathAuth -userName $WebSiteAuthUserName `
          -password $WebSiteAuthUserPassword -addBinding $AddBinding -protocol $Protocol -ipAddress $IpAddress -port $Port -hostname $HostName -assignDupBindings $AssignDuplicateBinding
@@ -609,6 +611,14 @@ function Execute-Main
             $appCmdPath, $iisVersion = Get-AppCmdLocation -regKeyPath $AppCmdRegKey
             Add-SslCert -port $Port -certhash $SslCertThumbPrint -hostname $HostName -sni $ServerNameIndication -iisVersion $iisVersion
             Enable-SNI -siteName $WebSiteName -sni $ServerNameIndication -ipAddress $IpAddress -port $Port -hostname $HostName
+        }
+    }
+    else
+    {
+        $doesWebSiteExists = Does-WebSiteExists -siteName $WebSiteName
+        if (-not $doesWebSiteExists)  
+        {
+            throw "The website '$WebSiteName' does not exist and you did not request to create it - deployment cannot continue."  
         }
     }
 

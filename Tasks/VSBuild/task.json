@@ -12,13 +12,13 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 27
     },
     "demands": [
         "msbuild",
         "visualstudio"
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.95.0",
     "groups": [
         {
             "name": "advanced",
@@ -113,11 +113,6 @@
     "execution": {
         "PowerShell3": {
             "target": "VSBuild.ps1"
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\LegacyVSBuild.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
     },
     "messages": {

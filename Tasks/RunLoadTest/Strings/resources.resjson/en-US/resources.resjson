@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Cloud-based Load Test",
-  "loc.helpMarkDown": "This task can be used to trigger a Cloud-based Load Test using Visual Studio Online. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
-  "loc.description": "Runs the load test in cloud, with Visual Studio Online",
+  "loc.helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.description": "Runs the load test in the cloud with Visual Studio Team Services",
   "loc.instanceNameFormat": "Cloud Load Test $(LoadTest)",
   "loc.input.label.connectedServiceName": "Registered connection",
   "loc.input.help.connectedServiceName": "Select a previously registered service connection to talk to the Cloud-based Load Test service. Choose 'Manage' to register a new connection.",

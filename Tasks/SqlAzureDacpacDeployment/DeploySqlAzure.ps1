@@ -110,13 +110,13 @@ Try
     $isFirewallConfigured = $firewallSettings.IsConfigured
 
     # getting script arguments to execute sqlpackage.exe
-    Write-Verbose "Creating SQLPackage.exe agruments" -Verbose
+    Write-Verbose "Creating SQLPackage.exe arguments" -Verbose
     $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
                                                      -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
-    Write-Verbose "Created SQLPackage.exe agruments" -Verbose
+    Write-Verbose "Created SQLPackage.exe arguments" -Verbose
 
     $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
-    $SqlPackageCommand = "& `"$sqlDeploymentScriptPath`" $scriptArgument"
+    $SqlPackageCommand = "& '$(`"$sqlDeploymentScriptPath`" -replace "['`]", '$&$&')' '$($scriptArgument -replace "['`]", '$&$&')'"
 
     Write-Verbose "Executing SQLPackage.exe"  -Verbose
 
