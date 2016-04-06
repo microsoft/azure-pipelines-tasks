@@ -28,7 +28,7 @@ var publishJUnitResults = tl.getInput('publishJUnitResults');
 var buildTool = "gradle";
 var ccTool = tl.getInput('codeCoverageTool');
 var classFileDirs = tl.getInput('classFilesDirectories');
-var classFilters = tl.getInput('classFilter');
+var classFilter = tl.getInput('classFilter');
 var summaryFile = null;
 var reportDir = null;
 var ccReportingTask = "";
@@ -132,7 +132,7 @@ function enableCodeCoverage() {
 
     var buildProps: { [key: string]: string } = {};
     buildProps['classfiledirs'] = classFileDirs;
-    buildProps['classfilters'] = classFilters;
+    buildProps['classfilter'] = classFilter;
     buildProps['summaryfile'] = summaryFile;
     buildProps['reportdir'] = reportDir;
     buildProps['buildfile'] = path.join(cwd + "/build.gradle");
