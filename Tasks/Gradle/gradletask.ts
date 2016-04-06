@@ -33,6 +33,7 @@ var summaryFile = null;
 var reportDir = null;
 var ccReportingTask = "";
 var codeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+var publishJUnitResultsOpted = (typeof publishJUnitResults != "undefined" && publishJUnitResults && publishJUnitResults.toLowerCase() == 'true');
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
 var specifiedJavaHome = extractJavaHome();
@@ -50,8 +51,8 @@ gb.arg(gbTasks);
 gb.arg(ccReportingTask)
 gb.exec()
     .then(function(code) {
-        publishTestResults(publishJUnitResults);
-        publishCodeCoverage();
+        publishTestResults(publishJUnitResultsOpted);
+        publishCodeCoverage(codeCoverageOpted);
         tl.exit(code);
     })
     .fail(function(err) {
@@ -60,8 +61,8 @@ gb.exec()
         tl.exit(1);
     })
 
-function publishTestResults(publishJUnitResults: string) {
-    if (publishJUnitResults && publishJUnitResults.toLowerCase() == 'true') {
+function publishTestResults(publishJUnitResultsOpted: boolean) {
+    if (publishJUnitResultsOpted) {
         var testResultsFiles = tl.getInput('testResultsFiles', true);
         //check for pattern in testResultsFiles
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
@@ -136,16 +137,15 @@ function enableCodeCoverage() {
     buildProps['buildfile'] = path.join(cwd + "/build.gradle");
     buildProps['ismultimodule'] = String(isMultiModule);
 
-    //TODO License for all files
     var ccEnabler = new tl.CodeCoverageEnabler("gradle", ccTool);
     ccEnabler.enableCodeCoverage(buildProps);
 }
 
-function publishCodeCoverage() { 
+function publishCodeCoverage(codeCoverageOpted: boolean) {
     if (codeCoverageOpted) {
         var ccPublisher = new tl.CodeCoveragePublisher();
         ccPublisher.publish(ccTool, summaryFile, reportDir, "");
-    }   
+    }
 }
 
 function isMultiModuleProject(wrapperScript: string): boolean {
