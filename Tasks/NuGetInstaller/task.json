@@ -1,15 +1,15 @@
 {
   "id": "d2590f80-f99a-11e5-8bf5-5d81d42a5574",
-  "name": "NuGetInstallerWithEndPoint",
-  "friendlyName": "NuGet Installer With end Point",
-  "description": "Installs or restores missing NuGet packages with end point",
-  "author": "ALM",
-  "helpMarkDown": "Replace with markdown to show in help",
-  "category": "Package",
+	"name": "NuGetInstaller",
+	"friendlyName": "NuGet Installer",
+	"description": "Installs or restores missing NuGet packages",
+	"helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
+	"category": "Package",
+	"author": "Microsoft Corporation",
    "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 27
+        "Patch": 29
     },
 	
   "minimumAgentVersion": "1.83.0",
