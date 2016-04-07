@@ -22,7 +22,7 @@ param(
     [string]$skipCACheck,
     [string]$outputVariable,
     [string]$enableDeploymentPrerequisitesForCreate,
-	[string]$enableDeploymentPrerequisitesForSelect
+    [string]$enableDeploymentPrerequisitesForSelect
 )
 
 Write-Verbose "Starting Azure Resource Group Deployment Task"
@@ -40,7 +40,7 @@ Write-Verbose "OutputVariable = $outputVariable"
 Write-Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
 Write-Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
 
-if([string]::IsNullOrEmpty($resourceGroupName))
+if($action -eq "Select Resource Group" -or $action -eq "DeleteRG")
 {
     $resourceGroupName = $resourceGroupNameWithVMs
 }
