@@ -40,7 +40,7 @@ Write-Verbose "OutputVariable = $outputVariable"
 Write-Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
 Write-Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
 
-if($action -eq "Select Resource Group" -or $action -eq "DeleteRG")
+if($action -ne "Create Or Update Resource Group" -and $action -ne "DeleteRG")
 {
     $resourceGroupName = $resourceGroupNameWithVMs
 }
