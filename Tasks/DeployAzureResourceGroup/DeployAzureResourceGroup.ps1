@@ -122,7 +122,7 @@ try
         }
     }
 	
-	Write-Verbose "Completing Azure Resource Group Deployment Task"
+	Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose
 }
 catch
 {
