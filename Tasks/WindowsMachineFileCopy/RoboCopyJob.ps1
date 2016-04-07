@@ -150,7 +150,7 @@ param (
         $command = "net use `"$machineShare`""
         if($userName)
         {
-            $command += " /user:`"$userName`" `'$password`'"
+            $command += " /user:`"$userName`" `'$($password -replace "['`]", '$&$&')`'"
         }
         $command += " 2>&1"
         
