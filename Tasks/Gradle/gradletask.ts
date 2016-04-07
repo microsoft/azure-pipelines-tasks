@@ -4,7 +4,7 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 
-var uuid = require('uuid');
+var uuid = require('node-uuid');
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
 fs.chmodSync(wrapperScript, "755"); //Make sure the wrapper script is executable
