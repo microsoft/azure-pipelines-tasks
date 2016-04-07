@@ -112,7 +112,7 @@ function extractJavaHome() {
 }
 
 function enableCodeCoverage() {
-    var reportDir = path.join(cwd + "/" + uuid.v1());
+    reportDir = path.join(cwd + "/" + uuid.v1());
     fs.mkdirSync(reportDir);
 
     var isMultiModule = isMultiModuleProject(wrapperScript);
