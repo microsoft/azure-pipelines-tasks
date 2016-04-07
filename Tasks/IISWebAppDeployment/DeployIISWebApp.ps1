@@ -127,9 +127,7 @@ if(![string]::IsNullOrWhiteSpace($webSiteName))
         $overRideParams = $overRideParams + [string]::Format('{0}name="IIS Web Application Name",value="{1}"',  [System.Environment]::NewLine, $webSiteName)
     }
 }
-
-$overRideParams = $overRideParams.Replace('"', '''')
-
+$overRideParams = $overRideParams.Replace('"', '`"')
 $msDeployScript = Get-Content  ./MsDeployOnTargetMachines.ps1 | Out-String
 $invokeMain = "Execute-Main -WebDeployPackage `"$webDeployPackage`" -WebDeployParamFile `"$webDeployParamFile`" -OverRideParams `"$overRideParams`" -WebSiteName `"$webSiteName`" -WebSitePhysicalPath `"$webSitePhysicalPath`" -WebSitePhysicalPathAuth `"$webSitePhysicalPathAuth`" -WebSiteAuthUserName $webSiteAuthUserName -WebSiteAuthUserPassword $webSiteAuthUserPassword -AddBinding $addBinding -AssignDuplicateBinding $assignDuplicateBinding -Protocol $protocol -IpAddress `"$ipAddress`" -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppPoolName `"$appPoolName`" -DotNetVersion `"$dotNetVersion`" -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolUsername `"$appPoolUsername`" -AppPoolPassword `"$appPoolPassword`" -AppCmdCommands `"$appCmdCommands`" -CreateWebSite $createWebSite -CreateAppPool $createAppPool"
 
@@ -141,11 +139,11 @@ $errorMessage = [string]::Empty
 
 if($resourceFilteringMethod -eq "tags")
 {
-    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlockContent $msDeployOnTargetMachinesScript -scriptArguments $scriptArgs -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -tags $machineFilter -scriptBlockContent $msDeployOnTargetMachinesScript -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
 }
 else
 {
-    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlockContent $msDeployOnTargetMachinesScript -scriptArguments $scriptArgs -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
+    $errorMessage = Invoke-RemoteDeployment -environmentName $environmentName -machineNames $machineFilter -scriptBlockContent $msDeployOnTargetMachinesScript -runPowershellInParallel $deployInParallel -adminUserName $adminUserName -adminPassword $adminPassword -protocol $winrmProtocol -testCertificate $testCertificate
 }
 
 if(-not [string]::IsNullOrEmpty($errorMessage))
