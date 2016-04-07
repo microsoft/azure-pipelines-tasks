@@ -225,8 +225,8 @@ function packageApps(code) {
                     var xcr = new tl.ToolRunner(xcrunPath);
                     if (xCode7Plus) {
                         var args = ['-sdk', sdk, 'xcodebuild', '-exportArchive', '-exportFormat', 'IPA', '-exportPath', ipa, '-archivePath', app];
-                        if (tl.getBoolInput('exportOptionsPlist', false)) {
-                            args.push('-exportOptionsPlist');
+                        if (optionsPlistPath = tl.getInput('exportOptionsPlist', false)) {
+                            args.push('-exportOptionsPlist', optionsPlistPath);
                         }
                         
                         xcr.arg(args);

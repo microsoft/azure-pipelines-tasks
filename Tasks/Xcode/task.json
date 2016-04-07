@@ -79,11 +79,11 @@
         },
         {
             "name": "exportOptionsPlist",
-            "type": "boolean",
+            "type": "filePath",
             "label": "Export Options plist",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Used when packaging with Xcode 7+ to indicate that the options plist should be exported"
+            "helpMarkDown": "Used when packaging with Xcode 7+ to indicate the options plist file that specifies the export options"
         },
         {
             "name": "signMethod",
