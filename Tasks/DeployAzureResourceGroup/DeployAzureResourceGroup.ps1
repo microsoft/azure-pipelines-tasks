@@ -5,6 +5,7 @@ param(
     [string]$action,
     [string]$actionClassic,
     [string]$resourceGroupName,
+    [string]$resourceGroupNameWithVMs,
     [string]$cloudService,
     [string]$location,
     [string]$csmFile,
@@ -31,12 +32,18 @@ Write-Verbose "ConnectedServiceNameClassic = $connectedServiceNameClassic"
 Write-Verbose "Action = $action"
 Write-Verbose "ActionClassic = $actionClassic"
 Write-Verbose "ResourceGroupName = $resourceGroupName"
+Write-Verbose "ResourceGroupNameWithVMs = $resourceGroupNameWithVMs"
 Write-Verbose "CloudService = $cloudService"
 Write-Verbose "Location = $location"
 Write-Verbose "OverrideParameters = $overrideParameters"
 Write-Verbose "OutputVariable = $outputVariable"
 Write-Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
 Write-Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
+
+if([string]::IsNullOrEmpty($resourceGroupName))
+{
+    $resourceGroupName = $resourceGroupNameWithVMs
+}
 
 if($connectedServiceNameSelector -eq "ConnectedServiceNameClassic")
 {

@@ -96,7 +96,18 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName && action != Select Resource Group && action != Start && action != Stop && action != Restart && action != Delete"
+    },
+    {
+      "name": "resourceGroupNameWithVMs",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.resourceGroupNameWithVMs",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupNameWithVMs",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName && action != Create Or Update Resource Group && action != DeleteRG"
     },
     {
       "name": "cloudService",
@@ -203,6 +214,12 @@
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "resourceGroupNameWithVMs",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureVirtualMachinesV2Id",
+      "resultTemplate": "{{#extractResource resourceGroups}}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
