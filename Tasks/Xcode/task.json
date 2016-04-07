@@ -78,6 +78,14 @@
             "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
         },
         {
+            "name": "exportOptionsPlist",
+            "type": "boolean",
+            "label": "Export Options plist",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Used when packaging with Xcode 7+ to indicate that the options plist should be exported"
+        },
+        {
             "name": "signMethod",
             "type": "radio",
             "label": "Override Using",

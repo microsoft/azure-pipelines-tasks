@@ -224,7 +224,12 @@ function packageApps(code) {
                     var ipa = app.substring(0, app.length - 3) + "ipa";
                     var xcr = new tl.ToolRunner(xcrunPath);
                     if (xCode7Plus) {
-                        xcr.arg(['-sdk', sdk, 'xcodebuild', '-exportArchive', '-exportFormat', 'IPA', '-exportPath', ipa, '-archivePath', app]);
+                        var args = ['-sdk', sdk, 'xcodebuild', '-exportArchive', '-exportFormat', 'IPA', '-exportPath', ipa, '-archivePath', app];
+                        if (tl.getBoolInput('exportOptionsPlist', false)) {
+                            args.push('-exportOptionsPlist');
+                        }
+                        
+                        xcr.arg(args);
                     } else {
                         xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', app, '-o', ipa]);
                     }
