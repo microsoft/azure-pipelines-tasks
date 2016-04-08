@@ -37,13 +37,18 @@ if ($excludeVersion -and "$excludeVersion".ToUpperInvariant() -ne 'FALSE')
 }
 
 # check for solution pattern
-if ($solution.Contains("*") -or $solution.Contains("?"))
+if ($solution.Contains("*") -or $solution.Contains("?") -or $searchPattern.Contains(";"))
 {
     Write-Verbose "Pattern found in solution parameter."
     if ($env:BUILD_SOURCESDIRECTORY)
     {
         Write-Verbose "Find-Files -SearchPattern $solution -RootFolder $env:BUILD_SOURCESDIRECTORY"
         $solutionFiles = Find-Files -SearchPattern $solution -RootFolder $env:BUILD_SOURCESDIRECTORY
+    }
+    elseif ($env:SYSTEM_ARTIFACTSDIRECTORY)
+    {
+        Write-Verbose "Find-Files -SearchPattern $solution -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY"
+        $solutionFiles = Find-Files -SearchPattern $solution -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY
     }
     else
     {
