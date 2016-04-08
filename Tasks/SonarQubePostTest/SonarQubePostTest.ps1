@@ -4,15 +4,12 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 . $PSScriptRoot/Common/SonarQubeHelpers/SonarQubeHelper.ps1
 
-if ( (IsPrBuild) -and ((GetTaskContextVariable "DisableSQAnalysisOnPrBuilds") -eq "true"))
-{
-	Write-Host "DisableSQAnalysisOnPrBuilds is set and this is a PR build - ignoring the analysis tasks"
-	return
-}
+# During PR builds only an "issues mode" analysis is allowed. The resulting issues are posted as code review comments. 
+# The feature can be toggled by the user and is OFF by default.  
+ExitOnPRBuild
 
 . $PSScriptRoot/SonarQubePostTestImpl.ps1
 . $PSScriptRoot/SonarQubeBuildBreaker.ps1
-
 . $PSScriptRoot/PRCA/Orchestrator.ps1
 
 InvokeMSBuildRunnerPostTest

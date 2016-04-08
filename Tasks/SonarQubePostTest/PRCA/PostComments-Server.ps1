@@ -280,7 +280,7 @@ function GetCodeFlowLatestIterationId
         $script:pullRequest.Repository.ProjectReference.Id,  # Guid project
         $script:pullRequest.CodeReviewId, # int reviewId
         $null, # bool? includeAllProperties
-        0, # int? maxChangesCount
+        $null, # int? maxChangesCount
         $null, # DateTimeOffset? ifModifiedSince
         $null, # object userState
         [System.Threading.CancellationToken]::None).Result
