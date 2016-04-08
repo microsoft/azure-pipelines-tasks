@@ -40,7 +40,15 @@ xcrun.pathArg(path.join(sourceDir, ipaPath, tl.getInput('ipaName', true)));
 // TODO: consider --sign option
 //xcrun.arg('--sign');
 //xcrun.arg('iPhone Developer: Some Name (5CX2Y47E88)');
-xcrun.arg('--embed');
+if (tl.getBoolInput('shouldEmbed')) {
+    xcrun.arg('--embed');
+}
+
+var otherFlags = tl.getInput('otherFlags', false);
+if (otherFlags) {
+    xcrun.arg(otherFlags);
+}
+
 xcrun.arg(tl.getInput('provisioningProfile', true));
 
 xcv.exec()
