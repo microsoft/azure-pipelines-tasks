@@ -5,7 +5,6 @@ param(
     [string]$action,
     [string]$actionClassic,
     [string]$resourceGroupName,
-    [string]$resourceGroupNameWithVMs,
     [string]$cloudService,
     [string]$location,
     [string]$csmFile,
@@ -39,11 +38,6 @@ Write-Verbose "OverrideParameters = $overrideParameters"
 Write-Verbose "OutputVariable = $outputVariable"
 Write-Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
 Write-Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
-
-if($action -ne "Create Or Update Resource Group" -and $action -ne "DeleteRG")
-{
-    $resourceGroupName = $resourceGroupNameWithVMs
-}
 
 if($connectedServiceNameSelector -eq "ConnectedServiceNameClassic")
 {
