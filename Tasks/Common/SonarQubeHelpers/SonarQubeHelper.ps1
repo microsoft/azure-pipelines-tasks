@@ -246,3 +246,29 @@ function GetSonarScannerDirectory
 }
 
 
+#
+# If a build variable that represents a feature is set to true or false, return it. Otherwise, return the specified default.   
+#
+function IsFeatureEnabled
+{
+    param ([string]$featureSettingName, [bool]$enabledByDefault)
+    
+    $featureSettingValue = GetTaskContextVariable $featureSettingName
+    
+    if ($featureSettingValue -eq "true")
+    {
+        return $true
+    }
+    
+    if ($featureSettingValue -eq "false")
+    {
+        return $false
+    }
+    
+    return $enabledByDefault        
+}
+
+function ShouldExitOnPRBuild
+{    
+    return ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $false)) 
+}
