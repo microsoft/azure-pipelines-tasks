@@ -4,13 +4,16 @@ import tl = require("vsts-task-lib/task");
 import path = require("path");
 var execSync = require("child_process").execSync;
 
+var buildSourceDirectory = tl.getVariable("build.sourceDirectory") || tl.getVariable("build.sourcesDirectory");
+tl.cd(buildSourceDirectory);
+
 // if output is rooted ($(build.buildDirectory)/output/...), will resolve to fully qualified path,
 // else relative to repo root
-var buildSourceDirectory = tl.getVariable("build.sourceDirectory") || tl.getVariable("build.sourcesDirectory");
-var out = path.resolve(buildSourceDirectory, tl.getInput("outputPattern", true));
+var outPath = path.resolve(buildSourceDirectory, tl.getInput("outputPattern", true));
 var appPath = tl.getInput("appPath", true);
 var appName = tl.getInput("appName", true);
-var ipaName = tl.getInput("ipaName", true);
+var ipaName = tl.getInput("ipaName", false);
+var ipaPath = tl.getInput("ipaPath", true);
 var provisioningProfile = tl.getInput("provisioningProfile", false);
 var signingIdentity = tl.getInput("signingIdentity", false);
 var sdk = tl.getInput("sdk", true);
@@ -25,6 +28,8 @@ var packageCommand = tl.createToolRunner(xcodeBuild);
 var ipaPath = tl.getInput("ipaPath", true);
 tl.mkdirP(path.join(buildSourceDirectory, ipaPath));
 
+var archiveName = appName + ".xcarchive";
+
 var xCode7Plus = false;
 try {
     var version = parseInt(execSync("xcodebuild -version").toString().match(/\d+(?=\.\d+)/g));
@@ -38,10 +43,10 @@ if (!xCode7Plus) {
     console.warn("Xcode <7 detected. The Xcode Package iOS task should be used instead of this one.");
 }
 
-var cleanCommandArgs = ["clean", "archive", "-archivePath", path.join(buildSourceDirectory, appPath, appName), "-scheme", appName];
+var cleanCommandArgs = ["clean", "archive", "-archivePath", path.join(outPath, archiveName), "-scheme", appName];
 cleanCommand.arg(cleanCommandArgs);
 
-var packageCommandArgs = ["-sdk", sdk, "-exportArchive", "-exportOptionsPlist", optionsPlist, "-exportFormat", "ipa", "-archivePath", path.join(buildSourceDirectory, appPath, appName), "-exportPath", path.join(buildSourceDirectory, ipaName)];
+var packageCommandArgs = ["-sdk", sdk, "-exportArchive", "-exportOptionsPlist", optionsPlist, "-exportFormat", "ipa", "-archivePath", path.join(outPath, archiveName), "-exportPath", path.join(ipaPath, (ipaName ? ipaName : ""))];
 
 if (provisioningProfile) {
     packageCommandArgs.push("-exportProvisioningProfile");

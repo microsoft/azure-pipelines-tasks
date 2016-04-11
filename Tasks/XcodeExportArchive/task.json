@@ -35,14 +35,6 @@
             "helpMarkDown": "Name of the .app, which is sometimes different from the .ipa"
         },
         {
-            "name": "ipaName",
-            "type": "string",
-            "label": "Name of .ipa",
-            "defaultValue": "name.ipa",
-            "required": true,
-            "helpMarkDown": "Name of the .ipa, which is sometimes different from the .app"
-        },
-        {
             "name": "provisioningProfile",
             "type": "string",
             "label": "Provisioning Profile Name",
@@ -82,6 +74,15 @@
             "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)",
             "required": true,
             "helpMarkDown": "Relative path to the built .app file",
+            "groupName": "advanced"
+        },
+        {
+            "name": "ipaName",
+            "type": "string",
+            "label": "Name of .ipa",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name to give the IPA (if different from appname.ipa)",
             "groupName": "advanced"
         },
         {
