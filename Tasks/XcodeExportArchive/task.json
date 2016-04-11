@@ -1,6 +1,6 @@
 {
-    "id": "F54D001C-999F-408A-9867-0400C1838C5E",
-    "name": "xcode-export-archive",
+    "id": "1357EC5B-B96F-4AD8-95DA-BAC1DD98DF80",
+    "name": "XcodeExportArchive",
     "friendlyName": "Xcode Export Archive",
     "description": "Export an archive file from Xcode build output",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613731)",
