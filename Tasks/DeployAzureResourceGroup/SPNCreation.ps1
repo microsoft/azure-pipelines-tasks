@@ -24,7 +24,6 @@ if ([string]::IsNullOrEmpty($appName))
 $displayName = [String]::Format("VSO.{0}.{1}", $appName -replace (' n','_'), $newguid)
 $homePage = "http://" + $displayName
 $identifierUri = $homePage
-Write-Output $displayName
 
 #Initialize subscription
 $isAzureModulePresent = Get-Module -Name AzureRM* -ListAvailable
