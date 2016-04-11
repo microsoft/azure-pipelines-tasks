@@ -41,11 +41,10 @@ function Install-Task {
 
     # Send the HTTP request.
     try {
-        Invoke-RestMethod -Uri $url -Method Put -Body $bytes -UseDefaultCredentials -Headers @{
+        Invoke-RestMethod -Uri $url -Method Put -Body $bytes -UseDefaultCredentials -ContentType 'application/octet-stream' -Headers @{
             #'Authorization' = "Basic $([System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(":$Pat")))"
             'X-TFS-FedAuthRedirect' = 'Suppress'
             'Content-Range' = "bytes 0-$($bytes.Length - 1)/$($bytes.Length)"
-            'Content-Type' = 'application/octet-stream'
         }
     } catch {
         $details = $null
