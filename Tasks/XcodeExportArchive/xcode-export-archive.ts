@@ -1,26 +1,28 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import tl = require('vsts-task-lib/task');
-import path = require('path');
-var execSync = require('child_process').execSync;
+import tl = require("vsts-task-lib/task");
+import path = require("path");
+var execSync = require("child_process").execSync;
 
 // if output is rooted ($(build.buildDirectory)/output/...), will resolve to fully qualified path,
 // else relative to repo root
-var buildSourceDirectory = tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
-var out = path.resolve(buildSourceDirectory, tl.getInput('outputPattern', true));
+var buildSourceDirectory = tl.getVariable("build.sourceDirectory") || tl.getVariable("build.sourcesDirectory");
+var out = path.resolve(buildSourceDirectory, tl.getInput("outputPattern", true));
 var appPath = tl.getInput("appPath", true);
 var appName = tl.getInput("appName", true);
 var ipaName = tl.getInput("ipaName", true);
 var provisioningProfile = tl.getInput("provisioningProfile", false);
+var signingIdentity = tl.getInput("signingIdentity", false);
 var sdk = tl.getInput("sdk", true);
 var optionsPlist = tl.getInput("exportOptionsPlist", true);
+var otherBuildArgs = tl.getInput("otherArgs", false);
 
 var xcodeBuild = tl.which("xcodebuild", true);
 var cleanCommand = tl.createToolRunner(xcodeBuild);
 var packageCommand = tl.createToolRunner(xcodeBuild);
 
 //creates the dir if it's not there; note that this needs to be an absolute path for the .ipa to be generated.
-var ipaPath = tl.getInput('ipaPath', true);
+var ipaPath = tl.getInput("ipaPath", true);
 tl.mkdirP(path.join(buildSourceDirectory, ipaPath));
 
 var xCode7Plus = false;
@@ -46,7 +48,16 @@ if (provisioningProfile) {
     packageCommandArgs.push(provisioningProfile);
 }
 
+if (signingIdentity) {
+    packageCommandArgs.push("-exportSigningIdentity");
+    packageCommandArgs.push(signingIdentity);
+}
+
 packageCommand.arg(packageCommandArgs);
+
+if (otherBuildArgs) {
+    packageCommand.arg(otherBuildArgs);
+}
 
 cleanCommand.exec().then((exitCode: number) => {
     return packageCommand.exec();

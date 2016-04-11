@@ -67,6 +67,15 @@
             "helpMarkDown": "Indicates the options plist file that specifies the export options"
         },
         {
+            "name": "signingIdentity",
+            "type": "string",
+            "label": "Signing Identity",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optional specification for the identity to sign the archive with",
+            "groupName": "advanced"
+        },
+        {
             "name": "appPath",
             "type": "string",
             "label": "Path to .app",
@@ -82,6 +91,15 @@
             "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)/output",
             "required": true,
             "helpMarkDown": "Relative path where the .ipa will be placed. The directory will be created if it doesn't exist.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "otherArgs",
+            "type": "string",
+            "label": "Other Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Other arguments. The value here will be passed directly to the commandline call to xcodebuild",
             "groupName": "advanced"
         }
     ],
