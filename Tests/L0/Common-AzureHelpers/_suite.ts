@@ -82,5 +82,8 @@ describe('Common-AzureHelpers Suite', function () {
         it('(Set-CurrentAzureSubscription) passes values', (done) => {
             psm.runPS(path.join(__dirname, 'Set-CurrentAzureSubscription.PassesValues.ps1'), done);
         })
+        it('Overriddes global debug preference', (done) => {
+            psm.runPS(path.join(__dirname, 'OverriddesGlobalDebugPreference.ps1'), done);
+        })
     }
 });

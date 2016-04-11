@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 64
+        "Patch": 65
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -29,17 +29,24 @@
         {
             "name": "searchPattern",
             "type": "filePath",
-            "label": "Path/Pattern to nuspec files",
-            "defaultValue":"**\\*.nuspec",
-            "helpMarkDown": "Pattern to search for nuspec and csproj files to pack.",
+            "label": "Path to csproj or nuspec file(s) to pack",
+            "defaultValue":"**\\*.csproj",
+            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.",
             "required":true
+        },
+        {
+            "name": "includeReferencedProjects",
+            "type": "boolean",
+            "label": "Include referenced projects",
+            "defaultValue": "false",
+            "helpMarkDown": "Include referenced projects either as dependencies or as part of the package. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](http://docs.nuget.org/consume/command-line-reference#pack-command) at NuGet.org."
         },
         {
             "name": "outputdir",
             "type": "filePath",
             "label": "Package Folder",
-            "defaultValue":"",
-            "helpMarkDown": "Folder where packages will be created, if empty will be created in the directory of csproj or nuspec file",
+            "defaultValue": "",
+            "helpMarkDown": "Folder where packages will be created. If empty, packages will be created alongside the csproj or nuspec file.",
             "required":false
         },
         {
@@ -47,7 +54,7 @@
             "type": "pickList",
             "label": "Automatic package versioning",
             "defaultValue":"false",
-            "helpMarkDown": "If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'.",
+            "helpMarkDown": "If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](http://go.microsoft.com/fwlink/?LinkID=627416)'.",
             "required":true,
             "groupName": "versioning",
             "options": {
@@ -101,7 +108,7 @@
             "name": "configurationToPack",
             "type": "string",
             "label": "Configuration to Package",
-            "defaultValue":"Release",
+            "defaultValue":"$(BuildConfiguration)",
             "helpMarkDown": "When using a csproj file this specifies the configuration to package",
             "required":false,
             "groupName": "advanced"

@@ -26,5 +26,8 @@ describe('SonarQubePreBuild Suite', function () {
         it('UpdateArgsForPrAnalysis tests', (done) => {
             psm.runPS(path.join(__dirname, 'UpdateArgsForPrAnalysis.ps1'), done);
         })
+        it('DisableAnalysisOnPrBuild tests', (done) => {
+            psm.runPS(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
+        })
     }
 });
