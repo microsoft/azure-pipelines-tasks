@@ -107,7 +107,7 @@ function Get-MsDeployCmdForLogs
     $msDeployCmdSplitByComma = $msDeployCmd.Split(',')
     $msDeployCmdHiddingSensitiveData = $msDeployCmdSplitByComma | ForEach-Object {if ($_.StartsWith("Password")) {$_.Replace($_, "Password=****")} else {$_}}
 
-    $msDeployCmdForLogs = $msDeployCmdHiddingSensitiveData -join ','
+    $msDeployCmdForLogs = $msDeployCmdHiddingSensitiveData -join ",`n`t"
     return $msDeployCmdForLogs
 }
 
@@ -119,7 +119,7 @@ function Run-MsDeployCommand
     $msDeployCmd = "`"$msDeployExePath`" $msDeployCmdArgs"
     $msDeployCmdForLogs = Get-MsDeployCmdForLogs -msDeployCmd $msDeployCmd
 
-    Write-Host (Get-LocalizedString -Key "Running msdeploy command: {0}" -ArgumentList $msDeployCmdForLogs)
+    Write-Host (Get-LocalizedString -Key "Running msdeploy command: `n`t{0}" -ArgumentList $msDeployCmdForLogs)
     Run-Command -command $msDeployCmd
     Write-Host (Get-LocalizedString -Key "msdeploy command ran successfully.")
 }
