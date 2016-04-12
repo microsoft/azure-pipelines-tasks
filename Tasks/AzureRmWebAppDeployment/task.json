@@ -73,7 +73,7 @@
             "label": "Package",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\**\\\\*.zip can be also used here."
+            "helpMarkDown": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\\\**\\\\\\*.zip can be also used here."
         },
         {
             "name": "RemoveAdditionalFilesFlag",

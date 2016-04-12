@@ -13,7 +13,7 @@
   "loc.input.label.SlotName": "Slot",
   "loc.input.help.SlotName": "Enter or Select an existing Slot other than the Production slot.",
   "loc.input.label.Package": "Package",
-  "loc.input.help.Package": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\**\\\\*.zip can be also used here.",
+  "loc.input.help.Package": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\\\**\\\\\\*.zip can be also used here.",
   "loc.input.label.RemoveAdditionalFilesFlag": "Remove Additional Files at Destination",
   "loc.input.help.RemoveAdditionalFilesFlag": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package.",
   "loc.input.label.ExcludeFilesFromAppDataFlag": "Exclude Files from the App_Data Folder",

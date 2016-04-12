@@ -11,6 +11,38 @@ function Get-MsDeployExePath
     return $msDeployExePath
 }
 
+function Get-SingleFile
+{
+    param([String][Parameter(Mandatory=$true)] $files,
+          [String][Parameter(Mandatory=$true)] $pattern)
+
+    if ($files -is [system.array])
+    {
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern {0}. There can be only one." -ArgumentList $pattern)
+    }
+    else
+    {
+        if (!$files)
+        {
+            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}." -ArgumentList $pattern)
+        }
+
+        return $files
+    }
+}
+
+function Get-SinglePackageFile
+{
+    param([String][Parameter(Mandatory=$true)] $package)
+
+    Write-Host (Get-LocalizedString -Key "packageFile = Find-Files -SearchPattern {0}" -ArgumentList $package)
+    $packageFile = Find-Files -SearchPattern $package
+    Write-Host (Get-LocalizedString -Key "packageFile = {0}" -ArgumentList $packageFile)
+
+    $packageFile = Get-SingleFile -files $packageFile -pattern $package
+    return $packageFile
+}
+
 function Get-WebAppNameForMSDeployCmd
 {
     param([String][Parameter(Mandatory=$true)] $webAppName,
@@ -29,7 +61,7 @@ function Get-WebAppNameForMSDeployCmd
 
 function Get-MsDeployCmdArgs
 {
-    param([String][Parameter(Mandatory=$true)] $package,
+    param([String][Parameter(Mandatory=$true)] $packageFile,
           [String][Parameter(Mandatory=$true)] $webAppNameForMSDeployCmd,
           [Object][Parameter(Mandatory=$true)] $azureRMWebAppConnectionDetails,
           [String][Parameter(Mandatory=$true)] $removeAdditionalFilesFlag,
@@ -38,11 +70,11 @@ function Get-MsDeployCmdArgs
           [String][Parameter(Mandatory=$false)] $virtualApplication)
 
     $msDeployCmdArgs = [String]::Empty
-    Write-Host (Get-LocalizedString -Key "Constructing msdeploy command arguments to deploy to azureRM WebApp:'{0}' `nfrom source Wep App zip package:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $package)
+    Write-Host (Get-LocalizedString -Key "Constructing msdeploy command arguments to deploy to azureRM WebApp:'{0}' `nfrom source Wep App zip package:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $packageFile)
 
     # msdeploy argument containing source and destination details to sync
     $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
-                                        , $package, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
+                                        , $packageFile, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
 
     # msdeploy argument to set destination IIS App Name for deploy
     if($virtualApplication)
@@ -72,7 +104,7 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webAppNameForMSDeployCmd)
     }
 
-    Write-Host (Get-LocalizedString -Key "Constructed msdeploy command arguments to deploy to azureRM WebApp:'{0}' `nfrom source Wep App zip package:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $package)
+    Write-Host (Get-LocalizedString -Key "Constructed msdeploy command arguments to deploy to azureRM WebApp:'{0}' `nfrom source Wep App zip package:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $packageFile)
     return $msDeployCmdArgs
 }
 
