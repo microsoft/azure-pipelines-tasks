@@ -9,15 +9,16 @@ tl.cd(buildSourceDirectory);
 
 // if output is rooted ($(build.buildDirectory)/output/...), will resolve to fully qualified path,
 // else relative to repo root
-var outPath = path.resolve(buildSourceDirectory, tl.getInput("outputPattern", true));
+var outPath = buildSourceDirectory;
 var appPath = tl.getInput("appPath", true);
 var appName = tl.getInput("appName", true);
 var ipaName = tl.getInput("ipaName", false);
 var ipaPath = tl.getInput("ipaPath", true);
+var shouldSkipSignArchive = tl.getBoolInput("shouldSkipSignArchive", false);
 var provisioningProfile = tl.getInput("provisioningProfile", false);
 var signingIdentity = tl.getInput("signingIdentity", false);
 var sdk = tl.getInput("sdk", true);
-var optionsPlist = tl.getInput("exportOptionsPlist", true);
+var optionsPlist = (tl.filePathSupplied("exportOptionsPlist") ? tl.getInput("exportOptionsPlist", true) : null);
 var otherBuildArgs = tl.getInput("otherArgs", false);
 
 var xcodeBuild = tl.which("xcodebuild", true);
@@ -43,21 +44,37 @@ if (!xCode7Plus) {
     console.warn("Xcode <7 detected. The Xcode Package iOS task should be used instead of this one.");
 }
 
-var cleanCommandArgs = ["clean", "archive", "-archivePath", path.join(outPath, archiveName), "-scheme", appName];
-cleanCommand.arg(cleanCommandArgs);
+var cleanCommandArgs = ["clean", "archive", "-archivePath", path.join(outPath, appPath, archiveName), "-scheme", appName];
+var packageCommandArgs = ["-sdk", sdk, "-exportArchive", "-archivePath", path.join(outPath, appPath, archiveName), "-exportPath", path.join(outPath, ipaPath, (ipaName ? ipaName : appName))];
 
-var packageCommandArgs = ["-sdk", sdk, "-exportArchive", "-exportOptionsPlist", optionsPlist, "-exportFormat", "ipa", "-archivePath", path.join(outPath, archiveName), "-exportPath", path.join(ipaPath, (ipaName ? ipaName : ""))];
+if (optionsPlist) {
+    packageCommandArgs.push("-exportOptionsPlist");
+    packageCommandArgs.push(optionsPlist);
+} else {
+    packageCommandArgs.push("-exportFormat");
+    packageCommandArgs.push("ipa");
+}
 
 if (provisioningProfile) {
+    cleanCommandArgs.push("-exportProvisioningProfile");
+    cleanCommandArgs.push(provisioningProfile);
     packageCommandArgs.push("-exportProvisioningProfile");
     packageCommandArgs.push(provisioningProfile);
 }
 
 if (signingIdentity) {
+    cleanCommandArgs.push("-exportSigningIdentity");
+    cleanCommandArgs.push(signingIdentity);
     packageCommandArgs.push("-exportSigningIdentity");
     packageCommandArgs.push(signingIdentity);
 }
 
+if (shouldSkipSignArchive) {
+    cleanCommandArgs.push("CODE_SIGN_IDENTITY=");
+    cleanCommandArgs.push("CODE_SIGNING_REQUIRED=NO");
+}
+
+cleanCommand.arg(cleanCommandArgs);
 packageCommand.arg(packageCommandArgs);
 
 if (otherBuildArgs) {
