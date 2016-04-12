@@ -59,6 +59,9 @@ $ErrorActionPreference = 'Stop'
 # Get msdeploy.exe path
 $msDeployExePath = Get-MsDeployExePath
 
+# Ensure that at most a package (.zip) file is found
+$packageFile = Get-SinglePackageFile -package $Package
+
 # Get destination azureRM webApp connection details
 $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
                                                                        -resourceGroupName $ResourceGroupName -slotName $SlotName
@@ -67,7 +70,7 @@ $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName
 $webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag -slotName $SlotName
 
 # Construct arguments for msdeploy command
-$msDeployCmdArgs = Get-MsDeployCmdArgs -package $Package -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
+$msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFile -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
                                        -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication
 
 # Deploy azureRM webApp using msdeploy Command
