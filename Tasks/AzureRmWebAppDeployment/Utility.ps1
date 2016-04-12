@@ -23,7 +23,7 @@ function Get-WebAppNameForMSDeployCmd
         $webAppNameForMSDeployCmd += "(" + $SlotName + ")"
     }
 
-    Write-Host (Get-LocalizedString -Key "WebApp Name to be used in MSDeploy Command is: '{0}'" -ArgumentList $webAppNameForMSDeployCmd)
+    Write-Host (Get-LocalizedString -Key "WebApp Name to be used in msdeploy command is: '{0}'" -ArgumentList $webAppNameForMSDeployCmd)
     return $webAppNameForMSDeployCmd
 }
 
@@ -38,7 +38,7 @@ function Get-MsDeployCmdArgs
           [String][Parameter(Mandatory=$false)] $physicalPath)
 
     $msDeployCmdArgs = [String]::Empty
-    Write-Host (Get-LocalizedString -Key "Constructing MSDeploy command arguments to deploy to azureRM WebApp: '{0}' from sourceFile: '{1}'." -ArgumentList $webAppNameForMSDeployCmd, $file)
+    Write-Host (Get-LocalizedString -Key "Constructing msdeply command arguments to deploy to azureRM WebApp:'{0}' from sourceFile:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $file)
 
     # msdeploy argument containing source and destination details to sync
     $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
@@ -72,7 +72,7 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webAppNameForMSDeployCmd)
     }
 
-    Write-Host (Get-LocalizedString -Key "Constructed MSDeploy command arguments to deploy to azureRM WebApp: '{0}' from sourceFile: '{1}'." -ArgumentList $webAppNameForMSDeployCmd, $file)
+    Write-Host (Get-LocalizedString -Key "Constructed msdeploy command arguments to deploy to azureRM WebApp:'{0}' from sourceFile:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $file)
     return $msDeployCmdArgs
 }
 
@@ -121,5 +121,5 @@ function Run-MsDeployCommand
 
     Write-Host (Get-LocalizedString -Key "Running msdeploy command: {0}" -ArgumentList $msDeployCmdForLogs)
     Run-Command -command $msDeployCmd
-    Write-Host (Get-LocalizedString -Key "MSDeploy command ran successfully.")
+    Write-Host (Get-LocalizedString -Key "msdeploy command ran successfully.")
 }
