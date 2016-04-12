@@ -22,7 +22,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "WebAppName",
@@ -33,15 +33,15 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
-      "name": "DeployToSpecificSlotFlag",
+      "name": "DeployToSlotFlag",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployToSpecificSlotFlag",
+      "label": "ms-resource:loc.input.label.DeployToSlotFlag",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag"
     },
     {
       "name": "ResourceGroupName",
@@ -52,8 +52,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "",
-      "visibleRule": "DeployToSpecificSlotFlag = true"
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "visibleRule": "DeployToSlotFlag = true"
     },
     {
       "name": "SlotName",
@@ -64,16 +64,16 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "",
-      "visibleRule": "DeployToSpecificSlotFlag = true"
+      "helpMarkDown": "ms-resource:loc.input.help.SlotName",
+      "visibleRule": "DeployToSlotFlag = true"
     },
     {
-      "name": "File",
+      "name": "Package",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.File",
+      "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
       "name": "RemoveAdditionalFilesFlag",
@@ -81,15 +81,15 @@
       "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
     },
     {
-      "name": "DeleteFilesInAppDataFlag",
+      "name": "ExcludeFilesFromAppDataFlag",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeleteFilesInAppDataFlag",
+      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
     },
     {
       "name": "TakeAppOfflineFlag",
@@ -97,15 +97,15 @@
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     },
     {
-      "name": "PhysicalPath",
+      "name": "VirtualApplication",
       "type": "string",
-      "label": "ms-resource:loc.input.label.PhysicalPath",
+      "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     }
   ],
   "dataSourceBindings": [

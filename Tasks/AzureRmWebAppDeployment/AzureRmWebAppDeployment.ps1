@@ -7,7 +7,7 @@ param
     $WebAppName,
 
     [String] [Parameter(Mandatory = $true)]
-    $DeployToSpecificSlotFlag,
+    $DeployToSlotFlag,
 
     [String] [Parameter(Mandatory = $false)]
     $ResourceGroupName,
@@ -16,33 +16,33 @@ param
     $SlotName,
 
     [String] [Parameter(Mandatory = $true)]
-    $File,
+    $Package,
 
     [String] [Parameter(Mandatory = $false)]
     $RemoveAdditionalFilesFlag,
 
     [String] [Parameter(Mandatory = $false)]
-    $DeleteFilesInAppDataFlag,
+    $ExcludeFilesFromAppDataFlag,
 
     [String] [Parameter(Mandatory = $false)]
     $TakeAppOfflineFlag,
 
     [String] [Parameter(Mandatory = $false)]
-    $PhysicalPath
+    $VirtualApplication
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
 
 Write-Verbose "ConnectedServiceName = $ConnectedServiceName"
 Write-Verbose "WebAppName = $WebAppName"
-Write-Verbose "DeployToSpecificSlotFlag = $DeployToSpecificSlotFlag"
+Write-Verbose "DeployToSlotFlag = $DeployToSlotFlag"
 Write-Verbose "ResourceGroupName = $ResourceGroupName"
 Write-Verbose "SlotName = $SlotName"
-Write-Verbose "File = $File"
+Write-Verbose "Package = $Package"
 Write-Verbose "RemoveAdditionalFilesFlag = $RemoveAdditionalFilesFlag"
-Write-Verbose "DeleteFilesInAppDataFlag = $DeleteFilesInAppDataFlag"
+Write-Verbose "ExcludeFilesFromAppDataFlag = $ExcludeFilesFromAppDataFlag"
 Write-Verbose "TakeAppOfflineFlag = $TakeAppOfflineFlag"
-Write-Verbose "PhysicalPath = $PhysicalPath"
+Write-Verbose "VirtualApplication = $VirtualApplication"
 
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -60,15 +60,15 @@ $ErrorActionPreference = 'Stop'
 $msDeployExePath = Get-MsDeployExePath
 
 # Get destination azureRM webApp connection details
-$azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName $WebAppName -deployToSpecificSlotFlag $DeployToSpecificSlotFlag `
+$azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
                                                                        -resourceGroupName $ResourceGroupName -slotName $SlotName
 
 # webApp Name to be used in msdeploy command
-$webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName -deployToSpecificSlotFlag $DeployToSpecificSlotFlag -slotName $SlotName
+$webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag -slotName $SlotName
 
 # Construct arguments for msdeploy command
-$msDeployCmdArgs = Get-MsDeployCmdArgs -file $File -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
-                                       -deleteFilesInAppDataFlag $DeleteFilesInAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -physicalPath $PhysicalPath
+$msDeployCmdArgs = Get-MsDeployCmdArgs -package $Package -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
+                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication
 
 # Deploy azureRM webApp using msdeploy Command
 Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs

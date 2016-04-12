@@ -14,11 +14,11 @@ function Get-MsDeployExePath
 function Get-WebAppNameForMSDeployCmd
 {
     param([String][Parameter(Mandatory=$true)] $webAppName,
-          [String][Parameter(Mandatory=$true)] $deployToSpecificSlotFlag,
+          [String][Parameter(Mandatory=$true)] $deployToSlotFlag,
           [String][Parameter(Mandatory=$false)] $slotName)
 
-    $webAppNameForMSDeployCmd = $WebAppName
-    if($DeployToSpecificSlotFlag -eq "true")
+    $webAppNameForMSDeployCmd = $webAppName
+    if($deployToSlotFlag -eq "true")
     {
         $webAppNameForMSDeployCmd += "(" + $SlotName + ")"
     }
@@ -29,25 +29,25 @@ function Get-WebAppNameForMSDeployCmd
 
 function Get-MsDeployCmdArgs
 {
-    param([String][Parameter(Mandatory=$true)] $file,
+    param([String][Parameter(Mandatory=$true)] $package,
           [String][Parameter(Mandatory=$true)] $webAppNameForMSDeployCmd,
           [Object][Parameter(Mandatory=$true)] $azureRMWebAppConnectionDetails,
           [String][Parameter(Mandatory=$true)] $removeAdditionalFilesFlag,
-          [String][Parameter(Mandatory=$true)] $deleteFilesInAppDataFlag,
+          [String][Parameter(Mandatory=$true)] $excludeFilesFromAppDataFlag,
           [String][Parameter(Mandatory=$true)] $takeAppOfflineFlag,
-          [String][Parameter(Mandatory=$false)] $physicalPath)
+          [String][Parameter(Mandatory=$false)] $virtualApplication)
 
     $msDeployCmdArgs = [String]::Empty
-    Write-Host (Get-LocalizedString -Key "Constructing msdeply command arguments to deploy to azureRM WebApp:'{0}' from sourceFile:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $file)
+    Write-Host (Get-LocalizedString -Key "Constructing msdeploy command arguments to deploy to azureRM WebApp:'{0}' `nfrom source Wep App zip package:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $package)
 
     # msdeploy argument containing source and destination details to sync
     $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
-                                        , $file, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
+                                        , $package, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
 
     # msdeploy argument to set destination IIS App Name for deploy
-    if($physicalPath)
+    if($virtualApplication)
     {
-        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}/{1}"', $webAppNameForMSDeployCmd, $physicalPath)
+        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}/{1}"', $webAppNameForMSDeployCmd, $virtualApplication)
     }
     else
     {
@@ -66,13 +66,13 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += " -enableRule:AppOffline"
     }
 
-    # msdeploy argument to remove files in App_Data folder
-    if($deleteFilesInAppDataFlag -eq "true")
+    # msdeploy argument to exclude files in App_Data folder
+    if($excludeFilesFromAppDataFlag -eq "true")
     {
         $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webAppNameForMSDeployCmd)
     }
 
-    Write-Host (Get-LocalizedString -Key "Constructed msdeploy command arguments to deploy to azureRM WebApp:'{0}' from sourceFile:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $file)
+    Write-Host (Get-LocalizedString -Key "Constructed msdeploy command arguments to deploy to azureRM WebApp:'{0}' `nfrom source Wep App zip package:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $package)
     return $msDeployCmdArgs
 }
 
