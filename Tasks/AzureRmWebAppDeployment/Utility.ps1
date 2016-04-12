@@ -2,40 +2,56 @@ $ErrorActionPreference = 'Stop'
 
 function Get-MsDeployExePath
 {
-    $currentDir = (Get-Item -Path ".\" -Verbose).FullName
+    $currentDir = (Get-Item -Path ".\").FullName
 
     $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
     $msDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
-    Write-Verbose "msdeployExePath = $msDeployExePath" -Verbose
+    Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $msDeployExePath)
 
     return $msDeployExePath
+}
+
+function Get-WebAppNameForMSDeployCmd
+{
+    param([String][Parameter(Mandatory=$true)] $webAppName,
+          [String][Parameter(Mandatory=$true)] $deployToSpecificSlotFlag,
+          [String][Parameter(Mandatory=$false)] $slotName)
+
+    $webAppNameForMSDeployCmd = $WebAppName
+    if($DeployToSpecificSlotFlag -eq "true")
+    {
+        $webAppNameForMSDeployCmd += "(" + $SlotName + ")"
+    }
+
+    Write-Host (Get-LocalizedString -Key "WebApp Name to be used in MSDeploy Command is: '{0}'" -ArgumentList $webAppNameForMSDeployCmd)
+    return $webAppNameForMSDeployCmd
 }
 
 function Get-MsDeployCmdArgs
 {
     param([String][Parameter(Mandatory=$true)] $file,
-          [String][Parameter(Mandatory=$true)] $webSiteName,
-          [Object][Parameter(Mandatory=$true)] $azureRMWebsiteConnectionDetails,
+          [String][Parameter(Mandatory=$true)] $webAppNameForMSDeployCmd,
+          [Object][Parameter(Mandatory=$true)] $azureRMWebAppConnectionDetails,
           [String][Parameter(Mandatory=$true)] $removeAdditionalFilesFlag,
           [String][Parameter(Mandatory=$true)] $deleteFilesInAppDataFlag,
           [String][Parameter(Mandatory=$true)] $takeAppOfflineFlag,
           [String][Parameter(Mandatory=$false)] $physicalPath)
 
     $msDeployCmdArgs = [String]::Empty
-    Write-Verbose "Constructing msdeploy command arguments to deploy to azureRM website: '$websiteName' from sourceFile: '$file'" -Verbose
+    Write-Host (Get-LocalizedString -Key "Constructing MSDeploy command arguments to deploy to azureRM WebApp: '{0}' from sourceFile: '{1}'." -ArgumentList $webAppNameForMSDeployCmd, $file)
 
     # msdeploy argument containing source and destination details to sync
     $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
-                                        , $file, $azureRMWebsiteConnectionDetails.KuduHostName, $webSiteName, $azureRMWebsiteConnectionDetails.UserName, $azureRMWebsiteConnectionDetails.UserPassword)
+                                        , $file, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
 
     # msdeploy argument to set destination IIS App Name for deploy
     if($physicalPath)
     {
-        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}/{1}"', $webSiteName, $physicalPath)
+        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}/{1}"', $webAppNameForMSDeployCmd, $physicalPath)
     }
     else
     {
-        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}"', $webSiteName)
+        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}"', $webAppNameForMSDeployCmd)
     }
 
     # msdeploy argument to block deletion from happening
@@ -51,12 +67,12 @@ function Get-MsDeployCmdArgs
     }
 
     # msdeploy argument to remove files in App_Data folder
-    if($takeAppOfflineFlag -eq "true")
+    if($deleteFilesInAppDataFlag -eq "true")
     {
-        $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webSiteName)
+        $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webAppNameForMSDeployCmd)
     }
 
-    Write-Verbose "Constructed msdeploy command arguments to deploy to azureRM website: '$websiteName' from sourceFile: '$file'" -Verbose
+    Write-Host (Get-LocalizedString -Key "Constructed MSDeploy command arguments to deploy to azureRM WebApp: '{0}' from sourceFile: '{1}'." -ArgumentList $webAppNameForMSDeployCmd, $file)
     return $msDeployCmdArgs
 }
 
@@ -84,14 +100,26 @@ function Run-Command
     return $result
 }
 
+function Get-MsDeployCmdForLogs
+{
+    param([String][Parameter(Mandatory=$true)] $msDeployCmd)
+
+    $msDeployCmdSplitByComma = $msDeployCmd.Split(',')
+    $msDeployCmdHiddingSensitiveData = $msDeployCmdSplitByComma | ForEach-Object {if ($_.StartsWith("Password")) {$_.Replace($_, "Password=****")} else {$_}}
+
+    $msDeployCmdForLogs = $msDeployCmdHiddingSensitiveData -join ','
+    return $msDeployCmdForLogs
+}
+
 function Run-MsDeployCommand
 {
     param([String][Parameter(Mandatory=$true)] $msDeployExePath,
           [String][Parameter(Mandatory=$true)] $msDeployCmdArgs)
 
     $msDeployCmd = "`"$msDeployExePath`" $msDeployCmdArgs"
+    $msDeployCmdForLogs = Get-MsDeployCmdForLogs -msDeployCmd $msDeployCmd
 
-    Write-Verbose "Running msdeploy command." -Verbose
+    Write-Host (Get-LocalizedString -Key "Running msdeploy command: {0}" -ArgumentList $msDeployCmdForLogs)
     Run-Command -command $msDeployCmd
-    Write-Verbose "msdeploy command ran successfully." -Verbose
+    Write-Host (Get-LocalizedString -Key "MSDeploy command ran successfully.")
 }

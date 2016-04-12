@@ -25,15 +25,47 @@
       "helpMarkDown": ""
     },
     {
-      "name": "WebSiteName",
+      "name": "WebAppName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebSiteName",
+      "label": "ms-resource:loc.input.label.WebAppName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
       "helpMarkDown": ""
+    },
+    {
+      "name": "DeployToSpecificSlotFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeployToSpecificSlotFlag",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "",
+      "visibleRule": "DeployToSpecificSlotFlag = true"
+    },
+    {
+      "name": "SlotName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SlotName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "",
+      "visibleRule": "DeployToSpecificSlotFlag = true"
     },
     {
       "name": "File",
@@ -78,9 +110,27 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "WebSiteName",
+      "target": "WebAppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureWebSiteNamesRM"
+      "dataSourceName": "AzureRMWebAppNames"
+    },
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppResourceGroup",
+      "parameters": {
+        "WebAppName": "$(WebAppName)"
+      }
+    },
+    {
+      "target": "SlotName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{{#extractResource slots}}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

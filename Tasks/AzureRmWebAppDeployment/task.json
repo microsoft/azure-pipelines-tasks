@@ -1,94 +1,144 @@
 {
-  "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
-  "name": "AzureRMWebAppDeployment",
-  "friendlyName": "AzureRM Web App Deployment",
-  "description": "",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 0
-  },
-  "minimumAgentVersion": "1.98.0",
-  "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "type": "connectedService:AzureRM",
-      "label": "Azure RM Subscription",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": ""
+    "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
+    "name": "AzureRMWebAppDeployment",
+    "friendlyName": "AzureRM Web App Deployment",
+    "description": "",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     },
-    {
-      "name": "WebSiteName",
-      "type": "pickList",
-      "label": "Web App Name",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-          "EditableOptions": "True"
-      },
-      "helpMarkDown": ""
-    },
-    {
-      "name": "File",
-      "type": "filePath",
-      "label": "File",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": ""
-    },
-    {
-      "name": "RemoveAdditionalFilesFlag",
-      "type": "boolean",
-      "label": "Remove Additional Files at Destination",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": ""
-    },
-    {
-      "name": "DeleteFilesInAppDataFlag",
-      "type": "boolean",
-      "label": "Delete Files in the App Data Folder",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": ""
-    },
-    {
-      "name": "TakeAppOfflineFlag",
-      "type": "boolean",
-      "label": "Take App Offline",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": ""
-    },
-    {
-      "name": "PhysicalPath",
-      "type": "string",
-      "label": "Physical Path",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": ""
+    "minimumAgentVersion": "1.98.0",
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure RM Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": ""
+        },
+        {
+            "name": "WebAppName",
+            "type": "pickList",
+            "label": "Web App Name",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": ""
+        },
+        {
+            "name": "DeployToSpecificSlotFlag",
+            "type": "boolean",
+            "label": "Deploy To Specific Slot",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": ""
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource Group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "",
+            "visibleRule": "DeployToSpecificSlotFlag = true"
+        },
+        {
+            "name": "SlotName",
+            "type": "pickList",
+            "label": "Slot",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "",
+            "visibleRule": "DeployToSpecificSlotFlag = true"
+        },
+        {
+            "name": "File",
+            "type": "filePath",
+            "label": "File",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": ""
+        },
+        {
+            "name": "RemoveAdditionalFilesFlag",
+            "type": "boolean",
+            "label": "Remove Additional Files at Destination",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": ""
+        },
+        {
+            "name": "DeleteFilesInAppDataFlag",
+            "type": "boolean",
+            "label": "Delete Files in the App Data Folder",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": ""
+        },
+        {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": ""
+        },
+        {
+            "name": "PhysicalPath",
+            "type": "string",
+            "label": "Physical Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": ""
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "WebAppName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppNames"
+        },
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppResourceGroup",
+            "parameters": {
+                "WebAppName": "$(WebAppName)"
+            }
+        },
+        {
+            "target": "SlotName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppSlotsId",
+            "parameters": {
+                "WebAppName": "$(WebAppName)",
+                "ResourceGroupName": "$(ResourceGroupName)"
+            },
+            "resultTemplate": "{{#extractResource slots}}"
+        }
+    ],
+    "instanceNameFormat": "Deploy Web App: $(WebAppName)",
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\AzureRMWebAppDeployment.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "WebSiteName",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureWebSiteNamesRM"
-    }
-  ],
-  "instanceNameFormat": "Deploy Web App: $(WebSiteName)",
-  "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\AzureRMWebAppDeployment.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    }
-  }
 }
