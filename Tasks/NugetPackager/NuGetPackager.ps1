@@ -1,6 +1,7 @@
 param(
     [string]$searchPattern,
     [string]$outputdir,
+    [string]$includeReferencedProjects,
     [string]$versionByBuild,
     [string]$versionEnvVar,
     [string]$requestedMajorVersion,
@@ -22,6 +23,8 @@ foreach($key in $PSBoundParameters.Keys)
 Write-Verbose "Importing modules"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
+$b_includeReferencedProjects = Convert-String $includeReferencedProjects Boolean
 
 # the string for versionByBuild is "true" for back-compat
 $b_versionByBuild = $versionByBuild -eq "true"    
@@ -184,6 +187,11 @@ try
             $buildProps = ($buildProps + ";" + $buildProperties)
         }
         $argsPack = "pack `"$fileToPackage`" -OutputDirectory `"$outputdir`" -Properties $buildProps";
+        
+        if($b_includeReferencedProjects)
+        {
+            $argsPack = ($argsPack + " -IncludeReferencedProjects ");
+        }
         
         if ($b_automaticallyVersion)
         {

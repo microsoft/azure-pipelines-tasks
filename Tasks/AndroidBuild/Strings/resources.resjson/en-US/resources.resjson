@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Android Build",
+  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
   "loc.instanceNameFormat": "Android Build $(gradleProj)",

@@ -246,3 +246,33 @@ function GetSonarScannerDirectory
 }
 
 
+#
+# If a build variable that represents a feature is set to true or false, return it. Otherwise, return the specified default.   
+#
+function IsFeatureEnabled
+{
+    param ([string]$featureSettingName, [bool]$enabledByDefault)
+    
+    $featureSettingValue = GetTaskContextVariable $featureSettingName
+    
+    if ($featureSettingValue -eq "true")
+    {
+        return $true
+    }
+    
+    if ($featureSettingValue -eq "false")
+    {
+        return $false
+    }
+    
+    return $enabledByDefault        
+}
+
+function ExitOnPRBuild
+{    
+    if ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $false))
+    {
+        Write-Host "SonarQube analysis is disabled during builds triggered by pull requests. Set a build variable named 'SQPullRequestBot' to 'true' to have the task post code analysis issues as comments in the PR. More information at http://go.microsoft.com/fwlink/?LinkID=786316"
+        exit
+    } 
+}

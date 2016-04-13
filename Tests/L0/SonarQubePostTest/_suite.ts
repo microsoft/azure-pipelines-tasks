@@ -20,12 +20,23 @@ describe('SonarQubePostTest Suite', function () {
     });
 
     if (ps) {
-
         it('UploadSumamryMdFile tests', (done) => {
             psm.runPS(path.join(__dirname, 'UploadSumamryMdFile.ps1'), done);
+        })
+         it('DisableAnalysisOnPrBuild tests', (done) => {
+            psm.runPS(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
         })
         it('TopLevelOrchestration tests', (done) => {
             psm.runPS(path.join(__dirname, 'TopLevelOrchestration.ps1'), done);
         })
+        it('PRCA Report Processor tests', (done) => {
+            psm.runPS(path.join(__dirname, 'PRCA', 'ReportProcessorTests.ps1'), done);
+        })       
+        it('PRCA Post Comments tests', (done) => {
+            psm.runPS(path.join(__dirname, 'PRCA', 'PostCommentsTests.ps1'), done);
+        })       
+        it('PRCA Orchestrator tests', (done) => {
+            psm.runPS(path.join(__dirname, 'PRCA', 'OrchestratorTests.ps1'), done);
+        })       
     }
 });
