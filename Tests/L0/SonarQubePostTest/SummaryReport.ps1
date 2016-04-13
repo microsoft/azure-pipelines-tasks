@@ -1,8 +1,9 @@
 [CmdletBinding()]
 param()
 
+. $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\Common\SonarQubehelpers\SonarQubeHelper.ps1
+. $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SonarQubeReportHandler.ps1
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SonarQubePostTestImpl.ps1
     
 function CreateRandomDir
 {
@@ -18,11 +19,12 @@ function CreateRandomDir
 }
 
 
-#### Test 1 - Uploading fails with a warning if the file is not found
+#### Test 1 - Legacy report - uploading fails with a warning if the file is not found
     
 # Arrange
 Register-Mock GetSonarQubeOutDirectory {([IO.Path]::GetRandomFileName())}
 Register-Mock Write-Warning 
+Register-Mock IsPrBuild {$true}  
 
 # Act
 UploadSummaryMdReport
@@ -31,11 +33,12 @@ UploadSummaryMdReport
 Assert-WasCalled Write-Warning 
 
 # Cleanup
-Unregister-Mock  GetSonarQubeOutDirectory
-Unregister-Mock  Write-Warning
+Unregister-Mock GetSonarQubeOutDirectory
+Unregister-Mock Write-Warning
+Unregister-Mock IsPrBuild   
 
 
-#### Test 2 - Happy path: the command responsible for uploading the summary report is called  
+#### Test 2 - Legacy report upload: the command responsible for uploading the summary report is called  
 
 # Arrange
   
@@ -45,6 +48,9 @@ $file = [IO.File]::Create($dummyReport)
 
 Register-Mock GetSonarQubeOutDirectory {$tempDir}
 Register-Mock Write-Host
+Register-Mock IsPrBuild {$false}  
+# the legacy report is printed if the user deselects the full report option
+Register-Mock GetTaskContextVariable {$false} -- "MSBuild.SonarQube.IncludeReport" 
 
 # Act
 UploadSummaryMdReport
@@ -57,6 +63,6 @@ $file.Dispose()
 [IO.Directory]::Delete($tempDir, $true)    
 Unregister-Mock  GetSonarQubeOutDirectory
 Unregister-Mock  Write-Host 
- 
+Unregister-Mock IsPrBuild   
 
 

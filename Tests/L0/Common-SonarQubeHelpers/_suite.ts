@@ -26,5 +26,8 @@ describe('Common-SonarQubeHelpers Suite', function () {
         it('IsPRBuild tests', (done) => {
             psm.runPS(path.join(__dirname, 'IsPRBuild.ps1'), done);
         })
+		 it('IsPRBuild tests', (done) => {
+            psm.runPS(path.join(__dirname, 'ServerVersion.ps1'), done);
+        })
     }
 });

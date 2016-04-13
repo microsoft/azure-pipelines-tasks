@@ -20,8 +20,8 @@ describe('SonarQubePostTest Suite', function () {
     });
 
     if (ps) {
-        it('UploadSumamryMdFile tests', (done) => {
-            psm.runPS(path.join(__dirname, 'UploadSumamryMdFile.ps1'), done);
+        it('SummaryReport tests', (done) => {
+            psm.runPS(path.join(__dirname, 'SummaryReport.ps1'), done);
         })
          it('DisableAnalysisOnPrBuild tests', (done) => {
             psm.runPS(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
@@ -37,6 +37,12 @@ describe('SonarQubePostTest Suite', function () {
         })       
         it('PRCA Orchestrator tests', (done) => {
             psm.runPS(path.join(__dirname, 'PRCA', 'OrchestratorTests.ps1'), done);
-        })       
+        })    
+		it('SonarQubeMetrics tests', function (done) {
+            psm.runPS(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);
+        });		
+		it('SummaryReport tests', function (done) {
+            psm.runPS(path.join(__dirname, 'SummaryReport.ps1'), done);
+        });	
     }
 });
