@@ -5,6 +5,7 @@
     "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
     "category": "Deploy",
     "visibility": [
+	    "Preview",
         "Build",
         "Release"
     ],
@@ -14,7 +15,7 @@
         "Minor": 0,
         "Patch": 0
     },
-    "minimumAgentVersion": "1.98.0",
+    "minimumAgentVersion": "1.99.0",
     "inputs": [
         {
             "name": "ConnectedServiceName",
