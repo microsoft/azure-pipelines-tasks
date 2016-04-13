@@ -25,7 +25,7 @@
       "name": "searchPattern",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPattern",
-      "defaultValue": "**\\*.nupkg;-:**\\packages\\**\\*.nupkg",
+      "defaultValue": "**\\*.nupkg;-:**\\packages\\**\\*.nupkg;-:**\\*.symbols.nupkg",
       "helpMarkDown": "ms-resource:loc.input.help.searchPattern",
       "required": true
     },
