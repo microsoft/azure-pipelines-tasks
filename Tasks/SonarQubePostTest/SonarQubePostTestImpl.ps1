@@ -8,7 +8,7 @@ function InvokeMSBuildRunnerPostTest
 
 function GetBootsrapperPath
 {
-	$bootstrapperPath = GetTaskContextVariable "MSBuild.SonarQube.BootstrapperPath" 
+	$bootstrapperPath = GetTaskContextVariable "MSBuild.SonarQube.Internal.BootstrapperPath" 
 
 	if (!$bootstrapperPath -or ![System.IO.File]::Exists($bootstrapperPath))
 	{
@@ -57,21 +57,3 @@ function GetMSBuildRunnerPostTestArgs()
 	return $sb.ToString();
 }
 
-function UploadSummaryMdReport
-{    
-	$sonarQubeOutDir = GetSonarQubeOutDirectory
-
-	# Upload the summary markdown file
-	$summaryMdPath = [System.IO.Path]::Combine($sonarQubeOutDir, "summary.md")
-	Write-Verbose "Looking for a summary report at $summaryMdPath"
-
-	if ([System.IO.File]::Exists($summaryMdPath))
-	{
-		Write-Verbose "Uploading the summary.md file"
-        Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report;]$summaryMdPath"
-	}
-	else
-	{
-		 Write-Warning "Could not find the summary report file $summaryMdPath"
-	}
-}

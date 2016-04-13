@@ -13,6 +13,7 @@ function RunTest
     # Arrange
     Register-Mock IsPrBuild {$isPrBuild}
     Register-Mock InvokeGetRestMethod {$sqVersion} -- "/api/server/version" 
+    Register-Mock GetTaskContextVariable {$null} -- "MSBuild.SonarQube.ServerVersion" 
 
     # Act
     $newArgs = UpdateArgsForPullRequestAnalysis $existingArgs
@@ -23,6 +24,7 @@ function RunTest
     # Cleanup
     Unregister-Mock InvokeGetRestMethod
     Unregister-Mock IsPrBuild
+    Unregister-Mock GetTaskContextVariable
 }
 
 
