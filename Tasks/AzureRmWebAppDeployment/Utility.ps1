@@ -55,7 +55,7 @@ function Get-WebAppNameForMSDeployCmd
         $webAppNameForMSDeployCmd += "(" + $SlotName + ")"
     }
 
-    Write-Host (Get-LocalizedString -Key "WebApp Name to be used in msdeploy command is: '{0}'" -ArgumentList $webAppNameForMSDeployCmd)
+    Write-Verbose "WebApp Name to be used in msdeploy command is: '$webAppNameForMSDeployCmd'"
     return $webAppNameForMSDeployCmd
 }
 
