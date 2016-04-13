@@ -28,7 +28,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 [bool]$DoNotDelete = Convert-String $DoNotDelete Boolean
-Write-Verbose "DonotDelete (converted) = $DoNotDelete"
+Write-Verbose "DoNotDelete (converted) = $DoNotDelete"
 
 # adding System.Web explicitly, since we use http utility
 Add-Type -AssemblyName System.Web
