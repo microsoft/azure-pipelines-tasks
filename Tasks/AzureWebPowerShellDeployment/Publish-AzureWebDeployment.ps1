@@ -68,7 +68,6 @@ $azureWebSiteError = $null
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)
 {
-
     $extraParameters = @{ }
     if ($Slot) { $extraParameters['Slot'] = $Slot }
 
@@ -157,9 +156,9 @@ if($azureWebSite) {
             }
         }
 
-        $deploymentId = Get-TaskVariable $distributedTaskContext "build.sourceVersion" #let's use commitId as unique deploymentId in build context
+        $deploymentId = Get-TaskVariable $distributedTaskContext "release.releaseUri" #let's use releaseUri as unique deploymentId in release context
         if([string]::IsNullOrEmpty($deploymentId)) {
-            $deploymentId = Get-TaskVariable $distributedTaskContext "release.releaseUri" #let's use releaseUri as unique deploymentId in release context
+            $deploymentId = Get-TaskVariable $distributedTaskContext "build.buildUri" #let's use buildUri as unique deploymentId in build context
         }
         if([string]::IsNullOrEmpty($deploymentId)) {
             #No point in proceeding further
