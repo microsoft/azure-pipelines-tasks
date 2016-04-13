@@ -166,11 +166,7 @@ if($azureWebSite) {
             Return
         }
 
-        $message = Get-TaskVariable $distributedTaskContext "build.sourceVersionMessage"
-        if([string]::IsNullOrEmpty($message)) {
-            $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $deploymentId
-        }
-
+        $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $deploymentId
         $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
 
         $collectionUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
