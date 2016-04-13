@@ -70,7 +70,7 @@ function Get-MsDeployCmdArgs
           [String][Parameter(Mandatory=$false)] $virtualApplication)
 
     $msDeployCmdArgs = [String]::Empty
-    Write-Host (Get-LocalizedString -Key "Constructing msdeploy command arguments to deploy to azureRM WebApp:'{0}' `nfrom source Wep App zip package:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $packageFile)
+    Write-Verbose "Constructing msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
 
     # msdeploy argument containing source and destination details to sync
     $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
@@ -104,7 +104,7 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webAppNameForMSDeployCmd)
     }
 
-    Write-Host (Get-LocalizedString -Key "Constructed msdeploy command arguments to deploy to azureRM WebApp:'{0}' `nfrom source Wep App zip package:'{1}'." -ArgumentList $webAppNameForMSDeployCmd, $packageFile)
+    Write-Verbose "Constructed msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
     return $msDeployCmdArgs
 }
 

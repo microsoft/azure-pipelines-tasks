@@ -4,9 +4,9 @@ function Get-AzureRMWebAppDetails
 {
     param([String][Parameter(Mandatory=$true)] $webAppName)
 
-    Write-Host (Get-LocalizedString -Key "`t [Azure Call]Getting azureRM WebApp:'{0}' details." -ArgumentList $webAppName)
+    Write-Verbose "`t [Azure Call]Getting azureRM WebApp:'$webAppName' details."
     $azureRMWebAppDetails = Get-AzureRMWebApp -Name $webAppName
-    Write-Host (Get-LocalizedString -Key "`t [Azure Call]Got azureRM WebApp:'{0}' details." -ArgumentList $webAppName)
+    Write-Verbose "`t [Azure Call]Got azureRM WebApp:'$webAppName' details."
 
     Write-Verbose ($azureRMWebAppDetails | Format-List | Out-String)
     return $azureRMWebAppDetails
@@ -35,9 +35,9 @@ function Get-AzureRMWebAppProfileForMSDeployWithProductionSlot
     $tmpFileName = [guid]::NewGuid().ToString() + ".pubxml"
     $pubXmlFile = Join-Path $currentDir $tmpFileName
 
-    Write-Host (Get-LocalizedString -Key "`t [Azure Call]Getting publish profile file for azureRM WebApp:'{0}' under Production Slot." -ArgumentList $webAppName)
+    Write-Verbose "`t [Azure Call]Getting publish profile file for azureRM WebApp:'$webAppName' under Production Slot at location: '$pubXmlFile'."
     $publishProfileContent = Get-AzureRMWebAppPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName -OutputFile $pubXmlFile
-    Write-Host (Get-LocalizedString -Key "`t [Azure Call]Got publish profile file for azureRM WebApp:'{0}' under Production Slot." -ArgumentList $webAppName)
+    Write-Verbose "`t [Azure Call]Got publish profile file for azureRM WebApp:'$webAppName' under Production Slot at location: '$pubXmlFile'."
 
     Remove-Item -Path $pubXmlFile -Force
     Write-Verbose "`t Deleted publish profile file at location: '$pubXmlFile'"
@@ -56,9 +56,9 @@ function Get-AzureRMWebAppProfileForMSDeployWithSpecificSlot
     $tmpFileName = [guid]::NewGuid().ToString() + ".pubxml"
     $pubXmlFile = Join-Path $currentDir $tmpFileName
 
-    Write-Host (Get-LocalizedString -Key "`t [Azure Call]Getting publish profile file for azureRM WebApp:'{0}' under Slot:'{1}'." -ArgumentList $webAppName, $slotName)
+    Write-Verbose "`t [Azure Call]Getting publish profile file for azureRM WebApp:'$webAppName' under Slot:'$slotName' at location: '$pubXmlFile'."
     $publishProfileContent = Get-AzureRMWebAppSlotPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName -Slot $slotName -OutputFile $pubXmlFile
-    Write-Host (Get-LocalizedString -Key "`t [Azure Call]Got publish profile file for azureRM WebApp:'{0}' under Slot:'{1}'." -ArgumentList $webAppName, $slotName)
+    Write-Verbose "`t [Azure Call]Got publish profile file for azureRM WebApp:'$webAppName' under Slot:'$slotName' at location: '$pubXmlFile'."
 
     Remove-Item -Path $pubXmlFile -Force
     Write-Verbose "`t Deleted publish profile file at location: '$pubXmlFile'"
@@ -75,7 +75,7 @@ function Construct-AzureWebAppConnectionObject
     # Get userName and userPassword to access kuduServer
     $userName = $webAppProfileForMSDeploy.userName
     $userPassword = $webAppProfileForMSDeploy.userPWD
-    Write-Host (Get-LocalizedString -Key "`t Username is:'{0}' to access KuduHostName:'{1}'." -ArgumentList $userName, $kuduHostName)
+    Write-Verbose "`t Username is:'$userName' to access KuduHostName:'$kuduHostName'."
 
     $azureRMWebAppConnectionDetails = @{}
     $azureRMWebAppConnectionDetails.KuduHostName = $kuduHostName
@@ -94,7 +94,7 @@ function Get-AzureRMWebAppConnectionDetailsWithSpecificSlot
     Write-Host (Get-LocalizedString -Key "Getting connection details for azureRM WebApp:'{0}' under Slot:'{1}'." -ArgumentList $webAppName, $slotName)
 
     $kuduHostName = $webAppName + "-" + $slotName + ".scm.azurewebsites.net"
-    Write-Host (Get-LocalizedString -Key "`t Using KuduHostName:'{0}' for azureRM WebApp:'{1}' under Slot:'{2}'." -ArgumentList $kuduHostName, $webAppName, $slotName)
+    Write-Verbose "`t Using KuduHostName:'$kuduHostName' for azureRM WebApp:'$webAppName' under Slot:'$slotName'."
 
     # Get webApp publish profile Object for MSDeploy
     $webAppProfileForMSDeploy =  Get-AzureRMWebAppProfileForMSDeployWithSpecificSlot -webAppName $webAppName -resourceGroupName $resourceGroupName -slotName $slotName
@@ -113,7 +113,7 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
     Write-Host (Get-LocalizedString -Key "Getting connection details for azureRM WebApp:'{0}' under Production Slot." -ArgumentList $webAppName)
 
     $kuduHostName = $webAppName + ".scm.azurewebsites.net"
-    Write-Host (Get-LocalizedString -Key  "`t Using KuduHostName:'{0}' for azureRM WebApp:'{1}' under default Slot." -ArgumentList $kuduHostName, $webAppName)
+    Write-Verbose  "`t Using KuduHostName:'$kuduHostName' for azureRM WebApp:'$webAppName' under default Slot."
 
     # Get azurerm webApp details
     $azureRMWebAppDetails = Get-AzureRMWebAppDetails -webAppName $webAppName
@@ -123,7 +123,7 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
     Write-Verbose "azureRMWebApp Id = $azureRMWebAppId"
 
     $resourceGroupName = $azureRMWebAppId.Split('/')[4]
-    Write-Host (Get-LocalizedString -Key  "`t ResourceGroup name is:'{0}' for azureRM WebApp:'{1}'." -ArgumentList $resourceGroupName, $webAppName)
+    Write-Verbose "`t ResourceGroup name is:'$resourceGroupName' for azureRM WebApp:'$webAppName'."
 
     # Get webApp publish profile Object for MSDeploy
     $webAppProfileForMSDeploy =  Get-AzureRMWebAppProfileForMSDeployWithProductionSlot -webAppName $webAppName -resourceGroupName $resourceGroupName
@@ -148,7 +148,7 @@ function Get-AzureRMWebAppConnectionDetails
     }
     else
     {
-         $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetailsWithProductionSlot -webAppName $webAppName
+        $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetailsWithProductionSlot -webAppName $webAppName
     }
 
     return $azureRMWebAppConnectionDetails
