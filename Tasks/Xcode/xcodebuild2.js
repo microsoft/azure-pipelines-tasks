@@ -25,32 +25,39 @@ var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
 var xCode7Plus = false;
 
 processInputs() 													// Process inputs to task and create xcv, xcb, import certs, profiles as required
-    .then(function(code) {
+    .then(function (code) {
         return xcv.exec();											// Print version of xcodebuild / xctool
     })
     .then(execBuild)                                                // Run main xcodebuild / xctool task
-    .then(function(code) {                                          // publish test results
+    .then(function (code) {                                          // publish test results
         publishTestResults(publishResults, testResultsFiles);
         return code;
     })
     .then(packageApps)												// Package apps if configured
-    .then(function(code) {											// On success, exit
-        tl.exit(code);
+    .fail(function (err) {
+        var promise = deleteKeychain ? deleteKeychain() : Q(0);	        // Delete temp keychain if created
+        if (deleteProfile) {											// Delete installed profile only if flag is set
+            promise = promise.then(function (code) {
+                return deleteProfile();
+            });
+        }
+
+        console.error(err);
+        return promise.then(function () {
+            process.exit(1);
+        });
     })
-    .fin(function(code) {
+    .done(function (code) {
         process.env['DEVELOPER_DIR'] = origXcodeDeveloperDir;
         var promise = deleteKeychain ? deleteKeychain.exec() : Q(0);
         if (deleteProvProfile) {
-            promise = promise.then(function(code) {
+            promise = promise.then(function (code) {
                 return deleteProvProfile.exec();
             });
         }
-        return promise;
-    })
-    .fail(function(err) {
-        console.error(err.message);
-        tl.debug('taskRunner fail');
-        tl.exit(1);
+        return promise.then(function () {
+            process.exit(code);
+        });
     });
 
 function processInputs() {
@@ -162,7 +169,7 @@ function iosIdentity(code) {
     }
 
     return xcutils.determineIdentity(input)
-        .then(function(result) {
+        .then(function (result) {
             if (result.identity) {
                 // TODO: Add CODE_SIGN_IDENTITY[iphoneos*]? 
                 xcb.arg('CODE_SIGN_IDENTITY="' + result.identity + '"');
@@ -185,7 +192,7 @@ function iosProfile(code) {
     }
 
     return xcutils.determineProfile(input)
-        .then(function(result) {
+        .then(function (result) {
             if (result.uuid) {
                 xcb.arg('PROVISIONING_PROFILE=' + result.uuid);
             }
@@ -218,7 +225,7 @@ function packageApps(code) {
             tl.debug(appFolders.length + ' apps found for packaging.');
             var xcrunPath = tl.which('xcrun', true);
             for (var i = 0; i < appFolders.length; i++) {
-                promise = promise.then(function(code) {
+                promise = promise.then(function (code) {
                     var app = appFolders[i];
                     tl.debug('Packaging ' + app);
                     var ipa = app.substring(0, app.length - 3) + "ipa";
@@ -228,7 +235,7 @@ function packageApps(code) {
                         if (optionsPlistPath = tl.getInput('exportOptionsPlist', false)) {
                             args.push('-exportOptionsPlist', optionsPlistPath);
                         }
-                        
+
                         xcr.arg(args);
                     } else {
                         xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', app, '-o', ipa]);
