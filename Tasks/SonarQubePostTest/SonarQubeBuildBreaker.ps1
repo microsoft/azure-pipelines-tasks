@@ -3,7 +3,7 @@
 # 
 function BreakBuildOnQualityGateFailure
 {    
-    $breakBuild = GetTaskContextVariable "MSBuild.SonarQube.BreakBuild"
+    $breakBuild = GetTaskContextVariable "MSBuild.SonarQube.Internal.BreakBuild"
     $breakBuildEnabled = Convert-String $breakBuild Boolean
 
     if ($breakBuildEnabled)
@@ -13,7 +13,8 @@ function BreakBuildOnQualityGateFailure
             Write-Host "Ignoring the setting of breaking the build on quality gate failure because the build was triggered by a pull request."
             return;
         }
-       
+        
+        WaitForAnalysisToFinish
         $qualityGateStatus = GetOrFetchQualityGateStatus
         FailBuildOnQualityGateStatus $qualityGateStatus
     }

@@ -40,13 +40,18 @@ Register-Mock InvokeGetRestMethod {$taskStatusResponse} -- "/api/ce/task?id=AVQF
 $qualityGateResponse = ConvertFrom-Json '{"projectStatus":{"status":"OK","conditions":[],"periods":[]}}'
 Register-Mock InvokeGetRestMethod {$qualityGateResponse} -- "/api/qualitygates/project_status?analysisId=10337" $true
 
-# Act
+# Act 1 - calling GetOrFetchQualityGateStatus without first calling WaitForAnalysisToFinish fails
+Assert-Throws {GetOrFetchQualityGateStatus} "*WaitForAnalysisToFinish*"
+ 
+WaitForAnalysisToFinish
+Assert-WasCalled SetTaskContextVariable -- 'MSBuild.SonarQube.AnalysisId' '10337' 
+Register-Mock GetTaskContextVariable {'10337'} -- 'MSBuild.SonarQube.AnalysisId' 
 $actualStatus = GetOrFetchQualityGateStatus
 
 # Assert
 Assert-AreEqual "OK" $actualStatus
 # make sure the analysis id and the quality gate status are set in build variables
-Assert-WasCalled SetTaskContextVariable -- 'MSBuild.SonarQube.AnalysisId' '10337' 
+
 Assert-WasCalled SetTaskContextVariable -- 'MSBuild.SonarQube.QualityGateStatus' 'OK'
 
 # Cleanup

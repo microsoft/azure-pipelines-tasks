@@ -4,7 +4,7 @@
 function InvokePreBuildTask
 {
     # TODO: read this from the task input and expose the new report 
-    $includeReport = $false
+    $includeFullReport = $false
     
     $serviceEndpoint = GetEndpointData $connectedServiceName
     Write-Verbose "serverUrl = $($serviceEndpoint.Url)"
@@ -13,7 +13,7 @@ function InvokePreBuildTask
     $bootstrapperDir = [System.IO.Path]::Combine($currentDir, "MSBuild.SonarQube.Runner-1.1") # the MSBuild.SonarQube.Runner is version specific
     $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQube.Runner.exe")
 
-    StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath "$($serviceEndpoint.Url)/dashboard/index?id=$($projectKey)" $includeReport $breakBuild
+    StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath "$($serviceEndpoint.Url)/dashboard/index?id=$($projectKey)" $includeFullReport $breakBuild
     StoreSensitiveParametersInTaskContext $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUsername $dbPassword
 
     $cmdLineArgs = UpdateArgsForPullRequestAnalysis $cmdLineArgs $serviceEndpoint
@@ -33,13 +33,13 @@ function StoreParametersInTaskContext
 		  [string]$hostUrl,
 		  [string]$bootstrapperPath,
 		  [string]$dahsboardUrl,
-          [string]$includeReport, 
+          [string]$includeFullReport, 
           [string]$breakBuild)
 	
-    SetTaskContextVariable "MSBuild.SonarQube.BootstrapperPath" $bootstrapperPath    
+    SetTaskContextVariable "MSBuild.SonarQube.Internal.BootstrapperPath" $bootstrapperPath    
     SetTaskContextVariable "MSBuild.SonarQube.HostUrl" $hostUrl   
-    SetTaskContextVariable "MSBuild.SonarQube.BreakBuild" $breakBuild
-    SetTaskContextVariable "MSBuild.SonarQube.IncludeReport" $includeReport        
+    SetTaskContextVariable "MSBuild.SonarQube.Internal.BreakBuild" $breakBuild
+    SetTaskContextVariable "MSBuild.SonarQube.Internal.IncludeReport" $includeFullReport        
     SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dahsboardUrl
 }
 

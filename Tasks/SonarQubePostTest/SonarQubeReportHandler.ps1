@@ -9,6 +9,7 @@ function UploadSummaryMdReport
     }
     else
     {
+        WaitForAnalysisToFinish
         UploadSummaryReportInternal
     }    
 }
@@ -52,7 +53,7 @@ function UploadSummaryReportInternal
 
 function IsReportEnabled
 {
-    $includeReport = GetTaskContextVariable "MSBuild.SonarQube.IncludeReport"
+    $includeReport = GetTaskContextVariable "MSBuild.SonarQube.Internal.IncludeFullReport"
     $reportEnabled = [System.Convert]::ToBoolean($includeReport)
     
     return $reportEnabled

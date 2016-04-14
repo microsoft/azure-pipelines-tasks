@@ -10,7 +10,7 @@ function VerifyVersionComparison
 {
     param ([string]$inputVersion, [int]$expectedComparisonResult)
     
-    Register-Mock Get-TaskVariable { $inputVersion } -- -Context $distributedTaskContext -Name 'MSBuild.SonarQube.ServerVersion'
+    Register-Mock Get-TaskVariable { $inputVersion } -- -Context $distributedTaskContext -Name 'MSBuild.SonarQube.Internal.ServerVersion'
     
     $result = CompareSonarQubeVersionWith52 
     

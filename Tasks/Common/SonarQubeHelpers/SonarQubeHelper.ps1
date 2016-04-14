@@ -296,11 +296,12 @@ function CompareSonarQubeVersionWith52
 #
 function GetOrFetchSonarQubeVersionString
 {         
-    $versionString = GetTaskContextVariable "MSBuild.SonarQube.ServerVersion"
+    $versionString = GetTaskContextVariable "MSBuild.SonarQube.Internal.ServerVersion"
     if ([String]::IsNullOrEmpty($versionString))
     {
          $command = {InvokeGetRestMethod "/api/server/version" }
          $versionString = Retry $command -maxRetries 2 -retryDelay 1 -Verbose
+         SetTaskContextVariable "MSBuild.SonarQube.Internal.ServerVersion" $versionString
     }
     
     Assert (![String]::IsNullOrEmpty($versionString)) "Could not retrieve the SonarQube server version"

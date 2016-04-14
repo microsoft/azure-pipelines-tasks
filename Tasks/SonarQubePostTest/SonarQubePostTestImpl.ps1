@@ -8,7 +8,7 @@ function InvokeMSBuildRunnerPostTest
 
 function GetBootsrapperPath
 {
-	$bootstrapperPath = GetTaskContextVariable "MSBuild.SonarQube.BootstrapperPath" 
+	$bootstrapperPath = GetTaskContextVariable "MSBuild.SonarQube.Internal.BootstrapperPath" 
 
 	if (!$bootstrapperPath -or ![System.IO.File]::Exists($bootstrapperPath))
 	{

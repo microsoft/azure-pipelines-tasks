@@ -1,7 +1,8 @@
 #region Public 
 
 #
-# Gets the chached quality gate status or queries the server to get the result of the quality gate if it is not cached
+# Gets the cached quality gate status or queries the server to get the result of the quality gate if it is not cached
+#
 # Remark: this only works for SQ version 5.3+
 #
 function GetOrFetchQualityGateStatus
@@ -19,21 +20,33 @@ function GetOrFetchQualityGateStatus
     return $qualityGateStatus
 }
 
+#
+# Waits for the SQ analysis to finish, i.e. to evaluate all the metrics including the quality gate. Calling this function more than once results in a NOP
+#
+# Remarks: this operation is only relevant for SQ 5.3+ and will fail if attempted with on an earlier server  
+#
+function WaitForAnalysisToFinish
+{
+    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"       
+    
+    if ([String]::IsNullOrEmpty($analysisId))
+    {
+        $analysisId = WaitForAnalysisToFinishInternal
+        SetTaskContextVariable "MSBuild.SonarQube.AnalysisId" $analysisId
+    }    
+    
+    Assert (![String]::IsNullOrEmpty($analysisId)) "Could not fetch the analysis id"
+}
+
 #endregion
 
 #region Private
 
 function FetchQualityGateStatus
 {
-    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"       
+    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"    
     
-    if ([String]::IsNullOrEmpty($analysisId))
-    {
-        $analysisId = WaitForAnalysisToFinish
-        SetTaskContextVariable "MSBuild.SonarQube.AnalysisId" $analysisId
-    }    
-    
-    Assert (![String]::IsNullOrEmpty($analysisId)) "Could not fetch the analysis id"
+    Assert (![String]::IsNullOrEmpty($analysisId)) "WaitForAnalysisToFinish should be called first."   
     
     $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$analysisId" $true    
     return $response.projectStatus.status;
@@ -42,7 +55,7 @@ function FetchQualityGateStatus
 #
 # Polls the server until current analysis is complete or a timeout is hit. Returns the analysis id. Throws if the analysis times out.
 #
-function WaitForAnalysisToFinish
+function WaitForAnalysisToFinishInternal
 {    
     Write-Host "Waiting on the SonarQube server to finish processing in order to determine the quality gate status."
        
