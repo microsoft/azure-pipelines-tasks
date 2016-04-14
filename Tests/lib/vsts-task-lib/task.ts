@@ -146,7 +146,13 @@ export function setResourcePath(path: string): void {
     }
 }
 
-export function loc(key: string, ...param: any[]): string {
+export function loc(key: string): string {
+    // we can't do ...param if we target ES6 and node 5.  This is what <=ES5 compiles down to.
+    var param = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        param[_i - 1] = arguments[_i];
+    }
+
     if (!libResourceFileLoaded) {
         // merge loc strings from vsts-task-lib.
         var libResourceFile = path.join(__dirname, 'lib.json');
