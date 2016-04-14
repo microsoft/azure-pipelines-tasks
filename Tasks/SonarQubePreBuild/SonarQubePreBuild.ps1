@@ -9,6 +9,7 @@ param(
     [string]$dbPassword,
     [string]$cmdLineArgs,
     [string]$configFile,
+    [string]$includeFullReport,
     [string]$breakBuild
 )
 
@@ -21,6 +22,7 @@ Write-Verbose "cmdLineArgs = $cmdLineArgs"
 Write-Verbose "configFile = $configFile"
 Write-Verbose "dbConnectionString = $dbUrl"
 Write-Verbose "breakBuild = $breakBuild"
+Write-Verbose "includeFullReport = $includeFullReport"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"

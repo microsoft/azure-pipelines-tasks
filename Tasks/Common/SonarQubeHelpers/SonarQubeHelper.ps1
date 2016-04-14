@@ -306,7 +306,7 @@ function GetOrFetchSonarQubeVersionString
     
     Assert (![String]::IsNullOrEmpty($versionString)) "Could not retrieve the SonarQube server version"
     
-    Write-Verbose "The SonarQube server version is $version"
+    Write-Verbose "The SonarQube server version is $versionString"
 
     return $versionString
 }
