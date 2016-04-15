@@ -156,22 +156,34 @@ if($azureWebSite) {
             }
         }
 
-        $deploymentId = Get-TaskVariable $distributedTaskContext "release.releaseUri" #let's use releaseUri as unique deploymentId in release context
-        if([string]::IsNullOrEmpty($deploymentId)) {
-            $deploymentId = Get-TaskVariable $distributedTaskContext "build.buildUri" #let's use buildUri as unique deploymentId in build context
+        # using buildId/releaseId to update deployment status
+        # using buildUrl/releaseUrl to update deployment message
+        $buildUrlTaskVar = Get-TaskVariable $distributedTaskContext "build.buildUri"
+        $releaseUrlTaskVar = Get-TaskVariable $distributedTaskContext "release.releaseUri"
+        $buildIdTaskVar = Get-TaskVariable $distributedTaskContext "build.buildId"
+        $releaseIdTaskVar = Get-TaskVariable $distributedTaskContext "release.releaseId"
+        if(-not [string]::IsNullOrEmpty($releaseUrlTaskVar)) {
+            $deploymentId = $releaseIdTaskVar
+            $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $releaseUrlTaskVar
         }
+        else
+        {
+           $deploymentId = $buildIdTaskVar
+           $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $buildUrlTaskVar
+        }
+
+        Write-Verbose "Using deploymentId as: '$deploymentId' to update deployment Status"
+        Write-Verbose "Using message as: '$message' to update deployment Status"
+
         if([string]::IsNullOrEmpty($deploymentId)) {
             #No point in proceeding further
             Write-Warning (Get-LocalizedString -Key "Cannot update deployment status, unique deploymentId cannot be retrieved")  
             Return
         }
 
-        $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $deploymentId
-        $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
-
         $collectionUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
         $teamproject = "$env:SYSTEM_TEAMPROJECTID"
-        $buildUrl = [string]::Format("{0}/{1}/_build#buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildId)
+        $buildUrl = [string]::Format("{0}/{1}/_build#buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildIdTaskVar)
 
         $body = ConvertTo-Json (New-Object -TypeName psobject -Property @{
             status = $status
