@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin Component Restore",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=786653)",
   "loc.description": "Restores Xamarin components for the specified solution",
   "loc.instanceNameFormat": "Xamarin component restore $(solution)",
   "loc.input.label.solution": "Path to Solution",
