@@ -37,7 +37,7 @@ function UpdateXMLAttribute
           [String][Parameter(mandatory=$false)] $conditionalAttributeValue,
           [String][Parameter(mandatory=$true)] $targetKey,
           [String][Parameter(mandatory=$true)] $targetValue,
-          [Object][Parameter(mandatory=$true)] $xml
+          [Xml.XmlElement][Parameter(mandatory=$true)] $xml
     )
     
     if( $xml -eq $null ){
