@@ -132,12 +132,12 @@ if ($destination -eq "AzureBlob")
     if(-not [string]::IsNullOrEmpty($outputStorageURI))
     {
         $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName
-        Write-Verbose "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+        Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
     }
     if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
     {
         $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
-        Write-Verbose "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+        Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
     }
     Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
     return
