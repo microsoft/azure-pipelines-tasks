@@ -162,7 +162,7 @@ if($azureWebSite) {
         $releaseUrlTaskVar = Get-TaskVariable $distributedTaskContext "release.releaseUri"
         $buildIdTaskVar = Get-TaskVariable $distributedTaskContext "build.buildId"
         $releaseIdTaskVar = Get-TaskVariable $distributedTaskContext "release.releaseId"
-        if(-not [string]::IsNullOrEmpty($releaseUrl)) {
+        if(-not [string]::IsNullOrEmpty($releaseUrlTaskVar)) {
             $deploymentId = $releaseIdTaskVar
             $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $releaseUrlTaskVar
         }
