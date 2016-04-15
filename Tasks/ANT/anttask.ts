@@ -12,7 +12,7 @@ antb.arg('-buildfile');
 antb.pathArg(tl.getPathInput('antBuildFile', true, true));
 
 // options and targets are optional
-antb.arg(tl.getDelimitedInput('options', ' ', false));
+antb.argString(tl.getInput('options', false));
 antb.arg(tl.getDelimitedInput('targets', ' ', false));
 
 // update ANT_HOME if user specified path manually (not required, but if so, check it)

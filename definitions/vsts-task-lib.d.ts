@@ -1,5 +1,4 @@
-/// <reference path="../definitions/node.d.ts" />
-/// <reference path="../definitions/Q.d.ts" />
+
 declare module 'vsts-task-lib/taskcommand' {
 	export class TaskCommand {
 	    constructor(command: any, properties: any, message: any);
@@ -14,10 +13,9 @@ declare module 'vsts-task-lib/taskcommand' {
 
 }
 declare module 'vsts-task-lib/toolrunner' {
-	/// <reference path="../definitions/node.d.ts" />
-	/// <reference path="../definitions/Q.d.ts" />
 	import Q = require('q');
 	import events = require('events');
+	import stream = require('stream');
 	/**
 	 * Interface for exec options
 	 *
@@ -35,8 +33,8 @@ declare module 'vsts-task-lib/toolrunner' {
 	    silent: boolean;
 	    failOnStdErr: boolean;
 	    ignoreReturnCode: boolean;
-	    outStream: NodeJS.WritableStream;
-	    errStream: NodeJS.WritableStream;
+	    outStream: stream.Writable;
+	    errStream: stream.Writable;
 	}
 	/**
 	 * Interface for exec results returned from synchronous exec functions
@@ -61,16 +59,21 @@ declare module 'vsts-task-lib/toolrunner' {
 	    private _debug(message);
 	    private _argStringToArray(argString);
 	    /**
-	     * Add arguments
-	     * Accepts a full string command line and a string array as well
-	     * With literal=false, will handle double quoted args. E.g. val='"arg one" two -z', args[]=['arg one', 'two', '-z']
-	     * With literal=true, will put input direct into args. E.g. val='/bin/working folder', args[]=['/bin/working folder']
+	     * Add argument
+	     * Append an argument or an array of arguments
 	     *
 	     * @param     val        string cmdline or array of strings
-	     * @param     literal    optional literal flag, if val is a string, add the original val to arguments when literal is true
 	     * @returns   void
 	     */
-	    arg(val: any, literal?: boolean): void;
+	    arg(val: string | string[]): void;
+	    /**
+	     * Append argument command line string
+	     * e.g. '"arg one" two -z' would append args[]=['arg one', 'two', '-z']
+	     *
+	     * @param     val        string cmdline
+	     * @returns   void
+	     */
+	    argString(val: string): void;
 	    /**
 	     * Add path argument
 	     * Add path string to argument, path string should not contain double quoted
@@ -113,12 +116,21 @@ declare module 'vsts-task-lib/toolrunner' {
 	}
 
 }
+declare module 'vsts-task-lib/vault' {
+	export class Vault {
+	    constructor();
+	    private _keyFile;
+	    private _store;
+	    initialize(): void;
+	    storeSecret(name: string, data: string): boolean;
+	    retrieveSecret(name: string): string;
+	    private getKey();
+	    private genKey();
+	}
+
+}
 declare module 'vsts-task-lib/task' {
-	/// <reference path="../definitions/node.d.ts" />
-	/// <reference path="../definitions/Q.d.ts" />
-	/// <reference path="../definitions/shelljs.d.ts" />
-	/// <reference path="../definitions/minimatch.d.ts" />
-	/// <reference path="../definitions/glob.d.ts" />
+	/// <reference path="../typings/main.d.ts" />
 	import Q = require('q');
 	import fs = require('fs');
 	import trm = require('vsts-task-lib/toolrunner');
@@ -126,8 +138,8 @@ declare module 'vsts-task-lib/task' {
 	    Succeeded = 0,
 	    Failed = 1,
 	}
-	export var _outStream: NodeJS.WritableStream;
-	export var _errStream: NodeJS.WritableStream;
+	export var _outStream: any;
+	export var _errStream: any;
 	export function _writeError(str: string): void;
 	export function _writeLine(str: string): void;
 	export function setStdStream(stdStream: any): void;
@@ -390,7 +402,7 @@ declare module 'vsts-task-lib/task' {
 	 * @param     options  optionalexec options.  See IExecOptions
 	 * @returns   IExecResult
 	 */
-	export function execSync(tool: string, args: any, options?: trm.IExecOptions): trm.IExecResult;
+	export function execSync(tool: string, args: string | string[], options?: trm.IExecOptions): trm.IExecResult;
 	/**
 	 * Convenience factory to create a ToolRunner.
 	 *
@@ -405,9 +417,18 @@ declare module 'vsts-task-lib/task' {
 	    testRunner: string;
 	    publish(resultFiles: any, mergeResults: any, platform: any, config: any, runTitle: any, publishRunAttachments: any): void;
 	}
-    export class CodeCoveragePublisher {
+	export class CodeCoveragePublisher {
 	    constructor();
 	    publish(codeCoverageTool: any, summaryFileLocation: any, reportDirectory: any, additionalCodeCoverageFiles: any): void;
 	}
+	export class CodeCoverageEnabler {
+	    private buildTool;
+	    private ccTool;
+	    constructor(buildTool: string, ccTool: string);
+	    enableCodeCoverage(buildProps: {
+	        [key: string]: string;
+	    }): void;
+	}
+	export function _loadData(): void;
 
 }

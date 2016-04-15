@@ -44,7 +44,7 @@ var runnuget = function(fn) {
             nugetTool.arg('-NoCache');
         }
         if (nuGetRestoreArgs) {
-            nugetTool.arg(nuGetRestoreArgs);
+            nugetTool.argString(nuGetRestoreArgs);
         }
 
         return nugetTool.exec(null);

@@ -6,10 +6,10 @@
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
-var tl = require('vsts-task-lib/task');
-var tr = require('vsts-task-lib/toolrunner');
-var path = require('path');
-var Q = require('q');
+const tl = require('vsts-task-lib/task');
+const tr = require('vsts-task-lib/toolrunner');
+const path = require('path');
+const Q = require('q');
 var xcutils = require('./xcode-task-utils.js');
 //--------------------------------------------------------
 // Tooling
@@ -42,6 +42,7 @@ var xcrpt = tl.getInput('xctoolReporter', false);
 var actions = tl.getDelimitedInput('actions', ' ', true);
 var out = path.resolve(process.cwd(), tl.getInput('outputPattern', true));
 var pkgapp = tl.getBoolInput('packageApp', true);
+var args = tl.getInput('args', false);
 //--------------------------------------------------------
 // Exec Tools
 //--------------------------------------------------------
@@ -49,7 +50,7 @@ var pkgapp = tl.getBoolInput('packageApp', true);
 var xcv = new tr.ToolRunner(tool);
 xcv.arg('-version');
 xcv.exec(null)
-    .then(function (code) {
+    .then((code) => {
     tl.exitOnCodeIf(code, code != 0);
     // --- XcodeBuild ---
     var xcb = new tr.ToolRunner(tool);
@@ -63,9 +64,12 @@ xcv.exec(null)
     xcb.arg('OBJROOT=' + path.join(out, 'build.obj'));
     xcb.arg('SYMROOT=' + path.join(out, 'build.sym'));
     xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(out, 'build.pch'));
+    if (args) {
+        xcb.argString(args);
+    }
     return xcb.exec(null);
 })
-    .then(function (code) {
+    .then((code) => {
     // --- PackageApps ---
     if (pkgapp && sdk != "iphonesimulator") {
         console.log('Packaging apps');
@@ -85,7 +89,7 @@ xcv.exec(null)
         return Q(0);
     }
 })
-    .fail(function (err) {
+    .fail((err) => {
     tl.setResult(tl.TaskResult.Failed, err.message);
 });
 /*

@@ -14,7 +14,7 @@ tl.cd(cwd);
 var command = tl.getInput('command', true);
 npm.arg(command);
 
-npm.arg(tl.getInput('arguments', false));
+npm.argString(tl.getInput('arguments', false));
 
 npm.exec()
 .then(function(code) {

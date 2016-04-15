@@ -3,7 +3,7 @@
     "name": "XamarinComponentRestore",
     "friendlyName": "Xamarin Component Restore",
     "description": "Restores Xamarin components for the specified solution",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=786653)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {

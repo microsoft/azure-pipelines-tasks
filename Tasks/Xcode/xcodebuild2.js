@@ -201,16 +201,12 @@ function iosProfile(code) {
 }
 
 function execBuild(code) {
-    // Add optional additional args
-    var args = tl.getInput('args', false);
-    if (args) {
-        xcb.arg(args);
-    }
-    tl.debug('Complete build args: ');
-    for (var arg in xcb.args) {
-        tl.debug(xcb.args[arg]);
-    }
-    return xcb.exec();
+	// Add optional additional args
+	var args=tl.getInput('args', false);			
+	if(args) {
+		xcb.argString(args);						
+	}
+	return xcb.exec();
 }
 
 function packageApps(code) {

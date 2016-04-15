@@ -13,7 +13,7 @@ var cwd = tl.getPathInput('workingFolder', true, false);
 tl.mkdirP(cwd);
 tl.cd(cwd);
 
-tr.arg(tl.getInput('arguments', false));
+tr.argString(tl.getInput('arguments', false));
 
 var failOnStdErr = tl.getBoolInput('failOnStandardError', false);
 

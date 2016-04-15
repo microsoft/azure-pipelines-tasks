@@ -200,7 +200,7 @@ var submitToTestCloud = function (index) {
         monoToolRunner.arg(parallelization);
     }
     if (optionalArgs) {
-        monoToolRunner.arg(optionalArgs.split(' '));
+        monoToolRunner.argString(optionalArgs);
     }
     if (publishNUnitResults == 'true') {
         var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');
