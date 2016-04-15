@@ -124,7 +124,7 @@ nugetRunner.exec()
                     xbuildRunner.arg('/p:BuildIpa=true');
                 }
                 if (args) {
-                    xbuildRunner.arg(args);
+                    xbuildRunner.argString(args);
                 }
                 if (provProfileUUID) {
                     xbuildRunner.arg('/p:CodesignProvision="' + provProfileUUID + '"');

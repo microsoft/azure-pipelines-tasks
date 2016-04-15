@@ -103,7 +103,7 @@ if (redirectStderr === 'true') {
 }
 
 if (options) {
-    curlRunner.arg(options);
+    curlRunner.argString(options);
 }
 
 if (username || password) {

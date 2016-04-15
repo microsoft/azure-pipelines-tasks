@@ -116,7 +116,7 @@ function getSonarQubeRunner() {
 
     mvnsq.arg('-f');
     mvnsq.pathArg(mavenPOMFile);
-    mvnsq.arg(mavenOptions); // add the user options to allow further customization of the SQ run
+    mvnsq.argString(mavenOptions); // add the user options to allow further customization of the SQ run
     mvnsq.arg("sonar:sonar");
 
     return mvnsq;

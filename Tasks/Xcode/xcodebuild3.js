@@ -42,6 +42,7 @@ var xcrpt = tl.getInput('xctoolReporter', false);
 var actions = tl.getDelimitedInput('actions', ' ', true);
 var out = path.resolve(process.cwd(), tl.getInput('outputPattern', true));
 var pkgapp = tl.getBoolInput('packageApp', true);
+var args = tl.getInput('args', false);
 //--------------------------------------------------------
 // Exec Tools
 //--------------------------------------------------------
@@ -63,6 +64,9 @@ xcv.exec(null)
     xcb.arg('OBJROOT=' + path.join(out, 'build.obj'));
     xcb.arg('SYMROOT=' + path.join(out, 'build.sym'));
     xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(out, 'build.pch'));
+    if (args) {
+        xcb.argString(args);
+    }
     return xcb.exec(null);
 })
     .then((code) => {
