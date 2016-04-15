@@ -1,27 +1,25 @@
 ﻿Param(
-  [Parameter(mandatory=$true)][string]$xmlFilePath,
-  [Parameter(mandatory=$true)][string]$tag,
-  [string]$conditionalAttributeKey,
-  [string]$conditionalAttributeValue,
-  [Parameter(mandatory=$true)][string]$targetKey,
-  [Parameter(mandatory=$true)][string]$targetValue
+  [String][Parameter(mandatory=$true)]$xmlFilePath,
+  [String][Parameter(mandatory=$true)][string]$tag,
+  [String][Parameter(mandatory=$false)]$conditionalAttributeKey,
+  [String][Parameter(mandatory=$false)]$conditionalAttributeValue,
+  [String][Parameter(mandatory=$true)][string]$targetKey,
+  [String][Parameter(mandatory=$true)][string]$targetValue
 )
 
-Write-Verbose "xmlFile = $xmlFilePath" -Verbose
-Write-Verbose "Tag = $tag" -Verbose
-Write-Verbose "conditionalAttribute = $conditionalAttributeKey" -Verbose
-Write-Verbose "conditionalValue = $conditionalAttributeValue" -Verbose
-Write-Verbose "targetKey = $targetKey" -Verbose
-Write-Verbose "targetValue = $targetValue" -Verbose
+Write-Verbose "xmlFile = $xmlFilePath" 
+Write-Verbose "Tag = $tag" 
+Write-Verbose "conditionalAttribute = $conditionalAttributeKey" 
+Write-Verbose "conditionalValue = $conditionalAttributeValue" 
+Write-Verbose "targetKey = $targetKey" 
 
 
-if( $conditionalAttribute -eq $null -xor $conditionalValue -eq $null) {
-    Write-Verbose "Either conditionalAttribute and conditionalValue should be set or both should be blank" -Verbose
+if( [string]::IsNullOrEmpty($conditionalAttribute) -xor [string]::IsNullOrEmpty($conditionalValue)) {
+    Write-Verbose "Either conditionalAttribute and conditionalValue should be set or both should be blank."
 }
 
 if (-not (test-path $xmlFilePath)) {
-    throw "XML file path is not present."
-
+    throw "Specified XML file path doesn't exists."
 }
 
 
@@ -34,7 +32,12 @@ function UpdateXMLAttribute
 {
 
     Param(
-          [Parameter(mandatory=$true)][string]$tag,[string] $conditionalAttributeKey , [string] $conditionalAttributeValue ,[string] $targetKey, [string] $targetValue ,[Xml.XmlElement] $xml
+          [String][Parameter(mandatory=$true)] $tag,
+          [String][Parameter(mandatory=$false)] $conditionalAttributeKey,
+          [String][Parameter(mandatory=$false)] $conditionalAttributeValue,
+          [String][Parameter(mandatory=$true)] $targetKey,
+          [String][Parameter(mandatory=$true)] $targetValue,
+          [Object][Parameter(mandatory=$true)] $xml
     )
     
     if( $xml -eq $null ){
