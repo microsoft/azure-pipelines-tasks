@@ -30,8 +30,8 @@ param
     [String] [Parameter(Mandatory = $false)]
     $VirtualApplication,
 
-    [String] [Parameter(Mandatory = $false)]
-    [String] $AdditionalArguments
+[String] [Parameter(Mandatory = $false)]
+[String] $AdditionalArguments
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
