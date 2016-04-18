@@ -138,16 +138,13 @@ function Get-ResourceWinRmConfig
     $winrmPortToUse = ''
     $protocolToUse = ''
 
-    Write-Verbose "Starting Get-Environment cmdlet call on environment name: $environmentName" -Verbose
-    $environment = Get-Environment -environmentName $environmentName -TaskContext $distributedTaskContext
-    Write-Verbose "Completed Get-Environment cmdlet call on environment name: $environmentName" -Verbose
 
     if($protocol -eq "HTTPS")
     {
         $protocolToUse = $useHttpsProtocolOption
     
         Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
-        $winrmPortToUse = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+        $winrmPortToUse = Get-EnvironmentProperty -Environment $environment -Key $resourceWinRMHttpsPortKeyName -ResourceId $resourceId
         Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId (Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
     
         if([string]::IsNullOrWhiteSpace($winrmPortToUse))
@@ -161,7 +158,7 @@ function Get-ResourceWinRmConfig
         $protocolToUse = $useHttpProtocolOption
         
         Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
-        $winrmPortToUse = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+        $winrmPortToUse = Get-EnvironmentProperty -Environment $environment -Key $resourceWinRMHttpPortKeyName -ResourceId $resourceId
         Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
     
         if([string]::IsNullOrWhiteSpace($winrmPortToUse))
@@ -176,7 +173,7 @@ function Get-ResourceWinRmConfig
         Write-Verbose "`t Environment is not standerd environment. Https port has higher precedence" -Verbose
 
         Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
-        $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+        $winrmHttpsPort = Get-EnvironmentProperty -Environment $environment -Key $resourceWinRMHttpsPortKeyName -ResourceId $resourceId
         Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId (Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
 
         if ([string]::IsNullOrEmpty($winrmHttpsPort))
@@ -184,7 +181,7 @@ function Get-ResourceWinRmConfig
                Write-Verbose "`t Resource: $resourceName does not have any winrm https port defined, checking for winrm http port" -Verbose
 
                Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
-               $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+               $winrmHttpPort = Get-EnvironmentProperty -Environment $environment -Key $resourceWinRMHttpPortKeyName -ResourceId $resourceId
                Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
 
                if ([string]::IsNullOrEmpty($winrmHttpPort))
@@ -211,7 +208,7 @@ function Get-ResourceWinRmConfig
         Write-Verbose "`t Environment is standerd environment. Http port has higher precedence" -Verbose
 
         Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
-        $winrmHttpPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+        $winrmHttpPort = Get-EnvironmentProperty -Environment $environment -Key $resourceWinRMHttpPortKeyName -ResourceId $resourceId
         Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName" -Verbose
 
         if ([string]::IsNullOrEmpty($winrmHttpPort))
@@ -219,7 +216,7 @@ function Get-ResourceWinRmConfig
                Write-Verbose "`t Resource: $resourceName does not have any winrm http port defined, checking for winrm https port" -Verbose
 
                Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
-               $winrmHttpsPort = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceWinRMHttpsPortKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+               $winrmHttpsPort = Get-EnvironmentProperty -Environment $environment -Key $resourceWinRMHttpsPortKeyName -ResourceId $resourceId
                Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName" -Verbose
 
                if ([string]::IsNullOrEmpty($winrmHttpsPort))
@@ -262,7 +259,7 @@ function Get-SkipCACheckOption
 
     # get skipCACheck option from environment
     Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with key: $skipCACheckKeyName" -Verbose
-    $skipCACheckBool = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $skipCACheckKeyName -TaskContext $distributedTaskContext
+    $skipCACheckBool = Get-EnvironmentProperty -Environment $environment -Key $skipCACheckKeyName
     Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with key: $skipCACheckKeyName" -Verbose
 
     if ($skipCACheckBool -eq "true")
@@ -282,7 +279,7 @@ function Get-ResourceConnectionDetails
     $resourceId = $resource.Id
 
     Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
-    $fqdn = Get-EnvironmentProperty -EnvironmentName $environmentName -Key $resourceFQDNKeyName -TaskContext $distributedTaskContext -ResourceId $resourceId
+    $fqdn = Get-EnvironmentProperty -Environment $environment -Key $resourceFQDNKeyName -ResourceId $resourceId
     Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName" -Verbose
 
     $winrmconfig = Get-ResourceWinRmConfig -resourceName $resourceName -resourceId $resourceId
@@ -324,7 +321,7 @@ try
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName" -Verbose
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName" -Verbose
-    $resources = Get-EnvironmentResources -EnvironmentName $environmentName -TaskContext $distributedTaskContext
+    $resources = Get-EnvironmentResources -Environment $environment
     if ($resources.Count -eq 0)
     {
         Write-TaskSpecificTelemetry "PREREQ_NoResources"
