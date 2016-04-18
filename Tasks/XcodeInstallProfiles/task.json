@@ -1,0 +1,122 @@
+{
+    "id": "EB4C2B91-77C7-4DA3-AD98-5B2CBCB739D9",
+    "name": "XcodeInstallProfiles",
+    "friendlyName": "Xcode Install Profile",
+    "description": "Export an archive file from Xcode build output",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613731)",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 1
+    },
+    "instanceNameFormat": "Xcode Export $(appName)",
+    "demands": [
+        "xcode"
+    ],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "appName",
+            "type": "string",
+            "label": "Name of .app",
+            "defaultValue": "MySampleApp",
+            "required": true,
+            "helpMarkDown": "Name of the .app, which is sometimes different from the .ipa"
+        },
+        {
+            "name": "sdk",
+            "type": "string",
+            "label": "SDK",
+            "defaultValue": "iphoneos",
+            "required": true,
+            "helpMarkDown": "Use the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs."
+        },
+        {
+            "name": "exportOptionsPlist",
+            "type": "filePath",
+            "label": "Export Options plist",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Indicates the options plist file that specifies the export options. If not specified, the archive will default to using \"-exportFormat ipa\""
+        },
+        {
+            "name": "shouldSkipSignArchive",
+            "type": "boolean",
+            "label": "Skip Archive Signing",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Checking this box will skip all attempts to sign the archive"
+        },
+        {
+            "name": "provisioningProfile",
+            "type": "string",
+            "label": "Provisioning Profile Name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name of the provisioning profile to use when signing.",
+            "visibleRule": "shouldSkipSignArchive=false"
+        },
+        {
+            "name": "signingIdentity",
+            "type": "string",
+            "label": "Signing Identity",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optional specification for the identity to sign the archive with",
+            "visibleRule": "shouldSkipSignArchive=false"
+        },
+        {
+            "name": "appPath",
+            "type": "string",
+            "label": "Path to .app",
+            "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)",
+            "required": true,
+            "helpMarkDown": "Relative path to the built .app file",
+            "groupName": "advanced"
+        },
+        {
+            "name": "ipaName",
+            "type": "string",
+            "label": "Name of .ipa",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name to give the IPA (if different from appname.ipa)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "ipaPath",
+            "type": "string",
+            "label": "Path to place .ipa",
+            "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)/output",
+            "required": true,
+            "helpMarkDown": "Relative path where the .ipa will be placed. The directory will be created if it doesn't exist.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "otherArgs",
+            "type": "string",
+            "label": "Other Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Other arguments. The value here will be passed directly to the commandline call to xcodebuild",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "xcode-export-archive.js",
+            "argumentFormat": ""
+        }
+    }
+}
