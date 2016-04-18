@@ -67,7 +67,8 @@ function Get-MsDeployCmdArgs
           [String][Parameter(Mandatory=$true)] $removeAdditionalFilesFlag,
           [String][Parameter(Mandatory=$true)] $excludeFilesFromAppDataFlag,
           [String][Parameter(Mandatory=$true)] $takeAppOfflineFlag,
-          [String][Parameter(Mandatory=$false)] $virtualApplication)
+          [String][Parameter(Mandatory=$false)] $virtualApplication,
+          [String][Parameter(Mandatory=$false)] $AdditionalArguments)
 
     $msDeployCmdArgs = [String]::Empty
     Write-Verbose "Constructing msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
@@ -102,6 +103,11 @@ function Get-MsDeployCmdArgs
     if($excludeFilesFromAppDataFlag -eq "true")
     {
         $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webAppNameForMSDeployCmd)
+    }
+
+    # msploy additional arguments 
+    if( -not [String]::IsNullOrEmpty($AdditionalArguments)){
+        $msDeployCmdArgs += ( " " + $AdditionalArguments)
     }
 
     Write-Verbose "Constructed msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."

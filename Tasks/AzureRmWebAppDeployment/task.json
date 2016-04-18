@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRMWebAppDeployment",
     "friendlyName": "AzureRM Web App Deployment",
@@ -107,6 +107,14 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root."
+         },
+        {
+            "name": "AdditionalArguments",
+            "type": "string",
+            "label": "Additional Arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Additional MSDeploy.exe arguments that will be applied while uploading asp.net website."
         }
     ],
     "dataSourceBindings": [

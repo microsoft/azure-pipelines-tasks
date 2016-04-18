@@ -28,7 +28,10 @@ param
     $TakeAppOfflineFlag,
 
     [String] [Parameter(Mandatory = $false)]
-    $VirtualApplication
+    $VirtualApplication,
+
+	[String] [Parameter(Mandatory = $false)]
+	[String] $AdditionalArguments
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
@@ -71,7 +74,7 @@ $webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName
 
 # Construct arguments for msdeploy command
 $msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFile -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
-                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication
+                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments
 
 # Deploy azureRM webApp using msdeploy Command
 Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs
