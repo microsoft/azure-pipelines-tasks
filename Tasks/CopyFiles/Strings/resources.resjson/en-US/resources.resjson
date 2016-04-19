@@ -12,7 +12,7 @@
   "loc.input.help.TargetFolder": "Target folder files will copy to. Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "Clean Target Folder",
   "loc.input.help.CleanTargetFolder": "Delete all existing files in target folder before copy",
-  "loc.input.label.OverWrite": "Over Write",
+  "loc.input.label.OverWrite": "Overwrite",
   "loc.input.help.OverWrite": "Replace existing file in target folder",
   "loc.messages.FoundNFiles": "found %d files",
   "loc.messages.CleaningTargetFolder": "Cleaning target folder: %s",
