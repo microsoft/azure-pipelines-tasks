@@ -2,7 +2,7 @@
     "id": "EB4C2B91-77C7-4DA3-AD98-5B2CBCB739D9",
     "name": "XcodeInstallProfiles",
     "friendlyName": "Xcode Install Profile",
-    "description": "Export an archive file from Xcode build output",
+    "description": "Install a provisioning profile",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613731)",
     "category": "Build",
     "visibility": [
@@ -14,7 +14,7 @@
         "Minor": 0,
         "Patch": 1
     },
-    "instanceNameFormat": "Xcode Export $(appName)",
+    "instanceNameFormat": "Xcode Install Profile $(appName)",
     "demands": [
         "xcode"
     ],
