@@ -55,6 +55,12 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 Import-Module ./AzureUtility.ps1 -Force
 Import-Module ./Utility.ps1 -Force
 
+ # Importing required version of azure cmdlets according to azureps installed on machine
+ $azureUtility = Get-AzureUtility
+
+ Write-Verbose -Verbose "Loading $azureUtility"
+ Import-Module ./$azureUtility -Force
+
 $ErrorActionPreference = 'Stop'
 
 #### MAIN EXECUTION OF AZURERM WEBAPP DEPLOYMENT TASK BEGINS HERE ####
