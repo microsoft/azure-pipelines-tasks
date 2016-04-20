@@ -58,9 +58,8 @@ Package (only on windows):
 // Options
 //
 var mopts = {
-    boolean: 'ci',
     string: 'suite',
-    default: { ci: false, suite: '**' }
+    default: { suite: '**' }
 };
 
 var options = minimist(process.argv.slice(2), mopts);
@@ -176,9 +175,9 @@ gulp.task('test', ['testResources'], function () {
     shell.mkdir('-p', _testTemp);
 
     var suitePath = path.join(_testRoot, options.suite + '/_suite.js');
-
+    var tfBuild = ('' + process.env['TF_BUILD']).toLowerCase() == 'true'
     return gulp.src([suitePath])
-        .pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !options.ci }));
+        .pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !tfBuild }));
 });
 
 //-----------------------------------------------------------------------------------------------------------------
