@@ -14,9 +14,14 @@ if (!profileInstallFolder) {
     taskLibrary.mkdirP(profileInstallFolder);
 }
 
+var installCert = taskLibrary.getPathInput("signingCertificate", false);
+var installKeychain = taskLibrary.getInput("keychainName", false);
+var shouldUnlockKeychain = taskLibrary.getBoolInput("shouldUnlockKeychain", false);
+var keychainPassword;
+var certificatePassword;
 installPromise = Q([taskLibrary.getInput("provisionFile", true)]);
 
-installPromise.then((provisionFileList: string[]) => {
+installPromise = installPromise.then((provisionFileList: string[]) => {
     console.log(provisionFileList);
     var installingProvisionsPromise: Q.Promise<any> = Q(null);
     for (var i = 0; i < provisionFileList.length; i++) {
@@ -24,11 +29,67 @@ installPromise.then((provisionFileList: string[]) => {
         console.log("Attemting install of profile: " + provisionFile);
         installingProvisionsPromise = installingProvisionsPromise.then(() => {
             return installProvisioningProfile(provisionFile);
-        })
+        });
     }
 
     return installingProvisionsPromise;
 });
+
+if (installCert) {
+    certificatePassword = taskLibrary.getInput("certificatePassword", true);
+
+    installPromise = installPromise.then(() => {
+        var securityCommand = taskLibrary.which("security", true);
+        var securityCommandArgs = ["import"];
+
+        securityCommandArgs.push(installCert);
+
+        if (installKeychain) {
+            securityCommandArgs.push("-k");
+            securityCommandArgs.push(installKeychain);
+        }
+
+        securityCommandArgs.push("-P");
+        securityCommandArgs.push(certificatePassword);
+
+        var codeSign = taskLibrary.which("codesign", false);
+        if (codeSign) {
+            securityCommandArgs.push("-T");
+            securityCommandArgs.push(codeSign);
+        }
+        
+        return runCommand(securityCommand, securityCommandArgs);
+    });
+}
+
+if (shouldUnlockKeychain) {
+    if (!keychainPassword) {
+        keychainPassword = taskLibrary.getInput("keychainPassword", true);
+    }
+    
+    installPromise = installPromise.then(() => {
+        var securityCommand = taskLibrary.which("security", true);
+        var securityCommandArgs = ["unlock-keychain"];
+        
+        securityCommandArgs.push("-p");
+        securityCommandArgs.push(keychainPassword);
+        
+        if (installKeychain) {
+            securityCommandArgs.push(installKeychain);
+        }
+        
+        return runCommand(securityCommand, securityCommandArgs);
+    });
+}
+
+installPromise.fail((err: any) => {
+    taskLibrary.error("task Failed");
+    taskLibrary.debug(err);
+    taskLibrary.setResult(taskLibrary.TaskResult.Failed, "Task Failed");
+}).done(() => {
+    taskLibrary.debug("task Completed");
+    taskLibrary.setResult(taskLibrary.TaskResult.Succeeded, "Task Succeeded");
+})
 
 function installProvisioningProfile(profileFile: string): Q.Promise<void> {
     var getUuidCommand = `grep -aA1 UUID ${profileFile} | grep -o "[-A-Z0-9]\\{36\\}"`;
