@@ -5,55 +5,37 @@
 import taskLibrary = require("vsts-task-lib/task");
 import path = require("path");
 import Q = require("q");
-var glob = Q.denodeify(require("glob"));
 var execSync = require("child_process").execSync;
-var gemCache;
 var installPromise;
 
 var profileInstallFolder = taskLibrary.getInput("installDirectory", false);
 if (!profileInstallFolder) {
-    profileInstallFolder = "~/Library/MobileDevice/Provisioning Profiles/";
+    profileInstallFolder = path.join(process.env['HOME'], 'Library', 'MobileDevice', 'Provisioning Profiles');
+    taskLibrary.mkdirP(profileInstallFolder);
 }
-var provisionerType = taskLibrary.getInput("provisionerType", true);
-if (provisionerType == "file") {
-    installPromise = Q([taskLibrary.getInput("provisionFile", true)]);
-} else if (provisionerType == "devAccount") {
-    // Set up environment
-    gemCache = process.env['GEM_CACHE'] || process.platform == 'win32' ? path.join(process.env['APPDATA'], 'gem-cache') : path.join(process.env['HOME'], '.gem-cache');
-    process.env['GEM_HOME'] = gemCache;
 
-    // Add bin of new gem home so we don't ahve to resolve it later;
-    process.env['PATH'] = process.env['PATH'] + ":" + gemCache + path.sep + "bin";
-
-    installPromise = installRubyGem("cupertino");
-
-    // Setup login credentials
-    process.env["IOS_USERNAME"] = taskLibrary.getInput("username", true);
-    process.env["IOS_PASSWORD"] = taskLibrary.getInput("password", true);
-
-    installPromise = installPromise.then(() => {
-        return runCommand("ios", "login").then(() => {
-            return runCommand("ios", "profiles:download:all").then(() => {
-                return glob("*.*provision*");
-            });
-        });
-    });
-}
+installPromise = Q([taskLibrary.getInput("provisionFile", true)]);
 
 installPromise.then((provisionFileList: string[]) => {
+    console.log(provisionFileList);
     var installingProvisionsPromise: Q.Promise<any> = Q(null);
     for (var i = 0; i < provisionFileList.length; i++) {
+        var provisionFile = provisionFileList[i];
+        console.log("Attemting install of profile: " + provisionFile);
         installingProvisionsPromise = installingProvisionsPromise.then(() => {
-            return installProvisioningProfile(provisionFileList[i]);
+            return installProvisioningProfile(provisionFile);
         })
     }
-    
+
     return installingProvisionsPromise;
 });
 
 function installProvisioningProfile(profileFile: string): Q.Promise<void> {
-    var getUuidCommand = `grep -aA1 UUID ${profileFile} | grep -o "[-A-Z0-9]\{36\}"`;
-    return runCommand(getUuidCommand).then((Uuid: string) => {
+    var getUuidCommand = `grep -aA1 UUID ${profileFile} | grep -o "[-A-Z0-9]\\{36\\}"`;
+    return Q(null).then(() => {
+        var grepResult: string = execSync(`grep -aA1 UUID "${profileFile}"`).toString();
+        console.log("Grep Result: " + grepResult);
+        var Uuid = grepResult.match(/[-0-9a-zA-Z]{36}/g)[0];
         taskLibrary.debug("Found UUID " + Uuid + ". Installing...");
         return runCommand("cp", [profileFile, path.join(profileInstallFolder, `${Uuid}.mobileprovision`)]).fail((reason: any) => {
             taskLibrary.debug("Failed to install profile " + profileFile);
