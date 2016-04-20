@@ -9,7 +9,7 @@ function Get-AzureRMWebAppARM
 
     $resourceGroupName = Get-WebAppRGName -webAppName $Name
 
-    Write-Verbose "[Azure RM Call] Getting azure webapp details for webapp with name : $Name and resource group $resourceGroupName "
+    Write-Verbose "[Azure Call] Getting azure webapp details for webapp with name : $Name and resource group $resourceGroupName "
     $azureWebApp =  Get-AzureWebApp -Name $webAppName -ResourceGroupName $resourceGroupName
     return $azureWebApp
 
@@ -24,9 +24,9 @@ function Get-WebAppRGName
 
     try
     {
-        Write-Verbose "[Azure RM Call] Getting resource details for webapp resource: $webAppName with resource type: $ARMSqlServerResourceType" -Verbose
+        Write-Verbose "[Azure Call] Getting resource details for webapp resource: $webAppName with resource type: $ARMSqlServerResourceType"
         $azureWebAppResourceDetails = (Get-AzureResource -ResourceName $webAppName -ErrorAction Stop) | Where-Object { $_.ResourceType -eq $ARMSqlServerResourceType }
-        Write-Verbose "[Azure RM Call] Retrieved resource details successfully for webapp resource: $webAppName with resource type: $ARMSqlServerResourceType" -Verbose
+        Write-Verbose "[Azure Call] Retrieved resource details successfully for webapp resource: $webAppName with resource type: $ARMSqlServerResourceType"
 
         $azureResourceGroupName = $azureWebAppResourceDetails.ResourceGroupName
         return $azureWebAppResourceDetails.ResourceGroupName
@@ -35,7 +35,7 @@ function Get-WebAppRGName
     {
         if ([string]::IsNullOrEmpty($azureResourceGroupName))
         {
-            Write-Verbose "[Azure RM Call] Web App: $webAppName not found" -Verbose
+            Write-Verbose "[Azure Call] Web App: $webAppName not found"
 
             Throw (Get-LocalizedString -Key "Web App: '{0}' not found." -ArgumentList $webAppName)
         }

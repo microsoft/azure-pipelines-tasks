@@ -5,7 +5,7 @@
     "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
     "category": "Deploy",
     "visibility": [
-        "Preview",
+	    "Preview",
         "Build",
         "Release"
     ],
@@ -114,7 +114,7 @@
             "label": "Additional Arguments",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Additional MSDeploy.exe arguments that will be applied while uploading asp.net website."
+            "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
         }
     ],
     "dataSourceBindings": [

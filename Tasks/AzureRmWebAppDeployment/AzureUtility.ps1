@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose -Verbose "Installed Azure PowerShell version: $currentVersion"
+    Write-Verbose  "Installed Azure PowerShell version: $currentVersion"
 
     $minimumAzureVersion = New-Object System.Version(0, 9, 9)
     $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
@@ -20,7 +20,7 @@ function Get-AzureUtility
         $azureUtilityRequiredVersion = $azureUtilityNewVersion
     }
 
-    Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
+    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
     return $azureUtilityRequiredVersion
 }
 
@@ -28,9 +28,9 @@ function Get-AzureRMWebAppDetails
 {
     param([String][Parameter(Mandatory=$true)] $webAppName)
 
-    Write-Verbose "`t [Azure Call]Getting azureRM WebApp:'$webAppName' details."
+    Write-Verbose "`t Getting azureRM WebApp:'$webAppName' details."
     $azureRMWebAppDetails = Get-AzureRMWebAppARM -Name $webAppName
-    Write-Verbose "`t [Azure Call]Got azureRM WebApp:'$webAppName' details."
+    Write-Verbose "`t Got azureRM WebApp:'$webAppName' details."
 
     Write-Verbose ($azureRMWebAppDetails | Format-List | Out-String)
     return $azureRMWebAppDetails

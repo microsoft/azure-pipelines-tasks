@@ -5,7 +5,7 @@ function Get-AzureRMWebAppARM
 {
     param([String] [Parameter(Mandatory = $true)] $Name)
 
-    Write-Verbose "[Azure RM Call] Getting azure webapp details for webapp with name : $Name "
+    Write-Verbose "[Azure Call] Getting azure webapp details for webapp with name : $Name "
     $azureWebApp =  Get-AzureRMWebApp -Name $webAppName
     return $azureWebApp
 
@@ -18,7 +18,7 @@ function Get-AzureRMWebAppPublishingProfileARM
           [String] [Parameter(Mandatory = $true)] $ResourceGroupName,
           [String] [Parameter(Mandatory = $true)] $pubXmlFile)
 
-     Write-Verbose "[Azure RM Call] Getting webapp publish profile for azureRM webapp : $Name "
+     Write-Verbose "[Azure Call] Getting webapp publish profile for azureRM webapp : $Name "
      $publishProfileContent = Get-AzureRMWebAppPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName -OutputFile $pubXmlFile
      return $publishProfileContent
 
@@ -33,7 +33,7 @@ function Get-AzureRMWebAppSlotPublishingProfileARM
           [String] [Parameter(Mandatory = $true)] $slotName,
           [String] [Parameter(Mandatory = $true)] $pubXmlFile)
 
-    Write-Verbose "[Azure RM Call] Getting publish profile file for azureRM WebApp:'$Name' for Slot:'$slotName'"
+    Write-Verbose "[Azure Call] Getting publish profile file for azureRM WebApp:'$Name' for Slot:'$slotName'"
     $publishProfileContent = Get-AzureRMWebAppSlotPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName -Slot $slotName -OutputFile $pubXmlFile
     return $publishProfileContent
 
