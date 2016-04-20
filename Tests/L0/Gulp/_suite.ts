@@ -40,7 +40,7 @@ describe('Gulp Suite', function() {
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
-            assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
+            assert(tr.ran('/usr/local/bin/gulp --no-color --gulpfile gulpfile.js'), 'it should have run Gulp');
             assert(tr.invokedToolCount == 1, 'should have only run Gulp');
 
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -223,7 +223,7 @@ describe('Gulp Suite', function() {
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
-            assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
+            assert(tr.ran('/usr/local/bin/gulp --no-color --gulpfile gulpfile.js'), 'it should have run gulp');
             assert(tr.invokedToolCount == 1, 'should have only run gulp');
 
             // success scripts don't necessarily set a result
