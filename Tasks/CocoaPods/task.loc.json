@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 12
+    "Patch": 13
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -26,10 +26,6 @@
     }
   ],
   "execution": {
-    "Bash": {
-      "target": "CocoaPodsSetup.sh",
-      "argumentFormat": ""
-    },
     "Node": {
       "target": "cocoapods.js",
       "argumentFormat": ""
