@@ -21,5 +21,7 @@
   "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.VirtualApplication": "Virtual Application",
-  "loc.input.help.VirtualApplication": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root."
+  "loc.input.help.VirtualApplication": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root.",
+  "loc.input.label.AdditionalArguments": "Additional Arguments",
+  "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
 }

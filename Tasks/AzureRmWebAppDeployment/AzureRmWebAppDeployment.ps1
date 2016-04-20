@@ -28,7 +28,10 @@ param
     $TakeAppOfflineFlag,
 
     [String] [Parameter(Mandatory = $false)]
-    $VirtualApplication
+    $VirtualApplication,
+
+	[String] [Parameter(Mandatory = $false)]
+	[String] $AdditionalArguments
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
@@ -43,6 +46,7 @@ Write-Verbose "RemoveAdditionalFilesFlag = $RemoveAdditionalFilesFlag"
 Write-Verbose "ExcludeFilesFromAppDataFlag = $ExcludeFilesFromAppDataFlag"
 Write-Verbose "TakeAppOfflineFlag = $TakeAppOfflineFlag"
 Write-Verbose "VirtualApplication = $VirtualApplication"
+Write-Verbose "AdditionalArguments = $AdditionalArguments"
 
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -51,6 +55,12 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 # Load all dependent files for execution
 Import-Module ./AzureUtility.ps1 -Force
 Import-Module ./Utility.ps1 -Force
+
+ # Importing required version of azure cmdlets according to azureps installed on machine
+ $azureUtility = Get-AzureUtility
+
+ Write-Verbose  "Loading $azureUtility"
+ Import-Module ./$azureUtility -Force
 
 $ErrorActionPreference = 'Stop'
 
@@ -71,7 +81,7 @@ $webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName
 
 # Construct arguments for msdeploy command
 $msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFile -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
-                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication
+                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments
 
 # Deploy azureRM webApp using msdeploy Command
 Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs

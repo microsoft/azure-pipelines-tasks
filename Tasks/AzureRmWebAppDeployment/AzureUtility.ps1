@@ -1,88 +1,39 @@
 $ErrorActionPreference = 'Stop'
 
+function Get-AzureUtility
+{
+    $currentVersion =  Get-AzureCmdletsVersion
+    Write-Verbose  "Installed Azure PowerShell version: $currentVersion"
+
+    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
+    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
+
+    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
+
+    if(!$versionCompatible)
+    {
+        $azureUtilityRequiredVersion = $azureUtilityOldVersion
+    }
+    else
+    {
+        $azureUtilityRequiredVersion = $azureUtilityNewVersion
+    }
+
+    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
+    return $azureUtilityRequiredVersion
+}
+
 function Get-AzureRMWebAppDetails
 {
     param([String][Parameter(Mandatory=$true)] $webAppName)
 
-    Write-Verbose "`t [Azure Call]Getting azureRM WebApp:'$webAppName' details."
-    $azureRMWebAppDetails = Get-AzureRMWebApp -Name $webAppName
-    Write-Verbose "`t [Azure Call]Got azureRM WebApp:'$webAppName' details."
+    Write-Verbose "`t Getting azureRM WebApp:'$webAppName' details."
+    $azureRMWebAppDetails = Get-AzureRMWebAppARM -Name $webAppName
+    Write-Verbose "`t Got azureRM WebApp:'$webAppName' details."
 
     Write-Verbose ($azureRMWebAppDetails | Format-List | Out-String)
     return $azureRMWebAppDetails
-}
-
-function Get-ProfileForMSDeployPublishMethod
-{
-    param([String][Parameter(Mandatory=$true)] $publishProfileContent)
-
-    # Converting publish profile content into object
-    $publishProfileXML = [xml] $publishProfileContent
-    $publishProfileObject = $publishProfileXML.publishData.publishProfile
-
-    # Getting profile for publish method 'MSDeploy'
-    $webAppProfileForMSDeploy = $publishProfileObject | Where-Object {$_.publishMethod -eq 'MSDeploy'}
-
-    return $webAppProfileForMSDeploy
-}
-
-function Get-AzureRMWebAppProfileForMSDeployWithProductionSlot
-{
-    param([String][Parameter(Mandatory=$true)] $webAppName,
-          [String][Parameter(Mandatory=$true)] $resourceGroupName)
-
-    $currentDir = (Get-Item -Path ".\").FullName
-    $tmpFileName = [guid]::NewGuid().ToString() + ".pubxml"
-    $pubXmlFile = Join-Path $currentDir $tmpFileName
-
-    Write-Verbose "`t [Azure Call]Getting publish profile file for azureRM WebApp:'$webAppName' under Production Slot at location: '$pubXmlFile'."
-    $publishProfileContent = Get-AzureRMWebAppPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName -OutputFile $pubXmlFile
-    Write-Verbose "`t [Azure Call]Got publish profile file for azureRM WebApp:'$webAppName' under Production Slot at location: '$pubXmlFile'."
-
-    Remove-Item -Path $pubXmlFile -Force
-    Write-Verbose "`t Deleted publish profile file at location: '$pubXmlFile'"
-
-    $webAppProfileForMSDeploy = Get-ProfileForMSDeployPublishMethod -publishProfileContent $publishProfileContent
-    return $webAppProfileForMSDeploy
-}
-
-function Get-AzureRMWebAppProfileForMSDeployWithSpecificSlot
-{
-    param([String][Parameter(Mandatory=$true)] $webAppName,
-          [String][Parameter(Mandatory=$true)] $resourceGroupName,
-          [String][Parameter(Mandatory=$true)] $slotName)
-
-    $currentDir = (Get-Item -Path ".\").FullName
-    $tmpFileName = [guid]::NewGuid().ToString() + ".pubxml"
-    $pubXmlFile = Join-Path $currentDir $tmpFileName
-
-    Write-Verbose "`t [Azure Call]Getting publish profile file for azureRM WebApp:'$webAppName' under Slot:'$slotName' at location: '$pubXmlFile'."
-    $publishProfileContent = Get-AzureRMWebAppSlotPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName -Slot $slotName -OutputFile $pubXmlFile
-    Write-Verbose "`t [Azure Call]Got publish profile file for azureRM WebApp:'$webAppName' under Slot:'$slotName' at location: '$pubXmlFile'."
-
-    Remove-Item -Path $pubXmlFile -Force
-    Write-Verbose "`t Deleted publish profile file at location: '$pubXmlFile'"
-
-    $webAppProfileForMSDeploy = Get-ProfileForMSDeployPublishMethod -publishProfileContent $publishProfileContent
-    return $webAppProfileForMSDeploy
-}
-
-function Construct-AzureWebAppConnectionObject
-{
-    param([String][Parameter(Mandatory=$true)] $kuduHostName,
-          [Object][Parameter(Mandatory=$true)] $webAppProfileForMSDeploy)
-
-    # Get userName and userPassword to access kuduServer
-    $userName = $webAppProfileForMSDeploy.userName
-    $userPassword = $webAppProfileForMSDeploy.userPWD
-    Write-Verbose "`t Username is:'$userName' to access KuduHostName:'$kuduHostName'."
-
-    $azureRMWebAppConnectionDetails = @{}
-    $azureRMWebAppConnectionDetails.KuduHostName = $kuduHostName
-    $azureRMWebAppConnectionDetails.UserName = $userName
-    $azureRMWebAppConnectionDetails.UserPassword = $userPassword
-
-    return $azureRMWebAppConnectionDetails
 }
 
 function Get-AzureRMWebAppConnectionDetailsWithSpecificSlot
@@ -128,7 +79,7 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
     # Get webApp publish profile Object for MSDeploy
     $webAppProfileForMSDeploy =  Get-AzureRMWebAppProfileForMSDeployWithProductionSlot -webAppName $webAppName -resourceGroupName $resourceGroupName
 
-     # construct object to store webApp connection details
+    # construct object to store webApp connection details
     $azureRMWebAppConnectionDetailsWithProductionSlot = Construct-AzureWebAppConnectionObject -kuduHostName $kuduHostName -webAppProfileForMSDeploy $webAppProfileForMSDeploy
 
     Write-Host (Get-LocalizedString -Key "Got connection details for azureRM WebApp:'{0}' under Production Slot." -ArgumentList $webAppName)

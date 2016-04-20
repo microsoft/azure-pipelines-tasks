@@ -107,6 +107,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     }
   ],
   "dataSourceBindings": [
