@@ -44,29 +44,6 @@ function installProvisioningProfile(profileFile: string): Q.Promise<void> {
     })
 }
 
-function installRubyGem(packageName: string, localPath?: string): Q.Promise<void> {
-    taskLibrary.debug("Checking for ruby install...");
-    taskLibrary.which("ruby", true);
-    taskLibrary.debug("Checking for gem install...");
-    taskLibrary.which("gem", true);
-
-    taskLibrary.debug("Setting up gem install");
-    var command = taskLibrary.createToolRunner("gem");
-    command.arg("install");
-    command.arg(packageName);
-
-    if (localPath) {
-        command.arg("--install-dir");
-        command.arg(localPath);
-    }
-
-    taskLibrary.debug("Attempting to install " + packageName + " to " + (localPath ? localPath : " default cache directory (" + process.env['GEM_HOME'] + ")"));
-    return command.exec().fail((err: any) => {
-        console.error(err.message);
-        taskLibrary.debug('taskRunner fail');
-    });
-}
-
 function runCommand(commandString: string, args?: any): Q.Promise<any> {
     taskLibrary.debug("Setting up command " + commandString);
     if (typeof args == "string") {
