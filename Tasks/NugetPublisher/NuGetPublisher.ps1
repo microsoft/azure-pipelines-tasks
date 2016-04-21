@@ -129,13 +129,18 @@ else
 }
 
 # check for solution pattern
-if ($searchPattern.Contains("*") -or $searchPattern.Contains("?"))
+if ($searchPattern.Contains("*") -or $searchPattern.Contains("?") -or $searchPattern.Contains(";"))
 {
     Write-Host (Get-LocalizedString -Key "Pattern found in solution parameter.")
     if ($env:BUILD_SOURCESDIRECTORY)
     {
         Write-Verbose "Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY"
         $packagesToPush = Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY
+    }
+    elseif ($env:SYSTEM_ARTIFACTSDIRECTORY)
+    {
+        Write-Verbose "Find-Files -SearchPattern $searchPattern -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY"
+        $packagesToPush = Find-Files -SearchPattern $searchPattern -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY
     }
     else
     {
