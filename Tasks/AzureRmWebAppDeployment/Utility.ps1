@@ -59,6 +59,23 @@ function Get-WebAppNameForMSDeployCmd
     return $webAppNameForMSDeployCmd
 }
 
+function Get-WebAppPublishURL
+{
+    param([String][Parameter(Mandatory=$true)] $webAppName,
+          [String][Parameter(Mandatory=$true)] $deployToSlotFlag,
+          [String][Parameter(Mandatory=$false)] $slotName)
+
+    $WebAppPublishURL = $webAppName
+    if($deployToSlotFlag -eq "true")
+    {
+        $WebAppPublishURL += "-" + $slotName 
+    }
+    $WebAppPublishURL += ".azurewebsites.net"
+
+    Write-Verbose "WebApp publish Url: '$WebAppPublishURL'"
+    return $WebAppPublishURL
+}
+
 function Get-MsDeployCmdArgs
 {
     param([String][Parameter(Mandatory=$true)] $packageFile,
@@ -145,7 +162,7 @@ function Get-MsDeployCmdForLogs
     $msDeployCmdSplitByComma = $msDeployCmd.Split(',')
     $msDeployCmdHiddingSensitiveData = $msDeployCmdSplitByComma | ForEach-Object {if ($_.StartsWith("Password")) {$_.Replace($_, "Password=****")} else {$_}}
 
-    $msDeployCmdForLogs = $msDeployCmdHiddingSensitiveData -join ",`n`t"
+    $msDeployCmdForLogs = $msDeployCmdHiddingSensitiveData -join ","
     return $msDeployCmdForLogs
 }
 
