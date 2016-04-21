@@ -959,14 +959,10 @@ function Copy-FilesParallellyToAzureVMs
     While ($Jobs.Count -gt 0)
     {
         Start-Sleep 10
-        $flag =  true
         foreach ($job in Get-Job)
         {
-            
             if ($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
             {
-                
-                $flag = false
                 $output = Receive-Job -Id $job.Id
                 Remove-Job $Job                
 
@@ -990,9 +986,6 @@ function Copy-FilesParallellyToAzureVMs
                 }
                 $Jobs.Remove($job.Id)
             }
-        }
-        if( $flag -eq $true){
-            break
         }
     }
 
