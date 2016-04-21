@@ -68,7 +68,7 @@ function Get-WebAppPublishURL
     $WebAppPublishURL = $webAppName
     if($deployToSlotFlag -eq "true")
     {
-        $WebAppPublishURL += "-" + $SlotName 
+        $WebAppPublishURL += "-" + $slotName 
     }
     $WebAppPublishURL += ".azurewebsites.net"
 
