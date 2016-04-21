@@ -89,6 +89,6 @@ Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeploy
 # Publish azure webApp url
 $azureWebsitePublishURL = Get-WebAppPublishURL -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag -slotName $SlotName
 
-Write-Host (Get-LocalizedString -Key "Webapp successfully published at Url : $azureWebsitePublishURL" -ArgumentList $azureWebsitePublishURL)
+Write-Host (Get-LocalizedString -Key "Webapp successfully published at Url : {0}" -ArgumentList $azureWebsitePublishURL)
 
 Write-Verbose "Completed AzureRM WebApp Deployment Task"
