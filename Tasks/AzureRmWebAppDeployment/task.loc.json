@@ -3,6 +3,7 @@
   "name": "AzureRMWebAppDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -149,6 +150,5 @@
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }
