@@ -69,6 +69,10 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
     # Get azurerm webApp details
     $azureRMWebAppDetails = Get-AzureRMWebAppDetails -webAppName $webAppName
 
+    if( $azureRMWebAppDetails.Count -eq 0 ){   
+	   Throw (Get-LocalizedString -Key "WebApp '{0}' does not exist." -ArgumentList $webAppName)
+    }
+
     # Get resourcegroup name under which azure webApp exists
     $azureRMWebAppId = $azureRMWebAppDetails.Id
     Write-Verbose "azureRMWebApp Id = $azureRMWebAppId"
