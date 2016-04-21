@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 34
+        "Patch": 35
     },
     "demands": [
     ],
@@ -28,6 +28,12 @@
             "name": "executionOptions",
             "displayName": "Execution Options",
             "isExpanded": true
+        },
+        {
+            "name": "enableCustomSlicing",
+            "displayName": "Run with custom slicing",
+            "tags" : [ "Preview" ],
+            "isExpanded": false
         },
         {
             "name": "reportingOptions",
@@ -150,6 +156,15 @@
             "required": false,
             "helpMarkDown": "Whether code coverage needs to be enabled.",
             "groupName": "executionOptions"
+        },
+        {
+            "name": "customSlicingEnabled",
+            "type": "boolean",
+            "label": "Custom Slicing Enabled",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Whether custom slicing needs to be enabled.",
+            "groupName": "enableCustomSlicing"
         },
         {
  	          "name": "testRunTitle", 
