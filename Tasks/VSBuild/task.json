@@ -1,18 +1,18 @@
 {
-    "id":"71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
-    "name":"VSBuild",
+    "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
+    "name": "VSBuild",
     "friendlyName": "Visual Studio Build",
     "description": "Build with MSBuild and set the Visual Studio version property",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 26
     },
     "demands": [
         "msbuild",
@@ -79,7 +79,7 @@
             "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
             "defaultValue": "14.0",
             "options": {
-                "latest":"Latest",
+                "latest": "Latest",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013",
                 "11.0": "Visual Studio 2012"

@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 27
+        "Patch": 28
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -64,6 +64,6 @@
     },
     "messages": {
         "PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s",
-        "PublishBuildArtifactsNotSupported" : "Publish build artifacts is not supported within Release"
+        "PublishBuildArtifactsNotSupported": "Publish build artifacts is not supported within Release"
     }
 }
