@@ -30,5 +30,5 @@ $input = @{
 
 
 Assert-WasCalled Get-VssConnection -Times 1
-Assert-WasCalled CmdletHasMember -Times 2
+Assert-WasCalled CmdletHasMember -Times 3
 Assert-WasCalled Invoke-RunDistributedTests -Times 1
