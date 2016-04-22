@@ -11,6 +11,34 @@ function Get-AzureRMWebAppARM
 
 }
 
+function Get-AzureRMWebAppPublishUrlARM
+{
+    param([String][Parameter(Mandatory=$true)] $webAppName,
+          [String][Parameter(Mandatory=$true)] $deployToSlotFlag,
+          [String][Parameter(Mandatory=$false)] $resourceGroupName,
+          [String][Parameter(Mandatory=$false)] $slotName)
+
+    if( $deployToSlotFlag -eq $false )
+    {
+        Write-Verbose "[Azure Call] Getting azure webapp info for webapp with name : $Name "
+        $azureRMWebAppDetails = Get-AzureRMWebApp -Name $webAppName   
+        Write-Verbose "[Azure Call] Getting azure webapp info for webapp with name : $Name "
+    }
+    else
+    {
+        Write-Verbose "[Azure Call] Getting azure webapp slot info for webapp with name : $Name , slot : $slotName and resource group : $resourceGroupName"
+        $azureRMWebAppDetails = Get-AzureRMWebAppSlot -Name $webAppName -Slot $slotName -ResourceGroupName $resourceGroupName
+        Write-Verbose "[Azure Call] Got azure webapp slot info for webapp with name : $Name , slot : $slotName and resource group : $resourceGroupName"
+    }
+
+    if( $azureRMWebAppDetails.Count -eq 0 ){
+        Throw (Get-LocalizedString -Key "WebApp '{0}' does not exist." -ArgumentList $webAppName)
+    }
+
+    return $azureRMWebAppDetails.HostNames
+   
+}
+
 # return azure webapp publish profile
 function Get-AzureRMWebAppPublishingProfileARM
 {

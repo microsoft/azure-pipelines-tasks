@@ -15,6 +15,36 @@ function Get-AzureRMWebAppARM
 
 }
 
+function Get-AzureRMWebAppPublishUrlARM
+{
+    param([String][Parameter(Mandatory=$true)] $webAppName,
+          [String][Parameter(Mandatory=$true)] $deployToSlotFlag,
+          [String][Parameter(Mandatory=$false)] $resourceGroupName,
+          [String][Parameter(Mandatory=$false)] $slotName)
+
+    Switch-AzureMode AzureResourceManager
+
+    $resourceGroupName = Get-WebAppRGName -webAppName $webAppName
+
+    if( $deployToSlotFlag -eq $false )
+    {
+        Write-Verbose "[Azure Call] Getting azure webapp publish profile info for webapp with name : $Name and resource group : $resourceGroupName"
+        $azureRMWebAppProfileDetails = Get-AzureWebAppPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName
+        Write-Verbose "[Azure Call] Getting azure webapp publish profile info for webapp with name : $Name and resource group : $resourceGroupName"
+    }
+    else
+    { 
+        Write-Verbose "[Azure Call] Getting azure webapp slot publish profile info for webapp with name : $Name , slot : $slotName and resource group : $resourceGroupName"
+        $azureRMWebAppProfileDetails = Get-AzureWebAppPublishingProfile -Name $webAppName -SlotName $slotName -ResourceGroupName $resourceGroupName
+        Write-Verbose "[Azure Call] Getting azure webapp slot publish profile info for webapp with name : $Name , slot : $slotName and resource group : $resourceGroupName"
+    }
+
+    $azureRMWebAppProfileDetails = $azureRMWebAppProfileDetails | Where-Object { $_.PublishMethod -eq 'MSDeploy'}
+
+    return $azureRMWebAppProfileDetails.DestinationAppUri.Host
+   
+}
+
 function Get-WebAppRGName
 {
     param([String] [Parameter(Mandatory = $true)] $webAppName)
