@@ -126,7 +126,7 @@ var loginToXamarin = function (email, password, callback) {
     var apiKey = '96cae35ce8a9b0244178bf28e4966c2ce1b8385723a96a6b838858cdd6ca0a1e';
     //Login as user
     tl.debug('Login as ' + email);
-    var loginRequestBody = 'email=' + encodeURI(email) + '&password=' + encodeURI(password);
+    var loginRequestBody = 'email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password);
     var options = {
         host: 'auth.xamarin.com',
         path: '/api/v1/auth',
@@ -339,7 +339,7 @@ if (action == 'Activate') {
     //check if already activated
     var licenseLocation = getLicenseLocation(product);
     if (fs.existsSync(licenseLocation)) {
-        tl.debug('License file already exists' + licenseLocation);
+        tl.debug('License file already exists: ' + licenseLocation);
         tl.exit(0); //return success
     } else {
         activateLicense(email, password, product, function (err) {
