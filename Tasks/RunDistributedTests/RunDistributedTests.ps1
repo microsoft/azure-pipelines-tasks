@@ -98,7 +98,7 @@ if([string]::Equals($testSelection, "testPlan"))
     }
     elseif($checkTestAgentCompatScriptLocationMemberExists)
     {
-        if($customSlicingEnabled)
+        if($customSlicingEnabledFlag)
         {
             Write-Warning "Update the build agent to run tests with uniform distribution. If you are using hosted agent there are chances that it is still not updated, so retry using your own agent."
         }
@@ -146,7 +146,7 @@ else
     }
 	else 
 	{
-        if($customSlicingEnabled)
+        if($customSlicingEnabledFlag)
         {
             Write-Warning "Update the build agent to run tests with uniform distribution. If you are using hosted agent there are chances that it is still not updated, so retry using your own agent."
         }
