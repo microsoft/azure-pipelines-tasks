@@ -30,8 +30,8 @@
             "isExpanded": true
         },
         {
-            "name": "enableCustomSlicing",
-            "displayName": "Run with custom slicing",
+            "name": "executionDistributionMethod",
+            "displayName": "Execution Distribution Method",
             "tags" : [ "Preview" ],
             "isExpanded": false
         },
@@ -160,11 +160,11 @@
         {
             "name": "customSlicingEnabled",
             "type": "boolean",
-            "label": "Custom Slicing Enabled",
+            "label": "Uniform Distribution Enabled",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Whether custom slicing needs to be enabled.",
-            "groupName": "enableCustomSlicing"
+            "helpMarkDown": "Whether tests are to be uniformly distributed amongst agents.",
+            "groupName": "executionDistributionMethod"
         },
         {
  	          "name": "testRunTitle", 

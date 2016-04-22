@@ -29,8 +29,8 @@
       "isExpanded": true
     },
     {
-      "name": "enableCustomSlicing",
-      "displayName": "ms-resource:loc.group.displayName.enableCustomSlicing",
+      "name": "executionDistributionMethod",
+      "displayName": "ms-resource:loc.group.displayName.executionDistributionMethod",
       "tags": [
         "Preview"
       ],
@@ -168,7 +168,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.customSlicingEnabled",
-      "groupName": "enableCustomSlicing"
+      "groupName": "executionDistributionMethod"
     },
     {
       "name": "testRunTitle",
