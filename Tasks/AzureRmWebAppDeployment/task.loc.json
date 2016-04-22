@@ -17,6 +17,13 @@
     "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
+  "groups": [
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -116,6 +123,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "outputVariable",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputVariable",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     }
   ],
   "dataSourceBindings": [

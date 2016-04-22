@@ -59,22 +59,6 @@ function Get-WebAppNameForMSDeployCmd
     return $webAppNameForMSDeployCmd
 }
 
-function Get-WebAppPublishURL
-{
-    param([String][Parameter(Mandatory=$true)] $webAppName,
-          [String][Parameter(Mandatory=$true)] $deployToSlotFlag,
-          [String][Parameter(Mandatory=$false)] $slotName)
-
-    $WebAppPublishURL = $webAppName
-    if($deployToSlotFlag -eq "true")
-    {
-        $WebAppPublishURL += "-" + $SlotName 
-    }
-    $WebAppPublishURL += ".azurewebsites.net"
-
-    Write-Verbose "WebApp publish Url: '$WebAppPublishURL'"
-    return $WebAppPublishURL
-}
 
 function Get-MsDeployCmdArgs
 {
@@ -119,7 +103,7 @@ function Get-MsDeployCmdArgs
     # msdeploy argument to exclude files in App_Data folder
     if($excludeFilesFromAppDataFlag -eq "true")
     {
-        $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webAppNameForMSDeployCmd)
+        $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="\\App_Data\\.*"')
     }
 
     # msploy additional arguments 
