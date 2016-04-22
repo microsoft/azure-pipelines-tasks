@@ -59,6 +59,23 @@
             "helpMarkDown": "Use the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs."
         },
         {
+            "name": "shouldEmbed",
+            "type": "boolean",
+            "label": "Embed?",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "If checked, will pass the --embed flag to the packager."
+        },
+        {
+            "name": "otherFlags",
+            "type": "string",
+            "label": "Other Flags",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Flags specified here will be passed directly through to the packager",
+            "groupName": "advanced"
+        },
+        {
             "name": "appPath",
             "type": "string",
             "label": "Path to .app",

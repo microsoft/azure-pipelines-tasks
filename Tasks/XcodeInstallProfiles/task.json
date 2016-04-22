@@ -1,0 +1,94 @@
+{
+    "id": "EB4C2B91-77C7-4DA3-AD98-5B2CBCB739D9",
+    "name": "XcodeInstallProfiles",
+    "friendlyName": "Xcode Install Profile",
+    "description": "Install a provisioning profile",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613731)",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 1
+    },
+    "instanceNameFormat": "Install Profile $(profileFile)",
+    "demands": [
+        "xcode"
+    ],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "provisionFile",
+            "type": "filePath",
+            "label": "Provisioning Profile File",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to the mobileprovision file to install."
+        },
+        {
+            "name": "keychainName",
+            "type": "string",
+            "label": "Keychain Name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name of the keychain (including the .keychain extension) to unlock/import certificate to. Defaults to \"default\" keychain"
+        },
+        {
+            "name": "signingCertificate",
+            "type": "filePath",
+            "label": "Signing Certificate (P12)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optional P12 certificate to add to a keychain."
+        },
+        {
+            "name": "certificatePassword",
+            "type": "string",
+            "label": "Certificate Passphrase",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Passphrase for the P12 certificate"
+        },
+        {
+            "name": "shouldUnlockKeychain",
+            "type": "boolean",
+            "label": "Unlock Keychain",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "If checked, the task will unlock the specified keychain on the agent"
+        },
+        {
+            "name": "keychainPassword",
+            "type": "string",
+            "label": "Keychain Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Password to unlock the keychain",
+            "visibleRule": "shouldUnlockKeychain=true"
+        },
+        {
+            "name": "installDirectory",
+            "type": "string",
+            "label": "Install To",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optional specification for a location to install profile to. Profiles install to ~/Library/MobileDevice/Provisioning Profiles by default",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "xcode-install-profiles.js",
+            "argumentFormat": ""
+        }
+    }
+}
