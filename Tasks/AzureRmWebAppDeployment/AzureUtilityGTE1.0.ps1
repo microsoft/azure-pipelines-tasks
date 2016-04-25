@@ -20,23 +20,50 @@ function Get-AzureRMWebAppPublishUrlARM
 
     if( $deployToSlotFlag -eq $false )
     {
-        Write-Verbose "[Azure Call] Getting azure webapp info for webapp with name : $Name "
-        $azureRMWebAppDetails = Get-AzureRMWebApp -Name $webAppName   
-        Write-Verbose "[Azure Call] Getting azure webapp info for webapp with name : $Name "
+        $resourceGroupName = Get-WebAppRGName -webAppName $webAppName
+        Write-Verbose "Getting azure webapp info for webapp with name : $Name "
+        $azureRMWebAppProfileDetails = Get-AzureRMWebAppProfileForMSDeployWithProductionSlot -webAppName $webAppName -resourceGroupName $resourceGroupName
+        Write-Verbose "Got azure webapp info for webapp with name : $Name "
     }
     else
     {
-        Write-Verbose "[Azure Call] Getting azure webapp slot info for webapp with name : $Name , slot : $slotName and resource group : $resourceGroupName"
-        $azureRMWebAppDetails = Get-AzureRMWebAppSlot -Name $webAppName -Slot $slotName -ResourceGroupName $resourceGroupName
-        Write-Verbose "[Azure Call] Got azure webapp slot info for webapp with name : $Name , slot : $slotName and resource group : $resourceGroupName"
+        Write-Verbose "Getting azure webapp slot info for webapp with name : $Name , slot : $slotName and resource group : $resourceGroupName"
+        $azureRMWebAppProfileDetails = Get-AzureRMWebAppProfileForMSDeployWithSpecificSlot -webAppName $webAppName -slotName $slotName -resourceGroupName $resourceGroupName
+        Write-Verbose "Got azure webapp slot info for webapp with name : $Name , slot : $slotName and resource group : $resourceGroupName"
     }
 
-    if( $azureRMWebAppDetails.Count -eq 0 ){
-        Throw (Get-LocalizedString -Key "WebApp '{0}' does not exist." -ArgumentList $webAppName)
+    if( $azureRMWebAppProfileDetails -eq $null ){
+        Throw (Get-LocalizedString -Key "Unable to find webapp publish profile details for webapp {0}." -ArgumentList $webAppName)
     }
 
-    return $azureRMWebAppDetails.HostNames
+    return $azureRMWebAppProfileDetails.destinationAppUrl
    
+}
+
+function Get-WebAppRGName
+{
+    param([String] [Parameter(Mandatory = $true)] $webAppName)
+
+    $ARMSqlServerResourceType =  "Microsoft.Web/sites"
+
+    try
+    {
+        Write-Verbose "[Azure Call] Getting resource details for webapp resource: $webAppName with resource type: $ARMSqlServerResourceType"
+        $azureWebAppResourceDetails = (Get-AzureRmResource -ErrorAction Stop) | Where-Object { $_.ResourceType -eq $ARMSqlServerResourceType -and $_.ResourceName -eq $webAppName}
+        Write-Verbose "[Azure Call] Retrieved resource details successfully for webapp resource: $webAppName with resource type: $ARMSqlServerResourceType"
+
+        $azureResourceGroupName = $azureWebAppResourceDetails.ResourceGroupName
+        return $azureWebAppResourceDetails.ResourceGroupName
+    }
+    finally
+    {
+        if ([string]::IsNullOrEmpty($azureResourceGroupName))
+        {
+            Write-Verbose "[Azure Call] Web App: $webAppName not found"
+
+            Throw (Get-LocalizedString -Key "Web App: '{0}' not found." -ArgumentList $webAppName)
+        }
+    }
 }
 
 # return azure webapp publish profile

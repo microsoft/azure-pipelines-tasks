@@ -41,7 +41,11 @@ function Get-AzureRMWebAppPublishUrlARM
 
     $azureRMWebAppProfileDetails = $azureRMWebAppProfileDetails | Where-Object { $_.PublishMethod -eq 'MSDeploy'}
 
-    return $azureRMWebAppProfileDetails.DestinationAppUri.Host
+    if( $azureRMWebAppProfileDetails.Count -eq 0 -or $azureRMWebAppProfileDetails.DestinationAppUri -eq $null ){
+        Throw (Get-LocalizedString -Key "Unable to find publish Url for WebApp '{0}'." -ArgumentList $webAppName)
+    }
+
+    return $azureRMWebAppProfileDetails.DestinationAppUri.OriginalString
    
 }
 
