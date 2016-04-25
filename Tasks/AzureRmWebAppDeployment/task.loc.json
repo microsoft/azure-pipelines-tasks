@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "1.99.0",
   "groups": [
@@ -125,13 +125,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
-      "name": "outputVariable",
+      "name": "WebAppUri",
       "type": "string",
-      "label": "ms-resource:loc.input.label.outputVariable",
+      "label": "ms-resource:loc.input.label.WebAppUri",
       "required": false,
       "defaultValue": "",
       "groupName": "output",
-      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     }
   ],
   "dataSourceBindings": [

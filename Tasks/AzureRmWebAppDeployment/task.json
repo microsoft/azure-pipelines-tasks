@@ -5,16 +5,16 @@
     "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
 	"helpMarkDown": "[More Information](http://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
-    "visibility": [
-        "Preview",
-        "Build",
-        "Release"
-    ],
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "1.99.0",
 	"groups": [
@@ -125,7 +125,7 @@
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
         },
 		{
-            "name": "outputVariable",
+            "name": "WebAppUri",
             "type": "string",
             "label": "Web App Hosted Url",
             "required": false,

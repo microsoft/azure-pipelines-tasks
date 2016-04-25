@@ -26,6 +26,6 @@
   "loc.input.help.VirtualApplication": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root.",
   "loc.input.label.AdditionalArguments": "Additional Arguments",
   "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension.",
-  "loc.input.label.outputVariable": "Web App Hosted Url",
-  "loc.input.help.outputVariable": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task."
+  "loc.input.label.WebAppUri": "Web App Hosted Url",
+  "loc.input.help.WebAppUri": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task."
 }

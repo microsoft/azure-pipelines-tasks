@@ -44,12 +44,12 @@ function Get-AzureRMWebAppPublishUrl
           [String][Parameter(Mandatory=$false)] $slotName)
 
     Write-Verbose "`t Getting azureRM WebApp Url for web app :'$webAppName'."
-    $azureRMWebAppProperties = Get-AzureRMWebAppPublishUrlARM -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
+    $AzureRMWebAppPublishUrl = Get-AzureRMWebAppPublishUrlARM -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
                          -resourceGroupName $ResourceGroupName -slotName $SlotName
     Write-Verbose "`t Got azureRM azureRM WebApp Url for web app :'$webAppName'."
 
-    Write-Verbose ($azureRMWebAppProperties | Format-List | Out-String)
-    return $azureRMWebAppProperties
+    Write-Verbose ($AzureRMWebAppPublishUrl | Format-List | Out-String)
+    return $AzureRMWebAppPublishUrl
 }
 
 function Get-AzureRMWebAppConnectionDetailsWithSpecificSlot

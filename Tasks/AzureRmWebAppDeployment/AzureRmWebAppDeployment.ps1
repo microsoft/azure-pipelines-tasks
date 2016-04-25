@@ -34,7 +34,7 @@ param
 	[String] $AdditionalArguments,
 
     [String] [Parameter(Mandatory = $false)]
-    [string]$outputVariable
+    [string]$WebAppUri
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
@@ -50,9 +50,9 @@ Write-Verbose "ExcludeFilesFromAppDataFlag = $ExcludeFilesFromAppDataFlag"
 Write-Verbose "TakeAppOfflineFlag = $TakeAppOfflineFlag"
 Write-Verbose "VirtualApplication = $VirtualApplication"
 Write-Verbose "AdditionalArguments = $AdditionalArguments"
-Write-Verbose "OutputVariable = $outputVariable"
+Write-Verbose "WebAppUri = $WebAppUri"
 
-$outputVariable = $outputVariable.Trim()
+$WebAppUri = $WebAppUri.Trim()
 
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -78,10 +78,6 @@ $msDeployExePath = Get-MsDeployExePath
 # Ensure that at most a package (.zip) file is found
 $packageFile = Get-SinglePackageFile -package $Package
 
-# Get azure webapp hosted url
-$azureWebsitePublishURL = Get-AzureRMWebAppPublishUrl -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
-                                                                       -resourceGroupName $ResourceGroupName -slotName $SlotName
-
 # Get destination azureRM webApp connection details
 $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
                                                                        -resourceGroupName $ResourceGroupName -slotName $SlotName
@@ -96,13 +92,23 @@ $msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFile -webAppNameForM
 # Deploy azureRM webApp using msdeploy Command
 Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs
 
+# Get azure webapp hosted url
+$azureWebsitePublishURL = Get-AzureRMWebAppPublishUrl -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
+                                                                       -resourceGroupName $ResourceGroupName -slotName $SlotName
+
 # Publish azure webApp url
 Write-Host (Get-LocalizedString -Key "Webapp successfully published at Url : {0}" -ArgumentList $azureWebsitePublishURL)
 
 # Set ouput vairable with azureWebsitePublishUrl
-if(-not [string]::IsNullOrEmpty($outputVariable))
+if(-not [string]::IsNullOrEmpty($WebAppUri))
 {
-    Write-Host "##vso[task.setvariable variable=$outputVariable;]$azureWebsitePublishURL"
+	
+    if( [string]::IsNullOrEmpty($azureWebsitePublishURL))
+	{
+		Throw (Get-LocalizedString -Key "Unable to retrieve webapp publish url for webapp : '{0}'." -ArgumentList $webAppName)
+	}
+	
+    Write-Host "##vso[task.setvariable variable=$WebAppUri;]$azureWebsitePublishURL"
 }
 
 Write-Verbose "Completed AzureRM WebApp Deployment Task"
