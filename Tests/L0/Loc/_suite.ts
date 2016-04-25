@@ -8,6 +8,7 @@ import path = require('path');
 import fs = require('fs');
 
 describe('Loc String Suite', function() {
+	this.timeout(20000);
 
 	before((done) => {
 		// init here

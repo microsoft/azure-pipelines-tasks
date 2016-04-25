@@ -5,8 +5,8 @@ import Q = require('q');
 import events = require('events');
 import fs = require('fs');
 import path = require('path');
+import child = require('child_process');
 var shell = require('shelljs');
-var exec = require('child_process').exec;
 
 function debug(message) {
     if (process.env['TASK_TEST_TRACE']) {
@@ -14,70 +14,81 @@ function debug(message) {
     }
 }
 
-export function runPS(psPath: string, done) {
-		var psr = new PSRunner(psPath);
+export class PSRunner extends events.EventEmitter {
+	constructor() {
+		super();
+	}
 
-		psr.run()
+	public stderr: string;
+	public stdout: string;
+
+	private _childProcess: child.ChildProcess;
+	private _errors: string[];
+	private _runDeferred: Q.Deferred<void>;
+
+	public start(): void {
+		this.emit('starting');
+		var defer = Q.defer<void>();
+		var powershell = shell.which('powershell.exe');
+		this._childProcess = child.spawn(
+			powershell, // command
+			[ // args
+				'-NoLogo',
+				'-Sta',
+				'-NoProfile',
+				'-NonInteractive',
+				'-ExecutionPolicy',
+				'Bypass',
+				'-Command',
+				'. ([System.IO.Path]::Combine(\'' + __dirname + '\', \'Start-TestRunner.ps1\'))'
+			],
+			{ // options
+				cwd: __dirname,
+				env: process.env
+			});
+		this._childProcess.stdout.on(
+			'data',
+			(data) => {
+				// Check for special ouput indicating end of test.
+				if (('' + data).trim() == '_END_OF_TEST_ce10a77a_') {
+					if (this._errors.length > 0) {
+						this._runDeferred.reject(this._errors.join('\n'));
+					} else {
+						this._runDeferred.resolve(null);
+					}
+				} else if (data != '\n') {
+					// Otherwise, normal stdout.
+					debug('stdout: ' + data);
+				}
+			});
+		this._childProcess.stderr.on(
+			'data',
+			(data) => {
+				// Stderr indicates an error record was written to PowerShell's error pipeline.
+				debug('stderr: ' + data);
+				this._errors.push(data);
+			});
+	}
+
+	public run (psPath: string, done) {
+		this.runPromise(psPath)
 		.then(() => {
 			done();
 		})
 		.fail((err) => {
 			done(err);
-		});	
-}
-
-export class PSRunner extends events.EventEmitter {
-	constructor(psPath: string) {
-		super();
-		this._psPath = psPath;
+		});
 	}
-	
-	public stderr: string;
-	public stdout: string;
 
-	private _psPath: string;
-	
-	//
-	// stderr/out
-	//
+	public runPromise(psPath: string): Q.Promise<void> {
+		this.emit('running test');
+		this._errors = [];
+		this._runDeferred = Q.defer<void>();
+		this._childProcess.stdin.write(psPath + '\n')
+		return <Q.Promise<void>>this._runDeferred.promise;
+	}
 
-	public run(): Q.Promise<void> {
-		this.emit('starting');
-		var defer = Q.defer<void>();
-
-		if (!fs.existsSync(this._psPath)) {
-			throw (new Error('Ps1 does not exist: ' + this._psPath));
-		}
-		
-		var wd = path.dirname(this._psPath);
-		
-		var psPath = shell.which('powershell');	
-		var cmdLine = psPath + ' -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Import-Module -Name Microsoft.PowerShell.Management, Microsoft.PowerShell.Utility ; Set-Content variable:ErrorActionPreference \'Stop\' ; Set-Content variable:VerbosePreference ([System.Management.Automation.ActionPreference]::Continue) ; Set-Content variable:PSModuleAutoloadingPreference \'None\' ; & \'' + this._psPath + '\'"';
-		var child = exec(cmdLine, 
-						{ 
-							cwd: wd, 
-							// keep current env clean
-							env: process.env
-						},
-			(err, stdout, stderr) => {
-				if (stdout) {
-					debug(stdout);
-				}
-
-				if (stderr) {
-					debug('stderr:');
-					debug(stderr);
-				}
-
-				if (err !== null) {
-					defer.reject(err);
-					return;
-				}
-
-				defer.resolve(null);
-			});
-		
-		return <Q.Promise<void>>defer.promise;
-	}	
+	public kill(): void {
+		this._childProcess.kill();
+	}
 }
-
