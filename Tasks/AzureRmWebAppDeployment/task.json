@@ -5,18 +5,25 @@
     "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
 	"helpMarkDown": "[More Information](http://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
-    "visibility": [
-        "Preview",
-        "Build",
-        "Release"
-    ],
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "1.99.0",
+	"groups": [
+        {
+            "name": "output",
+            "displayName": "Output",
+            "isExpanded": true
+        }
+    ],
     "inputs": [
         {
             "name": "ConnectedServiceName",
@@ -116,6 +123,15 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+		{
+            "name": "WebAppUri",
+            "type": "string",
+            "label": "Web App Hosted Url",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "output",
+            "helpMarkDown": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task."
         }
     ],
     "dataSourceBindings": [
