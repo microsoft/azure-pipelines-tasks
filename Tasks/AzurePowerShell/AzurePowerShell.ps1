@@ -46,8 +46,8 @@ $global:ErrorActionPreference = 'Continue'
 ([scriptblock]::Create($scriptCommand)) |
     ForEach-Object {
         Remove-Variable -Name scriptCommand
-        . $_
-    } 2>&1 |
+        . $_ 2>&1
+    } |
     ForEach-Object {
         # Put the object back into the pipeline. When doing this, the object needs
         # to be wrapped in an array to prevent unraveling.
