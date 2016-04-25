@@ -96,17 +96,18 @@ Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeploy
 $azureWebsitePublishURL = Get-AzureRMWebAppPublishUrl -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
                                                                        -resourceGroupName $ResourceGroupName -slotName $SlotName
 
-if( [string]::IsNullOrEmpty($azureWebsitePublishURL))
-{
-    Throw (Get-LocalizedString -Key "Unable to retrieve webapp publish url for webapp : '{0}'." -ArgumentList $webAppName)
-}
-
 # Publish azure webApp url
 Write-Host (Get-LocalizedString -Key "Webapp successfully published at Url : {0}" -ArgumentList $azureWebsitePublishURL)
 
 # Set ouput vairable with azureWebsitePublishUrl
 if(-not [string]::IsNullOrEmpty($WebAppUri))
 {
+	
+    if( [string]::IsNullOrEmpty($azureWebsitePublishURL))
+	{
+		Throw (Get-LocalizedString -Key "Unable to retrieve webapp publish url for webapp : '{0}'." -ArgumentList $webAppName)
+	}
+	
     Write-Host "##vso[task.setvariable variable=$WebAppUri;]$azureWebsitePublishURL"
 }
 
