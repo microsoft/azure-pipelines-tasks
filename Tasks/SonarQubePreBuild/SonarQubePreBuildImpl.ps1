@@ -3,6 +3,9 @@
 #
 function InvokePreBuildTask
 {
+    # TODO: read this from the task input and expose the new report 
+    $includeReport = $false
+    
     $serviceEndpoint = GetEndpointData $connectedServiceName
     Write-Verbose "serverUrl = $($serviceEndpoint.Url)"
 
@@ -10,7 +13,7 @@ function InvokePreBuildTask
     $bootstrapperDir = [System.IO.Path]::Combine($currentDir, "MSBuild.SonarQube.Runner-1.1") # the MSBuild.SonarQube.Runner is version specific
     $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQube.Runner.exe")
 
-    StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath "$($serviceEndpoint.Url)/dashboard/index?id=$($projectKey)" $breakBuild
+    StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath "$($serviceEndpoint.Url)/dashboard/index?id=$($projectKey)" $includeReport $breakBuild
     StoreSensitiveParametersInTaskContext $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUsername $dbPassword
 
     $cmdLineArgs = UpdateArgsForPullRequestAnalysis $cmdLineArgs $serviceEndpoint
@@ -29,12 +32,14 @@ function StoreParametersInTaskContext
 	param(
 		  [string]$hostUrl,
 		  [string]$bootstrapperPath,
-		  [string]$dahsboardUrl, 
+		  [string]$dahsboardUrl,
+          [string]$includeReport, 
           [string]$breakBuild)
 	
     SetTaskContextVariable "MSBuild.SonarQube.BootstrapperPath" $bootstrapperPath    
     SetTaskContextVariable "MSBuild.SonarQube.HostUrl" $hostUrl   
-    SetTaskContextVariable "MSBuild.SonarQube.BreakBuild" $breakBuild    
+    SetTaskContextVariable "MSBuild.SonarQube.BreakBuild" $breakBuild
+    SetTaskContextVariable "MSBuild.SonarQube.IncludeReport" $includeReport        
     SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dahsboardUrl
 }
 
@@ -142,18 +147,8 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs)
 
         Write-Verbose "Detected a PR build - running the SonarQube analysis in issues / incremental mode"
 
-        $sqServerVersion = GetSonarQubeServerVersion     
-
-        Write-Verbose "SonarQube server version:$sqServerVersion"
-
-        #strip out '-SNAPSHOT' if it is present in version (developer versions of SonarQube might return version in this format: 5.2-SNAPSHOT)
-        $sqServerVersion = ([string]$sqServerVersion).split("-")[0]
-
-        $sqVersion = New-Object -TypeName System.Version -ArgumentList $sqServerVersion
-        $sqVersion5dot2 = New-Object -TypeName System.Version -ArgumentList "5.2"
-
-        #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+. -ge below calls the overloaded operator in System.Version class
-        if ($sqVersion -ge $sqVersion5dot2)
+        # For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+.         
+        if ((CompareSonarQubeVersionWith52) -ge 0)
         {
             $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=issues" + " " + "/d:sonar.report.export.path=sonar-report.json"
         }
@@ -186,20 +181,4 @@ function GetEndpointData
 	}
 
     return $serviceEndpoint
-}
-
-
-################# Helpers ######################
-
-#
-# Helper that returns the version number of the SonarQube server
-#
-function GetSonarQubeServerVersion()
-{         
-    $command = {InvokeGetRestMethod "/api/server/version" }
-    $version = Retry $command -maxRetries 2 -retryDelay 1 -Verbose
-  
-    Write-Verbose "Returning SonarQube server version:$version"
-
-    return $version
 }

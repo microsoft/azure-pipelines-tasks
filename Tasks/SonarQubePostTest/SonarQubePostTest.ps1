@@ -9,10 +9,16 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 ExitOnPRBuild
 
 . $PSScriptRoot/SonarQubePostTestImpl.ps1
-. $PSScriptRoot/SonarQubeBuildBreaker.ps1
 . $PSScriptRoot/PRCA/Orchestrator.ps1
 
+. $PSScriptRoot/SonarQubeMetrics.ps1
+. $PSScriptRoot/SonarQubeReportHandler.ps1
+. $PSScriptRoot/SonarQubeBuildBreaker.ps1
+
+
 InvokeMSBuildRunnerPostTest
-UploadSummaryMdReport
+# PRCA
 HandleCodeAnalysisReporting
+
+UploadSummaryMdReport
 BreakBuildOnQualityGateFailure
