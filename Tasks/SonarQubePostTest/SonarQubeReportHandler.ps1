@@ -79,10 +79,10 @@ function CreateReport
     
     $reportTemplate  = '<div style="padding:5px 0px">
 <span>Quality Gate</span>
-<span style="padding:4px 10px; background-color:{0}; color:#fff; display:inline-block">{1}</span>
+<span style="padding:4px 10px; margin-left: 5px; background-color:{0}; color:#fff; display:inline-block">{1}</span>
 </div>
 <div>
-<a target="_blank" href="{2}">Detailed report ></a>
+<a target="_blank" href="{2}">Detailed report &gt;</a>
 </div>'
     
     $reportContents = [String]::Format($reportTemplate, $qualityGateColor, $qualityGateLabel, $dashboardUri)    
