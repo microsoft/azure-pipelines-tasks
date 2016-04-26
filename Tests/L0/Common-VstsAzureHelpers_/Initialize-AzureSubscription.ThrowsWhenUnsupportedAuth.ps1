@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot/../../lib/Initialize-Test.ps1
-$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/AzureHelpers -PassThru
+$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/VstsAzureHelpers_ -PassThru
 $endpoint = @{
     Auth = @{
         Parameters = @{
