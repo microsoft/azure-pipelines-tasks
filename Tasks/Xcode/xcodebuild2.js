@@ -125,7 +125,7 @@ function processInputs() {
 	var scheme = tl.getInput('scheme', false);
 	if(scheme) {
 		xcb.arg('-scheme');
-		xcb.arg('"' + tl.getInput('scheme', true) + '"');
+		xcb.arg(tl.getInput('scheme', true));
 	} else {
 		tl.debug('No scheme specified in task.');
 	}
