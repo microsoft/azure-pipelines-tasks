@@ -15,9 +15,8 @@ if ($scriptArguments -match '[\r\n]') {
 }
 
 # Initialize Azure.
-Import-Module $PSScriptRoot\ps_modules\AzureHelpers
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Initialize-Azure
-Remove-Module -Name AzureHelpers
 
 # Trace the expression as it will be invoked.
 $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
@@ -26,8 +25,13 @@ Remove-Variable -Name scriptArguments
 Write-Verbose $scriptCommand
 
 # Remove all commands imported from VstsTaskSdk, other than Out-Default.
+# Remove all commands imported from VstsAzureHelpers_.
 Get-ChildItem -LiteralPath function: |
-    Where-Object { ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or ($_.Name -eq 'Invoke-VstsTaskScript') } |
+    Where-Object {
+        ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
+        ($_.Name -eq 'Invoke-VstsTaskScript') -or
+        ($_.ModuleName -eq 'VstsAzureHelpers_' )
+    } |
     Remove-Item
 
 # For compatibility with the legacy handler implementation, set the error action

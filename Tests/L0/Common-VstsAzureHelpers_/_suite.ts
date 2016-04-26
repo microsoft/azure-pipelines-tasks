@@ -11,7 +11,7 @@ var shell = require('shelljs');
 var ps = shell.which('powershell');
 var psr = null;
 
-describe('Common-AzureHelpers Suite', function () {
+describe('Common-VstsAzureHelpers_ Suite', function () {
     this.timeout(20000);
 
     before((done) => {

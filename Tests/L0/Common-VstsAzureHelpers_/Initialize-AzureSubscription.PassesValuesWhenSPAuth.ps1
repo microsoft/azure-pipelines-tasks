@@ -4,14 +4,15 @@ param()
 # Arrange.
 . $PSScriptRoot/../../lib/Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module Microsoft.PowerShell.Security
-$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/AzureHelpers -PassThru
+$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/VstsAzureHelpers_ -PassThru
 $endpoint = @{
     Auth = @{
         Parameters = @{
-            UserName = 'Some user name'
-            Password = 'Some password'
+            ServicePrincipalId = 'Some service principal ID'
+            ServicePrincipalKey = 'Some service principal key'
+            TenantId = 'Some tenant ID'
         }
-        Scheme = 'UserNamePassword'
+        Scheme = 'ServicePrincipal'
     }
     Data = @{
         SubscriptionId = 'Some subscription ID'
@@ -34,7 +35,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Set-CurrentAzureSubscription
     Register-Mock Set-CurrentAzureRMSubscription
     if ($variableSet.Classic) {
-        & $module { $script:isClassic = $true ; $script:classicVersion = [version]'1.0' }
+        & $module { $script:isClassic = $true ; $script:classicVersion = [version]'0.9.8' }
     } else {
         & $module { $script:isClassic = $false ; $script:classicVersion = $null }
     }
@@ -46,21 +47,27 @@ foreach ($variableSet in $variableSets) {
     Assert-AreEqual $null $result
     if ($variableSet.Classic) {
         Assert-WasCalled Add-AzureAccount -ArgumentsEvaluator {
-            $args.Length -eq 2 -and
-            $args[0] -eq '-Credential' -and
-            $args[1] -is [pscredential] -and
-            $args[1].UserName -eq 'Some user name' -and
-            $args[1].GetNetworkCredential().Password -eq 'Some password'
+            $args.Length -eq 5 -and
+            $args[0] -eq '-ServicePrincipal' -and
+            $args[1] -eq '-Tenant' -and
+            $args[2] -eq 'Some tenant ID' -and
+            $args[3] -eq '-Credential' -and
+            $args[4] -is [pscredential] -and
+            $args[4].UserName -eq 'Some service principal ID' -and
+            $args[4].GetNetworkCredential().Password -eq 'Some service principal key'
         }
         Assert-WasCalled Set-CurrentAzureSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -StorageAccount $variableSet.StorageAccount
     } else {
         Assert-WasCalled Add-AzureRMAccount -ArgumentsEvaluator {
-            $args.Length -eq 2 -and
-            $args[0] -eq '-Credential' -and
-            $args[1] -is [pscredential] -and
-            $args[1].UserName -eq 'Some user name' -and
-            $args[1].GetNetworkCredential().Password -eq 'Some password'
+            $args.Length -eq 5 -and
+            $args[0] -eq '-ServicePrincipal' -and
+            $args[1] -eq '-Tenant' -and
+            $args[2] -eq 'Some tenant ID' -and
+            $args[3] -eq '-Credential' -and
+            $args[4] -is [pscredential] -and
+            $args[4].UserName -eq 'Some service principal ID' -and
+            $args[4].GetNetworkCredential().Password -eq 'Some service principal key'
         }
-        Assert-WasCalled Set-CurrentAzureRMSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId
+        Assert-WasCalled Set-CurrentAzureRMSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -TenantId $endpoint.Auth.Parameters.TenantId
     }
 }
