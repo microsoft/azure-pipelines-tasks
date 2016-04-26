@@ -166,7 +166,7 @@ function Register-Mock {
             'Command' = $Command
             'Implementations' = @( )
             'Invocations' = @( )
-            'GlobalAlias' = New-Alias -Name $Command -Value "global:$functionName" -Scope global -PassThru
+            'GlobalAlias' = New-Alias -Force -Name $Command -Value "global:$functionName" -Scope global -PassThru
             'GlobalFunction' = New-Item -Force -Path "function:\global:$functionName" -Value {
                 param()
 
