@@ -105,7 +105,7 @@ function FetchTaskIdFromReportFile
         throw "Could not find the task Id in $reportTaskFile."
     }
 
-    $taskId = $matchResult.Groups[1].Value
+    $taskId = $matchResult.Groups[1].Value.Trim()
     Write-Verbose "The analysis is associated with the task id $taskId"
 
     return $taskId
