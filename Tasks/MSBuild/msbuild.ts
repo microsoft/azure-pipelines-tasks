@@ -40,7 +40,7 @@ var runxbuild = function (fn, clean) {
             xbuild.arg('/p:Configuration="' + configuration + '"');
         }
         if (msbuildArguments) {
-            xbuild.arg(msbuildArguments);
+            xbuild.argString(msbuildArguments);
         }
 
         return xbuild.exec();
