@@ -117,26 +117,25 @@ function Get-MsDeployCmdArgs
 
 function Run-Command
 {
-    param([String][Parameter(Mandatory=$true)] $command,
-          [bool][Parameter(Mandatory=$false)] $failOnErr = $true)
+    param([String][Parameter(Mandatory=$true)] $command)
 
-    $ErrorActionPreference = 'Continue'
-    if( $psversiontable.PSVersion.Major -le 4)
-    {
-        $result = cmd.exe /c "`"$command`""
+    try
+	{
+        if( $psversiontable.PSVersion.Major -le 4)
+        {
+           cmd.exe /c "`"$command`""
+        }
+        else
+        {
+           cmd.exe /c "$command"
+        }
+
     }
-    else
+	catch [System.Exception]
     {
-        $result = cmd.exe /c "$command"
+        throw $_.Exception.Message    
     }
 
-    $ErrorActionPreference = 'Stop'
-    if($failOnErr -and $LASTEXITCODE -ne 0)
-    {
-        throw $result
-    }
-    
-    return $result
 }
 
 function Get-MsDeployCmdForLogs
