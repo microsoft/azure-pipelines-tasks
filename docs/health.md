@@ -15,7 +15,7 @@ Since the tasks are open sourced as reference examples, we want to ensure they f
 
 ## Task Lib/SDK
 
-Tasks should use the vsts-task-lib (TS) or vsts-task-sdk  
+Tasks should use the vsts-task-lib (TS) or vsts-task-sdk (PS) 
 
 Important! Reasons are [laid out here](https://github.com/Microsoft/vsts-task-lib/blob/master/powershell/Docs/README.md)
 
@@ -25,11 +25,9 @@ Contributers (Microsoft and public) should be able to run tests on any platform.
 
 Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/master/docs/contribute.md)
 
-# Health Report By Area
+# Task Health
 
-## Build
-
-|      Task        | Impl | Plat | Libs | L0 | Comments |
+|      Task        | Impl | Platform | Uses SDK | L0 Tests | Comments |
 |------------------|------|------|------|----|----------|
 | Azure Powershell |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | CMake            |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
