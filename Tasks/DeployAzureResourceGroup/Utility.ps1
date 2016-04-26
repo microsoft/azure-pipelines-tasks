@@ -483,7 +483,7 @@ function Instantiate-Environment
     $machineSpecification = $resources -join ","
 
     Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
-    $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext
+    $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -Persist
     Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName" -Verbose
 
     Write-Verbose "Adding environment $outputVariable to output variables" -Verbose
