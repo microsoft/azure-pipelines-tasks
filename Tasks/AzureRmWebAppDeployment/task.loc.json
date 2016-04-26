@@ -3,6 +3,7 @@
   "name": "AzureRMWebAppDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -13,9 +14,16 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "1.99.0",
+  "groups": [
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -115,6 +123,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "WebAppUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WebAppUri",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     }
   ],
   "dataSourceBindings": [
@@ -149,6 +166,5 @@
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

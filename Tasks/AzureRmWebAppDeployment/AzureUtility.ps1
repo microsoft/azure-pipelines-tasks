@@ -36,6 +36,22 @@ function Get-AzureRMWebAppDetails
     return $azureRMWebAppDetails
 }
 
+function Get-AzureRMWebAppPublishUrl
+{
+    param([String][Parameter(Mandatory=$true)] $webAppName,
+          [String][Parameter(Mandatory=$true)] $deployToSlotFlag,
+          [String][Parameter(Mandatory=$false)] $resourceGroupName,
+          [String][Parameter(Mandatory=$false)] $slotName)
+
+    Write-Verbose "`t Getting azureRM WebApp Url for web app :'$webAppName'."
+    $AzureRMWebAppPublishUrl = Get-AzureRMWebAppPublishUrlARM -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
+                         -resourceGroupName $ResourceGroupName -slotName $SlotName
+    Write-Verbose "`t Got azureRM azureRM WebApp Url for web app :'$webAppName'."
+
+    Write-Verbose ($AzureRMWebAppPublishUrl | Format-List | Out-String)
+    return $AzureRMWebAppPublishUrl
+}
+
 function Get-AzureRMWebAppConnectionDetailsWithSpecificSlot
 {
     param([String][Parameter(Mandatory=$true)] $webAppName,
@@ -68,6 +84,10 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
 
     # Get azurerm webApp details
     $azureRMWebAppDetails = Get-AzureRMWebAppDetails -webAppName $webAppName
+
+    if( $azureRMWebAppDetails.Count -eq 0 ){   
+	   Throw (Get-LocalizedString -Key "WebApp '{0}' does not exist." -ArgumentList $webAppName)
+    }
 
     # Get resourcegroup name under which azure webApp exists
     $azureRMWebAppId = $azureRMWebAppDetails.Id

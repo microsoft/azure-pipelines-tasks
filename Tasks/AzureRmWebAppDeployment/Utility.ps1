@@ -59,6 +59,7 @@ function Get-WebAppNameForMSDeployCmd
     return $webAppNameForMSDeployCmd
 }
 
+
 function Get-MsDeployCmdArgs
 {
     param([String][Parameter(Mandatory=$true)] $packageFile,
@@ -102,7 +103,7 @@ function Get-MsDeployCmdArgs
     # msdeploy argument to exclude files in App_Data folder
     if($excludeFilesFromAppDataFlag -eq "true")
     {
-        $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="{0}\\App_Data$"', $webAppNameForMSDeployCmd)
+        $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="\\App_Data\\.*"')
     }
 
     # msploy additional arguments 
@@ -145,7 +146,7 @@ function Get-MsDeployCmdForLogs
     $msDeployCmdSplitByComma = $msDeployCmd.Split(',')
     $msDeployCmdHiddingSensitiveData = $msDeployCmdSplitByComma | ForEach-Object {if ($_.StartsWith("Password")) {$_.Replace($_, "Password=****")} else {$_}}
 
-    $msDeployCmdForLogs = $msDeployCmdHiddingSensitiveData -join ",`n`t"
+    $msDeployCmdForLogs = $msDeployCmdHiddingSensitiveData -join ","
     return $msDeployCmdForLogs
 }
 
