@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot/../../lib/Initialize-Test.ps1
-Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/AzureHelpers
+Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/VstsAzureHelpers_
 $variableSets = @(
     @{
         ConnectedServiceNameSelector = 'ConnectedServiceName'

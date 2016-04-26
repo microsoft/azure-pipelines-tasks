@@ -1,7 +1,7 @@
 {
     "AzurePowerShell": [
         {
-            "module": "AzureHelpers",
+            "module": "VstsAzureHelpers_",
             "dest": "ps_modules"
         }
     ],
