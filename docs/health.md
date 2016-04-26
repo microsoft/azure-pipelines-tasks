@@ -29,77 +29,13 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 
 ## Build
 
-<table class="tg">
-  <tr>
-    <th></th>
-    <th>Impl</th>
-    <th>Plat</th>
-    <th>Libs</th>
-    <th>L0</th>
-    <th>Comments</th>
-  </tr>
-  <tr>
-    <td>Azure Powershell</td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td bgcolor="white">Tested in Azure-CommonHelpers</td>
-  </tr>
-  <tr>
-    <td>CMake</td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td bgcolor="white"></td>
-  </tr>
-  <tr>
-    <td>BatchScript</td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td>N/A</td>
-    <td>N/A</td>
-    <td bgcolor="white">No task impl because run as handler</td>
-  </tr>
-  <tr>
-    <td>CmdLine</td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td bgcolor="white"></td>
-  </tr>
-  <tr>
-    <td>CocoaPods</td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/red.png"/></td>
-    <td bgcolor="white"></td>
-  </tr>
-  <tr>
-    <td>CopyFiles</td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td bgcolor="white"></td>
-  </tr>
-  <tr>
-    <td>CopyPublishBuildArtifacts</td>
-    <td><img src="res/yellow.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/red.png"/></td>
-    <td bgcolor="white">2 Impl.  Written in TS but windows pinned to PS</td>
-  </tr>
-  <tr>
-    <td>DeleteFiles</td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td><img src="res/green.png"/></td>
-    <td bgcolor="white"></td>
-  </tr>
-</table>
+|      Task        | Impl | Plat | Libs | L0 | Comments |
+|------------------|------|------|------|----|----------|
+| Azure Powershell |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CMake            |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| BatchScript      |![Green](res/green.png)|![Green](res/green.png)| N/A  |  N/A | Carries no task impl.  Handler in agent |
+| CmdLine          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CocoaPods        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/red.png)| |
+| CopyFiles        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CopyPublishArtifact |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl.  Pinned to PS on windows |
+| DeleteFiles        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
