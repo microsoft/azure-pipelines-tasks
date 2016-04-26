@@ -53,6 +53,11 @@ Write-Verbose "AdditionalArguments = $AdditionalArguments"
 Write-Verbose "WebAppUri = $WebAppUri"
 
 $WebAppUri = $WebAppUri.Trim()
+$Package = $Package.Trim('"').Trim()
+
+if( [string]::IsNullOrEmpty($Package) ){
+    Throw (Get-LocalizedString -Key "Invalid webapp package path provided")
+}
 
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
