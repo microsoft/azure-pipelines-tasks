@@ -4,15 +4,14 @@ param()
 # Arrange.
 . $PSScriptRoot/../../lib/Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module Microsoft.PowerShell.Security
-$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/AzureHelpers -PassThru
+$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/VstsAzureHelpers_ -PassThru
 $endpoint = @{
     Auth = @{
         Parameters = @{
-            ServicePrincipalId = 'Some service principal ID'
-            ServicePrincipalKey = 'Some service principal key'
-            TenantId = 'Some tenant ID'
+            UserName = 'Some user name'
+            Password = 'Some password'
         }
-        Scheme = 'ServicePrincipal'
+        Scheme = 'UserNamePassword'
     }
     Data = @{
         SubscriptionId = 'Some subscription ID'
@@ -40,7 +39,7 @@ foreach ($variableSet in $variableSets) {
     # Act/Assert.
     Assert-Throws {
         & $module Initialize-AzureSubscription -Endpoint $endpoint
-    } -MessagePattern AZ_ServicePrincipalError
+    } -MessagePattern AZ_CredentialsError
 
     # Assert.
     Assert-WasCalled Write-VstsTaskError -- -Message 'Some add account error'
