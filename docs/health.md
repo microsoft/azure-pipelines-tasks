@@ -39,67 +39,67 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
     <th>Comments</th>
   </tr>
   <tr>
-    <td bgcolor="silver">Azure Powershell</td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
+    <td>Azure Powershell</td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
     <td bgcolor="white">Tested in Azure-CommonHelpers</td>
   </tr>
   <tr>
-    <td bgcolor="silver">CMake</td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
+    <td>CMake</td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
     <td bgcolor="white"></td>
   </tr>
   <tr>
-    <td bgcolor="silver">BatchScript</td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="white">N/A</td>
-    <td bgcolor="white">N/A</td>
+    <td>BatchScript</td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td>N/A</td>
+    <td>N/A</td>
     <td bgcolor="white">No task impl because run as handler</td>
   </tr>
   <tr>
-    <td bgcolor="silver">CmdLine</td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
+    <td>CmdLine</td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
     <td bgcolor="white"></td>
   </tr>
   <tr>
-    <td bgcolor="silver">CocoaPods</td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="red"></td>
+    <td>CocoaPods</td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/red.png"/></td>
     <td bgcolor="white"></td>
   </tr>
   <tr>
-    <td bgcolor="silver">CopyFiles</td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
+    <td>CopyFiles</td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
     <td bgcolor="white"></td>
   </tr>
   <tr>
-    <td bgcolor="silver">CopyPublishBuildArtifacts</td>
-    <td bgcolor="yellow"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="red"></td>
-    <td bgcolor="white">Written in TS but windows pinned to PS</td>
+    <td>CopyPublishBuildArtifacts</td>
+    <td><img src="res/yellow.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/red.png"/></td>
+    <td bgcolor="white">2 Impl.  Written in TS but windows pinned to PS</td>
   </tr>
   <tr>
-    <td bgcolor="silver">DeleteFiles</td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
-    <td bgcolor="green"></td>
+    <td>DeleteFiles</td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
+    <td><img src="res/green.png"/></td>
     <td bgcolor="white"></td>
   </tr>
 </table>
