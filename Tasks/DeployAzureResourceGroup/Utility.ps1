@@ -255,13 +255,13 @@ function Validate-DeploymentFileAndParameters
     param([string]$csmFile,
           [string]$csmParametersFile)
 
-    if (!(Test-Path -LiteralPath $csmFile -PathType Leaf))
+    if (!(Test-Path -Path $csmFile -PathType Leaf))
     {
         Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
         throw (Get-LocalizedString -Key "Please specify a complete and a valid template file path")
     }
 
-    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -and !(Test-Path -LiteralPath $csmParametersFile -PathType Leaf))
+    if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -and !(Test-Path -Path $csmParametersFile -PathType Leaf))
     {
          Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
          throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
