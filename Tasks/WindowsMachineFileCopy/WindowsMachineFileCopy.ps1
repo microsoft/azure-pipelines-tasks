@@ -120,7 +120,7 @@ function Validate-SourcePath(
 {
     Validate-Null -value $value -variableName "sourcePath"
 
-    if(-not (Test-Path $value))
+    if(-not (Test-Path -LiteralPath $value))
     {
         ThrowError -errorMessage (Get-LocalizedString -Key "Source path '{0}' does not exist." -ArgumentList $value)
     }
