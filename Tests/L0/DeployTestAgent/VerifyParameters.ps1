@@ -49,5 +49,6 @@ Assert-WasCalled Invoke-DeployTestAgent -ParametersEvaluator {
 	$Connection -eq $connection -and
 	$PersonalAccessToken -eq 'Some token' -and
 	$DataCollectionOnly -eq 'isDataCollectionOnly' -and
-	$VerifyTestMachinesAreInUseScriptLocation -like '*VerifyTestMachinesAreInUse.ps1'
+	$VerifyTestMachinesAreInUseScriptLocation -like '*VerifyTestMachinesAreInUse.ps1' -and
+	$CheckAgentInstallationScriptLocation -like '*CheckTestAgentInstallation.ps1'
     }
