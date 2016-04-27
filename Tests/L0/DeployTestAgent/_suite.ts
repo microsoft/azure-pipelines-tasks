@@ -37,5 +37,8 @@ describe('Deploy Test Agent Suite', function () {
         it('(DeployTestAgent-VerifyAzureCompat.OldResource) verifies if old deploy test agent is called for non-supported flat machine env', (done) => {
             psr.run(path.join(__dirname, 'VerifyAzureCompat.OldResource.ps1'), done);
         })
+        it('(DeployTestAgent-VerifyParameters) verifies if old deploy test agent is called with the right parameters', (done) => {
+            psr.run(path.join(__dirname, 'VerifyParameters.ps1'), done);
+        })
     }
 });
