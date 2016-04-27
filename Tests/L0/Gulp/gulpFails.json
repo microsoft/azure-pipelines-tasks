@@ -3,7 +3,7 @@
         "gulp": "/usr/local/bin/gulp"
     },
     "exec": {
-        "/usr/local/bin/gulp --gulpfile gulpfile.js": {
+        "/usr/local/bin/gulp --no-color --gulpfile gulpfile.js": {
             "code": 1,
             "stdout": "gulp output here",
             "stderr": "gulp failed with this output"
