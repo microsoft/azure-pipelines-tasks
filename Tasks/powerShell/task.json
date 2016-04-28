@@ -80,7 +80,7 @@
             }
         }
     ],
-    "instanceNameFormat": "Powershell Script",
+    "instanceNameFormat": "PowerShell Script",
     "execution": {
         "PowerShellExe": {
             "target": "$(scriptName)",
