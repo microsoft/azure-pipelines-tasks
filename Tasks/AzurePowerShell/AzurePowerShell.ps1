@@ -11,7 +11,7 @@ if ($scriptPath -match '[\r\n]') {
 }
 
 if ($scriptArguments -match '[\r\n]') {
-    throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptPath)
+    throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
 
 # Initialize Azure.
