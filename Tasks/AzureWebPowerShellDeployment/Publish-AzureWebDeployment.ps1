@@ -82,18 +82,17 @@ if($WebSiteLocation)
 
     Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError $(if ($Slot) { "-Slot $Slot" })"
     $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError @extraParameters
+    if($azureWebSiteError){
+        $azureWebSiteError | ForEach-Object { Write-Warning $_.Exception.ToString() }
+    }
 
     if($azureWebSite)
     {
         Write-Host "WebSite '$($azureWebSite.Name)' found."
-
-        if($azureWebSiteError){
-            $azureWebSiteError | ForEach-Object { Write-Warning $_.Exception.ToString() }
-        }
     }
     else
     {
-        Write-Host "WebSite '$WebSiteName' not found."
+        Write-Host "WebSite '$WebSiteName' not found. Creating it now."
 
         if ($Slot)
         {
@@ -137,8 +136,8 @@ if($azureWebSite) {
         if(!$publishAzureWebsiteError) {
             $status = 4 #succeeded
         }
-		
-		$username = $azureWebSite.PublishingUsername
+
+        $username = $azureWebSite.PublishingUsername
         $securePwd = ConvertTo-SecureString $azureWebSite.PublishingPassword -AsPlainText -Force
         $credential = New-Object System.Management.Automation.PSCredential ($username, $securePwd)
 
