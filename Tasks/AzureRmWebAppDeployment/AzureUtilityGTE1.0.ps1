@@ -6,7 +6,13 @@ function Get-AzureRMWebAppARM
     param([String] [Parameter(Mandatory = $true)] $Name)
 
     Write-Verbose "[Azure Call] Getting azure webapp details for webapp with name : $Name "
-    $azureWebApp =  Get-AzureRMWebApp -Name $webAppName
+    $azureWebApp =  Get-AzureRMWebApp -Name $Name
+
+    if( $azureWebApp.Count -eq 0 ) 
+    {
+        Throw (Get-LocalizedString -Key "Web App: '{0}' not found." -ArgumentList $Name)
+    }
+    
     return $azureWebApp
 
 }
@@ -74,7 +80,7 @@ function Get-AzureRMWebAppPublishingProfileARM
           [String] [Parameter(Mandatory = $true)] $pubXmlFile)
 
      Write-Verbose "[Azure Call] Getting webapp publish profile for azureRM webapp : $Name "
-     $publishProfileContent = Get-AzureRMWebAppPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName -OutputFile $pubXmlFile
+     $publishProfileContent = Get-AzureRMWebAppPublishingProfile -Name $Name -ResourceGroupName $resourceGroupName -OutputFile $pubXmlFile
      return $publishProfileContent
 
 }
@@ -89,7 +95,7 @@ function Get-AzureRMWebAppSlotPublishingProfileARM
           [String] [Parameter(Mandatory = $true)] $pubXmlFile)
 
     Write-Verbose "[Azure Call] Getting publish profile file for azureRM WebApp:'$Name' for Slot:'$slotName'"
-    $publishProfileContent = Get-AzureRMWebAppSlotPublishingProfile -Name $webAppName -ResourceGroupName $resourceGroupName -Slot $slotName -OutputFile $pubXmlFile
+    $publishProfileContent = Get-AzureRMWebAppSlotPublishingProfile -Name $Name -ResourceGroupName $resourceGroupName -Slot $slotName -OutputFile $pubXmlFile
     return $publishProfileContent
 
 }
