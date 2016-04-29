@@ -68,36 +68,33 @@ $azureWebSiteError = $null
 #If we're provided a WebSiteLocation, check for it and create it if necessary
 if($WebSiteLocation)
 {
+    #using production slot for website if website name provided doesnot contain any slot
+    if ([String]::IsNullOrEmpty($Slot))
+    { 
+        if(-not $WebSiteName.Contains('('))
+        {
+            $Slot  = 'Production'
+        }
+    }
+
     $extraParameters = @{ }
     if ($Slot) { $extraParameters['Slot'] = $Slot }
 
     Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError $(if ($Slot) { "-Slot $Slot" })"
-    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError @extraParameters | Where-Object {$_.Name -eq $WebSiteName }
-    #May get an Site array if there is more than one reference, e.g. Name does return wildcard entries, for example 
-    #Name somesite  and Name somesite(staging) = both are returned using just Name somesite
+    $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError @extraParameters
 
-    if ($azureWebSite.GetType().FullName -eq "Microsoft.WindowsAzure.Commands.Utilities.Websites.Services.WebEntities.Site")
+    if($azureWebSite)
     {
-       $index = $azureWebSite.SiteProperties.Properties.FindIndex({$args[0].Name -eq "PublishingUsername"})
-       $username=$azureWebSite.SiteProperties.Properties[$index].Value
-       $index = $azureWebSite.SiteProperties.Properties.FindIndex({$args[0].Name -eq "PublishingPassword"})
-       $pass=$azureWebSite.SiteProperties.Properties[$index].Value
-       $securePwd = ConvertTo-SecureString $pass -AsPlainText -Force
+        Write-Host "WebSite '$($azureWebSite.Name)' found."
+
+        if($azureWebSiteError){
+            $azureWebSiteError | ForEach-Object { Write-Warning $_.Exception.ToString() }
+        }
     }
     else
     {
-        $username = $azureWebSite.PublishingUsername
-        $securePwd = ConvertTo-SecureString $azureWebSite.PublishingPassword -AsPlainText -Force
-    }
-    Write-Host "Web Sites Found.."
-    $azureWebSite | ForEach-Object { Write-Host $_.Name.ToString() }
+        Write-Host "WebSite '$WebSiteName' not found."
 
-    if($azureWebSiteError){
-        $azureWebSiteError | ForEach-Object { Write-Warning $_.Exception.ToString() }
-    }
-    
-    if(!$azureWebSite)
-    {
         if ($Slot)
         {
             Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Slot $Slot"
@@ -140,7 +137,9 @@ if($azureWebSite) {
         if(!$publishAzureWebsiteError) {
             $status = 4 #succeeded
         }
-
+		
+		$username = $azureWebSite.PublishingUsername
+        $securePwd = ConvertTo-SecureString $azureWebSite.PublishingPassword -AsPlainText -Force
         $credential = New-Object System.Management.Automation.PSCredential ($username, $securePwd)
 
         $author = Get-TaskVariable $distributedTaskContext "build.sourceVersionAuthor"
