@@ -70,8 +70,8 @@ if($WebSiteLocation)
 {
     #using production slot for website if website name provided doesnot contain any slot
     if ([String]::IsNullOrEmpty($Slot))
-    { 
-        if(-not $WebSiteName.Contains('('))
+    {
+        if($WebSiteName -notlike '*(*)*')
         {
             $Slot  = 'Production'
         }
