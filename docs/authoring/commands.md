@@ -84,6 +84,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 </p>
             </td>
             <td>
+            	1.95
             </td>
         </tr>
         <tr>
