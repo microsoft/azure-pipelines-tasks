@@ -7,8 +7,8 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure-Verbindungstyp",
   "loc.input.label.ConnectedServiceName": "Azure RM-Abonnement",
   "loc.input.help.ConnectedServiceName": "Wählen Sie das Azure-Ressourcen-Manager-Abonnement für die Bereitstellung aus.",
-  "loc.input.label.ConnectedServiceNameClassic": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceNameClassic": "Select the Azure Classic subscription for the deployment.",
+  "loc.input.label.ConnectedServiceNameClassic": "Klassisches Azure-Abonnement",
+  "loc.input.help.ConnectedServiceNameClassic": "Wählen Sie das klassische Azure-Abonnement für die Bereitstellung aus.",
   "loc.input.label.action": "Aktion",
   "loc.input.help.action": "Die für Azure-Ressourcen oder -Ressourcengruppen auszuführende Aktion.",
   "loc.input.label.actionClassic": "Aktion",
@@ -26,9 +26,9 @@
   "loc.input.label.overrideParameters": "Vorlagenparameter überschreiben",
   "loc.input.help.overrideParameters": "Geben Sie die zu überschreibenden Vorlagenparameter an, z. B. <br>-storageName fabrikam -adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) -azureKeyVaultName $(fabrikamFibre).",
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "Bereitstellungsvoraussetzungen aktivieren",
-  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Durch das Aktivieren dieser Option wird der Listener der Windows-Remoteverwaltung (Windows Remote Management, WinRM) über das HTTPS-Protokoll an Port 5986 mithilfe eines selbstsignierten Zertifikats konfiguriert. Diese Konfiguration ist zum Ausführen des Bereitstellungsvorgangs auf Azure-Computern erforderlich. Wenn die virtuellen Zielmaschinen durch Lastenausgleich gesichert werden, stellen Sie sicher, dass die Regeln für eingehenden NAT-Datenverkehr für den Zielport (5986) konfiguriert sind. Wenn die virtuellen Zielmaschinen einer Netzwerksicherheitsgruppe (NSG) zugeordnet sind, konfigurieren Sie die Sicherheitsregeln für eingehenden Datenverkehr für den Zielport (5986).",
+  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "Bereitstellungsvoraussetzungen aktivieren",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Durch das Aktivieren dieser Option wird der Listener der Windows-Remoteverwaltung (Windows Remote Management, WinRM) über das HTTPS-Protokoll an Port 5986 mithilfe eines selbstsignierten Zertifikats konfiguriert. Diese Konfiguration ist zum Ausführen des Bereitstellungsvorgangs auf Azure-Computern erforderlich. Wenn die virtuellen Zielmaschinen durch Lastenausgleich gesichert werden, stellen Sie sicher, dass die Regeln für eingehenden NAT-Datenverkehr für den Zielport (5986) konfiguriert sind. Wenn die virtuellen Zielmaschinen einer Netzwerksicherheitsgruppe (NSG) zugeordnet sind, konfigurieren Sie die Sicherheitsregeln für eingehenden Datenverkehr für den Zielport (5986). Gilt nur für virtuelle ARM-Maschinen.",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.outputVariable": "Ressourcengruppe",
   "loc.input.help.outputVariable": "Geben Sie einen Namen für die Variable für die Ressourcengruppe an. Die Variable kann als \"$(variableName)\" verwendet werden, um in nachfolgenden Tasks (z. B. im Task \"PowerShell auf Zielcomputern\") für die Bereitstellung von Anwendungen auf die Ressourcengruppe zu verweisen. <br>Nur gültig, wenn die ausgewählte Aktion \"Erstellen\", \"Aktualisieren\" oder \"Auswählen\" ist. Erforderlich, wenn eine vorhandene Ressourcengruppe ausgewählt wird."
 }

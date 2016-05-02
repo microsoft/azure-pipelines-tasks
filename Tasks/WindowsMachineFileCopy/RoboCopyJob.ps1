@@ -34,11 +34,9 @@ param (
             [string]$errorMessage,
             [string]$fqdn
         )
-    
-        $readmelink = "http://aka.ms/windowsfilecopyreadme"
-        $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
+        
         $failMessage = "Copying failed for resource : $fqdn"
-        throw "$failMessage`n$errorMessage`n$helpMessage"
+        throw "$failMessage`n$errorMessage"
     }
     
     function Validate-Null(

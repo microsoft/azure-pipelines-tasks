@@ -9,6 +9,7 @@
   "loc.input.help.email": "Адрес электронной почты учетной записи Xamarin.",
   "loc.input.label.password": "Пароль",
   "loc.input.help.password": "Пароль учетной записи Xamarin.",
-  "loc.input.label.activateAndroid": "Активировать Xamarin.Android",
+  "loc.input.label.product": "Xamarin Product",
+  "loc.input.help.product": "Xamarin product name.",
   "loc.input.label.timeout": "Время ожидания в секундах"
 }

@@ -9,6 +9,7 @@
   "loc.input.help.email": "Xamarin アカウントの電子メール アドレス。",
   "loc.input.label.password": "パスワード",
   "loc.input.help.password": "Xamarin アカウントのパスワード。",
-  "loc.input.label.activateAndroid": "Xamarin.Android のアクティブ化",
+  "loc.input.label.product": "Xamarin Product",
+  "loc.input.help.product": "Xamarin product name.",
   "loc.input.label.timeout": "タイムアウト (秒)"
 }

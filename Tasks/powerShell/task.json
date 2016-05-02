@@ -12,12 +12,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 5
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [
         "DotNetFramework"
     ],
+    "minimumAgentVersion": "1.96.2",
     "groups": [
         {
             "name":"advanced",
@@ -26,12 +27,25 @@
         }
     ],
     "inputs": [
+        {
+            "name": "scriptType",
+            "type": "pickList",
+            "label": "Type",
+            "defaultValue": "filePath",
+            "required": true,
+            "helpMarkDown": "Type of the script: File Path or Inline Script",
+            "options": {
+                "inlineScript": "Inline Script",
+                "filePath": "File Path"
+            }
+        },
         { 
             "name": "scriptName", 
             "type": "filePath", 
             "label": "Script filename", 
             "defaultValue":"", 
             "required":true,
+            "visibleRule": "scriptType = filePath",
             "helpMarkDown": "Path of the script to execute. Should be fully qualified path or relative to the default working directory." 
         },
         { 
@@ -50,14 +64,30 @@
             "required":false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
             "groupName":"advanced"
+        },
+        { 
+            "name": "inlineScript", 
+            "type": "multiLine", 
+            "label": "Inline Script", 
+            "defaultValue":"# You can write your powershell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n Write-Host \"Hello World\"", 
+            "required":true,
+            "helpMarkDown": "",
+            "visibleRule": "scriptType = inlineScript",
+            "properties": {
+                "resizable": "true",
+                "rows" : "10",
+                "maxLength" : "500"
+            }
         }
     ],
-    "instanceNameFormat": "Powershell: $(scriptName)",
+    "instanceNameFormat": "Powershell Script",
     "execution": {
         "PowerShellExe": {
             "target": "$(scriptName)",
             "argumentFormat": "$(arguments)",
-            "workingDirectory": "$(workingFolder)"
+            "workingDirectory": "$(workingFolder)",
+            "inlineScript": "$(inlineScript)",
+            "scriptType": "$(scriptType)"
         }
     }
 }

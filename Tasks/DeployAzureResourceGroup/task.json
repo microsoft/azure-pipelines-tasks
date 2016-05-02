@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 62
+        "Patch": 68
     },
     "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "1.97.0",
     "groups": [
         {
             "name": "output",
@@ -198,22 +198,21 @@
             "target": "cloudService",
             "endpointId": "$(ConnectedServiceNameClassic)",
             "dataSourceName": "AzureHostedServiceNames"
-        }
-    ],
-    "sourceDefinitions": [
+        },
         {
             "target": "resourceGroupName",
-            "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "$(ConnectedServiceName)"
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureVirtualMachinesV2Id",
+            "resultTemplate": "{{#extractResource resourceGroups}}"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
-  "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  }
 }
+

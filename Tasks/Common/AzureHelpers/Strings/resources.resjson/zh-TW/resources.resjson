@@ -1,0 +1,4 @@
+{
+  "loc.messages.AZ_ModuleNotFound": "Neither the Azure module nor the AzureRM module was found. If the module was recently installed, retry after restarting the VSTS task agent.",
+  "loc.messages.AZ_RequiresMinVersion0": "The required minimum version ({0}) of the Azure PowerShell module is not installed."
+}

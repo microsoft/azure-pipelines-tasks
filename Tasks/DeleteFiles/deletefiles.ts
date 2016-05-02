@@ -7,7 +7,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 // contents is a multiline input containing glob patterns
 var contents: string[] = tl.getDelimitedInput('Contents', '\n', true);
-var sourceFolder = tl.getPathInput('SourceFolder', true, true);
+var sourceFolder = tl.getPathInput('SourceFolder', true, false);
 
 // Input that is used for backward compatibility with pre-sprint 95 symbol store artifacts.
 // Pre-95 symbol store artifacts were simply file path artifacts, so we need to make sure
@@ -28,8 +28,10 @@ for (var i = 0; i < contents.length; i++) {
 var files = [];
 var allPaths = tl.find(sourceFolder);
 tl.debug('allPaths: ' + allPaths);
-if (allPaths.length === 0) {
+if (!allPaths || allPaths.length === 0) {
     tl.debug('source folder not found. nothing to delete.');
+    tl.setResult(tl.TaskResult.Succeeded, tl.loc("NoFiles"));
+    process.exit(0);
 }
 
 var allFiles: string[] = [];

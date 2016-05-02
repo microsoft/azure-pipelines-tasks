@@ -22,5 +22,5 @@
   "loc.input.help.AdditionalArguments": "Additional robocopy arguments that will be applied when copying files like, /min:33553332 /l.",
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
   "loc.input.label.MachineNames": "Filter Criteria",
-  "loc.input.help.MachineNames": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
+  "loc.input.help.MachineNames": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }

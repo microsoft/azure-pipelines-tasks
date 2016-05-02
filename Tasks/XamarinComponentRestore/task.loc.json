@@ -1,0 +1,52 @@
+{
+  "id": "ff50fc97-da8c-4683-b014-34c15315ee5f",
+  "name": "XamarinComponentRestore",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.96.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "solution",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.solution",
+      "defaultValue": "**/*.sln",
+      "helpMarkDown": "ms-resource:loc.input.help.solution",
+      "required": "true"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.email",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.email"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.password"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "xamarincomponent.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "XamarinComponentRestoreReturnCode": "ms-resource:loc.messages.XamarinComponentRestoreReturnCode",
+    "XamarinComponentRestoreFailed": "ms-resource:loc.messages.XamarinComponentRestoreFailed"
+  }
+}

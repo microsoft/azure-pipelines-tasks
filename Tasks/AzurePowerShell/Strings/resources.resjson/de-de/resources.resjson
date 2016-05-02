@@ -4,12 +4,14 @@
   "loc.description": "PowerShell-Skript innerhalb einer Azure-Umgebung ausführen",
   "loc.instanceNameFormat": "Azure PowerShell-Skript: $(ScriptPath)",
   "loc.input.label.ConnectedServiceNameSelector": "Azure-Verbindungstyp",
-  "loc.input.label.ConnectedServiceName": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to configure before running PowerShell",
+  "loc.input.label.ConnectedServiceName": "Klassisches Azure-Abonnement",
+  "loc.input.help.ConnectedServiceName": "Klassisches Azure-Abonnement, das vor dem Ausführen von PowerShell konfiguriert wird.",
   "loc.input.label.ConnectedServiceNameARM": "Azure RM-Abonnement",
   "loc.input.help.ConnectedServiceNameARM": "Azure-Ressourcen-Manager-Abonnement, das vor dem Ausführen von PowerShell konfiguriert wird.",
   "loc.input.label.ScriptPath": "Skriptpfad",
   "loc.input.help.ScriptPath": "Der Pfad des Skripts. Es muss sich um den vollqualifizierten Pfad oder einen Pfad relativ zum Standardarbeitsverzeichnis handeln.",
   "loc.input.label.ScriptArguments": "Skriptargumente",
-  "loc.input.help.ScriptArguments": "Zusätzliche Argumente, die an PowerShell übergeben werden sollen. Entweder Ordnungszahl- oder benannte Parameter."
+  "loc.input.help.ScriptArguments": "Zusätzliche Argumente, die an PowerShell übergeben werden sollen. Entweder Ordnungszahl- oder benannte Parameter.",
+  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
 }

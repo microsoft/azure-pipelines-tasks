@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 15
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -31,7 +31,7 @@
             "label": "App File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**\\*.apk` for all APK files in all subfolders."
+            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders."
         },
         {
             "name": "dsym",
@@ -39,7 +39,7 @@
             "label": "dSYM File (iOS only)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Example: *.dSYM"
+            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM"
         },
         {
             "name": "teamApiKey",

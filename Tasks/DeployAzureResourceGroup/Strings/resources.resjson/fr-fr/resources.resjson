@@ -7,8 +7,8 @@
   "loc.input.label.ConnectedServiceNameSelector": "Type de connexion Azure",
   "loc.input.label.ConnectedServiceName": "Abonnement RM Azure",
   "loc.input.help.ConnectedServiceName": "Sélectionnez l'abonnement Azure Resource Manager pour le déploiement.",
-  "loc.input.label.ConnectedServiceNameClassic": "Azure Classic Subscription",
-  "loc.input.help.ConnectedServiceNameClassic": "Select the Azure Classic subscription for the deployment.",
+  "loc.input.label.ConnectedServiceNameClassic": "Abonnement Azure Classic",
+  "loc.input.help.ConnectedServiceNameClassic": "Sélectionnez l'abonnement Azure Classic pour le déploiement.",
   "loc.input.label.action": "Action",
   "loc.input.help.action": "Action à exécuter sur les ressources ou le groupe de ressources Azure.",
   "loc.input.label.actionClassic": "Action",
@@ -26,9 +26,9 @@
   "loc.input.label.overrideParameters": "Remplacer les paramètres de modèle",
   "loc.input.help.overrideParameters": "Spécifiez les paramètres de modèle à remplacer, par exemple <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre).",
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "Activer les conditions préalables au déploiement",
-  "loc.input.help.enableDeploymentPrerequisitesForCreate": "L'activation de cette option configure l'écouteur Windows Remote Management (WinRM) via le protocole HTTPS sur le port 5986, à l'aide d'un certificat auto-signé. Cette configuration est obligatoire pour effectuer une opération de déploiement sur des machines Azure. Si les machines virtuelles cibles sont associées à un équilibreur de charge, vérifiez que des règles NAT entrantes sont configurées pour le port cible (5986). Si les machines virtuelles cibles sont associées à un groupe de sécurité réseau (NSG), configurez des règles de sécurité entrantes pour le port de destination (5986).",
+  "loc.input.help.enableDeploymentPrerequisitesForCreate": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "Activer les conditions préalables au déploiement",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "L'activation de cette option configure l'écouteur Windows Remote Management (WinRM) via le protocole HTTPS sur le port 5986, à l'aide d'un certificat auto-signé. Cette configuration est obligatoire pour effectuer une opération de déploiement sur des machines Azure. Si les machines virtuelles cibles sont associées à un équilibreur de charge, vérifiez que des règles NAT entrantes sont configurées pour le port cible (5986). Si les machines virtuelles cibles sont associées à un groupe de sécurité réseau (NSG), configurez des règles de sécurité entrantes pour le port de destination (5986). Ceci est applicable uniquement aux machines virtuelles ARM.",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.outputVariable": "Groupe de ressources",
   "loc.input.help.outputVariable": "Indiquez un nom pour la variable du groupe de ressources. Elle peut être utilisée sous la forme $(variableName) pour faire référence au groupe de ressources dans des tâches futures, par exemple la tâche PowerShell de déploiement d'applications sur des machines cibles. <br>Valide uniquement quand l'action sélectionnée est de type Créer, Mettre à jour ou Sélectionner, et obligatoire quand un groupe de ressources existant est sélectionné."
 }

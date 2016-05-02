@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 7
     },
     "demands": [],
     "minimumAgentVersion": "1.92.0",
@@ -43,6 +43,7 @@
     },
     "messages": {
         "CantDeleteFiles": "Couldn't delete one or more files",
-        "SkippingSymbolStore": "Skipping delete for symbol store file share: %s"
+        "SkippingSymbolStore": "Skipping delete for symbol store file share: %s",
+        "NoFiles": "No files to delete."
     }
 }

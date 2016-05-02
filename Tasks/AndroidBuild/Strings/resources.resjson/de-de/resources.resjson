@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Android-Build",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613716)",
-  "loc.description": "Erstellen Sie eine Android-App mithilfe von Gradle, und starten Sie optional den Emulator für Unittests.",
+  "loc.description": "Erstellen Sie eine Android-App mithilfe von Gradle, und starten Sie optional den Emulator für Komponententests.",
   "loc.instanceNameFormat": "Android-Build $(gradleProj)",
   "loc.group.displayName.avdOptions": "Optionen für virtuelle Android-Geräte (AVD)",
   "loc.group.displayName.emulatorOptions": "Emulatoroptionen",

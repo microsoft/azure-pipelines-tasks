@@ -28,5 +28,5 @@
   "loc.input.label.ResourceFilteringMethod": "Computer auswählen nach",
   "loc.input.help.ResourceFilteringMethod": "Wählen Sie optional eine Teilmenge der Computer durch Angeben von Computernamen oder Tags aus.",
   "loc.input.label.MachineNames": "Filterkriterien",
-  "loc.input.help.MachineNames": "Diese Eingabe ist nur gültig für Computergruppen und wird noch nicht für flache Listen von Computern oder Ausgabevariablen unterstützt. Geben Sie eine Liste von Computern (z. B. \"dbserver.fabrikam.com\", \"webserver.fabrikam.com\", \"192.168.12.34\") oder Tags (z. B. \"Role:DB\", \"OS:Win8.1\") an. Wenn mehrere Tags angegeben werden, wird der Task auf allen Computern mit den angegebenen Tags ausgeführt. Geben Sie für Azure-Ressourcengruppen den Namen der virtuellen Maschine an, z. B. \"ffweb\" oder \"ffdb\". Standardmäßig wird der Task auf allen Computern ausgeführt."
+  "loc.input.help.MachineNames": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }
