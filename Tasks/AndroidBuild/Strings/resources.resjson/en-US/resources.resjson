@@ -1,8 +1,5 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
-  "loc.friendlyName": "Android Build",
+  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
   "loc.instanceNameFormat": "Android Build $(gradleProj)",
@@ -22,6 +19,7 @@
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "The ABI to use for the Android Virtual Device (AVD).",
   "loc.input.label.avdForce": "Overwrite Existing AVD",
+  "loc.input.help.avdForce": "Passing --force to 'android create avd' command.",
   "loc.input.label.avdOptionalArgs": "Create AVD Optional Arguments",
   "loc.input.help.avdOptionalArgs": "Additional arguments passed to 'android create avd'.",
   "loc.input.label.startEmulator": "Start and Stop Android Emulator",

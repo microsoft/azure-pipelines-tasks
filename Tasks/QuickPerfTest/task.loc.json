@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "9648625C-1523-4EB5-B015-DFE7C685840C",
   "name": "QuickPerfTest",
@@ -16,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 4
   },
   "demands": [
     "msbuild",

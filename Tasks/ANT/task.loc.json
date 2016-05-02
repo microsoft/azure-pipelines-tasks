@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "3A6A2D63-F2B2-4E93-BCF9-0CBE22F5DC26",
   "name": "Ant",
@@ -9,22 +6,28 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 40
   },
   "demands": [
     "ant"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.89.0",
   "groups": [
     {
       "name": "junitTestResults",
       "displayName": "ms-resource:loc.group.displayName.junitTestResults",
+      "isExpanded": true
+    },
+    {
+      "name": "codeCoverage",
+      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
       "isExpanded": true
     },
     {
@@ -39,7 +42,7 @@
       "name": "antBuildFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.antBuildFile",
-      "defaultValue": "",
+      "defaultValue": "build.xml",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.antBuildFile"
     },
@@ -48,14 +51,16 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.options",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.options"
     },
     {
       "name": "targets",
       "type": "string",
       "label": "ms-resource:loc.input.label.targets",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.targets"
     },
     {
       "name": "publishJUnitResults",
@@ -73,7 +78,84 @@
       "defaultValue": "**/TEST-*.xml",
       "required": true,
       "groupName": "junitTestResults",
-      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
+      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "codeCoverageTool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "None": "None",
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "classFilesDirectories",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
+      "defaultValue": ".",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "classFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilter",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "srcDirectories",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.srcDirectories",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "antHomeUserInputPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.antHomeUserInputPath",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.antHomeUserInputPath"
+    },
+    {
+      "name": "javaHomeSelection",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.javaHomeSelection",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "JDKVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.javaHomeSelection",
+      "options": {
+        "JDKVersion": "JDK Version",
+        "Path": "Path"
+      }
     },
     {
       "name": "jdkVersion",
@@ -83,12 +165,23 @@
       "groupName": "advanced",
       "defaultValue": "default",
       "helpMarkDown": "ms-resource:loc.input.help.jdkVersion",
+      "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
         "1.6": "JDK 6"
       }
+    },
+    {
+      "name": "jdkUserInputPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jdkUserInputPath",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkUserInputPath",
+      "visibleRule": "javaHomeSelection = Path"
     },
     {
       "name": "jdkArchitecture",
@@ -105,18 +198,17 @@
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "ant.js",
-      "argumentFormat": ""
-    },
     "Node": {
-      "target": "ant2.js",
+      "target": "anttask.js",
       "argumentFormat": ""
     },
     "PowerShell": {
       "target": "$(currentDirectory)\\ant.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
     }
   }
 }

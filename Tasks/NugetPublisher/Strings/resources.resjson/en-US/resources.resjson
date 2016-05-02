@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "NuGet Publisher",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.description": "Uploads nupkg files to a NuGet server",
+  "loc.instanceNameFormat": "NuGet Publisher $(solution)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.searchPattern": "Path/Pattern to nupkg",
+  "loc.input.help.searchPattern": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
+  "loc.input.label.nuGetFeedType": "Feed type",
+  "loc.input.label.connectedServiceName": "NuGet Server Endpoint",
+  "loc.input.help.connectedServiceName": "The NuGet server generic endpoint, set the key 'Password/Token Key' field to your NuGet API key.",
+  "loc.input.label.feedName": "Internal Feed URL",
+  "loc.input.help.feedName": "The URL of a NuGet feed hosted in this account.",
+  "loc.input.label.nuGetAdditionalArgs": "NuGet Arguments",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe push. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-push-command).",
+  "loc.input.label.nuGetPath": "Path to NuGet.exe",
+  "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
+}

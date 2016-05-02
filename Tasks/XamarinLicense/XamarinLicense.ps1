@@ -2,6 +2,7 @@
     [string]$action, 
     [string]$email, 
     [string]$password,
+    [string]$product,
     [string]$activateAndroid,
     [string]$timeout 
 )
@@ -9,15 +10,16 @@
 Write-Verbose "Entering script XamarinLicense.ps1"
 Write-Verbose "action = $action"
 Write-Verbose "email = $email"
+Write-Verbose "product = $product"
 Write-Verbose "activateAndroid = $activateAndroid"
 Write-Verbose "timeout = $timeout"
-
-$activateAndroidLicense = Convert-String $activateAndroid Boolean
-Write-Verbose "activateAndroid (converted) = $activateAndroidLicense"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
+$activateAndroidLicense = Convert-String $activateAndroid Boolean
+Write-Verbose "activateAndroid (converted) = $activateAndroidLicense"
 
 if (!$action)
 {
@@ -50,7 +52,7 @@ Write-Verbose "timeout: $timeoutInSec"
 if ($action -eq "Activate")
 {
     $xamarinProducts = @()
-    if ($activateAndroidLicense)
+    if ($product -eq "MA" -or $activateAndroidLicense)
     {
         $xamarinProducts += [Microsoft.TeamFoundation.DistributedTask.Task.Internal.Core.XamarinProductType]::Android 
     }

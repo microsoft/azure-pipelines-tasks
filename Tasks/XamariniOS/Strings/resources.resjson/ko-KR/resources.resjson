@@ -4,7 +4,7 @@
   "loc.description": "Mac OS에서 Xamarin으로 iOS 앱 빌드",
   "loc.instanceNameFormat": "Xamarin.iOS 솔루션 $(solution) 빌드",
   "loc.input.label.solution": "솔루션",
-  "loc.input.help.solution": "빌드할 Xamarin.iOS 솔루션의 리포지토리 루트로부터의 상대적 경로입니다.",
+  "loc.input.help.solution": "빌드할 Xamarin.iOS 솔루션의 리포 루트로부터의 상대 경로입니다.",
   "loc.input.label.configuration": "구성",
   "loc.input.help.configuration": "표준 구성은 임시, AppStore, 디버그, 릴리스입니다.",
   "loc.input.label.mdtoolLocation": "mdtool 경로 재정의",

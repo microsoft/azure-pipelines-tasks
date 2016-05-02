@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Расшифровка файлов (OpenSSL)",
+  "loc.description": "Тонкая задача служебной программы для расшифровки файлов с помощью OpenSSL.",
+  "loc.instanceNameFormat": "Расшифровать $(inFile)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.cipher": "Шифрование",
+  "loc.input.help.cipher": "Шифрование, которое следует использовать. Полный список возможных значений см. в разделе [Сipher Suite Names (имена наборов шифрования)] (http://go.microsoft.com/fwlink/?LinkID=627129).",
+  "loc.input.label.inFile": "Зашифрованный файл",
+  "loc.input.help.inFile": "Относительный путь к файлу для расшифровки.",
+  "loc.input.label.passphrase": "Парольная фраза",
+  "loc.input.help.passphrase": "Парольная фраза, используемая для расшифровки. **Используйте переменную для шифрования парольной фразы.**",
+  "loc.input.label.outFile": "Путь к расшифрованному файлу",
+  "loc.input.help.outFile": "Необязательное имя файла для расшифрованного файла. Значение по умолчанию — зашифрованный файл с расширением .out.",
+  "loc.input.label.cwd": "Рабочая папка",
+  "loc.input.help.cwd": "Рабочая папка для расшифровки. Значение по умолчанию — корень репозитория."
+}

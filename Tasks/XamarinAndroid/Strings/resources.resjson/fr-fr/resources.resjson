@@ -6,7 +6,7 @@
   "loc.group.displayName.msbuildOptions": "Options MSBuild",
   "loc.group.displayName.jdkOptions": "Options de JDK",
   "loc.input.label.project": "Projet",
-  "loc.input.help.project": "Chemin d'accès relatif depuis la racine du référentiel aux projets Xamarin.Android à générer. Les caractères génériques sont autorisés. Par exemple, '**\\*.csproj' pour tous les fichiers csproj de tous les sous-dossiers. Le projet doit avoir une cible PackageForAndroid.",
+  "loc.input.help.project": "Chemin relatif de la racine de dépôt des projets Xamarin.Android à générer. Les caractères génériques sont autorisés. Par exemple, '**\\*.csproj' pour tous les fichiers csproj de tous les sous-dossiers. Le projet doit avoir une cible PackageForAndroid.",
   "loc.input.label.target": "Cible",
   "loc.input.help.target": "Générez ces cibles dans ce projet. Utilisez un point-virgule pour séparer plusieurs cibles.",
   "loc.input.label.outputDir": "Répertoire de sortie",

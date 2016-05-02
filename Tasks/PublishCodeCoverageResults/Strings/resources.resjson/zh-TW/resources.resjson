@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "發行程式碼涵蓋範圍結果",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Publish code coverage results to VSTS/TFS",
+  "loc.instanceNameFormat": "發行程式碼涵蓋範圍結果 $(summaryFileLocation)",
+  "loc.input.label.codeCoverageTool": "程式碼涵蓋範圍工具",
+  "loc.input.help.codeCoverageTool": "選取已產生程式碼涵蓋範圍摘要檔的工具",
+  "loc.input.label.summaryFileLocation": "摘要檔",
+  "loc.input.help.summaryFileLocation": "程式碼涵蓋範圍摘要檔的路徑，該路徑具有程式碼涵蓋範圍統計資料，像是折線圖、方法、類別涵蓋範圍。例如 $(Build.Repository.LocalPath)\\CodeCoverage\\Summary.xml",
+  "loc.input.label.reportDirectory": "報告目錄",
+  "loc.input.help.reportDirectory": "程式碼涵蓋範圍報告目錄的路徑。報告目錄是作為針對組建的成品發行。例如 $(Build.Repository.LocalPath)\\CodeCoverageReport",
+  "loc.input.label.additionalCodeCoverageFiles": "其他檔案",
+  "loc.input.help.additionalCodeCoverageFiles": "規則運算式，其指定其他作為針對組建的成品發行的程式碼涵蓋範圍檔案。例如 `$(Build.Repository.LocalPath)\\**\\*.exec`"
+}

@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "Docker-Image auf einem Remotecomputer bereitstellen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Docker-Image auf einem Remotecomputer bereitstellen",
   "loc.instanceNameFormat": "Docker-Bereitstellung: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker-Endpunkt",
-  "loc.input.help.DockerEndpoint": "Remoteverbindungs-URL von Docker-Server. Der gültige remote_api_port-Bereich ist [0,65535].",
+  "loc.input.help.DockerEndpoint": "Die Remoteverbindungs-URL des Docker-Servers. Der gültige remote_api_port-Bereich ist [0,65535].",
   "loc.input.label.Repository": "Repository",
   "loc.input.help.Repository": "Name des Image",
   "loc.input.label.Tag": "Tag",

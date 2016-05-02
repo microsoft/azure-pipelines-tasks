@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Xcode-Paket $(appName)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.appName": "Name von \".app\"",
-  "loc.input.help.appName": "Name der APP-Datei, manchmal verschieden von der IPA-Datei",
+  "loc.input.help.appName": "Name der APP-Datei (kann sich von der IPA-Datei unterscheiden)",
   "loc.input.label.ipaName": "Name von \".ipa\"",
   "loc.input.help.ipaName": "Name der IPA-Datei, manchmal verschieden von der APP-Datei",
   "loc.input.label.provisioningProfile": "Profilname wird bereitgestellt",

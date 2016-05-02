@@ -86,9 +86,20 @@ if ($jdkVersion -and $jdkVersion -ne "default")
 Write-Verbose "args = $args"
 
 # build each project file
+$exitCode = 0;
 foreach ($pf in $projectFiles)
 {
-    Invoke-MSBuild $pf -LogFile "$pf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
+    try {
+        Invoke-MSBuild $pf -LogFile "$pf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
+    }
+    catch [System.Exception] {
+        Write-Error $error[0]
+        $exitCode = 1
+    }
+}
+
+if ($exitCode -ne 0) {
+    Write-Error "See http://go.microsoft.com/fwlink/?LinkId=760847"
 }
 
 Write-Verbose "Leaving script XamarinAndroid.ps1"

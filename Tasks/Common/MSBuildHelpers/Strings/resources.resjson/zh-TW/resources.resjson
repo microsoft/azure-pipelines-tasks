@@ -1,0 +1,6 @@
+{
+  "loc.messages.MSB_Build0": "組建 {0}",
+  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "偵測到 NuGet 擴充功能載入器路徑。環境變數 NUGET_EXTENSIONS_PATH 設定為 '{0}'。",
+  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "使用搜尋模式 '{0}' 找不到解決方案。",
+  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition."
+}

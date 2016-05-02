@@ -6,71 +6,80 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613721)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],    
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 2
+        "Patch": 22
     },
-    "demands" : [
-        "gulp"
+    "demands": [
+        "node.js"
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.91.0",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
-    ],    
+    ],
     "instanceNameFormat": "gulp $(targets)",
     "inputs": [
-        { 
+        {
             "name": "gulpFile",
             "type": "filePath",
             "label": "Gulp File Path",
-            "defaultValue":"gulpfile.js",
-            "required":true,
+            "defaultValue": "gulpfile.js",
+            "required": true,
             "helpMarkDown": "Relative path from repo root of the gulp file script file to run."
         },
         {
             "name": "targets",
             "type": "string",
             "label": "Gulp Task(s)",
-            "defaultValue":"",
-            "helpMarkDown": "Optional.  default task will get run if not specified. Space delimited list of tasks to run.  If not specified, the default task will run.",
-            "required":false
+            "defaultValue": "",
+            "helpMarkDown": "Optional.  Space delimited list of tasks to run.  If not specified, the default task will run.",
+            "required": false
         },
         {
             "name": "arguments",
             "type": "string",
             "label": "Arguments",
-            "defaultValue":"",
+            "defaultValue": "",
             "helpMarkDown": "Additional arguments passed to gulp.  --gulpfile is not needed since already added via gulpFile input above.",
-            "required":false,
-            "groupName":"advanced"
+            "required": false,
+            "groupName": "advanced"
         },
         {
             "name": "cwd",
             "type": "filePath",
             "label": "Working Directory",
-            "defaultValue":"",
-            "required":false,
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
-            "groupName":"advanced"
+            "groupName": "advanced"
+        },
+        {
+            "name": "gulpjs",
+            "type": "string",
+            "label": "gulp.js location",
+            "defaultValue": "node_modules/gulp/bin/gulp.js",
+            "required": true,
+            "helpMarkDown": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of cwd.",
+            "groupName": "advanced"
         }
     ],
     "execution": {
         "Node": {
             "target": "gulptask.js",
             "argumentFormat": ""
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\Gulptask.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "GulpNotInstalled": "Gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
+        "GulpReturnCode": "Gulp exited with return code: %d",
+        "GulpFailed": "Gulp failed with error: %s"
     }
 }

@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "複製檔案",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "使用 minimatch 模式將檔案從來源資料夾複製到目標資料夾 (minimatch 模式只會比對檔案路徑，而不會資料夾路徑)",
+  "loc.instanceNameFormat": "將檔案複製到: $(TargetFolder)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.SourceFolder": "來源資料夾",
+  "loc.input.help.SourceFolder": "複製模式執行所在的來源資料夾。保留空白表示是儲存機制的根資料夾。若檔案不在儲存機制中，請使用 [變數](http://go.microsoft.com/fwlink/?LinkID=550988)。例如: $(agent.builddirectory)",
+  "loc.input.label.Contents": "內容",
+  "loc.input.help.Contents": "複製時要一併加入的檔案路徑。支援 minimatch 模式的多行。[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "目標資料夾",
+  "loc.input.help.TargetFolder": "要接受所複製之檔案的目標資料夾。請使用 [變數](http://go.microsoft.com/fwlink/?LinkID=550988)。例如: $(build.artifactstagingdirectory)",
+  "loc.input.label.CleanTargetFolder": "清除目標資料夾",
+  "loc.input.help.CleanTargetFolder": "複製前先刪除目標資料夾中所有現有的檔案",
+  "loc.input.label.OverWrite": "覆寫",
+  "loc.input.help.OverWrite": "取代目標資料夾中現有的檔案",
+  "loc.messages.FoundNFiles": "找到 %d 個檔案",
+  "loc.messages.CleaningTargetFolder": "正在刪除目標資料夾: %s",
+  "loc.messages.FileAlreadyExistAt": "檔案 %s 已存在於 %s 上",
+  "loc.messages.CopyingTo": "正在將 %s 複製到 %s"
+}

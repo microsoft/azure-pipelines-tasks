@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
   "name": "MSBuild",
@@ -15,12 +12,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 33
   },
   "demands": [
     "msbuild"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
@@ -33,7 +30,7 @@
       "name": "solution",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
-      "defaultValue": "**\\*.sln",
+      "defaultValue": "**/*.sln",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.solution"
     },
@@ -64,14 +61,17 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.clean",
       "defaultValue": "false",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.clean"
     },
     {
       "name": "restoreNugetPackages",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.restoreNugetPackages",
-      "defaultValue": "true",
-      "required": false
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreNugetPackages"
     },
     {
       "name": "logProjectEvents",
@@ -136,10 +136,19 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\MSBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "MSBuild.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node": {
+      "target": "msbuild.js",
+      "argumentFormat": ""
     }
+  },
+  "messages": {
+    "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "ms-resource:loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion",
+    "MSBuildNotFoundVersion0Architecture1TryDifferent": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent"
   }
 }

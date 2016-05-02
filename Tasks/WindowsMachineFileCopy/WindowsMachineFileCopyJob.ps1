@@ -12,12 +12,12 @@ param (
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
     [void][reflection.assembly]::LoadFrom( $_.FullName )
-    Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
+    Write-Verbose "Loading .NET assembly:`t$($_.name)"
     }
 
     Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\*.dll | % {
     [void][reflection.assembly]::LoadFrom( $_.FullName )
-    Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
+    Write-Verbose "Loading .NET assembly:`t$($_.name)"
     }
 
 	$cleanTargetPathOption = ''
@@ -26,7 +26,7 @@ param (
 		$cleanTargetPathOption = '-CleanTargetPath'
     }
 
-    Write-Verbose "Initiating copy on $fqdn " -Verbose
+    Write-Verbose "Initiating copy on $fqdn "
 
    	[String]$copyFilesToTargetMachineBlockString = "Copy-FilesToTargetMachine -MachineDnsName $fqdn -SourcePath `$sourcePath -DestinationPath `$targetPath -Credential `$credential -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption"	
 		

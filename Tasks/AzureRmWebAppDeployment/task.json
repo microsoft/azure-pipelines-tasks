@@ -1,0 +1,170 @@
+{
+    "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
+    "name": "AzureRMWebAppDeployment",
+    "friendlyName": "AzureRM Web App Deployment",
+    "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
+	"helpMarkDown": "[More Information](http://aka.ms/azurermwebdeployreadme)",
+    "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 3
+    },
+    "minimumAgentVersion": "1.99.0",
+	"groups": [
+        {
+            "name": "output",
+            "displayName": "Output",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "AzureRM Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "WebAppName",
+            "type": "pickList",
+            "label": "Web App Name",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select the name of an existing AzureRM Web Application."
+        },
+        {
+            "name": "DeployToSlotFlag",
+            "type": "boolean",
+            "label": "Deploy to Slot",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the AzureRM Web App will be deployed to the Production slot."
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource Group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the AzureRM Web App specified above.",
+            "visibleRule": "DeployToSlotFlag = true"
+        },
+        {
+            "name": "SlotName",
+            "type": "pickList",
+            "label": "Slot",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
+            "visibleRule": "DeployToSlotFlag = true"
+        },
+        {
+            "name": "Package",
+            "type": "filePath",
+            "label": "Package",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\***.zip` can be also used here."
+        },
+        {
+            "name": "RemoveAdditionalFilesFlag",
+            "type": "boolean",
+            "label": "Remove Additional Files at Destination",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package."
+        },
+        {
+            "name": "ExcludeFilesFromAppDataFlag",
+            "type": "boolean",
+            "label": "Exclude Files from the App_Data Folder",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
+        },
+        {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+        },
+        {
+            "name": "VirtualApplication",
+            "type": "string",
+            "label": "Virtual Application",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root."
+         },
+        {
+            "name": "AdditionalArguments",
+            "type": "string",
+            "label": "Additional Arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+		{
+            "name": "WebAppUri",
+            "type": "string",
+            "label": "Web App Hosted Url",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "output",
+            "helpMarkDown": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "WebAppName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppNames"
+        },
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppResourceGroup",
+            "parameters": {
+                "WebAppName": "$(WebAppName)"
+            }
+        },
+        {
+            "target": "SlotName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppSlotsId",
+            "parameters": {
+                "WebAppName": "$(WebAppName)",
+                "ResourceGroupName": "$(ResourceGroupName)"
+            },
+            "resultTemplate": "{{#extractResource slots}}"
+        }
+    ],
+    "instanceNameFormat": "Deploy AzureRM Web App: $(WebAppName)",
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\AzureRMWebAppDeployment.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

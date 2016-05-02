@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
   "name": "AzureWebPowerShellDeployment",
   "friendlyName": "Azure Web App Deployment",
@@ -6,23 +6,23 @@
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
   "category": "Deploy",
   "visibility": [
-                "Build",
-                "Release"
-                ],
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 31
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.90.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
+      "type": "connectedService:Azure:Certificate,UsernamePassword",
       "label": "Azure Subscription",
       "defaultValue": "",
       "required": true,
@@ -33,7 +33,10 @@
       "type": "pickList",
       "label": "Web App Name",
       "defaultValue": "",
-      "required": true
+      "required": true,
+	  "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "WebSiteLocation",
@@ -41,22 +44,7 @@
       "label": "Web App Location",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Select a region for deployment.",
-      "options": {
-        "Brazil South": "Brazil South",
-        "Central US": "Central US",
-        "East Asia": "East Asia",
-        "East US": "East US",
-        "East US2": "East US2",
-        "Japan East": "Japan East",
-        "Japan West": "Japan West",
-        "North Central US": "North Central US",
-        "North Europe": "North Europe",
-        "South Central US": "South Central US",
-        "Southeast Asia": "Southeast Asia",
-        "West Europe": "West Europe",
-        "West US": "West US"
-      },
+      "helpMarkDown": "Select a region for deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",     
       "properties": {
         "EditableOptions": "True"
       }
@@ -71,11 +59,19 @@
     },
     {
       "name": "Package",
-      "type": "string",
+      "type": "filePath",
       "label": "Web Deploy Package",
       "defaultValue": "",
       "helpMarkDown": "Path to the Visual Studio Web Deploy package under the default artifact directory.",
       "required": true
+    },
+    {
+        "name": "doNotDelete",
+        "type": "boolean",
+        "label": "Set DoNotDelete flag",
+        "defaultValue": "false",
+        "helpMarkDown": "By enabling this, additional files in web deployment package are preserved while publishing website.",
+        "required": false
     },
     {
       "name": "AdditionalArguments",
@@ -85,12 +81,19 @@
       "required": false
     }
   ],
-  "sourceDefinitions": [
+  "dataSourceBindings": [
     {
-        "target": "WebSiteName",
-        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/webspaces/$(WebSiteLocation)Webspace/sites",
-        "selector": "xpath://Site/Name",
-        "authKey": "$(ConnectedServiceName)"
+      "target": "WebSiteName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureWebSiteNames",
+	  "parameters": {
+		"WebSiteLocation": "$(WebSiteLocation)"
+	  }
+    },
+    {
+      "target": "WebSiteLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",

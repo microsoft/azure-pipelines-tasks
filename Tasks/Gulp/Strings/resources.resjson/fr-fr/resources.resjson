@@ -1,15 +1,20 @@
 {
   "loc.friendlyName": "Gulp",
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613721)",
-  "loc.description": "Système de génération basé sur les tâches de diffusion en continu Node.js",
+  "loc.description": "Système de build basé sur les tâches de diffusion en continu Node.js",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.gulpFile": "Chemin d'accès du fichier Gulp",
-  "loc.input.help.gulpFile": "Chemin d'accès relatif depuis la racine du référentiel au fichier script du fichier gulp à exécuter.",
+  "loc.input.help.gulpFile": "Chemin relatif de la racine de dépôt du fichier script du fichier gulp à exécuter.",
   "loc.input.label.targets": "Tâche(s) Gulp",
-  "loc.input.help.targets": "Facultatif. La tâche par défaut est exécutée si aucune tâche n'est spécifiée. Liste de tâches séparées par des espaces à exécuter. Si non spécifié, la tâche par défaut est exécutée.",
+  "loc.input.help.targets": "Facultatif. Liste des tâches à exécuter délimitées par des espaces. Si elle n'est pas spécifiée, la tâche par défaut est exécutée.",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Arguments supplémentaires passés à gulp.  --gulpfile n'est pas nécessaire, car il est déjà ajouté via l'entrée gulpFile ci-dessus.",
   "loc.input.label.cwd": "Répertoire de travail",
-  "loc.input.help.cwd": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script."
+  "loc.input.help.cwd": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script.",
+  "loc.input.label.gulpjs": "Emplacement de gulp.js",
+  "loc.input.help.gulpjs": "Fichier gulp.js à exécuter quand l'agent ne trouve pas le gulp installé global. Correspond par défaut au fichier gulp.js sous le dossier node_modules de cwd.",
+  "loc.messages.GulpNotInstalled": "Gulp n'est pas installé de manière globale, ou ne se trouve pas dans le chemin de l'utilisateur via lequel l'agent s'exécute. De plus, il ne se trouve pas dans le dossier de travail local : %s",
+  "loc.messages.GulpReturnCode": "Sortie de Gulp. Code de retour : %d",
+  "loc.messages.GulpFailed": "Échec de Gulp. Erreur : %s"
 }

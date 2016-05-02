@@ -1,0 +1,19 @@
+{
+    "which": {
+        "grunt": "/usr/local/bin/grunt",
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/grunt build test --gruntfile gruntfile.js -v": {
+            "code": 1,
+            "stdout": "grunt output here",
+            "stderr": "grunt failed with this output"
+        }
+    },
+    "checkPath": {
+        "gruntfile.js": true
+    },        
+    "exist": {
+        "/usr/local/bin/grunt": true
+    }
+}

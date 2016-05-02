@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "C7B7CCF9-D6E0-472B-97BB-06B6E43504F3",
   "name": "ChefKnife",
@@ -16,10 +13,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 8
   },
   "demands": [
-    "Chef"
+    "Chef",
+    "DotNetFramework"
   ],
   "minimumAgentVersion": "1.83.0",
   "inputs": [

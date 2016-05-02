@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Publier les résultats de la couverture du code",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Publish code coverage results to VSTS/TFS",
+  "loc.instanceNameFormat": "Publier les résultats de la couverture du code $(summaryFileLocation)",
+  "loc.input.label.codeCoverageTool": "Outil de couverture du code",
+  "loc.input.help.codeCoverageTool": "Sélectionner l'outil avec lequel les fichiers de résumé de la couverture du code ont été générés",
+  "loc.input.label.summaryFileLocation": "Fichier de résumé",
+  "loc.input.help.summaryFileLocation": "Chemin du fichier de résumé de la couverture du code, qui contient les statistiques de couverture du code telles que la couverture de ligne, de méthode et de classe. Par exemple, $(Build.Repository.LocalPath)\\CodeCoverage\\Summary.xml",
+  "loc.input.label.reportDirectory": "Répertoire de rapports",
+  "loc.input.help.reportDirectory": "Chemin du répertoire des rapports de couverture du code. Le répertoire de rapports est publié en tant qu'artefact sur la build. Par exemple, $(Build.Repository.LocalPath)\\CodeCoverageReport",
+  "loc.input.label.additionalCodeCoverageFiles": "Fichiers supplémentaires",
+  "loc.input.help.additionalCodeCoverageFiles": "Expression régulière spécifiant les fichiers de couverture du code supplémentaires à publier en tant qu'artefact sur la build. Par exemple, `$(Build.Repository.LocalPath)\\**\\*.exec`"
+}

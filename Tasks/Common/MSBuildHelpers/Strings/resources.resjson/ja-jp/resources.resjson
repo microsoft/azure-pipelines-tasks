@@ -1,0 +1,6 @@
+{
+  "loc.messages.MSB_Build0": "ビルド: {0}",
+  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "NuGet 拡張機能のローダー パスが検出されました。環境変数 NUGET_EXTENSIONS_PATH が '{0}' に設定されています。",
+  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "検索パターン '{0}' を使ってソリューションが見つかりませんでした。",
+  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition."
+}

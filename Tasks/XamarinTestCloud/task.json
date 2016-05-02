@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "049918CB-1488-48EB-85E8-C318ECCAAA74",
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
@@ -6,16 +6,16 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [
-                "Build"
-                  ],
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 19
     },
-    "demands": [
-    ],
+    "demands": [],
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
@@ -31,7 +31,7 @@
             "label": "App File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**\\*.apk` for all APK files in all subfolders."
+            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders."
         },
         {
             "name": "dsym",
@@ -39,7 +39,7 @@
             "label": "dSYM File (iOS only)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Example: *.dSYM"
+            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM"
         },
         {
             "name": "teamApiKey",
@@ -102,15 +102,29 @@
             "required": true,
             "groupName": "advanced",
             "options": {
-                "en_US": "English (United States)",
+                "da_DK": "Danish (Denmark)",
+                "nl_NL": "Dutch (Netherlands)",
                 "en_GB": "English (United Kingdom)",
+                "en_US": "English (United States)",
                 "fr_FR": "French (France)",
                 "de_DE": "German (Germany)",
                 "ja_JP": "Japanese (Japan)",
                 "ru_RU": "Russian (Russia)",
                 "es_MX": "Spanish (Mexico)",
-                "es_ES": "Spanish (Spain)"
-            }
+                "es_ES": "Spanish (Spain)",
+                "user": "Other"
+            },
+            "helpMarkDown": "If your language isn't displayed, select 'Other' and enter its locale below, such as en_US."
+        },
+        {
+            "name": "userDefinedLocale",
+            "type": "string",
+            "label": "Other Locale",
+            "groupName": "advanced",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "locale = user",
+            "helpMarkDown": "Enter any two-letter ISO-639 language code along with any two-letter ISO 3166 country code in the format [language]_[country], such as en_US."
         },
         {
             "name": "testCloudLocation",
@@ -137,18 +151,20 @@
             "defaultValue": "true",
             "helpMarkDown": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
         }
-
     ],
     "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
     "execution": {
-       "Node": {
-            "target": "XamarinTestCloud.js",
+        "Node": {
+            "target": "xamarintestcloud.js",
             "argumentFormat": ""
         },
         "PowerShell": {
             "target": "$(currentDirectory)\\XamarinTestCloud.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": "$(currentDirectory)",
+            "platforms": [
+                "windows"
+            ]
         }
     }
 }

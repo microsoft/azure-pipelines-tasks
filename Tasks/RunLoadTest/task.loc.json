@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
   "name": "CloudLoadTest",
@@ -16,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 5
   },
   "demands": [
     "msbuild",

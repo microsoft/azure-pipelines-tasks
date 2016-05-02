@@ -8,6 +8,7 @@
         {
             $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
         }
+        
         $Version = Get-Item $regPath | %{$_.GetSubKeyNames()} | Sort-Object -Descending | Select-Object -First 1
         if ([string]::IsNullOrWhiteSpace($Version))
         {

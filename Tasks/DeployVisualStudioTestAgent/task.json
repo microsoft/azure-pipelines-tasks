@@ -1,23 +1,24 @@
-﻿{
+{
     "id": "52A38A6A-1517-41D7-96CC-73EE0C60D2B6",
     "name": "DeployVisualStudioTestAgent",
     "friendlyName": "Visual Studio Test Agent Deployment",
-    "description": "Deploy and configure Test Agent to run tests on a lab machine group",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployVisualStudioTestAgent/README.md)",
+    "description": "Deploy and configure Test Agent to run tests on a set of machines",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=625976)",
     "category": "Test",
-    "visibility": [
-                "Build"
+    "visibility": [     
+                  "Build",
+                  "Release"
                   ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 28
     },
     "demands": [
 
     ],
-    "minimumAgentVersion": "1.85.0",
+    "minimumAgentVersion": "1.97.0",
     "groups":  [
         {
             "name": "testMachineGroups",
@@ -36,17 +37,58 @@
         }
     ],
     "inputs": [
-        {
+		{
             "name": "testMachineGroup",
-            "type": "pickList",
-            "label": "Test Machine Group",
+            "type": "multiLine",
+            "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Test Machine Group on which tests need to be run.",
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. `Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name.",
             "groupName": "testMachineGroups"
         },
         {
-            "name":"ResourceFilteringMethod",
+            "name": "adminUserName",
+            "type": "string",
+            "label": "Admin Login",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Administrator login for the target machines.",
+            "groupName": "testMachineGroups"
+        },
+        {
+            "name": "adminPassword",
+            "type": "string",
+            "label": "Admin Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as `$(passwordVariable)`. <br>You may mark variable type as 'secret' to secure it.",
+            "groupName": "testMachineGroups"
+        },
+        {
+            "name": "winRmProtocol",
+            "type": "radio",
+            "label": "Protocol",
+            "required": false,
+            "defaultValue": "",
+            "options": {
+                "Http": "HTTP",
+                "Https": "HTTPS"
+            },
+            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is `HTTPS`.",
+            "groupName": "testMachineGroups"
+        },
+        {
+            "name": "testCertificate",
+            "type": "boolean",
+            "label": "Test Certificate",
+            "defaultValue": "true",
+            "visibleRule": "winRmProtocol = Https",
+            "required": false,
+            "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.",
+            "groupName": "testMachineGroups"
+        },
+        {
+            "name":"resourceFilteringMethod",
             "type":"radio",
             "label":"Select Machines By",
             "required":false,
@@ -60,10 +102,10 @@
         {
             "name": "testMachines",
             "type": "string",
-            "label": "Deploy to Machines",
+            "label": "Filter Criteria",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\"",
+            "helpMarkDown": "Provide a list of machines like `dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1`. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is to deploy agent on all machines represented in the Machines field.",
             "groupName": "testMachineGroups"
         },
         {
@@ -100,7 +142,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from http://go.microsoft.com/fwlink/?LinkId=536423"
+            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `http://go.microsoft.com/fwlink/?LinkId=536423`"
         },
         {
             "name": "updateTestAgent",
@@ -120,14 +162,6 @@
             "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
             "groupName": "advanced"
         }
-    ],
-    "sourceDefinitions": [ 
-     { 
-         "target": "testMachineGroup",
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-         "selector": "jsonpath:$.value[*].name",
-         "authKey": "tfs:DevTestLabs"
-     } 
     ],
     "instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
     "execution": {

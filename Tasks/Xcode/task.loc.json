@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
   "name": "Xcode",
@@ -13,9 +10,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 9
+    "Major": 2,
+    "Minor": 1,
+    "Patch": 14
   },
   "demands": [
     "xcode"
@@ -23,28 +20,17 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
+      "name": "sign",
+      "displayName": "ms-resource:loc.group.displayName.sign",
+      "isExpanded": true
+    },
+    {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
     }
   ],
   "inputs": [
-    {
-      "name": "xcWorkspacePath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.xcWorkspacePath",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.xcWorkspacePath"
-    },
-    {
-      "name": "scheme",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.scheme",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.scheme"
-    },
     {
       "name": "actions",
       "type": "string",
@@ -69,6 +55,133 @@
       "helpMarkDown": "ms-resource:loc.input.help.sdk"
     },
     {
+      "name": "xcWorkspacePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.xcWorkspacePath",
+      "defaultValue": "**/*.xcodeproj/*.xcworkspace",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcWorkspacePath"
+    },
+    {
+      "name": "scheme",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.scheme",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.scheme"
+    },
+    {
+      "name": "packageApp",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.packageApp",
+      "defaultValue": true,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageApp"
+    },
+    {
+      "name": "signMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.signMethod",
+      "required": false,
+      "groupName": "sign",
+      "defaultValue": "file",
+      "helpMarkDown": "ms-resource:loc.input.help.signMethod",
+      "options": {
+        "file": "File Contents",
+        "id": "Identifiers"
+      }
+    },
+    {
+      "name": "iosSigningIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.iosSigningIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.iosSigningIdentity",
+      "groupName": "sign",
+      "visibleRule": "signMethod = id"
+    },
+    {
+      "name": "unlockDefaultKeychain",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.unlockDefaultKeychain",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.unlockDefaultKeychain",
+      "groupName": "sign",
+      "visibleRule": "signMethod = id"
+    },
+    {
+      "name": "defaultKeychainPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.defaultKeychainPassword",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.defaultKeychainPassword",
+      "groupName": "sign",
+      "visibleRule": "signMethod = id"
+    },
+    {
+      "name": "provProfileUuid",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.provProfileUuid",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileUuid",
+      "groupName": "sign",
+      "visibleRule": "signMethod = id"
+    },
+    {
+      "name": "p12",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.p12",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.p12",
+      "groupName": "sign",
+      "visibleRule": "signMethod = file"
+    },
+    {
+      "name": "p12pwd",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.p12pwd",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.p12pwd",
+      "groupName": "sign",
+      "visibleRule": "signMethod = file"
+    },
+    {
+      "name": "provProfile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.provProfile",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfile",
+      "groupName": "sign",
+      "visibleRule": "signMethod = file"
+    },
+    {
+      "name": "removeProfile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.removeProfile",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.removeProfile",
+      "groupName": "sign",
+      "visibleRule": "signMethod = file"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.args",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
       "name": "outputPattern",
       "type": "string",
       "label": "ms-resource:loc.input.label.outputPattern",
@@ -76,13 +189,42 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.outputPattern",
       "groupName": "advanced"
+    },
+    {
+      "name": "xcodeDeveloperDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcodeDeveloperDir",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcodeDeveloperDir",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useXctool",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useXctool",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useXctool",
+      "groupName": "advanced"
+    },
+    {
+      "name": "xctoolReporter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xctoolReporter",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xctoolReporter",
+      "groupName": "advanced"
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishJUnitResults",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "xcodebuild.js",
-      "argumentFormat": ""
-    },
     "Node": {
       "target": "xcodebuild2.js",
       "argumentFormat": ""

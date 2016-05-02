@@ -6,12 +6,12 @@
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.solution": "方案的路徑",
   "loc.input.help.solution": "Visual Studio 方案檔案的路徑",
-  "loc.input.label.excludeVersion": "排除版本",
-  "loc.input.help.excludeVersion": "讓 NuGet 從封裝資料夾名稱排除封裝版本。相當於 -ExcludeVersion NuGet.exe 命令列引數",
+  "loc.input.label.nugetConfigPath": "NuGet.config 的路徑",
+  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
   "loc.input.label.noCache": "停用本機快取",
   "loc.input.help.noCache": "相當於 -NoCache NuGet.exe 命令列引數",
   "loc.input.label.nuGetRestoreArgs": "NuGet 引數",
-  "loc.input.help.nuGetRestoreArgs": "傳遞至 NuGet.exe 還原的其他引數。",
+  "loc.input.help.nuGetRestoreArgs": "傳遞至 NuGet.exe 還原的其他引數。[詳細資訊](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路徑",
-  "loc.input.help.nuGetPath": "選擇性地提供到 NuGet.exe 的路徑"
+  "loc.input.help.nuGetPath": "選擇性地提供 NuGet.exe 的路徑"
 }

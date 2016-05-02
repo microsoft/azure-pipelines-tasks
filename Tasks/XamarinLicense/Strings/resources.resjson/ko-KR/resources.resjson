@@ -9,6 +9,7 @@
   "loc.input.help.email": "Xamarin 계정 메일 주소.",
   "loc.input.label.password": "암호",
   "loc.input.help.password": "Xamarin 계정 암호.",
-  "loc.input.label.activateAndroid": "Xamarin.Android 활성화",
+  "loc.input.label.product": "Xamarin Product",
+  "loc.input.help.product": "Xamarin product name.",
   "loc.input.label.timeout": "시간 제한(초)"
 }

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "D9BAFED4-0B18-4F58-968D-86655B4D2CE9",
   "name": "CmdLine",
@@ -16,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 24
   },
   "groups": [
     {
@@ -39,6 +36,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "required": false
     },
     {
@@ -47,7 +45,6 @@
       "label": "ms-resource:loc.input.label.workingFolder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
       "groupName": "advanced"
     },
     {
@@ -66,15 +63,17 @@
       "target": "$(filename)",
       "argumentFormat": "$(arguments)",
       "workingDirectory": "$(workingFolder)",
-      "failOnStandardError": "$(failOnStandardError)"
-    },
-    "JavaScript": {
-      "target": "cmdLine.js",
-      "argumentFormat": ""
+      "platforms": [
+        "windows"
+      ]
     },
     "Node": {
-      "target": "cmdLine2.js",
+      "target": "cmdlinetask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CmdLineReturnCode": "ms-resource:loc.messages.CmdLineReturnCode",
+    "CmdLineFailed": "ms-resource:loc.messages.CmdLineFailed"
   }
 }

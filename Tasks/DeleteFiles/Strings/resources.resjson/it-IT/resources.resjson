@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Elimina file",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=722333)",
+  "loc.description": "Consente di eliminare file o cartelle usando criteri di corrispondenza minima che prendono in considerazione solo i percorsi dei file e non i percorsi delle cartelle.",
+  "loc.instanceNameFormat": "Elimina file da $(SourceFolder)",
+  "loc.input.label.SourceFolder": "Cartella di origine",
+  "loc.input.help.SourceFolder": "Cartella di origine da cui verranno eseguite le eliminazioni. Il valore vuoto corrisponde alla radice del repository. Usare [variabili](http://go.microsoft.com/fwlink/?LinkID=550988) se i file non sono presenti nel repository. Esempio: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Contenuti",
+  "loc.input.help.Contents": "Percorsi di file/cartella da eliminare. Sono supportate più righe di criteri di corrispondenza minima. [Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=722333)",
+  "loc.messages.CantDeleteFiles": "Non è stato possibile eliminare uno o più file",
+  "loc.messages.SkippingSymbolStore": "L'eliminazione per la condivisione file dell'archivio simboli verrà ignorata: %s"
+}

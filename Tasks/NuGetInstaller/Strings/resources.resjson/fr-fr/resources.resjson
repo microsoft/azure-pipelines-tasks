@@ -5,13 +5,13 @@
   "loc.instanceNameFormat": "Restauration NuGet $(solution)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.solution": "Chemin d'accès de la solution",
-  "loc.input.help.solution": "Chemin d'accès au fichier de la solution Visual Studio",
-  "loc.input.label.excludeVersion": "Exclure la version",
-  "loc.input.help.excludeVersion": "Indique à NuGet d'exclure la version de package des noms de dossier du package. Équivaut à l'argument de ligne de commande -ExcludeVersion NuGet.exe",
+  "loc.input.help.solution": "Chemin d'accès du fichier de la solution Visual Studio",
+  "loc.input.label.nugetConfigPath": "Chemin d'accès vers NuGet.config",
+  "loc.input.help.nugetConfigPath": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=733327).",
   "loc.input.label.noCache": "Désactiver le cache local",
   "loc.input.help.noCache": "Équivaut à l'argument de ligne de commande -NoCache NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Arguments NuGet",
-  "loc.input.help.nuGetRestoreArgs": "Arguments supplémentaires passé à la restauration de NuGet.exe.",
-  "loc.input.label.nuGetPath": "Chemin d'accès de NuGet.exe",
+  "loc.input.help.nuGetRestoreArgs": "Arguments supplémentaires passés à la commande restore de NuGet.exe. [Plus d'informations](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
+  "loc.input.label.nuGetPath": "Chemin de NuGet.exe",
   "loc.input.help.nuGetPath": "Indiquez éventuellement le chemin d'accès à NuGet.exe"
 }

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "AC4EE482-65DA-4485-A532-7B085873E532",
   "name": "Maven",
@@ -9,7 +6,8 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "demands": [
@@ -18,9 +16,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 45
   },
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -29,9 +27,19 @@
       "isExpanded": true
     },
     {
+      "name": "codeCoverage",
+      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
+      "isExpanded": true
+    },
+    {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "SQAnalysis",
+      "displayName": "ms-resource:loc.group.displayName.SQAnalysis",
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -39,7 +47,7 @@
       "name": "mavenPOMFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.mavenPOMFile",
-      "defaultValue": "",
+      "defaultValue": "pom.xml",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile"
     },
@@ -73,7 +81,74 @@
       "defaultValue": "**/TEST-*.xml",
       "required": true,
       "groupName": "junitTestResults",
-      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
+      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "codeCoverageTool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "None": "None",
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "classFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilter",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "classFilesDirectories",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "srcDirectories",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.srcDirectories",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "javaHomeSelection",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.javaHomeSelection",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "JDKVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.javaHomeSelection",
+      "options": {
+        "JDKVersion": "JDK Version",
+        "Path": "Path"
+      }
     },
     {
       "name": "jdkVersion",
@@ -83,12 +158,23 @@
       "groupName": "advanced",
       "defaultValue": "default",
       "helpMarkDown": "ms-resource:loc.input.help.jdkVersion",
+      "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
         "1.6": "JDK 6"
       }
+    },
+    {
+      "name": "jdkUserInputPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jdkUserInputPath",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkUserInputPath",
+      "visibleRule": "javaHomeSelection = Path"
     },
     {
       "name": "jdkArchitecture",
@@ -102,21 +188,108 @@
         "x86": "x86",
         "x64": "x64"
       }
+    },
+    {
+      "name": "mavenVersionSelection",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.mavenVersionSelection",
+      "defaultValue": "Default",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenVersionSelection",
+      "options": {
+        "Default": "Default",
+        "Path": "Custom Path"
+      }
+    },
+    {
+      "name": "mavenPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.mavenPath",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenPath",
+      "visibleRule": "mavenVersionSelection = Path"
+    },
+    {
+      "name": "mavenSetM2Home",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mavenSetM2Home",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenSetM2Home",
+      "visibleRule": "mavenVersionSelection = Path"
+    },
+    {
+      "name": "sqAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "SQAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
+    },
+    {
+      "name": "sqConnectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.sqConnectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
+      "groupName": "SQAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqDbDetailsRequired",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "SQAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbDetailsRequired",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqDbUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbUrl",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbUrl",
+      "groupName": "SQAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "sqDbUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbUsername",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbUsername",
+      "groupName": "SQAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "sqDbPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbPassword",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
+      "groupName": "SQAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
     }
   ],
   "execution": {
-    "JavaScript": {
-      "target": "maven.js",
-      "argumentFormat": ""
-    },
     "Node": {
-      "target": "maven2.js",
+      "target": "maventask.js",
       "argumentFormat": ""
     },
     "PowerShell": {
       "target": "$(currentDirectory)\\maven.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
     }
   }
 }

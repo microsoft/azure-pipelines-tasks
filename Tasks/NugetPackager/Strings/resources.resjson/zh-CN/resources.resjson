@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "NuGet 包装程序",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.description": "从 csproj 或 nuspec 文件创建 nupkg 输出",
+  "loc.instanceNameFormat": "NuGet 包装程序 $(solution)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.searchPattern": "nuspec 文件的路径/模式",
+  "loc.input.help.searchPattern": "搜索要打包的 nuspec 和 csproj 文件的模式。",
+  "loc.input.label.versionByBuild": "使用生成号确定包的版本",
+  "loc.input.help.versionByBuild": "将使用生成号确定包的版本。在“常规”设置下，生成的格式将为 \"$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)\"",
+  "loc.input.label.outputdir": "包文件夹",
+  "loc.input.help.outputdir": "在其中创建包的文件夹，如果为空，则将在 csproj 或 nuspec 文件的目录中创建",
+  "loc.input.label.configurationToPack": "包的配置",
+  "loc.input.help.configurationToPack": "使用 csproj 文件时，这指定包的配置",
+  "loc.input.label.buildProperties": "其他生成属性",
+  "loc.input.help.buildProperties": "用于生成包的属性列表，采用分号分隔。",
+  "loc.input.label.nuGetAdditionalArgs": "NuGet 参数",
+  "loc.input.help.nuGetAdditionalArgs": "传递给 NuGet.exe pack 的其他参数。[详细信息](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command)。",
+  "loc.input.label.nuGetPath": "NuGet.exe 的路径",
+  "loc.input.help.nuGetPath": "可以选择提供 NuGet.exe 的路径"
+}

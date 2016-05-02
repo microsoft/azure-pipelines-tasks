@@ -1,23 +1,26 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Windows Machine File Copy",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/WindowsMachineFileCopy/README.md)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copy files to remote machine(s)",
-  "loc.instanceNameFormat": "Copy files to $(EnvironmentName)",
-  "loc.group.displayName.advanced": "Advanced",
+  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
+  "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.SourcePath": "Source",
-  "loc.input.help.SourcePath": "Absolute path of the source folder or file on the local machine, or a UNC Share.",
-  "loc.input.label.EnvironmentName": "Machine Group",
-  "loc.input.help.EnvironmentName": "Name of the target Machine Group for copying the files to.​",
-  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
-  "loc.input.label.MachineNames": "Copy to Machines",
-  "loc.input.help.MachineNames": "If not specified, all machines in the Machine Group are selected. Format for Machine Names: \"Provide a comma separated list of machine names/FQDN. Example- TextBox.fareast.microsoft.corp.com, 192.168.12.34.\" Format for Tags: \"Provide a semi-colon separated list of key:value pairs. Example Role:Web;OS:Win7 - returns machines with either of the tags.\"",
+  "loc.input.help.SourcePath": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber.",
+  "loc.input.label.EnvironmentName": "Machines",
+  "loc.input.help.EnvironmentName": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName)",
+  "loc.input.label.AdminUserName": "Admin Login",
+  "loc.input.help.AdminUserName": "Administrator login for the target machines.",
+  "loc.input.label.AdminPassword": "Password",
+  "loc.input.help.AdminPassword": "Password for administrator login for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it. ",
   "loc.input.label.TargetPath": "Destination Folder",
-  "loc.input.help.TargetPath": "Local Path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
+  "loc.input.help.TargetPath": "Local Path on the target machines or an accessible UNC path for copying the files from the source like d:\\fabrikam or \\\\\\\\fabrikam\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
-  "loc.input.help.CleanTargetBeforeCopy": "Setting it to true will clean the destination folder before copying the files.",
+  "loc.input.help.CleanTargetBeforeCopy": "Selecting it will clean the destination folder before copying the files.",
   "loc.input.label.CopyFilesInParallel": "Copy Files in Parallel",
-  "loc.input.help.CopyFilesInParallel": "Setting it to true will copy files in parallel to the machines."
+  "loc.input.help.CopyFilesInParallel": "Selecting it will copy files in parallel to the machines.",
+  "loc.input.label.AdditionalArguments": "Additional Arguments",
+  "loc.input.help.AdditionalArguments": "Additional robocopy arguments that will be applied when copying files like, /min:33553332 /l.",
+  "loc.input.label.ResourceFilteringMethod": "Select Machines By",
+  "loc.input.label.MachineNames": "Filter Criteria",
+  "loc.input.help.MachineNames": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
 }

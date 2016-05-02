@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
   "name": "AzureCloudPowerShellDeployment",
   "friendlyName": "Azure Cloud Service Deployment",
@@ -6,23 +6,30 @@
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613748)",
   "category": "Deploy",
   "visibility": [
-                "Build",
-                "Release"
-                ],  
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 23
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.90.0",
+  "groups": [
+    {
+      "name": "newServiceAdvancedOptions",
+      "displayName": "Advanced Options For Creating New Service",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
+      "type": "connectedService:Azure:Certificate,UsernamePassword",
       "label": "Azure Subscription",
       "defaultValue": "",
       "required": true,
@@ -34,6 +41,9 @@
       "label": "Storage Account",
       "defaultValue": "",
       "required": true,
+	  "properties": {
+        "EditableOptions": "True"
+      },
       "helpMarkDown": "Storage Account must exist prior to deployment."
     },
     {
@@ -41,19 +51,25 @@
       "type": "pickList",
       "label": "Service Name",
       "defaultValue": "",
-      "required": true
+      "required": true,
+	  "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "ServiceLocation",
-      "type": "string",
+      "type": "pickList",
       "label": "Service Location",
       "defaultValue": "South Central US",
       "required": true,
-      "helpMarkDown": "Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others."
+      "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "CsPkg",
-      "type": "string",
+      "type": "filePath",
       "label": "CsPkg",
       "defaultValue": "",
       "required": true,
@@ -61,7 +77,7 @@
     },
     {
       "name": "CsCfg",
-      "type": "string",
+      "type": "filePath",
       "label": "CsCfg",
       "defaultValue": "",
       "required": true,
@@ -76,26 +92,71 @@
       "helpMarkDown": "**Production** or **Staging**"
     },
     {
+      "name": "DeploymentLabel",
+      "type": "string",
+      "label": "Deployment Label",
+      "defaultValue": "$(Build.BuildNumber)",
+      "required": false,
+      "helpMarkDown": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used."
+    },
+    {
+      "name": "AppendDateTimeToLabel",
+      "type": "boolean",
+      "label": "Append current date and time",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Appends current date and time to deployment label"
+    },
+    {
       "name": "AllowUpgrade",
       "type": "boolean",
       "label": "Allow Upgrade",
       "defaultValue": "true",
       "required": true
+    },
+    {
+      "name": "NewServiceAdditionalArguments",
+      "type": "string",
+      "label": "Additional Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
+      "groupName": "newServiceAdvancedOptions"
+    },
+    {
+      "name": "NewServiceAffinityGroup",
+      "type": "pickList",
+      "label": "AffinityGroup",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "While creating new service, this affinity group will be considered instead of using service location.",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "EditableOptions": "True"
+      }
     }
   ],
-  "sourceDefinitions": [
+  "dataSourceBindings": [
     {
-        "target": "StorageAccount",
-        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/storageservices",
-        "selector": "xpath://ServiceName",
-        "authKey": "$(ConnectedServiceName)"
+      "target": "ServiceName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureHostedServiceNames"
     },
-	{
-        "target": "ServiceName",
-        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/hostedservices",
-        "selector": "xpath://ServiceName",
-        "authKey": "$(ConnectedServiceName)"
-	}
+    {
+      "target": "ServiceLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "NewServiceAffinityGroup",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureAffinityGroups"
+    },
+    {
+      "target": "StorageAccount",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageServiceNames"
+    }
   ],
   "instanceNameFormat": "Azure Deployment: $(CsPkg)",
   "execution": {

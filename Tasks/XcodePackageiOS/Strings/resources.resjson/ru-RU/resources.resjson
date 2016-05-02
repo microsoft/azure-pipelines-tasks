@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Пакет Xcode для iOS",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613731)",
   "loc.description": "Создание IPA-файла из выходных данных сборки Xcode",
   "loc.instanceNameFormat": "Пакет Xcode $(appName)",
   "loc.group.displayName.advanced": "Дополнительно",

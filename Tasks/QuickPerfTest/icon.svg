@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   id="svg3336"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="C:\Users\Jamie\Sources\vso-agent-tasks\Tasks\QuickPerfTest\icon.png"
+   inkscape:export-xdpi="2.8099999"
+   inkscape:export-ydpi="2.8099999">
+  <defs
+     id="defs3344" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="20"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1467"
+     inkscape:window-height="1073"
+     id="namedview3342"
+     showgrid="true"
+     inkscape:zoom="0.5"
+     inkscape:cx="766.52703"
+     inkscape:cy="453.30121"
+     inkscape:window-x="1514"
+     inkscape:window-y="231"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg3336"
+     inkscape:snap-bbox="true"
+     inkscape:snap-global="true"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4170"
+       spacingx="32"
+       spacingy="32"
+       empspacing="4"
+       dotted="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata3338">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:subject>
+                    Miscellaneous
+                </dc:subject>
+        <dc:identifier>
+                    visual-studio-online
+                </dc:identifier>
+        <dc:title />
+        <dc:format>
+                    image/svg+xml
+                </dc:format>
+        <dc:publisher>
+                    Amido Limited
+                </dc:publisher>
+        <dc:creator>
+                    Richard Slater
+                </dc:creator>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <circle
+     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:34.62200165;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path4138"
+     cx="512"
+     cy="592"
+     r="400" />
+  <g
+     id="g4168"
+     transform="matrix(64.790123,0,0,64.033916,74.66667,-0.54265787)"
+     style="fill:#69207a;fill-opacity:1">
+    <rect
+       transform="matrix(0,1,-1,0,0,0)"
+       style="fill:#69207a;fill-opacity:1"
+       id="rect4143"
+       width="1.5"
+       height="5"
+       x="0.0084745381"
+       y="-9.25" />
+    <path
+       id="path3334"
+       d="M 6.75,2.5 C 3.0303493,2.5 0,5.5303485 0,9.25 0,12.969651 3.0303493,16 6.75,16 10.46965,16 13.5,12.969651 13.5,9.25 13.5,7.6206699 12.917299,6.1231341 11.951172,4.9550781 l 1.029297,-1.0292969 -0.90625,-0.90625 -1.029297,1.0292969 C 9.8768658,3.0827015 8.3793296,2.5 6.75,2.5 Z m 0,1.3964844 c 2.964899,0 5.353516,2.3886168 5.353516,5.3535156 0,2.964899 -2.388617,5.353516 -5.353516,5.353516 -2.9648989,0 -5.3535156,-2.388617 -5.3535156,-5.353516 0,-2.9648988 2.3886167,-5.3535156 5.3535156,-5.3535156 z"
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#69207a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       inkscape:connector-curvature="0" />
+    <rect
+       y="5.0961537"
+       x="5.9711537"
+       height="4.6730771"
+       width="1.5576923"
+       id="rect4141"
+       style="fill:#69207a;fill-opacity:1" />
+  </g>
+</svg>

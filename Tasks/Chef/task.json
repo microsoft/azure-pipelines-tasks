@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "B719DB6C-40A2-4F43-9AFF-827825BAECAE",
     "name": "Chef",
     "friendlyName": "Chef",
@@ -14,11 +14,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 10
     },
     "demands" : [
         "Chef",
-        "KnifeReporting"
+        "KnifeReporting",
+        "DotNetFramework"
     ],
     "minimumAgentVersion": "1.83.0",
     "inputs": [
@@ -44,7 +45,7 @@
             "label": "Environment Attributes",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the value of the leaf node attribute(s) to be updated. Example. {\"default_attributes.connectionString\":\"$(connectionString)\",\"override_attributes.buildLocation\":\"https://sample.blob.core.windows.net/build\"}. Task fails if the leaf node does not exist."
+            "helpMarkDown": "Specify the value of the leaf node attribute(s) to be updated. Example. { \"default_attributes.connectionString\" : \"$(connectionString)\", \"override_attributes.buildLocation\" : \"https://sample.blob.core.windows.net/build\" }. Task fails if the leaf node does not exist."
         },
         {
             "name": "chefWaitTime",

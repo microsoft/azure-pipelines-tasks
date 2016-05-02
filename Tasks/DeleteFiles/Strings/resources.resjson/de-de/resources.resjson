@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Dateien löschen",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=722333)",
+  "loc.description": "Löschen Sie Dateien oder Ordner. (Die Minimatchmuster ordnen nur Dateipfade zu, keine Ordnerpfade.)",
+  "loc.instanceNameFormat": "Dateien aus \"$(SourceFolder)\" löschen",
+  "loc.input.label.SourceFolder": "Quellordner",
+  "loc.input.help.SourceFolder": "Der Quellordner, aus dem mindestens ein Löschvorgang ausgeführt wird. \"Empty\" ist der Stamm des Repositorys. Verwenden Sie [Variablen](http://go.microsoft.com/fwlink/?LinkID=550988), wenn sich Dateien nicht im Repository befinden, z. B. \"$(agent.builddirectory)\".",
+  "loc.input.label.Contents": "Inhalte",
+  "loc.input.help.Contents": "Die zu löschenden Datei-/Ordnerpfade. Mehrere Zeilen von Minimatchmustern werden unterstützt. [Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=722333)",
+  "loc.messages.CantDeleteFiles": "Mindestens eine Datei konnte nicht gelöscht werden.",
+  "loc.messages.SkippingSymbolStore": "Der Löschvorgang für die Symbolspeicher-Dateifreigabe wird übersprungen: %s"
+}

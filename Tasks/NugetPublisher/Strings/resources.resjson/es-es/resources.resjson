@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "NuGet Publisher",
+  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.description": "Carga archivos nupkg en un servidor de NuGet",
+  "loc.instanceNameFormat": "NuGet Publisher $(solution)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.searchPattern": "Ruta de acceso o patrón para nupkg",
+  "loc.input.help.searchPattern": "Patrón de coincidencia o ruta de acceso a los archivos nupkg que se van a cargar. Se pueden separar varios patrones por punto y coma.",
+  "loc.input.label.nuGetFeedType": "Tipo de fuente",
+  "loc.input.label.connectedServiceName": "Extremo del servidor de NuGet",
+  "loc.input.help.connectedServiceName": "Extremo genérico del servidor de NuGet; establezca el campo \"Contraseña/clave de token\" de la clave en la clave de API de NuGet.",
+  "loc.input.label.feedName": "Dirección URL de fuente interna",
+  "loc.input.help.feedName": "La dirección URL de una fuente NuGet hospedada en esta cuenta.",
+  "loc.input.label.nuGetAdditionalArgs": "Argumentos de NuGet",
+  "loc.input.help.nuGetAdditionalArgs": "Argumentos adicionales que se pasan al comando push de NuGet.exe. [Más información](https://docs.nuget.org/consume/command-line-reference#user-content-push-command).",
+  "loc.input.label.nuGetPath": "Ruta de acceso a NuGet.exe",
+  "loc.input.help.nuGetPath": "También puede indicarse la ruta de acceso a NuGet.exe"
+}

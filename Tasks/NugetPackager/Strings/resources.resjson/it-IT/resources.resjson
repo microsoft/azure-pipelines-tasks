@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Strumento di creazione pacchetti NuGet",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.description": "Crea output nupkg da file csproj o nuspec",
+  "loc.instanceNameFormat": "Strumento di creazione pacchetti NuGet $(solution)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.searchPattern": "Percorso/Criterio per file nuspec",
+  "loc.input.help.searchPattern": "Criterio per la ricerca dei file nuspec e csproj da includere nel pacchetto.",
+  "loc.input.label.versionByBuild": "Usa numero di build per definire la versione del pacchetto",
+  "loc.input.help.versionByBuild": "Consente di usare il numero di build per definire la versione del pacchetto. In Generale impostare il formato del numero di build su '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'",
+  "loc.input.label.outputdir": "Cartella del pacchetto",
+  "loc.input.help.outputdir": "Cartella in cui verranno creati i pacchetti. Se è vuota, verranno creati nella directory del file csproj o nuspec",
+  "loc.input.label.configurationToPack": "Configurazione per cui creare il pacchetto",
+  "loc.input.help.configurationToPack": "Quando si usa un file csproj, consente di specificare la configurazione per il pacchetto",
+  "loc.input.label.buildProperties": "Proprietà di compilazione aggiuntive",
+  "loc.input.help.buildProperties": "Elenco di proprietà delimitate da punti e virgola usate per compilare il pacchetto.",
+  "loc.input.label.nuGetAdditionalArgs": "Argomenti NuGet",
+  "loc.input.help.nuGetAdditionalArgs": "Argomenti aggiuntivi passati a NuGet.exe pack. [Altre informazioni](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command).",
+  "loc.input.label.nuGetPath": "Percorso di NuGet.exe",
+  "loc.input.help.nuGetPath": "Consente, facoltativamente, di specificare il percorso di NuGet.exe."
+}

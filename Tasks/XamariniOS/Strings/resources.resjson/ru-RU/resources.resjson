@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[Подробнее](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613729)",
   "loc.description": "Сборка приложения iOS с помощью Xamarin на Mac OS",
   "loc.instanceNameFormat": "Сборка решения Xamarin.iOS $(solution)",
   "loc.input.label.solution": "Решение",

@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Copy Files",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "Copy files from source folder to target folder using minimatch patterns (The minimatch patterns will only match file paths, not folder paths)",
+  "loc.instanceNameFormat": "Copy Files to: $(TargetFolder)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.SourceFolder": "Source Folder",
+  "loc.input.help.SourceFolder": "The source folder that the copy pattern(s) will be run from.  Empty is the root of the repo.  Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)",
+  "loc.input.label.Contents": "Contents",
+  "loc.input.help.Contents": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "Target Folder",
+  "loc.input.help.TargetFolder": "Target folder files will copy to. Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.label.CleanTargetFolder": "Clean Target Folder",
+  "loc.input.help.CleanTargetFolder": "Delete all existing files in target folder before copy",
+  "loc.input.label.OverWrite": "Overwrite",
+  "loc.input.help.OverWrite": "Replace existing file in target folder",
+  "loc.messages.FoundNFiles": "found %d files",
+  "loc.messages.CleaningTargetFolder": "Cleaning target folder: %s",
+  "loc.messages.FileAlreadyExistAt": "File %s already exist at %s",
+  "loc.messages.CopyingTo": "Copying %s to %s"
+}

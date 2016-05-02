@@ -1,0 +1,6 @@
+{
+  "loc.messages.MSB_Build0": "Сборка {0}",
+  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Обнаружен путь к загрузчику расширений NuGet. Для переменной среды NUGET_EXTENSIONS_PATH задано значение \"{0}\".",
+  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Не удалось найти решение по шаблону поиска \"{0}\".",
+  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition."
+}

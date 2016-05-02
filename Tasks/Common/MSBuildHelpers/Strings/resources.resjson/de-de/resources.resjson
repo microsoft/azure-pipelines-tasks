@@ -1,0 +1,6 @@
+{
+  "loc.messages.MSB_Build0": "Build {0}",
+  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Der Pfad des NuGet-Extensionladeprogramms wurde erkannt. Die Umgebungsvariable \"NUGET_EXTENSIONS_PATH\" ist auf \"{0}\" festgelegt.",
+  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Die Lösung wurde mithilfe des Suchmusters \"{0}\" nicht gefunden.",
+  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition."
+}

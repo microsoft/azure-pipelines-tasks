@@ -6,113 +6,209 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613718)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],    
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 40
     },
-    "demands" : [
+    "demands": [
         "ant"
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.89.0",
     "groups": [
         {
-            "name":"junitTestResults",
-            "displayName":"JUnit Test Results",
-            "isExpanded":true
+            "name": "junitTestResults",
+            "displayName": "JUnit Test Results",
+            "isExpanded": true
         },
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "codeCoverage",
+            "displayName": "Code Coverage",
+            "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "instanceNameFormat": "Ant $(options) $(antBuildFile)",
     "inputs": [
-        { 
-            "name": "antBuildFile", 
-            "type": "filePath", 
-            "label": "Ant build file", 
-            "defaultValue": "", 
-            "required": true,
-            "helpMarkDown": "Relative path from the repository root to the `Ant build file`."
-        },
-        { 
-            "name": "options", 
-            "type": "string", 
-            "label": "Options", 
-            "defaultValue":"", 
-            "required":false 
-        },
-        { 
-            "name": "targets", 
-            "type": "string", 
-            "label": "Target(s)", 
-            "defaultValue":"", "required":false
-        }, 
         {
-            "name":"publishJUnitResults",
-            "type":"boolean",
-            "label":"Publish to VSO/TFS",
-            "required":true,
-            "defaultValue":"true",
-            "groupName":"junitTestResults",
-            "helpMarkDown":"Select this option to publish JUnit Test results produced by the Ant build to VSO/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSO/TFS."
-        }, 
+            "name": "antBuildFile",
+            "type": "filePath",
+            "label": "Ant build file",
+            "defaultValue": "build.xml",
+            "required": true,
+            "helpMarkDown": "Relative path from the repository root to the Ant build file."
+        },
+        {
+            "name": "options",
+            "type": "string",
+            "label": "Options",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide any options to pass to the Ant command line. You can provide your own properties (for example, ***-DmyProperty=myPropertyValue***) and also use built-in variables (for example, ***-DcollectionId=$(system.collectionId)***). Alternatively, the built-in variables are already set as environment variables during the build and can be passed directly (for example, ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***)."
+        },
+        {
+            "name": "targets",
+            "type": "string",
+            "label": "Target(s)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "An optional, space-separated list of targets to build. If not specified, the `default` target will be used. If no `default` target is defined, Ant 1.6.0 and later will build all top-level tasks."
+        },
+        {
+            "name": "publishJUnitResults",
+            "type": "boolean",
+            "label": "Publish to TFS/Team Services",
+            "required": true,
+            "defaultValue": "true",
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Ant build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services."
+        },
         {
             "name": "testResultsFiles",
             "type": "filePath",
             "label": "Test Results Files",
             "defaultValue": "**/TEST-*.xml",
             "required": true,
-            "groupName":"junitTestResults",
-            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
-        },            
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
+            "visibleRule": "publishJUnitResults = true"
+        },
         {
-            "name":"jdkVersion",
-            "type":"pickList",
-            "label":"JDK Version",
-            "required":false,
-            "groupName":"advanced",
-            "defaultValue":"default",
-            "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test Run Title",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Provide a name for the test run.",
+            "visibleRule": "publishJUnitResults = true"
+        },
+        {
+            "name": "codeCoverageTool",
+            "type": "pickList",
+            "label": "Code Coverage Tool",
+            "required": false,
+            "groupName": "codeCoverage",
+            "defaultValue": "None",
+            "helpMarkDown": "Select the code coverage tool. For on-premises agent support, refer to the `More Information` link below.",
             "options": {
-                "default":"default",
-                "1.8":"JDK 8",
-                "1.7":"JDK 7",
-                "1.6":"JDK 6"
+                "None": "None",
+                "Cobertura": "Cobertura",
+                "JaCoCo": "JaCoCo"
             }
         },
-        { 
-            "name": "jdkArchitecture", 
-            "type": "pickList", 
-            "label": "JDK Architecture", 
-            "defaultValue":"x86", 
-            "required":false,
-            "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
-            "groupName":"advanced",
-            "options":{
-                "x86":"x86",
-                "x64":"x64"
+        {
+            "name": "classFilesDirectories",
+            "type": "string",
+            "label": "Class Files Directories",
+            "defaultValue": ".",
+            "required": true,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Comma-separated list of relative paths from the Ant build file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name": "classFilter",
+            "type": "string",
+            "label": "Class Inclusion/Exclusion Filters",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name": "srcDirectories",
+            "type": "string",
+            "label": "Source Files Directories",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Comma-separated list of relative paths from the Ant build file to source code directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name": "antHomeUserInputPath",
+            "type": "string",
+            "label": "Set ANT_HOME Path",
+            "required": false,
+            "groupName": "advanced",
+            "defaultValue": "",
+            "helpMarkDown": "If set, overrides any existing ANT_HOME environment variable with the given path."
+        },
+        {
+            "name": "javaHomeSelection",
+            "type": "radio",
+            "label": "Set JAVA_HOME by",
+            "required": true,
+            "groupName": "advanced",
+            "defaultValue": "JDKVersion",
+            "helpMarkDown": "Sets JAVA_HOME either by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
+            "options": {
+                "JDKVersion": "JDK Version",
+                "Path": "Path"
+            }
+        },
+        {
+            "name": "jdkVersion",
+            "type": "pickList",
+            "label": "JDK Version",
+            "required": false,
+            "groupName": "advanced",
+            "defaultValue": "default",
+            "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
+            "visibleRule": "javaHomeSelection = JDKVersion",
+            "options": {
+                "default": "default",
+                "1.8": "JDK 8",
+                "1.7": "JDK 7",
+                "1.6": "JDK 6"
+            }
+        },
+        {
+            "name": "jdkUserInputPath",
+            "type": "string",
+            "label": "JDK Path",
+            "required": true,
+            "groupName": "advanced",
+            "defaultValue": "",
+            "helpMarkDown": "Sets JAVA_HOME to the given path.",
+            "visibleRule": "javaHomeSelection = Path"
+        },
+        {
+            "name": "jdkArchitecture",
+            "type": "pickList",
+            "label": "JDK Architecture",
+            "defaultValue": "x86",
+            "required": false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of the JDK.",
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
             }
         }
     ],
     "execution": {
-        "JavaScript": {
-            "target": "ant.js",
-            "argumentFormat": ""
-        },
         "Node": {
-            "target": "ant2.js",
+            "target": "anttask.js",
             "argumentFormat": ""
         },
         "PowerShell": {
             "target": "$(currentDirectory)\\ant.ps1",
             "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": "$(currentDirectory)",
+            "platforms": [
+                "windows"
+            ]
         }
     }
 }

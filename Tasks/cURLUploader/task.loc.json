@@ -1,17 +1,15 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "AD8974D8-DE11-11E4-B2FE-7FB898A745F3",
   "name": "cURLUploader",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 13
   },
   "demands": [
     "curl"
@@ -82,9 +80,8 @@
       "workingDirectory": "$(currentDirectory)"
     },
     "Node": {
-      "target": "cURLUploader.js",
+      "target": "curluploader.js",
       "argumentFormat": ""
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

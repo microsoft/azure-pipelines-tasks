@@ -1,0 +1,6 @@
+{
+  "loc.messages.MSB_Build0": "Compilación {0}",
+  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Se detectó la ruta de acceso del cargador de extensiones de NuGet. La variable de entorno NUGET_EXTENSIONS_PATH está establecida en '{0}'.",
+  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "No se encontró la solución con el patrón de búsqueda '{0}'.",
+  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition."
+}

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "94A74903-F93F-4075-884F-DC11F34058B4",
   "name": "AzureResourceGroupDeployment",
@@ -9,7 +6,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -17,34 +13,101 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 72
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.85.0",
+  "minimumAgentVersion": "1.97.0",
   "groups": [
     {
-      "name": "advancedDeploymentOptions",
-      "displayName": "ms-resource:loc.group.displayName.advancedDeploymentOptions",
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true
     }
   ],
   "inputs": [
     {
+      "name": "ConnectedServiceNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "ConnectedServiceName",
+      "options": {
+        "ConnectedServiceName": "Azure Resource Manager",
+        "ConnectedServiceNameClassic": "Azure Classic"
+      }
+    },
+    {
       "name": "ConnectedServiceName",
-      "type": "connectedService:Azure",
+      "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "ConnectedServiceNameClassic",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameClassic",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameClassic",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "Create Or Update Resource Group",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.action",
+      "options": {
+        "Create Or Update Resource Group": "Create Or Update Resource Group",
+        "Select Resource Group": "Select Resource Group",
+        "Start": "Start Virtual Machines",
+        "Stop": "Stop Virtual Machines",
+        "Restart": "Restart Virtual Machines",
+        "Delete": "Delete Virtual Machines",
+        "DeleteRG": "Delete Resource Group"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "actionClassic",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.actionClassic",
+      "defaultValue": "Select Resource Group",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.actionClassic",
+      "options": {
+        "Select Resource Group": "Select Cloud Service"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
     },
     {
       "name": "resourceGroupName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.resourceGroupName",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "cloudService",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.cloudService",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cloudService",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
     },
     {
       "name": "location",
@@ -54,15 +117,26 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.location",
       "options": {
+        "Australia East": "Australia East",
+        "Australia Southeast": "Australia Southeast",
+        "Brazil South": "Brazil South",
+        "Central US": "Central US",
         "East Asia": "East Asia",
         "East US": "East US",
+        "East US 2 ": "East US 2 ",
+        "Japan East": "Japan East",
+        "Japan West": "Japan West",
+        "North Central US": "North Central US",
+        "North Europe": "North Europe",
+        "South Central US": "South Central US",
         "Southeast Asia": "Southeast Asia",
         "West Europe": "West Europe",
         "West US": "West US"
       },
       "properties": {
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "csmFile",
@@ -70,7 +144,8 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile",
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "csmParametersFile",
@@ -78,7 +153,8 @@
       "label": "ms-resource:loc.input.label.csmParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile"
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "overrideParameters",
@@ -86,74 +162,47 @@
       "label": "ms-resource:loc.input.label.overrideParameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
-      "name": "dscDeployment",
+      "name": "enableDeploymentPrerequisitesForCreate",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.dscDeployment",
-      "required": false,
+      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForCreate",
       "defaultValue": "false",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.dscDeployment"
-    },
-    {
-      "name": "moduleUrlParameterName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.moduleUrlParameterName",
-      "defaultValue": "",
+      "visibleRule": "action = Create Or Update Resource Group",
       "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.moduleUrlParameterName",
-      "visibleRule": "dscDeployment = true"
+      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForCreate"
     },
     {
-      "name": "sasTokenParameterName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sasTokenParameterName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.sasTokenParameterName",
-      "visibleRule": "dscDeployment = true"
-    },
-    {
-      "name": "vmCreds",
+      "name": "enableDeploymentPrerequisitesForSelect",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.vmCreds",
-      "required": false,
+      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForSelect",
       "defaultValue": "false",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.vmCreds"
+      "visibleRule": "action = Select Resource Group",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForSelect"
     },
     {
-      "name": "vmUserName",
+      "name": "outputVariable",
       "type": "string",
-      "label": "ms-resource:loc.input.label.vmUserName",
-      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.outputVariable",
       "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "vmCreds = true",
-      "helpMarkDown": "ms-resource:loc.input.help.vmUserName"
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "cloudService",
+      "endpointId": "$(ConnectedServiceNameClassic)",
+      "dataSourceName": "AzureHostedServiceNames"
     },
     {
-      "name": "vmPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vmPassword",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advancedDeploymentOptions",
-      "visibleRule": "vmCreds = true",
-      "helpMarkDown": "ms-resource:loc.input.help.vmPassword"
-    },
-    {
-      "name": "skipCACheck",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.skipCACheck",
-      "required": false,
-      "defaultValue": "true",
-      "groupName": "advancedDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck"
+      "target": "resourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

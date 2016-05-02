@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "52A38A6A-1517-41D7-96CC-73EE0C60D2B6",
   "name": "DeployVisualStudioTestAgent",
@@ -9,16 +6,17 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
-    "Build"
+    "Build",
+    "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 28
   },
   "demands": [],
-  "minimumAgentVersion": "1.85.0",
+  "minimumAgentVersion": "1.97.0",
   "groups": [
     {
       "name": "testMachineGroups",
@@ -39,7 +37,7 @@
   "inputs": [
     {
       "name": "testMachineGroup",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
@@ -47,9 +45,50 @@
       "groupName": "testMachineGroups"
     },
     {
-      "name": "ResourceFilteringMethod",
+      "name": "adminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.adminUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adminUserName",
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "adminPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.adminPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adminPassword",
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "winRmProtocol",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "label": "ms-resource:loc.input.label.winRmProtocol",
+      "required": false,
+      "defaultValue": "",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.winRmProtocol",
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "testCertificate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.testCertificate",
+      "defaultValue": "true",
+      "visibleRule": "winRmProtocol = Https",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testCertificate",
+      "groupName": "testMachineGroups"
+    },
+    {
+      "name": "resourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.resourceFilteringMethod",
       "required": false,
       "defaultValue": "machineNames",
       "options": {
@@ -120,14 +159,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.isDataCollectionOnly",
       "groupName": "advanced"
-    }
-  ],
-  "sourceDefinitions": [
-    {
-      "target": "testMachineGroup",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

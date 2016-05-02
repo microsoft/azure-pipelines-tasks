@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
   "name": "VSBuild",
@@ -15,13 +12,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 29
   },
   "demands": [
     "msbuild",
     "visualstudio"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
@@ -71,8 +68,10 @@
       "name": "restoreNugetPackages",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.restoreNugetPackages",
-      "defaultValue": "true",
-      "required": false
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreNugetPackages"
     },
     {
       "name": "vsVersion",
@@ -112,10 +111,17 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\VSBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "VSBuild.ps1"
     }
+  },
+  "messages": {
+    "MSBuildLocationDeprecated0": "ms-resource:loc.messages.MSBuildLocationDeprecated0",
+    "MSBuildNotFoundVersion0Architecture1": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1",
+    "MSBuildVersionDeprecated0": "ms-resource:loc.messages.MSBuildVersionDeprecated0",
+    "UnexpectedVSVersion0": "ms-resource:loc.messages.UnexpectedVSVersion0",
+    "VSLocationDeprecated0": "ms-resource:loc.messages.VSLocationDeprecated0",
+    "VSNotFoundTry": "ms-resource:loc.messages.VSNotFoundTry",
+    "VSVersion0NotFoundLookingForLatest": "ms-resource:loc.messages.VSVersion0NotFoundLookingForLatest"
   }
 }

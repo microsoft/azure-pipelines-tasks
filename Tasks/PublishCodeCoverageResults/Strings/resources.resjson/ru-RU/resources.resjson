@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Опубликовать результаты оценки объемов протестированного кода",
+  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Publish code coverage results to VSTS/TFS",
+  "loc.instanceNameFormat": "Опубликовать результаты оценки объемов протестированного кода $(summaryFileLocation)",
+  "loc.input.label.codeCoverageTool": "Средство оценки объемов протестированного кода",
+  "loc.input.help.codeCoverageTool": "Выберите средство, с помощью которого были созданы файлы сводки по объемам протестированного кода.",
+  "loc.input.label.summaryFileLocation": "Файл сводки",
+  "loc.input.help.summaryFileLocation": "Путь к файлу сводки по объемам протестированного кода, который включает такие статистические данные, как покрытие строк, методов и классов. Например, $(Build.Repository.LocalPath)\\CodeCoverage\\Summary.xml.",
+  "loc.input.label.reportDirectory": "Каталог отчета",
+  "loc.input.help.reportDirectory": "Путь к каталогу отчета об объемах протестированного кода. Каталог отчета опубликован в качестве артефакта для сборки. Например, $(Build.Repository.LocalPath)\\CodeCoverageReport.",
+  "loc.input.label.additionalCodeCoverageFiles": "Дополнительные файлы",
+  "loc.input.help.additionalCodeCoverageFiles": "Регулярное выражение, указывающее дополнительные файлы оценки объемов протестированного кода, которые должны быть опубликованы в качестве артефакта для сборки. Например, `$(Build.Repository.LocalPath)\\**\\*.exec`."
+}

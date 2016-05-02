@@ -184,22 +184,35 @@ function ComposeAccountUrl($vsoUrl)
     return $elsUrl
 }
 
+function ValidateInputs()
+{
+    if (![System.Uri]::IsWellFormedUriString($websiteUrl, [System.UriKind]::Absolute))
+    {
+        throw "Website Url is not well formed."
+    }
+}
+
+############################################## PS Script execution starts here ##########################################
 Write-Output "Starting Quick Perf Test Script"
 
 $testName = $testName + ".loadtest"
-Write-Output "Test Name = $testName"
-Write-Output "Run Duration = $runDuration"
+Write-Output "Test name = $testName"
+Write-Output "Run duration = $runDuration"
 Write-Output "Website Url = $websiteUrl"
-Write-Output "Virtual User Load = $vuLoad"
-Write-Output "Load Location = $geoLocation"
+Write-Output "Virtual user load = $vuLoad"
+Write-Output "Load location = $geoLocation"
 
-$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+$serviceEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
-$Username = $connectedServiceDetails.Authorization.Parameters.Username
-Write-Verbose "userName = $userName" -Verbose
-$Password = $connectedServiceDetails.Authorization.Parameters.Password
-$CltAccountUrl = ComposeAccountUrl($connectedServiceDetails.Url.AbsoluteUri)
-Write-Verbose "CltAccountUrl = $CltAccountUrl" -Verbose
+$Username = $serviceEndpoint.Authorization.Parameters.Username
+$Password = $serviceEndpoint.Authorization.Parameters.Password
+$VSOAccountUrl = $serviceEndpoint.Url.AbsoluteUri
+##$EndpointName = $serviceEndpoint.Name
+$CltAccountUrl = ComposeAccountUrl($VSOAccountUrl)
+
+Write-Verbose "VSO account Url = $VSOAccountUrl" -Verbose
+
+ValidateInputs
 
 $h = InitializeRestHeaders
 
@@ -217,7 +230,7 @@ if ($drop.dropType -eq "InPlaceDrop")
 }
 else
 {
-    Write-Error ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $CltAccountUrl)
+    Write-Error ("Failed to connect to the endpoint '{0}' for VSO account '{1}'" -f $EndpointName, $VSOAccountUrl)
 }
 
 Write-Output "Finished Quick Perf Test Script"

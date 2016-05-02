@@ -1,0 +1,32 @@
+{
+    "AzurePowerShell": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
+    "MSBuild": [
+        {
+            "module": "MSBuildHelpers",
+            "dest": "ps_modules"
+        }
+    ],
+    "VSBuild": [
+        {
+            "module": "MSBuildHelpers",
+            "dest": "ps_modules"
+        }
+    ],
+    "SonarQubePreBuild": [
+        {
+            "module": "SonarQubeHelpers",
+            "dest": "Common"
+        }
+    ],
+     "SonarQubePostTest": [
+        {
+            "module": "SonarQubeHelpers",
+            "dest": "Common"
+        }
+    ]
+}

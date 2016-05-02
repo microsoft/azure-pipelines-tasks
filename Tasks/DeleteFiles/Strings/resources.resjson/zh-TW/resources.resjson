@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "刪除檔案",
+  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=722333)",
+  "loc.description": "刪除檔案或資料夾。(minimatch 模式只符合檔案路徑，而非資料夾路徑)",
+  "loc.instanceNameFormat": "從 $(SourceFolder) 刪除檔案",
+  "loc.input.label.SourceFolder": "來源資料夾",
+  "loc.input.help.SourceFolder": "將執行刪除的來源資料夾。空白即為儲存機制的根目錄。若檔案不在儲存機制中，請使用 [變數](http://go.microsoft.com/fwlink/?LinkID=550988)。例如: $(agent.builddirectory)",
+  "loc.input.label.Contents": "內容",
+  "loc.input.help.Contents": "要刪除的檔案/資料夾路徑。支援多行 minimatch 模式。[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=722333)",
+  "loc.messages.CantDeleteFiles": "無法刪除一或多個檔案",
+  "loc.messages.SkippingSymbolStore": "正在略過刪除符號存放區檔案共用: %s"
+}

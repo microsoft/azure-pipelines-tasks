@@ -6,7 +6,7 @@
   "loc.group.displayName.jarsignerOptions": "Options Jarsigner",
   "loc.group.displayName.zipalignOptions": "Options Zipalign",
   "loc.input.label.files": "Fichiers APK",
-  "loc.input.help.files": "Chemin d'accès relatif depuis la racine du référentiel aux fichiers. Les caractères génériques sont autorisés. Par exemple, '**\\bin\\*.apk' pour tous les fichiers APK du sous-dossier bin.",
+  "loc.input.help.files": "Chemin relatif de la racine de dépôt des fichiers. Les caractères génériques sont autorisés. Par exemple, '**\\bin\\*.apk' pour tous les fichiers APK du sous-dossier bin.",
   "loc.input.label.jarsign": "Signer le fichier APK",
   "loc.input.label.keystoreFile": "Fichier keystore",
   "loc.input.help.keystoreFile": "Chemin d'accès complet au fichier keystore.",

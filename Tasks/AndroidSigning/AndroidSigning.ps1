@@ -137,7 +137,7 @@ foreach ($file in $filesToSign)
         # move the apk file so we do not pollute the work direcotry with multiple apks
         $unsignedApk = RenameExtension $file ".unsigned"
 
-        $jarsignerArgs = "$jarsignerArguments -keystore $keystoreFile -signedjar $file $unsignedApk $keystoreAlias"
+        $jarsignerArgs = "$jarsignerArguments -keystore `"$keystoreFile`" -signedjar $file $unsignedApk $keystoreAlias"
         
         Invoke-Tool -Path $jarsigner -Arguments $jarsignerArgs 
     }

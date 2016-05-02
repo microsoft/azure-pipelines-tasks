@@ -1,16 +1,15 @@
 {
-  "loc.friendlyName": "Pubblica elementi di compilazione",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "Consente di pubblicare elementi di compilazione nel server o in una condivisione file usando criteri di corrispondenza minima",
-  "loc.instanceNameFormat": "Pubblica elemento: $(ArtifactName)",
-  "loc.input.label.CopyRoot": "Copia radice",
-  "loc.input.help.CopyRoot": "Cartella radice a cui applicare i criteri di copia. Se non viene specificata, corrisponde alla radice del repository. Usare le variabili se le istruzioni di compilazione vengono compilate all'esterno del repository. Esempio: $(agent.builddirectory)",
-  "loc.input.label.Contents": "Contenuti",
-  "loc.input.help.Contents": "Percorsi di file o cartella da includere nell'elemento. Sono supportati criteri su più righe o di corrispondenza minima. [Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.input.label.ArtifactName": "Nome dell'elemento",
-  "loc.input.help.ArtifactName": "Nome dell'elemento da creare.",
-  "loc.input.label.ArtifactType": "Tipo di elemento",
-  "loc.input.help.ArtifactType": "Tipo dell'elemento da creare.",
+  "loc.friendlyName": "Pubblica artefatti di compilazione",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "Consente di pubblicare artefatti di compilazione nel server o in una condivisione file",
+  "loc.instanceNameFormat": "Pubblica artefatto: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "Percorso per la pubblicazione",
+  "loc.input.help.PathtoPublish": "Percorso del file o della cartella da pubblicare. Può essere un percorso completo o relativo alla radice del repository. I caratteri jolly non sono supportati. Usare [variabili](http://go.microsoft.com/fwlink/?LinkID=550988). Esempio: $(build.artifactstagingdirectory)",
+  "loc.input.label.ArtifactName": "Nome artefatto",
+  "loc.input.help.ArtifactName": "Nome dell'artefatto da creare.",
+  "loc.input.label.ArtifactType": "Tipo di artefatto",
+  "loc.input.help.ArtifactType": "Tipo dell'artefatto da creare.",
   "loc.input.label.TargetPath": "Percorso",
-  "loc.input.help.TargetPath": "Condivisione file in cui copiare i file"
+  "loc.input.help.TargetPath": "Condivisione file in cui copiare i file",
+  "loc.messages.PublishBuildArtifactsFailed": "Pubblicazione degli artefatti di compilazione non riuscita. Errore: %s"
 }

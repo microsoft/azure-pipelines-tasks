@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "发布代码覆盖率结果",
+  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Publish code coverage results to VSTS/TFS",
+  "loc.instanceNameFormat": "发布代码覆盖率结果 $(summaryFileLocation)",
+  "loc.input.label.codeCoverageTool": "代码覆盖率工具",
+  "loc.input.help.codeCoverageTool": "选择用于生成代码覆盖率摘要文件的工具",
+  "loc.input.label.summaryFileLocation": "摘要文件",
+  "loc.input.help.summaryFileLocation": "代码覆盖率摘要文件的路径，该文件中包含代码覆盖率统计数据，如线路、方法和代码覆盖率。例如，$(Build.Repository.LocalPath)\\CodeCoverage\\Summary.xml",
+  "loc.input.label.reportDirectory": "报表目录",
+  "loc.input.help.reportDirectory": "代码覆盖率报表目录的路径。报表目录作为针对生成的项目发布。例如，$(Build.Repository.LocalPath)\\CodeCoverageReport",
+  "loc.input.label.additionalCodeCoverageFiles": "其他文件",
+  "loc.input.help.additionalCodeCoverageFiles": "正则表达式，用于指定将作为针对生成的项目发布的其他代码覆盖率文件。例如，`$(Build.Repository.LocalPath)\\**\\*.exec`"
+}

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
   "name": "AzurePowerShell",
@@ -16,20 +13,42 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 22
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.82.0",
+  "minimumAgentVersion": "1.95.0",
   "inputs": [
+    {
+      "name": "ConnectedServiceNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "ConnectedServiceName",
+      "options": {
+        "ConnectedServiceName": "Azure Classic",
+        "ConnectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
     {
       "name": "ConnectedServiceName",
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
       "name": "ScriptPath",
@@ -50,10 +69,17 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "PowerShell3": {
+      "target": "AzurePowerShell.ps1"
+    },
     "AzurePowerShell": {
-      "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
+      "target": "$(currentDirectory)\\AzurePowerShell-Legacy.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }
+  },
+  "messages": {
+    "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0"
   }
 }

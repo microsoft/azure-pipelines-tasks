@@ -1,16 +1,15 @@
 {
   "loc.friendlyName": "빌드 아티팩트 게시",
-  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "minimatch 패턴을 사용하여 서버 또는 파일 공유에 빌드 아티팩트 게시",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "서버 또는 파일 공유에 빌드 아티팩트 게시",
   "loc.instanceNameFormat": "아티팩트 게시: $(ArtifactName)",
-  "loc.input.label.CopyRoot": "루트 복사",
-  "loc.input.help.CopyRoot": "사본 패턴을 적용할 루트 폴더입니다. 비어 있으면 리포지토리의 루트입니다. 빌드 단계가 리포지토리의 외부에서 빌드 중일 경우 변수를 사용하세요. 예: $(agent.builddirectory)",
-  "loc.input.label.Contents": "콘텐츠",
-  "loc.input.help.Contents": "아티팩트의 일부로 포함할 파일 또는 폴더 경로이며, 여러 줄이나 minimatch 패턴을 지원합니다. [자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.label.PathtoPublish": "게시할 경로",
+  "loc.input.help.PathtoPublish": "게시할 폴더 또는 파일 경로입니다.  정규화된 경로 또는 리포 루트에 관한 상대적인 상대 경로일 수 있으며 와일드카드는 지원되지 않습니다. [변수](http://go.microsoft.com/fwlink/?LinkID=550988)를 사용하세요. 예: $(build.artifactstagingdirectory)",
   "loc.input.label.ArtifactName": "아티팩트 이름",
   "loc.input.help.ArtifactName": "만들 아티팩트의 이름입니다.",
   "loc.input.label.ArtifactType": "아티팩트 형식",
-  "loc.input.help.ArtifactType": "만들 아티팩트의 유형입니다.",
+  "loc.input.help.ArtifactType": "만들 아티팩트의 형식입니다.",
   "loc.input.label.TargetPath": "경로",
-  "loc.input.help.TargetPath": "파일을 복사할 파일 공유"
+  "loc.input.help.TargetPath": "파일을 복사할 파일 공유",
+  "loc.messages.PublishBuildArtifactsFailed": "오류 %s(으)로 빌드 아티팩트 게시 실패"
 }

@@ -7,13 +7,13 @@
   "loc.input.label.appName": ".app の名前",
   "loc.input.help.appName": ".app の名前。これは .ipa とは異なることがあります。",
   "loc.input.label.ipaName": ".ipa の名前",
-  "loc.input.help.ipaName": "jpa の名前。これは .app とは異なることがあります",
-  "loc.input.label.provisioningProfile": "プロファイル名のプロビジョニング",
+  "loc.input.help.ipaName": ".ipa の名前。これは .app とは異なることがあります",
+  "loc.input.label.provisioningProfile": "プロビジョニング プロファイルの名前",
   "loc.input.help.provisioningProfile": "署名の際に使用するプロビジョニング プロファイルの名前。",
   "loc.input.label.sdk": "SDK",
   "loc.input.help.sdk": "指定された SDK を使用します。SDK の有効なリストを表示するには、**xcodebuild -showsdks** を実行します。",
   "loc.input.label.appPath": ".app へのパス",
-  "loc.input.help.appPath": "ビルド .app ファイルへの相対パス",
+  "loc.input.help.appPath": "ビルドされる .app ファイルへの相対パス",
   "loc.input.label.ipaPath": ".ipa を配置するためのパス",
-  "loc.input.help.ipaPath": "jpa が置かれる場所の相対パス。ディレクトリが存在しない場合には、それが作成されます。"
+  "loc.input.help.ipaPath": ".ipa が置かれる場所の相対パス。ディレクトリが存在しない場合には作成されます。"
 }

@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "파일 복사",
+  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "minimatch 패턴을 사용하여 소스 폴더에서 대상 폴더로 파일을 복사합니다. minimatch 패턴은 폴더 경로가 아니라 파일 경로와만 일치합니다.",
+  "loc.instanceNameFormat": "파일을 복사할 위치: $(TargetFolder)",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.SourceFolder": "소스 폴더",
+  "loc.input.help.SourceFolder": "사본 패턴이 실행될 소스 폴더입니다. 리포지토리의 루트는 [비어 있음]입니다.  파일이 리포지토리에 없으면 [변수](http://go.microsoft.com/fwlink/?LinkID=550988)를 사용하세요. 예: $(agent.builddirectory)",
+  "loc.input.label.Contents": "콘텐츠",
+  "loc.input.help.Contents": "복사의 일부로 포함할 파일 경로입니다. 여러 줄의 minimatch 패턴을 지원합니다. [자세한 정보](http://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.label.TargetFolder": "대상 폴더",
+  "loc.input.help.TargetFolder": "파일이 복사될 대상 폴더입니다. [변수](http://go.microsoft.com/fwlink/?LinkID=550988)를 사용하세요. 예: $(build.artifactstagingdirectory)",
+  "loc.input.label.CleanTargetFolder": "대상 폴더 정리",
+  "loc.input.help.CleanTargetFolder": "복사 전 대상 폴더에서 기존 파일 모두 삭제",
+  "loc.input.label.OverWrite": "덮어쓰기",
+  "loc.input.help.OverWrite": "대상 폴더에서 기존 파일 바꾸기",
+  "loc.messages.FoundNFiles": "%d개 파일을 찾았습니다.",
+  "loc.messages.CleaningTargetFolder": "대상 폴더 정리: %s",
+  "loc.messages.FileAlreadyExistAt": "%s 파일이 %s에 이미 있습니다.",
+  "loc.messages.CopyingTo": "%s을(를) %s(으)로 복사하는 중"
+}

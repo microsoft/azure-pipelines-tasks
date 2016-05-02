@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
@@ -6,27 +6,49 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
-                "Build",
-                "Release"
-                  ],
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 22
     },
-    "demands" : [
+    "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.82.0",
+    "minimumAgentVersion": "1.95.0",
     "inputs": [
+        {
+            "name": "ConnectedServiceNameSelector",
+            "type": "pickList",
+            "label": "Azure Connection Type",
+            "required": false,
+            "helpMarkDown": "",
+            "defaultValue": "ConnectedServiceName",
+            "options": {
+                "ConnectedServiceName": "Azure Classic",
+                "ConnectedServiceNameARM": "Azure Resource Manager"
+            }
+        },
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:Azure",
-            "label": "Azure Subscription",
+            "label": "Azure Classic Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure subscription to configure before running PowerShell"
+            "helpMarkDown": "Azure Classic subscription to configure before running PowerShell",
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+        },
+        {
+            "name": "ConnectedServiceNameARM",
+            "type": "connectedService:AzureRM",
+            "label": "Azure RM Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
         },
         {
             "name": "ScriptPath",
@@ -47,10 +69,17 @@
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
     "execution": {
+        "PowerShell3": {
+            "target": "AzurePowerShell.ps1"
+        },
         "AzurePowerShell": {
-            "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
+            "target": "$(currentDirectory)\\AzurePowerShell-Legacy.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
     }
 }

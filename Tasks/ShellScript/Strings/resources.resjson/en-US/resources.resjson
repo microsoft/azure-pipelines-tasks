@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Shell Script",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613738)",
@@ -14,5 +11,7 @@
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located.",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+  "loc.messages.BashReturnCode": "Bash exited with return code: %d",
+  "loc.messages.BashFailed": "Bash failed with error: %s"
 }

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
   "name": "PublishSymbols",
@@ -15,9 +12,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 26
   },
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
@@ -38,19 +35,9 @@
       "name": "SearchPattern",
       "type": "string",
       "label": "ms-resource:loc.input.label.SearchPattern",
-      "defaultValue": "**\\bin\\**\\*.pdb",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SearchPattern",
-      "groupName": "advanced"
-    },
-    {
-      "name": "SourceFolder",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.SourceFolder",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SourceFolder",
-      "groupName": "advanced"
+      "defaultValue": "**/bin/**/*.pdb",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
     },
     {
       "name": "SymbolsFolder",
@@ -58,7 +45,24 @@
       "label": "ms-resource:loc.input.label.SymbolsFolder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder",
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder"
+    },
+    {
+      "name": "SkipIndexing",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SkipIndexing",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SkipIndexing",
+      "groupName": "advanced"
+    },
+    {
+      "name": "TreatNotIndexedAsWarning",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TreatNotIndexedAsWarning",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TreatNotIndexedAsWarning",
       "groupName": "advanced"
     },
     {
@@ -100,10 +104,32 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\PublishSymbols.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "PublishSymbols.ps1"
     }
+  },
+  "messages": {
+    "CleanedUpSemaphoreFile0": "ms-resource:loc.messages.CleanedUpSemaphoreFile0",
+    "CleanUpSemaphoreFile0Error1": "ms-resource:loc.messages.CleanUpSemaphoreFile0Error1",
+    "Error0AccessingSemaphoreFile1Retrying2Seconds": "ms-resource:loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds",
+    "Found0Files": "ms-resource:loc.messages.Found0Files",
+    "FreeLibraryDbghelpDllError0": "ms-resource:loc.messages.FreeLibraryDbghelpDllError0",
+    "NoFilesForIndexing": "ms-resource:loc.messages.NoFilesForIndexing",
+    "NoFilesForPublishing": "ms-resource:loc.messages.NoFilesForPublishing",
+    "NoSourcePathsIn0": "ms-resource:loc.messages.NoSourcePathsIn0",
+    "OneOrMoreSourceFilesNotIndexedFor0": "ms-resource:loc.messages.OneOrMoreSourceFilesNotIndexedFor0",
+    "ReachedPublishingMaxWaitTime0Seconds": "ms-resource:loc.messages.ReachedPublishingMaxWaitTime0Seconds",
+    "SemaphoreFile0ExistsRetrying1Seconds": "ms-resource:loc.messages.SemaphoreFile0ExistsRetrying1Seconds",
+    "SemaphoreFile0Minutes1AttemptingCleanup": "ms-resource:loc.messages.SemaphoreFile0Minutes1AttemptingCleanup",
+    "SkippingIndexing": "ms-resource:loc.messages.SkippingIndexing",
+    "SourceFolderDeprecated0": "ms-resource:loc.messages.SourceFolderDeprecated0",
+    "SourceInfoNotRetrievedFrom0Message1": "ms-resource:loc.messages.SourceInfoNotRetrievedFrom0Message1",
+    "SpacesInTemp": "ms-resource:loc.messages.SpacesInTemp",
+    "SymbolStoreLastIdTxtNotFoundAt0": "ms-resource:loc.messages.SymbolStoreLastIdTxtNotFoundAt0",
+    "UnableToDetermineWorkspaceFromSourceFolder0": "ms-resource:loc.messages.UnableToDetermineWorkspaceFromSourceFolder0",
+    "UnableToIndexSources": "ms-resource:loc.messages.UnableToIndexSources",
+    "UnexpectedDbghelpdllExpected0Actual1": "ms-resource:loc.messages.UnexpectedDbghelpdllExpected0Actual1",
+    "UnsupportedSourceProvider0": "ms-resource:loc.messages.UnsupportedSourceProvider0",
+    "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1"
   }
 }
