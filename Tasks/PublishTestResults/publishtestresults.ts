@@ -30,10 +30,11 @@ else {
   var matchingTestResultsFiles = [testResultsFiles];
 }
 
-if(!matchingTestResultsFiles) {
+if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
   tl.warning('No test result files matching ' + testResultsFiles + ' were found.');  
   tl.exit(0);
 }
-
-var tp = new tl.TestPublisher(testRunner);
-tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+else{
+  var tp = new tl.TestPublisher(testRunner);
+  tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+}
