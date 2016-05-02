@@ -57,15 +57,6 @@ function Invoke-Test {
     $powershell.Dispose()
 }
 
-# Set the minimum threadpool count.
-[int]$minimumWorkerThreads = 0
-[int]$minimumCPThreads = 0
-[System.Threading.ThreadPool]::GetMinThreads([ref]$minimumWorkerThreads, [ref]$minimumCPThreads)
-if ($minimumWorkerThreads -lt 4) {
-    $minimumWorkerThreads = 4
-    $null = [System.Threading.ThreadPool]::SetMinThreads($minimumWorkerThreads, $minimumCPThreads)
-}
-
 # Record the original environment variables.
 $originalEnv = @{ }
 foreach ($envVar in (Get-ChildItem -LiteralPath env:)) {
