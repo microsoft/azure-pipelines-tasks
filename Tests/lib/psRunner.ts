@@ -50,7 +50,7 @@ export class PSRunner extends events.EventEmitter {
 			'data',
 			(data) => {
 				// Check for special ouput indicating end of test.
-				if (('' + data).trim() == '_END_OF_TEST_ce10a77a_') {
+				if (('' + data).indexOf('_END_OF_TEST_ce10a77a_') >= 0) {
 					if (this._errors.length > 0) {
 						this._runDeferred.reject(this._errors.join('\n'));
 					} else {
