@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 31
+    "Patch": 32
   },
   "demands": [
     "azureps"
@@ -29,22 +29,23 @@
       "helpMarkDown": "Azure subscription to target for deployment."
     },
     {
+        "name": "WebSiteLocation",
+        "type": "pickList",
+        "label": "Web App Location",
+        "defaultValue": "South Central US",
+        "required": true,
+        "helpMarkDown": "Select a region for deployment.",
+        "properties": {
+            "EditableOptions": "True"
+        }
+    },
+    {
       "name": "WebSiteName",
       "type": "pickList",
       "label": "Web App Name",
       "defaultValue": "",
       "required": true,
-	  "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "WebSiteLocation",
-      "type": "pickList",
-      "label": "Web App Location",
-      "defaultValue": "South Central US",
-      "required": true,
-      "helpMarkDown": "Select a region for deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",     
+      "helpMarkDown": "",
       "properties": {
         "EditableOptions": "True"
       }
@@ -83,17 +84,17 @@
   ],
   "dataSourceBindings": [
     {
+      "target": "WebSiteLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureWebsiteLocations"
+    },
+    {
       "target": "WebSiteName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureWebSiteNames",
-	  "parameters": {
-		"WebSiteLocation": "$(WebSiteLocation)"
-	  }
-    },
-    {
-      "target": "WebSiteLocation",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocations"
+      "parameters": {
+         "WebSiteLocation": "$(WebSiteLocation)"
+      }
     }
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
