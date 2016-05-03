@@ -33,7 +33,13 @@ else {
 }
 
 // optional - no tasks will concat nothing
-gt.arg(tl.getInput('targets', false));
+tl.getDelimitedInput('targets', ' ', false)
+	.forEach(x => {
+		// omit empty values
+		if (x) {
+			gt.arg(x);
+		}
+	});
 
 gt.arg('--gulpfile');
 
