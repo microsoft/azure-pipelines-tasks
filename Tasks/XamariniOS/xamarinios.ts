@@ -115,10 +115,10 @@ nugetRunner.exec()
                 var xbuildRunner = tl.createToolRunner(xbuildToolPath);
                 xbuildRunner.pathArg(solutionPath);
                 if (configuration) {
-                    xbuildRunner.arg('/p:Configuration="' + configuration + '"');
+                    xbuildRunner.arg('/p:Configuration=' + configuration);
                 }
                 if (device) {
-                    xbuildRunner.arg('/p:Platform="' + device + '"');
+                    xbuildRunner.arg('/p:Platform=' + device);
                 }
                 if (packageApp) {
                     xbuildRunner.arg('/p:BuildIpa=true');
@@ -127,10 +127,10 @@ nugetRunner.exec()
                     xbuildRunner.argString(args);
                 }
                 if (provProfileUUID) {
-                    xbuildRunner.arg('/p:CodesignProvision="' + provProfileUUID + '"');
+                    xbuildRunner.arg('/p:CodesignProvision=' + provProfileUUID);
                 }
                 if (signIdentity) {
-                    xbuildRunner.arg('/p:Codesignkey="' + signIdentity + '"');
+                    xbuildRunner.arg('/p:Codesignkey=' + signIdentity);
                 }
                 // Execute build
                 xbuildRunner.exec()
