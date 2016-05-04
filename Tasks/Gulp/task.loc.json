@@ -49,8 +49,7 @@
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.arguments",
-      "required": false,
-      "groupName": "advanced"
+      "required": false
     },
     {
       "name": "cwd",
