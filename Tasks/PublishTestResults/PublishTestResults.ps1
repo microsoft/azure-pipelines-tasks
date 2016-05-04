@@ -20,7 +20,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
-if(!$testRunner)
+if (!$testRunner)
 {
     Write-Host "##vso[task.logissue type=error;code=003001;]"
     throw (Get-LocalizedString -Key "Test runner parameter has to be specified")
@@ -58,19 +58,19 @@ else
         
     $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
     $runTitleMemberExists = CmdletHasMember "RunTitle"
-	if(!($runTitleMemberExists))
+	if (!($runTitleMemberExists))
 	{
-		if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+		if (!([string]::IsNullOrWhiteSpace($testRunTitle)))
 		{
 			Write-Warning "Update the build agent to be able to use the custom run title feature."
 		}
-		if($publishRunLevelAttachmentsExists)
+		if ($publishRunLevelAttachmentsExists)
 		{
 			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
 		}
 		else 
 		{
-			if(!$publishResultsOption)
+			if (!$publishResultsOption)
 			{
 			    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
 			}
@@ -79,13 +79,13 @@ else
 	}
 	else
 	{
-		if($publishRunLevelAttachmentsExists)
+		if ($publishRunLevelAttachmentsExists)
 		{
 			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
 		}
 		else 
 		{
-			if(!$publishResultsOption)
+			if (!$publishResultsOption)
 			{
 			    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
 			}
