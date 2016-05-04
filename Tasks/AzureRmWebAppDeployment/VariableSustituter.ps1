@@ -6,7 +6,7 @@
 )
 
 # Load modules
-Import-Module ./XMLTagSubstituter.ps1 -Force
+Import-Module ./XMLSubstituter.ps1 -Force
 
 # Defined supported MIME type
 $ApplicationXmlMimeType = "application/xml"
