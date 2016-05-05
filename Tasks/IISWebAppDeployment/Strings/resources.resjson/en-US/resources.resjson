@@ -67,6 +67,7 @@
   "loc.input.help.AppPoolIdentity": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
   "loc.input.label.AppPoolUsername": "Username",
   "loc.input.label.AppPoolPassword": "Password",
+  "loc.input.help.AppPoolPassword": "If you are using a gMSA, this is not necessary",
   "loc.input.label.AppCmdCommands": "Additional AppCmd.exe Commands",
   "loc.input.help.AppCmdCommands": "Additional AppCmd.exe commands to set website or application pool properties. For more than one command use line separator, e.g., <br/> list apppools <br/> list sites",
   "loc.input.label.DeployInParallel": "Deploy in Parallel",

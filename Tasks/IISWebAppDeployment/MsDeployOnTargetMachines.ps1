@@ -459,6 +459,11 @@ function Update-AppPool
         $appCmdArgs = [string]::Format('{0} /[name=''"{1}"''].processModel.identityType:SpecificUser /[name=''"{1}"''].processModel.userName:"{2}" /[name=''"{1}"''].processModel.password:"{3}"',`
                                 $appCmdArgs, $appPoolName, $userName, $password)
     }
+    elseif($identity -eq "SpecificUser" -and -not [string]::IsNullOrWhiteSpace($userName) )
+    {
+        $appCmdArgs = [string]::Format('{0} /[name=''"{1}"''].processModel.identityType:SpecificUser /[name=''"{1}"''].processModel.userName:"{2}"',`
+                                $appCmdArgs, $appPoolName, $userName, $password)
+    }
     else
     {
         $appCmdArgs = [string]::Format('{0} /[name=''"{1}"''].processModel.identityType:{2}', $appCmdArgs, $appPoolName, $identity)

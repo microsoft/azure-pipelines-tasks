@@ -359,7 +359,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.AppPoolPassword",
       "defaultValue": "",
-      "required": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolPassword",
       "groupName": "applicationPool",
       "visibleRule": "AppPoolIdentity = SpecificUser"
     },
