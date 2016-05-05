@@ -9,7 +9,7 @@ param()
 
 # Arrange   
 Register-Mock InvokeMSBuildRunnerPostTest 
-Register-Mock UploadSummaryMdReport 
+Register-Mock CreateAndUploadReport 
 Register-Mock BreakBuildOnQualityGateFailure 
 
 # Act
@@ -17,6 +17,6 @@ Register-Mock BreakBuildOnQualityGateFailure
 
 # Assert
 Assert-WasCalled InvokeMSBuildRunnerPostTest
-Assert-WasCalled UploadSummaryMdReport
+Assert-WasCalled CreateAndUploadReport
 Assert-WasCalled BreakBuildOnQualityGateFailure
 
