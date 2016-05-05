@@ -17,14 +17,17 @@ function SetTaskContextVariable
 {
     param([string][ValidateNotNullOrEmpty()]$varName, 
           [string]$varValue)
-    
+        
+    #[Environment]::SetEnvironmentVariable($varName, $varValue)
     Write-Host "##vso[task.setvariable variable=$varName;]$varValue"
 }
 
 function GetTaskContextVariable()
 {
 	param([string][ValidateNotNullOrEmpty()]$varName)
-	return Get-TaskVariable -Context $distributedTaskContext -Name $varName
+        
+    #return ([Environment]::GetEnvironmentVariable($varName))
+	return Get-TaskVariable -Context $distributedTaskContext -Name $varName    
 }
 
 #
@@ -195,6 +198,17 @@ function Assert
         throw $message
     }
 }
+
+#
+# Returns true if the input is not null and it has at least 1 element 
+#
+function HasElements
+{
+    param ([Array]$arr)
+    
+    return ($arr -ne $null) -and ($arr.Count -gt 0)
+}
+
 
 #
 # Returns true if this build was triggered in response to a PR

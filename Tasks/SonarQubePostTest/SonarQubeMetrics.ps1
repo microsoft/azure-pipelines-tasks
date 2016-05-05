@@ -38,18 +38,38 @@ function WaitForAnalysisToFinish
     Assert (![String]::IsNullOrEmpty($analysisId)) "Could not fetch the analysis id"
 }
 
+
+function FetchQualityGateDetails
+{
+    param ([Array]$errors,[Array]$warnings)
+    
+    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"             
+    Assert (![String]::IsNullOrEmpty($analysisId)) "WaitForAnalysisToFinish should be called first."
+       
+    $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$analysisId" $true
+    return $response
+}
+
+#
+# For all the metrics in the system, this method returns the key and the friendly name, as well as the type and the id   
+#
+function FetchMetricNames
+{
+    $response = InvokeGetRestMethod "/api/metrics/search?ps=500&f=name" $false
+    
+    Assert (HasElements $response) "No metrics were found"
+    
+    return $response.metrics
+}
+
 #endregion
 
 #region Private
 
 function FetchQualityGateStatus
 {
-    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"    
-    
-    Assert (![String]::IsNullOrEmpty($analysisId)) "WaitForAnalysisToFinish should be called first."   
-    
-    $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$analysisId" $true    
-    return $response.projectStatus.status;
+    $response = FetchQualityGateDetails  
+    return $response.projectStatus.status
 }
 
 #

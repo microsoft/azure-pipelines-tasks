@@ -12,13 +12,11 @@ ExitOnPRBuild
 . $PSScriptRoot/PRCA/Orchestrator.ps1
 
 . $PSScriptRoot/SonarQubeMetrics.ps1
-. $PSScriptRoot/SonarQubeReportHandler.ps1
+. $PSScriptRoot/SummaryReport/ReportBuilder.ps1
 . $PSScriptRoot/SonarQubeBuildBreaker.ps1
 
 
 InvokeMSBuildRunnerPostTest
-# PRCA
-HandleCodeAnalysisReporting
-
+HandleCodeAnalysisReporting # PRCA
 UploadSummaryMdReport
 BreakBuildOnQualityGateFailure

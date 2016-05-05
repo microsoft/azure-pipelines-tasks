@@ -3,7 +3,7 @@
 #
 function HandleCodeAnalysisReporting
 {	
-    Write-Verbose "HandleCodeAnalysisReporting"
+    
     if (IsPrBuild)
     {   
         Write-Host "Fetching code analysis issues and posting them to the PR..."
@@ -19,6 +19,10 @@ function HandleCodeAnalysisReporting
         
         PostAndResolveComments $messages "SonarQube Code Analysis"
     }	
+    else
+    {
+        Write-Verbose "The build was not triggered by a Pull Request, not processing code analysis comments"   
+    }
 }
 
 #region Private 
