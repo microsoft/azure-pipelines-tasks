@@ -12,12 +12,12 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 22
+    "Patch": 23
   },
   "demands": [
     "node.js"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.98.1",
   "groups": [
     {
       "name": "advanced",

@@ -13,11 +13,12 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "sh"
   ],
+  "minimumAgentVersion": "1.98.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {

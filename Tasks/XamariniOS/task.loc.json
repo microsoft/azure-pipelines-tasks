@@ -12,11 +12,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [
     "Xamarin.iOS"
   ],
+  "minimumAgentVersion": "1.98.1",
   "groups": [
     {
       "name": "sign",

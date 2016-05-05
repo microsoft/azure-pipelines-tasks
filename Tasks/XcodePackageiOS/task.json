@@ -12,12 +12,13 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 15
+        "Patch": 16
     },
     "instanceNameFormat": "Xcode Package $(appName)",
     "demands": [
         "xcode"
     ],
+    "minimumAgentVersion": "1.98.1",
     "groups": [
         {
             "name": "advanced",
