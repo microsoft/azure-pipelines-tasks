@@ -89,7 +89,7 @@ $messages = GetQualityGateWarningsAndErrors $qualityGateResponse
 
 # Assert
 
-
+$messages = $messages | Sort-Object 'status', 'metric_name'
 Assert-AreEqual $messages.Count 4 "There should be 3 errors and 1 warning"
 
 VerifyMessage $messages[0] "error" "0%" "5%" "Duplicated blocks" "&#60;" # lower than
