@@ -115,16 +115,7 @@ function GetQualityGateWarningsAndErrors
             $comparator = GetComparatorDisplayLabel $failedCondition.comparator
             $color = GetMetricValueColor $failedCondition.status                        
             $value = GetMetricValueDisplayLabel $metricNames $failedCondition.metricKey $failedCondition.actualValue
-            
-            if ($failedCondition.status -eq "error")
-            {
-                $threshold = $failedCondition.errorThreshold   
-            }
-                        
-            if ($failedCondition.status -eq "warn")
-            {
-                $threshold = $failedCondition.warningThreshold   
-            }
+            $threshold = GetThresholdDisplayLabel $metricNames $failedCondition 
             
             $properties = @{
                 'status'=$failedCondition.status
@@ -145,33 +136,49 @@ function GetQualityGateWarningsAndErrors
     return $messages
 }
 
+function GetThresholdDisplayLabel
+{
+    param ($metricNames, $failedCondition)
+    
+    if ($failedCondition.status -eq "error")
+    {
+        $numericValue = $failedCondition.errorThreshold   
+    }                        
+    else
+    {
+        $numericValue = $failedCondition.warningThreshold   
+    }    
+    
+    $metric = GetMatchingMetric $metricNames $failedCondition.metricKey
+    
+    return (GetMetricValueWithUnit $metric $numericValue)
+}
 
 function GetMetricValueDisplayLabel
 {
     param ($metricNames, $metricKey, $numericValue)
     
-    $matchingMetric = $metricNames | Where-Object {$_.key -eq $metricKey}
+    $metric = GetMatchingMetric $metricNames $metricKey
     
-    if (!(HasElements $matchingMetric))
+    return (GetMetricValueWithUnit $metric $numericValue)
+}
+
+function GetMetricValueWithUnit
+{
+    param ($metric, $numericValue)
+    
+    if ($metric -eq $null)
     {
-        Write-Warning "No metric with the key $metricKey found"
         return $numericValue
     }
-     
-    if (@($matchingMetric).Count -gt 1) 
-    {
-        Write-Warning "Multiple metrics with the key $metricKey found"
-        return $numericValue     
-    }
     
-    $type = $matchingMetric.type
-    
+    $type = $metric.type
     if ($type -eq "WORK_DUR")
     {
         return (GetWorkDurationLabel ($numericValue -as [int]))
     }  
     
-    $unit = GetUnitDisplayLabel
+    $unit = GetUnitDisplayLabel $type
     return ($numericValue + $unit)    
 }
 
@@ -179,23 +186,34 @@ function GetMetricNameDisplayLabel
 {
     param ($metricNames, $metricKey)
     
+    $metric = GetMatchingMetric $metricNames $metricKey
+    if ($metric -eq $null)
+    {
+        return $metricKey
+    }
+  
+    return $metric.name
+}
+
+function GetMatchingMetric
+{
+     param ($metricNames, $metricKey)
+     
     $matchingMetric = $metricNames | Where-Object {$_.key -eq $metricKey} 
     
     if (!(HasElements $matchingMetric))
     {
         Write-Warning "No metric with the key $metricKey found"
-        return $metricKey  
+        return $null  
     } 
     
     if (@($matchingMetric).Count -gt 1) 
     {
         Write-Warning "Multiple metrics with the key $metricKey found"
-        return $metricKey      
+        return $null      
     }
     
-    $name = $matchingMetric.name 
-    
-    return $name
+    return $matchingMetric
 }
 
 #
@@ -204,17 +222,24 @@ function GetMetricNameDisplayLabel
 #
 function GetWorkDurationLabel
 {
-    param ($numericValue)
+    param ($totalMinutes)
     
     $displayValue = ""
-    if ($numericValue -ge 60)
+    $ts = New-Object "TimeSpan" -ArgumentList @(0, $totalMinutes, 0) 
+    $totalHours = [Math]::Floor($ts.TotalHours)
+    $minutes = $ts.Minutes
+    
+    if ($totalHours -gt 0)
     {
-        $hours = [Math]::Floor($numericValue / 60) 
-        $displayValue = ($hours.ToString()) + "h"
+        $displayValue = $totalHours.ToString() + "h"
+        if ($minutes -gt 0)
+        {
+             $displayValue += " " + $minutes.ToString() + "min"
+        }
     }
     else
     {
-        $displayValue = $numericValue.ToString() + "min"
+        $displayValue = $minutes.ToString() + "min"
     }
     
     return $displayValue
@@ -227,7 +252,7 @@ function GetUnitDisplayLabel
 {
      param ($unit)
     
-     switch ($status)      
+     switch ($unit)      
      {
         {$_ -eq "PERCENT"} 
         {

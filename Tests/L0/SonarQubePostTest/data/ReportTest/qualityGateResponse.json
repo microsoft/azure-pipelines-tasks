@@ -36,7 +36,7 @@
                 "metricKey": "new_technical_debt2",
                 "comparator": "GT",
                 "periodIndex": 1,
-                "errorThreshold": "5",
+                "errorThreshold": "0",
                 "actualValue": "59"
             },
             {
