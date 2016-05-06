@@ -207,10 +207,18 @@ function Invoke-MSBuild {
 
         # Always hook up the timeline logger. If project events are not requested then we will simply drop those
         # messages on the floor.
-        $loggerAssembly = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
-        $null = Assert-VstsPath -LiteralPath $loggerAssembly -PathType Leaf
+        $loggerAssembly = "$PSScriptRoot\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
+        $legacyLoggerAssembly = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
+        if (!([System.IO.File]::Exists($loggerAssembly)) -and
+            ([System.IO.File]::Exists($legacyLoggerAssembly)))
+        {
+            $loggerAssembly = $legacyLoggerAssembly
+        }
+
+        Assert-VstsPath -LiteralPath $loggerAssembly -PathType Leaf
         $arguments = "$arguments /dl:CentralLogger,`"$loggerAssembly`"*ForwardingLogger,`"$loggerAssembly`""
 
+        # Append additional arguments.
         if ($AdditionalArguments) {
             $arguments = "$arguments $AdditionalArguments"
         }
@@ -231,6 +239,7 @@ function Invoke-MSBuild {
             if ($NoTimelineLogger) {
                 Invoke-VstsTool -FileName $MSBuildPath -Arguments $arguments -RequireExitCodeZero
             } else {
+                $knownDetailNodes = @{ }
                 Invoke-VstsTool -FileName $MSBuildPath -Arguments $arguments -RequireExitCodeZero |
                     ForEach-Object {
                         if ($_ -and
@@ -246,11 +255,20 @@ function Invoke-MSBuild {
                                 $command.Event -eq 'logdetail' -and
                                 !$NoTimelineLogger) {
 
-                                if (!($parentProjectId = $command.Properties['parentid']) -or
-                                    [guid]$parentProjectId -eq [guid]::Empty) {
+                                # Record known detail nodes and manipulate the parent project ID if required.
+                                $id = $command.Properties['id']
+                                if (!$knownDetailNodes.ContainsKey($id)) {
+                                    # The detail node is new.
 
-                                    # Default the parent ID to the root ID.
-                                    $command.Properties['parentid'] = $detailId.ToString('D')
+                                    # Check if the parent project ID is null or empty.
+                                    $parentProjectId = $command.Properties['parentid']
+                                    if (!$parentProjectId -or [guid]$parentProjectId -eq [guid]::Empty) {
+                                        # Default the parent ID to the root ID it is a new node and does not have a parent ID.
+                                        $command.Properties['parentid'] = $detailId.ToString('D')
+                                    }
+
+                                    # Track the detail node as known.
+                                    $knownDetailNodes[$id] = $null
                                 }
 
                                 if ($projFile = $command.Properties['name']) {
