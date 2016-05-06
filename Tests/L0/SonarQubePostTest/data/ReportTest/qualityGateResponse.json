@@ -21,7 +21,7 @@
                 "metricKey": "sqale_index",
                 "comparator": "EQ",
                 "errorThreshold": "0",
-                "actualValue": "322"
+                "actualValue": "14"
             },
             {
                 "status": "ERROR",
@@ -30,6 +30,14 @@
                 "periodIndex": 1,
                 "errorThreshold": "480",
                 "actualValue": "322"
+            },
+             {
+                "status": "ERROR",
+                "metricKey": "new_technical_debt2",
+                "comparator": "GT",
+                "periodIndex": 1,
+                "errorThreshold": "5",
+                "actualValue": "59"
             },
             {
                 "status": "OK",

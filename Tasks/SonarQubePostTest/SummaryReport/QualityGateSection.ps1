@@ -111,9 +111,10 @@ function GetQualityGateWarningsAndErrors
         $metricNames = FetchMetricNames
         foreach ($failedCondition in $failedConditions)
         {
-            $metricName = GetMetricFriendlyName $metricNames $failedCondition.metricKey
-            $comparator = GetComparatorDisplayValue $failedCondition.comparator
-            $color = GetMetricValueColor $failedCondition.status            
+            $metricName = GetMetricNameDisplayLabel $metricNames $failedCondition.metricKey
+            $comparator = GetComparatorDisplayLabel $failedCondition.comparator
+            $color = GetMetricValueColor $failedCondition.status                        
+            $value = GetMetricValueDisplayLabel $metricNames $failedCondition.metricKey $failedCondition.actualValue
             
             if ($failedCondition.status -eq "error")
             {
@@ -130,7 +131,7 @@ function GetQualityGateWarningsAndErrors
                 'metric_name'=$metricName
                 'comparator'=$comparator
                 'threshold' = $threshold
-                'actualValue'= $failedCondition.actualValue
+                'actualValue'= $value
                 'color' = $color
             }
             
@@ -144,20 +145,106 @@ function GetQualityGateWarningsAndErrors
     return $messages
 }
 
-function GetMetricFriendlyName
+
+function GetMetricValueDisplayLabel
+{
+    param ($metricNames, $metricKey, $numericValue)
+    
+    $matchingMetric = $metricNames | Where-Object {$_.key -eq $metricKey}
+    
+    if (!(HasElements $matchingMetric))
+    {
+        Write-Warning "No metric with the key $metricKey found"
+        return $numericValue
+    }
+     
+    if (@($matchingMetric).Count -gt 1) 
+    {
+        Write-Warning "Multiple metrics with the key $metricKey found"
+        return $numericValue     
+    }
+    
+    $type = $matchingMetric.type
+    
+    if ($type -eq "WORK_DUR")
+    {
+        return (GetWorkDurationLabel ($numericValue -as [int]))
+    }  
+    
+    $unit = GetUnitDisplayLabel
+    return ($numericValue + $unit)    
+}
+
+function GetMetricNameDisplayLabel
 {
     param ($metricNames, $metricKey)
+    
     $matchingMetric = $metricNames | Where-Object {$_.key -eq $metricKey} 
     
-    Assert (HasElements $matchingMetric) "No metric with the key $metricKey found"
-    Assert (@($matchingMetric).Count -eq 1) "Multiple metrics with the key $metricKey found"
+    if (!(HasElements $matchingMetric))
+    {
+        Write-Warning "No metric with the key $metricKey found"
+        return $metricKey  
+    } 
+    
+    if (@($matchingMetric).Count -gt 1) 
+    {
+        Write-Warning "Multiple metrics with the key $metricKey found"
+        return $metricKey      
+    }
     
     $name = $matchingMetric.name 
     
     return $name
 }
 
-function GetComparatorDisplayValue
+#
+# SonarQube gives work durations in minutes and it uses complex logic to transform those values to hours, work days, weeks, months etc. 
+# At this point we only show hours and minutes.
+#
+function GetWorkDurationLabel
+{
+    param ($numericValue)
+    
+    $displayValue = ""
+    if ($numericValue -ge 60)
+    {
+        $hours = [Math]::Floor($numericValue / 60) 
+        $displayValue = ($hours.ToString()) + "h"
+    }
+    else
+    {
+        $displayValue = $numericValue.ToString() + "min"
+    }
+    
+    return $displayValue
+}
+
+#
+# Returns a label for the measurment unit as stored by SonarQube. Based on the api/metrics/types API 
+#
+function GetUnitDisplayLabel
+{
+     param ($unit)
+    
+     switch ($status)      
+     {
+        {$_ -eq "PERCENT"} 
+        {
+                return '%'
+        }
+        {$_ -eq "MILLISEC"} 
+        {
+                return 'ms'
+        }              
+        Default 
+        {
+            return ""
+        }
+     }
+}
+
+function GetComparatorDisplayLabel
 {
     param ($comparator)
     
