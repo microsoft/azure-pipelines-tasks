@@ -124,60 +124,68 @@ catch
 }
 finally
 {
-    # Try to publish test results, only if the results directory has been set.
-
-    if($testResultsDirectory)
+    try
     {
-        $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
+        # Try to publish test results, only if the results directory has been set.
 
-        $publishResultsOption = Convert-String $publishRunAttachments Boolean
-
-        if($resultFiles)
+        if($testResultsDirectory)
         {
-            # Remove the below hack once the min agent version is updated to S91 or above
-            $runTitleMemberExists = CmdletHasMember "RunTitle"
-            $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
-            if($runTitleMemberExists)
+            $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
+
+            $publishResultsOption = Convert-String $publishRunAttachments Boolean
+
+            if($resultFiles)
             {
-                if($publishRunLevelAttachmentsExists)
+                # Remove the below hack once the min agent version is updated to S91 or above
+                $runTitleMemberExists = CmdletHasMember "RunTitle"
+                $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
+                if($runTitleMemberExists)
                 {
-                    Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
+                    if($publishRunLevelAttachmentsExists)
+                    {
+                        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
+                    }
+                    else
+                    {
+                        if(!$publishResultsOption)
+                        {
+                            Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "opt in/out of publishing test run attachments")
+                        }
+                        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
+                    }
                 }
                 else
                 {
-                    if(!$publishResultsOption)
+                    if($testRunTitle)
                     {
-                        Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "opt in/out of publishing test run attachments")
+                        Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "custom run title")
                     }
-                    Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
+            
+                    if($publishRunLevelAttachmentsExists)		
+                    {
+                        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
+                    }
+                    else
+                    {
+                        if(!$publishResultsOption)
+                        {
+                            Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "opt in/out of publishing test run attachments")
+                        }
+                        Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
+                    }		
                 }
             }
             else
             {
-                if($testRunTitle)
-                {
-                    Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "custom run title")
-                }
-            
-                if($publishRunLevelAttachmentsExists)		
-                {
-                    Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
-                }
-                else
-                {
-                    if(!$publishResultsOption)
-                    {
-                        Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "opt in/out of publishing test run attachments")
-                    }
-                    Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
-                }		
+                Write-Host "##vso[task.logissue type=warning;code=002003;]"
+                Write-Warning (Get-LocalizedString -Key "No results found to publish.")
             }
         }
-        else
-        {
-            Write-Host "##vso[task.logissue type=warning;code=002003;]"
-            Write-Warning (Get-LocalizedString -Key "No results found to publish.")
-        }
+    }
+    catch
+    {
+        Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+        throw
     }
 }
 
