@@ -13,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 39
+    "Patch": 40
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "1.95.0",
   "inputs": [
     {
       "name": "SourcePath",
@@ -200,7 +200,7 @@
       "defaultValue": "false",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs",
       "required": false,
-      "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
+      "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs."
     },
     {
       "name": "CopyFilesInParallel",
@@ -221,13 +221,13 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "skipCACheck",
-      "type": "boolean",
-      "label": "Test Certificate",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
-      "visibleRule": "Destination = AzureVMs"
+        "name": "skipCACheck",
+        "type": "boolean",
+        "label": "Test Certificate",
+        "defaultValue": "true",
+        "required": false,
+        "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
+        "visibleRule": "Destination = AzureVMs"
     }
   ],
   "dataSourceBindings": [
