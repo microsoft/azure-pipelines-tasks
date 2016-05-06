@@ -1,0 +1,24 @@
+{
+    "which": {
+        "ant": "/usr/local/bin/ANT",
+        "node": "/usr/local/bin/node"
+    },
+    "exec": {
+        "/usr/local/bin/ANT -version": {
+            "code": 0,
+            "stdout": "Apache Ant(TM) version 1.9.7 compiled on April 9 2016"
+        },
+        "/usr/local/bin/ANT -buildfile /build/build.xml": {
+            "code": 0,
+            "stdout": ""
+        }
+    },
+    "checkPath" : {
+        "/build/build.xml": true,
+        "/usr/local/bin/ANT2": true
+    },
+    "getVariable" : {
+        "ANT_HOME": "/user/local/bin/ANT",
+        "JAVA_HOME_8_X86": "/user/local/bin/ANT8"
+    }
+}
