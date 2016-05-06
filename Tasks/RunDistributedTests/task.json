@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 35
+        "Patch": 36
     },
     "demands": [
     ],
@@ -30,8 +30,8 @@
             "isExpanded": true
         },
         {
-            "name": "executionDistributionMethod",
-            "displayName": "Execution Distribution Method",
+            "name": "testDistribution",
+            "displayName": "Test Distribution",
             "tags" : [ "Preview" ],
             "isExpanded": true
         },
@@ -160,11 +160,11 @@
         {
             "name": "customSlicingEnabled",
             "type": "boolean",
-            "label": "Uniform Distribution Enabled",
+            "label": "Distribute tests by number of machines",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Whether tests are to be uniformly distributed amongst agents.",
-            "groupName": "executionDistributionMethod"
+            "helpMarkDown": "Tests will be distributed based on the number of machines provided instead of number of test containers. Note that tests within a dll might also be distributed to multiple machines.",
+            "groupName": "testDistribution"
         },
         {
  	          "name": "testRunTitle", 
