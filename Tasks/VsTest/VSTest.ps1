@@ -109,7 +109,25 @@ try
         $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
     
         Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
+    
+    }
+    else
+    {
+        Write-Host "##vso[task.logissue type=warning;code=002004;]"
+        Write-Warning (Get-LocalizedString -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
+    }
+}
+catch
+{
+    Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+    throw
+}
+finally
+{
+    # Try to publish test results, only if the results directory has been set.
 
+    if($testResultsDirectory)
+    {
         $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
 
         $publishResultsOption = Convert-String $publishRunAttachments Boolean
@@ -160,18 +178,7 @@ try
             Write-Host "##vso[task.logissue type=warning;code=002003;]"
             Write-Warning (Get-LocalizedString -Key "No results found to publish.")
         }
-    
     }
-    else
-    {
-        Write-Host "##vso[task.logissue type=warning;code=002004;]"
-        Write-Warning (Get-LocalizedString -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
-    }
-}
-catch
-{
-    Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
-    throw
 }
 
 Write-Verbose "Leaving script VSTest.ps1"
