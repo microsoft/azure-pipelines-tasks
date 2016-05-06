@@ -119,6 +119,7 @@ try
 }
 catch
 {
+    # Catching reliability issues and logging them here.
     Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
     throw
 }
