@@ -1,4 +1,32 @@
-
+#
+# Displays the quality gate status and, if the quality gate status is error or warning, any conditions that led to this.
+# 
+# Example output:
+# 
+# <div style="padding:5px 0px">
+#    <span>Quality Gate</span>
+#    <span style="padding:4px 10px; margin-left: 5px; background-color:#d4333f; color:#fff; display:inline-block">Failed</span>
+# </div>
+#
+#<table border="0" style="border-top: 1px solid #eee;border-collapse: separate;border-spacing: 0 2px;">
+#    <tbody><tr>
+#        <td><span style="padding-right:4px;">Duplicated blocks</span></td>
+#        <td style="text-align: center; background-color:#d4333f; color:#fff;"><span style="padding:0px 2px">0</span></td>
+#        <td>&nbsp;&lt; 5</td>
+#    </tr>    
+#    <tr>
+#        <td><span style="padding-right:4px;">Blocker issues</span></td>
+#        <td style="text-align: center; background-color:#f90; color:#fff;"><span style="padding:0px 2px">0</span></td>
+#        <td>&nbsp;= 0</td>
+#    </tr>
+#</tbody></table>
+#
+# This corresponds to:
+# 
+# Quality Gate: Failed 
+# Duplicated blocks 0 < 5
+# Blocker issues 0 != 0
+#
 function GetQualityGateSectionContent
 {
     Write-Verbose "Formatting the quality gate report section"
@@ -27,10 +55,10 @@ function FormatQualityGateMessagesSection
 {
     param ($messages)
     
+    $sb = New-Object "System.Text.StringBuilder"
+    
     if (HasElements $messages)
     {
-        Write-Host "here"
-        $sb = New-Object "System.Text.StringBuilder"
         [void]$sb.AppendLine('<table border="0" style="border-top: 1px solid #eee;border-collapse: separate;border-spacing: 0 2px;">')
         
         foreach ($message in $messages)
@@ -153,7 +181,7 @@ function GetComparatorDisplayValue
             }
         Default 
         {
-            Write-Warning "Unkown operator $comparator"
+            Write-Warning "Unknown operator $comparator"
             return $comparator;
         }
      }
