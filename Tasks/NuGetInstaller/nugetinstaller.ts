@@ -25,7 +25,7 @@ if(!nuGetPathToUse) {
 }
 tl.checkPath(nuGetPathToUse, 'nuget');
 
-var sourcesFolder = tl.getVariable('build.sourcesdirectory');
+var sourcesFolder = tl.getVariable('system.defaultworkingdirectory');
 var runnuget = function(fn) {
     return Q.fcall(() => {
         var nugetTool = tl.createToolRunner(nuGetPathToUse);
