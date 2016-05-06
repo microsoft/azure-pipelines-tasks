@@ -45,7 +45,7 @@
       "label": "ms-resource:loc.input.label.WebSiteName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.WebSiteName",
       "properties": {
         "EditableOptions": "True"
       }

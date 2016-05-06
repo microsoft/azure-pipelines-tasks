@@ -45,7 +45,7 @@
       "label": "Web App Name",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "",
+      "helpMarkDown": "Enter the website name or Select from the list.<br>Note: Only the websites associated with Default App Service plan for the selected region are listed.",
       "properties": {
         "EditableOptions": "True"
       }
