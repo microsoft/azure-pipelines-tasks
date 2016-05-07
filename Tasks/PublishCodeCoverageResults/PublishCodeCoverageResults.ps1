@@ -12,6 +12,7 @@ Write-Verbose "reportDirectory = $reportDirectory" -Verbose
 Write-Verbose "additionalCodeCoverageFiles = $additionalCodeCoverageFiles" -Verbose
 
 # Import the Task.CodeCoverage dll that has all the cmdlets we need for Build
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 
 # Publish Code Coverage Files

@@ -208,13 +208,6 @@ function Invoke-MSBuild {
         # Always hook up the timeline logger. If project events are not requested then we will simply drop those
         # messages on the floor.
         $loggerAssembly = "$PSScriptRoot\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
-        $legacyLoggerAssembly = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
-        if (!([System.IO.File]::Exists($loggerAssembly)) -and
-            ([System.IO.File]::Exists($legacyLoggerAssembly)))
-        {
-            $loggerAssembly = $legacyLoggerAssembly
-        }
-
         Assert-VstsPath -LiteralPath $loggerAssembly -PathType Leaf
         $arguments = "$arguments /dl:CentralLogger,`"$loggerAssembly`"*ForwardingLogger,`"$loggerAssembly`""
 
