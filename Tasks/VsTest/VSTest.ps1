@@ -34,6 +34,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 # Import the Task.TestResults dll that has the cmdlet we need for publishing results
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 
 . $PSScriptRoot\Helpers.ps1
 

@@ -4,8 +4,9 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\DbghelpFunctions.ps1
-$env:AGENT_HOMEDIRECTORY = 'SomeDrive:\AgentHome'
-Register-Mock Assert-VstsPath { "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll" }
+Register-Mock Get-VstsTaskVariable { 'SomeDrive:\AgentHome' } -- -Name Agent.HomeDirectory -Require
+Register-Mock Assert-VstsPath { "SomeDrive:\AgentHome\Externals\Symstore\dbghelp.dll" }
+
 Register-Mock Get-CurrentProcess {
     New-Object psobject -Property @{
             Id = $PID
@@ -16,7 +17,7 @@ Register-Mock Get-CurrentProcess {
                 }
                 New-Object psobject -Property @{
                     ModuleName = 'dbghelp.dll'
-                    FileName = "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll"
+                    FileName = "SomeDrive:\AgentHome\Externals\Symstore\dbghelp.dll"
                 }
             )
         }

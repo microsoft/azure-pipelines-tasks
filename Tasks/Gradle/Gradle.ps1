@@ -43,6 +43,7 @@ Write-Verbose "jdkUserInputPath = $jdkUserInputPath"
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 # Verify wrapperScript is set and is not a container

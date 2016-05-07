@@ -345,6 +345,9 @@ if ($ThresholdLimit -and $ThresholdLimit -ge 0)
     Write-Output "Threshold limit = $ThresholdLimit"
 }
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
 $Username = $connectedServiceDetails.Authorization.Parameters.Username

@@ -202,6 +202,9 @@ Write-Output "Website Url = $websiteUrl"
 Write-Output "Virtual user load = $vuLoad"
 Write-Output "Load location = $geoLocation"
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 $serviceEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
 $Username = $serviceEndpoint.Authorization.Parameters.Username

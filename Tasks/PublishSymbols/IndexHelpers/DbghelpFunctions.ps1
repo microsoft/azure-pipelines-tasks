@@ -3,7 +3,16 @@ function Add-DbghelpLibrary {
     param()
 
     Trace-VstsEnteringInvocation $MyInvocation
-    [string]$filePath = Assert-VstsPath -LiteralPath "$env:AGENT_HOMEDIRECTORY\Agent\Worker\Tools\Symstore\dbghelp.dll" -PathType Leaf -PassThru
+    
+    $dbgAssembly = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\externals\symstore\dbghelp.dll"
+    $legacyDbgAssembly = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\Symstore\dbghelp.dll"
+    if (!([System.IO.File]::Exists($dbgAssembly)) -and		
+        ([System.IO.File]::Exists($legacyDbgAssembly)))		
+    {		
+        $dbgAssembly = $legacyDbgAssembly		
+    }
+    
+    [string]$filePath = Assert-VstsPath -LiteralPath $dbgAssembly -PathType Leaf -PassThru
     [bool]$isLoaded = $false
     foreach ($module in (Get-CurrentProcess).Modules) {
         if ($module.ModuleName -eq 'dbghelp.dll') {
