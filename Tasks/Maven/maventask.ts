@@ -183,21 +183,21 @@ function getAuthParameter(endpoint, paramName) {
 function createMavenSQRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?) {
     var mvnsq = tl.createToolRunner(mvntool);
 
-    mvnsq.arg('-Dsonar.host.url="' + sqHostUrl + '"');
+    mvnsq.arg('-Dsonar.host.url=' + sqHostUrl);
     if (sqHostUsername) {
-        mvnsq.arg('-Dsonar.login="' + sqHostUsername + '"');
+        mvnsq.arg('-Dsonar.login=' + sqHostUsername);
     }
     if (sqHostPassword) {
-        mvnsq.arg('-Dsonar.password="' + sqHostPassword + '"');
+        mvnsq.arg('-Dsonar.password=' + sqHostPassword);
     }
     if (sqDbUrl) {
-        mvnsq.arg('-Dsonar.jdbc.url="' + sqDbUrl + '"');
+        mvnsq.arg('-Dsonar.jdbc.url=' + sqDbUrl);
     }
     if (sqDbUsername) {
-        mvnsq.arg('-Dsonar.jdbc.username="' + sqDbUsername + '"');
+        mvnsq.arg('-Dsonar.jdbc.username=' + sqDbUsername);
     }
     if (sqDbPassword) {
-        mvnsq.arg('-Dsonar.jdbc.password="' + sqDbPassword + '"');
+        mvnsq.arg('-Dsonar.jdbc.password=' + sqDbPassword);
     }
 
     return mvnsq;

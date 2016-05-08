@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "DotNetFramework"
@@ -80,7 +80,7 @@
             }
         }
     ],
-    "instanceNameFormat": "Powershell Script",
+    "instanceNameFormat": "PowerShell Script",
     "execution": {
         "PowerShellExe": {
             "target": "$(scriptName)",

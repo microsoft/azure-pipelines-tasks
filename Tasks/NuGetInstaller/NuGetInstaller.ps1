@@ -40,10 +40,10 @@ if ($excludeVersion -and "$excludeVersion".ToUpperInvariant() -ne 'FALSE')
 if ($solution.Contains("*") -or $solution.Contains("?"))
 {
     Write-Verbose "Pattern found in solution parameter."
-    if ($env:BUILD_SOURCESDIRECTORY)
+    if ($env:SYSTEM_DEFAULTWORKINGDIRECTORY)
     {
-        Write-Verbose "Find-Files -SearchPattern $solution -RootFolder $env:BUILD_SOURCESDIRECTORY"
-        $solutionFiles = Find-Files -SearchPattern $solution -RootFolder $env:BUILD_SOURCESDIRECTORY
+        Write-Verbose "Find-Files -SearchPattern $solution -RootFolder $env:SYSTEM_DEFAULTWORKINGDIRECTORY"
+        $solutionFiles = Find-Files -SearchPattern $solution -RootFolder $env:SYSTEM_DEFAULTWORKINGDIRECTORY
     }
     else
     {
@@ -91,7 +91,7 @@ if($nuGetRestoreArgs)
     $args = ($args + " " + $nuGetRestoreArgs);
 }
 
-if($nugetConfigPath -and ($nugetConfigPath -ne $env:Build_SourcesDirectory))
+if($nugetConfigPath -and ($nugetConfigPath -ne $env:System_DefaultWorkingDirectory))
 {
     $args = "$args -configfile `"$tempNuGetConfigPath`""
 

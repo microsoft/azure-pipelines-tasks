@@ -20,78 +20,86 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
-if(!$testRunner)
-{
-    Write-Host "##vso[task.logissue type=error;code=003001;]"
-    throw (Get-LocalizedString -Key "Test runner parameter has to be specified")
-}
+Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
 
-if (!$testResultsFiles)
+try
 {
-    Write-Host "##vso[task.logissue type=error;code=003001;]"
-    throw (Get-LocalizedString -Key "Test results files parameter has to be specified")
-}
+    if(!$testRunner)
+    {        
+        throw (Get-LocalizedString -Key "Test runner parameter has to be specified")
+    }
 
-# check for pattern in testResultsFiles
-if ($testResultsFiles.Contains("*") -or $testResultsFiles.Contains("?"))
-{
-    Write-Verbose "Pattern found in testResultsFiles parameter."
-    Write-Verbose "Find-Files -SearchPattern $testResultsFiles"
-    $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
-    Write-Verbose "matchingTestResultsFiles = $matchingTestResultsFiles"
-}
-else
-{
-    Write-Verbose "No Pattern found in testResultsFiles parameter."
-    $matchingTestResultsFiles = ,$testResultsFiles
-}
+    if (!$testResultsFiles)
+    {        
+        throw (Get-LocalizedString -Key "Test results files parameter has to be specified")
+    }
 
-if (!$matchingTestResultsFiles)
-{
-    Write-Warning (Get-LocalizedString -Key "No test result files were found using search pattern '{0}'." -ArgumentList $testResultsFiles)
-}
-else
-{
-    $publishResultsOption = Convert-String $publishRunAttachments Boolean
-    $mergeResults = Convert-String $mergeTestResults Boolean
-    Write-Verbose "Calling Publish-TestResults"
+    # check for pattern in testResultsFiles
+    if ($testResultsFiles.Contains("*") -or $testResultsFiles.Contains("?"))
+    {
+        Write-Verbose "Pattern found in testResultsFiles parameter."
+        Write-Verbose "Find-Files -SearchPattern $testResultsFiles"
+        $matchingTestResultsFiles = Find-Files -SearchPattern $testResultsFiles
+        Write-Verbose "matchingTestResultsFiles = $matchingTestResultsFiles"
+    }
+    else
+    {
+        Write-Verbose "No Pattern found in testResultsFiles parameter."
+        $matchingTestResultsFiles = ,$testResultsFiles
+    }
+
+    if (!$matchingTestResultsFiles)
+    {
+        Write-Warning (Get-LocalizedString -Key "No test result files were found using search pattern '{0}'." -ArgumentList $testResultsFiles)
+    }
+    else
+    {
+        $publishResultsOption = Convert-String $publishRunAttachments Boolean
+        $mergeResults = Convert-String $mergeTestResults Boolean
+        Write-Verbose "Calling Publish-TestResults"
         
-    $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
-    $runTitleMemberExists = CmdletHasMember "RunTitle"
-	if(!($runTitleMemberExists))
-	{
-		if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
-		{
-			Write-Warning "Update the build agent to be able to use the custom run title feature."
-		}
-		if($publishRunLevelAttachmentsExists)
-		{
-			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
-		}
-		else 
-		{
-			if(!$publishResultsOption)
-			{
-			    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
-			}
-			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
-		}
-	}
-	else
-	{
-		if($publishRunLevelAttachmentsExists)
-		{
-			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
-		}
-		else 
-		{
-			if(!$publishResultsOption)
-			{
-			    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
-			}
-			Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
-		}
-	}
+        $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
+        $runTitleMemberExists = CmdletHasMember "RunTitle"
+	    if(!($runTitleMemberExists))
+	    {
+		    if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+		    {
+			    Write-Warning "Update the build agent to be able to use the custom run title feature."
+		    }
+		    if($publishRunLevelAttachmentsExists)
+		    {
+			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
+		    }
+		    else 
+		    {
+			    if(!$publishResultsOption)
+			    {
+			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+			    }
+			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+		    }
+	    }
+	    else
+	    {
+		    if($publishRunLevelAttachmentsExists)
+		    {
+			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
+		    }
+		    else 
+		    {
+			    if(!$publishResultsOption)
+			    {
+			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+			    }
+			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
+		    }
+	    }
+    }
+}
+catch
+{
+    Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+    throw
 }
 
 Write-Verbose "Leaving script PublishTestResults.ps1"

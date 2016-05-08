@@ -32,20 +32,15 @@ var jarsigning = (fn: string) => {
 
     // Get keystore file for signing
     var keystoreFile = tl.getInput('keystoreFile', true);
-    tl.debug('keystoreFile: ' + keystoreFile);
 
     // Get keystore alias
     var keystoreAlias = tl.getInput('keystoreAlias', true);
-    tl.debug('keystoreAlias: ' + keystoreAlias);
 
     var keystorePass = tl.getInput('keystorePass', false);
-    tl.debug('keystorePass nil?: ' + !keystorePass)
 
     var keyPass = tl.getInput('keyPass', false);
-    tl.debug('keyPass nil?: ' + !keyPass)
 
     var jarsignerArguments = tl.getInput('jarsignerArguments', false);
-    tl.debug("jarsignerArguments: " + jarsignerArguments);
 
     jarsignerRunner.arg(['-keystore', keystoreFile]);
 
@@ -58,7 +53,7 @@ var jarsigning = (fn: string) => {
     }
 
     if (jarsignerArguments) {
-        jarsignerRunner.arg(jarsignerArguments);
+        jarsignerRunner.argString(jarsignerArguments);
     }
 
     var unsignedFn = fn + ".unsigned"; 

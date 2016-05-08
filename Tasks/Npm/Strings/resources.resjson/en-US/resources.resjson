@@ -10,6 +10,7 @@
   "loc.input.help.arguments": "Additional arguments passed to npm.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory where npm command is run.  Defaults to the root of the repo.",
+  "loc.messages.InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
   "loc.messages.NpmReturnCode": "Npm exited with return code: %d",
   "loc.messages.NpmFailed": "Npm failed with error: %s"
 }

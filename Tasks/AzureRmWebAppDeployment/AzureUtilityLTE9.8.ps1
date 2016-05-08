@@ -10,7 +10,7 @@ function Get-AzureRMWebAppARM
     $resourceGroupName = Get-WebAppRGName -webAppName $Name
 
     Write-Verbose "[Azure Call] Getting azure webapp details for webapp with name : $Name and resource group $resourceGroupName "
-    $azureWebApp =  Get-AzureWebApp -Name $webAppName -ResourceGroupName $resourceGroupName
+    $azureWebApp =  Get-AzureWebApp -Name $Name -ResourceGroupName $resourceGroupName
     return $azureWebApp
 
 }

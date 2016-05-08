@@ -43,7 +43,7 @@ function Invoke-Test {
     # Create a new powershell engine with a separate session state.
     $powershell = [powershell]::Create(([initialsessionstate]::CreateDefault2()))
     $null = $powershell.
-        AddScript($script:scriptText, $true). # useLocalScope
+        AddScript($script:scriptText, $false). # Pass useLocalScope=$false so the script will not be run in a separate scope.
         AddParameter('Path', $Path)
     $powershell.Invoke() |
         ForEach-Object {
