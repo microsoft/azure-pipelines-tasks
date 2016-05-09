@@ -382,7 +382,7 @@ function Invoke-OperationOnMachine
          "Restart" {
              $response = Stop-Machine -resourceGroupName $resourceGroupName -machineName $machineName
 
-             if([string]::IsNullOrEmpty($response.Status) -or  $response.Status -ne "Succeeded")
+             if([string]::IsNullOrEmpty($response.Status) -or  $response.Status -eq "Succeeded")
              {
                 $response = Start-Machine -resourceGroupName $resourceGroupName -machineName $machineName
              }
