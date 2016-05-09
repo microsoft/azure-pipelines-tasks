@@ -75,8 +75,7 @@
             "visibleRule": "scriptType = inlineScript",
             "properties": {
                 "resizable": "true",
-                "rows" : "10",
-                "maxLength" : "500"
+                "rows" : "10"
             }
         }
     ],
