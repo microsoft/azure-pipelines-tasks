@@ -5,10 +5,14 @@ import fs = require('fs');
 import path = require('path');
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
-fs.chmodSync(wrapperScript, "755"); //Make sure the wrapper script is executable
+if (fs.existsSync(wrapperScript)) {
+    // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
+    // Make sure the wrapper script is executable
+    fs.chmodSync(wrapperScript, "755"); 
+}
 
 //working directory
-var cwd = tl.getInput('cwd');
+var cwd = tl.getPathInput('cwd', false, true);
 if(!cwd) {
   cwd = path.dirname(wrapperScript);
 }
@@ -51,11 +55,11 @@ if (specifiedJavaHome) {
         process.env['JAVA_HOME'] = specifiedJavaHome;
 }
 
-var publishJUnitResults = tl.getInput('publishJUnitResults');
+var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
 var testResultsFiles = tl.getInput('testResultsFiles', true);
 
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
-  if(publishJUnitResults == 'true') {
+  if(publishJUnitResults) {
     //check for pattern in testResultsFiles
     if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
       tl.debug('Pattern found in testResultsFiles parameter');
