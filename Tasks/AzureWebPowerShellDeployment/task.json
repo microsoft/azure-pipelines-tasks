@@ -34,7 +34,7 @@
         "label": "Web App Location",
         "defaultValue": "South Central US",
         "required": true,
-        "helpMarkDown": "Select a region for deployment.",
+        "helpMarkDown": "Select a location for website.",
         "properties": {
             "EditableOptions": "True"
         }

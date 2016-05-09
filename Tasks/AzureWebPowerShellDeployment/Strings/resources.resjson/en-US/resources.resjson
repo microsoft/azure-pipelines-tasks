@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
   "loc.input.help.ConnectedServiceName": "Azure subscription to target for deployment.",
   "loc.input.label.WebSiteLocation": "Web App Location",
-  "loc.input.help.WebSiteLocation": "Select a region for deployment.",
+  "loc.input.help.WebSiteLocation": "Select a location for website.",
   "loc.input.label.WebSiteName": "Web App Name",
   "loc.input.help.WebSiteName": "Enter the website name or Select from the list.<br>Note: Only the websites associated with Default App Service plan for the selected region are listed.",
   "loc.input.label.Slot": "Slot",
