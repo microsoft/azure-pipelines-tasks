@@ -18,5 +18,5 @@ ExitOnPRBuild
 
 InvokeMSBuildRunnerPostTest
 HandleCodeAnalysisReporting # PRCA
-UploadSummaryMdReport
+CreateAndUploadReport
 BreakBuildOnQualityGateFailure

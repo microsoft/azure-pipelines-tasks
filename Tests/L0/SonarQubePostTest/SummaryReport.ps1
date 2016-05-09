@@ -22,13 +22,14 @@ function VerifyMessage
 {
     param ($actualMessage, $expectedStatus, $expectedValue, $expectedThreshold, $expectedName, $expectedComparator)
     
+    Write-Host "Verifying $($actualMessage.metric_name)"
+    
+    Assert-AreEqual $expectedName $actualMessage.metric_name "Invalid message threshold"
     Assert-AreEqual $expectedStatus $actualMessage.status "Invalid message status"
     Assert-AreEqual $expectedValue $actualMessage.actualValue "Invalid message value"
-    Assert-AreEqual $expectedThreshold $actualMessage.threshold "Invalid message threshold"
-    Assert-AreEqual $expectedName $actualMessage.metric_name "Invalid message threshold"
+    Assert-AreEqual $expectedThreshold $actualMessage.threshold "Invalid message threshold"    
     Assert-AreEqual $expectedComparator $actualMessage.comparator "Invalid message comparator"    
 }
-
 
 #### Test 1 - Legacy report - uploading fails with a warning if the file is not found
     
@@ -87,8 +88,11 @@ Register-Mock FetchMetricNames {$metricsResponse.metrics}
 $messages = GetQualityGateWarningsAndErrors $qualityGateResponse
 
 # Assert
-Assert-AreEqual $messages.Count 3 "There should be 2 errors and 1 warning"
 
-VerifyMessage $messages[0] "error" 0 5 "Duplicated blocks" "&#60;" # lower than
-VerifyMessage $messages[1] "error" 322 480 "Technical Debt on new code" "&#8800;" # not equals
-VerifyMessage $messages[2] "warn" 0 0 "Blocker issues" "&#61;" # equals
+$messages = $messages | Sort-Object 'status', 'metric_name'
+Assert-AreEqual $messages.Count 4 "There should be 3 errors and 1 warning"
+
+VerifyMessage $messages[0] "error" "0%" "5%" "Duplicated blocks" "&#60;" # lower than
+VerifyMessage $messages[1] "error" "5h 22min" "8h" "Technical Debt on new code" "&#8800;" # 322 minutes is 5h and the operator is not equals
+VerifyMessage $messages[2] "error" "59min" "0min" "Technical Debt on new code 2" "&#62;" # 322 minutes is 5h and the operator is not equals
+VerifyMessage $messages[3] "warn" "0" "0" "Blocker issues" "&#61;" # equals

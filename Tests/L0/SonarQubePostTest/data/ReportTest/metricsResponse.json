@@ -15,13 +15,13 @@
         {
             "id": "88",
             "key": "duplicated_blocks",
-            "type": "INT",
+            "type": "PERCENT",
             "name": "Duplicated blocks"
         },
         {
             "id": "108",
             "key": "sqale_index",
-            "type": "WORK_DUR",
+            "type": "MILLISEC",
             "name": "Technical Debt"
         },
         {
@@ -29,6 +29,12 @@
             "key": "new_technical_debt",
             "type": "WORK_DUR",
             "name": "Technical Debt on new code"
+        },
+        {
+            "id": "2",
+            "key": "new_technical_debt2",
+            "type": "WORK_DUR",
+            "name": "Technical Debt on new code 2"
         }
     ]
 }
