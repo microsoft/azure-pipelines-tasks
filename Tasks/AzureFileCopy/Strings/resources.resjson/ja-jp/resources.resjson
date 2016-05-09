@@ -37,7 +37,7 @@
   "loc.input.label.AdditionalArguments": "追加引数",
   "loc.input.help.AdditionalArguments": "BLOB へのアップロードまたは VM へのアップロード時に適用される追加の AzCopy.exe 引数です。/NC:10 など。",
   "loc.input.label.enableCopyPrerequisites": "コピーの前提条件を有効にする",
-  "loc.input.help.enableCopyPrerequisites": "このオプションを有効にすると、自己署名証明書を使用して、Windows リモート管理 (WinRM) リスナーをポート 5986 上に HTTPS プロトコル経由で構成できます。この構成は Azure コンピューター上でコピー操作を実行するために必要とされます。ターゲットの仮想マシンがロード バランサーでバックアップされている場合は、受信の NAT 規則 がターゲット ポート (5986) に対して構成されていることを確認します。ターゲットの仮想マシンがネットワーク セキュリティ グループ (NSG) に関連付けられている場合は、受信のセキュリティ規則を宛先ポート (5986) に対して構成します。適用対象は、ARM VM のみです。",
+  "loc.input.help.enableCopyPrerequisites": "このオプションを有効にすると、自己署名証明書を使用して、Windows リモート管理 (WinRM) リスナーをポート 5986 上に HTTPS プロトコル経由で構成できます。この構成は Azure コンピューター上でコピー操作を実行するために必要とされます。ターゲットの仮想マシンがロード バランサーでバックアップされている場合は、受信の NAT 規則 がターゲット ポート (5986) に対して構成します。適用対象は、ARM VM のみです。",
   "loc.input.label.CopyFilesInParallel": "並列でのコピー",
   "loc.input.help.CopyFilesInParallel": "true に設定すると、ファイルを並列でターゲット コンピューターにコピーします。",
   "loc.input.label.CleanTargetBeforeCopy": "ターゲットの内容消去 ",

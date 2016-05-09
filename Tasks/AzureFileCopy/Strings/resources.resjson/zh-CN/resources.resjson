@@ -37,7 +37,7 @@
   "loc.input.label.AdditionalArguments": "其他参数",
   "loc.input.help.AdditionalArguments": "将在加载到 blob 或加载到 /NC:10 等 VM 时应用附加的 AzCopy.exe 参数。",
   "loc.input.label.enableCopyPrerequisites": "启用复制先决条件",
-  "loc.input.help.enableCopyPrerequisites": "启用该选项，将使用自签名证书在端口 5986 上配置针对 HTTPS 协议的 Windows 远程管理(WinRM)侦听程序。需要此配置才能在 Azure 计算机上执行复制操作。如果目标虚拟机受负载平衡器支持，请确保为目标端口(5986)配置了入站 NAT 规则。如果目标虚拟机与网络安全组(NSG)相关联，请为目标端口(5986)配置入站安全规则。仅适用于 ARM VM。",
+  "loc.input.help.enableCopyPrerequisites": "启用该选项，将使用自签名证书在端口 5986 上配置针对 HTTPS 协议的 Windows 远程管理(WinRM)侦听程序。需要此配置才能在 Azure 计算机上执行复制操作。如果目标虚拟机受负载平衡器支持，请确保为目标端口(5986)配置了入站 NAT 规则。仅适用于 ARM VM。",
   "loc.input.label.CopyFilesInParallel": "并行复制",
   "loc.input.help.CopyFilesInParallel": "将其设置为 true 会将文件并行复制到目标计算机。",
   "loc.input.label.CleanTargetBeforeCopy": "清理目标",

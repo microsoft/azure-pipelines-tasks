@@ -53,7 +53,7 @@ if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
 }
 
 # Constants #
-$defaultSasTokenTimeOutInHours = 2
+$defaultSasTokenTimeOutInHours = 4
 $useHttpsProtocolOption = ''
 $ErrorActionPreference = 'Stop'
 $telemetrySet = $false

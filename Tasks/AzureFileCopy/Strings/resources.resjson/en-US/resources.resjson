@@ -37,7 +37,7 @@
   "loc.input.label.AdditionalArguments": "Additional Arguments",
   "loc.input.help.AdditionalArguments": "Additional AzCopy.exe arguments that will be applied when uploading to blob or uploading to VM like, /NC:10.",
   "loc.input.label.enableCopyPrerequisites": "Enable Copy Prerequisites",
-  "loc.input.help.enableCopyPrerequisites": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs.",
+  "loc.input.help.enableCopyPrerequisites": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs.",
   "loc.input.label.CopyFilesInParallel": "Copy in Parallel",
   "loc.input.help.CopyFilesInParallel": "Setting it to true will copy files in parallel to the target machines.",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
