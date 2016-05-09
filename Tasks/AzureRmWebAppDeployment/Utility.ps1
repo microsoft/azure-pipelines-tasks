@@ -2,10 +2,26 @@ $ErrorActionPreference = 'Stop'
 
 function Get-MsDeployExePath
 {
-    $currentDir = (Get-Item -Path ".\").FullName
+    $msDeployExePath = $null
+    try
+    {
+        $msDeployExePath = Get-MSDeployOnTargetMachine
+    }
+    catch [System.Exception]
+    {
+         Write-Verbose ("MSDeploy is not installed in system." + $_.Exception.Message)
+    }
 
-    $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
-    $msDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
+    if( $msDeployExePath -eq $null )
+    {
+
+        Write-Verbose  (Get-LocalizedString -Key "Using local MSDeploy.exe")  
+        $currentDir = (Get-Item -Path ".\").FullName
+        $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
+        $msDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
+    
+    }
+ 
     Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $msDeployExePath)
 
     return $msDeployExePath
