@@ -116,15 +116,6 @@ function Write-TaskSpecificTelemetry
     Write-Telemetry "$codeKey" "3B5693D4-5777-4FEE-862A-BD2B7A374C68"
 }
 
-function ThrowError
-{
-    param([string]$errorMessage)
-    
-        $readmelink = "http://aka.ms/powershellontargetmachinesreadme"
-        $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
-        throw "$errorMessage $helpMessage"
-}
-
 function Get-ResourceWinRmConfig
 {
     param
@@ -378,12 +369,13 @@ else
         $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables
         $Jobs.Add($job.Id, $resourceProperties)
     }
-    While (Get-Job)
+
+    While ($Jobs.Count -gt 0)
     {
          Start-Sleep 10 
          foreach($job in Get-Job)
          {
-             if($job.State -ne "Running")
+             if($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
              {
                 $output = Receive-Job -Id $job.Id
                 Remove-Job $Job
@@ -403,6 +395,7 @@ else
                     }
                     Write-Output (Get-LocalizedString -Key "Deployment failed on machine '{0}' with following message : '{1}'" -ArgumentList $displayName, $errorMessage)
                 }
+                $Jobs.Remove($job.Id)
             }
         }
     }
@@ -412,7 +405,7 @@ if($envOperationStatus -ne "Passed")
 {
     Write-TaskSpecificTelemetry "DEPLOYMENT_Failed"
     $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
-    ThrowError -errorMessage $errorMessage
+    throw $errorMessage
 }
 
 Write-Verbose "Leaving script PowerShellOnTargetMachines.ps1" -Verbose
