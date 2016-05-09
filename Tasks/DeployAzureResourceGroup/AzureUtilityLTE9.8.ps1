@@ -51,7 +51,7 @@ function Deploy-AzureResourceGroup
         $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `$csmParametersFile $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
 
-    Write-Verbose "$finalCommand"
+    Write-Verbose -Verbose "$finalCommand"
     Invoke-Expression -Command $finalCommand
 
     @{"azureResourceGroupDeployment" = $($azureResourceGroupDeployment); "deploymentError" = $($deploymentError)}
