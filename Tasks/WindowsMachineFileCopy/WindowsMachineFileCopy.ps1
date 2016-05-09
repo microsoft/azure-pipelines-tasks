@@ -41,10 +41,8 @@ $envOperationStatus = 'Passed'
 function ThrowError
 {
     param([string]$errorMessage)
-    
-        $readmelink = "http://aka.ms/windowsfilecopyreadme"
-        $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
-        throw "$errorMessage $helpMessage"
+
+    throw "$errorMessage"
 }
 
 function Get-ResourceConnectionDetails
@@ -113,7 +111,7 @@ function Validate-SourcePath(
 {
     Validate-Null -value $value -variableName "sourcePath"
 
-    if(-not (Test-Path $value))
+    if(-not (Test-Path -LiteralPath $value))
     {
         ThrowError -errorMessage (Get-LocalizedString -Key "Source path '{0}' does not exist." -ArgumentList $value)
     }
@@ -195,15 +193,16 @@ else
             $Jobs.Add($job.Id, $resourceProperties)
         }
 
-        While (Get-Job)
+        While ($Jobs.Count -gt 0)
         {
             Start-Sleep 10 
             foreach($job in Get-Job)
             {
-                if($job.State -ne "Running")
+                if($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
                 {
                     Receive-Job -Id $job.Id
                     Remove-Job $Job                 
+                    $Jobs.Remove($job.Id)
                 } 
             }
         }
