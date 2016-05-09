@@ -120,3 +120,27 @@ function Remove-AzureMachineCustomScriptExtension
           [string]$vmName,
           [string]$name)
 }
+
+# Returns details of the network security group for VM with $vmId in ResourceGroup $resourceGroupName
+function Get-NetworkSecurityGroups
+{
+     param([string]$resourceGroupName,
+           [string]$vmId)
+}
+
+# Add the network security rule in ResourceGroup $resourceGroupName
+function Add-NetworkSecurityRuleConfig
+{
+    param([string]$resourceGroupName,
+          [object]$securityGroups,
+          [string]$ruleName,
+          [string]$rulePriotity,
+          [string]$winrmHttpsPort)
+}
+
+# Removes the network security rule
+function Remove-NetworkSecurityRuleConfig
+{
+    param([object] $securityGroups,
+          [string] $ruleName)
+}
