@@ -268,7 +268,7 @@ function IsFeatureEnabled
 #
 function ExitOnPRBuild
 {    
-    if ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $false))
+    if ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $true))
     {
         Write-Host "SonarQube analysis is disabled during builds triggered by pull requests. Set a build variable named 'SQPullRequestBot' to 'true' to have the task post code analysis issues as comments in the PR. More information at http://go.microsoft.com/fwlink/?LinkID=786316"
         exit
