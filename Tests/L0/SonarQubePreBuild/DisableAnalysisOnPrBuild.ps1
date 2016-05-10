@@ -45,11 +45,11 @@ function VerifyPrRun
     }
 }
 
-
+# PRCA is enabled by default but can be disabled through the build variable
 VerifyPrRun -SQPullRequestBotSetting "true" -IsPrBuild $true -ExpectedToRun $true
 VerifyPrRun -SQPullRequestBotSetting "false" -IsPrBuild $true -ExpectedToRun $false
-VerifyPrRun -SQPullRequestBotSetting "something_else" -IsPrBuild $true -ExpectedToRun $false
-VerifyPrRun -SQPullRequestBotSetting $null -IsPrBuild $true -ExpectedToRun $false
+VerifyPrRun -SQPullRequestBotSetting "something_else" -IsPrBuild $true -ExpectedToRun $true
+VerifyPrRun -SQPullRequestBotSetting $null -IsPrBuild $true -ExpectedToRun $true
 
 VerifyPrRun -SQPullRequestBotSetting "true" -IsPrBuild $false -ExpectedToRun $true
 VerifyPrRun -SQPullRequestBotSetting "false" -IsPrBuild $false -ExpectedToRun $true

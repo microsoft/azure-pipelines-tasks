@@ -12,9 +12,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 41
+    "Patch": 42
   },
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "1.99.0",
   "demands": [
     "msbuild",
     "java"
@@ -120,9 +120,9 @@
       "name": "includeFullReport",
       "type": "boolean",
       "defaultValue": "true",
-      "label": "Include full analysis report in the build summary (SQ 5.3+)",
+      "label": "Include full analysis report in the build summary",
       "required": false,
-      "helpMarkDown": "This option will delay the build until the SonarQube analysis is completed and is only available when using a SonarQube server 5.3 or above.",
+      "helpMarkDown": "This option will delay the build until the SonarQube analysis is completed.",
       "groupName": "advanced"
     },
     {

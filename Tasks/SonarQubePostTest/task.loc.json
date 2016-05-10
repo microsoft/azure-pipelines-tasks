@@ -12,9 +12,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 44
+    "Patch": 45
   },
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "1.99.0",
   "demands": [
     "msbuild",
     "java"
