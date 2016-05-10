@@ -41,11 +41,11 @@ describe('SonarQubePostTest Suite', function () {
          it('PRCA Orchestrator tests', (done) => {
              psr.run(path.join(__dirname, 'PRCA', 'OrchestratorTests.ps1'), done);
          })
-         it('SonarQubeMetrics tests', function (done) {
+         it('SonarQubeMetrics tests', (done) => {
              psr.run(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);
-         });
-        it('SummaryReport tests', function (done) {
-            psr.run(path.join(__dirname, 'SummaryReport.ps1'), done);
-        });
+         })
+         it('SummaryReport tests', (done) => {
+             psr.run(path.join(__dirname, 'SummaryReport.ps1'), done);
+         })
     }
 });
