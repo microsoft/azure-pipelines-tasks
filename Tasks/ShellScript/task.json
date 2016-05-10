@@ -55,7 +55,7 @@
         {
             "name": "disableAutoCwd",
             "type": "boolean",
-            "label": "Disable Auto CWD",
+            "label": "Specify Working Directory",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "The default behavior is to set the working directory to the script location. This enables you to optionally specify a different working directory.",
