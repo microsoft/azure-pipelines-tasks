@@ -136,7 +136,7 @@ try
         {
             if (-not (Test-Path $sf -PathType Leaf)) # check if the path is a file to give a friendly message if not
             {
-                Write-Error (Get-LocalizedString -Key "Path '{0}' does not exist or is not a solution file" -ArgumentList $sf)
+                Write-Error (Get-LocalizedString -Key "Path '{0}' does not exist or is not a solution file. Check the 'path to solution or packages.config' property of the NuGetInstaller task " -ArgumentList $sf)
             }
             else
             {
