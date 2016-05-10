@@ -139,7 +139,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 <p align="left">
-                    Sets a variable in the variable service of taskcontext. The first task can set a variable, and following tasks are able to use the variable. The variable is exposed to the following tasks as an environment variable. When 'issecret' is set to true, the value of the variable will be saved as secret and masked out from log.<br>
+                    Sets a variable in the variable service of taskcontext. The first task can set a variable, and following tasks are able to use the variable. The variable is exposed to the following tasks as an environment variable. When 'issecret' is set to true, the value of the variable will be saved as secret and masked out from log. Secret variables are not passed into tasks as environment variables must be passed as inputs.<br>
                     Example: <br>
                     ##vso[task.setvariable variable=testvar;]testvalue<br> 
                     ##vso[task.setvariable variable=testvar;issecret=true;]testvalue<br> 
