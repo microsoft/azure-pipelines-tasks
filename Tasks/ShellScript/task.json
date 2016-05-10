@@ -58,7 +58,7 @@
             "label": "Disable Auto CWD",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "The default behavior is to set working directory to scripts directory if cwd is not specified.  This disables that behavior.  Useful if you rely on scripts deep in the tree being run from root of repository.",
+            "helpMarkDown": "The default behavior is to set the working directory to the script location. This enables you to optionally specify a different working directory.",
             "groupName": "advanced"
         },        
         {
