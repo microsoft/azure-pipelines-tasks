@@ -2,13 +2,33 @@ $ErrorActionPreference = 'Stop'
 
 function Get-MsDeployExePath
 {
-    $currentDir = (Get-Item -Path ".\").FullName
+    $MSDeployExePath = $null
+    try
+    {
+        $MSDeployExePath , $MSDeployVersion = Get-MSDeployOnTargetMachine
+    }
+    catch [System.Exception]
+    {
+         Write-Verbose ("MSDeploy is not installed in system." + $_.Exception.Message)
+    }
 
-    $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
-    $msDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
-    Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $msDeployExePath)
+    if( $MSDeployExePath -ne $null -and $MSDeployVersion -lt 3 ){
+        throw  "Unsupported installed version : $MSDeployVersion found for MSDeploy,version should be alteast 3 or above"
+    }
 
-    return $msDeployExePath
+    if( [string]::IsNullOrEmpty($MSDeployExePath) )
+    {
+
+        Write-Verbose  (Get-LocalizedString -Key "Using local MSDeploy.exe")  
+        $currentDir = (Get-Item -Path ".\").FullName
+        $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
+        $MSDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
+    
+    }
+ 
+    Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $MSDeployExePath)
+
+    return $MSDeployExePath
 }
 
 function Get-SingleFile
@@ -103,7 +123,7 @@ function Get-MsDeployCmdArgs
     # msdeploy argument to exclude files in App_Data folder
     if($excludeFilesFromAppDataFlag -eq "true")
     {
-        $msDeployCmdArgs += [String]::Format(' -skip:objectname="dirPath",absolutepath="\\App_Data\\.*"')
+        $msDeployCmdArgs += [String]::Format(' -skip:Directory="\\App_Data"')
     }
 
     # msploy additional arguments 
