@@ -66,6 +66,7 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 # Load all dependent files for execution
 Import-Module ./AzureUtility.ps1 -Force
 Import-Module ./Utility.ps1 -Force
+Import-Module ./FindInstalledMSDeploy.ps1
 
  # Importing required version of azure cmdlets according to azureps installed on machine
  $azureUtility = Get-AzureUtility
