@@ -44,8 +44,8 @@ describe('SonarQubePostTest Suite', function () {
          it('SonarQubeMetrics tests', (done) => {
              psr.run(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);
          })
-         it('SummaryReport tests', (done) => {
-             psr.run(path.join(__dirname, 'SummaryReport.ps1'), done);
-         })
+         //it('SummaryReport tests', (done) => {
+         //    psr.run(path.join(__dirname, 'SummaryReport.ps1'), done);
+         //})
     }
 });
