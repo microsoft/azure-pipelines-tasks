@@ -18,7 +18,7 @@ function debug(message) {
 }
 
 export class TaskRunner extends events.EventEmitter {
-	constructor(name: string) {
+	constructor(name: string, ignoreSlashes?: boolean) {
 		super();
 		this._inputs = {};
 		this._name = name;
@@ -32,6 +32,7 @@ export class TaskRunner extends events.EventEmitter {
 		this.stderr = '';
 		this._tempPath = process.env['TASK_TEST_TEMP'];
 		this._commands = [];
+		this._ignoreSlashes = ignoreSlashes;
 	}
 	
 	public succeeded: boolean;
@@ -49,10 +50,15 @@ export class TaskRunner extends events.EventEmitter {
 	private _taskPath: string;
 	private _tempPath: string;
 	private _commands: string[];  
+	private _ignoreSlashes: boolean;
 
 	public ran(cmdLine: string): boolean {
 		var executed: boolean = false;
 		this._commands.forEach((cmd: string)=>{
+			if (this._ignoreSlashes) {
+				cmdLine = cmdLine.replace(/\\/g, "/");
+				cmd = cmd.replace(/\\/g, "/");
+			}
 			if(cmdLine.trim().localeCompare(cmd.trim()) === 0) {
 				executed = true;
 			}
@@ -143,7 +149,11 @@ export class TaskRunner extends events.EventEmitter {
 		stdoutLines.forEach((line: string) => {
 			if (line.indexOf('[command]') >= 0) {
 				++this.invokedToolCount;
-				this._commands.push(line.substr(line.indexOf('[command]') + '[command]'.length).trim());
+				var command = line.substr(line.indexOf('[command]') + '[command]'.length).trim();
+				if (this._ignoreSlashes) {
+					command = command.replace(/\\/g, "/");
+				}				
+				this._commands.push(command);
 			}
 
 			if (line.indexOf('##vso[') >= 0) {

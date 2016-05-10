@@ -17,5 +17,13 @@ export function getResponse(cmd: string, key: string): any {
         return null;
     }
 
+    if (!answers[cmd][key]) {
+        // try normalizing the slashes
+        var key2 = key.replace(/\\/g, "/");
+        if (answers[cmd][key2]) {
+            return answers[cmd][key2];
+        } 
+    }
+
     return answers[cmd][key];
 }
