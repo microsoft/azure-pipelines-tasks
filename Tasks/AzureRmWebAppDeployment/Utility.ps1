@@ -13,7 +13,7 @@ function Get-MsDeployExePath
     }
 
     if( $MSDeployExePath -ne $null -and $MSDeployVersion -lt 3 ){
-        throw  "Unsupported installed version : $MSDeployVersion found for MSDeploy,version should be alteast 3 and above"
+        throw  "Unsupported installed version : $MSDeployVersion found for MSDeploy,version should be alteast 3 or above"
     }
 
     if( [string]::IsNullOrEmpty($MSDeployExePath) )
