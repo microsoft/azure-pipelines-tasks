@@ -13,10 +13,10 @@ function Get-MsDeployExePath
     }
 
     if( $MSDeployExePath -ne $null -and $MSDeployVersion -lt 3 ){
-        throw  "Unsupported installed version found for MSDeploy"
+        throw  "Unsupported installed version : $MSDeployVersion found for MSDeploy,version should be alteast 3 and above"
     }
 
-    if( $MSDeployExePath -eq $null )
+    if( [string]::IsNullOrEmpty($MSDeployExePath) )
     {
 
         Write-Verbose  (Get-LocalizedString -Key "Using local MSDeploy.exe")  
