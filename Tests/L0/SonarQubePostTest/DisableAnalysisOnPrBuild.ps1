@@ -19,7 +19,7 @@ function VerifyPrRun
     Register-Mock IsPrBuild {$IsPrBuild}
     Register-Mock Write-Host
     Register-Mock InvokeMSBuildRunnerPostTest
-    Register-Mock UploadSummaryMdReport
+    Register-Mock CreateAndUploadReport
     Register-Mock HandleCodeAnalysisReporting
     Register-Mock BreakBuildOnQualityGateFailure
     
@@ -41,7 +41,7 @@ function VerifyPrRun
     Unregister-Mock IsPrBuild 
     Unregister-Mock Write-Host
     Unregister-Mock InvokeMSBuildRunnerPostTest
-    Unregister-Mock UploadSummaryMdReport
+    Unregister-Mock CreateAndUploadReport
     Unregister-Mock HandleCodeAnalysisReporting
     Unregister-Mock BreakBuildOnQualityGateFailure
     

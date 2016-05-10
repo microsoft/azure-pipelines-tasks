@@ -118,9 +118,9 @@ function GetQualityGateWarningsAndErrors
             $threshold = GetThresholdDisplayLabel $metricNames $failedCondition 
             
             $properties = @{
-                'status'=$failedCondition.status
-                'metric_name'=$metricName
-                'comparator'=$comparator
+                'status'= $failedCondition.status
+                'metric_name'= $metricName
+                'comparator'= $comparator
                 'threshold' = $threshold
                 'actualValue'= $value
                 'color' = $color
@@ -142,44 +142,54 @@ function GetThresholdDisplayLabel
     
     if ($failedCondition.status -eq "error")
     {
-        $numericValue = $failedCondition.errorThreshold   
+        $metricValue = $failedCondition.errorThreshold   
     }                        
     else
     {
-        $numericValue = $failedCondition.warningThreshold   
+        $metricValue = $failedCondition.warningThreshold   
     }    
     
     $metric = GetMatchingMetric $metricNames $failedCondition.metricKey
     
-    return (GetMetricValueWithUnit $metric $numericValue)
+    return (GetMetricValueWithUnit $metric $metricValue)
 }
 
 function GetMetricValueDisplayLabel
 {
-    param ($metricNames, $metricKey, $numericValue)
+    param ($metricNames, $metricKey, $metricValue)
     
     $metric = GetMatchingMetric $metricNames $metricKey
     
-    return (GetMetricValueWithUnit $metric $numericValue)
+    return (GetMetricValueWithUnit $metric $metricValue)
 }
 
 function GetMetricValueWithUnit
 {
-    param ($metric, $numericValue)
+    param ($metric, $metricValue)
     
     if ($metric -eq $null)
     {
-        return $numericValue
+        return $metricValue
     }
     
     $type = $metric.type
+    Write-Verbose "$($metric.name) -  type is $type with the value $metricValue"
+    
     if ($type -eq "WORK_DUR")
     {
-        return (GetWorkDurationLabel ($numericValue -as [int]))
-    }  
+        return (GetWorkDurationLabel ($metricValue -as [int]))
+    } 
     
+    # Show a single decimal digit
+    $doubleValue = $metricValue -as [double]
+    
+    if ($doubleValue -ne $null)
+    {
+        $metricValue = [Math]::Round($doubleValue, 1)
+    }
+
     $unit = GetUnitDisplayLabel $type
-    return ($numericValue + $unit)    
+    return ($metricValue.ToString() + $unit)    
 }
 
 function GetMetricNameDisplayLabel
