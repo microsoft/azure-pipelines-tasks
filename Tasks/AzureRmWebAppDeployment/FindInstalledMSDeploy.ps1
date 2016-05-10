@@ -18,7 +18,7 @@ function Get-MSDeployOnTargetMachine
     }
     else
     {
-        return $MSDeployPath
+        return $MSDeployPath, $MSDeployVersionNumber
     }
 }
 

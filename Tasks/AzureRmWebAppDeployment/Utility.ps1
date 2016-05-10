@@ -2,29 +2,33 @@ $ErrorActionPreference = 'Stop'
 
 function Get-MsDeployExePath
 {
-    $msDeployExePath = $null
+    $MSDeployExePath = $null
     try
     {
-        $msDeployExePath = Get-MSDeployOnTargetMachine
+        $MSDeployExePath , $MSDeployVersion = Get-MSDeployOnTargetMachine
     }
     catch [System.Exception]
     {
          Write-Verbose ("MSDeploy is not installed in system." + $_.Exception.Message)
     }
 
-    if( $msDeployExePath -eq $null )
+    if( $MSDeployExePath -ne $null -and $MSDeployVersion -lt 3 ){
+        throw  "Unsupported installed version found for MSDeploy"
+    }
+
+    if( $MSDeployExePath -eq $null )
     {
 
         Write-Verbose  (Get-LocalizedString -Key "Using local MSDeploy.exe")  
         $currentDir = (Get-Item -Path ".\").FullName
         $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
-        $msDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
+        $MSDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
     
     }
  
-    Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $msDeployExePath)
+    Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $MSDeployExePath)
 
-    return $msDeployExePath
+    return $MSDeployExePath
 }
 
 function Get-SingleFile
