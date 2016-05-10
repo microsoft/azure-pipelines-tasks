@@ -10,6 +10,8 @@
   "loc.input.help.args": "Arguments passed to the shell script",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+  "loc.input.label.disableAutoCwd": "Disable Auto CWD",
+  "loc.input.help.disableAutoCwd": "The default behavior is to set working directory to scripts directory if cwd is not specified.  This disables that behavior.  Useful if you rely on scripts deep in the tree being run from root of repository.",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
   "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream.",
   "loc.messages.BashReturnCode": "Bash exited with return code: %d",
