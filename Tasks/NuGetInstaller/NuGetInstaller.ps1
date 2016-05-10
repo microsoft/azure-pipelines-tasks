@@ -134,9 +134,16 @@ try
     {
         if($nuGetPath)
         {
-            $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
-            Write-Verbose "Running nuget package $restoreMode for $slnFolder"
-            Invoke-Tool -Path $nugetPath -Arguments "$restoreMode `"$sf`" $args" -WorkingFolder $slnFolder
+            if (-not (Test-Path $sf -PathType Leaf)) # check if the path is a file to give a friendly message if not
+            {
+                Write-Error (Get-LocalizedString -Key "Path '{0}' does not exist or is not a solution file. Check the 'path to solution or packages.config' property of the NuGetInstaller task " -ArgumentList $sf)
+            }
+            else
+            {
+                $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
+                Write-Verbose "Running nuget package $restoreMode for $slnFolder"
+                Invoke-Tool -Path $nugetPath -Arguments "$restoreMode `"$sf`" $args" -WorkingFolder $slnFolder
+            }
         }
     }
 }
