@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "sh"
@@ -44,6 +44,15 @@
             "helpMarkDown": "Arguments passed to the shell script"
         },
         {
+            "name": "specifyWorkingDirectory",
+            "type": "boolean",
+            "label": "Specify Working Directory",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "The default behavior is to set the working directory to the script location. This enables you to optionally specify a different working directory.",
+            "groupName": "advanced"
+        },
+        {
             "name": "cwd",
             "type": "filePath",
             "label": "Working Directory",
@@ -52,15 +61,6 @@
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
             "groupName": "advanced"
         },
-        {
-            "name": "disableAutoCwd",
-            "type": "boolean",
-            "label": "Disable Auto CWD",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "The default behavior is to set working directory to scripts directory if cwd is not specified.  This disables that behavior.  Useful if you rely on scripts deep in the tree being run from root of repository.",
-            "groupName": "advanced"
-        },        
         {
             "name": "failOnStandardError",
             "type": "boolean",
