@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 57
+        "Patch": 58
     },
     "demands": [
         "azureps"
@@ -58,33 +58,33 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
-            "name": "action", 
-            "type": "pickList", 
+            "name": "action",
+            "type": "pickList",
             "label": "Action",
             "defaultValue": "Create Or Update Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
+            "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
-                 "Create Or Update Resource Group": "Create Or Update Resource Group",
-                 "Select Resource Group": "Select Resource Group",
-                 "Start": "Start Virtual Machines",
-                 "Stop": "Stop Virtual Machines",
-                 "Restart": "Restart Virtual Machines",
-                 "Delete": "Delete Virtual Machines",
-                 "DeleteRG": "Delete Resource Group"
-                },
+                "Create Or Update Resource Group": "Create Or Update Resource Group",
+                "Select Resource Group": "Select Resource Group",
+                "Start": "Start Virtual Machines",
+                "Stop": "Stop Virtual Machines",
+                "Restart": "Restart Virtual Machines",
+                "Delete": "Delete Virtual Machines",
+                "DeleteRG": "Delete Resource Group"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
-            "name": "actionClassic", 
-            "type": "pickList", 
+            "name": "actionClassic",
+            "type": "pickList",
             "label": "Action",
             "defaultValue": "Select Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or cloud service.",
+            "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
             "options": {
-                 "Select Resource Group": "Select Cloud Service"
-                },
+                "Select Resource Group": "Select Cloud Service"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
@@ -134,15 +134,15 @@
                 "West US": "West US"
             },
             "properties": {
-                "EditableOptions": "True" 
+                "EditableOptions": "True"
             },
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "csmFile", 
-            "type": "filePath", 
-            "label": "Template", 
-            "defaultValue":"",
+            "name": "csmFile",
+            "type": "filePath",
+            "label": "Template",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates. To get started immediately use template http://aka.ms/sampletemplate.",
             "visibleRule": "action = Create Or Update Resource Group"
@@ -172,7 +172,7 @@
             "defaultValue": "false",
             "visibleRule": "action = Create Or Update Resource Group",
             "required": false,
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986)."
+            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
             "name": "enableDeploymentPrerequisitesForSelect",
@@ -181,7 +181,7 @@
             "defaultValue": "false",
             "visibleRule": "action = Select Resource Group",
             "required": false,
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
+            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs."
         },
         {
             "name": "outputVariable",
@@ -209,11 +209,11 @@
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
-  "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "execution": {
+        "AzurePowerShell": {
+            "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  }
 }
