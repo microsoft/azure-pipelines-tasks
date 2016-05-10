@@ -1,7 +1,7 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRMWebAppDeployment",
-    "friendlyName": "AzureRM Web App Deployment",
+    "friendlyName": "AzureRM Web App Deployment ( Preview )",
     "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
 	"helpMarkDown": "[More Information](http://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
