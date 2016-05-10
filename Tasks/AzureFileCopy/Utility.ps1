@@ -14,7 +14,7 @@ $telemetryCodes =
   "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
   "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
   "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
-  "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
+  "PREREQ_UnsupportedAzurePSVersion" = "PREREQ_UnsupportedAzurePSVersion";
   "PREREQ_ClassicStorageAccountNotFound" = "PREREQ_ClassicStorageAccountNotFound";
   "PREREQ_RMStorageAccountNotFound" = "PREREQ_RMStorageAccountNotFound";
   "PREREQ_NoClassicVMResources" = "PREREQ_NoClassicVMResources";
@@ -34,6 +34,7 @@ $telemetryCodes =
 
   "ENABLEWINRM_ProvisionVmCustomScriptFailed" = "ENABLEWINRM_ProvisionVmCustomScriptFailed"
   "ENABLEWINRM_ExecutionOfVmCustomScriptFailed" = "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
+  "ADDWINRM_NetworkSecurityRuleConfigFailed" = "ADDWINRM_NetworkSecurityRuleConfigFailed"
 
   "FILTERING_IncorrectFormat" = "FILTERING_IncorrectFormat";
   "FILTERING_NoVMResources" = "FILTERING_NoVMResources";
@@ -118,7 +119,7 @@ function Validate-AzurePowershellVersion
 
     if(!$versionCompatible)
     {
-        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVerion"
+        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVersion"
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
     }
 
@@ -243,6 +244,9 @@ function Upload-FilesToAzureContainer
 
             $uploadErrorMessage = $uploadResponse.Error
             Write-Verbose "UploadErrorMessage: $uploadErrorMessage" -Verbose
+
+            $uploadResponseLog = $uploadResponse.Log
+            Write-Verbose "UploadResponseLog: $uploadResponseLog" -Verbose
 
             $errorMessage = (Get-LocalizedString -Key "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $uploadErrorMessage)
             Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
@@ -418,29 +422,41 @@ function Get-MachineNameFromId
           [System.Collections.Hashtable]$map,
           [string]$mapParameter,
           [Object]$azureRMVMResources,
-          [boolean]$throwOnTotalUnavaialbility)
+          [boolean]$throwOnTotalUnavailability,
+          [string]$debugLogsFlag)
 
     if($map)
     {
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "Map for $mapParameter : " -Verbose
+            Write-Verbose ($map | Format-List | Out-String) -Verbose
+
+            Write-Verbose "azureRMVMResources: " -Verbose
+            Write-Verbose ($azureRMVMResources | Format-List | Out-String) -Verbose
+        }
+
+        Write-Verbose "throwOnTotalUnavailability: $throwOnTotalUnavailability" -Verbose
+
         $errorCount = 0
         foreach($vm in $azureRMVMResources)
         {
-            $value = $map[$vm.Id]
+            $value = $map[$vm.Id.ToLower()]
             $resourceName = $vm.Name
             if(-not [string]::IsNullOrEmpty($value))
             {
-                Write-Verbose "$mapParameter value for resource $resourceName is $value" -Verbose
-                $map.Remove($vm.Id)
+                Write-Verbose "$mapParameter value for resource $resourceName is $value"
+                $map.Remove($vm.Id.ToLower())
                 $map[$resourceName] = $value
             }
             else
             {
                 $errorCount = $errorCount + 1
-                Write-Verbose "Unable to find $mapParameter for resource $resourceName" -Verbose
+                Write-Verbose "Unable to find $mapParameter for resource $resourceName"
             }
         }
 
-        if($throwOnTotalUnavaialbility -eq $true)
+        if($throwOnTotalUnavailability -eq $true)
         {
             if($errorCount -eq $azureRMVMResources.Count -and $azureRMVMResources.Count -ne 0)
             {
@@ -459,29 +475,36 @@ function Get-MachineNameFromId
     }
 }
 
-function Get-MachinesFqdns
+function Get-MachinesFqdnsForPublicIP
 {
     param([string]$resourceGroupName,
           [Object]$publicIPAddressResources,
           [Object]$networkInterfaceResources,
           [Object]$azureRMVMResources,
-          [System.Collections.Hashtable]$fqdnMap)
+          [System.Collections.Hashtable]$fqdnMap,
+          [string]$debugLogsFlag)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName)-and $publicIPAddressResources -and $networkInterfaceResources)
     {
-        Write-Verbose "Trying to get FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
 
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)
         {
             if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
             {
-                $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.DnsSettings.Fqdn
+                $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
             }
             else
             {
-                $fqdnMap[$publicIp.IpConfiguration.Id] =  $publicIP.IpAddress
+                $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.IpAddress
             }
+        }
+
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "fqdnMap for MachinesFqdnsForPublicIP after mapping ip configuration to fqdn: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
         }
 
         #Find out the NIC, and thus the VM corresponding to a given ipc
@@ -489,22 +512,27 @@ function Get-MachinesFqdns
         {
             foreach($ipc in $nic.IpConfigurations)
             {
-                $fqdn =  $fqdnMap[$ipc.Id]
+                $fqdn =  $fqdnMap[$ipc.Id.ToLower()]
                 if(-not [string]::IsNullOrEmpty($fqdn))
                 {
-                    $fqdnMap.Remove($ipc.Id)
+                    $fqdnMap.Remove($ipc.Id.ToLower())
                     if($nic.VirtualMachine)
                     {
-                        $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+                        $fqdnMap[$nic.VirtualMachine.Id.ToLower()] = $fqdn
                     }
                 }
             }
         }
 
-        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "final fqdnMap for MachinesFqdnsForPublicIP after finding vm id corresponding to ip configuration: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        }
     }
 
-    Write-Verbose "Got FQDN for the azureRM VM resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName"
+
     return $fqdnMap
 }
 
@@ -514,37 +542,50 @@ function Get-MachinesFqdnsForLB
           [Object]$publicIPAddressResources,
           [Object]$networkInterfaceResources,
           [Object]$frontEndIPConfigs,
-          [System.Collections.Hashtable]$fqdnMap)
+          [System.Collections.Hashtable]$fqdnMap,
+          [string]$debugLogsFlag)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $publicIPAddressResources -and $networkInterfaceResources -and $frontEndIPConfigs)
     {
-        Write-Verbose "Trying to get FQDN for the RM azureVM resources from resource group: $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the RM azureVM resources under load balancer from resource group: $resourceGroupName" -Verbose
 
         #Map the public ip id to the fqdn
         foreach($publicIp in $publicIPAddressResources)
         {
             if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
             {
-                $fqdnMap[$publicIp.Id] =  $publicIP.DnsSettings.Fqdn
+                $fqdnMap[$publicIp.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
             }
             else
             {
-                $fqdnMap[$publicIp.Id] =  $publicIP.IpAddress
+                $fqdnMap[$publicIp.Id.ToLower()] =  $publicIP.IpAddress
             }
+        }
+
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "fqdnMap for MachinesFqdnsForLB after mapping ip configuration to fqdn: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
         }
 
         #Get the NAT rule for a given ip id
         foreach($config in $frontEndIPConfigs)
         {
-            $fqdn = $fqdnMap[$config.PublicIpAddress.Id]
+            $fqdn = $fqdnMap[$config.PublicIpAddress.Id.ToLower()]
             if(-not [string]::IsNullOrEmpty($fqdn))
             {
-                $fqdnMap.Remove($config.PublicIpAddress.Id)
+                $fqdnMap.Remove($config.PublicIpAddress.Id.ToLower())
                 foreach($rule in $config.InboundNatRules)
                 {
-                    $fqdnMap[$rule.Id] =  $fqdn
+                    $fqdnMap[$rule.Id.ToLower()] =  $fqdn
                 }
             }
+        }
+
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "fqdnMap for MachinesFqdnsForLB after getting NAT rule for given ip configuration: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
         }
 
         #Find out the NIC, and thus the corresponding machine to which the NAT rule belongs
@@ -554,21 +595,28 @@ function Get-MachinesFqdnsForLB
             {
                 foreach($rule in $ipc.LoadBalancerInboundNatRules)
                 {
-                    $fqdn = $fqdnMap[$rule.Id]
+                    $fqdn = $fqdnMap[$rule.Id.ToLower()]
                     if(-not [string]::IsNullOrEmpty($fqdn))
                     {
-                        $fqdnMap.Remove($rule.Id)
+                        $fqdnMap.Remove($rule.Id.ToLower())
                         if($nic.VirtualMachine)
                         {
-                            $fqdnMap[$nic.VirtualMachine.Id] = $fqdn
+                            $fqdnMap[$nic.VirtualMachine.Id.ToLower()] = $fqdn
                         }
                     }
                 }
             }
         }
+
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "final fqdnMap for MachinesFqdnsForLB after getting vm id corresponding to NAT rule for given ip configuration: " -Verbose
+            Write-Verbose ($fqdnMap | Format-List | Out-String) -Verbose
+        }
     }
 
-    Write-Verbose "Got FQDN for the RM azureVM resources from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName" -Verbose
+
     return $fqdnMap
 }
 
@@ -577,7 +625,8 @@ function Get-FrontEndPorts
     param([string]$backEndPort,
           [System.Collections.Hashtable]$portList,
           [Object]$networkInterfaceResources,
-          [Object]$inboundRules)
+          [Object]$inboundRules,
+          [string]$debugLogsFlag)
 
     if(-not [string]::IsNullOrEmpty($backEndPort) -and $networkInterfaceResources -and $inboundRules)
     {
@@ -590,8 +639,14 @@ function Get-FrontEndPorts
         {
             if($rule.BackendIPConfiguration)
             {
-                $portList[$rule.BackendIPConfiguration.Id] = $rule.FrontendPort
+                $portList[$rule.BackendIPConfiguration.Id.ToLower()] = $rule.FrontendPort
             }
+        }
+
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "portList for FrontEndPorts after mapping front end port to backend ip configuration: " -Verbose
+            Write-Verbose ($portList | Format-List | Out-String) -Verbose
         }
 
         #Get the nic, and the corresponding machine id for a given back end ipc
@@ -599,16 +654,22 @@ function Get-FrontEndPorts
         {
             foreach($ipConfig in $nic.IpConfigurations)
             {
-                $frontEndPort = $portList[$ipConfig.Id]
+                $frontEndPort = $portList[$ipConfig.Id.ToLower()]
                 if(-not [string]::IsNullOrEmpty($frontEndPort))
                 {
-                    $portList.Remove($ipConfig.Id)
+                    $portList.Remove($ipConfig.Id.ToLower())
                     if($nic.VirtualMachine)
                     {
-                        $portList[$nic.VirtualMachine.Id] = $frontEndPort
+                        $portList[$nic.VirtualMachine.Id.ToLower()] = $frontEndPort
                     }
                 }
             }
+        }
+
+        if($debugLogsFlag -eq "true")
+        {
+            Write-Verbose "portList for FrontEndPorts after getting vm id corresponding to given backend ip configuration, after finding nic: " -Verbose
+            Write-Verbose ($portList | Format-List | Out-String) -Verbose
         }
     }
     
@@ -623,8 +684,9 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
           [string]$enableCopyPrerequisites)
 
     [hashtable]$fqdnMap = @{}
-    [hashtable]$winRMHttpsPortMap = @{}
+    $winRMHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
     [hashtable]$azureRMVMsDetails = @{}
+    $debugLogsFlag= $env:system_debug
 
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
@@ -642,22 +704,25 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
                 $frontEndIPConfigs = $lbDetails["frontEndIPConfigs"]
                 $inboundRules = $lbDetails["inboundRules"]
 
-                $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -frontEndIPConfigs $frontEndIPConfigs -fqdnMap $fqdnMap
-                $winRMHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRMHttpsPortMap -networkInterfaceResources $networkInterfaceResources -inboundRules $inboundRules
+                $fqdnMap = Get-MachinesFqdnsForLB -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources `
+                                                  -frontEndIPConfigs $frontEndIPConfigs -fqdnMap $fqdnMap -debugLogsFlag $debugLogsFlag
+                $winRMHttpsPortMap = Get-FrontEndPorts -BackEndPort "5986" -PortList $winRMHttpsPortMap -networkInterfaceResources $networkInterfaceResources `
+                                                       -inboundRules $inboundRules -debugLogsFlag $debugLogsFlag
             }
 
-            $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $true
-            $winRMHttpsPortMap = Get-MachineNameFromId -Map $winRMHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources -ThrowOnTotalUnavaialbility $false
+            $winRMHttpsPortMap = Get-MachineNameFromId -Map $winRMHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources `
+                                                       -throwOnTotalUnavailability $false -debugLogsFlag $debugLogsFlag
         }
-        else
-        {
-            $fqdnMap = Get-MachinesFqdns -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap
-            $winRMHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
-        }
+
+        $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources `
+                                                -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap -debugLogsFlag $debugLogsFlag
+        $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources `
+                                         -throwOnTotalUnavailability $true -debugLogsFlag $debugLogsFlag
 
         foreach ($resource in $azureRMVMResources)
         {
             $resourceName = $resource.Name
+            $resourceId = $resource.Id
             $resourceFQDN = $fqdnMap[$resourceName]
             $resourceWinRMHttpsPort = $winRMHttpsPortMap[$resourceName]
             if([string]::IsNullOrWhiteSpace($resourceWinRMHttpsPort))
@@ -676,7 +741,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             if ($enableCopyPrerequisites -eq "true")
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
-                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
             }
         }
 
@@ -835,7 +900,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
                             $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVMsCredentials, `
-                            $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocal, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
+                            $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $status = $copyResponse.Status
 
@@ -854,7 +919,7 @@ function Copy-FilesSequentiallyToAzureVMs
     }
 }
 
-function Copy-FilesParallelyToAzureVMs
+function Copy-FilesParallellyToAzureVMs
 {
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
           [string][Parameter(Mandatory=$true)]$containerName,
@@ -881,17 +946,17 @@ function Copy-FilesParallelyToAzureVMs
 
         $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
                    $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, `
-                   $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocal, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
+                   $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $Jobs.Add($job.Id, $resourceProperties)
     }
 
-    While (Get-Job)
+    While ($Jobs.Count -gt 0)
     {
         Start-Sleep 10
         foreach ($job in Get-Job)
         {
-            if ($job.State -ne "Running")
+            if ($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
             {
                 $output = Receive-Job -Id $job.Id
                 Remove-Job $Job
@@ -914,11 +979,12 @@ function Copy-FilesParallelyToAzureVMs
 
                     Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
                 }
+                $Jobs.Remove($job.Id)
             }
         }
     }
 
-    # While copying paralelly, if copy failed on one or more azure VMs then throw
+    # While copying parallelly, if copy failed on one or more azure VMs then throw
     if ($parallelOperationStatus -eq "Failed")
     {
         $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
@@ -954,17 +1020,17 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
     }
-    # copies files parallely
+    # copies files parallelly
     else
     {
-        Copy-FilesParallelyToAzureVMs `
+        Copy-FilesParallellyToAzureVMs `
                 -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
     }
 
-    # if no error thrown, copy succesfully succeeded
+    # if no error thrown, copy successfully succeeded
     Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $resourceGroupName)
 }
 
@@ -981,6 +1047,7 @@ function Validate-CustomScriptExecutionStatus
     {
         $status = Get-AzureMachineStatus -resourceGroupName $resourceGroupName -Name $vmName
 
+        # For AzurePS < 1.0.4 $_.ExtensionType is applicable.
         $customScriptExtension = $status.Extensions | Where-Object { ($_.ExtensionType -eq "Microsoft.Compute.CustomScriptExtension" -or $_.Type -eq "Microsoft.Compute.CustomScriptExtension") -and $_.Name -eq $extensionName }
 
         if($customScriptExtension)
@@ -1032,12 +1099,12 @@ function Validate-CustomScriptExecutionStatus
 function Is-WinRMCustomScriptExtensionExists
 {
     param([string]$resourceGroupName,
-    [string]$vmName,
-    [string]$extensionName)
-	 
+          [string]$vmName,
+          [string]$extensionName)
+
     $isExtensionExists = $true
     $removeExtension = $false
-	
+
     try
     {
         $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
@@ -1057,7 +1124,7 @@ function Is-WinRMCustomScriptExtensionExists
                 catch
                 {
                     $isExtensionExists = $false
-                }				
+                }
             }
         }
         else
@@ -1068,8 +1135,8 @@ function Is-WinRMCustomScriptExtensionExists
     catch
     {
         $isExtensionExists = $false	
-    }		
-    
+    }
+
     if($removeExtension)
     {
         $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
@@ -1079,10 +1146,63 @@ function Is-WinRMCustomScriptExtensionExists
     $isExtensionExists
 }
 
+function Add-WinRMHttpsNetworkSecurityRuleConfig
+{
+    param([string]$resourceGroupName,
+          [string]$vmId,
+          [string]$ruleName,
+          [string]$rulePriotity,
+          [string]$winrmHttpsPort)
+    
+    Write-Verbose "Trying to add a network security group rule"
+
+    try
+    {
+        $securityGroups = Get-NetworkSecurityGroups -resourceGroupName $resourceGroupName -vmId $vmId
+
+        if($securityGroups.Count -gt 0)
+        {
+            Add-NetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -securityGroups $securityGroups -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+        }
+    }
+    catch
+    {
+        Write-TaskSpecificTelemetry "ADDWINRM_NetworkSecurityRuleConfigFailed"
+        Write-Warning (Get-LocalizedString -Key "Failed to add the network security rule: {0}" -ArgumentList $_.exception.message)
+    }
+}
+
+function Add-WinRMHttpsNetworkSecurityRuleConfig
+{
+    param([string]$resourceGroupName,
+          [string]$vmId,
+          [string]$ruleName,
+          [string]$rulePriotity,
+          [string]$winrmHttpsPort)
+    
+    Write-Verbose -Verbose "Trying to add a network security group rule"
+
+    try
+    {
+        $securityGroups = Get-NetworkSecurityGroups -resourceGroupName $resourceGroupName -vmId $vmId
+
+        if($securityGroups.Count -gt 0)
+        {
+            Add-NetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -securityGroups $securityGroups -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+        }
+    }
+    catch
+    {
+        Write-TaskSpecificTelemetry "ADDWINRM_NetworkSecurityRuleConfigFailed"
+        Write-Warning (Get-LocalizedString -Key "Failed to add the network security rule: {0}" -ArgumentList $_.exception.message)
+    }
+}
+
 function Add-AzureVMCustomScriptExtension
 {
     param([string]$resourceGroupName,
-          [string]$vmName,          
+          [string]$vmId,
+          [string]$vmName,
           [string]$dnsName,
           [string]$location)
 
@@ -1091,10 +1211,13 @@ function Add-AzureVMCustomScriptExtension
     $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
+    $ruleName = "VSO-Custom-WinRM-Https-Port"
+    $rulePriotity="3986"
+    $winrmHttpsPort = "5986"
 
-    Write-Verbose -Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
-    Write-Verbose -Verbose "VM Location : $location"
-    Write-Verbose -Verbose "VM DNS : $dnsName"
+    Write-Verbose "Adding custom script extension '$extensionName' for virtual machine '$vmName'"
+    Write-Verbose "VM Location : $location"
+    Write-Verbose "VM DNS : $dnsName"
 
     try
     {
@@ -1103,23 +1226,26 @@ function Add-AzureVMCustomScriptExtension
 
         if($isExtensionExists)
         {
+            Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
+
             Write-Verbose -Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
             return
         }
 
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
+        $resultDetails = $result | ConvertTo-Json
+        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
 
-        if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
+        if($result.Status -ne "Succeeded")
         {
-            Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
+            Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"
 
             $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
             throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
         }
 
-	    $resultDetails = $result | ConvertTo-Json
-        Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
         Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
     }
     catch
     {

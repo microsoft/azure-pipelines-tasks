@@ -78,7 +78,7 @@ function Get-AzureRMResourceGroupResourcesDetails
           [object]$azureRMVMResources)
 }
 
-#Generate and return SAS Token correspoding to Container and storageaccount information present in $storageContext
+#Generate and return SAS Token corresponding to Container and storageaccount information present in $storageContext
 function Generate-AzureStorageContainerSASToken
 {
     param([string]$containerName,
@@ -93,7 +93,7 @@ function Get-AzureMachineStatus
           [string]$name)
 }
 
-# Returns details of the custon script extension $name of VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name of VM $vmName present in ResourceGroup $resourceGroupName
 function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
@@ -101,7 +101,7 @@ function Get-AzureMachineCustomScriptExtension
           [string]$name)
 }
 
-# Returns details of the custon script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
 function Set-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
@@ -113,10 +113,34 @@ function Set-AzureMachineCustomScriptExtension
           [string]$location)
 }
 
-# Returns details of the custon script extension $name deleted from VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name deleted from VM $vmName present in ResourceGroup $resourceGroupName
 function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
           [string]$name)
+}
+
+# Returns details of the network security group for VM with $vmId in ResourceGroup $resourceGroupName
+function Get-NetworkSecurityGroups
+{
+     param([string]$resourceGroupName,
+           [string]$vmId)
+}
+
+# Add the network security rule in ResourceGroup $resourceGroupName
+function Add-NetworkSecurityRuleConfig
+{
+    param([string]$resourceGroupName,
+          [object]$securityGroups,
+          [string]$ruleName,
+          [string]$rulePriotity,
+          [string]$winrmHttpsPort)
+}
+
+# Removes the network security rule
+function Remove-NetworkSecurityRuleConfig
+{
+    param([object] $securityGroups,
+          [string] $ruleName)
 }
