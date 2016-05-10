@@ -2,13 +2,33 @@ $ErrorActionPreference = 'Stop'
 
 function Get-MsDeployExePath
 {
-    $currentDir = (Get-Item -Path ".\").FullName
+    $MSDeployExePath = $null
+    try
+    {
+        $MSDeployExePath , $MSDeployVersion = Get-MSDeployOnTargetMachine
+    }
+    catch [System.Exception]
+    {
+         Write-Verbose ("MSDeploy is not installed in system." + $_.Exception.Message)
+    }
 
-    $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
-    $msDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
-    Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $msDeployExePath)
+    if( $MSDeployExePath -ne $null -and $MSDeployVersion -lt 3 ){
+        throw  "Unsupported installed version found for MSDeploy"
+    }
 
-    return $msDeployExePath
+    if( $MSDeployExePath -eq $null )
+    {
+
+        Write-Verbose  (Get-LocalizedString -Key "Using local MSDeploy.exe")  
+        $currentDir = (Get-Item -Path ".\").FullName
+        $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
+        $MSDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
+    
+    }
+ 
+    Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $MSDeployExePath)
+
+    return $MSDeployExePath
 }
 
 function Get-SingleFile
@@ -120,7 +140,8 @@ function Run-Command
     param([String][Parameter(Mandatory=$true)] $command)
 
 
-    try{
+    try
+	{
         if( $psversiontable.PSVersion.Major -le 4)
         {
            cmd.exe /c "`"$command`""
@@ -129,10 +150,11 @@ function Run-Command
         {
            cmd.exe /c "$command"
         }
-    }catch [System.Exception]
+
+    }
+	catch [System.Exception]
     {
-        throw $_.Exception.Message
-        
+        throw $_.Exception.Message    
     }
 
 }
