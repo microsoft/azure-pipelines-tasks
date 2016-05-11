@@ -32,14 +32,8 @@ else {
 	var gt = tl.createToolRunner(grunt);
 }
 
-// optional - no tasks will concat nothing
-tl.getDelimitedInput('targets', ' ', false)
-	.forEach(x => {
-		// omit empty values
-		if (x) {
-			gt.arg(x);
-		}
-	});
+// optional - no targets will concat nothing
+gt.arg(tl.getDelimitedInput('targets', ' ', false));
 
 gt.arg('--gruntfile');
 
