@@ -25,7 +25,7 @@ describe('SonarQubePostTest Suite', function () {
         psr.kill();
     });
 
-    if (ps) {      
+    if (ps) {
          it('DisableAnalysisOnPrBuild tests', (done) => {
              psr.run(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
          })
@@ -44,8 +44,8 @@ describe('SonarQubePostTest Suite', function () {
          it('SonarQubeMetrics tests', (done) => {
              psr.run(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);
          })
-         //it('SummaryReport tests', (done) => {
-         //    psr.run(path.join(__dirname, 'SummaryReport.ps1'), done);
-         //})
+         it('SummaryReport tests', (done) => {
+            psr.run(path.join(__dirname, 'SummaryReport.ps1'), done);
+         })
     }
 });
