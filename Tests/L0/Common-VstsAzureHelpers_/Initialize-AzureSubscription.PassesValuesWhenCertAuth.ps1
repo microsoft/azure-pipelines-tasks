@@ -4,7 +4,7 @@ param()
 # Arrange.
 . $PSScriptRoot/../../lib/Initialize-Test.ps1
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/VstsAzureHelpers_ -PassThru
-& $module { $script:isClassic = $true ; $script:classicVersion = [version]'1.0' }
+& $module { $script:azureModule = @{ Version = [version]'1.0' } }
 $endpoint = @{
     Auth = @{
         Scheme = 'Certificate'

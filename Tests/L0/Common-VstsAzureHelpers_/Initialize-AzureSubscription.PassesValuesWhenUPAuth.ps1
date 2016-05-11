@@ -19,9 +19,34 @@ $endpoint = @{
     }
 }
 $variableSets = @(
-    @{ Classic = $true ; StorageAccount = $null }
-    @{ Classic = $true ; StorageAccount = 'Some storage account' }
-    @{ Classic = $false ; StorageAccount = $null }
+    # Azure:
+    @{
+        Azure = $true
+        AzureRM = $false
+        StorageAccount = $null
+    }
+    @{
+        Azure = $true
+        AzureRM = $false
+        StorageAccount = 'Some storage account'
+    }
+    # Azure and AzureRM:
+    @{
+        Azure = $true
+        AzureRM = $true
+        StorageAccount = $null
+    }
+    @{
+        Azure = $true
+        AzureRM = $true
+        StorageAccount = 'Some storage account'
+    }
+    # AzureRM:
+    @{
+        Azure = $false
+        AzureRM = $true
+        StorageAccount = $null
+    }
 )
 foreach ($variableSet in $variableSets) {
     Write-Verbose ('-' * 80)
@@ -33,10 +58,16 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Add-AzureRMAccount { 'some output' }
     Register-Mock Set-CurrentAzureSubscription
     Register-Mock Set-CurrentAzureRMSubscription
-    if ($variableSet.Classic) {
-        & $module { $script:isClassic = $true ; $script:classicVersion = [version]'1.0' }
-    } else {
-        & $module { $script:isClassic = $false ; $script:classicVersion = $null }
+    & $module {
+        $script:azureModule = $null
+        $script:azureRMProfileModule = $null
+    }
+    if ($variableSet.Azure) {
+        & $module { $script:azureModule = @{ Version = [version]'1.0' } }
+    }
+
+    if ($variableSet.AzureRM) {
+        & $module { $script:azureRMProfileModule = @{ Version = [version]'1.2.3.4' } }
     }
 
     # Act.
@@ -44,7 +75,7 @@ foreach ($variableSet in $variableSets) {
 
     # Assert.
     Assert-AreEqual $null $result
-    if ($variableSet.Classic) {
+    if ($variableSet.Azure) {
         Assert-WasCalled Add-AzureAccount -ArgumentsEvaluator {
             $args.Length -eq 2 -and
             $args[0] -eq '-Credential' -and
@@ -53,7 +84,9 @@ foreach ($variableSet in $variableSets) {
             $args[1].GetNetworkCredential().Password -eq 'Some password'
         }
         Assert-WasCalled Set-CurrentAzureSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -StorageAccount $variableSet.StorageAccount
-    } else {
+    }
+
+    if ($variableSet.AzureRM) {
         Assert-WasCalled Add-AzureRMAccount -ArgumentsEvaluator {
             $args.Length -eq 2 -and
             $args[0] -eq '-Credential' -and
