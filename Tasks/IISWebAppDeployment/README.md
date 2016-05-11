@@ -1,7 +1,10 @@
 # IIS Web Application Deployment
 
 ## **Important Notice**
-The preview IIS Web Application Deployment task has been **shipped as an extension for Visual Studio Team Services**, and is available in the marketplace as [**IIS Web App Deployment Using WinRM**](https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp). The SQL Server Database Deployment task will be also added to the extension in the next update. VSTS accounts that are using these preview tasks should move to the extension. **All future enhancements to the IIS Web App Deployment task or to the SQL Server Database Deployment task will be provided in the extension.**
+The preview IIS Web Application Deployment task has been **deprecated and will be removed soon**. The task has been **shipped as an extension for Visual Studio Team Services**, and is available in the marketplace - https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp. 
+
+**Install the extension, and add the tasks from the extension in Build or Release Definitions, and remove this IIS Web Application Deployment task from the definition.**
+
 
 ## Overview
 
