@@ -1,5 +1,11 @@
 # IIS Web Application Deployment
 
+## **Important Notice**
+The preview IIS Web Application Deployment task has been **deprecated and will be removed soon**. The task has been **shipped as an extension for Visual Studio Team Services**, and is available in the marketplace - https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp. 
+
+**Install the extension, and add the tasks from the extension in Build or Release Definitions, and remove this IIS Web Application Deployment task from the definition.**
+
+
 ## Overview
 
 The task is used to deploy a web application or a website to IIS web server and to create or update websites and application pools, and the underlying technologies used by the task is [Web Deploy](http://www.iis.net/downloads/microsoft/web-deploy) and [AppCmd.exe](http://www.iis.net/learn/get-started/getting-started-with-iis/getting-started-with-appcmdexe). Web Deploy packages the web application content, configuration and any other artifacts like registry, GAC assemblies etc. that can be used deployment. If the package needs to be redeployed to a different environment, configuration values within the package can be parameterized during deployment without requiring modifications to the packages themselves. Web deploy works with IIS 7, IIS 7.5, IIS 8, and IIS 8.5. AppCmd.exe is the single command line tool for managing IIS 7 and above. It exposes all key server management functionality through a set of intuitive management objects that can be manipulated from the command line or from scripts.
