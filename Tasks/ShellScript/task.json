@@ -59,7 +59,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "disableAutoCwd = true",
-            "helpMarkDown": "Current working directory when script is run. Defaults to the $(System.DefaultWorkingDirectory).",
+            "helpMarkDown": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory).",
             "groupName": "advanced"
         },
         {
