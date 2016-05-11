@@ -30,7 +30,7 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 
 |      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
 |------------------|------|------|------|----|----------|
-| Ant                            |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
+| Ant                            |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
 | AndroidSigning                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | AzureCloudPowerShellDeployment | | | | | |
 | AzureFileCopy                  | | | | | |
@@ -45,17 +45,17 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | CocoaPods                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/red.png)| |
 | CopyFiles                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | CopyPublishBuildArtifacts      |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl.  Pinned to PS on windows |
-| cURLUploader                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. PS1 should be removed|
+| cURLUploader                   |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. PS1 should be removed|
 | DecryptFile                    | | | | | |
 | DeleteFiles                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | DeployAzureResourceGroup       | | | | | |
 | DeployVisualStudioTestAgent    | | | | | |
-| Gradle                         |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
+| Gradle                         |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
 | Grunt                          | | | | | |
 | Gulp                           | | | | | |
 | IISWebAppDeployment            | | | | | |
 | MSBuild                        | | | | | |
-| Maven                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
+| Maven                          |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
 | Npm                            | | | | | |
 | NuGetInstaller                 | | | | | |
 | NugetPackager                  | | | | | |
