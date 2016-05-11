@@ -32,9 +32,15 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Add-AzureRMAccount { throw 'Some add account error' }
     Register-Mock Write-VstsTaskError
     if ($variableSet.Classic) {
-        & $module { $script:isClassic = $true ; $script:classicVersion = [version]'0.9.8' }
+        & $module {
+            $script:azureModule = @{ Version = [version]'0.9.8' }
+            $script:azureRMProfileModule = $null
+        }
     } else {
-        & $module { $script:isClassic = $false ; $script:classicVersion = $null }
+        & $module {
+            $script:azureModule = $null
+            $script:azureRMProfileModule = @{ Version = [version]'1.2.3.4' }
+        }
     }
 
     # Act/Assert.

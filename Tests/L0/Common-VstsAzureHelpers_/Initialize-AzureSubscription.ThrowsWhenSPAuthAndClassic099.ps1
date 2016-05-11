@@ -25,7 +25,7 @@ $variableSets = @(
 )
 foreach ($variableSet in $variableSets) {
     Write-Verbose ('-' * 80)
-    & $module { $script:isClassic = $true ; $script:classicVersion = $args[0] } $variableSet.Version
+    & $module { $script:azureModule = @{ Version = $args[0] } } $variableSet.Version
 
     # Act/Assert.
     Assert-Throws {
