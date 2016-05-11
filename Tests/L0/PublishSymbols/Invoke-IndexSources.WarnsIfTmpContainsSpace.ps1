@@ -7,8 +7,8 @@ param()
 $env:TMP = "$env:TMP _"
 Register-Mock Write-Warning
 $script:pdbstrExePath = 'SomeDrive:\SomeDir\pdbstr.exe'
-$env:AGENT_HOMEDIRECTORY = 'SomeDrive:\AgentHome'
-Register-Mock Assert-VstsPath { $script:pdbstrExePath } -- -LiteralPath "$env:Agent_HomeDirectory\Agent\Worker\Tools\Pdbstr\pdbstr.exe" -PathType Leaf -PassThru
+Register-Mock Get-VstsTaskVariable { 'SomeDrive:\AgentHome' } -- -Name Agent.HomeDirectory -Require
+Register-Mock Assert-VstsPath { $script:pdbstrExePath } -- -LiteralPath "SomeDrive:\AgentHome\Externals\Pdbstr\pdbstr.exe" -PathType Leaf -PassThru
 Register-Mock Push-Location
 Register-Mock Add-DbghelpLibrary { -1234 }
 $script:sourcesRoot = 'SomeDrive:\SomeSourcesRoot'

@@ -10,7 +10,7 @@ var minimist = require('minimist');
 var mocha = require('gulp-mocha');
 var Q = require('q');
 var semver = require('semver');
-var shell = require('shelljs')
+var shell = require('shelljs');
 
 // gulp modules
 var del = require('del');
@@ -105,10 +105,10 @@ gulp.task('compileTasks', ['clean'], function (cb) {
 
 
     var tasksPath = path.join(__dirname, 'Tasks', '**/*.ts');
-    return gulp.src([tasksPath, 'definitions/*.d.ts'], { base: './Tasks'})
+    return gulp.src([tasksPath, 'definitions/*.d.ts'], { base: './Tasks' })
         .pipe(ts)
         .on('error', errorHandler)
-        .pipe(gulp.dest(path.join(__dirname, 'Tasks'))); 
+        .pipe(gulp.dest(path.join(__dirname, 'Tasks')));
 });
 
 gulp.task('compile', ['compileTasks', 'compileTests']);
@@ -142,7 +142,7 @@ gulp.task('cleanTests', function (cb) {
 gulp.task('compileTests', ['cleanTests'], function (cb) {
     var testsPath = path.join(__dirname, 'Tests', '**/*.ts');
 
-    return gulp.src([testsPath, 'definitions/*.d.ts'], { base: './Tests'})
+    return gulp.src([testsPath, 'definitions/*.d.ts'], { base: './Tests' })
         .pipe(ts)
         .on('error', errorHandler)
         .pipe(gulp.dest(_testRoot));
@@ -154,7 +154,7 @@ gulp.task('testLib', ['compileTests'], function (cb) {
 });
 
 gulp.task('copyTestData', ['compileTests'], function (cb) {
-    return gulp.src(['Tests/**/data/**'],{ dot: true })
+    return gulp.src(['Tests/**/data/**'], { dot: true })
         .pipe(gulp.dest(_testRoot));
 });
 
@@ -193,7 +193,7 @@ gulp.task('bumpjs', function () {
     var tasksRootFolder = path.resolve(__dirname, 'Tasks');
 
     var taskFolders = [];
-    fs.readdirSync(tasksRootFolder).forEach(folderName=> {
+    fs.readdirSync(tasksRootFolder).forEach(folderName => {
         if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
             taskFolders.push(path.join(tasksRootFolder, folderName));
         }
@@ -216,7 +216,7 @@ gulp.task('bumpps', function () {
     var tasksRootFolder = path.resolve(__dirname, 'Tasks');
 
     var taskFolders = [];
-    fs.readdirSync(tasksRootFolder).forEach(folderName=> {
+    fs.readdirSync(tasksRootFolder).forEach(folderName => {
         if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
             taskFolders.push(path.join(tasksRootFolder, folderName));
         }
