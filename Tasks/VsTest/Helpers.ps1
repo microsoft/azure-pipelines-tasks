@@ -58,40 +58,49 @@ function SetupRunSettingsFileForParallel {
 
     if($runInParallelFlag -eq "True")
     {        
-        $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
-        if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -ne 0) -Or (Test-Path $runSettingsFilePath -pathtype container))  # no file provided so create one and use it for the run
-        {
-            Write-Verbose "No runsettings file provided"
-            $runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>
-<RunSettings>
-  <RunConfiguration>
-    <MaxCpuCount>0</MaxCpuCount>
-  </RunConfiguration>
-</RunSettings>
-'
-        }
-        else 
-        { 
-            Write-Verbose "Adding maxcpucount element to runsettings file provided"
-            $runSettingsForParallel = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
-            $runConfigurationElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration")
-            if($runConfigurationElement.Count -eq 0)
-            {
-                $runConfigurationElement = $runSettingsForParallel.RunSettings.AppendChild($runSettingsForParallel.CreateElement("RunConfiguration"))
-            }
+		if([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".testsettings", $True) -eq 0)
+		{
+			Write-Verbose "Run in Parallel is not supported with testsettings file."
+		}
+		else
+		{
+			$runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>'
+			if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -ne 0) -Or (Test-Path $runSettingsFilePath -pathtype container))  # no file provided so create one and use it for the run
+			{
+				Write-Verbose "No runsettings file provided"
+				$runSettingsForParallel = [xml]'<?xml version="1.0" encoding="utf-8"?>
+				<RunSettings>
+				  <RunConfiguration>
+					<MaxCpuCount>0</MaxCpuCount>
+				  </RunConfiguration>
+				</RunSettings>
+				'
+			}
+			else 
+			{ 
+				Write-Verbose "Adding maxcpucount element to runsettings file provided"
+				$runSettingsForParallel = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
+				$runConfigurationElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration")
+				if($runConfigurationElement.Count -eq 0)
+				{
+					$runConfigurationElement = $runSettingsForParallel.RunSettings.AppendChild($runSettingsForParallel.CreateElement("RunConfiguration"))
+				}
 
-            $maxCpuCountElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration/MaxCpuCount")
-            if($maxCpuCountElement.Count -eq 0)
-            {
-                $newMaxCpuCountElement = $runConfigurationElement.AppendChild($runSettingsForParallel.CreateElement("MaxCpuCount"))
-            }    
-        }
+				$maxCpuCountElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration/MaxCpuCount")
+				if($maxCpuCountElement.Count -eq 0)
+				{
+					$newMaxCpuCountElement = $runConfigurationElement.AppendChild($runSettingsForParallel.CreateElement("MaxCpuCount"))
+				}    
+			}
 
-        $runSettingsForParallel.RunSettings.RunConfiguration.MaxCpuCount = $defaultCpuCount
-        $tempFile = [io.path]::GetTempFileName()
-        $runSettingsForParallel.Save($tempFile)
-        Write-Verbose "Temporary runsettings file created at $tempFile"
-        return $tempFile
+			$runSettingsForParallel.RunSettings.RunConfiguration.MaxCpuCount = $defaultCpuCount
+			$tempFile = [io.path]::GetTempFileName()
+			$runSettingsForParallel.Save($tempFile)
+			Write-Verbose "Temporary runsettings file created at $tempFile"
+			return $tempFile
+		}
+		
+        
     }
     return $runSettingsFilePath
 }
