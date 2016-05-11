@@ -20,12 +20,10 @@ try {
     }
 
     if ($PSVersionTable.PSVersion -lt [version]'5.0') {
-        function global:Write-Host_d9245505 {
+        function global:Write-Host {
             $OFS = ' '
             Write-Verbose "Write-Host $args"
         }
-
-        New-Alias -Name 'Write-Host' -Value "global:Write-Host_d9245505" -Scope global
     }
 
     . $Path *>&1

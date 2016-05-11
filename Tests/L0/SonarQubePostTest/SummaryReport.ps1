@@ -79,9 +79,8 @@ Unregister-Mock IsPrBuild
 
 
 ### Test 3 - Fetching the quality gate warnings and errors
-
-$qualityGateResponse = Get-Content "$PSScriptRoot\data\ReportTest\qualityGateResponse.json" | ConvertFrom-Json
-$metricsResponse = Get-Content "$PSScriptRoot\data\ReportTest\metricsResponse.json" | ConvertFrom-Json
+$qualityGateResponse = Get-Content "$PSScriptRoot\data\ReportTest\qualityGateResponse.json" | Out-String | ConvertFrom-Json
+$metricsResponse = Get-Content "$PSScriptRoot\data\ReportTest\metricsResponse.json" | Out-String | ConvertFrom-Json
 Register-Mock FetchMetricNames {$metricsResponse.metrics}
 
 # Act
