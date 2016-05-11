@@ -12,12 +12,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 35
   },
   "demands": [
     "java"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.98.1",
   "groups": [
     {
       "name": "junitTestResults",

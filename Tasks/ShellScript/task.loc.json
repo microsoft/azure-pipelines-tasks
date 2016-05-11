@@ -18,6 +18,7 @@
   "demands": [
     "sh"
   ],
+  "minimumAgentVersion": "1.98.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
