@@ -36,6 +36,8 @@
     [string]$deployInParallel
     )
 
+Write-Warning "The preview IIS Web App Deployment task has been deprecated and has been released as an extension in the Visual Studio Team Services`
+ marketplace at http://aka.ms/iisextn.  VSTS accounts that are using the preview task should move to this extension."
 Write-Verbose "Entering script DeployIISWebApp.ps1" -Verbose
 
 $hostName = [string]::Empty
