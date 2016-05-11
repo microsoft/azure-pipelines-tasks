@@ -21,8 +21,8 @@ if (mavenVersionSelection == 'Path') {
 tl.debug('Maven binary: ' + mvntool);
 
 var mavenPOMFile = tl.getPathInput('mavenPOMFile', true, true);
-var mavenOptions = tl.getDelimitedInput('options', ' ', false);
-var mavenGoals = tl.getDelimitedInput('goals', ' ', true);
+var mavenOptions = tl.getInput('options', false); // options can have spaces and quotes so we need to treat this as one string and not try to parse it
+var mavenGoals = tl.getDelimitedInput('goals', ' ', true); // This assumes that goals cannot contain spaces
 
 var mvnv = tl.createToolRunner(mvntool);
 mvnv.arg('-version');
@@ -30,7 +30,7 @@ mvnv.arg('-version');
 var mvnb = tl.createToolRunner(mvntool);
 mvnb.arg('-f');
 mvnb.pathArg(mavenPOMFile);
-mvnb.arg(mavenOptions);
+mvnb.argString(mavenOptions);
 mvnb.arg(mavenGoals);
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
@@ -68,34 +68,34 @@ var publishJUnitResults = tl.getInput('publishJUnitResults');
 var testResultsFiles = tl.getInput('testResultsFiles', true);
 
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
+    var matchingTestResultsFiles: string[] = undefined;
     if (publishJUnitResults == 'true') {
         //check for pattern in testResultsFiles
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
             var buildFolder = tl.getVariable('agent.buildDirectory');
+            tl.debug(`buildFolder=${buildFolder}`);
             var allFiles = tl.find(buildFolder);
-            var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, {
+            matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, {
                 matchBase: true
             });
         } else {
             tl.debug('No pattern found in testResultsFiles parameter');
-            var matchingTestResultsFiles = [testResultsFiles];
+            matchingTestResultsFiles = [testResultsFiles];
         }
 
-        if (!matchingTestResultsFiles) {
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
             return 0;
         }
-
+        
         var tp = new tl.TestPublisher("JUnit");
         tp.publish(matchingTestResultsFiles, true, "", "", "", true);
     }
 }
 
 function getSonarQubeRunner() {
-    var sqAnalysisEnabled = tl.getInput('sqAnalysisEnabled', true);
-
-    if (sqAnalysisEnabled != 'true') {
+    if (!tl.getBoolInput('sqAnalysisEnabled')) {
         console.log("SonarQube analysis is not enabled");
         return;
     }
@@ -103,9 +103,8 @@ function getSonarQubeRunner() {
     console.log("SonarQube analysis is enabled");
     var mvnsq;
     var sqEndpoint = getEndpointDetails("sqConnectedServiceName");
-    var sqDbDetailsRequired = tl.getInput('sqDbDetailsRequired', true);
 
-    if (sqDbDetailsRequired == 'true') {
+    if (tl.getBoolInput('sqDbDetailsRequired')) {
         var sqDbUrl = tl.getInput('sqDbUrl', false);
         var sqDbUsername = tl.getInput('sqDbUsername', false);
         var sqDbPassword = tl.getInput('sqDbPassword', false);

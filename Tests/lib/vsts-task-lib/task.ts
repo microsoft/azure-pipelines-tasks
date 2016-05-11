@@ -284,14 +284,14 @@ export function getPathInput(name: string, required?: boolean, check?: boolean):
 //-----------------------------------------------------
 
 export function getEndpointUrl(id: string, optional: boolean): string {
-    var urlval = process.env['ENDPOINT_URL_' + id];
+    var urlval = getVariable('ENDPOINT_URL_' + id);
+    debug(id + '=' + urlval);
 
     if (!optional && !urlval) {
         _writeError('Endpoint not present: ' + id);
         exit(1);
     }
 
-    debug(id + '=' + urlval);
     return urlval;
 }
 
@@ -304,13 +304,12 @@ export interface EndpointAuthorization {
 }
 
 export function getEndpointAuthorization(id: string, optional: boolean): EndpointAuthorization {
-    var aval = process.env['ENDPOINT_AUTH_' + id];
+    var aval = getVariable('ENDPOINT_AUTH_' + id);
+    debug(id + '=' + aval);
 
     if (!optional && !aval) {
         setResult(TaskResult.Failed, 'Endpoint not present: ' + id);
     }
-
-    debug(id + '=' + aval);
 
     var auth: EndpointAuthorization;
     try {
