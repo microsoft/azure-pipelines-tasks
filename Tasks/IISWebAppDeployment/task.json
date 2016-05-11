@@ -1,7 +1,7 @@
 {
   "id": "89A3A82D-4B3E-4A09-8D40-A793849DC94F",
   "name": "IISWebAppDeployment",
-  "friendlyName": "[Deprecated] IIS Web Application Deployment",
+  "friendlyName": "[Deprecated] IIS Web App Deployment",
   "description": "Deploy by MSDeploy, create/update website & app pools",
   "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
   "category": "Deploy",
