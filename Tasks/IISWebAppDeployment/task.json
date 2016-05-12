@@ -360,7 +360,8 @@
       "type": "string",
       "label": "Password",
       "defaultValue": "",
-      "required": true,
+      "required": false,
+      "helpMarkDown": "If you are using a gMSA, this is not necessary",
       "groupName": "applicationPool",
       "visibleRule": "AppPoolIdentity = SpecificUser"
     },
