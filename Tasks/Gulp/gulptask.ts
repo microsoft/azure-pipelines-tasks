@@ -30,7 +30,6 @@ if(!tl.exist(gulp)) {
 }
 else {
 	var gt = tl.createToolRunner(gulp);
-	gt.arg('--no-color');
 }
 
 // optional - no targets will concat nothing
