@@ -1,6 +1,6 @@
 ﻿# Private module-scope variables.
-$script:isClassic = $null
-$script:classicVersion = $null
+$script:azureModule = $null
+$script:azureRMProfileModule = $null
 
 # Override the DebugPreference.
 if ($global:DebugPreference -eq 'Continue') {
@@ -32,8 +32,19 @@ function Initialize-Azure {
         $endpoint = Get-VstsEndpoint -Name $serviceName -Require
         $storageAccount = Get-VstsInput -Name StorageAccount
 
+        # Determine which modules are preferred.
+        $preferredModules = @( )
+        if ($serviceNameInput -eq 'ConnectedServiceNameARM') {
+            $preferredModules += 'AzureRM'
+        } elseif ($endpoint.Auth.Scheme -eq 'UserNamePassword') {
+            $preferredModules += 'Azure'
+            $preferredModules += 'AzureRM'
+        } else {
+            $preferredModules += 'Azure'
+        }
+
         # Import/initialize the Azure module.
-        Import-AzureModule -PreferAzureRM:($serviceNameInput -eq 'ConnectedServiceNameARM')
+        Import-AzureModule -PreferredModule $preferredModules
         Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $storageAccount
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

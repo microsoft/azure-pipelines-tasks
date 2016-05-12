@@ -30,7 +30,7 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Set-AzureSubscription
     Register-Mock Select-AzureSubscription
     Register-Mock Set-AzureSubscription
-    & $module { $script:isClassic = $true ; $script:classicVersion = $args[0] } $variableSet.Version
+    & $module { $script:azureModule = @{ Version = $args[0] } } $variableSet.Version
 
     # Act.
     & $module Set-CurrentAzureSubscription -SubscriptionId $variableSet.SubscriptionId -StorageAccount $variableSet.StorageAccount
