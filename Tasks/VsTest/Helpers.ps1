@@ -56,7 +56,7 @@ function SetupRunSettingsFileForParallel {
 	{
 		if([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".testsettings", $True) -eq 0)
 		{
-			Write-Verbose "Run in Parallel is not supported with testsettings file."
+			Write-Warning "Run in Parallel is not supported with testsettings file."
 		}
 		else
 		{
