@@ -34,7 +34,7 @@ function Initialize-Azure {
 
         # Determine which modules are preferred.
         $preferredModules = @( )
-        if ($serviceNameInput -eq 'ConnectedServiceNameARM') {
+        if ($endpoint.Auth.Scheme -eq 'ServicePrincipal') {
             $preferredModules += 'AzureRM'
         } elseif ($endpoint.Auth.Scheme -eq 'UserNamePassword') {
             $preferredModules += 'Azure'
