@@ -28,8 +28,14 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
     });
 
     if (ps) {
-        it('(Import-AzureModule) falls back', (done) => {
-            psr.run(path.join(__dirname, 'Import-AzureModule.FallsBack.ps1'), done);
+        it('(Import-AzureModule) azure preferred falls back', (done) => {
+            psr.run(path.join(__dirname, 'Import-AzureModule.AzurePreferredFallsBack.ps1'), done);
+        })
+        it('(Import-AzureModule) azure rm preferred falls back', (done) => {
+            psr.run(path.join(__dirname, 'Import-AzureModule.AzureRMPreferredFallsBack.ps1'), done);
+        })
+        it('(Import-AzureModule) both preferred falls back', (done) => {
+            psr.run(path.join(__dirname, 'Import-AzureModule.BothPreferredFallsBack.ps1'), done);
         })
         it('(Import-AzureModule) throws when not found', (done) => {
             psr.run(path.join(__dirname, 'Import-AzureModule.ThrowsWhenNotFound.ps1'), done);

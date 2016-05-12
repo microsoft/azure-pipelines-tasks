@@ -87,7 +87,7 @@ foreach ($variableSet in $variableSets) {
     }
 
     # Clear the private module variables.
-    & $module { $script:isClassic = $null ; $script:classicVersion = $null }
+    & $module { $script:azureModule = $null ; $script:azureRMProfileModule = $null }
 
     # Act.
     $result = & $module Import-FromSdkPath -Classic:($variableSet.Classic)
@@ -100,8 +100,9 @@ foreach ($variableSet in $variableSets) {
         Assert-WasCalled Import-Module -- -Name $psd1 -Global -PassThru
     }
 
-    Assert-AreEqual $variableSet.Classic (& $module { $script:isClassic })
     if ($variableSet.Classic) {
-        Assert-AreEqual $expectedModule.Version (& $module { $script:classicVersion })
+        Assert-AreEqual $expectedModule (& $module { $script:azureModule })
+    } else {
+        Assert-AreEqual $expectedModule (& $module { $script:azureRMProfileModule })
     }
 }

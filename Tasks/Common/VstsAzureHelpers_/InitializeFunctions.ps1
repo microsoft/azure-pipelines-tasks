@@ -1,7 +1,4 @@
-﻿$script:isClassic = $null
-$script:classicVersion = $null
-
-function Add-Certificate {
+﻿function Add-Certificate {
     [CmdletBinding()]
     param([Parameter(Mandatory=$true)]$Endpoint)
 
@@ -28,7 +25,7 @@ function Initialize-AzureSubscription {
 
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
-        if (!$script:isClassic) {
+        if (!$script:azureModule) {
             throw (Get-VstsLocString -Key AZ_CertificateAuthNotSupported)
         }
 
@@ -49,7 +46,9 @@ function Initialize-AzureSubscription {
         $psCredential = New-Object System.Management.Automation.PSCredential(
             $Endpoint.Auth.Parameters.UserName,
             (ConvertTo-SecureString $Endpoint.Auth.Parameters.Password -AsPlainText -Force))
-        if ($script:isClassic) {
+
+        # Add account (Azure).
+        if ($script:azureModule) {
             try {
                 Write-Host "##[command]Add-AzureAccount -Credential $psCredential"
                 $null = Add-AzureAccount -Credential $psCredential
@@ -58,9 +57,10 @@ function Initialize-AzureSubscription {
                 Write-VstsTaskError -Message $_.Exception.Message
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
+        }
 
-            Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
-        } else {
+        # Add account (AzureRM).
+        if ($script:azureRMProfileModule) {
             try {
                 Write-Host "##[command]Add-AzureRMAccount -Credential $psCredential"
                 $null = Add-AzureRMAccount -Credential $psCredential
@@ -69,14 +69,22 @@ function Initialize-AzureSubscription {
                 Write-VstsTaskError -Message $_.Exception.Message
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
+        }
 
+        # Select subscription (Azure).
+        if ($script:azureModule) {
+            Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
+        }
+
+        # Select subscription (AzureRM).
+        if ($script:azureRMProfileModule) {
             Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId
         }
     } elseif ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
         $psCredential = New-Object System.Management.Automation.PSCredential(
             $Endpoint.Auth.Parameters.ServicePrincipalId,
             (ConvertTo-SecureString $Endpoint.Auth.Parameters.ServicePrincipalKey -AsPlainText -Force))
-        if ($script:isClassic -and $script:classicVersion -lt ([version]'0.9.9')) {
+        if ($script:azureModule -and $script:azureModule.Version -lt ([version]'0.9.9')) {
             # Service principals arent supported from 0.9.9 and greater in the Azure module.
             try {
                 Write-Host "##[command]Add-AzureAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential"
@@ -88,9 +96,9 @@ function Initialize-AzureSubscription {
             }
 
             Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
-        } elseif ($script:isClassic) {
+        } elseif ($script:azureModule) {
             # Throw if >=0.9.9 Azure.
-            throw (Get-VstsLocString -Key "AZ_ServicePrincipalAuthNotSupportedAzureVersion0" -ArgumentList $script:classicVersion)
+            throw (Get-VstsLocString -Key "AZ_ServicePrincipalAuthNotSupportedAzureVersion0" -ArgumentList $script:azureModule.Version)
         } else {
             # Else, this is AzureRM.
             try {
@@ -117,7 +125,7 @@ function Set-CurrentAzureSubscription {
         [string]$StorageAccount)
 
     $additional = @{ }
-    if ($script:isClassic -and $script:classicVersion -lt ([version]'0.8.15')) {
+    if ($script:azureModule.Version -lt ([version]'0.8.15')) {
         $additional['Default'] = $true # The Default switch is required prior to 0.8.15.
     }
 
