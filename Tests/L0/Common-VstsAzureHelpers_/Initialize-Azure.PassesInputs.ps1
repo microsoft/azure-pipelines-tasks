@@ -8,6 +8,14 @@ $variableSets = @(
     @{
         ConnectedServiceNameSelector = 'ConnectedServiceName'
         DeploymentEnvironmentName = $null
+        Endpoint = @{ Auth = @{ Scheme = 'ServicePrincipal' } }
+        StorageAccount = $null
+        ExpectedServiceNameInput = 'ConnectedServiceName'
+        ExpectedPreferredModule = ,'AzureRM'
+    }
+    @{
+        ConnectedServiceNameSelector = 'ConnectedServiceName'
+        DeploymentEnvironmentName = $null
         Endpoint = @{ Auth = @{ Scheme = 'UserNamePassword' } }
         StorageAccount = $null
         ExpectedServiceNameInput = 'ConnectedServiceName'
@@ -24,7 +32,7 @@ $variableSets = @(
     @{
         ConnectedServiceNameSelector = 'ConnectedServiceName'
         DeploymentEnvironmentName = $null
-        Endpoint = 'Some endpoint'
+        Endpoint = @{ Auth = @{ Scheme = 'Certificate' } }
         StorageAccount = $null
         ExpectedServiceNameInput = 'ConnectedServiceName'
         ExpectedPreferredModule = ,'Azure'
@@ -32,7 +40,7 @@ $variableSets = @(
     @{
         ConnectedServiceNameSelector = 'ConnectedServiceName'
         DeploymentEnvironmentName = $null
-        Endpoint = 'Some endpoint'
+        Endpoint = @{ Auth = @{ Scheme = 'Certificate' } }
         StorageAccount = 'Some storage account'
         ExpectedServiceNameInput = 'ConnectedServiceName'
         ExpectedPreferredModule = ,'Azure'
@@ -40,7 +48,7 @@ $variableSets = @(
     @{
         ConnectedServiceNameSelector = 'ConnectedServiceNameARM'
         DeploymentEnvironmentName = $null
-        Endpoint = 'Some endpoint'
+        Endpoint = @{ Auth = @{ Scheme = 'ServicePrincipal' } }
         StorageAccount = $null
         ExpectedServiceNameInput = 'ConnectedServiceNameARM'
         ExpectedPreferredModule = ,'AzureRM'
@@ -48,7 +56,7 @@ $variableSets = @(
     @{
         ConnectedServiceNameSelector = 'ConnectedServiceNameARM'
         DeploymentEnvironmentName = $null
-        Endpoint = 'Some endpoint'
+        Endpoint = @{ Auth = @{ Scheme = 'ServicePrincipal' } }
         StorageAccount = 'Some storage account'
         ExpectedServiceNameInput = 'ConnectedServiceNameARM'
         ExpectedPreferredModule = ,'AzureRM'
