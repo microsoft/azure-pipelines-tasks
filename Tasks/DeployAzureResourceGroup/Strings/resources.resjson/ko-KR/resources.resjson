@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 리소스 그룹 배포",
-  "loc.helpMarkDown": "[자세한 정보](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[자세한 정보](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Azure 리소스 그룹 배포, 시작, 중지, 삭제",
   "loc.instanceNameFormat": "Azure 배포:$(resourceGroupName)에 대한 $(action) 작업",
   "loc.group.displayName.output": "출력",

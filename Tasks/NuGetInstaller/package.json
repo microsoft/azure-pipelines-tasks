@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/vso-agent-tasks.git"
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vso-agent-tasks#readme",
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "xmlreader": "^0.2.3"
   }

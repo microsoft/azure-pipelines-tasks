@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione gruppo di risorse di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Consente di distribuire, avviare, arrestare ed eliminare gruppi di risorse di Azure",
   "loc.instanceNameFormat": "Distribuzione Azure: azione $(action) su $(resourceGroupName)",
   "loc.group.displayName.output": "Output",

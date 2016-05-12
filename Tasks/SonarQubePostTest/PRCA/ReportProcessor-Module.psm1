@@ -204,7 +204,7 @@ function GetRelativePath
     
     $result = $path1.SubString($path2.Length);
 
-    #Replace '\' with '/'. VSO expects file path like /Mail2Bug/Main.cs (\Mail2Bug\Main.cs does not work)
+    #Replace '\' with '/'. Team Services expects file path like /Mail2Bug/Main.cs (\Mail2Bug\Main.cs does not work)
     $result = $result.Replace([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
     
     return $result

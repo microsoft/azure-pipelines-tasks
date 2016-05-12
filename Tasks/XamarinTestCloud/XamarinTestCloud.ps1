@@ -169,7 +169,7 @@ foreach ($ap in $appFiles)
     }
 }
 
-# Publish nunit test results to VSO
+# Publish NUnit test results to Team Services
 if($publishResults) 
 {    
     $searchPattern = Join-Path $testDir "xamarintest_$buildId*.xml"

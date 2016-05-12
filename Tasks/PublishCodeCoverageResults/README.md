@@ -1,7 +1,7 @@
 # Publish Code Coverage Results
 
 ###Overview
-The Publish Code Coverage Results task is used to publish the code coverage results to VSO/TFS. 
+The Publish Code Coverage Results task is used to publish the code coverage results to TFS/Team Services. 
 
 ###The different parameters of the task are explained below:
 
