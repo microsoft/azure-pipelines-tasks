@@ -17,7 +17,7 @@ export function getResponse(cmd: string, key: string): any {
         return null;
     }
 
-    if (!answers[cmd][key] && key) {
+    if (!answers[cmd][key] && key && process.env['MOCK_NORMALIZE_SLASHES'] === 'true') {
         // try normalizing the slashes
         var key2 = key.replace(/\\/g, "/");
         if (answers[cmd][key2]) {

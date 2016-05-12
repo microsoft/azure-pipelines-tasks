@@ -4,6 +4,7 @@
 
 import Q = require('q');
 import os = require('os');
+import path = require('path');
 import events = require('events');
 import mock = require('./mock');
 
@@ -182,12 +183,19 @@ export class ToolRunner extends events.EventEmitter {
             cmdString += (' ' + argString);
         }
 
+        this._debug('ignoreTempPath=' + process.env['MOCK_IGNORE_TEMP_PATH']);
+        this._debug('tempPath=' + process.env['MOCK_TEMP_PATH']);
+        if (process.env['MOCK_IGNORE_TEMP_PATH'] === 'true') {
+            // Using split/join to replace the temp path
+            cmdString = cmdString.split(process.env['MOCK_TEMP_PATH']).join('');
+        }
+
         if (!ops.silent) {
             ops.outStream.write('[command]' + cmdString + os.EOL);
         }
 
         // TODO: filter process.env
-
+        
         var res = mock.getResponse('exec', cmdString);
         //console.log(JSON.stringify(res, null, 2));
         if (res.stdout) {
