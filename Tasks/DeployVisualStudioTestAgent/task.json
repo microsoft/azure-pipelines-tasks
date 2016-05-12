@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 24
     },
     "demands": [
 
@@ -161,6 +161,15 @@
             "required": false,
             "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
             "groupName": "advanced"
+        },
+        {
+            "name": "taskApiAccessScope",
+            "type": "string",
+            "defaultValue": "vso.test_execution",
+            "required": false,
+            "groupName": "advanced",
+            "label": "Api Access Scope",
+            "visibleRule": "isDataCollectionOnly == true && isDataCollectionOnly == false"
         }
     ],
     "instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
