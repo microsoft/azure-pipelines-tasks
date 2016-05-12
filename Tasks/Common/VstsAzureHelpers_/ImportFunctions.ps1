@@ -1,19 +1,22 @@
 ﻿function Import-AzureModule {
     [CmdletBinding()]
-    param([switch]$PreferAzureRM)
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Azure', 'AzureRM')]
+        [string[]]$PreferredModule)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        if ($PreferAzureRM) {
-            if (!(Import-FromModulePath -Classic:$false) -and
-                !(Import-FromSdkPath -Classic:$false) -and
-                !(Import-FromModulePath -Classic:$true) -and
-                !(Import-FromSdkPath -Classic:$true))
-            {
+        if ($PreferredModule -contains 'Azure' -and $PreferredModule -contains 'AzureRM') {
+            # Attempt to import Azure and AzureRM.
+            $azure = (Import-FromModulePath -Classic:$true) -or (Import-FromSdkPath -Classic:$true)
+            $azureRM = (Import-FromModulePath -Classic:$false) -or (Import-FromSdkPath -Classic:$false)
+            if (!$azure -and !$azureRM) {
                 throw (Get-VstsLocString -Key AZ_ModuleNotFound)
             }
-        } else {
+        } elseif ($PreferredModule -contains 'Azure') {
+            # Attempt to import Azure but fallback to AzureRM.
             if (!(Import-FromModulePath -Classic:$true) -and
                 !(Import-FromSdkPath -Classic:$true) -and
                 !(Import-FromModulePath -Classic:$false) -and
@@ -21,11 +24,20 @@
             {
                 throw (Get-VstsLocString -Key AZ_ModuleNotFound)
             }
+        } else {
+            # Attempt to import AzureRM but fallback to Azure.
+            if (!(Import-FromModulePath -Classic:$false) -and
+                !(Import-FromSdkPath -Classic:$false) -and
+                !(Import-FromModulePath -Classic:$true) -and
+                !(Import-FromSdkPath -Classic:$true))
+            {
+                throw (Get-VstsLocString -Key AZ_ModuleNotFound)
+            }
         }
 
         # Validate the Classic version.
         $minimumVersion = [version]'0.8.10.1'
-        if ($script:isClassic -and $script:classicVersion -lt $minimumVersion) {
+        if ($script:azureModule -and $script:azureModule.Version -lt $minimumVersion) {
             throw (Get-VstsLocString -Key AZ_RequiresMinVersion0 -ArgumentList $minimumVersion)
         }
     } finally {
@@ -59,12 +71,9 @@ function Import-FromModulePath {
         $module = Import-Module -Name $module.Path -Global -PassThru
         Write-Verbose "Imported module version: $($module.Version)"
 
-        # Store the mode.
-        $script:isClassic = $Classic.IsPresent
-
-        if ($script:isClassic) {
-            # The Azure module was imported.
-            $script:classicVersion = $module.Version
+        if ($Classic) {
+            # Store the imported Azure module.
+            $script:azureModule = $module
         } else {
             # The AzureRM module was imported.
 
@@ -74,10 +83,10 @@ function Import-FromModulePath {
                 throw (Get-VstsLocString -Key AZ_AzureRMProfileModuleNotFound)
             }
 
-            # Import the AzureRM.profile module.
+            # Import and then store the AzureRM.profile module.
             Write-Host "##[command]Import-Module -Name $($profileModule.Path) -Global"
-            $profileModule = Import-Module -Name $profileModule.Path -Global -PassThru
-            Write-Verbose "Imported module version: $($profileModule.Version)"
+            $script:azureRMProfileModule = Import-Module -Name $profileModule.Path -Global -PassThru
+            Write-Verbose "Imported module version: $($script:azureRMProfileModule.Version)"
         }
 
         return $true
@@ -111,12 +120,11 @@ function Import-FromSdkPath {
                 $module = Import-Module -Name $path -Global -PassThru
                 Write-Verbose "Imported module version: $($module.Version)"
 
-                # Store the mode.
-                $script:isClassic = $Classic.IsPresent
-
+                # Store the imported module.
                 if ($Classic) {
-                    # The Azure module was imported.
-                    $script:classicVersion = $module.Version
+                    $script:azureModule = $module
+                } else {
+                    $script:azureRMProfileModule = $module
                 }
 
                 return $true
