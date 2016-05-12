@@ -40,10 +40,10 @@ if ($excludeVersion -and "$excludeVersion".ToUpperInvariant() -ne 'FALSE')
 if ($solution.Contains("*") -or $solution.Contains("?"))
 {
     Write-Verbose "Pattern found in solution parameter."
-    if ($env:BUILD_SOURCESDIRECTORY)
+    if ($env:SYSTEM_DEFAULTWORKINGDIRECTORY)
     {
-        Write-Verbose "Find-Files -SearchPattern $solution -RootFolder $env:BUILD_SOURCESDIRECTORY"
-        $solutionFiles = Find-Files -SearchPattern $solution -RootFolder $env:BUILD_SOURCESDIRECTORY
+        Write-Verbose "Find-Files -SearchPattern $solution -RootFolder $env:SYSTEM_DEFAULTWORKINGDIRECTORY"
+        $solutionFiles = Find-Files -SearchPattern $solution -RootFolder $env:SYSTEM_DEFAULTWORKINGDIRECTORY
     }
     else
     {
@@ -91,7 +91,7 @@ if($nuGetRestoreArgs)
     $args = ($args + " " + $nuGetRestoreArgs);
 }
 
-if($nugetConfigPath -and ($nugetConfigPath -ne $env:Build_SourcesDirectory))
+if($nugetConfigPath -and ($nugetConfigPath -ne $env:System_DefaultWorkingDirectory))
 {
     $args = "$args -configfile `"$tempNuGetConfigPath`""
 
@@ -134,9 +134,16 @@ try
     {
         if($nuGetPath)
         {
-            $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
-            Write-Verbose "Running nuget package $restoreMode for $slnFolder"
-            Invoke-Tool -Path $nugetPath -Arguments "$restoreMode `"$sf`" $args" -WorkingFolder $slnFolder
+            if (-not (Test-Path $sf -PathType Leaf)) # check if the path is a file to give a friendly message if not
+            {
+                Write-Error (Get-LocalizedString -Key "Path '{0}' does not exist or is not a solution file. Check the 'path to solution or packages.config' property of the NuGetInstaller task " -ArgumentList $sf)
+            }
+            else
+            {
+                $slnFolder = $(Get-ItemProperty -Path $sf -Name 'DirectoryName').DirectoryName
+                Write-Verbose "Running nuget package $restoreMode for $slnFolder"
+                Invoke-Tool -Path $nugetPath -Arguments "$restoreMode `"$sf`" $args" -WorkingFolder $slnFolder
+            }
         }
     }
 }

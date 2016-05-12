@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "AzureRM Web App Deployment",
+  "loc.friendlyName": "AzureRM Web App Deployment ( Preview )",
   "loc.helpMarkDown": "[More Information](http://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Deploy the web project to the AzureRM Web App using Web Deploy",
   "loc.instanceNameFormat": "Deploy AzureRM Web App: $(WebAppName)",

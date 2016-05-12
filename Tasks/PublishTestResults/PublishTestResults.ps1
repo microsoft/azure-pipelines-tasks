@@ -24,7 +24,11 @@ Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
 
 try
 {
+<<<<<<< HEAD
     if (!$testRunner)
+=======
+    if(!$testRunner)
+>>>>>>> 25a6d25e4d257d39d6e51ab59a026dd6e9c86f42
     {        
         throw (Get-LocalizedString -Key "Test runner parameter has to be specified")
     }
@@ -60,6 +64,7 @@ try
         
         $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
         $runTitleMemberExists = CmdletHasMember "RunTitle"
+<<<<<<< HEAD
         if (!($runTitleMemberExists))
         {
             if (!([string]::IsNullOrWhiteSpace($testRunTitle)))
@@ -94,6 +99,42 @@ try
                 Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
             }
         }
+=======
+	    if(!($runTitleMemberExists))
+	    {
+		    if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+		    {
+			    Write-Warning "Update the build agent to be able to use the custom run title feature."
+		    }
+		    if($publishRunLevelAttachmentsExists)
+		    {
+			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
+		    }
+		    else 
+		    {
+			    if(!$publishResultsOption)
+			    {
+			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+			    }
+			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+		    }
+	    }
+	    else
+	    {
+		    if($publishRunLevelAttachmentsExists)
+		    {
+			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
+		    }
+		    else 
+		    {
+			    if(!$publishResultsOption)
+			    {
+			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+			    }
+			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
+		    }
+	    }
+>>>>>>> 25a6d25e4d257d39d6e51ab59a026dd6e9c86f42
     }
 }
 catch

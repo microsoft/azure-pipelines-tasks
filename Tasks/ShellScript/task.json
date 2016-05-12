@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [
         "sh"
@@ -44,12 +44,22 @@
             "helpMarkDown": "Arguments passed to the shell script"
         },
         {
+            "name": "disableAutoCwd",
+            "type": "boolean",
+            "label": "Specify Working Directory",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "The default behavior is to set the working directory to the script location. This enables you to optionally specify a different working directory.",
+            "groupName": "advanced"
+        },
+        {
             "name": "cwd",
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+            "visibleRule": "disableAutoCwd = true",
+            "helpMarkDown": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory).",
             "groupName": "advanced"
         },
         {

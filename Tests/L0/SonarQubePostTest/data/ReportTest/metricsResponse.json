@@ -1,0 +1,40 @@
+{
+    "metrics": [
+        {
+            "id": "11",
+            "key": "accessors",
+            "type": "INT",
+            "name": "Accessors"
+        },
+        {
+            "id": "93",
+            "key": "blocker_violations",
+            "type": "INT",
+            "name": "Blocker issues"
+        },
+        {
+            "id": "88",
+            "key": "duplicated_blocks",
+            "type": "PERCENT",
+            "name": "Duplicated blocks"
+        },
+        {
+            "id": "108",
+            "key": "sqale_index",
+            "type": "MILLISEC",
+            "name": "Technical Debt"
+        },
+        {
+            "id": "109",
+            "key": "new_technical_debt",
+            "type": "WORK_DUR",
+            "name": "Technical Debt on new code"
+        },
+        {
+            "id": "2",
+            "key": "new_technical_debt2",
+            "type": "WORK_DUR",
+            "name": "Technical Debt on new code 2"
+        }
+    ]
+}

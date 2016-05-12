@@ -66,8 +66,8 @@ $sourcePath = $sourcePath.Trim('"')
 $storageAccount = $storageAccount.Trim()
 
 # azcopy location on automation agent
-$agentHomeDir = $env:AGENT_HOMEDIRECTORY
-$azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
+$azCopyExeLocation = Get-ToolPath -Name 'AzCopy\AzCopy.exe'
+$azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"

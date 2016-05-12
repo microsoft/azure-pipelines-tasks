@@ -26,29 +26,26 @@ describe('SonarQubePostTest Suite', function () {
     });
 
     if (ps) {
-        it('SummaryReport tests', (done) => {
-            psr.run(path.join(__dirname, 'SummaryReport.ps1'), done);
-        })
          it('DisableAnalysisOnPrBuild tests', (done) => {
-            psr.run(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
-        })
-        it('TopLevelOrchestration tests', (done) => {
-            psr.run(path.join(__dirname, 'TopLevelOrchestration.ps1'), done);
-        })
-        it('PRCA Report Processor tests', (done) => {
-            psr.run(path.join(__dirname, 'PRCA', 'ReportProcessorTests.ps1'), done);
-        })
-        it('PRCA Post Comments tests', (done) => {
-            psr.run(path.join(__dirname, 'PRCA', 'PostCommentsTests.ps1'), done);
-        })
-        it('PRCA Orchestrator tests', (done) => {
-            psr.run(path.join(__dirname, 'PRCA', 'OrchestratorTests.ps1'), done);
-        })
-        it('SonarQubeMetrics tests', function (done) {
-            psr.run(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);
-        });
-        it('SummaryReport tests', function (done) {
+             psr.run(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
+         })
+         it('TopLevelOrchestration tests', (done) => {
+             psr.run(path.join(__dirname, 'TopLevelOrchestration.ps1'), done);
+         })
+         it('PRCA Report Processor tests', (done) => {
+             psr.run(path.join(__dirname, 'PRCA', 'ReportProcessorTests.ps1'), done);
+         })
+         it('PRCA Post Comments tests', (done) => {
+             psr.run(path.join(__dirname, 'PRCA', 'PostCommentsTests.ps1'), done);
+         })
+         it('PRCA Orchestrator tests', (done) => {
+             psr.run(path.join(__dirname, 'PRCA', 'OrchestratorTests.ps1'), done);
+         })
+         it('SonarQubeMetrics tests', (done) => {
+             psr.run(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);
+         })
+         it('SummaryReport tests', (done) => {
             psr.run(path.join(__dirname, 'SummaryReport.ps1'), done);
-        });
+         })
     }
 });

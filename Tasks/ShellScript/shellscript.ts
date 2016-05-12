@@ -13,7 +13,7 @@ async function run() {
 
     // if user didn't supply a cwd (advanced), then set cwd to folder script is in.
     // All "script" tasks should do this
-    if (!tl.filePathSupplied(cwd)) {
+    if (!tl.filePathSupplied('cwd') && !tl.getBoolInput('disableAutoCwd', false)) {
         cwd = path.dirname(scriptPath);
     }
     tl.mkdirP(cwd);

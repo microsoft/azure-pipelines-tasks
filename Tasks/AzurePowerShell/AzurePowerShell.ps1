@@ -22,7 +22,6 @@ Initialize-Azure
 $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
 Remove-Variable -Name scriptPath
 Remove-Variable -Name scriptArguments
-Write-Verbose $scriptCommand
 
 # Remove all commands imported from VstsTaskSdk, other than Out-Default.
 # Remove all commands imported from VstsAzureHelpers_.
@@ -50,6 +49,7 @@ $global:ErrorActionPreference = 'Continue'
 ([scriptblock]::Create($scriptCommand)) |
     ForEach-Object {
         Remove-Variable -Name scriptCommand
+        Write-Host "##[command]$_"
         . $_ 2>&1
     } |
     ForEach-Object {
