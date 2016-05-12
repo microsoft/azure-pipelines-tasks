@@ -1,66 +1,66 @@
 function CmdletHasMember {
-    [cmdletbinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [string]$memberName
-    )
-    
-    $publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
-    return $publishParameters
+	[cmdletbinding()]
+	[OutputType([System.Boolean])]
+	param(
+		[string]$memberName
+	)
+	
+	$publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
+	return $publishParameters
 }
 
 function SetRegistryKeyForParallel {    
-    [cmdletbinding()]
-    param(
-        [string]$vsTestVersion
-    )
-    
-    $regkey = "HKCU\SOFTWARE\Microsoft\VisualStudio\" + $vsTestVersion + "_Config\FeatureFlags\TestingTools\UnitTesting\Taef"
-    reg add $regkey /v Value /t REG_DWORD /d 1 /f /reg:32 > $null
+	[cmdletbinding()]
+	param(
+		[string]$vsTestVersion
+	)
+	
+	$regkey = "HKCU\SOFTWARE\Microsoft\VisualStudio\" + $vsTestVersion + "_Config\FeatureFlags\TestingTools\UnitTesting\Taef"
+	reg add $regkey /v Value /t REG_DWORD /d 1 /f /reg:32 > $null
 }
 
 function IsVisualStudio2015Update1OrHigherInstalled {
-    [cmdletbinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [string]$vsTestVersion
-    )
-    
-    if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
-        $vsTestVersion = Locate-VSVersion
-    }
-    
-    $version = [int]($vsTestVersion)
-    if($version -ge 14)
-    {
-        # checking for dll introduced in vs2015 update1
-        # since path of the dll will change in dev15+ using vstestversion>14 as a blanket yes
-        if((Test-Path -Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll") -Or ($version -gt 14))
-        {
-            # ensure the registry is set otherwise you need to launch VSIDE
-            SetRegistryKeyForParallel $vsTestVersion
-            
-            return $true
-        }
-    }
-    
-    return $false
+	[cmdletbinding()]
+	[OutputType([System.Boolean])]
+	param(
+		[string]$vsTestVersion
+	)
+	
+	if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
+		$vsTestVersion = Locate-VSVersion
+	}
+	
+	$version = [int]($vsTestVersion)
+	if($version -ge 14)
+	{
+		# checking for dll introduced in vs2015 update1
+		# since path of the dll will change in dev15+ using vstestversion>14 as a blanket yes
+		if((Test-Path -Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll") -Or ($version -gt 14))
+		{
+			# ensure the registry is set otherwise you need to launch VSIDE
+			SetRegistryKeyForParallel $vsTestVersion
+			
+			return $true
+		}
+	}
+	
+	return $false
 }
 
 function SetupRunSettingsFileForParallel {
-    [cmdletbinding()]
-    [OutputType([System.String])]
-    param(
-        [string]$runInParallelFlag,
-        [string]$runSettingsFilePath,
-        [string]$defaultCpuCount
-    )
+	[cmdletbinding()]
+	[OutputType([System.String])]
+	param(
+		[string]$runInParallelFlag,
+		[string]$runSettingsFilePath,
+		[string]$defaultCpuCount
+	)
 
-    if($runInParallelFlag -eq "True")
-    {        
+	if($runInParallelFlag -eq "True")
+	{        
 		if([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".testsettings", $True) -eq 0)
 		{
-			Write-Verbose "Run in Parallel is not supported with testsettings file."
+			Write-Warning "Run in Parallel is not supported with testsettings file."
 		}
 		else
 		{
@@ -99,10 +99,9 @@ function SetupRunSettingsFileForParallel {
 			Write-Verbose "Temporary runsettings file created at $tempFile"
 			return $tempFile
 		}
-		
-        
-    }
-    return $runSettingsFilePath
+	}
+	
+	return $runSettingsFilePath
 }
 
 function Get-SubKeysInFloatFormat($keys)
@@ -134,4 +133,3 @@ function Locate-VSVersion()
 	}
 	return $version
 }
-
