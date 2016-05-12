@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 28
+    "Patch": 29
   },
   "demands": [],
   "minimumAgentVersion": "1.97.0",
@@ -159,6 +159,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.isDataCollectionOnly",
       "groupName": "advanced"
+    },
+    {
+      "name": "taskApiAccessScope",
+      "type": "string",
+      "defaultValue": "vso.test_execution",
+      "required": false,
+      "groupName": "advanced",
+      "label": "ms-resource:loc.input.label.taskApiAccessScope",
+      "visibleRule": "isDataCollectionOnly == true && isDataCollectionOnly == false"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

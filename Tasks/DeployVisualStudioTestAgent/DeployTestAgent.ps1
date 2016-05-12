@@ -11,7 +11,9 @@ param(
     [string]$machinePassword,
     [string]$agentLocation,
     [string]$updateTestAgent,
-    [string]$isDataCollectionOnly
+    [string]$isDataCollectionOnly,
+    [string]$taskApiAccessScope,
+    [string]$taskApiAccessScopeToken
 )
 
 # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
@@ -75,9 +77,17 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
 
-Write-Verbose "Getting Personal Access Token for the Run"
-$vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
-$personalAccessToken = Get-PersonalAccessToken $vssEndpoint
+if (![string]::IsNullOrWhiteSpace($taskApiAccessScopeToken))
+{
+   Write-Verbose "Using Personal Access Token for scope: $taskApiAccessScope"
+   $personalAccessToken = $taskApiAccessScopeToken
+}
+else
+{
+    Write-Verbose "Getting Personal Access Token for the Run"
+    $vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
+    $personalAccessToken = Get-PersonalAccessToken $vssEndpoint
+}
 
 if (!$personalAccessToken)
 {

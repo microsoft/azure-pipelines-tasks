@@ -30,5 +30,6 @@
   "loc.input.label.updateTestAgent": "Update Test Agent",
   "loc.input.help.updateTestAgent": "Optionally specify if test agent needs to be updated.",
   "loc.input.label.isDataCollectionOnly": "Enable Data Collection Only",
-  "loc.input.help.isDataCollectionOnly": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group."
+  "loc.input.help.isDataCollectionOnly": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+  "loc.input.label.taskApiAccessScope": "Api Access Scope"
 }
