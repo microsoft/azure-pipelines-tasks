@@ -9,7 +9,7 @@ Register-Mock Get-TaskVariable
 . $PSScriptRoot\..\..\..\Tasks\VsTest\Helpers.ps1
 
 $cpuCount="1"
-$temptestsettingsfile = [io.path]::ChangeExtension([io.path]::GetTempFileName(),"testsettings")
+$temptestsettingsfile = [io.path]::ChangeExtension([io.path]::GetTempFileName(),"xml")
 $testsettings = @('<?xml version="1.0" encoding="utf-8"?> 
 <TestSettings name="Empty Test Settings">
   <Description>Empty testsettings</Description>
@@ -22,7 +22,10 @@ $returnedFilePath = SetupRunSettingsFileForParallel "true" $temptestsettingsfile
 $fileExists = Test-Path $returnedFilePath
 Assert-AreEqual $true $fileExists
 
-Assert-AreEqual $temptestsettingsfile $returnedFilePath
+Assert-AreNotEqual $temptestsettingsfile $returnedFilePath
+
+$readRunSettingsFile=[System.Xml.XmlDocument](Get-Content $returnedFilePath)
+Assert-AreEqual $cpuCount $readRunSettingsFile.RunSettings.RunConfiguration.MaxCpuCount
 
 #cleanup
 if($fileExists){
