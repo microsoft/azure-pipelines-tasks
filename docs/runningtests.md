@@ -5,7 +5,7 @@ After running gulp to build, run gulp test to run the L0 task test suites.
 
 ```bash
 $ gulp test
-[15:02:47] Using gulpfile ~/Projects/vso-agent-tasks/gulpfile.js
+[15:02:47] Using gulpfile ~/Projects/vsts-tasks/gulpfile.js
 [15:02:47] Starting 'compileTests'...
 [15:02:48] Compiling TypeScript files using tsc version 1.6.2
 [15:02:49] Finished 'compileTests' after 2.08 s

@@ -99,10 +99,10 @@ If this is not the case, testagent should be manually downloaded from official m
 
 ### Here is a list of other tasks that can be used with this task in the Build-Deploy-Test (BDT) workflow:
 
-1.	*Deploy Azure Resource Group*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup
-2.	*Azure File Copy*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/AzureFileCopy
-3.	*Windows Machine File Copy*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/WindowsMachineFileCopy
-4.	*PowerShell on Target Machines*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/PowerShellOnTargetMachines
-5.	*Deploy Visual Studio Test Agent*: https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployVisualStudioTestAgent
+1.	*Deploy Azure Resource Group*: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup
+2.	*Azure File Copy*: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureFileCopy
+3.	*Windows Machine File Copy*: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/WindowsMachineFileCopy
+4.	*PowerShell on Target Machines*: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/PowerShellOnTargetMachines
+5.	*Deploy Visual Studio Test Agent*: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployVisualStudioTestAgent
 
 <br/>
