@@ -1236,7 +1236,7 @@ function Add-AzureVMCustomScriptExtension
         $resultDetails = $result | ConvertTo-Json
         Write-Verbose -Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
 
-        if($result.Status -ne "Succeeded")
+        if(-not [string]::IsNullOrEmpty($result.Status) -and $result.Status -ne "Succeeded")
         {
             Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"
 
