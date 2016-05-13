@@ -9,10 +9,6 @@ function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-process.env['MOCK_RESPONSES'] = path.join(__dirname, 'response.json');
-import mock = require('../../lib/vsts-task-lib/mock');
-
-
 describe('XamarinComponentRestore Suite', function() {
     this.timeout(20000);
     
