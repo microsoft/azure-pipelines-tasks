@@ -21,11 +21,11 @@ describe('maven Suite', function() {
 		
 	});
 	
-	it('run maven with all default inputs', (done) => {
-		setResponseFile('mavenGood.json');
+	it('run maven with all default inputs and M2_HOME not set', (done) => {
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'package');
@@ -48,12 +48,41 @@ describe('maven Suite', function() {
 			done(err);
 		});
 	})
-
-	it('run maven with missing mavenVersionSelection', (done) => {
-		setResponseFile('mavenGood.json');
+	
+	it('run maven with all default inputs and M2_HOME set', (done) => {
+		setResponseFile('responseM2_HOME.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		//tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
+		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
+		tr.setInput('options', '');
+		tr.setInput('goals', 'package');
+		tr.setInput('javaHomeSelection', 'JDKVersion');
+		tr.setInput('jdkVersion', 'default');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/TEST-*.xml');
+		process.env['M2_HOME'] = '/anotherHome/bin/maven/bin/mvn';
+		
+		tr.run()
+		.then(() => {
+            assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+            assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+            assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+			assert(tr.resultWasSet, 'task should have set a result');
+			assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
+	it('run maven with missing mavenVersionSelection', (done) => {
+		setResponseFile('response.json');
+		
+		var tr = new trm.TaskRunner('maven', true);
+		//tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'package');
@@ -77,7 +106,7 @@ describe('maven Suite', function() {
 	})
 	
 	it('run maven with INVALID mavenVersionSelection', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
 		tr.setInput('mavenVersionSelection', 'garbage');
@@ -105,7 +134,7 @@ describe('maven Suite', function() {
 	})	
 
 	it('run maven with mavenVersionSelection set to Path (mavenPath valid)', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
 		tr.setInput('mavenVersionSelection', 'Path');
@@ -134,7 +163,7 @@ describe('maven Suite', function() {
 	})	
 	
 	it('run maven with mavenVersionSelection set to Path (mavenPath missing)', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
 		tr.setInput('mavenVersionSelection', 'Path');
@@ -161,7 +190,7 @@ describe('maven Suite', function() {
 	})	
         
 	it('run maven with mavenVersionSelection set to Path (mavenPath INVALID)', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
 		tr.setInput('mavenVersionSelection', 'Path');
@@ -189,7 +218,7 @@ describe('maven Suite', function() {
 	})	
     
 	it('run maven with mavenSetM2Home set to garbage', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
 		tr.setInput('mavenVersionSelection', 'Path');
@@ -219,7 +248,7 @@ describe('maven Suite', function() {
 	})	    
     
     it('run maven with mavenSetM2Home set to true', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
 		tr.setInput('mavenVersionSelection', 'Path');
@@ -241,7 +270,7 @@ describe('maven Suite', function() {
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-			assert(tr.stdout.indexOf('M2_HOME set to /home/bin/maven2') >= 0, 'M2_HOME not set');			
+			assert(tr.stdout.indexOf('set M2_HOME=/home/bin/maven2') >= 0, 'M2_HOME not set');			
 			done();
 		})
 		.fail((err) => {
@@ -250,10 +279,10 @@ describe('maven Suite', function() {
 	})	
 		
 	it('run maven with options set', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '/o /p "/t:i o" /n /s');
 		tr.setInput('goals', 'package');
@@ -278,10 +307,10 @@ describe('maven Suite', function() {
 	})	
 	
 	it('run maven with goals not set', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '/o /p /t /i /o /n /s');
 		//tr.setInput('goals', 'package');
@@ -305,10 +334,10 @@ describe('maven Suite', function() {
 	})
 		
 	it('run maven with tasks set to multiple', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '/o /p /t /i /o /n /s');
 		tr.setInput('goals', 'build test package');
@@ -333,10 +362,10 @@ describe('maven Suite', function() {
 	})	
 			
 	it('run maven with missing publishJUnitResults input', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '/o /p /t /i /o /n /s');
 		tr.setInput('goals', 'build test package');
@@ -361,7 +390,7 @@ describe('maven Suite', function() {
 	
 	it('run maven with publishJUnitResults set to "garbage"', (done) => {
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '/o /p /t /i /o /n /s');
 		tr.setInput('goals', 'build test package');
@@ -387,7 +416,7 @@ describe('maven Suite', function() {
 	
 	it('run maven and publish tests', (done) => {
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'package');
@@ -413,10 +442,10 @@ describe('maven Suite', function() {
 	})		
 		            
 	it('fails if missing testResultsFiles input', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'build test package');
@@ -439,10 +468,10 @@ describe('maven Suite', function() {
 	})		
 	
 	it('fails if missing javaHomeSelection input', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'package');
@@ -466,10 +495,10 @@ describe('maven Suite', function() {
 	})		
 
 	it('run maven with jdkVersion set to 1.8', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'package');
@@ -487,7 +516,7 @@ describe('maven Suite', function() {
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf('Set JAVA_HOME to /user/local/bin/Java8') >= 0, 'JAVA_HOME not set correctly');
+            assert(tr.stdout.indexOf('set JAVA_HOME=/user/local/bin/Java8') >= 0, 'JAVA_HOME not set correctly');
 			done();
 		})
 		.fail((err) => {
@@ -496,10 +525,10 @@ describe('maven Suite', function() {
 	})	
 	
 	it('run maven with jdkVersion set to 1.5', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 		
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'package');
@@ -524,10 +553,10 @@ describe('maven Suite', function() {
 	})	
 		
 	it('run maven with Valid inputs but it fails', (done) => {
-		setResponseFile('mavenGood.json');
+		setResponseFile('response.json');
 
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'FAIL package');
@@ -554,7 +583,7 @@ describe('maven Suite', function() {
 	
 	it('run maven including SonarQube analysis', (done) => {
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'package');
@@ -583,7 +612,7 @@ describe('maven Suite', function() {
 
 	it('run maven including SonarQube analysis (with db details)', (done) => {
 		var tr = new trm.TaskRunner('maven', true);
-		tr.setInput('mavenVersionSelection', 'default');
+		tr.setInput('mavenVersionSelection', 'Default');
 		tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
 		tr.setInput('options', '');
 		tr.setInput('goals', 'package');
