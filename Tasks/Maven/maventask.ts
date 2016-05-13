@@ -21,8 +21,7 @@ if (mavenVersionSelection == 'Path') {
 
     // Set the M2_HOME variable to a custom Maven installation path?
     if (tl.getBoolInput('mavenSetM2Home')) {
-        tl.setEnvVar('M2_HOME', mavenPath);
-        tl.debug('M2_HOME set to ' + mavenPath)
+        tl.setVariable('M2_HOME', mavenPath);
     }
 }
 else {
@@ -72,8 +71,7 @@ else {
 
 // Set JAVA_HOME as determined above (if different than default)
 if (specifiedJavaHome) {
-    tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
-    process.env['JAVA_HOME'] = specifiedJavaHome;
+    tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
 // Maven task orchestration occurs as follows:

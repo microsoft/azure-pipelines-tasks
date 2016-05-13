@@ -270,7 +270,7 @@ describe('maven Suite', function() {
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-			assert(tr.stdout.indexOf('M2_HOME set to /home/bin/maven2') >= 0, 'M2_HOME not set');			
+			assert(tr.stdout.indexOf('set M2_HOME=/home/bin/maven2') >= 0, 'M2_HOME not set');			
 			done();
 		})
 		.fail((err) => {
@@ -516,7 +516,7 @@ describe('maven Suite', function() {
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf('Set JAVA_HOME to /user/local/bin/Java8') >= 0, 'JAVA_HOME not set correctly');
+            assert(tr.stdout.indexOf('set JAVA_HOME=/user/local/bin/Java8') >= 0, 'JAVA_HOME not set correctly');
 			done();
 		})
 		.fail((err) => {
