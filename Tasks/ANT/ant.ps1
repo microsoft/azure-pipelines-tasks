@@ -123,8 +123,6 @@ if($isCoverageEnabled)
 	}
 }
 
-
-
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
 $summaryFile = Join-Path $summaryFile $summaryFileName
 # ensuring unique code coverage report task name by using guid
@@ -141,7 +139,7 @@ if($isCoverageEnabled)
 	# Enable code coverage in build file
 	if ($codeCoverageTool -eq "Cobertura")
 	{
-		$coberturaCCFile = Join-Path $buildRootPath "cobertura.cer"
+		$coberturaCCFile = Join-Path $buildRootPath "cobertura.ser"
 		if(Test-Path $coberturaCCFile)
 		{
 			# delete any previous cobertura code coverage file
