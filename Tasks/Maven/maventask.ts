@@ -17,7 +17,7 @@ if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
     tl.debug('Using Maven path from user input');
     var mavenPath = tl.getPathInput('mavenPath', true, true);
-    mvnExec = path.join(mavenPath, 'bin/mvn');
+    mvnExec = path.join(mavenPath, 'bin', 'mvn');
 
     // Set the M2_HOME variable to a custom Maven installation path?
     if (tl.getBoolInput('mavenSetM2Home')) {
@@ -33,7 +33,7 @@ else {
     m2HomeEnvVar = tl.getVariable('M2_HOME');
     if (m2HomeEnvVar) {
         tl.debug('Using M2_HOME environment variable value for Maven path: ' + m2HomeEnvVar);
-        mvnExec = path.join(m2HomeEnvVar, 'bin/mvn');
+        mvnExec = path.join(m2HomeEnvVar, 'bin', 'mvn');
     }
     // Second, look for Maven in the system path
     else {
@@ -52,13 +52,13 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
 
     if (jdkVersion != 'default') {
-        // jdkVersion should be in the form of 1.7, 1.8, or 1.10
-        // jdkArchitecture is either x64 or x86
-        // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
+        // jdkVersion must be in the form of "1.7", "1.8", or "1.10"
+        // jdkArchitecture is either "x64" or "x86"
+        // envName for version=1.7 and architecture=x64 would be "JAVA_HOME_7_X64"
         var envName: string = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
         specifiedJavaHome = tl.getVariable(envName);
         if (!specifiedJavaHome) {
-            tl.error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
+            tl.error('Failed to find specified JDK version. Make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
             tl.exit(1);
         }
     }
@@ -135,7 +135,7 @@ mvnGetVersion.exec()
 .then(function () {
     // 4. Always publish test results even if tests fail, causing this task to fail.
     if (publishJUnitResults == 'true') {
-        publishTestResults(testResultsFiles);
+        publishJUnitTestResults(testResultsFiles);
     }
     
     // Set overall success or failure
@@ -149,9 +149,9 @@ mvnGetVersion.exec()
     // Do not force an exit as publishing results is async and it won't have finished 
 })
 
-// Publishes test results from files matching the specified pattern.
-function publishTestResults(testResultsFiles: string) {
-    var matchingTestResultsFiles: string[] = undefined;
+// Publishes JUnit test results from files matching the specified pattern.
+function publishJUnitTestResults(testResultsFiles: string) {
+    var matchingJUnitResultFiles: string[] = undefined;
 
     // Check for pattern in testResultsFiles
     if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
@@ -159,22 +159,22 @@ function publishTestResults(testResultsFiles: string) {
         var buildFolder = tl.getVariable('agent.buildDirectory');
         tl.debug(`buildFolder=${buildFolder}`);
         var allFiles = tl.find(buildFolder);
-        matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, {
+        matchingJUnitResultFiles = tl.match(allFiles, testResultsFiles, {
             matchBase: true
         });
     }
     else {
         tl.debug('No pattern found in testResultsFiles parameter');
-        matchingTestResultsFiles = [testResultsFiles];
+        matchingJUnitResultFiles = [testResultsFiles];
     }
 
-    if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
+    if (!matchingJUnitResultFiles || matchingJUnitResultFiles.length == 0) {
         tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
         return 0;
     }
     
     var tp = new tl.TestPublisher("JUnit");
-    tp.publish(matchingTestResultsFiles, true, "", "", "", true);
+    tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
 }
 
 // Gets the SonarQube tool runner if SonarQube analysis is enabled.
