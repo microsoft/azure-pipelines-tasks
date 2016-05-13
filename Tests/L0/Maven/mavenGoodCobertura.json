@@ -69,5 +69,13 @@
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
+    },
+    "stats" : {
+        "CCReport43F6D5EF\\jacoco.xml": {
+            "isFile": true
+        },
+        "target\\site\\cobertura\\coverage.xml": {
+            "isFile": true
+        }
     }
 }

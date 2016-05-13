@@ -75,10 +75,32 @@ if (isDirectoryExists(instrumentedClassesDirectory)) {
 }
 
 if (isCodeCoverageOpted) {
-    var reportBuildFile = null;
-    var ccReportTask = null;
-    var summaryFile = null;
-    var reportDirectory = null;
+    var classFilter = tl.getInput('classFilter');
+    var classFilesDirectories = tl.getInput('classFilesDirectories', true);
+    var sourceDirectories = tl.getInput('srcDirectories');
+    // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
+    var reportDirectoryName = "CCReport43F6D5EF";
+    var reportDirectory = path.join(buildRootPath, reportDirectoryName);
+    var ccReportTask = "CodeCoverage_9064e1d0";
+    var reportBuildFileName = "CCReportBuildA4D283EG.xml";
+    var reportBuildFile = path.join(buildRootPath, reportBuildFileName);
+    var summaryFileName = "coverage.xml";
+    var summaryFile = path.join(buildRootPath, reportDirectoryName);
+    summaryFile = path.join(summaryFile, summaryFileName);
+    var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
+    
+    // clean any previous reports.
+    if (isFileExists(coberturaCCFile)) {
+        tl.rmRF(coberturaCCFile);
+    }
+
+    if (isDirectoryExists(reportDirectory)) {
+        tl.rmRF(reportDirectory);
+    }
+
+    if (isFileExists(reportBuildFile)) {
+        tl.rmRF(reportBuildFile);
+    }
     enableCodeCoverage();
 }
 else {
@@ -129,37 +151,6 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
 }
 
 function enableCodeCoverage() {
-    var classFilter = tl.getInput('classFilter');
-    var classFilesDirectories = tl.getInput('classFilesDirectories', true);
-    var sourceDirectories = tl.getInput('srcDirectories');
-
-    // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
-    var reportDirectoryName = "CCReport43F6D5EF";
-    reportDirectory = path.join(buildRootPath, reportDirectoryName);
-    ccReportTask = "CodeCoverage_9064e1d0";
-    var reportBuildFileName = "CCReportBuildA4D283EG" + ".xml";
-    reportBuildFile = path.join(buildRootPath, reportBuildFileName);
-    var summaryFileName = "coverage.xml";
-    summaryFile = path.join(buildRootPath, reportDirectoryName);
-    summaryFile = path.join(summaryFile, summaryFileName);
-
-    if (ccTool.toLowerCase() == "cobertura") {
-        var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
-        //delete any previous cobertura code coverage file
-        if (isFileExists(coberturaCCFile)) {
-            tl.rmRF(coberturaCCFile);
-        }
-    }
-    
-    // clean any previous reports.
-    if (isDirectoryExists(reportDirectory)) {
-        tl.rmRF(reportDirectory);
-    }
-
-    if (isFileExists(reportBuildFile)) {
-        tl.rmRF(reportBuildFile);
-    }
-
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = antBuildFile;
     buildProps['classfilter'] = classFilter
@@ -181,7 +172,6 @@ function enableCodeCoverage() {
 
 function publishCodeCoverage(codeCoverageOpted: boolean) {
     if (codeCoverageOpted) {
-        var reportsGenerationFailed = false;
         tl.debug("Collecting code coverage reports");
         var antRunner = tl.createToolRunner(anttool);
         if (isFileExists(reportBuildFile)) {
@@ -195,7 +185,7 @@ function publishCodeCoverage(codeCoverageOpted: boolean) {
             antRunner.arg(ccReportTask);
         }
         antRunner.exec().then(function(code) {
-            if (!reportsGenerationFailed && isFileExists(summaryFile)) {
+            if (isFileExists(summaryFile)) {
                 tl.debug("Summary file = " + summaryFile);
                 tl.debug("Report directory = " + reportDirectory);
                 tl.debug("Publishing code coverage results to TFS");
@@ -206,25 +196,25 @@ function publishCodeCoverage(codeCoverageOpted: boolean) {
                 tl.warning("No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details.");
             }
         }).fail(function(err) {
-            reportsGenerationFailed = true;
+            tl.warning("No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details.");
         });
     }
 }
 
-function  isFileExists(path:string) {
-    try{
+function isFileExists(path: string) {
+    try {
         return tl.stats(path).isFile();
     }
-    catch(error){
+    catch (error) {
         return false;
     }
 }
 
-function  isDirectoryExists(path:string) {
-    try{
+function isDirectoryExists(path: string) {
+    try {
         return tl.stats(path).isDirectory();
     }
-    catch(error){
+    catch (error) {
         return false;
     }
 }
