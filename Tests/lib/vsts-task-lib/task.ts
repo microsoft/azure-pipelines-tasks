@@ -654,6 +654,25 @@ export class CodeCoveragePublisher {
 }
 
 //-----------------------------------------------------
+// Code coverage Publisher
+//-----------------------------------------------------
+export class CodeCoverageEnabler {
+    private buildTool: string;
+    private ccTool: string;
+
+    constructor(buildTool: string, ccTool: string) {
+        this.buildTool = buildTool;
+        this.ccTool = ccTool;
+    }
+
+    public enableCodeCoverage(buildProps: { [key: string]: string }) {
+        buildProps['buildtool'] = this.buildTool;
+        buildProps['codecoveragetool'] = this.ccTool;
+        command('codecoverage.enable', buildProps, "");
+    }
+}
+
+//-----------------------------------------------------
 // Tools
 //-----------------------------------------------------
 exports.TaskCommand = tcm.TaskCommand;
