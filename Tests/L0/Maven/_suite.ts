@@ -615,7 +615,7 @@ describe('maven Suite', function() {
     })
 
     it('maven calls enable code coverage and publish code coverage when jacoco is selected', (done) => {
-        setResponseFile('mavenGoodCobertura.json');
+        setResponseFile('mavenCodeCoverageGood.json');
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -682,7 +682,7 @@ describe('maven Suite', function() {
 
 
     it('maven calls enable code coverage and publish code coverage when cobertura is selected', (done) => {
-        setResponseFile('mavenGoodCobertura.json');
+        setResponseFile('mavenCodeCoverageGood.json');
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file

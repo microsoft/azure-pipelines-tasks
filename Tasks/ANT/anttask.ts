@@ -75,32 +75,10 @@ if (isDirectoryExists(instrumentedClassesDirectory)) {
 }
 
 if (isCodeCoverageOpted) {
-    var classFilter = tl.getInput('classFilter');
-    var classFilesDirectories = tl.getInput('classFilesDirectories', true);
-    var sourceDirectories = tl.getInput('srcDirectories');
-    // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
-    var reportDirectoryName = "CCReport43F6D5EF";
-    var reportDirectory = path.join(buildRootPath, reportDirectoryName);
-    var ccReportTask = "CodeCoverage_9064e1d0";
-    var reportBuildFileName = "CCReportBuildA4D283EG.xml";
-    var reportBuildFile = path.join(buildRootPath, reportBuildFileName);
-    var summaryFileName = "coverage.xml";
-    var summaryFile = path.join(buildRootPath, reportDirectoryName);
-    summaryFile = path.join(summaryFile, summaryFileName);
-    var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
-    
-    // clean any previous reports.
-    if (isFileExists(coberturaCCFile)) {
-        tl.rmRF(coberturaCCFile);
-    }
-
-    if (isDirectoryExists(reportDirectory)) {
-        tl.rmRF(reportDirectory);
-    }
-
-    if (isFileExists(reportBuildFile)) {
-        tl.rmRF(reportBuildFile);
-    }
+    var summaryFile = null;
+    var reportDirectory = null;
+    var ccReportTask = null;
+    var reportBuildFile = null;
     enableCodeCoverage();
 }
 else {
@@ -151,6 +129,33 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
 }
 
 function enableCodeCoverage() {
+    var classFilter = tl.getInput('classFilter');
+    var classFilesDirectories = tl.getInput('classFilesDirectories', true);
+    var sourceDirectories = tl.getInput('srcDirectories');
+    // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
+    var reportDirectoryName = "CCReport43F6D5EF";
+    reportDirectory = path.join(buildRootPath, reportDirectoryName);
+    ccReportTask = "CodeCoverage_9064e1d0";
+    var reportBuildFileName = "CCReportBuildA4D283EG.xml";
+    reportBuildFile = path.join(buildRootPath, reportBuildFileName);
+    var summaryFileName = "coverage.xml";
+    summaryFile = path.join(buildRootPath, reportDirectoryName);
+    summaryFile = path.join(summaryFile, summaryFileName);
+    var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
+    
+    // clean any previous reports.
+    if (isFileExists(coberturaCCFile)) {
+        tl.rmRF(coberturaCCFile);
+    }
+
+    if (isDirectoryExists(reportDirectory)) {
+        tl.rmRF(reportDirectory);
+    }
+
+    if (isFileExists(reportBuildFile)) {
+        tl.rmRF(reportBuildFile);
+    }
+
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = antBuildFile;
     buildProps['classfilter'] = classFilter

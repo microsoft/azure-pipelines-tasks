@@ -68,43 +68,11 @@ var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 
 if (isCodeCoverageOpted) {
-    var classFilter = tl.getInput('classFilter');
-    var classFilesDirectories = tl.getInput('classFilesDirectories');
-    var sourceDirectories = tl.getInput('srcDirectories');
-    var buildRootPath = path.dirname(mavenPOMFile);
-    // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
-    var reportPOMFileName = "CCReportPomA4D283EG.xml";
-    var reportPOMFile = path.join(buildRootPath, reportPOMFileName);
-    var targetDirectory = path.join(buildRootPath, "target");
-    var ccReportTask = "jacoco:report";
-
-    if (ccTool.toLowerCase() == "jacoco") {
-        var reportDirectoryName = "CCReport43F6D5EF";
-        var summaryFileName = "jacoco.xml";
-    }
-    else if (ccTool.toLowerCase() == "cobertura") {
-        var reportDirectoryName = "target/site/cobertura";
-        var summaryFileName = "coverage.xml";
-    }
-
-    var reportDirectory = path.join(buildRootPath, reportDirectoryName);
-    var summaryFile = path.join(reportDirectory, summaryFileName);
-
-    if (ccTool.toLowerCase() == "jacoco") {
-        var execFileJacoco = path.join(reportDirectory, "jacoco.exec");
-    }    
-        
-    // clean any previously generated files.
-    if (isDirectoryExists(targetDirectory)) {
-        tl.rmRF(targetDirectory);
-    }
-    if (isDirectoryExists(reportDirectory)) {
-        tl.rmRF(reportDirectory);
-    }
-    if (isFileExists(reportPOMFile)) {
-        tl.rmRF(reportPOMFile);
-    }
-
+    var summaryFile = null;
+    var reportDirectory = null;
+    var reportPOMFile = null;
+    var execFileJacoco = null;
+    var ccReportTask = null;
     enableCodeCoverage();
 }
 else {
@@ -142,6 +110,43 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
 }
 
 function enableCodeCoverage() {
+    var classFilter = tl.getInput('classFilter');
+    var classFilesDirectories = tl.getInput('classFilesDirectories');
+    var sourceDirectories = tl.getInput('srcDirectories');
+    var buildRootPath = path.dirname(mavenPOMFile);
+    // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
+    var reportPOMFileName = "CCReportPomA4D283EG.xml";
+    reportPOMFile = path.join(buildRootPath, reportPOMFileName);
+    var targetDirectory = path.join(buildRootPath, "target");
+    ccReportTask = "jacoco:report";
+
+    if (ccTool.toLowerCase() == "jacoco") {
+        var reportDirectoryName = "CCReport43F6D5EF";
+        var summaryFileName = "jacoco.xml";
+    }
+    else if (ccTool.toLowerCase() == "cobertura") {
+        var reportDirectoryName = "target/site/cobertura";
+        var summaryFileName = "coverage.xml";
+    }
+
+    reportDirectory = path.join(buildRootPath, reportDirectoryName);
+    summaryFile = path.join(reportDirectory, summaryFileName);
+
+    if (ccTool.toLowerCase() == "jacoco") {
+        execFileJacoco = path.join(reportDirectory, "jacoco.exec");
+    }    
+        
+    // clean any previously generated files.
+    if (isDirectoryExists(targetDirectory)) {
+        tl.rmRF(targetDirectory);
+    }
+    if (isDirectoryExists(reportDirectory)) {
+        tl.rmRF(reportDirectory);
+    }
+    if (isFileExists(reportPOMFile)) {
+        tl.rmRF(reportPOMFile);
+    }
+
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = mavenPOMFile;
     buildProps['classfilter'] = classFilter
