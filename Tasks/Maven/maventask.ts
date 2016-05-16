@@ -74,6 +74,21 @@ if (specifiedJavaHome) {
     tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
+var ccTool = tl.getInput('codeCoverageTool');
+var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+
+if (isCodeCoverageOpted) {
+    var summaryFile = null;
+    var reportDirectory = null;
+    var reportPOMFile = null;
+    var execFileJacoco = null;
+    var ccReportTask = null;
+    enableCodeCoverage();
+}
+else {
+    tl.debug("Option to enable code coverage was not selected and is being skipped.");
+}
+
 // Maven task orchestration occurs as follows:
 // 1. Check that Maven exists by executing it to retrieve its version.
 // 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
@@ -135,6 +150,7 @@ mvnGetVersion.exec()
     if (publishJUnitResults == 'true') {
         publishJUnitTestResults(testResultsFiles);
     }
+    publishCodeCoverage(isCodeCoverageOpted);
     
     // Set overall success or failure
     if (userRunFailed || sonarQubeRunFailed) {
@@ -173,6 +189,122 @@ function publishJUnitTestResults(testResultsFiles: string) {
     
     var tp = new tl.TestPublisher("JUnit");
     tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
+}
+
+function enableCodeCoverage() {
+    var classFilter = tl.getInput('classFilter');
+    var classFilesDirectories = tl.getInput('classFilesDirectories');
+    var sourceDirectories = tl.getInput('srcDirectories');
+    var buildRootPath = path.dirname(mavenPOMFile);
+    // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
+    var reportPOMFileName = "CCReportPomA4D283EG.xml";
+    reportPOMFile = path.join(buildRootPath, reportPOMFileName);
+    var targetDirectory = path.join(buildRootPath, "target");
+    ccReportTask = "jacoco:report";
+
+    if (ccTool.toLowerCase() == "jacoco") {
+        var reportDirectoryName = "CCReport43F6D5EF";
+        var summaryFileName = "jacoco.xml";
+    }
+    else if (ccTool.toLowerCase() == "cobertura") {
+        var reportDirectoryName = "target/site/cobertura";
+        var summaryFileName = "coverage.xml";
+    }
+
+    reportDirectory = path.join(buildRootPath, reportDirectoryName);
+    summaryFile = path.join(reportDirectory, summaryFileName);
+
+    if (ccTool.toLowerCase() == "jacoco") {
+        execFileJacoco = path.join(reportDirectory, "jacoco.exec");
+    }    
+        
+    // clean any previously generated files.
+    if (isDirectoryExists(targetDirectory)) {
+        tl.rmRF(targetDirectory);
+    }
+    if (isDirectoryExists(reportDirectory)) {
+        tl.rmRF(reportDirectory);
+    }
+    if (isFileExists(reportPOMFile)) {
+        tl.rmRF(reportPOMFile);
+    }
+
+    var buildProps: { [key: string]: string } = {};
+    buildProps['buildfile'] = mavenPOMFile;
+    buildProps['classfilter'] = classFilter
+    buildProps['classfilesdirectories'] = classFilesDirectories;
+    buildProps['sourcedirectories'] = sourceDirectories;
+    buildProps['summaryfile'] = summaryFile;
+    buildProps['reportdirectory'] = reportDirectory;
+    buildProps['reportbuildfile'] = reportPOMFile;
+
+    try {
+        var codeCoverageEnabler = new tl.CodeCoverageEnabler('Maven', ccTool);
+        codeCoverageEnabler.enableCodeCoverage(buildProps);
+        tl.debug("Code coverage is successfully enabled.");
+    }
+    catch (Error) {
+        tl.warning("Enabling code coverage failed. Check the build logs for errors.");
+    }
+}
+
+function publishCodeCoverage(isCodeCoverageOpted: boolean) {
+    if (isCodeCoverageOpted) {
+        tl.debug("Collecting code coverage reports");
+
+        if (ccTool.toLowerCase() == "jacoco") {
+            var mvnReport = tl.createToolRunner(mvnExec);
+            mvnReport.arg('-f');
+            if (isFileExists(reportPOMFile)) {
+                // multi module project
+                mvnReport.pathArg(reportPOMFile);
+                mvnReport.arg("verify");
+            }
+            else {
+                mvnReport.pathArg(mavenPOMFile);
+                mvnReport.arg(ccReportTask);
+            }
+            mvnReport.exec().then(function(code) {
+                publishCCToTfs();
+            }).fail(function(err) {
+                tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
+            });
+        }
+        else if (ccTool.toLowerCase() == "cobertura") {
+            publishCCToTfs();
+        }
+    }
+}
+
+function publishCCToTfs() {
+    if (isFileExists(summaryFile)) {
+        tl.debug("Summary file = " + summaryFile);
+        tl.debug("Report directory = " + reportDirectory);
+        tl.debug("Publishing code coverage results to TFS");
+        var ccPublisher = new tl.CodeCoveragePublisher();
+        ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
+    }
+    else {
+        tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
+    }
+}
+
+function isFileExists(path: string) {
+    try {
+        return tl.stats(path).isFile();
+    }
+    catch (error) {
+        return false;
+    }
+}
+
+function isDirectoryExists(path: string) {
+    try {
+        return tl.stats(path).isDirectory();
+    }
+    catch (error) {
+        return false;
+    }
 }
 
 // Gets the SonarQube tool runner if SonarQube analysis is enabled.
