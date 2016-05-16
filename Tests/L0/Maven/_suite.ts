@@ -644,7 +644,7 @@ describe('maven Suite', function() {
 	})
 	
     it('maven calls enable code coverage and publish code coverage when jacoco is selected', (done) => {
-        setResponseFile('mavenCodeCoverageGood.json');
+        setResponseFile('responseCodeCoverage.json');
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -677,7 +677,7 @@ describe('maven Suite', function() {
     })
 
     it('maven calls enable code coverage and not publish code coverage when jacoco is selected and report generation failed', (done) => {
-        setResponseFile('mavenGood.json');
+        setResponseFile('response.json');
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -711,7 +711,7 @@ describe('maven Suite', function() {
 
 
     it('maven calls enable code coverage and publish code coverage when cobertura is selected', (done) => {
-        setResponseFile('mavenCodeCoverageGood.json');
+        setResponseFile('responseCodeCoverage.json');
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -742,7 +742,7 @@ describe('maven Suite', function() {
     })
 
     it('maven calls enable code coverage and not publish code coverage when cobertura is selected and report generation failed', (done) => {
-        setResponseFile('mavenGood.json');
+        setResponseFile('response.json');
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
