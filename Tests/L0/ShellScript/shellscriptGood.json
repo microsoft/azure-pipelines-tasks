@@ -10,6 +10,8 @@
         }
     },
     "checkPath" : {
+        "/usr/local/bin/bash": true,
+        "/usr/local/bin/node": true,
         "/script.sh" : true
     }
 }
