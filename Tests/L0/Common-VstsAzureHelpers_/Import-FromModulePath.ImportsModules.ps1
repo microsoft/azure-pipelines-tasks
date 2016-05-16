@@ -8,14 +8,26 @@ $variableSets = @(
     @{
         Classic = $true
         Modules = @(
-            @{ Name = 'Azure' ; Path = 'Path to Azure' ; Version = [version]'1.2.3.4' }
+            @{
+                Name = 'Azure'
+                Path = 'Path to Azure'
+                Version = [version]'1.2.3.4'
+            }
         )
     }
     @{
         Classic = $false
         Modules = @(
-            @{ Name = 'AzureRM' ; Path = 'Path to AzureRM' ; Version = [version]'1.2.3.4' }
-            @{ Name = 'AzureRM.profile' ; Path = 'Path to AzureRM.profile' ; Version = [version]'1.2.3.4' }
+            @{
+                Name = 'AzureRM'
+                Path = 'Path to AzureRM'
+                Version = [version]'2.3.4.5'
+            }
+            @{
+                Name = 'AzureRM.profile'
+                Path = 'Path to AzureRM.profile'
+                Version = [version]'3.4.5.6'
+            }
         )
     }
 )
@@ -40,8 +52,9 @@ foreach ($variableSet in $variableSets) {
         Assert-WasCalled Import-Module -- -Name $variableSet.Modules[1].Path -Global -PassThru
     }
 
-    Assert-AreEqual $variableSet.Classic (& $module { $script:isClassic })
     if ($variableSet.Classic) {
-        Assert-AreEqual $variableSet.Modules[0].Version (& $module { $script:classicVersion })
+        Assert-AreEqual $variableSet.Modules[0] (& $module { $script:azureModule })
+    } else {
+        Assert-AreEqual $variableSet.Modules[1] (& $module { $script:azureRMProfileModule })
     }
 }

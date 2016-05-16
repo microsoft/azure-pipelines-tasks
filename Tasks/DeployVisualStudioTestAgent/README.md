@@ -42,7 +42,7 @@ The task requires:
   For example, in a client-server application model, you would use this option to deploy Test Agent on the server machines and use another deploy task to deploy Agent to test machines. This will enable you to collect data from both Server and client machines while not triggering tests on Server machines 
   
 ###Scenarios Supported
-For a list of scenarios supported, please see https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/RunDistributedTests/README.md 
+For a list of scenarios supported, please see https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/RunDistributedTests/README.md 
 
 ###Configuring Test Machine Group / Azure Resource Group
-Prerequisites for configuring Test machine group or Azure resource group to work with this task and other BDT tasks can be found at https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md#machine-pre-requisites-for-the-task-
+Prerequisites for configuring Test machine group or Azure resource group to work with this task and other BDT tasks can be found at https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md#machine-pre-requisites-for-the-task-

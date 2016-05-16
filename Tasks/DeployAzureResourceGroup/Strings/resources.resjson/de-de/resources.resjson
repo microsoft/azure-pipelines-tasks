@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bereitstellung einer Azure-Ressourcengruppe",
-  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Bereitstellen, Starten, Beenden und Löschen von Azure-Ressourcengruppen.",
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(action) Aktion für $(resourceGroupName)",
   "loc.group.displayName.output": "Ausgabe",

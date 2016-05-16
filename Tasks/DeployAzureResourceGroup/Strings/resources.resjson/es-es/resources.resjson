@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de un grupo de recursos de Azure",
-  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Implementar, iniciar, detener, eliminar grupos de recursos de Azure",
   "loc.instanceNameFormat": "Implementación en Azure: acción $(action) en $(resourceGroupName)",
   "loc.group.displayName.output": "Salida",

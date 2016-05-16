@@ -82,7 +82,7 @@ if($connectedServiceName -and $useExternalFeed)
 elseif($feedName -and (-not $useExternalFeed))
 {
     Write-Verbose "Using provided feed URL"
-    $nugetServer = $feedName
+    $nugetServer = $feedName.Trim()
 
     if (-not [URI]::IsWellFormedUriString($nugetServer, [UriKind]::Absolute))
     {
