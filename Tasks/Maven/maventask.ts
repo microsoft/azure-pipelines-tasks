@@ -43,7 +43,9 @@ else {
 }
 
 // On Windows, append .cmd or .bat to the executable as necessary
-if (os.type().match(/^Win/)) {
+if (os.type().match(/^Win/) &&
+    !mvnExec.toLowerCase().endsWith('.cmd') &&
+    !mvnExec.toLowerCase().endsWith('.bat')) {
     if (tl.exist(mvnExec + '.cmd')) {
         // Maven 3 uses mvn.cmd
         mvnExec += '.cmd';
