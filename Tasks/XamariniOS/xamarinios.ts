@@ -14,16 +14,9 @@ var args = tl.getInput('args');
 var packageApp = tl.getBoolInput('packageApp');
 var buildForSimulator = tl.getBoolInput('forSimulator');
 var device = (buildForSimulator) ? 'iPhoneSimulator' : 'iPhone';
+tl.debug('device: ' + device);
 var xbuildLocation = tl.getInput('mdtoolLocation', false);
 var cwd = tl.getInput('cwd');
-tl.debug('solution: ' + solutionPath);
-tl.debug('configuration: ' + configuration);
-tl.debug('args: ' + args);
-tl.debug('packageApp: ' + packageApp);
-tl.debug('buildForSimulator: ' + buildForSimulator);
-tl.debug('device: ' + device);
-tl.debug('xbuildLocation: ' + xbuildLocation);
-tl.debug('cwd: ' + cwd);
 
 // Get path to xbuild
 var xbuildToolPath = undefined;
@@ -149,11 +142,11 @@ nugetRunner.exec()
                                                 tl.exit(code);
                                             })
                                     } else {
-                                        tl.exit(0);
+                                        tl.setResult(tl.TaskResult.Succeeded, '');
                                     }
                                 })
                         } else {
-                            tl.exit(0);
+                            tl.setResult(tl.TaskResult.Succeeded, '');
                         }
                         
                     })
