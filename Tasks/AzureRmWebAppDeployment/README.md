@@ -67,5 +67,4 @@ The task is used to deploy a Web  project to an existing Azure Web App. The mand
 
 ## Known Issues
   - The task has not been tested and verified for ASP.NET Core 1 web applications.
-  - The task does not take output variables as an input from the [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup).
 
