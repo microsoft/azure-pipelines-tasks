@@ -14,30 +14,31 @@ var args = tl.getInput('args');
 var packageApp = tl.getBoolInput('packageApp');
 var buildForSimulator = tl.getBoolInput('forSimulator');
 var device = (buildForSimulator) ? 'iPhoneSimulator' : 'iPhone';
-tl.debug('Device: ' + device);
+var xbuildLocation = tl.getInput('mdtoolLocation', false);
+var cwd = tl.getInput('cwd');
+tl.debug('solution: ' + solutionPath);
+tl.debug('configuration: ' + configuration);
+tl.debug('args: ' + args);
+tl.debug('packageApp: ' + packageApp);
+tl.debug('buildForSimulator: ' + buildForSimulator);
+tl.debug('device: ' + device);
+tl.debug('xbuildLocation: ' + xbuildLocation);
+tl.debug('cwd: ' + cwd);
 
 // Get path to xbuild
-var xbuildToolPath = tl.which('xbuild');
-var xbuildLocation = tl.getInput('mdtoolLocation', false);
+var xbuildToolPath = undefined;
 if (xbuildLocation) {
-    xbuildToolPath = xbuildLocation + '/xbuild';
+    xbuildToolPath = path.join(xbuildLocation, 'xbuild');
     tl.checkPath(xbuildToolPath, 'xbuild');
-}
-if (!xbuildToolPath) {
-    tl.error('xbuild was not found in the path.');
-    tl.exit(1);
+} else {
+    xbuildToolPath = tl.which('xbuild', true);
 }
 
 // Find location of nuget
-var nugetPath = tl.which('nuget');
-if (!nugetPath) {
-    tl.error('nuget was not found in the path.');
-    tl.exit(1);
-}
+var nugetPath = tl.which('nuget', true);
 
 //Process working directory
-var buildSourceDirectory = tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
-var cwd = tl.getInput('cwd') || buildSourceDirectory;
+var cwd = cwd || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
 tl.cd(cwd);
 
 // Prepare function for tool execution failure
@@ -147,9 +148,14 @@ nugetRunner.exec()
                                             .then(function (code) {
                                                 tl.exit(code);
                                             })
+                                    } else {
+                                        tl.exit(0);
                                     }
                                 })
+                        } else {
+                            tl.exit(0);
                         }
+                        
                     })
                     .fail(onFailedExecution) //xbuild
             })
