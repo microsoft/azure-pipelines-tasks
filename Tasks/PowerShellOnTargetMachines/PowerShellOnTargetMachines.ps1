@@ -351,7 +351,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
             Write-TaskSpecificTelemetry "DEPLOYMENT_Failed"
             Write-Verbose $deploymentResponse.Error.ToString() -Verbose
             $errorMessage =  $deploymentResponse.Error.Message
-            ThrowError -errorMessage $errorMessage
+            throw $errorMessage
         }
     }
 }
