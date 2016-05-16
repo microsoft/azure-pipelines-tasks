@@ -18,7 +18,7 @@ function debug(message) {
 }
 
 export class TaskRunner extends events.EventEmitter {
-	constructor(name: string, ignoreSlashes?: boolean) {
+	constructor(name: string, normalizeSlashes?: boolean, ignoreTempPathsInResponse?: boolean) {
 		super();
 		this._inputs = {};
 		this._name = name;
@@ -32,7 +32,8 @@ export class TaskRunner extends events.EventEmitter {
 		this.stderr = '';
 		this._tempPath = process.env['TASK_TEST_TEMP'];
 		this._commands = [];
-		this._ignoreSlashes = ignoreSlashes;
+		this._normalizeSlashes = normalizeSlashes;
+		this._ignoreTempPathsInResponse = ignoreTempPathsInResponse;
 	}
 	
 	public succeeded: boolean;
@@ -50,15 +51,12 @@ export class TaskRunner extends events.EventEmitter {
 	private _taskPath: string;
 	private _tempPath: string;
 	private _commands: string[];  
-	private _ignoreSlashes: boolean;
+	private _normalizeSlashes: boolean;
+    private _ignoreTempPathsInResponse: boolean;
 
 	public ran(cmdLine: string): boolean {
 		var executed: boolean = false;
 		this._commands.forEach((cmd: string)=>{
-			if (this._ignoreSlashes) {
-				cmdLine = cmdLine.replace(/\\/g, "/");
-				cmd = cmd.replace(/\\/g, "/");
-			}
 			if(cmdLine.trim().localeCompare(cmd.trim()) === 0) {
 				executed = true;
 			}
@@ -150,9 +148,6 @@ export class TaskRunner extends events.EventEmitter {
 			if (line.indexOf('[command]') >= 0) {
 				++this.invokedToolCount;
 				var command = line.substr(line.indexOf('[command]') + '[command]'.length).trim();
-				if (this._ignoreSlashes) {
-					command = command.replace(/\\/g, "/");
-				}				
 				this._commands.push(command);
 			}
 
@@ -187,6 +182,12 @@ export class TaskRunner extends events.EventEmitter {
 	        var envVarName = 'INPUT_' + key.replace(' ', '_').toUpperCase();
 	        this._taskEnv[envVarName] = this._inputs[key];
 	    }
+        
+        // Add additional environment variables based on test requirements
+        // These variables can be used by the mocked task-lib classes
+        this._taskEnv['MOCK_TEMP_PATH'] = this._tempPath; 
+        this._taskEnv['MOCK_IGNORE_TEMP_PATH'] = this._ignoreTempPathsInResponse; 
+        this._taskEnv['MOCK_NORMALIZE_SLASHES'] = this._normalizeSlashes; 
 
 	    //
 	    // Run the task via node
@@ -214,16 +215,24 @@ export class TaskRunner extends events.EventEmitter {
 						return;
 					}
 
-					this._processOutput(stdout.toString(), stderr.toString());
+					var standardOut = stdout.toString(); 
+					var standardErr = stderr.toString(); 
+
+					if (this._normalizeSlashes) {
+						standardOut = standardOut.replace(/\\/g, "/");
+						standardErr = standardErr.replace(/\\/g, "/");
+					}				
+
+					this._processOutput(standardOut, standardErr);
 
 					if (stdout) {
 						debug('stdout:');
-						debug(stdout);
+						debug(standardOut);
 					}
 					
 					if (stderr) {
 						debug('stderr:');
-						debug(stderr);
+						debug(standardErr);
 					}
 					
 					defer.resolve(null);

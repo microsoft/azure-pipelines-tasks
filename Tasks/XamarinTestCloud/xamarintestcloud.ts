@@ -3,7 +3,6 @@
 
 import fs = require('fs');
 import path = require('path');
-import shell = require('shelljs');
 import tl = require('vsts-task-lib/task');
 
 // Get inputs
@@ -41,10 +40,14 @@ var onError = function (errorMsg) {
     tl.exit(1);
 }
 
+// Find location of mono
+var monoPath = tl.which('mono', true);
+tl.debug("monoPath: " + monoPath);
+
 // Resolve apps for the specified value or pattern
 if (app.indexOf('*') == -1 && app.indexOf('?') == -1) {
     // Check literal path to a single app file
-    if (!fs.existsSync(app)) {
+    if (!tl.exist(app)) {
         onError('The specified app file does not exist: ' + app);
     }
 
@@ -65,19 +68,20 @@ else {
 }
 
 // Check and add parameter for test assembly directory
-if (!shell.test('-d', testDir)) {
+if (!tl.exist(testDir)) {
     onError('The test assembly directory does not exist: ' + testDir);
 }
 
 // Ensure that $testCloudLocation specifies test-cloud.exe (case-sensitive)
 if (path.basename(testCloudLocation) != 'test-cloud.exe') {
-    throw "test-cloud.exe location must end with '\\test-cloud.exe'."
+    tl.debug("testCloudLocation = " + testCloudLocation);
+    onError("test-cloud.exe location must end with '\\test-cloud.exe'.");
 }
 
 // Locate test-cloud.exe (part of the Xamarin.UITest NuGet package)
 if (testCloudLocation.indexOf('*') == -1 && testCloudLocation.indexOf('?') == -1) {
     // Check literal path to test-cloud.exe
-    if (!fs.existsSync(testCloudLocation)) {
+    if (!tl.exist(testCloudLocation)) {
         onError('test-cloud.exe does not exist at the specified location: ' + testCloudLocation);
     }
 
@@ -98,12 +102,6 @@ else {
 
     // Use first found path to test-cloud.exe
     var testCloud = testCloudExecutables[0];
-}
-
-// Find location of mono
-var monoPath = tl.which('mono');
-if (!monoPath) {
-    onError('mono was not found in the path.');
 }
 
 // Invoke test-cloud.exe for each app file

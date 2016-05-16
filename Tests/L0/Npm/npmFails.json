@@ -3,6 +3,10 @@
         "npm": "/usr/local/bin/npm",
         "node": "/usr/local/bin/node"
     },
+    "checkPath": {
+        "/usr/local/bin/npm": true,
+        "/usr/local/bin/node": true
+    },
     "exec": {
         "/usr/local/bin/npm install npm -g": {
             "code": 1,

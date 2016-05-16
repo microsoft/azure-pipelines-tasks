@@ -10,6 +10,7 @@
         }
     },
     "checkPath": {
+        "/usr/local/bin/gulp": true,
         "gulpfile.js": true
     },
     "exist": {

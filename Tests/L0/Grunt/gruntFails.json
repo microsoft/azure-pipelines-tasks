@@ -11,6 +11,8 @@
         }
     },
     "checkPath": {
+        "/usr/local/bin/grunt": true,
+        "/usr/local/bin/node": true,
         "gruntfile.js": true
     },        
     "exist": {
