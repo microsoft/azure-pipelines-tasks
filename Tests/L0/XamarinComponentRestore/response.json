@@ -13,7 +13,8 @@
         }
     },
     "checkPath" : {
-        "/user/build/fun/project.csproj": true  
+        "/user/build/fun/project.csproj": true,
+        "/home/bin/mono": true  
     },
     "glob": {
         "**/*.sln": [
