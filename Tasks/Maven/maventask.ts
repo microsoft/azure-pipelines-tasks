@@ -1,6 +1,7 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import tl = require('vsts-task-lib/task');
+import os = require('os');
 import path = require('path');
 
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
@@ -40,6 +41,21 @@ else {
         mvnExec = tl.which('mvn', true);
     }
 }
+
+// On Windows, append .cmd or .bat to the executable as necessary
+if (os.type().match(/^Win/) &&
+    !mvnExec.toLowerCase().endsWith('.cmd') &&
+    !mvnExec.toLowerCase().endsWith('.bat')) {
+    if (tl.exist(mvnExec + '.cmd')) {
+        // Maven 3 uses mvn.cmd
+        mvnExec += '.cmd';
+    }
+    else if (tl.exist(mvnExec + '.bat')) {
+        // Maven 2 uses mvn.bat
+        mvnExec += '.bat';
+    }
+}
+
 tl.debug('Maven executable: ' + mvnExec);
 
 // Set JAVA_HOME to the JDK version (default, 1.7, 1.8, etc.) or the path specified by the user

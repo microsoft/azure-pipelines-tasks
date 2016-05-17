@@ -476,7 +476,11 @@ export function mkdirP(p): void {
 }
 
 export function which(tool: string, check?: boolean): string {
-    return mock.getResponse('which', tool);
+    var response = mock.getResponse('which', tool);
+    if (check) {
+        checkPath(response, tool);
+    }
+    return response;
 }
 
 export function cp(options, source: string, dest: string): void {

@@ -17,7 +17,8 @@
             "stdout": ""
         }
     },
-    "checkPath": {
+    "checkPath" : {
+        "/usr/local/bin/ANT": true,
         "/build/build.xml": true,
         "/usr/local/bin/ANT2": true
     },

@@ -29,7 +29,8 @@ xamarinComponentTool.arg(tl.getInput('email', true));
 xamarinComponentTool.arg('-p');
 xamarinComponentTool.arg(tl.getInput('password', true));
 
-var solutionPath = tl.getPathInput('solution', true, false);
+var solutionInput = tl.getPathInput('solution', true, false);
+var solutionPath = solutionInput;
 if(tl.filePathSupplied('solution'))
 {
     var solutionMatches = tl.glob(solutionPath);
@@ -41,9 +42,14 @@ if(tl.filePathSupplied('solution'))
         }
         
         solutionPath = solutionMatches[0];
+    } else {
+        solutionPath = undefined;
     }
-} else {
-    tl.debug('No solutions found');
+} 
+
+if (!solutionPath) {
+    tl.error(tl.loc('XamarinComponentRestoreFailed', 'No solutions found matching the input: ' + solutionInput));
+    tl.exit(1);
 }
 
 tl.debug("Restoring components for " + solutionPath);

@@ -47,7 +47,11 @@ else {
 //find xbuild location to use
 var xbuildToolPath = tl.which('xbuild');
 if(xbuildLocation) {
-    xbuildToolPath = xbuildLocation + '/xbuild';
+    xbuildToolPath = path.join(xbuildLocation, 'xbuild');
+    if (!tl.exist(xbuildToolPath)) {
+        xbuildToolPath = path.join(xbuildLocation, 'xbuild.exe');
+    }
+    tl.checkPath(xbuildToolPath, 'xbuild');
 }
 if(!xbuildToolPath) {
     tl.error('xbuild was not found in the path.');

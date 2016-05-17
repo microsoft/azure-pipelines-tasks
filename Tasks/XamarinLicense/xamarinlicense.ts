@@ -356,4 +356,7 @@ if (action == 'Activate') {
         }
         tl.exit(0);
     });
+} else {
+    tl.error('Unknown action: ' + action);
+    tl.exit(1);
 }
