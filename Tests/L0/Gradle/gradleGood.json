@@ -6,7 +6,7 @@
         },
         "gradlew properties": {
             "code": 0,
-            "stdout": "Something subprojects",
+            "stdout": "subprojects: []",
             "stderr": ""
         },
         "gradlew build jacocoTestReport": {
