@@ -133,9 +133,7 @@ function enableCodeCoverage() {
     summaryFile = path.join(reportDirectory, summaryFileName);
     var buildFile = path.join(buildRootPath, "build.gradle");
 
-    if (isDirectoryExists(reportDirectory)) {
-        tl.rmRF(reportDirectory);
-    }
+    tl.rmRF(reportDirectory, true);
 
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = buildFile;

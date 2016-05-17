@@ -106,62 +106,62 @@ mvnGetVersion.arg('-version');
 
 // 1. Check that Maven exists by executing it to retrieve its version.
 mvnGetVersion.exec()
-.fail(function (err) {
-    console.error("Maven is not installed on the agent");
-    tl.exit(1);  // tl.exit sets the step result but does not stop execution
-    process.exit(1);
-})
-.then(function (code) {
-    // Setup tool runner to execute Maven goals
-    var mvnRun = tl.createToolRunner(mvnExec);
-    mvnRun.arg('-f');
-    mvnRun.pathArg(mavenPOMFile);
-    mvnRun.argString(mavenOptions);
-    mvnRun.arg(mavenGoals);
+    .fail(function(err) {
+        console.error("Maven is not installed on the agent");
+        tl.exit(1);  // tl.exit sets the step result but does not stop execution
+        process.exit(1);
+    })
+    .then(function(code) {
+        // Setup tool runner to execute Maven goals
+        var mvnRun = tl.createToolRunner(mvnExec);
+        mvnRun.arg('-f');
+        mvnRun.pathArg(mavenPOMFile);
+        mvnRun.argString(mavenOptions);
+        mvnRun.arg(mavenGoals);
     
-    // Read Maven standard output
-    mvnRun.on('stdout', function (data) {
-        processMavenOutput(data);
-    });
+        // Read Maven standard output
+        mvnRun.on('stdout', function(data) {
+            processMavenOutput(data);
+        });
     
-    // 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
-    return mvnRun.exec(); // Run Maven with the user specified goals
-})
-.fail(function (err) {
-    console.error(err.message);
-    userRunFailed = true; // Record the error and continue
-})
-.then(function (code) {
-    // 3. Always try to run the SonarQube analysis if it is enabled.
-    var mvnsq = getSonarQubeRunner();
-    if (mvnsq) {
-        // Run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures).
-        // Note that running sonar:sonar along with the user goals is not supported due to a SonarQube bug.
-        return mvnsq.exec()
-    }
-})
-.fail(function (err) {
-    console.error(err.message);
-    console.error("SonarQube analysis failed");
-    sonarQubeRunFailed = true;
-})
-.then(function () {
-    // 4. Always publish test results even if tests fail, causing this task to fail.
-    if (publishJUnitResults == 'true') {
-        publishJUnitTestResults(testResultsFiles);
-    }
-    publishCodeCoverage(isCodeCoverageOpted);
+        // 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
+        return mvnRun.exec(); // Run Maven with the user specified goals
+    })
+    .fail(function(err) {
+        console.error(err.message);
+        userRunFailed = true; // Record the error and continue
+    })
+    .then(function(code) {
+        // 3. Always try to run the SonarQube analysis if it is enabled.
+        var mvnsq = getSonarQubeRunner();
+        if (mvnsq) {
+            // Run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures).
+            // Note that running sonar:sonar along with the user goals is not supported due to a SonarQube bug.
+            return mvnsq.exec()
+        }
+    })
+    .fail(function(err) {
+        console.error(err.message);
+        console.error("SonarQube analysis failed");
+        sonarQubeRunFailed = true;
+    })
+    .then(function() {
+        // 4. Always publish test results even if tests fail, causing this task to fail.
+        if (publishJUnitResults == 'true') {
+            publishJUnitTestResults(testResultsFiles);
+        }
+        publishCodeCoverage(isCodeCoverageOpted);
     
-    // Set overall success or failure
-    if (userRunFailed || sonarQubeRunFailed) {
-        tl.exit(1); // Set task failure
-    }
-    else {
-        tl.exit(0); // Set task success
-    }
+        // Set overall success or failure
+        if (userRunFailed || sonarQubeRunFailed) {
+            tl.exit(1); // Set task failure
+        }
+        else {
+            tl.exit(0); // Set task success
+        }
 
-    // Do not force an exit as publishing results is async and it won't have finished 
-})
+        // Do not force an exit as publishing results is async and it won't have finished 
+    })
 
 // Publishes JUnit test results from files matching the specified pattern.
 function publishJUnitTestResults(testResultsFiles: string) {
@@ -186,7 +186,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
         tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
         return 0;
     }
-    
+
     var tp = new tl.TestPublisher("JUnit");
     tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
 }
@@ -219,15 +219,9 @@ function enableCodeCoverage() {
     }    
         
     // clean any previously generated files.
-    if (isDirectoryExists(targetDirectory)) {
-        tl.rmRF(targetDirectory);
-    }
-    if (isDirectoryExists(reportDirectory)) {
-        tl.rmRF(reportDirectory);
-    }
-    if (isFileExists(reportPOMFile)) {
-        tl.rmRF(reportPOMFile);
-    }
+    tl.rmRF(targetDirectory, true);
+    tl.rmRF(reportDirectory, true);
+    tl.rmRF(reportPOMFile, true);
 
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = mavenPOMFile;
@@ -382,7 +376,7 @@ function getSonarQubeAuthParameter(endpoint, paramName) {
     var parameters = Object.getOwnPropertyNames(auth['parameters']);
 
     var keyName;
-    parameters.some(function (key) {
+    parameters.some(function(key) {
 
         if (key.toLowerCase() === paramName.toLowerCase()) {
             keyName = key;
@@ -434,7 +428,7 @@ function processMavenOutput(data) {
         if (rightIndex > 0) {
             severity = data.substring(1, rightIndex);
 
-            if(severity === 'ERROR' || severity === 'WARNING') {
+            if (severity === 'ERROR' || severity === 'WARNING') {
                 // Try to match output like:
                 // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // A successful match will return an array of 5 strings - full matched string, file path, line number, column number, error message
@@ -446,7 +440,7 @@ function processMavenOutput(data) {
                     matches = matches.concat(match);
                 }
 
-                if(matches != null) {
+                if (matches != null) {
                     var index: number = 0;
                     while (index + 4 < matches.length) {
                         tl.debug('full match = ' + matches[index + 0]);

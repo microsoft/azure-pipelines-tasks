@@ -5,7 +5,6 @@ import path = require('path');
 import fs = require('fs');
 
 var anttool = tl.which('ant', true);
-
 var antv = tl.createToolRunner(anttool);
 antv.arg('-version');
 
@@ -69,10 +68,8 @@ var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLo
 
 var buildRootPath = path.dirname(antBuildFile);
 var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
-if (isDirectoryExists(instrumentedClassesDirectory)) {
-    //delete any previous cobertura instrumented classes as they might interfere with ant execution.
-    tl.rmRF(instrumentedClassesDirectory);
-}
+//delete any previous cobertura instrumented classes as they might interfere with ant execution.
+tl.rmRF(instrumentedClassesDirectory, true);
 
 if (isCodeCoverageOpted) {
     var summaryFile = null;
@@ -144,17 +141,9 @@ function enableCodeCoverage() {
     var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
     
     // clean any previous reports.
-    if (isFileExists(coberturaCCFile)) {
-        tl.rmRF(coberturaCCFile);
-    }
-
-    if (isDirectoryExists(reportDirectory)) {
-        tl.rmRF(reportDirectory);
-    }
-
-    if (isFileExists(reportBuildFile)) {
-        tl.rmRF(reportBuildFile);
-    }
+    tl.rmRF(coberturaCCFile, true);
+    tl.rmRF(reportDirectory, true);
+    tl.rmRF(reportBuildFile, true);
 
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = antBuildFile;
@@ -179,13 +168,12 @@ function publishCodeCoverage(codeCoverageOpted: boolean) {
     if (codeCoverageOpted) {
         tl.debug("Collecting code coverage reports");
         var antRunner = tl.createToolRunner(anttool);
+        antRunner.arg('-buildfile');
         if (isFileExists(reportBuildFile)) {
-            antRunner.arg('-buildfile');
             antRunner.pathArg(reportBuildFile);
             antRunner.arg(ccReportTask);
         }
         else {
-            antRunner.arg('-buildfile');
             antRunner.pathArg(antBuildFile);
             antRunner.arg(ccReportTask);
         }
