@@ -62,7 +62,7 @@ xamarinComponentTool.exec()
     tl.setResult(tl.TaskResult.Succeeded, tl.loc('XamarinComponentRestoreReturnCode', code));
 })
 .fin(function(code){
-    var homeDir = process.env.HOME || process.env.USERPROFILE;
+    var homeDir = tl.getVariable('HOME') || tl.getVariable('USERPROFILE');
     var xamarinCredentials = path.join(homeDir, '.xamarin-credentials');
     if(fs.existsSync(xamarinCredentials))
     {

@@ -4,6 +4,9 @@
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import path = require('path');
+import os = require('os');
+
+var isWin = /^win/.test(process.platform);
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -28,10 +31,14 @@ describe('XamarinComponentRestore Suite', function() {
         tr.setInput('solution', '**/*.sln');
         tr.setInput('email', 'me@ms.com');
         tr.setInput('password', 'mypass');
-        
+
         tr.run()
         .then(() => {
-            assert(tr.ran('/XamarinComponentRestore/xpkg/xamarin-component.exe restore -u me@ms.com -p mypass /user/build/fun/project.sln'), 'it should have run xamarin component restore');
+            if(isWin) {
+                assert(tr.ran('/XamarinComponentRestore/xpkg/xamarin-component.exe restore -u me@ms.com -p mypass /user/build/fun/project.sln'), 'it should have run xamarin component restore');
+            } else {
+                assert(tr.ran('/home/bin/mono /XamarinComponentRestore/xpkg/xamarin-component.exe restore -u me@ms.com -p mypass /user/build/fun/project.sln'), 'it should have run xamarin component restore');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinComponentRestore 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -53,7 +60,11 @@ describe('XamarinComponentRestore Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/XamarinComponentRestore/xpkg/xamarin-component.exe restore -u me@ms.com -p mypass /user/build/fun/project.sln'), 'it should have run xamarin component restore');
+            if(isWin) {
+                assert(tr.ran('/XamarinComponentRestore/xpkg/xamarin-component.exe restore -u me@ms.com -p mypass /user/build/fun/project.sln'), 'it should have run xamarin component restore');
+            } else {
+                assert(tr.ran('/home/bin/mono /XamarinComponentRestore/xpkg/xamarin-component.exe restore -u me@ms.com -p mypass /user/build/fun/project.sln'), 'it should have run xamarin component restore');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinComponentRestore 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
