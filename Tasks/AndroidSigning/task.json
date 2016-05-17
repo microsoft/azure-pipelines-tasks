@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20 
+        "Patch": 21 
     },
     "demands": [
         "JDK",
@@ -115,11 +115,6 @@
     ],
     "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\AndroidSigning.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
-        },
         "Node": {
             "target": "androidsigning.js",
             "argumentFormat": ""
