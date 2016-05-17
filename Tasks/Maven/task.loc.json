@@ -37,8 +37,8 @@
       "isExpanded": false
     },
     {
-      "name": "SQAnalysis",
-      "displayName": "ms-resource:loc.group.displayName.SQAnalysis",
+      "name": "CodeAnalysis",
+      "displayName": "ms-resource:loc.group.displayName.CodeAnalysis",
       "isExpanded": true
     }
   ],
@@ -228,7 +228,7 @@
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
       "required": true,
       "defaultValue": "false",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
     },
     {
@@ -237,7 +237,7 @@
       "label": "ms-resource:loc.input.label.sqConnectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
     },
     {
@@ -246,7 +246,7 @@
       "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
       "required": true,
       "defaultValue": "false",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.sqDbDetailsRequired",
       "visibleRule": "sqAnalysisEnabled = true"
     },
@@ -256,7 +256,7 @@
       "label": "ms-resource:loc.input.label.sqDbUrl",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqDbUrl",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "visibleRule": "sqDbDetailsRequired = true"
     },
     {
@@ -265,7 +265,7 @@
       "label": "ms-resource:loc.input.label.sqDbUsername",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqDbUsername",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "visibleRule": "sqDbDetailsRequired = true"
     },
     {
@@ -274,8 +274,17 @@
       "label": "ms-resource:loc.input.label.sqDbPassword",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "pmdAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.pmdAnalysisEnabled"
     }
   ],
   "execution": {
@@ -291,5 +300,11 @@
         "windows"
       ]
     }
+  },
+  "messages": {
+    "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
+    "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
+    "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
+    "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations"
   }
 }

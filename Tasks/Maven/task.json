@@ -37,8 +37,8 @@
             "isExpanded": false
         },
         {
-            "name": "SQAnalysis",
-            "displayName": "SonarQube Analysis",
+            "name": "CodeAnalysis",
+            "displayName": "Code Analysis",
             "isExpanded": true
         }
     ],
@@ -228,7 +228,7 @@
             "label": "Run SonarQube Analysis",
             "required": true,
             "defaultValue": "false",
-            "groupName": "SQAnalysis",
+            "groupName": "CodeAnalysis",
             "helpMarkDown": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
         },
         {
@@ -237,7 +237,7 @@
             "label": "SonarQube Endpoint",
             "required": true,
             "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
-            "groupName": "SQAnalysis",
+            "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },
         {
@@ -246,7 +246,7 @@
             "label": "The SonarQube server version is lower than 5.2",
             "required": true,
             "defaultValue": "false",
-            "groupName": "SQAnalysis",
+            "groupName": "CodeAnalysis",
             "helpMarkDown": "If using a SonarQube server 5.1 or lower, you must specify the database connection details.",
             "visibleRule": "sqAnalysisEnabled = true"
         },
@@ -256,7 +256,7 @@
             "label": "Db Connection String",
             "required": false,
             "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the database connection setting (i.e. sonar.jdbc.url). For example: jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
-            "groupName": "SQAnalysis",
+            "groupName": "CodeAnalysis",
             "visibleRule": "sqDbDetailsRequired = true"
         },
         {
@@ -265,7 +265,7 @@
             "label": "Db Username",
             "required": false,
             "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the username for the database user (i.e. sonar.jdbc.username).",
-            "groupName": "SQAnalysis",
+            "groupName": "CodeAnalysis",
             "visibleRule": "sqDbDetailsRequired = true"
         },
         {
@@ -274,8 +274,17 @@
             "label": "Db User Password",
             "required": false,
             "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
-            "groupName": "SQAnalysis",
+            "groupName": "CodeAnalysis",
             "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+          "name": "pmdAnalysisEnabled",
+          "type": "boolean",
+          "label": "Run PMD Analysis",
+          "required": false,
+          "defaultValue": "false",
+          "groupName": "CodeAnalysis",
+          "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code."
         }
     ],
     "execution": {
@@ -291,5 +300,11 @@
                 "windows"
             ]
         }
+    },
+    "messages": {
+      "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
+      "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
+      "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
+      "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations."
     }
 }

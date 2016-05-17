@@ -3,6 +3,10 @@
 import tl = require('vsts-task-lib/task');
 import os = require('os');
 import path = require('path');
+import fs = require('fs');
+
+// Lowercased file names are to lessen the likelihood of xplat issues
+import codeAnalysis = require('./mavencodeanalysis');
 
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
@@ -107,14 +111,17 @@ else {
 
 // Maven task orchestration occurs as follows:
 // 1. Check that Maven exists by executing it to retrieve its version.
-// 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
-// 3. Always try to run the SonarQube analysis if it is enabled.
+// 2. Apply any goals for static code analysis tools selected by the user.
+// 3. Run Maven. Compilation or test errors will cause this to fail.
+// 4. Always try to run the SonarQube analysis if it is enabled.
 //    In case the build has failed, the analysis will still succeed but the report will have less data. 
-// 4. Always publish test results even if tests fail, causing this task to fail.
-// 5. If #2 above failed, exit with an error code to mark the entire step as failed. Same for #4.
+// 5. Attempt to collate and upload static code analysis build summaries and artifacts.
+// 6. Always publish test results even if tests fail, causing this task to fail.
+// 7. If #2, #4 or #5 above failed, exit with an error code to mark the entire step as failed.
 
 var userRunFailed: boolean = false;
 var sonarQubeRunFailed: boolean = false;
+var pmdRunFailed: boolean = false;
 
 // Setup tool runner that executes Maven only to retrieve its version
 var mvnGetVersion = tl.createToolRunner(mvnExec);
@@ -134,6 +141,9 @@ mvnGetVersion.exec()
         mvnRun.pathArg(mavenPOMFile);
         mvnRun.argString(mavenOptions);
         mvnRun.arg(mavenGoals);
+
+        // Add goals for static code analysis tools
+        codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
     
         // Read Maven standard output
         mvnRun.on('stdout', function(data) {
@@ -161,6 +171,20 @@ mvnGetVersion.exec()
         console.error("SonarQube analysis failed");
         sonarQubeRunFailed = true;
     })
+    .then(function (code) { // Pick up files from the Java code analysis tools
+        // The files won't be created if the build failed, and the user should probably fix their build first
+        if (userRunFailed) {
+            console.error('Could not retrieve code analysis results - Maven run failed.');
+            return;
+        }
+
+        codeAnalysis.uploadCodeAnalysisResults();
+    })
+    .fail(function (err) {
+        console.error(err.message);
+        console.error("PMD analysis failed");
+        pmdRunFailed = true;
+    })
     .then(function() {
         // 4. Always publish test results even if tests fail, causing this task to fail.
         if (publishJUnitResults == 'true') {
@@ -169,7 +193,7 @@ mvnGetVersion.exec()
         publishCodeCoverage(isCodeCoverageOpted);
     
         // Set overall success or failure
-        if (userRunFailed || sonarQubeRunFailed) {
+        if (userRunFailed || sonarQubeRunFailed || pmdRunFailed) {
             tl.exit(1); // Set task failure
         }
         else {

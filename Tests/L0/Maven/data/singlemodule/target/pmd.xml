@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="5.3.5" timestamp="2000-03-18T16:34:50.673">
+    <file name="C:\Agent\_work\3\s\src\main\java\test\test1.java">
+        <violation beginline="262" endline="262" begincolumn="26" endcolumn="61" rule="UselessParentheses" ruleset="Unnecessary" package="gamesincommon" class="GamesInCommon" method="filterGame" externalInfoUrl="https://pmd.github.io/pmd-5.3.5/pmd-java/rules/java/unnecessary.html#UselessParentheses" priority="4">
+            Useless parentheses.
+        </violation>
+    </file>
+    <file name="C:\Agent\_work\3\s\src\main\java\test\test2.java">
+        <violation beginline="452" endline="452" begincolumn="22" endcolumn="36" rule="UselessParentheses" ruleset="Unnecessary" package="gamesincommon" class="Gui" method="addName" externalInfoUrl="https://pmd.github.io/pmd-5.3.5/pmd-java/rules/java/unnecessary.html#UselessParentheses" priority="4">
+            Useless parentheses.
+        </violation>
+        <violation beginline="452" endline="452" begincolumn="43" endcolumn="78" rule="UselessParentheses" ruleset="Unnecessary" package="gamesincommon" class="Gui" method="addName" externalInfoUrl="https://pmd.github.io/pmd-5.3.5/pmd-java/rules/java/unnecessary.html#UselessParentheses" priority="4">
+            Useless parentheses.
+        </violation>
+    </file>
+</pmd>
