@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Remote Shell Commands",
+  "loc.helpMarkDown": "",
+  "loc.description": "Run shell commands on a remote machine using SSH.",
+  "loc.instanceNameFormat": "Run shell commands on remote machine using SSH",
+  "loc.group.displayName.connection": "Connection",
+  "loc.input.label.hostname": "Hostname",
+  "loc.input.help.hostname": "Hostname or IP of the remote machine.",
+  "loc.input.label.port": "Port number",
+  "loc.input.help.port": "Port number on the remote machine to use for connecting.",
+  "loc.input.label.username": "Username",
+  "loc.input.help.username": "Username to connect to the remote machine.",
+  "loc.input.label.password": "Password/Passphrase",
+  "loc.input.help.password": "Provide the admin password or the passphrase to the private key if using SSH keys.",
+  "loc.input.label.privateKey": "Private Key",
+  "loc.input.help.privateKey": "Provide entire contents of the private key file.",
+  "loc.input.label.commands": "Commands",
+  "loc.input.help.commands": "Specify the shell commands to run on the remote machine. Enter each command along with it's arguments on a new line."
+}

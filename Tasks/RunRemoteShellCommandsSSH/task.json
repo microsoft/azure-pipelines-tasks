@@ -1,0 +1,89 @@
+{
+    "id": "91443475-df55-4874-944b-39253b558790",
+    "name": "RunRemoteShellCommandsSSH",
+    "friendlyName": "Remote Shell Commands",
+    "description": "Run shell commands on a remote machine using SSH.",
+    "helpMarkDown": "",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "demands": [
+     ],
+    "instanceNameFormat": "Run shell commands on remote machine using SSH",
+    "groups": [
+        {
+            "name": "connection",
+            "displayName": "Connection",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "hostname",
+            "type": "string",
+            "label": "Hostname",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "connection",
+            "helpMarkDown": "Hostname or IP of the remote machine."
+        },
+        {
+            "name": "port",
+            "type": "string",
+            "label": "Port number",
+            "defaultValue": "22",
+            "required": false,
+            "groupName": "connection",
+            "helpMarkDown": "Port number on the remote machine to use for connecting."
+        },
+        {
+            "name": "username",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "connection",
+            "helpMarkDown": "Username to connect to the remote machine."
+        },
+        {
+            "name": "password",
+            "type": "string",
+            "label": "Password/Passphrase",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "connection",
+            "helpMarkDown": "Provide the admin password or the passphrase to the private key if using SSH keys."
+        },
+        {
+            "name": "privateKey",
+            "type": "multiLine",
+            "label": "Private Key",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "connection",
+            "helpMarkDown": "Provide entire contents of the private key file."
+        },
+        {
+            "name": "commands",
+            "type": "multiLine",
+            "label": "Commands",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with it's arguments on a new line."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "RunRemoteShellCommandsSSH.js",
+            "argumentFormat": ""
+        }
+    }
+}

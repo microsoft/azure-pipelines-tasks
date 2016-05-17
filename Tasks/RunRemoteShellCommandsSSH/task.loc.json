@@ -1,0 +1,88 @@
+{
+  "id": "91443475-df55-4874-944b-39253b558790",
+  "name": "RunRemoteShellCommandsSSH",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "connection",
+      "displayName": "ms-resource:loc.group.displayName.connection",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "hostname",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.hostname",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "connection",
+      "helpMarkDown": "ms-resource:loc.input.help.hostname"
+    },
+    {
+      "name": "port",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.port",
+      "defaultValue": "22",
+      "required": false,
+      "groupName": "connection",
+      "helpMarkDown": "ms-resource:loc.input.help.port"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.username",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "connection",
+      "helpMarkDown": "ms-resource:loc.input.help.username"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "connection",
+      "helpMarkDown": "ms-resource:loc.input.help.password"
+    },
+    {
+      "name": "privateKey",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.privateKey",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "connection",
+      "helpMarkDown": "ms-resource:loc.input.help.privateKey"
+    },
+    {
+      "name": "commands",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.commands",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.commands"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "RunRemoteShellCommandsSSH.js",
+      "argumentFormat": ""
+    }
+  }
+}
