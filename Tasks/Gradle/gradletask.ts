@@ -59,8 +59,8 @@ var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 
 if (isCodeCoverageOpted) {
-    var summaryFile = null;
-    var reportDirectory = null
+    var summaryFile: string = null;
+    var reportDirectory: string = null;
     enableCodeCoverage()
 }
 else {
@@ -108,8 +108,8 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
 }
 
 function enableCodeCoverage() {
-    var classFilter = tl.getInput('classFilter');
-    var classFilesDirectories = tl.getInput('classFilesDirectories');
+    var classFilter: string = tl.getInput('classFilter');
+    var classFilesDirectories: string = tl.getInput('classFilesDirectories');
     var buildRootPath = cwd;
     var reportDirectoryName = "CCReport43F6D5EF";
     reportDirectory = path.join(buildRootPath, reportDirectoryName);
@@ -175,7 +175,7 @@ function isMultiModuleProject(wrapperScript: string): boolean {
 
 function publishCodeCoverage(isCodeCoverageOpted: boolean) {
     if (isCodeCoverageOpted) {
-        if (isFileExists(summaryFile)) {
+        if (pathExistsAsFile(summaryFile)) {
             tl.debug("Summary file = " + summaryFile);
             tl.debug("Report directory = " + reportDirectory);
             tl.debug("Publishing code coverage results to TFS");
@@ -188,18 +188,9 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
     }
 }
 
-function isFileExists(path: string) {
+function pathExistsAsFile(path: string) {
     try {
         return tl.stats(path).isFile();
-    }
-    catch (error) {
-        return false;
-    }
-}
-
-function isDirectoryExists(path: string) {
-    try {
-        return tl.stats(path).isDirectory();
     }
     catch (error) {
         return false;

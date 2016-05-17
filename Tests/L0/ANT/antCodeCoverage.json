@@ -17,17 +17,35 @@
             "stdout": ""
         }
     },
-    "checkPath" : {
+    "checkPath": {
         "/build/build.xml": true,
         "/usr/local/bin/ANT2": true
     },
-    "getVariable" : {
+    "getVariable": {
         "ANT_HOME": "/user/local/bin/ANT",
         "JAVA_HOME_8_X86": "/user/local/bin/ANT8"
     },
-    "stats" : {
+    "stats": {
         "\\build\\CCReport43F6D5EF\\coverage.xml": {
             "isFile": true
+        }
+    },
+    "rmRF": {
+        "/build/InstrumentedClasses": {
+            "success": true,
+            "message": "success"
+        },
+        "/build/cobertura.ser": {
+            "success": true,
+            "message": "success"
+        },
+        "/build/CCReport43F6D5EF": {
+            "success": true,
+            "message": "success"
+        },
+        "/build/CCReportBuildA4D283EG.xml": {
+            "success": true,
+            "message": "success"
         }
     }
 }

@@ -78,11 +78,11 @@ var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 
 if (isCodeCoverageOpted) {
-    var summaryFile = null;
-    var reportDirectory = null;
-    var reportPOMFile = null;
-    var execFileJacoco = null;
-    var ccReportTask = null;
+    var summaryFile: string = null;
+    var reportDirectory: string = null;
+    var reportPOMFile: string = null;
+    var execFileJacoco: string = null;
+    var ccReportTask: string = null;
     enableCodeCoverage();
 }
 else {
@@ -192,9 +192,9 @@ function publishJUnitTestResults(testResultsFiles: string) {
 }
 
 function enableCodeCoverage() {
-    var classFilter = tl.getInput('classFilter');
-    var classFilesDirectories = tl.getInput('classFilesDirectories');
-    var sourceDirectories = tl.getInput('srcDirectories');
+    var classFilter: string = tl.getInput('classFilter');
+    var classFilesDirectories: string = tl.getInput('classFilesDirectories');
+    var sourceDirectories: string = tl.getInput('srcDirectories');
     var buildRootPath = path.dirname(mavenPOMFile);
     // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
     var reportPOMFileName = "CCReportPomA4D283EG.xml";
@@ -249,7 +249,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
         if (ccTool.toLowerCase() == "jacoco") {
             var mvnReport = tl.createToolRunner(mvnExec);
             mvnReport.arg('-f');
-            if (isFileExists(reportPOMFile)) {
+            if (pathExistsAsFile(reportPOMFile)) {
                 // multi module project
                 mvnReport.pathArg(reportPOMFile);
                 mvnReport.arg("verify");
@@ -271,7 +271,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
 }
 
 function publishCCToTfs() {
-    if (isFileExists(summaryFile)) {
+    if (pathExistsAsFile(summaryFile)) {
         tl.debug("Summary file = " + summaryFile);
         tl.debug("Report directory = " + reportDirectory);
         tl.debug("Publishing code coverage results to TFS");
@@ -283,18 +283,9 @@ function publishCCToTfs() {
     }
 }
 
-function isFileExists(path: string) {
+function pathExistsAsFile(path: string) {
     try {
         return tl.stats(path).isFile();
-    }
-    catch (error) {
-        return false;
-    }
-}
-
-function isDirectoryExists(path: string) {
-    try {
-        return tl.stats(path).isDirectory();
     }
     catch (error) {
         return false;
@@ -409,6 +400,9 @@ function createMavenSonarQubeRunner(sqHostUrl, sqHostUsername, sqHostPassword, s
     }
     if (sqDbPassword) {
         mvnsq.arg('-Dsonar.jdbc.password=' + sqDbPassword);
+    }
+    if (typeof execFileJacoco != "undefined" && execFileJacoco) {
+        mvnsq.arg('-Dsonar.jacoco.reportPath=' + execFileJacoco);
     }
 
     return mvnsq;

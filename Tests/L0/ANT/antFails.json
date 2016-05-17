@@ -18,5 +18,11 @@
     },
     "getVariable" : {
         "ANT_HOME": "/user/local/bin/ANT"
+    },
+    "rmRF": {
+        "/build/InstrumentedClasses": {
+            "success": true,
+            "message": "success"
+        }
     }
 }

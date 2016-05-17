@@ -1,6 +1,6 @@
 {
     "which": {
-        "mvn": "/home/bin/maven/bin/mvn"  
+        "mvn": "/home/bin/maven/bin/mvn"
     },
     "exec": {
         "/home/bin/maven/bin/mvn -version": {
@@ -30,31 +30,35 @@
         "/home/bin/maven/bin/mvn -f pom.xml /o /p /t /i /o /n /s package": {
             "code": 0,
             "stdout": "Maven package done"
-        },        
+        },
         "/home/bin/maven/bin/mvn -f pom.xml /o /p /t /i /o /n /s build test package": {
             "code": 0,
             "stdout": "Maven package done"
-        },        
+        },
         "/home/bin/maven/bin/mvn -f pom.xml FAIL package": {
             "code": 2,
             "stdout": "Running Maven...",
             "stderr": "FAILED"
         },
-        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml sonar:sonar":{
+        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml sonar:sonar": {
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
         },
-        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass -f pom.xml sonar:sonar":{
+        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass -f pom.xml sonar:sonar": {
+            "code": 0,
+            "stdout": "Maven package and SQ analysis done"
+        },
+        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\\jacoco.exec -f pom.xml sonar:sonar": {
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
         }
     },
-    "checkPath" : {
+    "checkPath": {
         "/home/bin/maven/bin/mvn": true,
         "/home/bin/maven2": true,
         "pom.xml": true
     },
-    "getVariable" : {
+    "getVariable": {
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
         "agent.buildDirectory": "/user/build",
         "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
@@ -70,12 +74,30 @@
             "/user/build/fun/test-123.xml"
         ]
     },
-    "stats" : {
+    "stats": {
         "CCReport43F6D5EF\\jacoco.xml": {
             "isFile": true
         },
         "target\\site\\cobertura\\coverage.xml": {
             "isFile": true
+        }
+    },
+    "rmRF": {
+        "target": {
+            "success": true,
+            "message": "success"
+        },
+        "CCReport43F6D5EF": {
+            "success": true,
+            "message": "success"
+        },
+        "target/site/cobertura": {
+            "success": true,
+            "message": "success"
+        },
+        "CCReportPomA4D283EG.xml": {
+            "success": true,
+            "message": "success"
         }
     }
 }

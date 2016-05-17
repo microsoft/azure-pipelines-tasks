@@ -72,10 +72,10 @@ var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses
 tl.rmRF(instrumentedClassesDirectory, true);
 
 if (isCodeCoverageOpted) {
-    var summaryFile = null;
-    var reportDirectory = null;
-    var ccReportTask = null;
-    var reportBuildFile = null;
+    var summaryFile: string = null;
+    var reportDirectory: string = null;
+    var ccReportTask: string = null;
+    var reportBuildFile: string = null;
     enableCodeCoverage();
 }
 else {
@@ -126,9 +126,9 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
 }
 
 function enableCodeCoverage() {
-    var classFilter = tl.getInput('classFilter');
-    var classFilesDirectories = tl.getInput('classFilesDirectories', true);
-    var sourceDirectories = tl.getInput('srcDirectories');
+    var classFilter: string = tl.getInput('classFilter');
+    var classFilesDirectories: string = tl.getInput('classFilesDirectories', true);
+    var sourceDirectories: string = tl.getInput('srcDirectories');
     // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
     var reportDirectoryName = "CCReport43F6D5EF";
     reportDirectory = path.join(buildRootPath, reportDirectoryName);
@@ -169,7 +169,7 @@ function publishCodeCoverage(codeCoverageOpted: boolean) {
         tl.debug("Collecting code coverage reports");
         var antRunner = tl.createToolRunner(anttool);
         antRunner.arg('-buildfile');
-        if (isFileExists(reportBuildFile)) {
+        if (pathExistsAsFile(reportBuildFile)) {
             antRunner.pathArg(reportBuildFile);
             antRunner.arg(ccReportTask);
         }
@@ -178,7 +178,7 @@ function publishCodeCoverage(codeCoverageOpted: boolean) {
             antRunner.arg(ccReportTask);
         }
         antRunner.exec().then(function(code) {
-            if (isFileExists(summaryFile)) {
+            if (pathExistsAsFile(summaryFile)) {
                 tl.debug("Summary file = " + summaryFile);
                 tl.debug("Report directory = " + reportDirectory);
                 tl.debug("Publishing code coverage results to TFS");
@@ -194,18 +194,9 @@ function publishCodeCoverage(codeCoverageOpted: boolean) {
     }
 }
 
-function isFileExists(path: string) {
+function pathExistsAsFile(path: string) {
     try {
         return tl.stats(path).isFile();
-    }
-    catch (error) {
-        return false;
-    }
-}
-
-function isDirectoryExists(path: string) {
-    try {
-        return tl.stats(path).isDirectory();
     }
     catch (error) {
         return false;

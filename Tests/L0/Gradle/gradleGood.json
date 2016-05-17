@@ -39,5 +39,11 @@
     "getVariable": {
         "ANT_HOME": "/user/local/bin/ANT",
         "JAVA_HOME_8_X86": "/user/local/bin/Java8"
+    },
+    "rmRF": {
+        "CCReport43F6D5EF": {
+            "success": true,
+            "message": "success"
+        }
     }
 }
