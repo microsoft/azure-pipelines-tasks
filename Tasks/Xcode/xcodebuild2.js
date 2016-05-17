@@ -161,12 +161,12 @@ function iosIdentity(code) {
 		.then(function(result) {
 			if(result.identity) {
 				// TODO: Add CODE_SIGN_IDENTITY[iphoneos*]? 
-				xcb.arg('CODE_SIGN_IDENTITY="' + result.identity + '"');
+				xcb.arg('CODE_SIGN_IDENTITY=' + result.identity);
 			} else {
 				tl.debug('No explicit signing identity specified in task.')
 			}
 			if(result.keychain) {
-				xcb.arg('OTHER_CODE_SIGN_FLAGS=--keychain="' + result.keychain + '"');
+				xcb.arg('OTHER_CODE_SIGN_FLAGS=--keychain=' + result.keychain);
 			}	
 			deleteKeychain = result.deleteCommand;
 		});

@@ -47,7 +47,11 @@ else {
 //find xbuild location to use
 var xbuildToolPath = tl.which('xbuild');
 if(xbuildLocation) {
-    xbuildToolPath = xbuildLocation + '/xbuild';
+    xbuildToolPath = path.join(xbuildLocation, 'xbuild');
+    if (!tl.exist(xbuildToolPath)) {
+        xbuildToolPath = path.join(xbuildLocation, 'xbuild.exe');
+    }
+    tl.checkPath(xbuildToolPath, 'xbuild');
 }
 if(!xbuildToolPath) {
     tl.error('xbuild was not found in the path.');
@@ -67,13 +71,13 @@ var runxbuild = function (fn) {
             xbuild.argString(msbuildArguments);
         }
         if (outputDir) {
-            xbuild.arg('/p:OutputPath="' + outputDir + '"');
+            xbuild.arg('/p:OutputPath=' + outputDir);
         }
         if(configuration) {
-            xbuild.arg('/p:Configuration="' + configuration + '"');
+            xbuild.arg('/p:Configuration=' + configuration);
         }
         if (specifiedJavaHome) {
-            xbuild.arg('/p:JavaSdkDirectory="' + specifiedJavaHome + '"');
+            xbuild.arg('/p:JavaSdkDirectory=' + specifiedJavaHome);
         }
 
         return xbuild.exec();

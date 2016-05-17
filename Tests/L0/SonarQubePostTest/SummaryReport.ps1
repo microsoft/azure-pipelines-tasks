@@ -2,7 +2,7 @@
 param()
 
 . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\Common\SonarQubehelpers\SonarQubeHelper.ps1
-. $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SonarQubeReportHandler.ps1
+. $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SummaryReport\ReportBuilder.ps1
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
     
 function CreateRandomDir
@@ -18,6 +18,18 @@ function CreateRandomDir
    return $tempDirectory 
 }
 
+function VerifyMessage
+{
+    param ($actualMessage, $expectedStatus, $expectedValue, $expectedThreshold, $expectedName, $expectedComparator)
+    
+    Write-Host "Verifying $($actualMessage.metric_name)"
+    
+    Assert-AreEqual $expectedName $actualMessage.metric_name "Invalid message threshold"
+    Assert-AreEqual $expectedStatus $actualMessage.status "Invalid message status"
+    Assert-AreEqual $expectedValue $actualMessage.actualValue "Invalid message value"
+    Assert-AreEqual $expectedThreshold $actualMessage.threshold "Invalid message threshold"    
+    Assert-AreEqual $expectedComparator $actualMessage.comparator "Invalid message comparator"    
+}
 
 #### Test 1 - Legacy report - uploading fails with a warning if the file is not found
     
@@ -27,7 +39,7 @@ Register-Mock Write-Warning
 Register-Mock IsPrBuild {$true}  
 
 # Act
-UploadSummaryMdReport
+CreateAndUploadReport
 
 # Assert
 Assert-WasCalled Write-Warning 
@@ -53,7 +65,7 @@ Register-Mock IsPrBuild {$false}
 Register-Mock GetTaskContextVariable {$false} -- "MSBuild.SonarQube.IncludeReport" 
 
 # Act
-UploadSummaryMdReport
+CreateAndUploadReport
 
 # Assert
 Assert-WasCalled Write-Host -ArgumentsEvaluator { $args[0].StartsWith("##vso[task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report;") }
@@ -61,8 +73,25 @@ Assert-WasCalled Write-Host -ArgumentsEvaluator { $args[0].StartsWith("##vso[tas
 # Cleanup
 $file.Dispose()
 [IO.Directory]::Delete($tempDir, $true)    
-Unregister-Mock  GetSonarQubeOutDirectory
-Unregister-Mock  Write-Host 
+Unregister-Mock GetSonarQubeOutDirectory
+Unregister-Mock Write-Host 
 Unregister-Mock IsPrBuild   
 
 
+### Test 3 - Fetching the quality gate warnings and errors
+$qualityGateResponse = Get-Content "$PSScriptRoot\data\ReportTest\qualityGateResponse.json" | Out-String | ConvertFrom-Json
+$metricsResponse = Get-Content "$PSScriptRoot\data\ReportTest\metricsResponse.json" | Out-String | ConvertFrom-Json
+Register-Mock FetchMetricNames {$metricsResponse.metrics}
+
+# Act
+$messages = GetQualityGateWarningsAndErrors $qualityGateResponse
+
+# Assert
+
+$messages = $messages | Sort-Object 'status', 'metric_name'
+Assert-AreEqual $messages.Count 4 "There should be 3 errors and 1 warning"
+
+VerifyMessage $messages[0] "error" "0%" "5%" "Duplicated blocks" "&#60;" # lower than
+VerifyMessage $messages[1] "error" "5h 22min" "8h" "Technical Debt on new code" "&#8800;" # 322 minutes is 5h and the operator is not equals
+VerifyMessage $messages[2] "error" "59min" "0min" "Technical Debt on new code 2" "&#62;" # 322 minutes is 5h and the operator is not equals
+VerifyMessage $messages[3] "warn" "0" "0" "Blocker issues" "&#61;" # equals

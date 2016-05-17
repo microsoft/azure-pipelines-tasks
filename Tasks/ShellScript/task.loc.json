@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [
     "sh"
@@ -44,11 +44,21 @@
       "helpMarkDown": "ms-resource:loc.input.help.args"
     },
     {
+      "name": "disableAutoCwd",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.disableAutoCwd",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.disableAutoCwd",
+      "groupName": "advanced"
+    },
+    {
       "name": "cwd",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
       "required": false,
+      "visibleRule": "disableAutoCwd = true",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
     },

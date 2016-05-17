@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 22
+        "Patch": 23
     },
     "demands": [
         "node.js"
@@ -49,8 +49,7 @@
             "label": "Arguments",
             "defaultValue": "",
             "helpMarkDown": "Additional arguments passed to gulp.  --gulpfile is not needed since already added via gulpFile input above.",
-            "required": false,
-            "groupName": "advanced"
+            "required": false
         },
         {
             "name": "cwd",

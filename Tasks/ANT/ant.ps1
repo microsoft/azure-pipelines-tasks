@@ -51,6 +51,7 @@ if(!$antBuildFile)
 # Import the Task.Common, Task.TestResults and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 # Determine if ANT_HOME should be set by path provided by user

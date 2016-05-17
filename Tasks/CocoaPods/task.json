@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 14
+        "Patch": 15
     },
     "instanceNameFormat": "pod install",
     "inputs": [

@@ -1,0 +1,12 @@
+{
+    "archivePackages": [
+        {
+            "archiveName": "msbuildlogger.zip",
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/1/msbuildlogger.zip",
+            "dest": "./",
+            "files": [
+                "Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
+            ]
+        }
+    ]
+}

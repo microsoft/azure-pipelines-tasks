@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [
         "npm"
@@ -38,8 +38,7 @@
             "label": "Arguments",
             "defaultValue": "",
             "helpMarkDown": "Additional arguments passed to npm.",
-            "required": false,
-            "groupName": "advanced"
+            "required": false
         },
         {
             "name": "cwd",
@@ -58,6 +57,7 @@
         }
     },
     "messages": {
+        "InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
         "NpmReturnCode": "Npm exited with return code: %d",
         "NpmFailed": "Npm failed with error: %s"
     }

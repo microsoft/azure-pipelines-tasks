@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement de groupe de ressources Azure",
-  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Déployer, démarrer, arrêter et supprimer les groupes de ressources Azure",
   "loc.instanceNameFormat": "Déploiement Azure : action $(action) sur $(resourceGroupName)",
   "loc.group.displayName.output": "Sortie",

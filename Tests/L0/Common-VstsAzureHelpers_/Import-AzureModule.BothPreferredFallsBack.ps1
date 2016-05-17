@@ -5,59 +5,53 @@ param()
 . $PSScriptRoot/../../lib/Initialize-Test.ps1
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/VstsAzureHelpers_ -PassThru
 $variableSets = @(
+    # Combinations for only one preference matched:
     @{
-        PreferAzureRM = $true
-        RMModulePathResult = $true
-        RMSdkPathResult = $null
-        ClassicModulePathResult = $null
+        ClassicModulePathResult = $true
         ClassicSdkPathResult = $null
+        RMModulePathResult = $false
+        RMSdkPathResult = $false
     }
     @{
-        PreferAzureRM = $true
+        ClassicModulePathResult = $false
+        ClassicSdkPathResult = $true
+        RMModulePathResult = $false
+        RMSdkPathResult = $false
+    }
+    @{
+        ClassicModulePathResult = $false
+        ClassicSdkPathResult = $false
+        RMModulePathResult = $true
+        RMSdkPathResult = $null
+    }
+    @{
+        ClassicModulePathResult = $false
+        ClassicSdkPathResult = $false
         RMModulePathResult = $false
         RMSdkPathResult = $true
-        ClassicModulePathResult = $null
-        ClassicSdkPathResult = $null
     }
+    # Combinations for both preferences matched:
     @{
-        PreferAzureRM = $true
-        RMModulePathResult = $false
-        RMSdkPathResult = $false
         ClassicModulePathResult = $true
         ClassicSdkPathResult = $null
-    }
-    @{
-        PreferAzureRM = $true
-        RMModulePathResult = $false
-        RMSdkPathResult = $false
-        ClassicModulePathResult = $false
-        ClassicSdkPathResult = $true
-    }
-    @{
-        PreferAzureRM = $false
-        ClassicModulePathResult = $true
-        ClassicSdkPathResult = $null
-        RMModulePathResult = $null
-        RMSdkPathResult = $null
-    }
-    @{
-        PreferAzureRM = $false
-        ClassicModulePathResult = $false
-        ClassicSdkPathResult = $true
-        RMModulePathResult = $null
-        RMSdkPathResult = $null
-    }
-    @{
-        PreferAzureRM = $false
-        ClassicModulePathResult = $false
-        ClassicSdkPathResult = $false
         RMModulePathResult = $true
         RMSdkPathResult = $null
     }
     @{
-        PreferAzureRM = $false
+        ClassicModulePathResult = $true
+        ClassicSdkPathResult = $null
+        RMModulePathResult = $false
+        RMSdkPathResult = $true
+    }
+    @{
         ClassicModulePathResult = $false
-        ClassicSdkPathResult = $false
+        ClassicSdkPathResult = $true
+        RMModulePathResult = $true
+        RMSdkPathResult = $null
+    }
+    @{
+        ClassicModulePathResult = $false
+        ClassicSdkPathResult = $true
         RMModulePathResult = $false
         RMSdkPathResult = $true
     }
@@ -85,7 +79,7 @@ foreach ($variableSet in $variableSets) {
     }
 
     # Act.
-    & $module Import-AzureModule -PreferAzureRM:($variableSet.PreferAzureRM)
+    & $module Import-AzureModule -PreferredModule 'Azure', 'AzureRM'
 
     # Assert.
     Assert-WasCalled Import-FromModulePath -Times $(if ($variableSet.RMModulePathResult -eq $null) { 0 } else { 1 }) -- -Classic: $false

@@ -27,7 +27,7 @@ function GetOrFetchQualityGateStatus
 #
 function WaitForAnalysisToFinish
 {
-    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"       
+    $analysisId = GetAnalysisIdFromCache    
     
     if ([String]::IsNullOrEmpty($analysisId))
     {
@@ -38,18 +38,37 @@ function WaitForAnalysisToFinish
     Assert (![String]::IsNullOrEmpty($analysisId)) "Could not fetch the analysis id"
 }
 
+
+function FetchQualityGateDetails
+{
+    param ([Array]$errors,[Array]$warnings)
+    
+    $analysisId = GetAnalysisIdFromCache             
+    Assert (![String]::IsNullOrEmpty($analysisId)) "WaitForAnalysisToFinish should be called first."
+       
+    $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$analysisId" $true
+    return $response
+}
+
+#
+# For all the metrics in the system, this method returns the key and the friendly name, as well as the type and the id   
+#
+function FetchMetricNames
+{
+    $response = InvokeGetRestMethod "/api/metrics/search?ps=500&f=name" $false
+    Assert (HasElements $response) "No metrics were found"
+    
+    return $response.metrics
+}
+
 #endregion
 
 #region Private
 
 function FetchQualityGateStatus
 {
-    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"    
-    
-    Assert (![String]::IsNullOrEmpty($analysisId)) "WaitForAnalysisToFinish should be called first."   
-    
-    $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$analysisId" $true    
-    return $response.projectStatus.status;
+    $response = FetchQualityGateDetails  
+    return $response.projectStatus.status
 }
 
 #
@@ -154,7 +173,7 @@ function GetTaskStatusFile
     if (![System.IO.File]::Exists($reportTaskFile))
     {
         Write-Verbose "Could not find the task details file at $reportTaskFile"
-        throw "Cannot determine if the analysis has finished in order to break the build. Possible cause: your SonarQube server version is lower than 5.3 - for more details on how to break the build in this case see http://go.microsoft.com/fwlink/?LinkId=722407"
+        throw "Cannot determine if the analysis has finished. Possible cause: your SonarQube server version is lower than 5.3 - for more details see http://go.microsoft.com/fwlink/?LinkId=722407"
     }
 
     return $reportTaskFile
@@ -176,6 +195,12 @@ function GetAnalysisCompleteTimeout
     }
 
     return $timeout;
+}
+
+function GetAnalysisIdFromCache
+{
+    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"  
+    return $analysisId
 }
 
 #endregion

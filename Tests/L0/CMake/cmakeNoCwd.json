@@ -1,5 +1,8 @@
 {
     "which": {
         "cmake": "/usr/local/bin/cmake"
+    },
+    "checkPath": {
+        "/usr/local/bin/cmake": true
     }
 }

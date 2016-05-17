@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 18
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -170,7 +170,7 @@
       "name": "WebSiteAuthUserPassword",
       "type": "string",
       "label": "ms-resource:loc.input.label.WebSiteAuthUserPassword",
-      "required": true,
+      "required": false,
       "groupName": "website",
       "defaultValue": "",
       "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
@@ -359,7 +359,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.AppPoolPassword",
       "defaultValue": "",
-      "required": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolPassword",
       "groupName": "applicationPool",
       "visibleRule": "AppPoolIdentity = SpecificUser"
     },

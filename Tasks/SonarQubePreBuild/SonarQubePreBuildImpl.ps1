@@ -12,6 +12,7 @@ function InvokePreBuildTask
     $dashboardUrl = GetDashboardUrl $serviceEndpoint.Url $projectKey
     Write-Verbose "Dashboard Url: $dashboardUrl"
     
+    ResetTaskContext
     StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath $dashboardUrl $includeFullReport $breakBuild
     StoreSensitiveParametersInTaskContext $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUsername $dbPassword
 
@@ -42,6 +43,14 @@ function StoreParametersInTaskContext
     SetTaskContextVariable "MSBuild.SonarQube.Internal.IncludeFullReport" $includeFullReport        
 }
 
+#
+# Some data is cached into the task context so it needs to be reset 
+#
+function ResetTaskContext
+{
+    SetTaskContextVariable "MSBuild.SonarQube.AnalysisId" ""
+    SetTaskContextVariable "MSBuild.SonarQube.QualityGateStatus" ""
+}
 
 #
 # Remarks: Some sensitive parameters cannot be stored on the agent between the 2 steps so 

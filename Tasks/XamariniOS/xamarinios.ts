@@ -14,30 +14,24 @@ var args = tl.getInput('args');
 var packageApp = tl.getBoolInput('packageApp');
 var buildForSimulator = tl.getBoolInput('forSimulator');
 var device = (buildForSimulator) ? 'iPhoneSimulator' : 'iPhone';
-tl.debug('Device: ' + device);
+tl.debug('device: ' + device);
+var xbuildLocation = tl.getInput('mdtoolLocation', false);
+var cwd = tl.getInput('cwd');
 
 // Get path to xbuild
-var xbuildToolPath = tl.which('xbuild');
-var xbuildLocation = tl.getInput('mdtoolLocation', false);
+var xbuildToolPath = undefined;
 if (xbuildLocation) {
-    xbuildToolPath = xbuildLocation + '/xbuild';
+    xbuildToolPath = path.join(xbuildLocation, 'xbuild');
     tl.checkPath(xbuildToolPath, 'xbuild');
-}
-if (!xbuildToolPath) {
-    tl.error('xbuild was not found in the path.');
-    tl.exit(1);
+} else {
+    xbuildToolPath = tl.which('xbuild', true);
 }
 
 // Find location of nuget
-var nugetPath = tl.which('nuget');
-if (!nugetPath) {
-    tl.error('nuget was not found in the path.');
-    tl.exit(1);
-}
+var nugetPath = tl.which('nuget', true);
 
 //Process working directory
-var buildSourceDirectory = tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
-var cwd = tl.getInput('cwd') || buildSourceDirectory;
+var cwd = cwd || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
 tl.cd(cwd);
 
 // Prepare function for tool execution failure
@@ -115,10 +109,10 @@ nugetRunner.exec()
                 var xbuildRunner = tl.createToolRunner(xbuildToolPath);
                 xbuildRunner.pathArg(solutionPath);
                 if (configuration) {
-                    xbuildRunner.arg('/p:Configuration="' + configuration + '"');
+                    xbuildRunner.arg('/p:Configuration=' + configuration);
                 }
                 if (device) {
-                    xbuildRunner.arg('/p:Platform="' + device + '"');
+                    xbuildRunner.arg('/p:Platform=' + device);
                 }
                 if (packageApp) {
                     xbuildRunner.arg('/p:BuildIpa=true');
@@ -127,10 +121,10 @@ nugetRunner.exec()
                     xbuildRunner.argString(args);
                 }
                 if (provProfileUUID) {
-                    xbuildRunner.arg('/p:CodesignProvision="' + provProfileUUID + '"');
+                    xbuildRunner.arg('/p:CodesignProvision=' + provProfileUUID);
                 }
                 if (signIdentity) {
-                    xbuildRunner.arg('/p:Codesignkey="' + signIdentity + '"');
+                    xbuildRunner.arg('/p:Codesignkey=' + signIdentity);
                 }
                 // Execute build
                 xbuildRunner.exec()
@@ -147,9 +141,14 @@ nugetRunner.exec()
                                             .then(function (code) {
                                                 tl.exit(code);
                                             })
+                                    } else {
+                                        tl.setResult(tl.TaskResult.Succeeded, '');
                                     }
                                 })
+                        } else {
+                            tl.setResult(tl.TaskResult.Succeeded, '');
                         }
+                        
                     })
                     .fail(onFailedExecution) //xbuild
             })

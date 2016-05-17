@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 资源组部署",
-  "loc.helpMarkDown": "[详细信息](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[详细信息](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "部署、启动、停止和删除 Azure 资源组",
   "loc.instanceNameFormat": "对 $(resourceGroupName) 的 Azure Deployment:$(action) 操作",
   "loc.group.displayName.output": "输出",

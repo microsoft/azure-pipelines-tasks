@@ -3,6 +3,7 @@
         "node": "/usr/local/bin/node"
     },
     "checkPath": {
+        "/usr/local/bin/node": true,
         "gulpfile.js": true
     }
 }

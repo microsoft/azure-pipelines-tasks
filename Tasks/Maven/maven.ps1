@@ -94,6 +94,7 @@ if(!$mavenPOMFile)
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 . ./mavenHelper.ps1

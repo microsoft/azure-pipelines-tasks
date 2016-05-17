@@ -5,8 +5,9 @@ param()
 . $PSScriptRoot/../../lib/Initialize-Test.ps1
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/AzurePowerShell/ps_modules/VstsAzureHelpers_ -PassThru
 $variableSets = @(
-    @{ PreferAzureRM = $true }
-    @{ PreferAzureRM = $false }
+    @{ PreferredModule = 'Azure', 'AzureRM' }
+    @{ PreferredModule = 'Azure' }
+    @{ PreferredModule = 'AzureRM' }
 )
 foreach ($variableSet in $variableSets) {
     Write-Verbose ('-' * 80)
@@ -16,5 +17,5 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Import-FromSdkPath
 
     # Act/Assert.
-    Assert-Throws { & $module Import-AzureModule -PreferAzureRM:($variableSet.PreferAzureRM) } -MessagePattern AZ_ModuleNotFound
+    Assert-Throws { & $module Import-AzureModule -PreferredModule $variableSet.PreferredModule } -MessagePattern AZ_ModuleNotFound
 }

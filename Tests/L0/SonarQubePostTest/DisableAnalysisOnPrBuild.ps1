@@ -19,7 +19,7 @@ function VerifyPrRun
     Register-Mock IsPrBuild {$IsPrBuild}
     Register-Mock Write-Host
     Register-Mock InvokeMSBuildRunnerPostTest
-    Register-Mock UploadSummaryMdReport
+    Register-Mock CreateAndUploadReport
     Register-Mock HandleCodeAnalysisReporting
     Register-Mock BreakBuildOnQualityGateFailure
     
@@ -41,7 +41,7 @@ function VerifyPrRun
     Unregister-Mock IsPrBuild 
     Unregister-Mock Write-Host
     Unregister-Mock InvokeMSBuildRunnerPostTest
-    Unregister-Mock UploadSummaryMdReport
+    Unregister-Mock CreateAndUploadReport
     Unregister-Mock HandleCodeAnalysisReporting
     Unregister-Mock BreakBuildOnQualityGateFailure
     
@@ -51,11 +51,11 @@ function VerifyPrRun
     }
 }
 
-
+# PRCA is enabled by default but can be disabled through the build variable
 VerifyPrRun -SQPullRequestBotSetting "true" -IsPrBuild $true -ExpectedToRun $true
 VerifyPrRun -SQPullRequestBotSetting "false" -IsPrBuild $true -ExpectedToRun $false
-VerifyPrRun -SQPullRequestBotSetting "something_else" -IsPrBuild $true -ExpectedToRun $false
-VerifyPrRun -SQPullRequestBotSetting $null -IsPrBuild $true -ExpectedToRun $false
+VerifyPrRun -SQPullRequestBotSetting "something_else" -IsPrBuild $true -ExpectedToRun $true
+VerifyPrRun -SQPullRequestBotSetting $null -IsPrBuild $true -ExpectedToRun $true
 
 VerifyPrRun -SQPullRequestBotSetting "true" -IsPrBuild $false -ExpectedToRun $true
 VerifyPrRun -SQPullRequestBotSetting "false" -IsPrBuild $false -ExpectedToRun $true

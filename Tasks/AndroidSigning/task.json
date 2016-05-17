@@ -12,13 +12,13 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 20 
     },
     "demands": [
         "JDK",
         "AndroidSDK"
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.98.1",
     "groups": [
         {
             "name": "jarsignerOptions",

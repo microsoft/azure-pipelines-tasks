@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание группы ресурсов Azure",
-  "loc.helpMarkDown": "[Подробнее...](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[Подробнее...](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
   "loc.description": "Развертывание, запуск, остановка и удаление групп ресурсов Azure",
   "loc.instanceNameFormat": "Развертывание Azure: действие $(action) с $(resourceGroupName)",
   "loc.group.displayName.output": "Выход",

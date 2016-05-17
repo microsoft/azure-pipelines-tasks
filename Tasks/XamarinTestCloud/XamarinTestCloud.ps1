@@ -30,6 +30,7 @@ Write-Verbose "publishNUnitResults = $publishNUnitResults"
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 $parameters = ""
 
@@ -168,7 +169,7 @@ foreach ($ap in $appFiles)
     }
 }
 
-# Publish nunit test results to VSO
+# Publish NUnit test results to Team Services
 if($publishResults) 
 {    
     $searchPattern = Join-Path $testDir "xamarintest_$buildId*.xml"

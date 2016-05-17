@@ -17,14 +17,17 @@ function SetTaskContextVariable
 {
     param([string][ValidateNotNullOrEmpty()]$varName, 
           [string]$varValue)
-    
+        
+    #[Environment]::SetEnvironmentVariable($varName, $varValue)
     Write-Host "##vso[task.setvariable variable=$varName;]$varValue"
 }
 
 function GetTaskContextVariable()
 {
 	param([string][ValidateNotNullOrEmpty()]$varName)
-	return Get-TaskVariable -Context $distributedTaskContext -Name $varName
+        
+    #return ([Environment]::GetEnvironmentVariable($varName))
+	return Get-TaskVariable -Context $distributedTaskContext -Name $varName    
 }
 
 #
@@ -197,6 +200,17 @@ function Assert
 }
 
 #
+# Returns true if the input is not null and it has at least 1 element 
+#
+function HasElements
+{
+    param ([Array]$arr)
+    
+    return ($arr -ne $null) -and ($arr.Count -gt 0)
+}
+
+
+#
 # Returns true if this build was triggered in response to a PR
 #
 # Remark: this logic is temporary until the platform provides a more robust way of determining PR builds; 
@@ -268,9 +282,9 @@ function IsFeatureEnabled
 #
 function ExitOnPRBuild
 {    
-    if ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $false))
+    if ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $true))
     {
-        Write-Host "SonarQube analysis is disabled during builds triggered by pull requests. Set a build variable named 'SQPullRequestBot' to 'true' to have the task post code analysis issues as comments in the PR. More information at http://go.microsoft.com/fwlink/?LinkID=786316"
+        Write-Host "SonarQube analysis is disabled because either this is a pull request build or because the flag SQPullRequestBot is set to false"
         exit
     } 
 }

@@ -284,14 +284,14 @@ export function getPathInput(name: string, required?: boolean, check?: boolean):
 //-----------------------------------------------------
 
 export function getEndpointUrl(id: string, optional: boolean): string {
-    var urlval = process.env['ENDPOINT_URL_' + id];
+    var urlval = getVariable('ENDPOINT_URL_' + id);
+    debug(id + '=' + urlval);
 
     if (!optional && !urlval) {
         _writeError('Endpoint not present: ' + id);
         exit(1);
     }
 
-    debug(id + '=' + urlval);
     return urlval;
 }
 
@@ -304,13 +304,12 @@ export interface EndpointAuthorization {
 }
 
 export function getEndpointAuthorization(id: string, optional: boolean): EndpointAuthorization {
-    var aval = process.env['ENDPOINT_AUTH_' + id];
+    var aval = getVariable('ENDPOINT_AUTH_' + id);
+    debug(id + '=' + aval);
 
     if (!optional && !aval) {
         setResult(TaskResult.Failed, 'Endpoint not present: ' + id);
     }
-
-    debug(id + '=' + aval);
 
     var auth: EndpointAuthorization;
     try {
@@ -477,7 +476,11 @@ export function mkdirP(p): void {
 }
 
 export function which(tool: string, check?: boolean): string {
-    return mock.getResponse('which', tool);
+    var response = mock.getResponse('which', tool);
+    if (check) {
+        checkPath(response, tool);
+    }
+    return response;
 }
 
 export function cp(options, source: string, dest: string): void {
@@ -591,14 +594,14 @@ export class TestPublisher {
 
     public testRunner: string;
 
-    public publish(resultFiles, mergeResults, platform, config) {
-
-        if (mergeResults == 'true') {
-            _writeLine("Merging test results from multiple files to one test run is not supported on this version of build agent for OSX/Linux, each test result file will be published as a separate test run in VSO/TFS.");
-        }
+    public publish(resultFiles, mergeResults, platform, config, runTitle, publishRunAttachments) {
 
         var properties = <{ [key: string]: string }>{};
         properties['type'] = this.testRunner;
+
+        if (mergeResults) {
+            properties['mergeResults'] = mergeResults;
+        }
 
         if (platform) {
             properties['platform'] = platform;
@@ -608,9 +611,19 @@ export class TestPublisher {
             properties['config'] = config;
         }
 
-        for (var i = 0; i < resultFiles.length; i++) {
-            command('results.publish', properties, resultFiles[i]);
+        if (runTitle) {
+            properties['runTitle'] = runTitle;
         }
+
+        if (publishRunAttachments) {
+            properties['publishRunAttachments'] = publishRunAttachments;
+        }
+
+        if (resultFiles) {
+            properties['resultFiles'] = resultFiles;
+        }
+
+        command('results.publish', properties, '');
     }
 }
 

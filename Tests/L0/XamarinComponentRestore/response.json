@@ -1,0 +1,34 @@
+{
+    "which": {
+        "mono": "/home/bin/mono"
+    },
+    "exec": {
+        "/XamarinComponentRestore/xpkg/xamarin-component.exe restore -u me@ms.com -p mypass /user/build/fun/project.sln": {
+            "code": 0,
+            "stdout": "Xamarin component restore on Windows"
+        },        
+        "/home/bin/mono /XamarinComponentRestore/xpkg/xamarin-component.exe restore -u me@ms.com -p mypass /user/build/fun/project.sln": {
+            "code": 0,
+            "stdout": "Xamarin component restore on Linux/Mac"
+        }
+    },
+    "checkPath" : {
+        "/user/build/fun/project.csproj": true,
+        "/home/bin/mono": true  
+    },
+    "glob": {
+        "**/*.sln": [
+            "/user/build/fun/project.sln"
+        ],
+        "**/Multiple*.sln": [
+            "/user/build/fun/project.sln",
+            "/user/build/fun2/project.sln",
+            "/user/build/fun3/project.sln"
+        ],
+        "**/NoneMatching*.sln": [
+        ]
+    },
+    "getVariable": {
+        "HOME": "/home/user/" 
+    }
+}

@@ -3,12 +3,13 @@
         "gulp": "/usr/local/bin/gulp"
     },
     "exec": {
-        "/usr/local/bin/gulp --no-color --gulpfile gulpfile.js": {
+        "/usr/local/bin/gulp --gulpfile gulpfile.js": {
             "code": 0,
             "stdout": "gulp output here"
         }
     },
     "checkPath": {
+        "/usr/local/bin/gulp": true,
         "gulpfile.js": true
     },     
     "exist": {
