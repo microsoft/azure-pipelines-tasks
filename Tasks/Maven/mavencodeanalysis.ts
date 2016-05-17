@@ -21,6 +21,90 @@ var sourcesDir:string = tl.getVariable('build.sourcesDirectory') || tl.getInput(
 var stagingDir:string = path.join(tl.getVariable('build.artifactStagingDirectory') || tl.getInput('test.artifactStagingDirectory'), ".codeAnalysis");
 var buildNumber:string = tl.getVariable('build.buildNumber') || tl.getInput('test.buildNumber');
 
+// Apply goals for enabled code analysis tools
+export function applyEnabledCodeAnalysisGoals(mvnRun: trm.ToolRunner):void {
+    var enabledCodeAnalysisTools:string[] = getEnabledCodeAnalysisTools();
+
+    // PMD
+    if (enabledCodeAnalysisTools.indexOf(pmd.toolName) > -1) {
+        pmd.applyPmdArgs(mvnRun);
+    }
+}
+
+// Extract data from code analysis output files and upload results to build server
+export function uploadCodeAnalysisResults():void {
+    // Need to run this if any one of the code analysis tools were run
+    var enabledCodeAnalysisTools = getEnabledCodeAnalysisTools();
+    if (enabledCodeAnalysisTools.length > 0) {
+        // Discover maven modules
+        var modules:ma.ModuleAnalysis[] = findCandidateModules(sourcesDir);
+
+        // Special case: if the root turns up as a module, the automatic name won't do
+        modules.forEach((module:ma.ModuleAnalysis) => {
+            if (module.rootDirectory == sourcesDir) {
+                module.moduleName = 'root';
+            }
+        });
+
+        tl.debug('Discovered ' + modules.length + ' Maven modules to upload results from.');
+
+        // Discover output files, summarise per-module results
+        modules.forEach((module:ma.ModuleAnalysis) => {
+            // PMD
+            if (enabledCodeAnalysisTools.indexOf(pmd.toolName) > -1) {
+                try {
+                    var pmdResults:ar.AnalysisResult = pmd.collectPmdOutput(module.rootDirectory);
+                    if (pmdResults) {
+                        module.analysisResults[pmdResults.toolName] = pmdResults;
+                    }
+                } catch(e) {
+                    tl.error(e.message);
+                    tl.exit(1);
+                }
+            }
+
+        });
+
+
+        // Gather analysis results by tool for summaries, stage and upload build artifacts
+        var buildSummaryLines:string[] = [];
+        cleanDirectory(stagingDir);
+
+        enabledCodeAnalysisTools.forEach((toolName:string) => {
+            var toolAnalysisResults:ar.AnalysisResult[] = [];
+            modules.forEach((module:ma.ModuleAnalysis) => {
+                var moduleAnalysisResult:ar.AnalysisResult = module.analysisResults[toolName];
+                if (moduleAnalysisResult) {
+                    toolAnalysisResults.push(moduleAnalysisResult);
+                }
+
+                uploadBuildArtifacts(toolName, module);
+            });
+
+            // After looping through all modules, summarise tool output results
+            try {
+                var summaryLine:string = createSummaryLine(toolName, toolAnalysisResults);
+            } catch (error) {
+                tl.error(error.message);
+            }
+            buildSummaryLines.push(summaryLine);
+        });
+
+        // Save and upload build summary
+        // Looks like: "PMD found 13 violations in 4 files.  \r\n
+        // FindBugs found 10 violations in 8 files."
+        var buildSummaryContents:string = buildSummaryLines.join("  \r\n"); // Double space is end of line in markdown
+        var buildSummaryFilePath:string = path.join(stagingDir, 'CodeAnalysisBuildSummary.md');
+        fs.writeFileSync(buildSummaryFilePath, buildSummaryContents);
+        tl.debug('Uploading build summary from ' + buildSummaryFilePath);
+
+        tl.command('task.addattachment', {
+            'type': 'Distributedtask.Core.Summary',
+            'name': "Code Analysis Report"
+        }, buildSummaryFilePath);
+    }
+}
+
 // Returns the names of any enabled code analysis tools, or empty array if none.
 function getEnabledCodeAnalysisTools():string[] {
     var result:string[] = [];
@@ -43,16 +127,6 @@ function cleanDirectory(targetDirectory:string):boolean {
     tl.mkdirP(targetDirectory);
 
     return tl.exist(targetDirectory);
-}
-
-// Apply goals for enabled code analysis tools
-export function applyEnabledCodeAnalysisGoals(mvnRun: trm.ToolRunner):void {
-    var enabledCodeAnalysisTools:string[] = getEnabledCodeAnalysisTools();
-
-    // PMD
-    if (enabledCodeAnalysisTools.indexOf(pmd.toolName) > -1) {
-        pmd.applyPmdArgs(mvnRun);
-    }
 }
 
 // Identifies maven modules below the root by the presence of a pom.xml file and a /target/ directory,
@@ -154,78 +228,4 @@ function uploadBuildArtifacts(toolName:string, moduleAnalysis:ma.ModuleAnalysis)
         // NB: Artifact names need to be unique on an upload-by-upload basis
         artifactname: buildNumber + '_' + moduleAnalysis.moduleName + '_' + toolName
     }, localStagingDir);
-}
-
-// Extract data from code analysis output files and upload results to build server
-export function uploadCodeAnalysisResults():void {
-    // Need to run this if any one of the code analysis tools were run
-    var enabledCodeAnalysisTools = getEnabledCodeAnalysisTools();
-    if (enabledCodeAnalysisTools.length > 0) {
-        // Discover maven modules
-        var modules:ma.ModuleAnalysis[] = findCandidateModules(sourcesDir);
-
-        // Special case: if the root turns up as a module, the automatic name won't do
-        modules.forEach((module:ma.ModuleAnalysis) => {
-            if (module.rootDirectory == sourcesDir) {
-                module.moduleName = 'root';
-            }
-        });
-
-        tl.debug('Discovered ' + modules.length + ' Maven modules to upload results from.');
-
-        // Discover output files, summarise per-module results
-        modules.forEach((module:ma.ModuleAnalysis) => {
-            // PMD
-            if (enabledCodeAnalysisTools.indexOf(pmd.toolName) > -1) {
-                try {
-                    var pmdResults:ar.AnalysisResult = pmd.collectPmdOutput(module.rootDirectory);
-                    if (pmdResults) {
-                        module.analysisResults[pmdResults.toolName] = pmdResults;
-                    }
-                } catch(e) {
-                    tl.error(e.message);
-                    tl.exit(1);
-                }
-            }
-
-        });
-
-
-        // Gather analysis results by tool for summaries, stage and upload build artifacts
-        var buildSummaryLines:string[] = [];
-        cleanDirectory(stagingDir);
-
-        enabledCodeAnalysisTools.forEach((toolName:string) => {
-            var toolAnalysisResults:ar.AnalysisResult[] = [];
-            modules.forEach((module:ma.ModuleAnalysis) => {
-                var moduleAnalysisResult:ar.AnalysisResult = module.analysisResults[toolName];
-                if (moduleAnalysisResult) {
-                    toolAnalysisResults.push(moduleAnalysisResult);
-                }
-
-                uploadBuildArtifacts(toolName, module);
-            });
-
-            // After looping through all modules, summarise tool output results
-            try {
-                var summaryLine:string = createSummaryLine(toolName, toolAnalysisResults);
-            } catch (error) {
-                tl.error(error.message);
-            }
-            buildSummaryLines.push(summaryLine);
-        });
-
-        // Save and upload build summary
-        // Looks like: "PMD found 13 violations in 4 files.  \r\n
-        // FindBugs found 10 violations in 8 files."
-        var buildSummaryContents:string = buildSummaryLines.join("  \r\n"); // Double space is end of line in markdown
-        var buildSummaryFilePath:string = path.join(stagingDir, 'CodeAnalysisBuildSummary.md');
-        fs.writeFileSync(buildSummaryFilePath, buildSummaryContents);
-        tl.debug('Uploading build summary from ' + buildSummaryFilePath);
-
-        tl.command('task.addattachment', {
-            'type': 'Distributedtask.Core.Summary',
-            'name': "Code Analysis Report"
-        }, buildSummaryFilePath);
-    }
 }
