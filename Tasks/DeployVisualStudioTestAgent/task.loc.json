@@ -16,7 +16,7 @@
     "Patch": 23
   },
   "demands": [],
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "1.95.2",
   "groups": [
     {
       "name": "testMachineGroups",

@@ -15,7 +15,7 @@
         "Minor": 0,
         "Patch": 28
     },
-    "minimumAgentVersion": "1.95.1",
+    "minimumAgentVersion": "1.95.2",
     "groups": [
         {
             "name": "deployment",
