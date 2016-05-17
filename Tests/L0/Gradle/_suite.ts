@@ -418,8 +418,8 @@ describe('gradle Suite', function() {
             });
     })
 
-    it('Gradle with jacoco selected should call enable and publish code coverage.', (done) => {
-        setResponseFile('gradleCodeCoverageGood.json');
+    it('Gradle with jacoco selected should call enable and publish code coverage for a single module project.', (done) => {
+        setResponseFile('gradleCCSingleModule.json');
 
         var tr = new trm.TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
@@ -448,8 +448,38 @@ describe('gradle Suite', function() {
             });
     })
     
+    it('Gradle with jacoco selected should call enable and publish code coverage for a multi module project.', (done) => {
+        setResponseFile('gradleCCMultiModule.json');
+
+        var tr = new trm.TaskRunner('gradle');
+        tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('options', '');
+        tr.setInput('tasks', 'build');
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
+                assert(tr.ran('gradlew build jacocoRootReport'), 'it should have run gradlew build');
+                assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
+                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=true;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    
     it('Gradle with cobertura selected should call enable and publish code coverage.', (done) => {
-        setResponseFile('gradleCodeCoverageGood.json');
+        setResponseFile('gradleCCSingleModule.json');
 
         var tr = new trm.TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
