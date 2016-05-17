@@ -21,7 +21,7 @@ param(
     [string]$skipCACheck,
     [string]$outputVariable,
     [string]$enableDeploymentPrerequisitesForCreate,
-	[string]$enableDeploymentPrerequisitesForSelect
+    [string]$enableDeploymentPrerequisitesForSelect
 )
 
 Write-Verbose "Starting Azure Resource Group Deployment Task"
@@ -122,7 +122,7 @@ try
         }
     }
 	
-	Write-Verbose "Completing Azure Resource Group Deployment Task"
+	Write-Verbose "Completing Azure Resource Group Deployment Task" -Verbose
 }
 catch
 {

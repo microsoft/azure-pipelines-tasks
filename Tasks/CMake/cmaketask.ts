@@ -11,7 +11,7 @@ var cwd = tl.getPathInput('cwd', true, false);
 tl.mkdirP(cwd);
 tl.cd(cwd);
 
-cmake.arg(tl.getInput('cmakeArgs', false));
+cmake.argString(tl.getInput('cmakeArgs', false));
 
 cmake.exec()
 .then(function(code) {

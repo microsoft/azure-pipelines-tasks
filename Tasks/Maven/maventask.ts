@@ -15,7 +15,7 @@ if (mavenVersionSelection == 'Path') {
         tl.debug('M2_HOME set to ' + mavenPath)
     }
 } else {
-    tl.debug('Using maven from standard system path')
+    tl.debug('Using maven from standard system path');
     mvntool = tl.which('mvn', true);
 }
 tl.debug('Maven binary: ' + mvntool);
@@ -88,7 +88,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         }
 
         var tp = new tl.TestPublisher("JUnit");
-        tp.publish(matchingTestResultsFiles, false, "", "", "", "");
+        tp.publish(matchingTestResultsFiles, true, "", "", "", true);
     }
 }
 
@@ -116,7 +116,7 @@ function getSonarQubeRunner() {
 
     mvnsq.arg('-f');
     mvnsq.pathArg(mavenPOMFile);
-    mvnsq.arg(mavenOptions); // add the user options to allow further customization of the SQ run
+    mvnsq.argString(mavenOptions); // add the user options to allow further customization of the SQ run
     mvnsq.arg("sonar:sonar");
 
     return mvnsq;
@@ -203,6 +203,57 @@ function createMavenSQRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?
     return mvnsq;
 }
 
+function processMavenOutput(data) {
+    if(data == null) {
+        return;
+    }
+
+    data = data.toString();
+    var input = data;
+    var severity = 'NONE';
+    if(data.charAt(0) === '[') {
+        var rightIndex = data.indexOf(']');
+        if(rightIndex > 0) {
+            severity = data.substring(1, rightIndex);
+
+            if(severity === 'ERROR' || severity === 'WARNING') {
+                // Try to match output like
+                // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
+                // A successful match will return an array of 5 strings - full matched string, file path, line number, column number, error message
+                input = input.substring(rightIndex + 1);
+                var compileErrorsRegex = /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;
+                var matches = [];
+                var match;
+                while (match = compileErrorsRegex.exec(input.toString())) {
+                    matches = matches.concat(match);
+                }
+
+                if(matches != null) {
+                    var index = 0;
+                    while (index + 4 < matches.length) {
+                        tl.debug('full match = ' + matches[index + 0]);
+                        tl.debug('file path = ' + matches[index + 1]);
+                        tl.debug('line number = ' + matches[index + 2]);
+                        tl.debug('column number = ' + matches[index + 3]);
+                        tl.debug('message = ' + matches[index + 4]);
+
+                        // task.issue is only for xplat agent and doesn't provide the sourcepath link on summary page
+                        // we should use task.logissue when xplat agent is not used anymore so this will workon the coreCLR agent
+                        tl.command('task.issue', {
+                            type: severity.toLowerCase(),
+                            sourcepath: matches[index + 1],
+                            linenumber: matches[index + 2],
+                            columnnumber: matches[index + 3]
+                        }, matches[index + 0]);
+
+                        index = index + 5;
+                    }
+                }
+            }
+        }
+    }
+}
+
 /*
 Maven task orchestration:
 1. Check that maven exists 
@@ -223,6 +274,10 @@ mvnv.exec()
     process.exit(1);
 })
 .then(function (code) {
+        //read maven stdout
+        mvnb.on('stdout', function (data) {
+            processMavenOutput(data);
+        });
     return mvnb.exec(); // run Maven with the user specified goals
 })
 .fail(function (err) {

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 33
+    "Patch": 40
   },
   "demands": [
     "ant"
@@ -42,7 +42,7 @@
       "name": "antBuildFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.antBuildFile",
-      "defaultValue": "",
+      "defaultValue": "build.xml",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.antBuildFile"
     },
@@ -59,7 +59,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.targets",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.targets"
     },
     {
       "name": "publishJUnitResults",
@@ -100,8 +101,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
         "None": "None",
-        "JaCoCo": "JaCoCo",
-        "Cobertura": "Cobertura"
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
       }
     },
     {

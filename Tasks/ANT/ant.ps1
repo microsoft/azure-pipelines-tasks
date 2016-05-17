@@ -187,7 +187,7 @@ if($publishJUnitResultsFromAntBuild)
 	$runTitleMemberExists = CmdletHasMember "RunTitle"
 	if($runTitleMemberExists)
 	{
-		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
+		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle -MergeResults $true
 	}
 	else
 	{
@@ -195,7 +195,7 @@ if($publishJUnitResultsFromAntBuild)
 		{
 			Write-Warning "Update the build agent to be able to use the custom run title feature."
 		}
-		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -MergeResults $true
 	}
     }    
 }

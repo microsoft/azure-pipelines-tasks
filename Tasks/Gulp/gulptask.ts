@@ -30,6 +30,7 @@ if(!tl.exist(gulp)) {
 }
 else {
 	var gt = tl.createToolRunner(gulp);
+	gt.arg('--no-color');
 }
 
 // optional - no tasks will concat nothing
@@ -39,7 +40,7 @@ gt.arg('--gulpfile');
 
 gt.pathArg(gulpFile);
 
-gt.arg(tl.getInput('arguments', false));
+gt.argString(tl.getInput('arguments', false));
 
 gt.exec()
 .then(function(code) {

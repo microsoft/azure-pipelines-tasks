@@ -12,8 +12,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 38
+    "Patch": 40
   },
+  "minimumAgentVersion": "1.95.0",
   "demands": [
     "msbuild",
     "java"
@@ -113,6 +114,15 @@
       "label": "ms-resource:loc.input.label.configFile",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.configFile",
+      "groupName": "advanced"
+    },
+    {
+      "name": "includeFullReport",
+      "type": "boolean",
+      "defaultValue": "true",
+      "label": "ms-resource:loc.input.label.includeFullReport",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.includeFullReport",
       "groupName": "advanced"
     },
     {

@@ -89,7 +89,7 @@ function Get-AzureMachineStatus
           [string]$name)
 }
 
-# Returns details of the custon script extension $name of VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name of VM $vmName present in ResourceGroup $resourceGroupName
 function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
@@ -97,7 +97,7 @@ function Get-AzureMachineCustomScriptExtension
           [string]$name)
 }
 
-# Returns details of the custon script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
 function Set-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
@@ -109,7 +109,7 @@ function Set-AzureMachineCustomScriptExtension
           [string]$location)
 }
 
-# Returns details of the custon script extension $name deleted from VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name deleted from VM $vmName present in ResourceGroup $resourceGroupName
 function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,

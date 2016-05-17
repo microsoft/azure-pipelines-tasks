@@ -1,0 +1,86 @@
+{
+  "id": "F20661EB-E0F7-4AFD-9A86-9FE9D1A93382",
+  "name": "ApacheJMeterLoadTest",
+  "friendlyName": "Cloud-based Apache JMeter Load Test",
+  "description": "Runs the Apache JMeter load test in cloud",
+  "helpMarkDown": "This task can be used to trigger an Apache JMeter load test in cloud using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?LinkId=784929).",
+  "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "VS Team Service Endpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select a service endpoint to connect to the Cloud-based Load Test service. Choose 'Manage' to register a new endpoint."
+    },
+    {
+      "name": "TestDrop",
+      "type": "filePath",
+      "label": "Apache JMeter test files folder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root where the load test files are available."
+    },
+    {
+      "name": "LoadTest",
+      "type": "string",
+      "label": "Apache JMeter file",
+      "defaultValue": "jmeter.jmx",
+      "required": true,
+      "helpMarkDown": "The Apache JMeter test filename to be used under the load test folder specified above."
+    },
+    {
+      "name": "agentCount",
+      "type": "pickList",
+      "label": "Agent Count",
+      "required": true,
+      "helpMarkDown": "Number of test agents (dual-core) used in the run.",
+      "defaultValue": "1",
+      "options": {
+        "1":"1",
+        "2":"2",
+        "3":"3",
+        "4":"4",
+        "5":"5"
+      }
+    },
+    {
+      "name": "runDuration",
+      "type": "pickList",
+      "label": "Run Duration (sec)",
+      "required": true,
+      "helpMarkDown": "Load test run duration in seconds.",
+      "defaultValue": "60",
+      "options": {
+        "60":"60",
+        "120":"120",
+        "180":"180",
+        "240":"240",
+        "300":"300"
+      }
+    }
+  ],
+  "instanceNameFormat": "Apache JMeter Test $(LoadTest)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Start-ApacheJMeterTest.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

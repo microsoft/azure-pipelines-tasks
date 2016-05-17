@@ -6,13 +6,13 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613739)",
     "category": "Utility",
     "visibility": [
-                "Build"
-                  ],
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 13
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -24,15 +24,15 @@
         }
     ],
     "inputs": [
-       {
-            "name":"action",
-            "type":"radio",
-            "label":"Action",
-            "required":true,
-            "defaultValue":"Activate",
+        {
+            "name": "action",
+            "type": "radio",
+            "label": "Action",
+            "required": true,
+            "defaultValue": "Activate",
             "options": {
-                "Activate":"Activate",
-                "Deactivate":"Deactivate"
+                "Activate": "Activate",
+                "Deactivate": "Deactivate"
             }
         },
         {
@@ -52,17 +52,17 @@
             "helpMarkDown": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value."
         },
         {
-          "name": "product",
-          "type": "pickList",
-          "label": "Xamarin Product",
-          "defaultValue": "MA",
-          "required": true,
-          "helpMarkDown": "Xamarin product name.",
-          "options": {
-            "MA": "Xamarin.Android",
-            "MT": "Xamarin.iOS",
-            "MM": "Xamarin.Mac"
-          }
+            "name": "product",
+            "type": "pickList",
+            "label": "Xamarin Product",
+            "defaultValue": "MA",
+            "required": true,
+            "helpMarkDown": "Xamarin product name.",
+            "options": {
+                "MA": "Xamarin.Android",
+                "MT": "Xamarin.iOS",
+                "MM": "Xamarin.Mac"
+            }
         },
         {
             "name": "timeout",

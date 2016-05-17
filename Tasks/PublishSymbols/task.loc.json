@@ -12,9 +12,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 22
+    "Patch": 26
   },
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
@@ -35,7 +35,7 @@
       "name": "SearchPattern",
       "type": "string",
       "label": "ms-resource:loc.input.label.SearchPattern",
-      "defaultValue": "**\\bin\\**\\*.pdb",
+      "defaultValue": "**/bin/**/*.pdb",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
     },

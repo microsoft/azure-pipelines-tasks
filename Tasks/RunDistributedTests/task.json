@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 33
+        "Patch": 35
     },
     "demands": [
     ],
@@ -27,6 +27,12 @@
         {
             "name": "executionOptions",
             "displayName": "Execution Options",
+            "isExpanded": true
+        },
+        {
+            "name": "executionDistributionMethod",
+            "displayName": "Execution Distribution Method",
+            "tags" : [ "Preview" ],
             "isExpanded": true
         },
         {
@@ -150,6 +156,15 @@
             "required": false,
             "helpMarkDown": "Whether code coverage needs to be enabled.",
             "groupName": "executionOptions"
+        },
+        {
+            "name": "customSlicingEnabled",
+            "type": "boolean",
+            "label": "Uniform Distribution Enabled",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Whether tests are to be uniformly distributed amongst agents.",
+            "groupName": "executionDistributionMethod"
         },
         {
  	          "name": "testRunTitle", 

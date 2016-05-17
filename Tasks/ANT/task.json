@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 33
+        "Patch": 40
     },
     "demands": [
         "ant"
@@ -42,9 +42,9 @@
             "name": "antBuildFile",
             "type": "filePath",
             "label": "Ant build file",
-            "defaultValue": "",
+            "defaultValue": "build.xml",
             "required": true,
-            "helpMarkDown": "Relative path from the repository root to the `Ant build file`."
+            "helpMarkDown": "Relative path from the repository root to the Ant build file."
         },
         {
             "name": "options",
@@ -52,23 +52,24 @@
             "label": "Options",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide any options to pass to the Ant command line.  You can provide your own properties (for example, ***-DmyProperty=myPropertyValue***) and also use built-in variables (for example, ***-DcollectionId=$(system.collectionId)***).  Alternatively, the built-in variables are already set as environment variables during the build and can be passed directly (for example, ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***)."
+            "helpMarkDown": "Provide any options to pass to the Ant command line. You can provide your own properties (for example, ***-DmyProperty=myPropertyValue***) and also use built-in variables (for example, ***-DcollectionId=$(system.collectionId)***). Alternatively, the built-in variables are already set as environment variables during the build and can be passed directly (for example, ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***)."
         },
         {
             "name": "targets",
             "type": "string",
             "label": "Target(s)",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "helpMarkDown": "An optional, space-separated list of targets to build. If not specified, the `default` target will be used. If no `default` target is defined, Ant 1.6.0 and later will build all top-level tasks."
         },
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to VSTS/TFS",
+            "label": "Publish to TFS/Team Services",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit Test results produced by the Ant build to VSTS/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS/TFS."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Ant build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services."
         },
         {
             "name": "testResultsFiles",
@@ -77,7 +78,7 @@
             "defaultValue": "**/TEST-*.xml",
             "required": true,
             "groupName": "junitTestResults",
-            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-.",
+            "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
             "visibleRule": "publishJUnitResults = true"
         },
         {
@@ -87,7 +88,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "junitTestResults",
-            "helpMarkDown": "Provide a name for the Test Run.",
+            "helpMarkDown": "Provide a name for the test run.",
             "visibleRule": "publishJUnitResults = true"
         },
         {
@@ -97,11 +98,11 @@
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "None",
-            "helpMarkDown": "Select the code coverage tool. For on premise agent setup please refer to the more information link below.",
+            "helpMarkDown": "Select the code coverage tool. For on-premises agent support, refer to the `More Information` link below.",
             "options": {
                 "None": "None",
-                "JaCoCo": "JaCoCo",
-                "Cobertura": "Cobertura"
+                "Cobertura": "Cobertura",
+                "JaCoCo": "JaCoCo"
             }
         },
         {
@@ -111,7 +112,7 @@
             "defaultValue": ".",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of relative paths from ant build file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. For example: target/classes,target/testClasses.",
+            "helpMarkDown": "Comma-separated list of relative paths from the Ant build file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -121,7 +122,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of filters to include or exclude classes from collecting code coverage. For example: `+:com.*`,`+:org.*`,`-:my.app*.*`.",
+            "helpMarkDown": "Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -131,7 +132,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma separated list of relative paths from ant build file to source directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.",
+            "helpMarkDown": "Comma-separated list of relative paths from the Ant build file to source code directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -188,7 +189,7 @@
             "label": "JDK Architecture",
             "defaultValue": "x86",
             "required": false,
-            "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of the JDK.",
             "groupName": "advanced",
             "options": {
                 "x86": "x86",

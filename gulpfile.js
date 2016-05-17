@@ -1,20 +1,27 @@
-var gulp = require('gulp');
-var path = require('path');
-var del = require('del');
-var shell = require('shelljs')
-var pkgm = require('./package');
-var gutil = require('gulp-util');
-var zip = require('gulp-zip');
-var minimist = require('minimist');
-var os = require('os');
-var fs = require('fs');
-var semver = require('semver');
-var Q = require('q');
-var exec = require('child_process').exec;
-var tsc = require('gulp-tsc');
-var mocha = require('gulp-mocha');
+// node built-ins
 var cp = require('child_process');
+var exec = require('child_process').exec;
+var fs = require('fs');
+var path = require('path');
+var os = require('os');
 
+// build/test script
+var minimist = require('minimist');
+var mocha = require('gulp-mocha');
+var Q = require('q');
+var semver = require('semver');
+var shell = require('shelljs')
+
+// gulp modules
+var del = require('del');
+var gts = require('gulp-typescript');
+var gulp = require('gulp');
+var gutil = require('gulp-util');
+var pkgm = require('./package');
+var typescript = require('typescript');
+var zip = require('gulp-zip');
+
+// validation
 var NPM_MIN_VER = '3.0.0';
 var MIN_NODE_VER = '4.0.0';
 
@@ -23,7 +30,7 @@ if (semver.lt(process.versions.node, MIN_NODE_VER)) {
     process.exit(1);
 }
 
-/*
+/*----------------------------------------------------------------------------------------
 Distinct build, test and Packaging Phases:
 
 Build:
@@ -45,61 +52,43 @@ Package (only on windows):
 - if nuget found (windows):
   - create nuget package
   - if server url, publish package - this is for our VSO build 
-*/
+----------------------------------------------------------------------------------------*/
 
+//
+// Options
+//
 var mopts = {
-    boolean: 'ci',
     string: 'suite',
-    default: { ci: false, suite: '**' }
+    default: { suite: '**' }
 };
 
 var options = minimist(process.argv.slice(2), mopts);
 
+//
+// Paths
+//
 var _buildRoot = path.join(__dirname, '_build', 'Tasks');
 var _testRoot = path.join(__dirname, '_build', 'Tests');
 var _testTemp = path.join(_testRoot, 'Temp');
 var _pkgRoot = path.join(__dirname, '_package');
 var _oldPkg = path.join(__dirname, 'Package');
 var _wkRoot = path.join(__dirname, '_working');
-
 var _tempPath = path.join(__dirname, '_temp');
+
+//-----------------------------------------------------------------------------------------------------------------
+// Build Tasks
+//-----------------------------------------------------------------------------------------------------------------
+
+function errorHandler(err) {
+    process.exit(1);
+}
+
+var proj = gts.createProject('./tsconfig.json', { typescript: typescript });
+var ts = gts(proj);
 
 gulp.task('clean', function (cb) {
     del([_buildRoot, _pkgRoot, _wkRoot, _oldPkg], cb);
 });
-
-gulp.task('cleanTests', function (cb) {
-    del([_testRoot], cb);
-});
-
-gulp.task('compileTests', ['cleanTests'], function (cb) {
-    var testsPath = path.join(__dirname, 'Tests', '**/*.ts');
-    return gulp.src([testsPath, 'definitions/*.d.ts'])
-        .pipe(tsc())
-        .pipe(gulp.dest(_testRoot));
-});
-
-gulp.task('ps1tests', ['compileTests'], function (cb) {
-    return gulp.src(['Tests/**/*.ps1', 'Tests/**/*.json'])
-        .pipe(gulp.dest(_testRoot));
-});
-
-gulp.task('copyTestData', ['compileTests'], function (cb) {
-    return gulp.src(['Tests/**/data/**'],{ dot: true })
-        .pipe(gulp.dest(_testRoot));
-});
-
-gulp.task('testLib', ['compileTests'], function (cb) {
-    return gulp.src(['Tests/lib/**/*'])
-        .pipe(gulp.dest(path.join(_testRoot, 'lib')));
-});
-
-gulp.task('testLib_NodeModules', ['testLib'], function (cb) {
-    return gulp.src(path.join(_testRoot, 'lib/vsts-task-lib/**/*'))
-        .pipe(gulp.dest(path.join(_testRoot, 'lib/node_modules/vsts-task-lib')));
-});
-
-gulp.task('testResources', ['testLib_NodeModules', 'ps1tests', 'copyTestData']);
 
 // compile tasks inline
 gulp.task('compileTasks', ['clean'], function (cb) {
@@ -115,9 +104,10 @@ gulp.task('compileTasks', ['clean'], function (cb) {
 
 
     var tasksPath = path.join(__dirname, 'Tasks', '**/*.ts');
-    return gulp.src([tasksPath, 'definitions/*.d.ts'])
-        .pipe(tsc())
-        .pipe(gulp.dest(path.join(__dirname, 'Tasks')));
+    return gulp.src([tasksPath, 'definitions/*.d.ts'], { base: './Tasks'})
+        .pipe(ts)
+        .on('error', errorHandler)
+        .pipe(gulp.dest(path.join(__dirname, 'Tasks'))); 
 });
 
 gulp.task('compile', ['compileTasks', 'compileTests']);
@@ -138,18 +128,57 @@ gulp.task('build', ['locCommon'], function () {
         .pipe(pkgm.PackageTask(_buildRoot, commonDeps, commonSrc));
 });
 
+gulp.task('default', ['build']);
+
+//-----------------------------------------------------------------------------------------------------------------
+// Test Tasks
+//-----------------------------------------------------------------------------------------------------------------
+
+gulp.task('cleanTests', function (cb) {
+    del([_testRoot], cb);
+});
+
+gulp.task('compileTests', ['cleanTests'], function (cb) {
+    var testsPath = path.join(__dirname, 'Tests', '**/*.ts');
+
+    return gulp.src([testsPath, 'definitions/*.d.ts'], { base: './Tests'})
+        .pipe(ts)
+        .on('error', errorHandler)
+        .pipe(gulp.dest(_testRoot));
+});
+
+gulp.task('testLib', ['compileTests'], function (cb) {
+    return gulp.src(['Tests/lib/**/*'])
+        .pipe(gulp.dest(path.join(_testRoot, 'lib')));
+});
+
+gulp.task('copyTestData', ['compileTests'], function (cb) {
+    return gulp.src(['Tests/**/data/**'],{ dot: true })
+        .pipe(gulp.dest(_testRoot));
+});
+
+gulp.task('ps1tests', ['compileTests'], function (cb) {
+    return gulp.src(['Tests/**/*.ps1', 'Tests/**/*.json'])
+        .pipe(gulp.dest(_testRoot));
+});
+
+gulp.task('testLib_NodeModules', ['testLib'], function (cb) {
+    return gulp.src(path.join(_testRoot, 'lib/vsts-task-lib/**/*'))
+        .pipe(gulp.dest(path.join(_testRoot, 'lib/node_modules/vsts-task-lib')));
+});
+
+gulp.task('testResources', ['testLib_NodeModules', 'ps1tests', 'copyTestData']);
+
 gulp.task('test', ['testResources'], function () {
     process.env['TASK_TEST_TEMP'] = _testTemp;
     shell.rm('-rf', _testTemp);
     shell.mkdir('-p', _testTemp);
 
     var suitePath = path.join(_testRoot, options.suite + '/_suite.js');
-
+    var tfBuild = ('' + process.env['TF_BUILD']).toLowerCase() == 'true'
     return gulp.src([suitePath])
-        .pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !options.ci }));
+        .pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !tfBuild }));
 });
-
-gulp.task('default', ['build']);
 
 //-----------------------------------------------------------------------------------------------------------------
 // INTERNAL BELOW

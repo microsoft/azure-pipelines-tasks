@@ -14,7 +14,7 @@ $telemetryCodes =
   "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
   "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
   "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
-  "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
+  "PREREQ_UnsupportedAzurePSVersion" = "PREREQ_UnsupportedAzurePSVersion";
   "PREREQ_ClassicStorageAccountNotFound" = "PREREQ_ClassicStorageAccountNotFound";
   "PREREQ_RMStorageAccountNotFound" = "PREREQ_RMStorageAccountNotFound";
   "PREREQ_NoClassicVMResources" = "PREREQ_NoClassicVMResources";
@@ -124,7 +124,7 @@ function Validate-AzurePowershellVersion
 
     if(!$versionCompatible)
     {
-        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVerion"
+        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVersion"
         Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
     }
 
@@ -427,7 +427,7 @@ function Get-MachineNameFromId
           [System.Collections.Hashtable]$map,
           [string]$mapParameter,
           [Object]$azureRMVMResources,
-          [boolean]$throwOnTotalUnavaialbility,
+          [boolean]$throwOnTotalUnavailability,
           [string]$debugLogsFlag)
 
     if($map)
@@ -441,7 +441,7 @@ function Get-MachineNameFromId
             Write-Verbose ($azureRMVMResources | Format-List | Out-String) -verbose
         }
 
-        Write-Verbose "throwOnTotalUnavaialbility: $throwOnTotalUnavaialbility"
+        Write-Verbose "throwOnTotalUnavailability: $throwOnTotalUnavailability"
 
         $errorCount = 0
         foreach($vm in $azureRMVMResources)
@@ -461,7 +461,7 @@ function Get-MachineNameFromId
             }
         }
 
-        if($throwOnTotalUnavaialbility -eq $true)
+        if($throwOnTotalUnavailability -eq $true)
         {
             if($errorCount -eq $azureRMVMResources.Count -and $azureRMVMResources.Count -ne 0)
             {
@@ -716,13 +716,13 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             }
 
             $winRMHttpsPortMap = Get-MachineNameFromId -Map $winRMHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources `
-                                                       -ThrowOnTotalUnavaialbility $false -debugLogsFlag $debugLogsFlag
+                                                       -throwOnTotalUnavailability $false -debugLogsFlag $debugLogsFlag
         }
 
         $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources -networkInterfaceResources $networkInterfaceResources `
                                                 -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap -debugLogsFlag $debugLogsFlag
         $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources `
-                                         -ThrowOnTotalUnavaialbility $true -debugLogsFlag $debugLogsFlag
+                                         -throwOnTotalUnavailability $true -debugLogsFlag $debugLogsFlag
 
         foreach ($resource in $azureRMVMResources)
         {
@@ -905,7 +905,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
                             $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVMsCredentials, `
-                            $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocal, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
+                            $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $status = $copyResponse.Status
 
@@ -924,7 +924,7 @@ function Copy-FilesSequentiallyToAzureVMs
     }
 }
 
-function Copy-FilesParallelyToAzureVMs
+function Copy-FilesParallellyToAzureVMs
 {
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
           [string][Parameter(Mandatory=$true)]$containerName,
@@ -951,20 +951,20 @@ function Copy-FilesParallelyToAzureVMs
 
         $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
                    $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, `
-                   $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocal, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
+                   $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $Jobs.Add($job.Id, $resourceProperties)
     }
 
-    While (Get-Job)
+    While ($Jobs.Count -gt 0)
     {
         Start-Sleep 10
         foreach ($job in Get-Job)
         {
-            if ($job.State -ne "Running")
+            if ($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
             {
                 $output = Receive-Job -Id $job.Id
-                Remove-Job $Job
+                Remove-Job $Job                
 
                 $status = $output.Status
                 $resourceName = $Jobs.Item($job.Id).Name
@@ -984,11 +984,12 @@ function Copy-FilesParallelyToAzureVMs
 
                     Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
                 }
+                $Jobs.Remove($job.Id)
             }
         }
     }
 
-    # While copying paralelly, if copy failed on one or more azure VMs then throw
+    # While copying parallelly, if copy failed on one or more azure VMs then throw
     if ($parallelOperationStatus -eq "Failed")
     {
         $errorMessage = (Get-LocalizedString -Key 'Copy to one or more machines failed.')
@@ -1024,17 +1025,17 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
     }
-    # copies files parallely
+    # copies files parallelly
     else
     {
-        Copy-FilesParallelyToAzureVMs `
+        Copy-FilesParallellyToAzureVMs `
                 -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
     }
 
-    # if no error thrown, copy succesfully succeeded
+    # if no error thrown, copy successfully succeeded
     Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $resourceGroupName)
 }
 

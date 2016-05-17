@@ -166,7 +166,7 @@ function Register-Mock {
             'Command' = $Command
             'Implementations' = @( )
             'Invocations' = @( )
-            'GlobalAlias' = New-Alias -Name $Command -Value "global:$functionName" -Scope global -PassThru
+            'GlobalAlias' = New-Alias -Force -Name $Command -Value "global:$functionName" -Scope global -PassThru
             'GlobalFunction' = New-Item -Force -Path "function:\global:$functionName" -Value {
                 param()
 
@@ -190,12 +190,12 @@ function Register-Mock {
                     if (Test-Invocation -Invocation $args -ParametersEvaluator $implementation.ParametersEvaluator -ArgumentsEvaluator $implementation.ArgumentsEvaluator -Arguments $implementation.Arguments) {
                         # Verbose logging.
                         if ($implementation.ParametersEvaluator) {
-                            Write-Verbose "Matching implementation found using parameters evaluator: { $($implementation.ParametersEvaluator.ToString().Trim()) }"
+                            Write-Verbose "  Matching implementation found using parameters evaluator: { $($implementation.ParametersEvaluator.ToString().Trim()) }"
                         } elseif ($implementation.ArgumentsEvaluator) {
-                            Write-Verbose "Matching implementation found using arguments evaluator: { $($implementation.ArgumentsEvaluator.ToString().Trim()) }"
+                            Write-Verbose "  Matching implementation found using arguments evaluator: { $($implementation.ArgumentsEvaluator.ToString().Trim()) }"
                         } elseif (!([object]::ReferenceEquals($implementation.Arguments, $null))) {
                             $OFS = " "
-                            Write-Verbose "Matching implementation found using arguments: $($implementation.Arguments)"
+                            Write-Verbose "  Matching implementation found using arguments: $($implementation.Arguments)"
                         }
 
                         # Validate multiple matches not found.
@@ -209,9 +209,9 @@ function Register-Mock {
 
                 # Invoke the matching implementation.
                 if (($matchingImplementation -eq $null) -or ($matchingImplementation.Func -eq $null)) {
-                    Write-Verbose "Command is stubbed."
+                    Write-Verbose "  Command is stubbed."
                 } else {
-                    Write-Verbose "Invoking Func: { $($matchingImplementation.Func.ToString().Trim()) }"
+                    Write-Verbose "  Invoking Func: { $($matchingImplementation.Func.ToString().Trim()) }"
                     & $matchingImplementation.Func @args
                 }
             }

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 68
+        "Patch": 72
     },
     "demands": [
         "azureps"
@@ -94,10 +94,10 @@
             "required": true,
             "helpMarkDown": "Provide the name of the resource group.",
             "properties": {
-              "EditableOptions": "True"
+                "EditableOptions": "True"
             },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },
+        },        
         {
             "name": "cloudService",
             "type": "pickList",
@@ -202,8 +202,7 @@
         {
             "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureVirtualMachinesV2Id",
-            "resultTemplate": "{{#extractResource resourceGroups}}"
+            "dataSourceName": "AzureResourceGroups"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",

@@ -233,7 +233,7 @@ if (!$azureService)
     $azureService = Invoke-Expression -Command $azureService
 }
 
-$diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $CsCfg
+$diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile
 
 $label = $DeploymentLabel
 

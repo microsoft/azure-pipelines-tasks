@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 16
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -60,7 +60,7 @@
         {
             "name": "OverWrite",
             "type": "boolean",
-            "label": "Over Write",
+            "label": "Overwrite",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Replace existing file in target folder",

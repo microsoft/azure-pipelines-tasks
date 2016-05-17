@@ -40,7 +40,7 @@ describe('Gulp Suite', function() {
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
-            assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
+            assert(tr.ran('/usr/local/bin/gulp --no-color --gulpfile gulpfile.js'), 'it should have run Gulp');
             assert(tr.invokedToolCount == 1, 'should have only run Gulp');
 
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -223,7 +223,7 @@ describe('Gulp Suite', function() {
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 		.then(() => {
-            assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
+            assert(tr.ran('/usr/local/bin/gulp --no-color --gulpfile gulpfile.js'), 'it should have run gulp');
             assert(tr.invokedToolCount == 1, 'should have only run gulp');
 
             // success scripts don't necessarily set a result
@@ -237,43 +237,4 @@ describe('Gulp Suite', function() {
 			done(err);
 		});
 	})
-
-	if (ps) {
-		it('passes helper arguments', (done) => {
-			psm.runPS(path.join(__dirname, 'Gulptask.PassesHelperArguments.ps1'), done);
-		})
-
-		it('formats arguments', (done) => {
-			psm.runPS(path.join(__dirname, 'Helpers.Arguments.ps1'), done);
-		})
-
-		it('formats arguments with targets', (done) => {
-			psm.runPS(path.join(__dirname, 'Helpers.ArgumentsWithTargets.ps1'), done);
-		})
-
-		it('gets gulp command from path', (done) => {
-			psm.runPS(path.join(__dirname, 'Helpers.GulpCommand.ps1'), done);
-		})
-
-		it('falls back to gulp command from node bin path', (done) => {
-			psm.runPS(path.join(__dirname, 'Helpers.GulpCommandFromNodeBinPath.ps1'), done);
-		})
-
-		it('falls back to gulp command from sources directory', (done) => {
-			psm.runPS(path.join(__dirname, 'Helpers.GulpCommandFromSourcesDirectory.ps1'), done);
-		})
-
-		it('throws if gulp not found', (done) => {
-			psm.runPS(path.join(__dirname, 'Helpers.GulpCommandNotFound.ps1'), done);
-		})
-
-		it('sets the working directory', (done) => {
-			psm.runPS(path.join(__dirname, 'Helpers.WorkingDirectory.ps1'), done);
-		})
-
-		it('gets the default working directory', (done) => {
-			psm.runPS(path.join(__dirname, 'Helpers.WorkingDirectoryNotSet.ps1'), done);
-		})
-	}
-
 });

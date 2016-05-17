@@ -64,7 +64,7 @@ var runxbuild = function (fn) {
         }
         xbuild.arg('/t:PackageForAndroid');
         if (msbuildArguments) {
-            xbuild.arg(msbuildArguments);
+            xbuild.argString(msbuildArguments);
         }
         if (outputDir) {
             xbuild.arg('/p:OutputPath="' + outputDir + '"');

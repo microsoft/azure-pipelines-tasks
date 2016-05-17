@@ -3,13 +3,13 @@
     "name": "XamarinComponentRestore",
     "friendlyName": "Xamarin Component Restore",
     "description": "Restores Xamarin components for the specified solution",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=786653)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 3
     },
     "minimumAgentVersion": "1.96.0",
     "instanceNameFormat": "Xamarin component restore $(solution)",
@@ -18,9 +18,9 @@
             "name": "solution",
             "type": "filePath",
             "label": "Path to Solution",
-            "defaultValue":"**/*.sln",
+            "defaultValue": "**/*.sln",
             "helpMarkDown": "The path to the Visual Studio Solution file",
-            "required":"true"
+            "required": "true"
         },
         {
             "name": "email",
@@ -38,10 +38,9 @@
             "required": true,
             "helpMarkDown": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value."
         }
-
     ],
     "execution": {
-       "Node": {
+        "Node": {
             "target": "xamarincomponent.js",
             "argumentFormat": ""
         }

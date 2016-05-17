@@ -60,11 +60,11 @@ function PublishTestResults
 			Write-Verbose "Calling Publish-TestResults"
 			if([string]::IsNullOrWhiteSpace($testRunTitle))
 			{
-				Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
+				Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -MergeResults $true
 			}
 			else
 			{
-				Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle
+				Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle -MergeResults $true
 			}
 		}    
 	}

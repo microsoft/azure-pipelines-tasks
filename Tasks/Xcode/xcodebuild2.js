@@ -125,7 +125,7 @@ function processInputs() {
 	var scheme = tl.getInput('scheme', false);
 	if(scheme) {
 		xcb.arg('-scheme');
-		xcb.arg('"' + tl.getInput('scheme', true) + '"');
+		xcb.arg(tl.getInput('scheme', true));
 	} else {
 		tl.debug('No scheme specified in task.');
 	}
@@ -193,11 +193,7 @@ function execBuild(code) {
 	// Add optional additional args
 	var args=tl.getInput('args', false);			
 	if(args) {
-		xcb.arg(args);						
-	}
-	tl.debug('Complete build args: ');
-	for(var arg in xcb.args) {
-		tl.debug(xcb.args[arg]);
+		xcb.argString(args);						
 	}
 	return xcb.exec();	
 }

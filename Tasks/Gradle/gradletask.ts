@@ -16,7 +16,7 @@ tl.cd(cwd);
 
 var gb = tl.createToolRunner(wrapperScript);
 
-gb.arg(tl.getDelimitedInput('options', ' ', false));
+gb.argString(tl.getInput('options', false));
 gb.arg(tl.getDelimitedInput('tasks', ' ', true));
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
@@ -74,7 +74,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
     }
 
     var tp = new tl.TestPublisher("JUnit");
-    tp.publish(matchingTestResultsFiles, false, "", "", "", "");
+    tp.publish(matchingTestResultsFiles, true, "", "", "", true);
   } 
 }
 

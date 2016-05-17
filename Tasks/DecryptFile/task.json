@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 11
     },
     "groups": [
         {
@@ -66,11 +66,6 @@
         "Node": {
             "target": "decrypt.js",
             "argumentFormat": ""
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\decrypt.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
     }
 }

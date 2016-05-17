@@ -2,7 +2,7 @@
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "Run a PowerShell script",
-  "loc.instanceNameFormat": "Powershell Script",
+  "loc.instanceNameFormat": "PowerShell Script",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.scriptType": "Type",
   "loc.input.help.scriptType": "Type of the script: File Path or Inline Script",

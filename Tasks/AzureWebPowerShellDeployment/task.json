@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 27
+    "Patch": 31
   },
   "demands": [
     "azureps"
@@ -70,7 +70,7 @@
         "type": "boolean",
         "label": "Set DoNotDelete flag",
         "defaultValue": "false",
-        "helpMarkDown": "By enabling this, additonal files in web deployment package are preserved while publishing website.",
+        "helpMarkDown": "By enabling this, additional files in web deployment package are preserved while publishing website.",
         "required": false
     },
     {

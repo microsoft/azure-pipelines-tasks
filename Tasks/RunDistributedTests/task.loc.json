@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 33
+    "Patch": 35
   },
   "demands": [],
   "minimumAgentVersion": "1.95.0",
@@ -26,6 +26,14 @@
     {
       "name": "executionOptions",
       "displayName": "ms-resource:loc.group.displayName.executionOptions",
+      "isExpanded": true
+    },
+    {
+      "name": "executionDistributionMethod",
+      "displayName": "ms-resource:loc.group.displayName.executionDistributionMethod",
+      "tags": [
+        "Preview"
+      ],
       "isExpanded": true
     },
     {
@@ -152,6 +160,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
       "groupName": "executionOptions"
+    },
+    {
+      "name": "customSlicingEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.customSlicingEnabled",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customSlicingEnabled",
+      "groupName": "executionDistributionMethod"
     },
     {
       "name": "testRunTitle",

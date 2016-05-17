@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 11
     },
     "demands": [],
     "minimumAgentVersion": "1.90.0",
@@ -26,8 +26,8 @@
             "defaultValue": "JaCoCo",
             "helpMarkDown": "Select the tool with which code coverage summary files have been generated",
             "options": {
-                "JaCoCo": "JaCoCo",
-                "Cobertura": "Cobertura"
+                "Cobertura": "Cobertura",
+                "JaCoCo": "JaCoCo"
             }
         },
         {

@@ -6,6 +6,7 @@ var check = require('validator');
 var shell = require('shelljs');
 var Q = require('q');
 var os = require('os');
+var cp = require('child_process');
 
 var _strRelPath = path.join('Strings', 'resources.resjson', 'en-US');
 
@@ -283,6 +284,23 @@ function packageTask(pkgPath, commonDeps, commonSrc){
                         shell.mkdir('-p', dest);
                         shell.cp('-R', src, dest);
                     })
+                }
+
+                // run npm install if packages.json exists
+                var pkgJsonPath = path.join(tgtPath, 'package.json');
+                var nodeModulesPath = path.join(tgtPath, 'node_modules');
+                if (fs.existsSync(pkgJsonPath) && fs.existsSync(nodeModulesPath)) {
+                    shell.pushd(tgtPath);
+                    gutil.log('package.json exists.  Running npm install');
+                    try {
+                        cp.execSync('npm install');
+                    }
+                    catch (err) {
+                        new gutil.PluginError('PackageTask', 'npm install failed');
+                        throw new Error('npm install failed');
+                        gutil.log(err.Message);
+                    }
+                    shell.popd();
                 }
 
 	        	return;

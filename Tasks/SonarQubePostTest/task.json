@@ -12,8 +12,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 40
+    "Patch": 43
   },
+  "minimumAgentVersion": "1.95.0",
   "demands": [
     "msbuild",
     "java"
@@ -26,5 +27,4 @@
       "workingDirectory": "$(currentDirectory)"
     }
   }
-
 }

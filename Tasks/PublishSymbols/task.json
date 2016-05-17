@@ -1,20 +1,20 @@
 {
-    "id":"0675668A-7BBA-4CCB-901D-5AD6554CA653",
-    "name":"PublishSymbols",
+    "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
+    "name": "PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",
     "description": "Index your source code and publish symbols to a file share",
     "helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](http://go.microsoft.com/fwlink/?LinkID=613722)",
     "category": "Build",
     "visibility": [
-                    "Build"
-                  ],
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 26
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.95.0",
     "groups": [
         {
             "name": "advanced",
@@ -35,7 +35,7 @@
             "name": "SearchPattern",
             "type": "string",
             "label": "Search pattern",
-            "defaultValue": "**\\bin\\**\\*.pdb",
+            "defaultValue": "**/bin/**/*.pdb",
             "required": true,
             "helpMarkDown": "The pattern used to discover the pdb files to publish."
         },

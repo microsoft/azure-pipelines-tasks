@@ -2,14 +2,14 @@
     "id": "AD8974D8-DE11-11E4-B2FE-7FB898A745F3",
     "name": "cURLUploader",
     "friendlyName": "cURL Upload Files",
-    "description": "Use cURL to upload files with supported protocols. (FTP, FTPS, SFTP, HTTP, and more)",
+    "description": "Use cURL to upload files with FTP, FTPS, SFTP, HTTP, and more.",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627418)",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 13
     },
     "demands": [
         "curl"
@@ -28,7 +28,7 @@
             "label": "Files",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "File(s) to be uploaded.  Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders."
+            "helpMarkDown": "File(s) to be uploaded. Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders."
         },
         {
             "name": "username",
@@ -36,7 +36,7 @@
             "label": "Username",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the username to use for server authentication."
+            "helpMarkDown": "Specify the username for server authentication."
         },
         {
             "name": "password",
@@ -44,7 +44,7 @@
             "label": "Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the password to use for server authentication.  Password should reference a secret variable defined on the variable tab."
+            "helpMarkDown": "Specify the password for server authentication. Use a new build variable with its lock enabled on the Variables tab to encrypt this value."
         },
         {
             "name": "url",
@@ -52,7 +52,7 @@
             "label": "URL",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the URL where the file(s) will be uploaded to.  Directory should end with a trailing slash.  Possible protocols include DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET and TFTP."
+            "helpMarkDown": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`."
         },
         {
             "name": "options",
@@ -69,7 +69,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Add '--stderr -' to cURL.  By default cURL writes progress bar to stderr, and build will pick it up as error output. Suppressing this behavior."
+            "helpMarkDown": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior."
         }
     ],
     "instanceNameFormat": "Upload $(files) with cURL",

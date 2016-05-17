@@ -6,16 +6,16 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
-                "Build",
-                "Release"
-                  ],
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 22
     },
-    "demands" : [
+    "demands": [
         "azureps"
     ],
     "minimumAgentVersion": "1.95.0",

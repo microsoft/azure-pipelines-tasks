@@ -1,8 +1,3 @@
-###############################################################################################
-### Note: This file should be kept in sync with the SonarQubeHelper.ps1 from the "end task"####
-###############################################################################################
-
-
 # When passing arguments to a process, the quotes need to be doubled and   
 # the entire string needs to be placed inside quotes to avoid issues with spaces  
 function EscapeArg  
@@ -246,3 +241,72 @@ function GetSonarScannerDirectory
 }
 
 
+#
+# If a build variable that represents a feature is set to true or false, return it. Otherwise, return the specified default.   
+#
+function IsFeatureEnabled
+{
+    param ([string]$featureSettingName, [bool]$enabledByDefault)
+    
+    $featureSettingValue = GetTaskContextVariable $featureSettingName
+    
+    if ($featureSettingValue -eq "true")
+    {
+        return $true
+    }
+    
+    if ($featureSettingValue -eq "false")
+    {
+        return $false
+    }
+    
+    return $enabledByDefault        
+}
+
+#
+# Exit if the build is a PR build and PRCA is not enabled
+#
+function ExitOnPRBuild
+{    
+    if ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $false))
+    {
+        Write-Host "SonarQube analysis is disabled during builds triggered by pull requests. Set a build variable named 'SQPullRequestBot' to 'true' to have the task post code analysis issues as comments in the PR. More information at http://go.microsoft.com/fwlink/?LinkID=786316"
+        exit
+    } 
+}
+
+#
+# Compares the SonarQube server version with 5.2. Returns 0 is identical, >0 if greater, <0 if lower.
+# Note that 5.2 introduces the async analysis mode resulting in major API changes. 
+function CompareSonarQubeVersionWith52
+{
+    $versionString = GetOrFetchSonarQubeVersionString
+    
+    # Strip out '-SNAPSHOT' if it is present in version (developer versions of SonarQube might return version in this format: 5.2-SNAPSHOT)
+    $sqServerVersion = ([string]$versionString).split("-")[0]
+
+    $sqVersion = New-Object -TypeName System.Version -ArgumentList $sqServerVersion
+    $sqVersion5dot2 = New-Object -TypeName System.Version -ArgumentList "5.2"
+    
+    return $sqVersion.CompareTo($sqVersion5dot2)
+}
+
+#
+# Helper that returns the version number of the SonarQube server
+#
+function GetOrFetchSonarQubeVersionString
+{         
+    $versionString = GetTaskContextVariable "MSBuild.SonarQube.Internal.ServerVersion"
+    if ([String]::IsNullOrEmpty($versionString))
+    {
+         $command = {InvokeGetRestMethod "/api/server/version" }
+         $versionString = Retry $command -maxRetries 2 -retryDelay 1 -Verbose
+         SetTaskContextVariable "MSBuild.SonarQube.Internal.ServerVersion" $versionString
+    }
+    
+    Assert (![String]::IsNullOrEmpty($versionString)) "Could not retrieve the SonarQube server version"
+    
+    Write-Verbose "The SonarQube server version is $versionString"
+
+    return $versionString
+}
