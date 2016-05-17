@@ -1,0 +1,5 @@
+{
+     "checkPath": {
+        "/some/path/a.apk": true
+    }
+}
