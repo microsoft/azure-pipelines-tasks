@@ -261,6 +261,35 @@ declare module 'vsts-task-lib/task' {
 	    };
 	    scheme: string;
 	}
+	/*
+	 * Gets the endpoint data parameter value with specified key for a service endpoint
+	 * If the endpoint data parameter was not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param key of the parameter
+	 * @param optional whether the endpoint data is optional
+	 * @returns {string} value of the endpoint data parameter
+	 */
+	export function getEndpointDataParameter(id: string, key: string, optional: boolean): string;
+	/**
+	 * Gets the endpoint authorization scheme for a service endpoint
+	 * If the endpoint authorization scheme is not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param optional whether the endpoint authorization scheme is optional
+	 * @returns {string} value of the endpoint authorization scheme
+	 */
+	export function getEndpointAuthorizationScheme(id: string, optional: boolean): string;
+	/**
+	 * Gets the endpoint authorization parameter value for a service endpoint with specified key
+	 * If the endpoint authorization parameter is not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param key key to find the endpoint authorization parameter
+	 * @param optional optional whether the endpoint authorization scheme is optional
+	 * @returns {string} value of the endpoint authorization parameter value
+	 */
+	export function getEndpointAuthorizationParameter(id: string, key: string, optional: boolean): string;
 	/**
 	 * Gets the authorization details for a service endpoint
 	 * If the authorization was not set and is not optional, the task will fail with an error message. Execution will halt.
