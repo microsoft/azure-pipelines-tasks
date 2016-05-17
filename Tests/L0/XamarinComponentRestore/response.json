@@ -27,5 +27,8 @@
         ],
         "**/NoneMatching*.sln": [
         ]
+    },
+    "getVariable": {
+        "HOME": "/home/user/" 
     }
 }

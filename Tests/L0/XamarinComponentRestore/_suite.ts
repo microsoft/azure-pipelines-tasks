@@ -31,7 +31,7 @@ describe('XamarinComponentRestore Suite', function() {
         tr.setInput('solution', '**/*.sln');
         tr.setInput('email', 'me@ms.com');
         tr.setInput('password', 'mypass');
-        
+
         tr.run()
         .then(() => {
             if(isWin) {
