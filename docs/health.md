@@ -78,10 +78,10 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | VSBuild                        | | | | | |
 | VsTest                         | | | | | |
 | WindowsMachineFileCopy         | | | | | |
-| XamarinAndroid                 | | | | | |
-| XamarinComponentRestore        | | | | | |
-| XamarinLicense                 | | | | | |
-| XamarinTestCloud               | | | | | |
-| XamariniOS                     | | | | | |
+| XamarinAndroid                 | | | |![Green](res/green.png)| |
+| XamarinComponentRestore        | | | |![Green](res/green.png)| |
+| XamarinLicense                 | | | |![Green](res/green.png)| |
+| XamarinTestCloud               | | | |![Green](res/green.png)| |
+| XamariniOS                     | | | |![Green](res/green.png)| |
 | Xcode                          | | | | | |
 | XcodePackageiOS                | | | | | |
