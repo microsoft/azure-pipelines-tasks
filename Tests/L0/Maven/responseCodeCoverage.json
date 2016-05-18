@@ -47,6 +47,10 @@
         "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass -f pom.xml sonar:sonar": {
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
+        },
+        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF/jacoco.exec -f pom.xml sonar:sonar": {
+            "code": 0,
+            "stdout": "Maven package and SQ analysis done"
         }
     },
     "checkPath": {
@@ -69,6 +73,14 @@
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
+    },
+    "stats": {
+        "CCReport43F6D5EF/jacoco.xml": {
+            "isFile": true
+        },
+        "target/site/cobertura/coverage.xml": {
+            "isFile": true
+        }
     },
     "rmRF": {
         "target": {

@@ -40,6 +40,14 @@
         "ANT_HOME": "/user/local/bin/ANT",
         "JAVA_HOME_8_X86": "/user/local/bin/Java8"
     },
+    "stats": {
+        "CCReport43F6D5EF\\summary.xml": {
+            "isFile": true
+        },
+        "CCReport43F6D5EF\\coverage.xml": {
+            "isFile": true
+        }
+    },
     "rmRF": {
         "CCReport43F6D5EF": {
             "success": true,

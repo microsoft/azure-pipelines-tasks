@@ -16,5 +16,11 @@
     "checkPath" : {
         "/usr/local/bin/ANT": true,
         "/build/build.xml": true
+    },
+    "rmRF": {
+        "\\build\\InstrumentedClasses": {
+            "success": true,
+            "message": "success"
+        }
     }
 }

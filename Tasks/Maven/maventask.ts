@@ -90,6 +90,21 @@ if (specifiedJavaHome) {
     tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
+var ccTool = tl.getInput('codeCoverageTool');
+var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+
+if (isCodeCoverageOpted) {
+    var summaryFile: string = null;
+    var reportDirectory: string = null;
+    var reportPOMFile: string = null;
+    var execFileJacoco: string = null;
+    var ccReportTask: string = null;
+    enableCodeCoverage();
+}
+else {
+    tl.debug("Option to enable code coverage was not selected and is being skipped.");
+}
+
 // Maven task orchestration occurs as follows:
 // 1. Check that Maven exists by executing it to retrieve its version.
 // 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
@@ -107,61 +122,62 @@ mvnGetVersion.arg('-version');
 
 // 1. Check that Maven exists by executing it to retrieve its version.
 mvnGetVersion.exec()
-.fail(function (err) {
-    console.error("Maven is not installed on the agent");
-    tl.exit(1);  // tl.exit sets the step result but does not stop execution
-    process.exit(1);
-})
-.then(function (code) {
-    // Setup tool runner to execute Maven goals
-    var mvnRun = tl.createToolRunner(mvnExec);
-    mvnRun.arg('-f');
-    mvnRun.pathArg(mavenPOMFile);
-    mvnRun.argString(mavenOptions);
-    mvnRun.arg(mavenGoals);
+    .fail(function(err) {
+        console.error("Maven is not installed on the agent");
+        tl.exit(1);  // tl.exit sets the step result but does not stop execution
+        process.exit(1);
+    })
+    .then(function(code) {
+        // Setup tool runner to execute Maven goals
+        var mvnRun = tl.createToolRunner(mvnExec);
+        mvnRun.arg('-f');
+        mvnRun.pathArg(mavenPOMFile);
+        mvnRun.argString(mavenOptions);
+        mvnRun.arg(mavenGoals);
     
-    // Read Maven standard output
-    mvnRun.on('stdout', function (data) {
-        processMavenOutput(data);
-    });
+        // Read Maven standard output
+        mvnRun.on('stdout', function(data) {
+            processMavenOutput(data);
+        });
     
-    // 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
-    return mvnRun.exec(); // Run Maven with the user specified goals
-})
-.fail(function (err) {
-    console.error(err.message);
-    userRunFailed = true; // Record the error and continue
-})
-.then(function (code) {
-    // 3. Always try to run the SonarQube analysis if it is enabled.
-    var mvnsq = getSonarQubeRunner();
-    if (mvnsq) {
-        // Run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures).
-        // Note that running sonar:sonar along with the user goals is not supported due to a SonarQube bug.
-        return mvnsq.exec()
-    }
-})
-.fail(function (err) {
-    console.error(err.message);
-    console.error("SonarQube analysis failed");
-    sonarQubeRunFailed = true;
-})
-.then(function () {
-    // 4. Always publish test results even if tests fail, causing this task to fail.
-    if (publishJUnitResults == 'true') {
-        publishJUnitTestResults(testResultsFiles);
-    }
+        // 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
+        return mvnRun.exec(); // Run Maven with the user specified goals
+    })
+    .fail(function(err) {
+        console.error(err.message);
+        userRunFailed = true; // Record the error and continue
+    })
+    .then(function(code) {
+        // 3. Always try to run the SonarQube analysis if it is enabled.
+        var mvnsq = getSonarQubeRunner();
+        if (mvnsq) {
+            // Run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures).
+            // Note that running sonar:sonar along with the user goals is not supported due to a SonarQube bug.
+            return mvnsq.exec()
+        }
+    })
+    .fail(function(err) {
+        console.error(err.message);
+        console.error("SonarQube analysis failed");
+        sonarQubeRunFailed = true;
+    })
+    .then(function() {
+        // 4. Always publish test results even if tests fail, causing this task to fail.
+        if (publishJUnitResults == 'true') {
+            publishJUnitTestResults(testResultsFiles);
+        }
+        publishCodeCoverage(isCodeCoverageOpted);
     
-    // Set overall success or failure
-    if (userRunFailed || sonarQubeRunFailed) {
-        tl.exit(1); // Set task failure
-    }
-    else {
-        tl.exit(0); // Set task success
-    }
+        // Set overall success or failure
+        if (userRunFailed || sonarQubeRunFailed) {
+            tl.exit(1); // Set task failure
+        }
+        else {
+            tl.exit(0); // Set task success
+        }
 
-    // Do not force an exit as publishing results is async and it won't have finished 
-})
+        // Do not force an exit as publishing results is async and it won't have finished 
+    })
 
 // Publishes JUnit test results from files matching the specified pattern.
 function publishJUnitTestResults(testResultsFiles: string) {
@@ -186,9 +202,111 @@ function publishJUnitTestResults(testResultsFiles: string) {
         tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
         return 0;
     }
-    
+
     var tp = new tl.TestPublisher("JUnit");
     tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
+}
+
+function enableCodeCoverage() {
+    var classFilter: string = tl.getInput('classFilter');
+    var classFilesDirectories: string = tl.getInput('classFilesDirectories');
+    var sourceDirectories: string = tl.getInput('srcDirectories');
+    var buildRootPath = path.dirname(mavenPOMFile);
+    // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
+    var reportPOMFileName = "CCReportPomA4D283EG.xml";
+    reportPOMFile = path.join(buildRootPath, reportPOMFileName);
+    var targetDirectory = path.join(buildRootPath, "target");
+    ccReportTask = "jacoco:report";
+
+    if (ccTool.toLowerCase() == "jacoco") {
+        var reportDirectoryName = "CCReport43F6D5EF";
+        var summaryFileName = "jacoco.xml";
+    }
+    else if (ccTool.toLowerCase() == "cobertura") {
+        var reportDirectoryName = path.join("target", "site");
+        reportDirectoryName = path.join(reportDirectoryName, "cobertura");
+        var summaryFileName = "coverage.xml";
+    }
+
+    reportDirectory = path.join(buildRootPath, reportDirectoryName);
+    summaryFile = path.join(reportDirectory, summaryFileName);
+
+    if (ccTool.toLowerCase() == "jacoco") {
+        execFileJacoco = path.join(reportDirectory, "jacoco.exec");
+    }    
+        
+    // clean any previously generated files.
+    tl.rmRF(targetDirectory, true);
+    tl.rmRF(reportDirectory, true);
+    tl.rmRF(reportPOMFile, true);
+
+    var buildProps: { [key: string]: string } = {};
+    buildProps['buildfile'] = mavenPOMFile;
+    buildProps['classfilter'] = classFilter
+    buildProps['classfilesdirectories'] = classFilesDirectories;
+    buildProps['sourcedirectories'] = sourceDirectories;
+    buildProps['summaryfile'] = summaryFile;
+    buildProps['reportdirectory'] = reportDirectory;
+    buildProps['reportbuildfile'] = reportPOMFile;
+
+    try {
+        var codeCoverageEnabler = new tl.CodeCoverageEnabler('Maven', ccTool);
+        codeCoverageEnabler.enableCodeCoverage(buildProps);
+        tl.debug("Code coverage is successfully enabled.");
+    }
+    catch (Error) {
+        tl.warning("Enabling code coverage failed. Check the build logs for errors.");
+    }
+}
+
+function publishCodeCoverage(isCodeCoverageOpted: boolean) {
+    if (isCodeCoverageOpted) {
+        tl.debug("Collecting code coverage reports");
+
+        if (ccTool.toLowerCase() == "jacoco") {
+            var mvnReport = tl.createToolRunner(mvnExec);
+            mvnReport.arg('-f');
+            if (pathExistsAsFile(reportPOMFile)) {
+                // multi module project
+                mvnReport.pathArg(reportPOMFile);
+                mvnReport.arg("verify");
+            }
+            else {
+                mvnReport.pathArg(mavenPOMFile);
+                mvnReport.arg(ccReportTask);
+            }
+            mvnReport.exec().then(function(code) {
+                publishCCToTfs();
+            }).fail(function(err) {
+                tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
+            });
+        }
+        else if (ccTool.toLowerCase() == "cobertura") {
+            publishCCToTfs();
+        }
+    }
+}
+
+function publishCCToTfs() {
+    if (pathExistsAsFile(summaryFile)) {
+        tl.debug("Summary file = " + summaryFile);
+        tl.debug("Report directory = " + reportDirectory);
+        tl.debug("Publishing code coverage results to TFS");
+        var ccPublisher = new tl.CodeCoveragePublisher();
+        ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
+    }
+    else {
+        tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
+    }
+}
+
+function pathExistsAsFile(path: string) {
+    try {
+        return tl.stats(path).isFile();
+    }
+    catch (error) {
+        return false;
+    }
 }
 
 // Gets the SonarQube tool runner if SonarQube analysis is enabled.
@@ -266,7 +384,7 @@ function getSonarQubeAuthParameter(endpoint, paramName) {
     var parameters = Object.getOwnPropertyNames(auth['parameters']);
 
     var keyName;
-    parameters.some(function (key) {
+    parameters.some(function(key) {
 
         if (key.toLowerCase() === paramName.toLowerCase()) {
             keyName = key;
@@ -300,6 +418,9 @@ function createMavenSonarQubeRunner(sqHostUrl, sqHostUsername, sqHostPassword, s
     if (sqDbPassword) {
         mvnsq.arg('-Dsonar.jdbc.password=' + sqDbPassword);
     }
+    if (typeof execFileJacoco != "undefined" && execFileJacoco) {
+        mvnsq.arg('-Dsonar.jacoco.reportPath=' + execFileJacoco);
+    }
 
     return mvnsq;
 }
@@ -318,7 +439,7 @@ function processMavenOutput(data) {
         if (rightIndex > 0) {
             severity = data.substring(1, rightIndex);
 
-            if(severity === 'ERROR' || severity === 'WARNING') {
+            if (severity === 'ERROR' || severity === 'WARNING') {
                 // Try to match output like:
                 // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // A successful match will return an array of 5 strings - full matched string, file path, line number, column number, error message
@@ -330,7 +451,7 @@ function processMavenOutput(data) {
                     matches = matches.concat(match);
                 }
 
-                if(matches != null) {
+                if (matches != null) {
                     var index: number = 0;
                     while (index + 4 < matches.length) {
                         tl.debug('full match = ' + matches[index + 0]);

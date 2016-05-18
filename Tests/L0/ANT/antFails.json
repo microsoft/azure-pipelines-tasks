@@ -13,11 +13,17 @@
             "stdout": ""
         }
     },
-    "checkPath" : {
+    "checkPath": {
         "/usr/local/bin/ANT": true,
         "/build/build.xml": true
     },
-    "getVariable" : {
+    "getVariable": {
         "ANT_HOME": "/user/local/bin/ANT"
+    },
+    "rmRF": {
+        "\\build\\InstrumentedClasses": {
+            "success": true,
+            "message": "success"
+        }
     }
 }

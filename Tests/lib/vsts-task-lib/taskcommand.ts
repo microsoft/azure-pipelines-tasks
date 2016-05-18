@@ -21,7 +21,7 @@ export class TaskCommand {
 
     public command: string;
     public message: string;
-    public properties: {[key: string]: string};
+    public properties: { [key: string]: string };
 
     public toString() {
         var cmdStr = CMD_PREFIX + this.command;
@@ -33,7 +33,7 @@ export class TaskCommand {
                     var val = this.properties[key];
                     if (val) {
                         cmdStr += key + '=' + val + ';';
-                    }                    
+                    }
                 }
             }
         }
@@ -45,8 +45,8 @@ export class TaskCommand {
 
 export function commandFromString(commandLine) {
     var preLen = CMD_PREFIX.length;
-    var lbPos = commandLine.indexOf('[');
-    var rbPos = commandLine.indexOf(']');
+    var lbPos = commandLine.indexOf('##vso[') + preLen - 1;
+    var rbPos = commandLine.indexOf(']', lbPos);
     if (lbPos == -1 || rbPos == -1 || rbPos - lbPos < 3) {
         throw new Error('Invalid command brackets');
     }
@@ -58,10 +58,10 @@ export function commandFromString(commandLine) {
 
     if (spaceIdx > 0) {
         command = cmdInfo.trim().substring(0, spaceIdx);
-        var propSection = cmdInfo.trim().substring(spaceIdx+1);
+        var propSection = cmdInfo.trim().substring(spaceIdx + 1);
 
         var propLines = propSection.split(';');
-        propLines.forEach(function (propLine) {
+        propLines.forEach(function(propLine) {
             propLine = propLine.trim();
             if (propLine.length > 0) {
                 var propParts = propLine.split('=');

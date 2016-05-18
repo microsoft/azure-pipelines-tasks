@@ -19,12 +19,16 @@
     },
     "checkPath": {
         "/usr/local/bin/ANT": true,
-        "/build/build.xml": true,
-        "/usr/local/bin/ANT2": true
+        "/build/build.xml": true
     },
     "getVariable": {
         "ANT_HOME": "/user/local/bin/ANT",
         "JAVA_HOME_8_X86": "/user/local/bin/ANT8"
+    },
+    "stats": {
+        "\\build\\CCReport43F6D5EF\\coverage.xml": {
+            "isFile": true
+        }
     },
     "rmRF": {
         "\\build\\InstrumentedClasses": {
