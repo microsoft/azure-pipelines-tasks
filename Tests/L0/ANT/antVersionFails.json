@@ -18,7 +18,7 @@
         "/build/build.xml": true
     },
     "rmRF": {
-        "/build/InstrumentedClasses": {
+        "\\build\\InstrumentedClasses": {
             "success": true,
             "message": "success"
         }

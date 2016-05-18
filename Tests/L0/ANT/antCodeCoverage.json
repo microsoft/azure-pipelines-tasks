@@ -18,8 +18,8 @@
         }
     },
     "checkPath": {
-        "/build/build.xml": true,
-        "/usr/local/bin/ANT2": true
+        "/usr/local/bin/ANT": true,
+        "/build/build.xml": true
     },
     "getVariable": {
         "ANT_HOME": "/user/local/bin/ANT",
@@ -31,19 +31,19 @@
         }
     },
     "rmRF": {
-        "/build/InstrumentedClasses": {
+        "\\build\\InstrumentedClasses": {
             "success": true,
             "message": "success"
         },
-        "/build/cobertura.ser": {
+        "\\build\\cobertura.ser": {
             "success": true,
             "message": "success"
         },
-        "/build/CCReport43F6D5EF": {
+        "\\build\\CCReport43F6D5EF": {
             "success": true,
             "message": "success"
         },
-        "/build/CCReportBuildA4D283EG.xml": {
+        "\\build\\CCReportBuildA4D283EG.xml": {
             "success": true,
             "message": "success"
         }

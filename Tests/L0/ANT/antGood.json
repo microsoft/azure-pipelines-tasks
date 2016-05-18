@@ -17,7 +17,7 @@
             "stdout": ""
         }
     },
-    "checkPath" : {
+    "checkPath": {
         "/usr/local/bin/ANT": true,
         "/build/build.xml": true,
         "/usr/local/bin/ANT2": true
@@ -27,19 +27,19 @@
         "JAVA_HOME_8_X86": "/user/local/bin/ANT8"
     },
     "rmRF": {
-        "/build/InstrumentedClasses": {
+        "\\build\\InstrumentedClasses": {
             "success": true,
             "message": "success"
         },
-        "/build/cobertura.ser": {
+        "\\build\\cobertura.ser": {
             "success": true,
             "message": "success"
         },
-        "/build/CCReport43F6D5EF": {
+        "\\build\\CCReport43F6D5EF": {
             "success": true,
             "message": "success"
         },
-        "/build/CCReportBuildA4D283EG.xml": {
+        "\\build\\CCReportBuildA4D283EG.xml": {
             "success": true,
             "message": "success"
         }

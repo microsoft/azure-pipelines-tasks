@@ -223,7 +223,8 @@ function enableCodeCoverage() {
         var summaryFileName = "jacoco.xml";
     }
     else if (ccTool.toLowerCase() == "cobertura") {
-        var reportDirectoryName = "target/site/cobertura";
+        var reportDirectoryName = path.join("target", "site");
+        reportDirectoryName = path.join(reportDirectoryName, "cobertura");
         var summaryFileName = "coverage.xml";
     }
 
