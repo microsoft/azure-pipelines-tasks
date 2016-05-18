@@ -35,7 +35,7 @@ function FetchAnnotatedNewIssues
     $difference = $newIssues.Count - $newFileLevelIssues.Count
     if ($difference -gt 0)
     {
-        Write-Host "$difference issue(s) are not at the file level issues and will not be posted to the code review"
+        Write-Host "$difference issue(s) do not relate to a specific file and will not be posted to the code review"
     }
 
     $newFileLevelIssues = AnnotateIssuesWithRelativePath $newFileLevelIssues
