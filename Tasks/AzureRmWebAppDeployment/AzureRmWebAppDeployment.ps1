@@ -17,6 +17,9 @@ param
 
     [String] [Parameter(Mandatory = $true)]
     $Package,
+    
+    [String] [Parameter(Mandatory = $false)]
+    $SetParametersFile,
 
     [String] [Parameter(Mandatory = $false)]
     $RemoveAdditionalFilesFlag,
@@ -45,6 +48,7 @@ Write-Verbose "DeployToSlotFlag = $DeployToSlotFlag"
 Write-Verbose "ResourceGroupName = $ResourceGroupName"
 Write-Verbose "SlotName = $SlotName"
 Write-Verbose "Package = $Package"
+Write-Verbose "SetParametersFile = $SetParametersFile"
 Write-Verbose "RemoveAdditionalFilesFlag = $RemoveAdditionalFilesFlag"
 Write-Verbose "ExcludeFilesFromAppDataFlag = $ExcludeFilesFromAppDataFlag"
 Write-Verbose "TakeAppOfflineFlag = $TakeAppOfflineFlag"
@@ -58,6 +62,8 @@ $Package = $Package.Trim('"').Trim()
 if( [string]::IsNullOrEmpty($Package) ){
     Throw (Get-LocalizedString -Key "Invalid webapp package path provided")
 }
+
+$SetParametersFile = $SetParametersFile.Trim('"').Trim()
 
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -82,7 +88,12 @@ $ErrorActionPreference = 'Stop'
 $msDeployExePath = Get-MsDeployExePath
 
 # Ensure that at most a package (.zip) file is found
-$packageFile = Get-SinglePackageFile -package $Package
+$packageFile = Get-SingleFilePath -file $Package
+
+$setParametersFilePath = ""
+if( -not [String]::IsNullOrEmpty($SetParametersFile)){
+    $setParametersFilePath = Get-SingleFilePath -file $SetParametersFile
+}
 
 # Get destination azureRM webApp connection details
 $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
@@ -93,7 +104,8 @@ $webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName
 
 # Construct arguments for msdeploy command
 $msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFile -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
-                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments
+                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments `
+                                       -setParametersFile $setParametersFilePath
 
 # Deploy azureRM webApp using msdeploy Command
 Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs

@@ -51,16 +51,16 @@ function Get-SingleFile
     }
 }
 
-function Get-SinglePackageFile
+function Get-SingleFilePath
 {
-    param([String][Parameter(Mandatory=$true)] $package)
+    param([String][Parameter(Mandatory=$true)] $file)
 
-    Write-Host (Get-LocalizedString -Key "packageFile = Find-Files -SearchPattern {0}" -ArgumentList $package)
-    $packageFile = Find-Files -SearchPattern $package
-    Write-Host (Get-LocalizedString -Key "packageFile = {0}" -ArgumentList $packageFile)
+    Write-Host (Get-LocalizedString -Key "filePath = Find-Files -SearchPattern {0}" -ArgumentList $file)
+    $filePath = Find-Files -SearchPattern $file
+    Write-Host (Get-LocalizedString -Key "filePath = {0}" -ArgumentList $filePath)
 
-    $packageFile = Get-SingleFile -files $packageFile -pattern $package
-    return $packageFile
+    $filePath = Get-SingleFile -files $filePath -pattern $file
+    return $filePath
 }
 
 function Get-WebAppNameForMSDeployCmd
@@ -89,6 +89,7 @@ function Get-MsDeployCmdArgs
           [String][Parameter(Mandatory=$true)] $excludeFilesFromAppDataFlag,
           [String][Parameter(Mandatory=$true)] $takeAppOfflineFlag,
           [String][Parameter(Mandatory=$false)] $virtualApplication,
+          [String][Parameter(Mandatory=$false)] $setParametersFile,
           [String][Parameter(Mandatory=$false)] $AdditionalArguments)
 
     $msDeployCmdArgs = [String]::Empty
@@ -126,6 +127,10 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += [String]::Format(' -skip:Directory="\\App_Data"')
     }
 
+    if( -not [String]::IsNullOrEmpty($setParametersFile)){
+        $msDeployCmdArgs += [String]::Format(' -setParamFile:"{0}"', $setParametersFile)
+    }
+    
     # msploy additional arguments 
     if( -not [String]::IsNullOrEmpty($AdditionalArguments)){
         $msDeployCmdArgs += ( " " + $AdditionalArguments)
