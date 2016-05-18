@@ -190,7 +190,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "output",
-            "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. You can use this variable for selecting machines in later tasks by providing tags as filter criteria. Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
+            "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. You can use this variable for selecting machines in later tasks by providing tags as filter criteria. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
         }
     ],
     "dataSourceBindings": [
