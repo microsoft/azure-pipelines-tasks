@@ -28,12 +28,19 @@ function FetchAnnotatedNewIssues
     CreateComponentKeyToPathMap $json
 
     # '@' makes sure the result set is returned as an array
-    $newIssues = @($json.issues | Where {$_.isNew -eq $true})
+    $newIssues = @($json.issues | Where { $_.isNew -eq $true })
     Write-Host "SonarQube found $($json.issues.Count) issues out of which $($newIssues.Count) are new"
-
-    $newIssues = AnnotateIssuesWithRelativePath $newIssues
     
-    return $newIssues
+    $newFileLevelIssues = @($newIssues | Where {(IsFileLevelIssue $_)})
+    $difference = $newIssues.Count - $newFileLevelIssues.Count
+    if ($difference -gt 0)
+    {
+        Write-Host "$difference issue(s) are not at the file level issues and will not be posted to the code review"
+    }
+
+    $newFileLevelIssues = AnnotateIssuesWithRelativePath $newFileLevelIssues
+    
+    return $newFileLevelIssues
 }
 
 #endregion
@@ -128,11 +135,6 @@ function GetComponentGuid
   
     $tokens = $component.Split(":")
 
-    if ($tokens.Count -ne 4) 
-    {
-        throw "Internal error: component $component is not in the expected format (expected 4 parts)"
-    }
-
     #third token must be a guid
     $guidToken = $tokens[2]
 
@@ -215,7 +217,7 @@ function AnnotateIssuesWithRelativePath
     param ([Array]$issues)
     
     foreach ($issue in $issues)
-    {
+    {        
         $filePath = GetPathRelativeToRepoRoot $($issue.component)
 
         # Add a new property in the object which stores the file path so it can be consumed directly
@@ -223,6 +225,18 @@ function AnnotateIssuesWithRelativePath
     }
     
     return $issues
+}
+
+#
+# File level issues have a 4-part component. Assembly level issues have a 3-part component.
+#
+function IsFileLevelIssue
+{
+    param ([ValidateNotNullOrEmpty()]$issue)    
+        
+    $tokens = $issue.component.Split(":")
+
+    return ($tokens.Count -eq 4) 
 }
 
 #endregion
