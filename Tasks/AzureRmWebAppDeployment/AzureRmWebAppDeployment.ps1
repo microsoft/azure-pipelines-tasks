@@ -88,10 +88,12 @@ $ErrorActionPreference = 'Stop'
 $msDeployExePath = Get-MsDeployExePath
 
 # Ensure that at most a package (.zip) file is found
-$packageFile = Get-SingleFilePath -file $Package
+$packageFilePath = Get-SingleFilePath -file $Package
 
-$setParametersFilePath = ""
-if( -not [String]::IsNullOrEmpty($SetParametersFile)){
+# Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
+if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")){
+    $setParametersFilePath = ""
+} else {
     $setParametersFilePath = Get-SingleFilePath -file $SetParametersFile
 }
 
@@ -103,7 +105,7 @@ $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName
 $webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag -slotName $SlotName
 
 # Construct arguments for msdeploy command
-$msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFile -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
+$msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFilePath -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
                                        -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments `
                                        -setParametersFile $setParametersFilePath
 
