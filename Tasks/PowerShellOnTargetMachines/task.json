@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 29
+        "Patch": 30
     },
     "minimumAgentVersion": "1.95.2",
     "groups": [
@@ -140,7 +140,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
+            "helpMarkDown": "This input is not supported for flat list of machines. For Azure Resource Group output variables use tags as filter criteria. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task on all machines."
         }
     ],
     "instanceNameFormat": "Run PowerShell on $(EnvironmentName)",

@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 60
+        "Patch": 61
     },
     "demands": [
         "azureps"
@@ -190,7 +190,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "output",
-            "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
+            "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. You can use this variable for selecting machines in later tasks by providing tags as filter criteria. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
         }
     ],
     "dataSourceBindings": [
