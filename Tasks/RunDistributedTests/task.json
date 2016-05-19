@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 36
+        "Patch": 37
     },
     "demands": [
     ],
@@ -27,12 +27,6 @@
         {
             "name": "executionOptions",
             "displayName": "Execution Options",
-            "isExpanded": true
-        },
-        {
-            "name": "testDistribution",
-            "displayName": "Test Distribution",
-            "tags" : [ "Preview" ],
             "isExpanded": true
         },
         {
@@ -164,7 +158,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Tests will be distributed based on the number of machines provided instead of number of test containers. Note that tests within a dll might also be distributed to multiple machines.",
-            "groupName": "testDistribution"
+            "groupName": "executionOptions"
         },
         {
  	          "name": "testRunTitle", 
