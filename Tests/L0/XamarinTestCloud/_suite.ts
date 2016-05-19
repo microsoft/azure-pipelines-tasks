@@ -370,7 +370,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -399,9 +403,15 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin2/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin3/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin2/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin3/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin2/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin3/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 3, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -517,7 +527,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -574,7 +588,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }   
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -637,7 +655,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -668,7 +690,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --dsym /bin/project1.dsym'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --dsym /bin/project1.dsym'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --dsym /bin/project1.dsym'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -699,7 +725,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -732,7 +762,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -764,7 +798,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -796,8 +834,13 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml'), 
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml'), 
                           'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml'), 
+                          'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -826,7 +869,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/FAIL/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/FAIL/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/FAIL/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length > 0, 'should have written to stderr');
