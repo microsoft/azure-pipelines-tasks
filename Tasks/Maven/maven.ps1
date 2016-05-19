@@ -88,7 +88,7 @@ Write-Verbose "dbUsername = $sqDbUsername"
 # PMD analysis is not supported on Powershell, output a warning message
 if($pmdAnalysisEnabled)
 {
-		Write-Warning "PMD code analysis is not yet supported on Windows and hosted agents."
+    Write-Warning "PMD code analysis is not yet supported on Windows and hosted agents."
     Write-Warning "Please use a dedicated Linux agent to enable this feature: https://github.com/Microsoft/vso-agent"
 }
 
