@@ -307,76 +307,75 @@ describe('ANT Suite', function() {
                 done(err);
             });
     })
+       
+    it('Ant calls enable code coverage and publish code coverage when Cobertura is selected.', (done) => {
+        setResponseFile('antCodeCoverage.json');
 
-    //
-    // Commenting out because these are failing and hanging for awhile on OSX
-    //    
-    // it('Ant calls enable code coverage and publish code coverage when Cobertura is selected.', (done) => {
-    //     setResponseFile('antCodeCoverage.json');
+        var tr = new trm.TaskRunner('ANT');
+        tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('codeCoverageTool', 'Cobertura');
+        tr.setInput('classFilesDirectories', 'class1');
 
-    //     var tr = new trm.TaskRunner('ANT');
-    //     tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
-    //     tr.setInput('javaHomeSelection', 'JDKVersion');
-    //     tr.setInput('jdkVersion', 'default');
-    //     tr.setInput('testResultsFiles', '**/TEST-*.xml');
-    //     tr.setInput('codeCoverageTool', 'Cobertura');
-    //     tr.setInput('classFilesDirectories', 'class1');
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=Cobertura;\]/) >= 0 || tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\/build\/CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\\build\\CCReport43F6D5EF\\coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;\]/) >= 0 ||
+                    tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\/build\/CCReport43F6D5EF\/coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
+                done();
+            })
+            .fail((err) => {
+                assert.fail("task should not have failed");
+                done(err);
+            });
+    })
 
-    //     tr.run()
-    //         .then(() => {
-    //             assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
-    //             assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\\build\\CCReport43F6D5EF\\coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             assert.fail("task should not have failed");
-    //             done(err);
-    //         });
-    // })
+    it('Ant calls enable code coverage and publish code coverage when Jacoco is selected.', (done) => {
+        setResponseFile('antCodeCoverage.json');
 
-    // it('Ant calls enable code coverage and publish code coverage when Jacoco is selected.', (done) => {
-    //     setResponseFile('antCodeCoverage.json');
+        var tr = new trm.TaskRunner('ANT');
+        tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('classFilesDirectories', 'class1');
 
-    //     var tr = new trm.TaskRunner('ANT');
-    //     tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
-    //     tr.setInput('javaHomeSelection', 'JDKVersion');
-    //     tr.setInput('jdkVersion', 'default');
-    //     tr.setInput('testResultsFiles', '**/TEST-*.xml');
-    //     tr.setInput('codeCoverageTool', 'JaCoCo');
-    //     tr.setInput('classFilesDirectories', 'class1');
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0 || tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\/build\/CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\\build\\CCReport43F6D5EF\\coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;\]/) >= 0 ||
+                    tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/build\/CCReport43F6D5EF\/coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
+                done();
+            })
+            .fail((err) => {
+                assert.fail("task should not have failed");
+                done(err);
+            });
+    })
 
-    //     tr.run()
-    //         .then(() => {
-    //             assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
-    //             assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\\build\\CCReport43F6D5EF\\coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             assert.fail("task should not have failed");
-    //             done(err);
-    //         });
-    // })
+    it('Ant calls enable code coverage but not publish code coverage when summary file is not generated.', (done) => {
+        setResponseFile('antGood.json');
+        // antGood.json doesnt mock the stat for summary file.
+        var tr = new trm.TaskRunner('ANT');
+        tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('classFilesDirectories', 'class1');
 
-    // it('Ant calls enable code coverage but not publish code coverage when summary file is not generated.', (done) => {
-    //     setResponseFile('antGood.json');
-    //     // antGood.json doesnt mock the stat for summary file.
-    //     var tr = new trm.TaskRunner('ANT');
-    //     tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
-    //     tr.setInput('javaHomeSelection', 'JDKVersion');
-    //     tr.setInput('jdkVersion', 'default');
-    //     tr.setInput('testResultsFiles', '**/TEST-*.xml');
-    //     tr.setInput('codeCoverageTool', 'JaCoCo');
-    //     tr.setInput('classFilesDirectories', 'class1');
-
-    //     tr.run()
-    //         .then(() => {
-    //             assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
-    //             assert(tr.stdout.search(/##vso\[codecoverage.publish/) < 0, 'should have called publish code coverage.');
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             assert.fail("task should not have failed");
-    //             done(err);
-    //         });
-    // })
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0 || tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\/build\/CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish/) < 0, 'should have called publish code coverage.');
+                done();
+            })
+            .fail((err) => {
+                assert.fail("task should not have failed");
+                done(err);
+            });
+    })
 });

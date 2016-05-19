@@ -437,7 +437,8 @@ describe('gradle Suite', function() {
                 assert(tr.ran('gradlew build jacocoTestReport'), 'it should have run gradlew build');
                 assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
+                    tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\/summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -447,7 +448,7 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with jacoco selected should call enable and publish code coverage for a multi module project.', (done) => {
         setResponseFile('gradleCCMultiModule.json');
 
@@ -467,7 +468,8 @@ describe('gradle Suite', function() {
                 assert(tr.ran('gradlew build jacocoRootReport'), 'it should have run gradlew build');
                 assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=true;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
+                    tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\/summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -477,7 +479,7 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with cobertura selected should call enable and publish code coverage.', (done) => {
         setResponseFile('gradleCCSingleModule.json');
 
@@ -497,7 +499,8 @@ describe('gradle Suite', function() {
                 assert(tr.ran('gradlew build cobertura'), 'it should have run gradlew build');
                 assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=coverage.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=CCReport43F6D5EF\\coverage.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=CCReport43F6D5EF\\coverage.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
+                    tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=CCReport43F6D5EF\/coverage.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -507,7 +510,7 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with jacoco selected and report generation failed should call enable but not publish code coverage.', (done) => {
         setResponseFile('gradleGood.json');
 
@@ -537,7 +540,7 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with cobertura selected and report generation failed should call enable but not publish code coverage.', (done) => {
         setResponseFile('gradleGood.json');
 
