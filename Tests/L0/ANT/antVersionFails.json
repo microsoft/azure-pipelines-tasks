@@ -21,6 +21,10 @@
         "\\build\\InstrumentedClasses": {
             "success": true,
             "message": "success"
+        },
+        "/build/InstrumentedClasses": {
+            "success": true,
+            "message": "success"
         }
     }
 }
