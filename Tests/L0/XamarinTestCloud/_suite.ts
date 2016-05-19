@@ -4,6 +4,9 @@
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import path = require('path');
+import os = require('os');
+
+var isWin = /^win/.test(process.platform);
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -43,7 +46,11 @@ describe('XamarinTestCloud Suite', function() {
         
         tr.run()
         .then(() => {
-            assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -607,35 +614,6 @@ describe('XamarinTestCloud Suite', function() {
             done(err);
         });
     })
-    
-    it('fails when mono does not exist', (done) => {
-        setResponseFile('responseEmpty.json');
-        
-        var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
-        // required inputs
-        tr.setInput('app', 'bin/project.apk');
-        tr.setInput('teamApiKey', 'key1');
-        tr.setInput('user', 'me@ms.com');
-        tr.setInput('devices', 'devices1');
-        tr.setInput('series', 'master');
-        tr.setInput('testDir', 'tests/bin');
-        tr.setInput('parallelization', 'none');
-        tr.setInput('locale', 'en_US');
-        tr.setInput('testCloudLocation', '**/test-cloud.exe');
-        
-        tr.run()
-        .then(() => {
-            assert(tr.invokedToolCount == 0, 'should not have run XamarinTestCloud');
-            assert(tr.resultWasSet, 'task should have set a result');
-            assert(tr.stderr.length > 0, 'should have written to stderr');
-            assert(tr.failed, 'task should have failed');
-            assert(tr.stderr.indexOf('not found mono') >= 0, 'wrong error message');            
-            done();
-        })
-        .fail((err) => {
-            done(err);
-        });
-    })    
     
     //TODO build.buildId has a value    
     //TODO build.buildId has a space
