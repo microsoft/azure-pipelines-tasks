@@ -31,10 +31,6 @@ Write-Verbose "StartIPAddress= $StartIPAddress"
 Write-Verbose "EndIPAddress= $EndIPAddress"
 Write-Verbose "DeleteFirewallRule= $DeleteFirewallRule"
 
-# Import all the dlls and modules which have cmdlets we need
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # Load all dependent files for execution
 Import-Module ./Utility.ps1 -Force
