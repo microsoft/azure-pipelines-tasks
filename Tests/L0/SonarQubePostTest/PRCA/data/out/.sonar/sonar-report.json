@@ -17,6 +17,16 @@
             "creationDate": "2016-02-29T14:10:20+0000"
         },
         {
+            "key": "3d04d8a1-1c8d-47be-8e47-09a1b4c037f6",
+            "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E",
+            "message": "This issue is reported at the assembly level!",
+            "severity": "MAJOR",
+            "rule": "fxcop:MarkAssembliesWithNeutralResourcesLanguage",
+            "status": "OPEN",
+            "isNew": true,
+            "creationDate": "2016-05-17T23:16:56+0200"
+        },
+        {
             "key": "AVMtPj5t2ux5vOqxVSsN",
             "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
             "line": 10,

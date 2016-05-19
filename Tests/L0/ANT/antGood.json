@@ -42,6 +42,22 @@
         "\\build\\CCReportBuildA4D283EG.xml": {
             "success": true,
             "message": "success"
+        },
+        "/build/InstrumentedClasses": {
+            "success": true,
+            "message": "success"
+        },
+        "/build/cobertura.ser": {
+            "success": true,
+            "message": "success"
+        },
+        "/build/CCReport43F6D5EF": {
+            "success": true,
+            "message": "success"
+        },
+        "/build/CCReportBuildA4D283EG.xml": {
+            "success": true,
+            "message": "success"
         }
     }
 }

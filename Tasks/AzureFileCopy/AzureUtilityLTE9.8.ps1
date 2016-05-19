@@ -185,6 +185,7 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
             $resourceProperties.Name = $resourceName
             $resourceProperties.fqdn = $resourceFQDN
             $resourceProperties.winRMHttpsPort = $resourceWinRMHttpsPort
+            $resourceProperties.DeploymentModel = 'Classic'
             $azureClassicVMsDetails.Add($resourceName, $resourceProperties)
         }
     }
