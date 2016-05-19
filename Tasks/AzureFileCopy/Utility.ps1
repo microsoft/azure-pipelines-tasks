@@ -749,6 +749,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             $resourceProperties.Name = $resourceName
             $resourceProperties.fqdn = $resourceFQDN
             $resourceProperties.winRMHttpsPort = $resourceWinRMHttpsPort
+            $resourceProperties.Type = 'ARM'
 
             $azureRMVMsDetails.Add($resourceName, $resourceProperties)
 
@@ -903,12 +904,14 @@ function Copy-FilesSequentiallyToAzureVMs
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments)
 
+    $deploymentModel = [string]::Empty
     foreach ($resource in $azureVMResourcesProperties.Keys)
     {
         $resourceProperties = $azureVMResourcesProperties[$resource]
         $resourceFQDN = $resourceProperties.fqdn
         $resourceName = $resourceProperties.Name
         $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
+        $deploymentModel = $resourceProperties.DeploymentModel
 
         Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
@@ -924,7 +927,13 @@ function Copy-FilesSequentiallyToAzureVMs
         if ($status -ne "Passed")
         {
             $winrmHelpMsg = Get-LocalizedString -Key "TofixWinRMconnectionrelatedissuesselectthe"
-            $copyErrorMessage =  $copyResponse.Error.Message + $winrmHelpMsg
+
+            $copyErrorMessage = $copyResponse.Error.Message
+            if($deploymentModel -eq 'ARM')
+            {
+               $copyErrorMessage = $copyErrorMessage + $winrmHelpMsg
+            }
+
             Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
 
             Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
@@ -949,12 +958,14 @@ function Copy-FilesParallellyToAzureVMs
           [string]$additionalArguments)
 
     [hashtable]$Jobs = @{}
+    $deploymentModel = [string]::Empty
     foreach ($resource in $azureVMResourcesProperties.Keys)
     {
         $resourceProperties = $azureVMResourcesProperties[$resource]
         $resourceFQDN = $resourceProperties.fqdn
         $resourceName = $resourceProperties.Name
         $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
+        $deploymentModel = $resourceProperties.DeploymentModel
 
         Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
@@ -988,7 +999,11 @@ function Copy-FilesParallellyToAzureVMs
                     if($output.Error -ne $null)
                     {
                         $winrmHelpMsg = Get-LocalizedString -Key "TofixWinRMconnectionrelatedissuesselectthe"
-                        $errorMessage = $output.Error.Message + $winrmHelpMsg
+                        $errorMessage = $output.Error.Message 
+                        if($deploymentModel -eq 'ARM')
+                        {
+                           $errorMessage = $errorMessage + $winrmHelpMsg
+                        }
                     }
 
                     Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
