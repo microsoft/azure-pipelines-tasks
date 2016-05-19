@@ -28,6 +28,9 @@
     "stats": {
         "\\build\\CCReport43F6D5EF\\coverage.xml": {
             "isFile": true
+        },
+        "/build/CCReport43F6D5EF/coverage.xml": {
+            "isFile": true
         }
     },
     "rmRF": {
@@ -51,7 +54,7 @@
             "success": true,
             "message": "success"
         },
-        "\build/cobertura.ser": {
+        "/build/cobertura.ser": {
             "success": true,
             "message": "success"
         },

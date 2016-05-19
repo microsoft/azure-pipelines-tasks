@@ -47,7 +47,7 @@
             "success": true,
             "message": "success"
         },
-        "\build/cobertura.ser": {
+        "/build/cobertura.ser": {
             "success": true,
             "message": "success"
         },

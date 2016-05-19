@@ -321,7 +321,7 @@ describe('ANT Suite', function() {
 
         tr.run()
             .then(() => {
-                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=Cobertura;\]/) >= 0 || tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\/build\/CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\\build\\CCReport43F6D5EF\\coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;\]/) >= 0 ||
                     tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\/build\/CCReport43F6D5EF\/coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
                 done();
@@ -345,7 +345,7 @@ describe('ANT Suite', function() {
 
         tr.run()
             .then(() => {
-                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
+                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0 || tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\/build\/CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\\build\\CCReport43F6D5EF\\coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;\]/) >= 0 ||
                     tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/build\/CCReport43F6D5EF\/coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
                 done();
