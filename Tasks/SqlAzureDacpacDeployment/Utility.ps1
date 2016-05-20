@@ -5,7 +5,7 @@ function Get-AgentStartIPAddress
     $connection = Get-VssConnection -TaskContext $taskContext
 
     # getting start ip address from dtl service
-    Write-Verbose "Getting external ip address by making call to dtl service" -Verbose
+    Write-Verbose "Getting external ip address by making call to dtl service"
     $startIP = Get-ExternalIpAddress -Connection $connection
 
     return $startIP
@@ -36,7 +36,7 @@ function Get-AgentIPAddress
 function Get-AzureUtility
 {
     $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose -Verbose "Installed Azure PowerShell version: $currentVersion"
+    Write-Verbose "Installed Azure PowerShell version: $currentVersion"
 
     $minimumAzureVersion = New-Object System.Version(0, 9, 9)
     $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
@@ -53,7 +53,7 @@ function Get-AzureUtility
         $azureUtilityRequiredVersion = $azureUtilityNewVersion
     }
 
-    Write-Verbose -Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
+    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
     return $azureUtilityRequiredVersion
 }
 
@@ -65,7 +65,7 @@ function Get-ConnectionType
     $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $taskContext
     $connectionType = $serviceEndpoint.Authorization.Scheme
 
-    Write-Verbose -Verbose "Connection type used is $connectionType"
+    Write-Verbose "Connection type used is $connectionType"
     return $connectionType
 }
 
@@ -125,7 +125,8 @@ function Get-SqlPackageCommandArguments
           [String] $sqlPassword,
           [String] $connectionString,
           [String] $publishProfile,
-          [String] $additionalArguments)
+          [String] $additionalArguments,
+          [switch] $isOutputSecure)
 
     $ErrorActionPreference = 'Stop'
     $dacpacFileExtension = ".dacpac"
@@ -147,30 +148,39 @@ function Get-SqlPackageCommandArguments
         Write-Error (Get-LocalizedString -Key "Invalid Dacpac file '{0}' provided" -ArgumentList $dacpacFile)
     }
 
-    $sqlPackageArguments = @($SqlPackageOptions.SourceFile + "`'$dacpacFile`'")
+    $sqlPackageArguments = @($SqlPackageOptions.SourceFile + "`"$dacpacFile`"")
     $sqlPackageArguments += @($SqlPackageOptions.Action + "Publish")
 
     if($targetMethod -eq "server")
     {
-        $sqlPackageArguments += @($SqlPackageOptions.TargetServerName + "`'$serverName`'")
+        $sqlPackageArguments += @($SqlPackageOptions.TargetServerName + "`"$serverName`"")
         if($databaseName)
         {
-            $sqlPackageArguments += @($SqlPackageOptions.TargetDatabaseName + "`'$databaseName`'")
+            $sqlPackageArguments += @($SqlPackageOptions.TargetDatabaseName + "`"$databaseName`"")
         }
 
         if($sqlUsername)
         {
-            $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`'$sqlUsername`'")
+            $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
             if(-not($sqlPassword))
             {
                 Write-Error (Get-LocalizedString -Key "No password specified for the SQL User: '{0}'" -ArgumentList $sqlUserName)
             }
-            $sqlPackageArguments += @($SqlPackageOptions.TargetPassword + "`'$sqlPassword`'")
+
+            if( $isOutputSecure ){
+                $sqlPassword = "********"
+            } 
+            else
+            {
+                $sqlPassword = ConvertParamToSqlSupported $sqlPassword
+            }
+            
+            $sqlPackageArguments += @($SqlPackageOptions.TargetPassword + "`"$sqlPassword`"")
         }
     }
     elseif($targetMethod -eq "connectionString")
     {
-        $sqlPackageArguments += @($SqlPackageOptions.TargetConnectionString + "`'$connectionString`'")
+        $sqlPackageArguments += @($SqlPackageOptions.TargetConnectionString + "`"$connectionString`"")
     }
 
     if($publishProfile)
@@ -180,11 +190,45 @@ function Get-SqlPackageCommandArguments
         {
             Write-Error (Get-LocalizedString -Key "Invalid Publish Profile '{0}' provided" -ArgumentList $publishProfile)
         }
-        $sqlPackageArguments += @($SqlPackageOptions.Profile + "`'$publishProfile`'")
+        $sqlPackageArguments += @($SqlPackageOptions.Profile + "`"$publishProfile`"")
     }
 
     $sqlPackageArguments += @("$additionalArguments")
-    $scriptArgument = '"' + ($sqlPackageArguments -join " ") + '"'
+    $scriptArgument = ($sqlPackageArguments -join " ") 
 
     return $scriptArgument
 }
+
+function Run-Command
+{
+    param([String][Parameter(Mandatory=$true)] $command)
+
+    try
+	{
+        if( $psversiontable.PSVersion.Major -le 4)
+        {
+           cmd.exe /c "`"$command`""
+        }
+        else
+        {
+           cmd.exe /c "$command"
+        }
+
+    }
+	catch [System.Exception]
+    {
+        Write-Verbose $_.Exception
+        throw $_.Exception
+    }
+
+}
+
+function ConvertParamToSqlSupported
+{
+    param([String]$param)
+
+    $param = $param.Replace('"', '\"')
+
+    return $param
+}
+
