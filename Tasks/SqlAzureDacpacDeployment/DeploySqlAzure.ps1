@@ -20,24 +20,21 @@ param
 Write-Verbose "Entering script DeploySqlAzure.ps1"
 
 # Log arguments
-Write-Verbose "ConnectedServiceNameSelector= $connectedServiceNameSelector" -Verbose
-Write-Verbose "DacpacFile= $DacpacFile" -Verbose
-Write-Verbose "ServerName= $ServerName" -Verbose
-Write-Verbose "DatabaseName= $DatabaseName" -Verbose
-Write-Verbose "SqlUsername= $SqlUsername" -Verbose
-Write-Verbose "PublishProfile= $PublishProfile" -Verbose
-Write-Verbose "AdditionalArguments= $AdditionalArguments" -Verbose
-Write-Verbose "StartIPAddress= $StartIPAddress" -Verbose
-Write-Verbose "EndIPAddress= $EndIPAddress" -Verbose
-Write-Verbose "DeleteFirewallRule= $DeleteFirewallRule" -Verbose
+Write-Verbose "ConnectedServiceNameSelector= $connectedServiceNameSelector"
+Write-Verbose "DacpacFile= $DacpacFile"
+Write-Verbose "ServerName= $ServerName"
+Write-Verbose "DatabaseName= $DatabaseName"
+Write-Verbose "SqlUsername= $SqlUsername"
+Write-Verbose "PublishProfile= $PublishProfile"
+Write-Verbose "AdditionalArguments= $AdditionalArguments"
+Write-Verbose "StartIPAddress= $StartIPAddress"
+Write-Verbose "EndIPAddress= $EndIPAddress"
+Write-Verbose "DeleteFirewallRule= $DeleteFirewallRule"
 
-# Import all the dlls and modules which have cmdlets we need
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # Load all dependent files for execution
 Import-Module ./Utility.ps1 -Force
+Import-Module ./FindSqlPackagePath.ps1 -Force
 
 function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
 {
@@ -77,11 +74,11 @@ $ErrorActionPreference = 'Stop'
 
 $ServerName = $ServerName.ToLower()
 $serverFriendlyName = $ServerName.split(".")[0]
-Write-Verbose "Server friendly name is $serverFriendlyName" -Verbose
+Write-Verbose "Server friendly name is $serverFriendlyName"
 
 # Getting start and end IP address for agent machine
 $ipAddress = Get-AgentIPAddress -startIPAddress $StartIpAddress -endIPAddress $EndIpAddress -ipDetectionMethod $IpDetectionMethod -taskContext $distributedTaskContext
-Write-Verbose ($ipAddress | Format-List | Out-String) -Verbose
+Write-Verbose ($ipAddress | Format-List | Out-String)
 
 $startIp =$ipAddress.StartIPAddress
 $endIp = $ipAddress.EndIPAddress
@@ -91,7 +88,7 @@ Try
     # Importing required version of azure cmdlets according to azureps installed on machine
     $azureUtility = Get-AzureUtility
 
-    Write-Verbose -Verbose "Loading $azureUtility"
+    Write-Verbose "Loading $azureUtility"
     Import-Module ./$azureUtility -Force
 
     if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
@@ -104,25 +101,31 @@ Try
 
     # creating firewall rule for agent on sql server
     $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -connectionType $connectionType
-    Write-Verbose ($firewallSettings | Format-List | Out-String) -Verbose
+    Write-Verbose ($firewallSettings | Format-List | Out-String)
 
     $firewallRuleName = $firewallSettings.RuleName
     $isFirewallConfigured = $firewallSettings.IsConfigured
 
     # getting script arguments to execute sqlpackage.exe
-    Write-Verbose "Creating SQLPackage.exe arguments" -Verbose
     $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
                                                      -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
-    Write-Verbose "Created SQLPackage.exe arguments" -Verbose
 
-    $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
-    $SqlPackageCommand = "& '$(`"$sqlDeploymentScriptPath`" -replace "['`]", '$&$&')' '$($scriptArgument -replace "['`]", '$&$&')'"
+    $scriptArgumentToBeLogged = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
+                                                     -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments -isOutputSecure
+   
+    Write-Verbose "sqlPackageArguments = $scriptArgumentToBeLogged"
 
-    Write-Verbose "Executing SQLPackage.exe"  -Verbose
+    $SqlPackagePath = Get-SqlPackageOnTargetMachine
 
-    $ErrorActionPreference = 'Continue'
-    Invoke-Expression -Command $SqlPackageCommand
-    $ErrorActionPreference = 'Stop'
+    Write-Verbose "Executing SQLPackage.exe"     
+    
+    $SqlPackageCommand = "`"$SqlPackagePath`" $scriptArgument"
+    $commandToBeLogged = "`"$SqlPackagePath`" $scriptArgumentToBeLogged"
+
+    Write-Verbose "Executing : $commandToBeLogged" 
+
+    Run-Command $SqlPackageCommand
+    
 }
 Finally
 {
@@ -131,4 +134,4 @@ Finally
                                               -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $DeleteFirewallRule
 }
 
-Write-Verbose "Leaving script DeploySqlAzure.ps1" -Verbose
+Write-Verbose "Leaving script DeploySqlAzure.ps1"

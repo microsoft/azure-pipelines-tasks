@@ -30,6 +30,34 @@
         "/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml": {
             "code": 0,
             "stdout": "Xamarin test cloud"
+        },
+        "/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin": {
+            "code": 0,
+            "stdout": "Xamarin test cloud"
+        },
+        "/home/build/packages/project1/tools/test-cloud.exe submit bin/FAIL/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin": {
+            "code": 2,
+            "stdout": "FAILED"
+        },
+        "/home/build/packages/project1/tools/test-cloud.exe submit bin2/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin": {
+            "code": 0,
+            "stdout": "Xamarin test cloud"
+        },
+        "/home/build/packages/project1/tools/test-cloud.exe submit bin3/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin": {
+            "code": 0,
+            "stdout": "Xamarin test cloud"
+        },
+        "/home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --dsym /bin/project1.dsym": {
+            "code": 0,
+            "stdout": "Xamarin test cloud"
+        },
+        "/home/build/packages/project1/tools/test-cloud.exe submit bin/project.ipa key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin": {
+            "code": 0,
+            "stdout": "Xamarin test cloud"
+        },
+        "/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml": {
+            "code": 0,
+            "stdout": "Xamarin test cloud"
         }
     },
     "checkPath" : {
