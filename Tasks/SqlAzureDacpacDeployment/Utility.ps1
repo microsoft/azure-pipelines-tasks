@@ -125,7 +125,8 @@ function Get-SqlPackageCommandArguments
           [String] $sqlPassword,
           [String] $connectionString,
           [String] $publishProfile,
-          [String] $additionalArguments)
+          [String] $additionalArguments,
+          [switch] $isOutputSecure)
 
     $ErrorActionPreference = 'Stop'
     $dacpacFileExtension = ".dacpac"
@@ -166,8 +167,14 @@ function Get-SqlPackageCommandArguments
                 Write-Error (Get-LocalizedString -Key "No password specified for the SQL User: '{0}'" -ArgumentList $sqlUserName)
             }
 
-            $sqlPassword = ConvertParamToSqlSupported $sqlPassword
-
+            if( $isOutputSecure ){
+                $sqlPassword = "********"
+            } 
+            else
+            {
+                $sqlPassword = ConvertParamToSqlSupported $sqlPassword
+            }
+            
             $sqlPackageArguments += @($SqlPackageOptions.TargetPassword + "`"$sqlPassword`"")
         }
     }
@@ -223,81 +230,5 @@ function ConvertParamToSqlSupported
     $param = $param.Replace('"', '\"')
 
     return $param
-}
-
-function Get-SqlPackageCommandArgumentsToBeLogged
-{
-    param([String] $dacpacFile,
-          [String] $targetMethod,
-          [String] $serverName,
-          [String] $databaseName,
-          [String] $sqlUsername,
-          [String] $sqlPassword,
-          [String] $connectionString,
-          [String] $publishProfile,
-          [String] $additionalArguments)
-
-    $ErrorActionPreference = 'Stop'
-    $dacpacFileExtension = ".dacpac"
-    $SqlPackageOptions =
-    @{
-        SourceFile = "/SourceFile:"; 
-        Action = "/Action:"; 
-        TargetServerName = "/TargetServerName:";
-        TargetDatabaseName = "/TargetDatabaseName:";
-        TargetUser = "/TargetUser:";
-        TargetPassword = "/TargetPassword:";
-        TargetConnectionString = "/TargetConnectionString:";
-        Profile = "/Profile:";
-    }
-
-    # validate dacpac file
-    if([System.IO.Path]::GetExtension($dacpacFile) -ne $dacpacFileExtension)
-    {
-        Write-Error (Get-LocalizedString -Key "Invalid Dacpac file '{0}' provided" -ArgumentList $dacpacFile)
-    }
-
-    $sqlPackageArguments = @($SqlPackageOptions.SourceFile + "`"$dacpacFile`"")
-    $sqlPackageArguments += @($SqlPackageOptions.Action + "Publish")
-
-    if($targetMethod -eq "server")
-    {
-        $sqlPackageArguments += @($SqlPackageOptions.TargetServerName + "`"$serverName`"")
-        if($databaseName)
-        {
-            $sqlPackageArguments += @($SqlPackageOptions.TargetDatabaseName + "`"$databaseName`"")
-        }
-
-        if($sqlUsername)
-        {
-            $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
-            if(-not($sqlPassword))
-            {
-                Write-Error (Get-LocalizedString -Key "No password specified for the SQL User: '{0}'" -ArgumentList $sqlUserName)
-            }
-
-            $ASTERISK_PASSWORD = "********"
-            $sqlPackageArguments += @($SqlPackageOptions.TargetPassword + "`"$ASTERISK_PASSWORD`"")
-        }
-    }
-    elseif($targetMethod -eq "connectionString")
-    {
-        $sqlPackageArguments += @($SqlPackageOptions.TargetConnectionString + "`"$connectionString`"")
-    }
-
-    if($publishProfile)
-    {
-        # validate publish profile
-        if([System.IO.Path]::GetExtension($publishProfile) -ne ".xml")
-        {
-            Write-Error (Get-LocalizedString -Key "Invalid Publish Profile '{0}' provided" -ArgumentList $publishProfile)
-        }
-        $sqlPackageArguments += @($SqlPackageOptions.Profile + "`"$publishProfile`"")
-    }
-
-    $sqlPackageArguments += @("$additionalArguments")
-    $scriptArgument = ($sqlPackageArguments -join " ") 
-
-    return $scriptArgument
 }
 

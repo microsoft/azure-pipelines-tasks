@@ -107,18 +107,13 @@ Try
     $isFirewallConfigured = $firewallSettings.IsConfigured
 
     # getting script arguments to execute sqlpackage.exe
-    Write-Verbose "Creating SQLPackage.exe arguments"
     $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
                                                      -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
 
-    Write-Verbose "Created SQLPackage.exe arguments"
-
-    $scriptArgumentToBeLogged = Get-SqlPackageCommandArgumentsToBeLogged -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
-                                                     -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
+    $scriptArgumentToBeLogged = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
+                                                     -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments -isOutputSecure
    
     Write-Verbose "sqlPackageArguments = $scriptArgumentToBeLogged"
-
-    Write-Verbose "Getting location of SQLPackage.exe" 
 
     $SqlPackagePath = Get-SqlPackageOnTargetMachine
 
@@ -128,6 +123,7 @@ Try
     $commandToBeLogged = "`"$SqlPackagePath`" $scriptArgumentToBeLogged"
 
     Write-Verbose "Executing : $commandToBeLogged" 
+
     Run-Command $SqlPackageCommand
     
 }
