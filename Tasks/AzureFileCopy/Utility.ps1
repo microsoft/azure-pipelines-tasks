@@ -901,7 +901,8 @@ function Copy-FilesSequentiallyToAzureVMs
           [string]$communicationProtocol,
           [string][Parameter(Mandatory=$true)]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
-          [string]$additionalArguments)
+          [string]$additionalArguments,
+          [string][Parameter(Mandatory=$true)]$connectionType)
 
     foreach ($resource in $azureVMResourcesProperties.Keys)
     {
@@ -924,7 +925,12 @@ function Copy-FilesSequentiallyToAzureVMs
         if ($status -ne "Passed")
         {
             $winrmHelpMsg = Get-LocalizedString -Key "TofixWinRMconnectionrelatedissuesselectthe"
-            $copyErrorMessage =  $copyResponse.Error.Message + $winrmHelpMsg
+            $copyErrorMessage =  $copyResponse.Error.Message
+            if($connectionType -eq 'ServicePrincipal')
+            {
+                $copyErrorMessage = $copyErrorMessage + $winrmHelpMsg
+            }
+
             Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
 
             Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
@@ -946,7 +952,8 @@ function Copy-FilesParallellyToAzureVMs
           [string]$communicationProtocol,
           [string][Parameter(Mandatory=$true)]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
-          [string]$additionalArguments)
+          [string]$additionalArguments,
+          [string][Parameter(Mandatory=$true)]$connectionType)
 
     [hashtable]$Jobs = @{}
     foreach ($resource in $azureVMResourcesProperties.Keys)
@@ -973,7 +980,7 @@ function Copy-FilesParallellyToAzureVMs
             if ($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
             {
                 $output = Receive-Job -Id $job.Id
-                Remove-Job $Job                
+                Remove-Job $Job
 
                 $status = $output.Status
                 $resourceName = $Jobs.Item($job.Id).Name
@@ -988,7 +995,11 @@ function Copy-FilesParallellyToAzureVMs
                     if($output.Error -ne $null)
                     {
                         $winrmHelpMsg = Get-LocalizedString -Key "TofixWinRMconnectionrelatedissuesselectthe"
-                        $errorMessage = $output.Error.Message + $winrmHelpMsg
+                        $errorMessage = $output.Error.Message
+                        if($connectionType -eq 'ServicePrincipal')
+                        {
+                            $errorMessage = $errorMessage + $winrmHelpMsg
+                        }
                     }
 
                     Write-Output (Get-LocalizedString -Key "Copy failed on machine '{0}' with following message : '{1}'" -ArgumentList $resourceName, $errorMessage)
@@ -1022,7 +1033,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
           [string][Parameter(Mandatory=$true)]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
-          [string][Parameter(Mandatory=$true)]$copyFilesInParallel)
+          [string][Parameter(Mandatory=$true)]$copyFilesInParallel,
+          [string][Parameter(Mandatory=$true)]$connectionType)
 
     # copies files sequentially
     if ($copyFilesInParallel -eq "false" -or ( $azureVMResourcesProperties.Count -eq 1 ))
@@ -1032,7 +1044,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
-                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
+                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
     }
     # copies files parallelly
     else
@@ -1041,7 +1053,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
-                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments
+                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
     }
 
     # if no error thrown, copy successfully succeeded
