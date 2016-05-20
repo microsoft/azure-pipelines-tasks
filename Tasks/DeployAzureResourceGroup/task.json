@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 75
+        "Patch": 76
     },
     "demands": [
         "azureps"
@@ -58,33 +58,33 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
-            "name": "action", 
-            "type": "pickList", 
+            "name": "action",
+            "type": "pickList",
             "label": "Action",
             "defaultValue": "Create Or Update Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
+            "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
-                 "Create Or Update Resource Group": "Create Or Update Resource Group",
-                 "Select Resource Group": "Select Resource Group",
-                 "Start": "Start Virtual Machines",
-                 "Stop": "Stop Virtual Machines",
-                 "Restart": "Restart Virtual Machines",
-                 "Delete": "Delete Virtual Machines",
-                 "DeleteRG": "Delete Resource Group"
-                },
+                "Create Or Update Resource Group": "Create Or Update Resource Group",
+                "Select Resource Group": "Select Resource Group",
+                "Start": "Start Virtual Machines",
+                "Stop": "Stop Virtual Machines",
+                "Restart": "Restart Virtual Machines",
+                "Delete": "Delete Virtual Machines",
+                "DeleteRG": "Delete Resource Group"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
-            "name": "actionClassic", 
-            "type": "pickList", 
+            "name": "actionClassic",
+            "type": "pickList",
             "label": "Action",
             "defaultValue": "Select Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or cloud service.",
+            "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
             "options": {
-                 "Select Resource Group": "Select Cloud Service"
-                },
+                "Select Resource Group": "Select Cloud Service"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
@@ -97,7 +97,7 @@
                 "EditableOptions": "True"
             },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },        
+        },
         {
             "name": "cloudService",
             "type": "pickList",
@@ -105,7 +105,7 @@
             "required": true,
             "helpMarkDown": "Provide the name of the cloud service.",
             "properties": {
-              "EditableOptions": "True"
+                "EditableOptions": "True"
             },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
@@ -134,15 +134,15 @@
                 "West US": "West US"
             },
             "properties": {
-                "EditableOptions": "True" 
+                "EditableOptions": "True"
             },
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "csmFile", 
-            "type": "filePath", 
-            "label": "Template", 
-            "defaultValue":"",
+            "name": "csmFile",
+            "type": "filePath",
+            "label": "Template",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates. To get started immediately use template http://aka.ms/sampletemplate.",
             "visibleRule": "action = Create Or Update Resource Group"
