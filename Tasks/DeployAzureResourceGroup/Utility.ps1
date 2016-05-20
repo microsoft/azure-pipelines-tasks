@@ -510,11 +510,11 @@ function Get-MachinesFqdnsForLB
             {
                 if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
                 {
-                    $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
+                    $fqdnMap[$publicIp.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
                 }
                 elseif(-not [string]::IsNullOrEmpty($publicIP.IpAddress))
                 {
-                    $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.IpAddress
+                    $fqdnMap[$publicIp.Id.ToLower()] =  $publicIP.IpAddress
                 }
             }
         }
