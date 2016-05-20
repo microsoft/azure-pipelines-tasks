@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 65
+        "Patch": 66
     },
     "demands": [
     "Cmd"
@@ -34,7 +34,7 @@
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue":"**\\*.csproj",
-            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.",
+            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
             "required":true
         },
         {

@@ -6,7 +6,7 @@
   "loc.group.displayName.versioning": "Versioning",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.searchPattern": "Path to csproj or nuspec file(s) to pack",
-  "loc.input.help.searchPattern": "Pattern to search for csproj or nuspec files to pack.",
+  "loc.input.help.searchPattern": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
   "loc.input.label.includeReferencedProjects": "Include referenced projects",
   "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](http://docs.nuget.org/consume/command-line-reference#pack-command) at NuGet.org.",
   "loc.input.label.outputdir": "Package Folder",
