@@ -506,13 +506,16 @@ function Get-MachinesFqdnsForLB
         #Map the public ip id to the fqdn
         foreach($publicIp in $publicIPAddressResources)
         {
-            if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
+            if(-not [string]::IsNullOrEmpty($publicIp.IpConfiguration.Id))
             {
-                $fqdnMap[$publicIp.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
-            }
-            else
-            {
-                $fqdnMap[$publicIp.Id.ToLower()] =  $publicIP.IpAddress
+                if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
+                {
+                    $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
+                }
+                elseif(-not [string]::IsNullOrEmpty($publicIP.IpAddress))
+                {
+                    $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.IpAddress
+                }
             }
         }
 
@@ -525,13 +528,16 @@ function Get-MachinesFqdnsForLB
         #Get the NAT rule for a given ip id
         foreach($config in $frontEndIPConfigs)
         {
-            $fqdn = $fqdnMap[$config.PublicIpAddress.Id.ToLower()]
-            if(-not [string]::IsNullOrEmpty($fqdn))
+            if(-not [string]::IsNullOrEmpty($config.PublicIpAddress.Id))
             {
-                $fqdnMap.Remove($config.PublicIpAddress.Id.ToLower())
-                foreach($rule in $config.InboundNatRules)
+                $fqdn = $fqdnMap[$config.PublicIpAddress.Id.ToLower()]
+                if(-not [string]::IsNullOrEmpty($fqdn))
                 {
-                    $fqdnMap[$rule.Id.ToLower()] =  $fqdn
+                    $fqdnMap.Remove($config.PublicIpAddress.Id.ToLower())
+                    foreach($rule in $config.InboundNatRules)
+                    {
+                        $fqdnMap[$rule.Id.ToLower()] =  $fqdn
+                    }
                 }
             }
         }
@@ -706,13 +712,16 @@ function Get-MachinesFqdnsForPublicIP
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)
         {
-            if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
+            if(-not [string]::IsNullOrEmpty($publicIp.IpConfiguration.Id))
             {
-                $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
-            }
-            else
-            {
-                $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.IpAddress
+                if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
+                {
+                    $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
+                }
+                elseif(-not [string]::IsNullOrEmpty($publicIP.IpAddress))
+                {
+                    $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.IpAddress
+                }
             }
         }
 
@@ -766,8 +775,8 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     {
         $ResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
 
-        $networkInterfaceResources = $ResourcesDetails["networkInterfaceResources"]	
-        $publicIPAddressResources = $ResourcesDetails["publicIPAddressResources"]	
+        $networkInterfaceResources = $ResourcesDetails["networkInterfaceResources"]
+        $publicIPAddressResources = $ResourcesDetails["publicIPAddressResources"]
         $loadBalancerResources = $ResourcesDetails["loadBalancerResources"]
 
         if($loadBalancerResources)

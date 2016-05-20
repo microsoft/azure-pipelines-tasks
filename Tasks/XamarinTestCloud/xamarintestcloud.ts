@@ -3,7 +3,10 @@
 
 import fs = require('fs');
 import path = require('path');
+import os = require('os');
 import tl = require('vsts-task-lib/task');
+
+var isWin = /^win/.test(process.platform);
 
 // Get inputs
 var app = tl.getInput('app', true);
@@ -20,29 +23,11 @@ var testCloudLocation = tl.getInput('testCloudLocation', true);
 var optionalArgs = tl.getInput('optionalArgs', false);
 var publishNUnitResults = tl.getInput('publishNUnitResults', false);
 
-// Output debug information for inputs
-tl.debug('app: ' + app);
-tl.debug('dsym: ' + dsym);
-tl.debug('teamApiKey: ' + teamApiKey);
-tl.debug('user: ' + user);
-tl.debug('devices: ' + devices);
-tl.debug('series: ' + series);
-tl.debug('testDir: ' + testDir);
-tl.debug('parallelization: ' + parallelization);
-tl.debug('locale: ' + locale);
-tl.debug('userDefinedLocale: ' + userDefinedLocale);
-tl.debug('testCloudLocation: ' + testCloudLocation);
-tl.debug('optionalArgs: ' + optionalArgs);
-
 // Define error handler
 var onError = function (errorMsg) {
     tl.error(errorMsg);
     tl.exit(1);
 }
-
-// Find location of mono
-var monoPath = tl.which('mono', true);
-tl.debug("monoPath: " + monoPath);
 
 // Resolve apps for the specified value or pattern
 if (app.indexOf('*') == -1 && app.indexOf('?') == -1) {
@@ -103,6 +88,7 @@ else {
     // Use first found path to test-cloud.exe
     var testCloud = testCloudExecutables[0];
 }
+
 
 // Invoke test-cloud.exe for each app file
 var buildId = tl.getVariable('build.buildId');
@@ -173,37 +159,43 @@ function publishTestResults() {
 }
 
 var submitToTestCloud = function (index) {
+    // Find location of mono
+    if (isWin) {
+        var testCloudRunner = tl.createToolRunner(testCloud);
+    } else {
+        var monoPath = tl.which('mono', true);
+        var testCloudRunner = tl.createToolRunner(monoPath);
+        testCloudRunner.arg(testCloud);
+    }
     // Form basic arguments
-    var monoToolRunner = tl.createToolRunner(monoPath);
-    monoToolRunner.arg(testCloud);
-    monoToolRunner.arg('submit');
-    monoToolRunner.pathArg(appFiles[index]);
-    monoToolRunner.arg(teamApiKey);
-    monoToolRunner.arg('--user');
-    monoToolRunner.arg(user);
-    monoToolRunner.arg('--devices');
-    monoToolRunner.arg(devices);
-    monoToolRunner.arg('--series');
-    monoToolRunner.arg(series);
-    monoToolRunner.arg('--locale');
+    testCloudRunner.arg('submit');
+    testCloudRunner.pathArg(appFiles[index]);
+    testCloudRunner.arg(teamApiKey);
+    testCloudRunner.arg('--user');
+    testCloudRunner.arg(user);
+    testCloudRunner.arg('--devices');
+    testCloudRunner.arg(devices);
+    testCloudRunner.arg('--series');
+    testCloudRunner.arg(series);
+    testCloudRunner.arg('--locale');
     if (locale == 'user') {
-        monoToolRunner.arg(userDefinedLocale);
+        testCloudRunner.arg(userDefinedLocale);
     }
     else {
-        monoToolRunner.arg(locale);
+        testCloudRunner.arg(locale);
     }
-    monoToolRunner.arg('--assembly-dir');
-    monoToolRunner.pathArg(testDir);
+    testCloudRunner.arg('--assembly-dir');
+    testCloudRunner.pathArg(testDir);
     if (parallelization != 'none') {
-        monoToolRunner.arg(parallelization);
+        testCloudRunner.arg(parallelization);
     }
     if (optionalArgs) {
-        monoToolRunner.argString(optionalArgs);
+        testCloudRunner.argString(optionalArgs);
     }
     if (publishNUnitResults == 'true') {
         var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');
-        monoToolRunner.arg('--nunit-xml');
-        monoToolRunner.pathArg(nunitFile);
+        testCloudRunner.arg('--nunit-xml');
+        testCloudRunner.pathArg(nunitFile);
     }
 
     // For an iOS .ipa app, look for an accompanying dSYM file
@@ -220,13 +212,13 @@ var submitToTestCloud = function (index) {
         }
         else {
             // Include dSYM file in Test Cloud arguments
-            monoToolRunner.arg('--dsym');
-            monoToolRunner.pathArg(dsymFiles[0]);
+            testCloudRunner.arg('--dsym');
+            testCloudRunner.pathArg(dsymFiles[0]);
         }
     }
 
     //read stdout
-    monoToolRunner.on('stdout', function (data) {
+    testCloudRunner.on('stdout', function (data) {
         if (data) {
             var matches = data.toString().toLowerCase().match(/https:\/\/testcloud.xamarin.com\/test\/.+\//g);
             if (matches != null) {
@@ -238,7 +230,7 @@ var submitToTestCloud = function (index) {
 
     // Submit to Test Cloud
     tl.debug('Submitting to Xamarin Test Cloud: ' + appFiles[index]);
-    monoToolRunner.exec()
+    testCloudRunner.exec()
         .then(onRunComplete)
         .fail(onFailedExecution)
 }
