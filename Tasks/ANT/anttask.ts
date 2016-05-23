@@ -106,7 +106,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         //check for pattern in testResultsFiles
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
-            var buildFolder = tl.getVariable('agent.buildDirectory');
+            var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
             var allFiles = tl.find(buildFolder);
             var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
         }
