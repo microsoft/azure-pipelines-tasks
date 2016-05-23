@@ -38,93 +38,18 @@ There should be a SQL Server instance that is already installed and configured o
 
 If the deployment of the database is on pre-existing machines (physical or virtual machines) then a machine group has to be created in the Machines Hub. There is a manage link next to the Machine Group parameter of the task. Click on the link to navigate to the Machines Hub and create a machine group. Note that the IP Address or the FDQN of Azure virtual machines can be also added in the machine group. The difference between using the domain-joined/workgroup machines and the Azure virtual machines is that copying files to them uses separate tasks wiz. [Windows Machine File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/WindowsMachineFileCopy) for the domain-joined/workgroup machines and [Azure File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureFileCopy) for the Azure virtual machines. Note that the SQL Server Database Deployment task expects the DACPACs to be available on the machines or on a UNC path that is accessible by the machine administrator's login. Prior to using the SQL Server Database Deployment task, ensure that the DACPACs are available for the deployment by copying them to the machines using the Windows Machine File Copy or the Azure File Copy tasks.
 
-### Azure Resource Groups
+### WinRM setup
+This task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426.aspx) (WinRM) to access domain-joined or workgroup, on-premises physical or virtual machines.
 
-To use dynamically deployed Azure virtual machines, use the [Azure Resource Group Deployment](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) task to deploy the virtual machines in a Resource Group and then the name of the Resource Group can be typed in the Machine Group parameter of the SQL Server Database Deployment task. As described above, copy the DACPACs to the virtual machines in the Azure Resource Group using the [Azure File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureFileCopy) task.
+#### Windows Remote Management (WinRM) Setup for On-premises Physical or Virtual Machines
+To easily **setup WinRM** on the **host machines** follow the directions for [domain-joined machines](https://www.visualstudio.com/en-us/docs/release/examples/other-servers/net-to-vm) or the [workgroup machines](https://www.visualstudio.com/en-us/docs/release/examples/other-servers/net-to-workgroup-vm).
 
-_NOTE: Currently existing Azure Resource Groups, classic (v1) or Azure Resource Manager (v2), cannot be used in the Build or Release Management definitions. Ability to select existing Resource Groups and to use the virtual machine resources in them to deploy applications to is coming soon._
+#### Windows Remote Management (WinRM) Setup for Azure Virtual Machines
+Azure virtual machines only work with the WinRM HTTPS protocol. With the WinRM protocol selected as HTTPS, you have an option to use the Test Certificate. Selecting the Test Certificate option means that the certificate is a self-signed certificate, and the automation agent will skip validating the authenticity of the machine's certificate from a trusted certification authority.
 
-### Windows Remote Management (WinRM) Setup
+-	**Classic Virtual machines:** When creating [classic virtual machine](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) from the [new Azure portal](https://portal.azure.com/) or the [classic Azure portal](https://manage.windowsazure.com/), the virtual machine is already setup for WinRM HTTPS, with the default port 5986 already open in Firewall, and a self-signed certificate installed on the machine. These virtual machines can be directly added to the WinRM. The existing [classic virtual machine](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) can be also selected by using the [Azure Resource Group Deployment task](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup).
 
-The SQL Server Database Deployment task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426(v=vs.85).aspx) (WinRM) to access domain-joined/workgroup machines or Azure virtual machines. WinRM is Microsoft's implementation of  [WS-Management Protocol](https://msdn.microsoft.com/en-us/library/aa384470(v=vs.85).aspx) that is firewall-friendly and provides a common way for systems to access and exchange management information across on-premises or Cloud IT infrastructure. The automation agent that runs the SQL Server Database Deployment task uses WinRM to communicate with the target machines. It is important to setup WinRM properly on the target machines else the deployment tasks will fail. The configuration of WinRM is described in detail on the MSDN [site](https://msdn.microsoft.com/en-us/library/aa384372(v=vs.85).aspx). For the target machines the following will ensure that the WinRM has been setup properly on them:
-
-1. Azure virtual machines only work with the WinRM HTTPS protocol. When creating [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) or [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) virtual machine from the Azure preview portal or Azure portal, the virtual machine is already setup for WinRM HTTPS, with the default port 5986 already open in Firewall, and a test certificate installed on the machine. These virtual machines can be directly added to a machine group, with the WinRM protocol selected as HTTPS, and the Skip CA Check option selected. The Skip CA Check means that the certificate is a test certificate and the client should skip the validation of the certificate by a trusted certification authority.                  
-2. To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the SQL Server Database Deployment task.
-3. For pre-existing on-premises machines, domain-joined or workgroup, and whether they are physical machines or virtual machines, set them up as per the table below to ensure that the deployment tasks work fine with them:
-
-<table border="1" style="width:100%">
-<tr>
-	<th> Target Machine State </th>
-	<th> Target Machine Trust with Automation Agent </th>
-	<th> Machine Identity </th>
-	<th> Authentication Account </th>
-	<th> Authentication Mode </th>
-	<th> Authentication Account Permission on Target Machine </th>
-	<th> Connection Type </th>
-	<th> Pre-requisites in Target machine for Deployment Tasks to Succeed </th>
-</tr>
-<tr>
-	<td> Domain joined machine in Corp network </td>
-	<td> Trusted </td>
-	<td> DNS name </td>
-	<td> Domain account </td>
-	<td> Kerberos </td>
-	<td> Machine Administrator </td>
-	<td> WinRM HTTP </td>
-	<td>	<ul>
-		<li> WinRM HTTP port (default 5985) opened in Firewall. </li>
-		<li> File & Printer sharing enabled </li>
-		</ul> </td>
-</tr>
-<tr>
-	<td> Domain joined machine in Corp network </td>
-	<td> Trusted </td>
-	<td> DNS name </td>
-	<td> Domain account </td>
-	<td> Kerberos </td>
-	<td> Machine Administrator </td>
-	<td> WinRM HTTPS </td>
-	<td>	<ul>
-		<li> WinRM HTTPS port (default 5986) opened in Firewall. </li>
-		<li> Trusted certificate in Automation agent. </li>
-		<li> If Trusted certificate not in Automation agent, then Test Certificate option enabled in Task for deployment. </li>
-		<li> File & Printer sharing enabled. </li>
-		</ul> </td>
-</tr>
-<tr>
-	<td> Domain joined machine or Workgroup machine, in Corp network </td>
-	<td> Any </td>
-	<td> DNS name </td>
-	<td> Local machine account </td>
-	<td> NTLM </td>
-	<td> Machine Administrator </td>
-	<td> WinRM HTTP </td>
-	<td>	<ul>
-		<li> WinRM HTTP port (default 5985) opened in Firewall. </li>
-		<li> Disable UAC remote restrictions (<a href="https://support.microsoft.com/en-us/kb/951016">link</a>). </li>
-		<li> Credential in <Account> format. </li>
-		<li> Set "AllowUnencrypted" option and add remote machines in "Trusted Host" list in Automation Agent (<a href="https://msdn.microsoft.com/en-us/library/aa384372(v=vs.85).aspx">link</a>). </li>
-		<li> File & Printer sharing enabled. </li>
-		</ul> </td>
-</tr>
-<tr>
-	<td> Domain joined machine or Workgroup machine, in Corp network </td>
-	<td> Any </td>
-	<td> DNS name </td>
-	<td> Local machine account </td>
-	<td> NTLM </td>
-	<td> Machine Administrator </td>
-	<td> WinRM HTTPS </td>
-	<td>	<ul>
-		<li> WinRM HTTPS port (default 5986) opened in Firewall. </li>
-		<li> Disable UAC remote restrictions(<a href="https://support.microsoft.com/en-us/kb/951016">link</a>). </li>
-		<li> Credential in <Account> format. </li>
-		<li> Trusted certificate in Automation agent. </li>
-		<li> If Trusted certificate not in Automation agent, then Test Certificate option enabled in Task for deployment. </li>
-		<li> File & Printer sharing enabled. </li>
-		</ul> </td>
-</tr>
-</table>
+- **•	Azure Resource Group:** If an [Azure resource group](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-hero-tutorial/) has been created in the [new Azure portal](https://portal.azure.com/), then it needs to be setup for the WinRM HTTPS protocol (WinRM HTTPS, with the default port 5986 already open in Firewall, and a self-signed certificate installed on the machine). To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment task](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup). The task has a checkbox titled - **Enable Deployment Pre-requisites**. Select this option to setup the WinRM HTTPS protocol on the virtual machines, and to open the 5986 port in the Firewall, and to install the test certificate. After this the virtual machines are ready for use in the deployment task.
 
 ## Parameters of the task:
 
