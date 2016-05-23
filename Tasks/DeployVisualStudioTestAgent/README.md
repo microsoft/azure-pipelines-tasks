@@ -9,6 +9,19 @@ The task requires:
 - .NET 4.5 on Windows7 Sp2 or Windows 2K8R2
 - Test machines should have PSRemoting enabled (run 'Enable-PSRemoting' on Windows Powershell)
 
+### Windows Remote Management (WinRM) Setup for On-premises Physical or Virtual Machines
+
+This task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426.aspx) (WinRM) to access domain-joined or workgroup, on-premises physical or virtual machines. 
+
+To easily **setup WinRM** on the **host machines** follow the directions for [domain-joined machines](https://www.visualstudio.com/en-us/docs/release/examples/other-servers/net-to-vm) or the [workgroup machines](https://www.visualstudio.com/en-us/docs/release/examples/other-servers/net-to-workgroup-vm).
+
+### Windows Remote Management (WinRM) Setup for Azure Virtual Machines
+
+- Azure virtual machines only work with the WinRM HTTPS protocol. When creating [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) virtual machine from the new Azure portal(https://portal.azure.com/) or the classic Azure portal(https://manage.windowsazure.com/), the virtual machine is already setup for WinRM HTTPS, with the default port 5986 already open in Firewall, and a self-signed certificate installed on the machine. These virtual machines can be directly added to the WinRM - IIS Web App Management task, with the WinRM protocol selected as HTTPS, and the Test Certificate option selected. Selecting the Test Certificate option means that the certificate is a self-signed certificate, and the automation agent will skip validating the authenticity of the machine's certificate from a trusted certification authority.
+- The existing [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) virtual machines can be also selected using the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task.
+- If a [resource group](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-hero-tutorial/) has been created in the Azure Portal(https://portal.azure.com/), then it needs to be setup for the WinRM HTTPS protocol. The steps listed in the section above should be used to setup the WinRM HTTPS on them.
+- To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a checkbox titled - **Enable Deployment Pre-requisites**. Select this option to setup the WinRM HTTPS protocol on the virtual machines, and to open the 5986 port in the Firewall, and to install the test certificate. After this the virtual machines. The virtual machines are then ready for use in the deployment task.
+
 ###The different parameters of the task are explained below:
 
 - **Machines:** Required Field. Provide the comma seperated list of machine names or "Azure Resource Group / Test Machine Group" name or Variable name containing the list of machines on which the Test Agent should be deployed.
