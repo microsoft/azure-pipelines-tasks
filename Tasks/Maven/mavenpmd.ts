@@ -12,7 +12,7 @@ import ar = require('./analysisresult');
 export const toolName:string = 'PMD';
 
 // Adds PMD goals, if selected by the user
-export function applyPmdArgs(mvnRun: trm.ToolRunner):void {
+export function applyPmdArgs(mvnRun):void {
     // This setup will give a [WARNING] during Maven build due to missing cross-reference data when creating HTML output,
     // but generating the data is not related to PMD code analysis. The feature can be disabled with -DlinkXRef=false.
     mvnRun.arg(['pmd:pmd']);

@@ -143,7 +143,7 @@ mvnGetVersion.exec()
         mvnRun.arg(mavenGoals);
 
         // Add goals for static code analysis tools
-        codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
+        mvnRun = codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
     
         // Read Maven standard output
         mvnRun.on('stdout', function(data) {

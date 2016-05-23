@@ -7,25 +7,26 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 
 // Lowercased names are to lessen the likelihood of xplat issues
-import pmd = require('./pmdformaven');
+import pmd = require('./mavenpmd');
 import ar = require('./analysisresult');
 import ma = require('./moduleanalysis');
 
 // Set up for localization
 tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-// Cache build variables - if they are null, we are in a test env and can use test inputs
-// The artifact staging directory will be a subdirectory just to be safe.
-var sourcesDir:string = tl.getVariable('build.sourcesDirectory') || tl.getInput('test.sourcesDirectory');
-var stagingDir:string = path.join(tl.getVariable('build.artifactStagingDirectory') || tl.getInput('test.artifactStagingDirectory'), ".codeAnalysis");
-var buildNumber:string = tl.getVariable('build.buildNumber') || tl.getInput('test.buildNumber');
+// Cache build variables are cached globally as they cannot change during the same build.
+var sourcesDir:string;
+var stagingDir:string;
+var buildNumber:string;
 
 // Apply goals for enabled code analysis tools
-export function applyEnabledCodeAnalysisGoals(mvnRun: trm.ToolRunner):void {
+export function applyEnabledCodeAnalysisGoals(mvnRun: trm.ToolRunner):trm.ToolRunner {
     // PMD
     if (isCodeAnalysisToolEnabled(pmd.toolName)) {
         pmd.applyPmdArgs(mvnRun);
     }
+
+    return mvnRun;
 }
 
 // Extract data from code analysis output files and upload results to build server
@@ -35,6 +36,11 @@ export function uploadCodeAnalysisResults():void {
     if (enabledCodeAnalysisTools.length < 1) {
         return;
     }
+
+    // Retrieve build variables
+    sourcesDir = tl.getVariable('build.sourcesDirectory');
+    stagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
+    buildNumber = tl.getVariable('build.buildNumber');
 
     // Discover maven modules
     var modules:ma.ModuleAnalysis[] = findCandidateModules(sourcesDir);
@@ -46,7 +52,10 @@ export function uploadCodeAnalysisResults():void {
         }
     });
 
-    tl.debug('Discovered ' + modules.length + ' Maven modules to upload results from: ' + modules);
+    tl.debug('Discovered ' + modules.length + ' Maven modules to upload results from: ');
+    modules.forEach((module:ma.ModuleAnalysis) => {
+        tl.debug('    ' + module.moduleName);
+    });
 
     // Gather data from enabled tools, add it to the module objects
     modules = processAndAssignAnalysisResults(enabledCodeAnalysisTools, modules);

@@ -55,6 +55,7 @@
     },
     "checkPath": {
         "/home/bin/maven/bin/mvn": true,
+        "/home/bin/maven": true,
         "/home/bin/maven2": true,
         "pom.xml": true
     },
