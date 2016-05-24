@@ -47,10 +47,15 @@
         "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass -f pom.xml sonar:sonar": {
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
+        },
+        "/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd": {
+          "code": 0,
+          "stdout": "Maven package and PMD analysis done"
         }
     },
     "checkPath": {
         "/home/bin/maven/bin/mvn": true,
+        "/home/bin/maven": true,
         "/home/bin/maven2": true,
         "pom.xml": true
     },

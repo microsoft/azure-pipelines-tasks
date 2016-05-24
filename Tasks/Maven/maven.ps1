@@ -21,7 +21,8 @@
     [string]$sqDbDetailsRequired,
     [string]$sqDbUrl,
     [string]$sqDbUsername,
-    [string]$sqDbPassword
+    [string]$sqDbPassword,
+    [string]$pmdAnalysisEnabled
 )
 
 Function CmdletHasMember($memberName) {
@@ -83,6 +84,13 @@ Write-Verbose "connectedServiceName = $sqConnectedServiceName"
 Write-Verbose "sqDbDetailsRequired = $sqDbDetailsRequired"
 Write-Verbose "dbUrl = $sqDbUrl"
 Write-Verbose "dbUsername = $sqDbUsername"
+
+# PMD analysis is not supported on Powershell, output a warning message
+if($pmdAnalysisEnabled)
+{
+    Write-Warning "PMD code analysis is not yet supported on Windows and hosted agents."
+    Write-Warning "Please use a dedicated Linux agent to enable this feature: https://github.com/Microsoft/vso-agent"
+}
 
 # Verify Maven POM file is specified
 if(!$mavenPOMFile)
