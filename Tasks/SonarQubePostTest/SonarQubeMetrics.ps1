@@ -55,7 +55,7 @@ function FetchQualityGateDetails
 #
 function FetchMetricNames
 {
-    $response = InvokeGetRestMethod "/api/metrics/search?ps=500&f=name" $false
+    $response = InvokeGetRestMethod "/api/metrics/search?ps=500&f=name" $true
     Assert (HasElements $response) "No metrics were found"
     
     return $response.metrics

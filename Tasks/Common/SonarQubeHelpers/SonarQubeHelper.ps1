@@ -162,6 +162,8 @@ function InvokeGetRestMethod
        
     }  
 
+    # Fix for HTTPS websites that support only TLS 1.2, as described by https://jira.sonarsource.com/browse/SONARMSBRU-169
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls
     $response = Invoke-RestMethod -Uri $request -Method Get -Headers $allheaders
 
     return $response
