@@ -570,5 +570,31 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
+    
+    it('Gradle build with publish test results.', (done) => {
+        setResponseFile('gradleGood.json');
+
+        var tr = new trm.TaskRunner('gradle');
+        tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('options', '');
+        tr.setInput('tasks', 'build');
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('codeCoverageTool', 'None');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0)
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
 
 });
