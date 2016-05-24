@@ -166,6 +166,10 @@
       "target": "$(currentDirectory)\\VSTest.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
+    },
+    "Node": {
+      "target": "VSTest.js",
+      "argumentFormat": ""
     }
   }
 }
