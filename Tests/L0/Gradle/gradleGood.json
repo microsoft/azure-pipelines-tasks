@@ -37,13 +37,23 @@
         "/home/repo/src": true
     },
     "getVariable": {
-        "ANT_HOME": "/user/local/bin/ANT",
-        "JAVA_HOME_8_X86": "/user/local/bin/Java8"
+        "JAVA_HOME_8_X86": "/user/local/bin/Java8",
+        "System.DefaultWorkingDirectory": "/user/build"
     },
     "rmRF": {
         "CCReport43F6D5EF": {
             "success": true,
             "message": "success"
         }
+    },
+    "find": {
+        "/user/build": [
+            "/user/build/fun/test-123.xml"
+        ]
+    },
+    "match": {
+        "**/TEST-*.xml": [
+            "/user/build/fun/test-123.xml"
+        ]
     }
 }

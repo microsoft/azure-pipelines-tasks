@@ -841,4 +841,34 @@ describe('Maven Suite', function() {
                 done(err);
             });
     })
+    
+    it('Maven build with publish test results', (done) => {
+        setResponseFile('response.json');
+        var tr = new trm.TaskRunner('maven', true);
+        tr.setInput('mavenVersionSelection', 'default');
+        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('options', '');
+        tr.setInput('goals', 'package');
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('codeCoverageTool', 'None');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0)
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                assert.fail("should not have thrown error");
+                done(err);
+            });
+    })
 });
