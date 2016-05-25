@@ -1,6 +1,6 @@
 {
   "id": "91443475-df55-4874-944b-39253b558790",
-  "name": "RunRemoteShellCommandsSSH",
+  "name": "SSHCommandRunner",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -81,7 +81,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "RunRemoteShellCommandsSSH.js",
+      "target": "SSHCommandRunner.js",
       "argumentFormat": ""
     }
   }

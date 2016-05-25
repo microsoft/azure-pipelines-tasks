@@ -1,8 +1,8 @@
 {
     "id": "91443475-df55-4874-944b-39253b558790",
-    "name": "RunRemoteShellCommandsSSH",
-    "friendlyName": "Remote Shell Commands",
-    "description": "Run shell commands on a remote machine using SSH.",
+    "name": "SSHCommandRunner",
+    "friendlyName": "SSH Command Runner",
+    "description": "Run shell commands on a remote machine using SSH",
     "helpMarkDown": "",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +17,7 @@
     },
     "demands": [
      ],
-    "instanceNameFormat": "Run shell commands on remote machine using SSH",
+    "instanceNameFormat": "Run remote shell commands",
     "groups": [
         {
             "name": "connection",
@@ -33,7 +33,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "connection",
-            "helpMarkDown": "Hostname or IP of the remote machine."
+            "helpMarkDown": "Hostname or IP address of the remote machine."
         },
         {
             "name": "port",
@@ -56,7 +56,7 @@
         {
             "name": "password",
             "type": "string",
-            "label": "Password/Passphrase",
+            "label": "Password/passphrase",
             "defaultValue": "",
             "required": false,
             "groupName": "connection",
@@ -65,7 +65,7 @@
         {
             "name": "privateKey",
             "type": "multiLine",
-            "label": "Private Key",
+            "label": "Private key",
             "defaultValue": "",
             "required": false,
             "groupName": "connection",
@@ -77,12 +77,12 @@
             "label": "Commands",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with it's arguments on a new line."
+            "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line."
         }
     ],
     "execution": {
         "Node": {
-            "target": "RunRemoteShellCommandsSSH.js",
+            "target": "SSHCommandRunner.js",
             "argumentFormat": ""
         }
     }
