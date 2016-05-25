@@ -89,7 +89,7 @@ Write-Verbose "dbUsername = $sqDbUsername"
 if($pmdAnalysisEnabled)
 {
     Write-Warning "PMD code analysis is not yet supported on Windows and hosted agents."
-    Write-Warning "Please use a dedicated Linux agent to enable this feature: https://github.com/Microsoft/vso-agent"
+    Write-Warning "Please use a dedicated Unix agent to enable this feature: https://github.com/Microsoft/vsts-agent"
 }
 
 # Verify Maven POM file is specified
