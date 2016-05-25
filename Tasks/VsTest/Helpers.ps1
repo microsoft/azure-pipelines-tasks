@@ -26,6 +26,10 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 		[string]$vsTestVersion
 	)
 	
+	if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
+		$vsTestVersion = Locate-VSVersion
+	}
+
 	$version = [int]($vsTestVersion)
 	if($version -ge 14)
 	{
@@ -100,3 +104,32 @@ function SetupRunSettingsFileForParallel {
 	return $runSettingsFilePath
 }
 
+function Get-SubKeysInFloatFormat($keys)
+{
+	$targetKeys = @()      # New array
+	foreach ($key in $keys)
+	{
+		$targetKeys += $key -as [decimal]
+	}
+
+	return $targetKeys
+}
+
+function Locate-VSVersion()
+{
+	#Find the latest version
+	$regPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio"
+	if (-not (Test-Path $regPath))
+	{
+		return $null
+	}
+	
+	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()} -ErrorAction SilentlyContinue
+	$version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
+
+	if ([string]::IsNullOrWhiteSpace($version))
+	{
+		return $null
+	}
+	return $version
+}
