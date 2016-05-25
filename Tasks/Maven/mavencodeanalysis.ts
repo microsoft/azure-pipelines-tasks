@@ -255,8 +255,12 @@ function uploadBuildArtifactsFromModule(toolName:string, moduleAnalysis:ModuleAn
     }
 
     // If there are no files to upload or there were no violations, return early
-    if (!analysisResult.filesToUpload || analysisResult.filesToUpload.length < 1 || analysisResult.totalViolations < 1) {
-        console.log('No artifacts to upload for ' + toolName + ' analysis of module ' + moduleAnalysis.moduleName);
+    if (!analysisResult.filesToUpload || analysisResult.filesToUpload.length < 1) {
+        console.log('Skipping artifact upload: No artifacts from ' + toolName + ' analysis of module ' + moduleAnalysis.moduleName);
+        return;
+    }
+    if (analysisResult.totalViolations < 1) {
+        console.log('Skipping artifact upload: No violations from ' + toolName + ' analysis of module ' + moduleAnalysis.moduleName);
         return;
     }
 
