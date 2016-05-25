@@ -144,9 +144,14 @@ function processAndAssignAnalysisResults(enabledCodeAnalysisTools:string[], modu
 // Create a build summary from the analysis results of modules
 function createAndUploadBuildSummary(enabledTools:string[], modules:ma.ModuleAnalysis[]):void {
     var buildSummaryLines:string[] = [];
+    var totalViolationsInBuild = 0;
 
     enabledTools.forEach((toolName:string) => {
         var toolAnalysisResults:ar.AnalysisResult[] = getToolAnalysisResults(modules, toolName);
+
+        toolAnalysisResults.forEach((toolAnalysisResult:ar.AnalysisResult) => {
+            totalViolationsInBuild += toolAnalysisResult.totalViolations;
+        });
 
         // After looping through all modules, summarise tool output results
         try {
@@ -156,6 +161,12 @@ function createAndUploadBuildSummary(enabledTools:string[], modules:ma.ModuleAna
         }
         buildSummaryLines.push(summaryLine);
     });
+
+    // Add a double space and a final line with descriptive text, if there were any violations to be reported
+    if (totalViolationsInBuild > 0) {
+        buildSummaryLines.push("");
+        buildSummaryLines.push("Code analysis results can be found in the 'Artifacts' tab.");
+    }
 
     // Save and upload build summary
     // Looks like: "PMD found 13 violations in 4 files.  \r\n
