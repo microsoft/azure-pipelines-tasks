@@ -50,7 +50,9 @@ function GetResultsLocation {
 		[string]$runSettingsFilePath		
 	)
 
-    if((![System.String]::IsNullOrWhiteSpace($runSettingsFilePath)) -And ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -eq 0) -And !(Test-Path $runSettingsFilePath -pathtype container))
+    if((![System.String]::IsNullOrWhiteSpace($runSettingsFilePath)) -And 
+    (([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -eq 0) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".tmp", $True) -eq 0)) -And 
+    !(Test-Path $runSettingsFilePath -pathtype container))
     {
         $runSettingsForTestResults = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
         $resultsDirElement = $runSettingsForTestResults.SelectNodes("//RunSettings/RunConfiguration/ResultsDirectory")
