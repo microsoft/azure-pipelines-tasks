@@ -100,7 +100,7 @@ if($testAssemblyFiles)
     $defaultCpuCount = "0"    
     $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
     
-    $testResultsDirectory = GetResultsLocation $runSettingsFile
+    $testResultsDirectory = GetResultsLocation $runSettingsFileWithParallel 
     if(!$testResultsDirectory)
     {
         $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
