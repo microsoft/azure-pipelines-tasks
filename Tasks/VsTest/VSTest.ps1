@@ -85,13 +85,7 @@ if($testAssemblyFiles)
 
     $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
-    $workingDirectory = $artifactsDirectory
-
-    $testResultsDirectory = GetResultsLocation $runSettingsFile
-    if(!$testResultsDirectory)
-    {
-        $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
-    }    
+    $workingDirectory = $artifactsDirectory   
 
     if($runInParallel -eq "True")
     {
@@ -106,6 +100,13 @@ if($testAssemblyFiles)
     $defaultCpuCount = "0"    
     $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
     
+    $testResultsDirectory = GetResultsLocation $runSettingsFile
+    if(!$testResultsDirectory)
+    {
+        $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+    } 
+    Write-Verbose "Test results directory: $testResultsDirectory"
+
     Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
 
     $resultFiles = Find-Files -SearchPattern "*.trx" -RootFolder $testResultsDirectory 
