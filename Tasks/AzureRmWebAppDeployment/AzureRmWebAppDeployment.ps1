@@ -17,6 +17,9 @@ param
 
     [String] [Parameter(Mandatory = $true)]
     $Package,
+    
+    [String] [Parameter(Mandatory = $false)]
+    $SetParametersFile,
 
     [String] [Parameter(Mandatory = $false)]
     $RemoveAdditionalFilesFlag,
@@ -45,6 +48,7 @@ Write-Verbose "DeployToSlotFlag = $DeployToSlotFlag"
 Write-Verbose "ResourceGroupName = $ResourceGroupName"
 Write-Verbose "SlotName = $SlotName"
 Write-Verbose "Package = $Package"
+Write-Verbose "SetParametersFile = $SetParametersFile"
 Write-Verbose "RemoveAdditionalFilesFlag = $RemoveAdditionalFilesFlag"
 Write-Verbose "ExcludeFilesFromAppDataFlag = $ExcludeFilesFromAppDataFlag"
 Write-Verbose "TakeAppOfflineFlag = $TakeAppOfflineFlag"
@@ -58,6 +62,8 @@ $Package = $Package.Trim('"').Trim()
 if( [string]::IsNullOrEmpty($Package) ){
     Throw (Get-LocalizedString -Key "Invalid webapp package path provided")
 }
+
+$SetParametersFile = $SetParametersFile.Trim('"').Trim()
 
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -82,7 +88,14 @@ $ErrorActionPreference = 'Stop'
 $msDeployExePath = Get-MsDeployExePath
 
 # Ensure that at most a package (.zip) file is found
-$packageFile = Get-SinglePackageFile -package $Package
+$packageFilePath = Get-SingleFilePath -file $Package
+
+# Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
+if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")){
+    $setParametersFilePath = ""
+} else {
+    $setParametersFilePath = Get-SingleFilePath -file $SetParametersFile
+}
 
 # Get destination azureRM webApp connection details
 $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
@@ -92,8 +105,9 @@ $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName
 $webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag -slotName $SlotName
 
 # Construct arguments for msdeploy command
-$msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFile -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
-                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments
+$msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFilePath -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
+                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments `
+                                       -setParametersFile $setParametersFilePath
 
 # Deploy azureRM webApp using msdeploy Command
 Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs

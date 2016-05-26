@@ -85,6 +85,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
+      "name": "SetParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SetParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
+    },
+    {
       "name": "RemoveAdditionalFilesFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
