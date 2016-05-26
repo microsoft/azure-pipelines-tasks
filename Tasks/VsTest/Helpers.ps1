@@ -59,14 +59,14 @@ function GetResultsLocation {
 		if($resultsDirElement -And $resultsDirElement.Count -ne 0)
 		{
             $customLocation = $runSettingsForTestResults.RunSettings.RunConfiguration.ResultsDirectory       
-            if(![io.path]::IsPathRooted($customLocation))
+            if([io.path]::IsPathRooted($customLocation))
             {
-                $customLocation = [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
+		return $customLocation
             }
-            if([io.directory]::Exists($customLocation))
-            {
-                return $customLocation
-            }
+	    else
+	    {
+		return [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
+	    }
         }        
     }
     return $null
