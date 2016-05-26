@@ -7,7 +7,7 @@ import xml2js = require('xml2js');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 
-import ar = require('./analysisresult');
+import {AnalysisResult} from './analysisresult';
 
 export const toolName:string = 'PMD';
 
@@ -22,8 +22,8 @@ export function applyPmdArgs(mvnRun):void {
 // names and locations within the target directory.
 // Takes the working directory (should contain pom.xml and target/) and returns an AnalysisResult data class.
 // @param sourcesDirectory - The absolute location of the root source directory.
-export function collectPmdOutput(rootDir:string) : ar.AnalysisResult {
-    var result:ar.AnalysisResult = new ar.AnalysisResult();
+export function collectPmdOutput(rootDir:string) : AnalysisResult {
+    var result:AnalysisResult = new AnalysisResult();
     result.toolName = toolName;
 
     var pmdXmlFilePath = path.join(rootDir, 'target', 'pmd.xml');
@@ -40,7 +40,7 @@ export function collectPmdOutput(rootDir:string) : ar.AnalysisResult {
 
 // Verifies the existence of the HTML output file.
 // Modifies the relevant field within the returned object accordingly.
-function collectPmdHtml(analysisResult:ar.AnalysisResult, path:string):ar.AnalysisResult {
+function collectPmdHtml(analysisResult:AnalysisResult, path:string):AnalysisResult {
     if (!tl.exist(path)) {
         tl.debug('PMD HTML not found at ' + path);
     } else {
@@ -51,7 +51,7 @@ function collectPmdHtml(analysisResult:ar.AnalysisResult, path:string):ar.Analys
 
 // Verifies the existence of the XML output file and parses its contents.
 // Modifies the relevant fields within the returned object accordingly.
-function collectPmdXml(analysisResult:ar.AnalysisResult, path:string):ar.AnalysisResult {
+function collectPmdXml(analysisResult:AnalysisResult, path:string):AnalysisResult {
     if (!tl.exist(path)) {
         tl.debug('PMD XML not found at ' + path);
     }
