@@ -86,7 +86,12 @@ if($testAssemblyFiles)
     $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
     $workingDirectory = $artifactsDirectory
-    $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+
+    $testResultsDirectory = GetResultsLocation $runSettingsFile
+    if(!$testResultsDirectory)
+    {
+        $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+    }    
 
     if($runInParallel -eq "True")
     {
