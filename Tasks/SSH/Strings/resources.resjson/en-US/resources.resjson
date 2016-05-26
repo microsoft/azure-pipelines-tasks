@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "SSH Command Runner",
+  "loc.friendlyName": "SSH",
   "loc.helpMarkDown": "",
   "loc.description": "Run shell commands on a remote machine using SSH",
   "loc.instanceNameFormat": "Run remote shell commands",

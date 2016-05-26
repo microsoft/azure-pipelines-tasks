@@ -6,7 +6,7 @@
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
   "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.group.displayName.SQAnalysis": "SonarQube Analysis",
+  "loc.group.displayName.CodeAnalysis": "Code Analysis",
   "loc.input.label.mavenPOMFile": "Maven POM file",
   "loc.input.help.mavenPOMFile": "Relative path from the repository root to the Maven POM file.",
   "loc.input.label.options": "Options",
@@ -50,5 +50,11 @@
   "loc.input.label.sqDbUsername": "Db Username",
   "loc.input.help.sqDbUsername": "SonarQube server 5.1 and lower only. Enter the username for the database user (i.e. sonar.jdbc.username).",
   "loc.input.label.sqDbPassword": "Db User Password",
-  "loc.input.help.sqDbPassword": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password"
+  "loc.input.help.sqDbPassword": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
+  "loc.input.label.pmdAnalysisEnabled": "Run PMD Analysis",
+  "loc.input.help.pmdAnalysisEnabled": "Use the PMD Java static analysis tool to look for bugs in the code.",
+  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
+  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
+  "loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
+  "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations."
 }

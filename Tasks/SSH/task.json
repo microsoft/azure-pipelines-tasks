@@ -1,7 +1,7 @@
 {
     "id": "91443475-df55-4874-944b-39253b558790",
-    "name": "SSHCommandRunner",
-    "friendlyName": "SSH Command Runner",
+    "name": "SSH",
+    "friendlyName": "SSH",
     "description": "Run shell commands on a remote machine using SSH",
     "helpMarkDown": "",
     "category": "Deploy",
