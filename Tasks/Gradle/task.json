@@ -33,6 +33,11 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
+        },
+        {
+          "name": "CodeAnalysis",
+          "displayName": "Code Analysis",
+          "isExpanded": true
         }
     ],
     "inputs": [
@@ -181,6 +186,61 @@
                 "x86": "x86",
                 "x64": "x64"
             }
+        },
+        {
+          "name": "sqAnalysisEnabled",
+          "type": "boolean",
+          "label": "Run SonarQube Analysis",
+          "required": true,
+          "defaultValue": "false",
+          "groupName": "CodeAnalysis",
+          "helpMarkDown": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
+        },
+        {
+          "name": "sqConnectedServiceName",
+          "type": "connectedService:Generic",
+          "label": "SonarQube Endpoint",
+          "required": true,
+          "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
+          "groupName": "CodeAnalysis",
+          "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+          "name": "sqDbDetailsRequired",
+          "type": "boolean",
+          "label": "The SonarQube server version is lower than 5.2",
+          "required": true,
+          "defaultValue": "false",
+          "groupName": "CodeAnalysis",
+          "helpMarkDown": "If using a SonarQube server 5.1 or lower, you must specify the database connection details.",
+          "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+          "name": "sqDbUrl",
+          "type": "string",
+          "label": "Db Connection String",
+          "required": false,
+          "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the database connection setting (i.e. sonar.jdbc.url). For example: jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
+          "groupName": "CodeAnalysis",
+          "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+          "name": "sqDbUsername",
+          "type": "string",
+          "label": "Db Username",
+          "required": false,
+          "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the username for the database user (i.e. sonar.jdbc.username).",
+          "groupName": "CodeAnalysis",
+          "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+          "name": "sqDbPassword",
+          "type": "string",
+          "label": "Db User Password",
+          "required": false,
+          "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
+          "groupName": "CodeAnalysis",
+          "visibleRule": "sqDbDetailsRequired = true"
         }
     ],
     "instanceNameFormat": "gradlew $(tasks)",

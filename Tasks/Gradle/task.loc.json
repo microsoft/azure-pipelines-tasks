@@ -33,6 +33,11 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "CodeAnalysis",
+      "displayName": "ms-resource:loc.group.displayName.CodeAnalysis",
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -181,6 +186,61 @@
         "x86": "x86",
         "x64": "x64"
       }
+    },
+    {
+      "name": "sqAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
+    },
+    {
+      "name": "sqConnectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.sqConnectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqDbDetailsRequired",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbDetailsRequired",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqDbUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbUrl",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbUrl",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "sqDbUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbUsername",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbUsername",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "sqDbPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqDbPassword",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqDbDetailsRequired = true"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
