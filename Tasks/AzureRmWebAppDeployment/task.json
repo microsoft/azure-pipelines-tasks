@@ -6,7 +6,6 @@
 	"helpMarkDown": "[More Information](http://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -14,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "minimumAgentVersion": "1.99.0",
 	"groups": [
