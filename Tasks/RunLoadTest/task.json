@@ -59,7 +59,18 @@
       "label": "Number of permissible threshold violations",
       "required": false,
       "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsucessful."
-    }
+    },
+    { 
+             "name": "runloadtestusing", 
+             "type": "radio", 
+             "label": "Run Load Test Using", 
+             "required": true,  
+             "defaultValue": "localagents", 
+             "options": { 
+                 "localagents": "Static Local Agents", 
+                 "VUM": "Virtual User Machines" 
+             }
+       } 
   ],
   "instanceNameFormat": "Cloud Load Test $(LoadTest)",
   "execution": {
