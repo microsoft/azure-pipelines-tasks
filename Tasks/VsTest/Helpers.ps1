@@ -43,6 +43,40 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 	return $false
 }
 
+function GetResultsLocation {
+	[cmdletbinding()]
+	[OutputType([System.String])]
+	param(		
+		[string]$runSettingsFilePath		
+	)
+
+    if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath)) 
+    {
+        return null
+    }
+
+    #If this is a runsettings file then try to get the custom results location
+    if((([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -eq 0) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".tmp", $True) -eq 0)) -And 
+    !(Test-Path $runSettingsFilePath -pathtype container))
+    {
+        $runSettingsForTestResults = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
+        $resultsDirElement = $runSettingsForTestResults.SelectNodes("//RunSettings/RunConfiguration/ResultsDirectory")
+		if($resultsDirElement -And $resultsDirElement.Count -ne 0)
+		{
+            $customLocation = $runSettingsForTestResults.RunSettings.RunConfiguration.ResultsDirectory       
+            if([io.path]::IsPathRooted($customLocation))
+            {
+		return $customLocation
+            }
+	    else
+	    {
+		return [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
+	    }
+        }        
+    }
+    return $null
+}
+
 function SetupRunSettingsFileForParallel {
 	[cmdletbinding()]
 	[OutputType([System.String])]
