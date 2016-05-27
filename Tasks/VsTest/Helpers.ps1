@@ -50,8 +50,13 @@ function GetResultsLocation {
 		[string]$runSettingsFilePath		
 	)
 
-    if((![System.String]::IsNullOrWhiteSpace($runSettingsFilePath)) -And 
-    (([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -eq 0) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".tmp", $True) -eq 0)) -And 
+    if([System.String]::IsNullOrWhiteSpace($runSettingsFilePath)) 
+    {
+        return null
+    }
+
+    #If this is a runsettings file then try to get the custom results location
+    if((([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -eq 0) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".tmp", $True) -eq 0)) -And 
     !(Test-Path $runSettingsFilePath -pathtype container))
     {
         $runSettingsForTestResults = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
