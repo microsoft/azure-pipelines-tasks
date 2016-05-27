@@ -6,7 +6,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -14,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 6
   },
   "minimumAgentVersion": "1.99.0",
   "groups": [
@@ -169,10 +168,30 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\AzureRMWebAppDeployment.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "AzureRMWebAppDeployment.ps1"
     }
+  },
+  "messages": {
+    "Invalidwebapppackagepathprovided": "ms-resource:loc.messages.Invalidwebapppackagepathprovided",
+    "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
+    "Unabletoretrievewebapppublishurlforwebapp0": "ms-resource:loc.messages.Unabletoretrievewebapppublishurlforwebapp0",
+    "GettingconnectiondetailsforazureRMWebApp0underSlot1": "ms-resource:loc.messages.GettingconnectiondetailsforazureRMWebApp0underSlot1",
+    "GotconnectiondetailsforazureRMWebApp0underSlot1": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0underSlot1",
+    "GettingconnectiondetailsforazureRMWebApp0underProductionSlot": "ms-resource:loc.messages.GettingconnectiondetailsforazureRMWebApp0underProductionSlot",
+    "WebApp0doesnotexist": "ms-resource:loc.messages.WebApp0doesnotexist",
+    "GotconnectiondetailsforazureRMWebApp0underProductionSlot": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0underProductionSlot",
+    "WebApp0notfound": "ms-resource:loc.messages.WebApp0notfound",
+    "Unabletofindwebapppublishprofiledetailsforwebapp0": "ms-resource:loc.messages.Unabletofindwebapppublishprofiledetailsforwebapp0",
+    "UsinglocalMSDeployexe": "ms-resource:loc.messages.UsinglocalMSDeployexe",
+    "msdeployexeislocatedat0": "ms-resource:loc.messages.msdeployexeislocatedat0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "packageFileFindFilesSearchPattern0": "ms-resource:loc.messages.packageFileFindFilesSearchPattern0",
+    "packageFile0": "ms-resource:loc.messages.packageFile0",
+    "Runningmsdeploycommand0": "ms-resource:loc.messages.Runningmsdeploycommand0",
+    "msdeploycommandransuccessfully": "ms-resource:loc.messages.msdeploycommandransuccessfully",
+    "filePathFindFilesSearchPattern0": "ms-resource:loc.messages.filePathFindFilesSearchPattern0",
+    "filePath0": "ms-resource:loc.messages.filePath0"
   }
 }
