@@ -34,11 +34,11 @@ Register-Mock SetTaskContextVariable
 $taskStatusResponse = ConvertFrom-Json '{"task":{"id":"AVQFkrko8fxuJtveJbjv","type":"REPORT","componentId":"AVQFkrko8fxuJtveJbjv","componentKey":"blm5","componentName":"Backlogmaps","componentQualifier":"TRK","analysisId":"10337","status":"SUCCESS","submittedAt":"2016-04-12T10:29:33+0100","startedAt":"2016-04-12T10:29:35+0100","executedAt":"2016-04-12T10:29:39+0100","executionTimeMs":3968,"logs":true}}'
 
 # the task id below is the one in the report-task.txt file
-Register-Mock InvokeGetRestMethod {$taskStatusResponse} -- "/api/ce/task?id=AVQFkrko8fxuJtveJbjv" $true
+Register-Mock InvokeGetRestMethod {$taskStatusResponse} -- "/api/ce/task?id=AVQFkrko8fxuJtveJbjv" 
 
 # the analysis id below comes from the task status reponse
 $qualityGateResponse = ConvertFrom-Json '{"projectStatus":{"status":"OK","conditions":[],"periods":[]}}'
-Register-Mock InvokeGetRestMethod {$qualityGateResponse} -- "/api/qualitygates/project_status?analysisId=10337" $true
+Register-Mock InvokeGetRestMethod {$qualityGateResponse} -- "/api/qualitygates/project_status?analysisId=10337" 
 
 # Act 1 - calling GetOrFetchQualityGateStatus without first calling WaitForAnalysisToFinish fails
 Assert-Throws {GetOrFetchQualityGateStatus} "*WaitForAnalysisToFinish*"

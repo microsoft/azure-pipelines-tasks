@@ -236,7 +236,7 @@
             "type": "connectedService:Generic",
             "label": "SonarQube Endpoint",
             "required": true,
-            "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
+            "helpMarkDown": "The SonarQube server generic endpoint",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },
