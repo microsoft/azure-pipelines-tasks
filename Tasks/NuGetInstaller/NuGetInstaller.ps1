@@ -80,7 +80,7 @@ if($nuGetRestoreArgs)
     $args = ($args + " " + $nuGetRestoreArgs);
 }
 
-if($nugetConfigPath -and ($nugetConfigPath -ne $env:Build_SourcesDirectory))
+if($nugetConfigPath -and ($nugetConfigPath -ne $env:System_DefaultWorkingDirectory))
 {
     $args = "$args -configfile `"$tempNuGetConfigPath`""
 
