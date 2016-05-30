@@ -51,41 +51,5 @@ function Initialize-Azure {
     }
 }
 
-function Get-AzureCmdletsVersion
-{
-    $module = Get-Module -Name AzureRM* -ListAvailable | Select-Object -First 1
-    if($module)
-    {
-        return ($module).Version
-    }
-    return (Get-Module Azure -ListAvailable).Version
-}
-
-function Get-AzureVersionComparison
-{
-    param
-    (
-        [System.Version] [Parameter(Mandatory = $true)]
-        $AzureVersion,
-
-        [System.Version] [Parameter(Mandatory = $true)]
-        $CompareVersion
-    )
-
-    $result = $AzureVersion.CompareTo($CompareVersion)
-
-    if ($result -lt 0)
-    {
-        #AzureVersion is before CompareVersion
-        return $false 
-    }
-    else
-    {
-        return $true
-    }
-}
-
 # Export only the public function.
-Export-ModuleMember -Function Get-AzureVersionComparison
-Export-ModuleMember -Function Get-AzureCmdletsVersion
 Export-ModuleMember -Function Initialize-Azure
