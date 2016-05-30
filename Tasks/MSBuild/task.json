@@ -1,11 +1,11 @@
 {
-     "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
-     "name": "MSBuild",
-     "friendlyName": "MSBuild",
-     "description": "Build with MSBuild",
-     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
-     "category": "Build",
-     "visibility": [
+    "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
+    "name": "MSBuild",
+    "friendlyName": "MSBuild",
+    "description": "Build with MSBuild",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
+    "category": "Build",
+    "visibility": [
         "Build"
     ],
     "author": "Microsoft Corporation",

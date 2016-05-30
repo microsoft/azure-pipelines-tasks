@@ -2,24 +2,25 @@ $ErrorActionPreference = 'Stop'
 
 function Get-AzureUtility
 {
-    $currentVersion =  Get-AzureCmdletsVersion
+    $currentVersion =  (Get-Module -Name AzureRM.profile).Version
     Write-Verbose  "Installed Azure PowerShell version: $currentVersion"
 
     $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
-
-    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
+	
+	$azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
     $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
-
-    if(!$versionCompatible)
-    {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
-    }
-    else
-    {
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
-    }
-
+	
+	Write-Verbose "Current AzureRM.profile version : $currentVersion "
+	
+	if( !$versionCompatible -and $currentVersion -gt $minimumAzureVersion )
+	{
+		$azureUtilityRequiredVersion = $azureUtilityNewVersion
+	}
+	else
+	{
+		$azureUtilityRequiredVersion = $azureUtilityOldVersion
+	}
+	
     Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
     return $azureUtilityRequiredVersion
 }

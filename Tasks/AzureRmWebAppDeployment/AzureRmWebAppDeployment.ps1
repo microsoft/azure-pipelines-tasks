@@ -7,13 +7,13 @@ try{
 
 	# Get inputs.
 	$WebAppName = Get-VstsInput -Name WebAppName -Require
-	$DeployToSlotFlag = Get-VstsInput -Name DeployToSlotFlag -Require
+	$DeployToSlotFlag = Get-VstsInput -Name DeployToSlotFlag -Require -AsBool
 	$ResourceGroupName = Get-VstsInput -Name ResourceGroupName
 	$SlotName = Get-VstsInput -Name SlotName
 	$Package = Get-VstsInput -Name Package -Require
-	$RemoveAdditionalFilesFlag = Get-VstsInput -Name ScriptArgument
-	$ExcludeFilesFromAppDataFlag = Get-VstsInput -Name ExcludeFilesFromAppDataFlag 
-	$TakeAppOfflineFlag = Get-VstsInput -Name TakeAppOfflineFlag 
+	$RemoveAdditionalFilesFlag = Get-VstsInput -Name RemoveAdditionalFilesFlag -AsBool
+	$ExcludeFilesFromAppDataFlag = Get-VstsInput -Name ExcludeFilesFromAppDataFlag -AsBool
+	$TakeAppOfflineFlag = Get-VstsInput -Name TakeAppOfflineFlag -AsBool
 	$VirtualApplication = Get-VstsInput -Name VirtualApplication 
 	$AdditionalArguments = Get-VstsInput -Name AdditionalArguments 
 	$WebAppUri = Get-VstsInput -Name WebAppUri
@@ -27,57 +27,26 @@ try{
 	# Import the loc strings.
 	Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
-
-	Write-Verbose "Starting AzureRM WebApp Deployment Task"
-
-	Write-Verbose "ConnectedServiceName = $ConnectedServiceName"
-	Write-Verbose "WebAppName = $WebAppName"
-	Write-Verbose "DeployToSlotFlag = $DeployToSlotFlag"
-	Write-Verbose "ResourceGroupName = $ResourceGroupName"
-	Write-Verbose "SlotName = $SlotName"
-	Write-Verbose "Package = $Package"
-	Write-Verbose "SetParametersFile = $SetParametersFile"
-	Write-Verbose "RemoveAdditionalFilesFlag = $RemoveAdditionalFilesFlag"
-	Write-Verbose "ExcludeFilesFromAppDataFlag = $ExcludeFilesFromAppDataFlag"
-	Write-Verbose "TakeAppOfflineFlag = $TakeAppOfflineFlag"
-	Write-Verbose "VirtualApplication = $VirtualApplication"
-	Write-Verbose "AdditionalArguments = $AdditionalArguments"
-	Write-Verbose "WebAppUri = $WebAppUri"
-
 	$WebAppUri = $WebAppUri.Trim()
-	$Package = $Package.Trim('"').Trim()
+	$Package = "$Package".Trim('"').Trim()
 
 	if( [string]::IsNullOrEmpty($Package) ){
 		Throw (Get-VstsLocString -Key "Invalidwebapppackagepathprovided")
-	}
-
-	if ($ExcludeFilesFromAppDataFlag -match '[\r\n]' -or [string]::IsNullOrEmpty($ExcludeFilesFromAppDataFlag)) {
-		$ExcludeFilesFromAppDataFlag = $false
-	}
-
-	if ($TakeAppOfflineFlag -match '[\r\n]' -or [string]::IsNullOrEmpty($TakeAppOfflineFlag)) {
-		$TakeAppOfflineFlag = $false
-	}
-
-	if ($RemoveAdditionalFilesFlag -match '[\r\n]' -or [string]::IsNullOrEmpty($RemoveAdditionalFilesFlag)) {
-		$RemoveAdditionalFilesFlag = $false
 	}
 
 	$SetParametersFile = $SetParametersFile.Trim('"').Trim()
 
 
 	# Load all dependent files for execution
-	Import-Module ./AzureUtility.ps1 -Force
-	Import-Module ./Utility.ps1 -Force
-	Import-Module ./FindInstalledMSDeploy.ps1
+	. $PSScriptRoot/AzureUtility.ps1 -Force
+	. $PSScriptRoot/Utility.ps1 -Force
+	. $PSScriptRoot/FindInstalledMSDeploy.ps1
 
-	 # Importing required version of azure cmdlets according to azureps installed on machine
-	 $azureUtility = Get-AzureUtility
+	# Importing required version of azure cmdlets according to azureps installed on machine
+	$azureUtility = Get-AzureUtility
 
-	 Write-Verbose  "Loading $azureUtility"
-	 Import-Module ./$azureUtility -Force
-
-	$ErrorActionPreference = 'Stop'
+	Write-Verbose  "Loading $azureUtility"
+	. $PSScriptRoot/$azureUtility -Force
 
 	#### MAIN EXECUTION OF AZURERM WEBAPP DEPLOYMENT TASK BEGINS HERE ####
 
@@ -129,7 +98,7 @@ try{
 			Throw (Get-VstsLocString -Key "Unabletoretrievewebapppublishurlforwebapp0" -ArgumentList $webAppName)
 		}
 	
-		Write-Host "##vso[task.setvariable variable=$WebAppUri;]$azureWebsitePublishURL"
+		Set-VstsTaskVariable -Name $WebAppUri -Value $azureWebsitePublishURL
 	}
 
 	Write-Verbose "Completed AzureRM WebApp Deployment Task"

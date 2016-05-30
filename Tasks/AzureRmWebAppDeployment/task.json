@@ -168,6 +168,11 @@
     ],
     "instanceNameFormat": "Deploy AzureRM Web App: $(WebAppName)",
     "execution": {
+       "AzurePowerShell": {
+            "target": "$(currentDirectory)\\AzureRmWebAppDeployment-Legacy.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        },
         "PowerShell3": {
             "target": "AzureRMWebAppDeployment.ps1"
         }

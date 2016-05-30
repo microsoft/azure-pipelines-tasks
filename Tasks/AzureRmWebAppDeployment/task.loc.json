@@ -168,6 +168,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\AzureRmWebAppDeployment-Legacy.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    },
     "PowerShell3": {
       "target": "AzureRMWebAppDeployment.ps1"
     }
