@@ -3,7 +3,7 @@
 declare module 'sonarqube-common/sonarqube-common' {
     import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
-    // Applies required parameters for connecting a Java-based plugin to SonarQube.
+    // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
     // sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
     export function applySonarQubeConnectionParams(toolRunner:ToolRunner, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?):ToolRunner;
 
