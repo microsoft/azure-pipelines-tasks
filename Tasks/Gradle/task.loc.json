@@ -284,5 +284,9 @@
       "target": "gradletask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+      "sqAnalysis_isEnabled": "ms-resource:loc.messages.sqAnalysis_isEnabled",
+      "sqAnalysis_isNotEnabled": "ms-resource:loc.messages.sqAnalysis_isNotEnabled"
   }
 }

@@ -50,5 +50,7 @@
   "loc.input.label.sqProjectKey": "SonarQube Project Key",
   "loc.input.help.sqProjectKey": "The SonarQube project unique key, i.e. sonar.projectKey. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
   "loc.input.label.sqProjectVersion": "SonarQube Project Version",
-  "loc.input.help.sqProjectVersion": "The SonarQube project version, i.e. sonar.projectVersion. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle"
+  "loc.input.help.sqProjectVersion": "The SonarQube project version, i.e. sonar.projectVersion. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+  "loc.messages.sqAnalysis_isEnabled": "SonarQube analysis is enabled.",
+  "loc.messages.sqAnalysis_isNotEnabled": "SonarQube analysis is not enabled."
 }

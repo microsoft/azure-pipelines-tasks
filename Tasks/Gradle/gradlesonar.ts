@@ -14,11 +14,13 @@ import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 // Apply arguments to enable SonarQube analysis
 export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.ToolRunner {
     if (!tl.getBoolInput('sqAnalysisEnabled')) {
-        console.log("SonarQube analysis is not enabled");
+        // Looks like: 'SonarQube analysis is not enabled.'
+        console.log(tl.loc('sqAnalysis_isNotEnabled'));
         return gradleRun;
     }
 
-    console.log("SonarQube analysis is enabled");
+    // Looks like: 'SonarQube analysis is enabled.'
+    console.log(tl.loc('sqAnalysis_isEnabled'));
 
     // #1: Inject custom script to the Gradle build, triggering a SonarQube run
     // Add a custom initialisation script to the Gradle run that will apply the SonarQube plugin and task

@@ -284,5 +284,9 @@
             "target": "gradletask.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "sqAnalysis_isEnabled": "SonarQube analysis is enabled.",
+        "sqAnalysis_isNotEnabled": "SonarQube analysis is not enabled."
     }
 }

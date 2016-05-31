@@ -339,11 +339,13 @@ function pathExistsAsFile(path: string) {
 // Gets the SonarQube tool runner if SonarQube analysis is enabled.
 function getSonarQubeRunner() {
     if (!tl.getBoolInput('sqAnalysisEnabled')) {
-        console.log("SonarQube analysis is not enabled");
+        // Looks like: 'SonarQube analysis is not enabled.'
+        console.log(tl.loc('sqAnalysis_isNotEnabled'));
         return;
     }
 
-    console.log("SonarQube analysis is enabled");
+    // Looks like: 'SonarQube analysis is enabled.'
+    console.log(tl.loc('sqAnalysis_isEnabled'));
     var mvnsq;
     var sqEndpoint:SonarQubeEndpoint = sqCommon.getSonarQubeEndpointFromInput("sqConnectedServiceName");
 
