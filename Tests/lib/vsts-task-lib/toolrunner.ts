@@ -1,4 +1,3 @@
-
 /// <reference path="../../../definitions/node.d.ts" />
 /// <reference path="../../../definitions/Q.d.ts" />
 
@@ -44,10 +43,11 @@ export class ToolRunner extends events.EventEmitter {
     constructor(toolPath) {
         debug('toolRunner toolPath: ' + toolPath);
 
+        super();
+        
         this.toolPath = toolPath;
         this.args = [];
         this.silent = false;
-        super();
     }
 
     public toolPath: string;
