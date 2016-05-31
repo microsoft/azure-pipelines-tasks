@@ -44,17 +44,18 @@ try{
 
     if (testAssemblyFiles && testAssemblyFiles.length != 0) {   
         var workingDirectory = path.join(sourcesDirectory, "..");     
-        var testResultsDirectory = getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults'));
-        invokeVSTest().then(function(code){
-            try{
-                publishTestResults();
-                tl.exit(code);
-            }
-            catch(error){
-                //Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
-                throw error;
-            }
-        });
+        getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function(resultsDirectory){
+            invokeVSTest(resultsDirectory).then(function(code){
+                try{
+                    publishTestResults(resultsDirectory);
+                    tl.exit(code);
+                }
+                catch(error){
+                    //Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+                    throw error;
+                }
+            });
+        });        
     }
     else {
         //Write-Host "##vso[task.logissue type=warning;code=002004;]"
@@ -66,7 +67,7 @@ catch(error){
     throw error;
 }
 
-function invokeVSTest(): Q.Promise<number> {
+function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     var defer = Q.defer<number>();
     if (vsTestVersion == "latest") {
         vsTestVersion = null;
@@ -153,7 +154,7 @@ function cleanUp(temporarySettingsFile: string){
     }
 }
 
-function publishTestResults(){
+function publishTestResults(testResultsDirectory:string){
     if(testResultsDirectory){
         var allFilesInResultsDirectory = tl.find(testResultsDirectory);
         var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", {matchBase: true});   
@@ -183,8 +184,8 @@ function overrideTestRunParametersIfRequired(settingsFile:string): Q.Promise<str
             if(pair.length == 2){
                 var key = pair[0];
                 var value = pair[1];
-                if(!overrideParameters.key){
-                    overrideParameters.key = value;
+                if(!overrideParameters[key]){
+                    overrideParameters[key] = value;
                 }
             }
         });
@@ -197,8 +198,8 @@ function overrideTestRunParametersIfRequired(settingsFile:string): Q.Promise<str
                     var parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
                     parametersArray.forEach(function(parameter){
                         var key = parameter.$.name;
-                        if(overrideParameters.key){
-                            parameter.$.value = overrideParameters.key;
+                        if(overrideParameters[key]){
+                            parameter.$.value = overrideParameters[key];
                         } 
                     });
                     var builder = new xml2js.Builder();
