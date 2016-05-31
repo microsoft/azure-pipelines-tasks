@@ -21,7 +21,7 @@ try{
     var testRunTitle: string = tl.getInput('testRunTitle');
     var platform: string = tl.getInput('platform');
     var configuration: string = tl.getInput('configuration');
-    var publishRunAttachments: boolean = tl.getBoolInput('publisRunAttachments');
+    var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     
     //Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
@@ -93,16 +93,11 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 });
                 
                 if(testFiltercriteria){
-                    if(testFiltercriteria[0] == "\""){
-                        vstest.arg("/TestCaseFilter:"+testFiltercriteria);
-                    }
-                    else{
-                        vstest.arg("/TestCaseFilter:\""+testFiltercriteria+"\"");
-                    }
+                    vstest.arg("/TestCaseFilter:"+testFiltercriteria);                  
                 }
                 
                 if(parallelRunSettingsFile && pathExistsAsFile(parallelRunSettingsFile)){ 
-                    vstest.arg("/Settings:\"" + parallelRunSettingsFile + "\"");
+                    vstest.arg("/Settings:" + parallelRunSettingsFile);
                 }
                 
                 if(codeCoverageEnabled){
@@ -117,10 +112,10 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 
                 if(pathtoCustomTestAdapters){
                     if(pathExistsAsDirectory(pathtoCustomTestAdapters)){                    
-                        vstest.arg("/TestAdapterPath:\""+testFiltercriteria+"\"");
+                        vstest.arg("/TestAdapterPath:\""+pathtoCustomTestAdapters+"\"");
                     }
                     else{
-                        vstest.arg("/TestAdapterPath:\""+path.dirname(testFiltercriteria)+"\"");
+                        vstest.arg("/TestAdapterPath:\""+path.dirname(pathtoCustomTestAdapters)+"\"");
                     }
                 }
                 else if(sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)){
@@ -136,9 +131,9 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 })
                 .fail(function(err) {
                     cleanUp(parallelRunSettingsFile);
-                    console.error("Error occured while running vstest "+ err);
-                    tl.exit(1);  // tl.exit sets the step result but does not stop execution
-                    process.exit(1);
+                    tl.warning("Vstest failed with error. Check logs for failures. There might be failed tests");
+                    tl.error(err);
+                    defer.resolve(1);
                 });
             });  
         });    
@@ -160,7 +155,7 @@ function publishTestResults(testResultsDirectory:string){
         var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", {matchBase: true});   
         if (resultFiles && resultFiles.length != 0) { 
             var tp = new tl.TestPublisher("VSTest");
-            tp.publish(resultFiles, true, platform, configuration, testRunTitle, publishRunAttachments);
+            tp.publish(resultFiles, "false", platform, configuration, testRunTitle, publishRunAttachments);
         }
         else{
             //Write-Host "##vso[task.logissue type=warning;code=002003;]"
