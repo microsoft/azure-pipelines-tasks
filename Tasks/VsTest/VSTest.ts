@@ -44,7 +44,7 @@ try{
 
     if (testAssemblyFiles && testAssemblyFiles.length != 0) {   
         var workingDirectory = path.join(sourcesDirectory, "..");     
-        var testResultsDirectory = path.join(workingDirectory, 'TestResults');
+        var testResultsDirectory = getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults'));
         invokeVSTest().then(function(code){
             try{
                 publishTestResults();
@@ -71,72 +71,86 @@ function invokeVSTest(): Q.Promise<number> {
     if (vsTestVersion == "latest") {
         vsTestVersion = null;
     }
-    locateVSVersion().then(function(vsVersion){
-        setRunInParallellIfApplicable(vsVersion);
-        setupRunSettingsFileForParallel().then(function(parallelRunSettingsFile){
-            tl.rmRF(testResultsDirectory, true);
-            var vsCommon = tl.getVariable("VS"+vsVersion+"0COMNTools");
-            var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
-            var vstest = tl.createToolRunner(vstestLocation);
-            
-            testAssemblyFiles.forEach(function(testAssembly) {
-                var testAssemblyPath = testAssembly;
-                //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
-                if(sourcesDirectory && !pathExistsAsFile(testAssembly)){
-                    var expandedPath = path.join(sourcesDirectory, testAssembly);
-                    if(pathExistsAsFile(expandedPath)){
-                        testAssemblyPath = expandedPath;
+    overrideTestRunParametersIfRequired(runSettingsFile).then(function(overriddenSettingsFile){
+        locateVSVersion().then(function(vsVersion){
+            setRunInParallellIfApplicable(vsVersion);
+            setupRunSettingsFileForParallel(overriddenSettingsFile).then(function(parallelRunSettingsFile){
+                var vsCommon = tl.getVariable("VS"+vsVersion+"0COMNTools");
+                var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
+                var vstest = tl.createToolRunner(vstestLocation);
+                
+                testAssemblyFiles.forEach(function(testAssembly) {
+                    var testAssemblyPath = testAssembly;
+                    //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
+                    if(sourcesDirectory && !pathExistsAsFile(testAssembly)){
+                        var expandedPath = path.join(sourcesDirectory, testAssembly);
+                        if(pathExistsAsFile(expandedPath)){
+                            testAssemblyPath = expandedPath;
+                        }
+                    }
+                    vstest.arg(testAssemblyPath);  
+                });
+                
+                if(testFiltercriteria){
+                    if(testFiltercriteria[0] == "\""){
+                        vstest.arg("/TestCaseFilter:"+testFiltercriteria);
+                    }
+                    else{
+                        vstest.arg("/TestCaseFilter:\""+testFiltercriteria+"\"");
                     }
                 }
-                vstest.arg(testAssemblyPath);  
-            });
-            
-            if(testFiltercriteria){
-                if(testFiltercriteria[0] == "\""){
-                    vstest.arg("/TestCaseFilter:"+testFiltercriteria);
+                
+                if(parallelRunSettingsFile && pathExistsAsFile(parallelRunSettingsFile)){ 
+                    vstest.arg("/Settings:\"" + parallelRunSettingsFile + "\"");
                 }
-                else{
-                    vstest.arg("/TestCaseFilter:\""+testFiltercriteria+"\"");
+                
+                if(codeCoverageEnabled){
+                    vstest.arg("/EnableCodeCoverage");
                 }
-            }
-             
-            if(parallelRunSettingsFile && pathExistsAsFile(parallelRunSettingsFile)){
+                
+                if(otherConsoleOptions){
+                    vstest.arg(otherConsoleOptions);
+                }
+                
+                vstest.arg("/logger:trx");
+                
+                if(pathtoCustomTestAdapters){
+                    if(pathExistsAsDirectory(pathtoCustomTestAdapters)){                    
+                        vstest.arg("/TestAdapterPath:\""+testFiltercriteria+"\"");
+                    }
+                    else{
+                        vstest.arg("/TestAdapterPath:\""+path.dirname(testFiltercriteria)+"\"");
+                    }
+                }
+                else if(sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)){
+                    vstest.arg("/TestAdapterPath:\""+sourcesDirectory+"\"");
+                }
+                
+                tl.rmRF(testResultsDirectory, true);
                 tl.mkdirP(testResultsDirectory);
-                if(overrideTestrunParameters){
-                    
-                }
-                vstest.arg("/Settings:\"" + parallelRunSettingsFile + "\"");
-            }
-            
-            if(codeCoverageEnabled){
-                vstest.arg("/EnableCodeCoverage");
-            }
-            
-            if(otherConsoleOptions){
-                vstest.arg(otherConsoleOptions);
-            }
-            
-            vstest.arg("/logger:trx");
-            
-            if(pathtoCustomTestAdapters){
-                if(pathExistsAsDirectory(pathtoCustomTestAdapters)){                    
-                    vstest.arg("/TestAdapterPath:\""+testFiltercriteria+"\"");
-                }
-                else{
-                    vstest.arg("/TestAdapterPath:\""+path.dirname(testFiltercriteria)+"\"");
-                }
-            }
-            else if(sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)){
-                vstest.arg("/TestAdapterPath:\""+sourcesDirectory+"\"");
-            }
-            
-            tl.cd(workingDirectory);
-            vstest.exec().then(function(code){
-                defer.resolve(code);
-            })
-        });  
+                tl.cd(workingDirectory);
+                vstest.exec().then(function(code){
+                    cleanUp(parallelRunSettingsFile);
+                    defer.resolve(code);
+                })
+                .fail(function(err) {
+                    cleanUp(parallelRunSettingsFile);
+                    console.error("Error occured while running vstest "+ err);
+                    tl.exit(1);  // tl.exit sets the step result but does not stop execution
+                    process.exit(1);
+                });
+            });  
+        });    
     });
+        
     return defer.promise;
+}
+
+function cleanUp(temporarySettingsFile: string){
+    //cleanup the runsettings file
+    if(temporarySettingsFile && runSettingsFile != temporarySettingsFile){
+        tl.rmRF(temporarySettingsFile, true);
+    }
 }
 
 function publishTestResults(){
@@ -152,6 +166,55 @@ function publishTestResults(){
             tl.warning("No results found to publish.");
         }         
     }
+}
+
+function overrideTestRunParametersIfRequired(settingsFile:string): Q.Promise<string>{
+    var defer = Q.defer<string>();
+    if(!settingsFile || !pathExistsAsFile(settingsFile) || !overrideTestrunParameters || overrideTestrunParameters.trim().length == 0){
+        defer.resolve(settingsFile);
+    }
+    else{
+        overrideTestrunParameters = overrideTestrunParameters.trim();
+        var overrideParameters = {};
+        
+        var parameterStrings = overrideTestrunParameters.split(";");
+        parameterStrings.forEach(function(parameterString){
+            var pair = parameterString.split("=", 2);
+            if(pair.length == 2){
+                var key = pair[0];
+                var value = pair[1];
+                if(!overrideParameters.key){
+                    overrideParameters.key = value;
+                }
+            }
+        });
+        
+        readFileContents(runSettingsFile, "utf-8").then(function(xmlContents){
+            var parser = new xml2js.Parser();
+            parser.parseString(xmlContents, function (err, result) {
+                if(!err && result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] && 
+                        result.RunSettings.TestRunParameters[0].Parameter){
+                    var parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
+                    parametersArray.forEach(function(parameter){
+                        var key = parameter.$.name;
+                        if(overrideParameters.key){
+                            parameter.$.value = overrideParameters.key;
+                        } 
+                    });
+                    var builder = new xml2js.Builder();
+                    var overridedRunSettings = builder.buildObject(result);
+                    saveToFile(overridedRunSettings).then(function(fileName){
+                            defer.resolve(fileName);
+                    });
+                }
+                else{
+                    defer.resolve(settingsFile);
+                }
+            });
+        });
+        
+    }
+    return defer.promise;
 }
 
 function isNugetRestoredAdapterPresent(rootDirectory: string):boolean{
@@ -171,15 +234,37 @@ function isNugetRestoredAdapterPresent(rootDirectory: string):boolean{
     return false;
 }
 
-function setupRunSettingsFileForParallel(): Q.Promise<string>{    
+function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string) : Q.Promise<string>{
+    var defer = Q.defer<string>();
+    if(!settingsFile || !pathExistsAsFile(settingsFile)){
+        defer.resolve(defaultResultsDirectory);
+    }
+    else{
+        readFileContents(runSettingsFile, "utf-8").then(function(xmlContents){
+            var parser = new xml2js.Parser();
+            parser.parseString(xmlContents, function (err, result) {
+                if(!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
+                     result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0){
+                    defer.resolve(result.RunSettings.RunConfiguration[0].ResultsDirectory[0]);
+                }
+                else{
+                    defer.resolve(defaultResultsDirectory);
+                }
+            });
+        });
+    }
+    return defer.promise;
+}
+
+function setupRunSettingsFileForParallel(settingsFile : string): Q.Promise<string>{    
     var defer = Q.defer<string>();           
     if(runInParallel){
-        if(runSettingsFile.split('.').pop().toLowerCase() == "testsettings"){
+        if(settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings"){
             tl.warning("Run in Parallel is not supported with testsettings file."); 
-            defer.resolve(runSettingsFile);           
+            defer.resolve(settingsFile);           
         }
         else{
-            if(!runSettingsFile || runSettingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(runSettingsFile)){
+            if(!settingsFile || settingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(settingsFile)){
                 tl.debug("No settings file provided or the provided settings file does not exist.");
                 var runSettingsForParallel =  '<?xml version="1.0" encoding="utf-8"?><RunSettings><RunConfiguration><MaxCpuCount>0</MaxCpuCount></RunConfiguration></RunSettings>';
                 saveToFile(runSettingsForParallel).then(function(fileName){
@@ -189,13 +274,14 @@ function setupRunSettingsFileForParallel(): Q.Promise<string>{
             }
             else{
                 tl.debug("Adding maxcpucount element to runsettings file provided.");
-                readFileContents(runSettingsFile, "utf-8").then(function(xmlContents){
+                readFileContents(settingsFile, "utf-8").then(function(xmlContents){
                     var parser = new xml2js.Parser();
                     parser.parseString(xmlContents, function (err, result) {
                         if(!result.RunSettings){
-                            result.RunSettings = {RunConfiguration :{ MaxCpuCount: 0 }};
+                             tl.warning("Failed to set run in parallel. Invalid run settings file."); 
+                             defer.resolve(settingsFile); 
                         }
-                        else if(!result.RunSettings.RunConfiguration || result.RunSettings.RunConfiguration.length == 0 || result.RunSettings.RunConfiguration[0].length == 0){
+                        else if(!result.RunSettings.RunConfiguration || !result.RunSettings.RunConfiguration[0]){
                             result.RunSettings.RunConfiguration = { MaxCpuCount: 0 };
                         }
                         else{
@@ -206,6 +292,7 @@ function setupRunSettingsFileForParallel(): Q.Promise<string>{
                         var builder = new xml2js.Builder();
                         var runSettingsForParallel = builder.buildObject(result);
                         saveToFile(runSettingsForParallel).then(function(fileName){
+                            cleanUp(settingsFile);
                             defer.resolve(fileName);
                             return defer.promise;
                         });
@@ -215,7 +302,7 @@ function setupRunSettingsFileForParallel(): Q.Promise<string>{
         }
     }
     else{
-        defer.resolve(runSettingsFile);
+        defer.resolve(settingsFile);
     }
     
     return defer.promise;
