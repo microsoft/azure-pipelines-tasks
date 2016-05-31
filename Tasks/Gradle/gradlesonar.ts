@@ -46,9 +46,9 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.To
     }
 
     // Add parameters to specify the SonarQube project properties (if given by the user)
-    var projectName:string = tl.getInput('sqProjectName', false);
-    var projectKey:string = tl.getInput('sqProjectKey', false);
-    var projectVersion:string = tl.getInput('sqProjectVersion', false);
+    var projectName:string = tl.getInput('sqProjectName', true);
+    var projectKey:string = tl.getInput('sqProjectKey', true);
+    var projectVersion:string = tl.getInput('sqProjectVersion', true);
     gradleRun = sqCommon.applySonarQubeAnalysisParams(gradleRun, projectName, projectKey, projectVersion);
 
     return gradleRun;
