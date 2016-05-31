@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 39
+        "Patch": 40
     },
     "demands": [
         "java"
@@ -33,6 +33,11 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
+        },
+        {
+          "name": "CodeAnalysis",
+          "displayName": "Code Analysis",
+          "isExpanded": true
         }
     ],
     "inputs": [
@@ -181,6 +186,88 @@
                 "x86": "x86",
                 "x64": "x64"
             }
+        },
+        {
+          "name": "sqAnalysisEnabled",
+          "type": "boolean",
+          "label": "Run SonarQube Analysis",
+          "required": true,
+          "defaultValue": "false",
+          "groupName": "CodeAnalysis",
+          "helpMarkDown": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
+        },
+        {
+          "name": "sqConnectedServiceName",
+          "type": "connectedService:Generic",
+          "label": "SonarQube Endpoint",
+          "required": true,
+          "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
+          "groupName": "CodeAnalysis",
+          "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+          "name": "sqDbDetailsRequired",
+          "type": "boolean",
+          "label": "The SonarQube server version is lower than 5.2",
+          "required": true,
+          "defaultValue": "false",
+          "groupName": "CodeAnalysis",
+          "helpMarkDown": "If using a SonarQube server 5.1 or lower, you must specify the database connection details.",
+          "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+          "name": "sqDbUrl",
+          "type": "string",
+          "label": "Db Connection String",
+          "required": false,
+          "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the database connection setting (i.e. sonar.jdbc.url). For example: jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
+          "groupName": "CodeAnalysis",
+          "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+          "name": "sqDbUsername",
+          "type": "string",
+          "label": "Db Username",
+          "required": false,
+          "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the username for the database user (i.e. sonar.jdbc.username).",
+          "groupName": "CodeAnalysis",
+          "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+          "name": "sqDbPassword",
+          "type": "string",
+          "label": "Db User Password",
+          "required": false,
+          "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
+          "groupName": "CodeAnalysis",
+          "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+            "name": "sqProjectName",
+            "type": "string",
+            "label": "SonarQube Project Name",
+            "required": true,
+            "helpMarkDown": "The SonarQube project name, i.e. sonar.projectName. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqProjectKey",
+            "type": "string",
+            "label": "SonarQube Project Key",
+            "required": true,
+            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqProjectVersion",
+            "type": "string",
+            "label": "SonarQube Project Version",
+            "required": true,
+            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
         }
     ],
     "instanceNameFormat": "gradlew $(tasks)",
@@ -197,5 +284,9 @@
             "target": "gradletask.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "sqAnalysis_isEnabled": "SonarQube analysis is enabled.",
+        "sqAnalysis_isNotEnabled": "SonarQube analysis is not enabled."
     }
 }

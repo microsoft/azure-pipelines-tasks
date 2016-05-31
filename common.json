@@ -23,10 +23,22 @@
             "dest": "Common"
         }
     ],
-     "SonarQubePostTest": [
+    "SonarQubePostTest": [
         {
             "module": "SonarQubeHelpers",
             "dest": "Common"
+        }
+    ],
+    "Maven": [
+        {
+            "module": "sonarqube-common",
+            "dest": "node_modules"
+        }
+    ],
+    "Gradle": [
+        {
+            "module": "sonarqube-common",
+            "dest": "node_modules"
         }
     ]
 }

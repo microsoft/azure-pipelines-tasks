@@ -55,7 +55,7 @@
       "type": "string",
       "label": "Project Name",
       "required": true,
-      "helpMarkDown": "The SonarQube project name, i.e. sonar.ProjectName",
+      "helpMarkDown": "The SonarQube project name, i.e. sonar.projectName",
       "groupName": "project"
     },
     {

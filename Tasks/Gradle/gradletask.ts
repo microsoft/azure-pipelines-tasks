@@ -4,6 +4,9 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 
+// Lowercased file names are to lessen the likelihood of xplat issues
+import sqGradle = require('./gradlesonar');
+
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
@@ -22,6 +25,7 @@ var gb = tl.createToolRunner(wrapperScript);
 
 gb.argString(tl.getInput('options', false));
 gb.arg(tl.getDelimitedInput('tasks', ' ', true));
+gb = sqGradle.applyEnabledSonarQubeArguments(gb);
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
 var javaHomeSelection = tl.getInput('javaHomeSelection', true);

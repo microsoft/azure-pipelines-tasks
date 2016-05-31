@@ -1,9 +1,12 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import tl = require('vsts-task-lib/task');
 import os = require('os');
 import path = require('path');
 import fs = require('fs');
+
+import tl = require('vsts-task-lib/task');
+import sqCommon = require ('sonarqube-common/sonarqube-common');
+import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./mavencodeanalysis');
@@ -336,13 +339,15 @@ function pathExistsAsFile(path: string) {
 // Gets the SonarQube tool runner if SonarQube analysis is enabled.
 function getSonarQubeRunner() {
     if (!tl.getBoolInput('sqAnalysisEnabled')) {
-        console.log("SonarQube analysis is not enabled");
+        // Looks like: 'SonarQube analysis is not enabled.'
+        console.log(tl.loc('sqAnalysis_isNotEnabled'));
         return;
     }
 
-    console.log("SonarQube analysis is enabled");
+    // Looks like: 'SonarQube analysis is enabled.'
+    console.log(tl.loc('sqAnalysis_isEnabled'));
     var mvnsq;
-    var sqEndpoint = getSonarQubeEndpointDetails("sqConnectedServiceName");
+    var sqEndpoint:SonarQubeEndpoint = sqCommon.getSonarQubeEndpointFromInput("sqConnectedServiceName");
 
     if (tl.getBoolInput('sqDbDetailsRequired')) {
         var sqDbUrl = tl.getInput('sqDbUrl', false);
@@ -362,86 +367,12 @@ function getSonarQubeRunner() {
     return mvnsq;
 }
 
-// Gets SonarQube connection endpoint details.
-function getSonarQubeEndpointDetails(inputFieldName) {
-    var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)"
-    if (!tl.getEndpointUrl) {
-        throw new Error(errorMessage);
-    }
-
-    var genericEndpoint = tl.getInput(inputFieldName);
-    if (!genericEndpoint) {
-        throw new Error(errorMessage);
-    }
-
-    var hostUrl = tl.getEndpointUrl(genericEndpoint, false);
-    if (!hostUrl) {
-        throw new Error(errorMessage);
-    }
-
-    // Currently the username and the password are required, but in the future they will not be mandatory
-    // - so not validating the values here
-    var hostUsername = getSonarQubeAuthParameter(genericEndpoint, 'username');
-    var hostPassword = getSonarQubeAuthParameter(genericEndpoint, 'password');
-    tl.debug("hostUsername: " + hostUsername);
-
-    return {
-        "Url": hostUrl,
-        "Username": hostUsername,
-        "Password": hostPassword
-    };
-}
-
-// Gets a SonarQube authentication parameter from the specified connection endpoint.
-// The endpoint stores the auth details as JSON. Unfortunately the structure of the JSON has changed through time, namely the keys were sometimes upper-case.
-// To work around this, we can perform case insensitive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
-// See https://github.com/Microsoft/vso-agent/blob/bbabbcab3f96ef0cfdbae5ef8237f9832bef5e9a/src/agent/plugins/release/artifact/jenkinsArtifact.ts for a similar implementation
-function getSonarQubeAuthParameter(endpoint, paramName) {
-
-    var paramValue = null;
-    var auth = tl.getEndpointAuthorization(endpoint, false);
-
-    if (auth.scheme != "UsernamePassword") {
-        throw new Error("The authorization scheme " + auth.scheme + " is not supported for a SonarQube endpoint. Please use a username and a password.");
-    }
-
-    var parameters = Object.getOwnPropertyNames(auth['parameters']);
-
-    var keyName;
-    parameters.some(function(key) {
-
-        if (key.toLowerCase() === paramName.toLowerCase()) {
-            keyName = key;
-
-            return true;
-        }
-    });
-
-    paramValue = auth['parameters'][keyName];
-
-    return paramValue;
-}
-
 // Creates the tool runner for executing SonarQube.
 function createMavenSonarQubeRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?) {
     var mvnsq = tl.createToolRunner(mvnExec);
 
-    mvnsq.arg('-Dsonar.host.url=' + sqHostUrl);
-    if (sqHostUsername) {
-        mvnsq.arg('-Dsonar.login=' + sqHostUsername);
-    }
-    if (sqHostPassword) {
-        mvnsq.arg('-Dsonar.password=' + sqHostPassword);
-    }
-    if (sqDbUrl) {
-        mvnsq.arg('-Dsonar.jdbc.url=' + sqDbUrl);
-    }
-    if (sqDbUsername) {
-        mvnsq.arg('-Dsonar.jdbc.username=' + sqDbUsername);
-    }
-    if (sqDbPassword) {
-        mvnsq.arg('-Dsonar.jdbc.password=' + sqDbPassword);
-    }
+    mvnsq = sqCommon.applySonarQubeConnectionParams(mvnsq, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword);
+
     if (typeof execFileJacoco != "undefined" && execFileJacoco) {
         mvnsq.arg('-Dsonar.jacoco.reportPath=' + execFileJacoco);
     }
