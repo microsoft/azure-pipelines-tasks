@@ -369,7 +369,7 @@ function getSonarQubeRunner() {
 function createMavenSonarQubeRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?) {
     var mvnsq = tl.createToolRunner(mvnExec);
 
-    mvnsq = sqCommon.applySonarQubeParams(mvnsq, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword);
+    mvnsq = sqCommon.applySonarQubeConnectionParams(mvnsq, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword);
 
     if (typeof execFileJacoco != "undefined" && execFileJacoco) {
         mvnsq.arg('-Dsonar.jacoco.reportPath=' + execFileJacoco);

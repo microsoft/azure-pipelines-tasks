@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 39
+        "Patch": 40
     },
     "demands": [
         "java"
@@ -241,6 +241,33 @@
           "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
           "groupName": "CodeAnalysis",
           "visibleRule": "sqDbDetailsRequired = true"
+        },
+        {
+            "name": "sqProjectName",
+            "type": "string",
+            "label": "SonarQube Project Name",
+            "required": true,
+            "helpMarkDown": "The SonarQube project name, i.e. sonar.projectName. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqProjectKey",
+            "type": "string",
+            "label": "SonarQube Project Key",
+            "required": true,
+            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqProjectVersion",
+            "type": "string",
+            "label": "SonarQube Project Version",
+            "required": true,
+            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
         }
     ],
     "instanceNameFormat": "gradlew $(tasks)",

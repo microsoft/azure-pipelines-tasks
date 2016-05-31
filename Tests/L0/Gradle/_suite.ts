@@ -637,7 +637,7 @@ describe('gradle Suite', function() {
             });
     });
 
-    it('Gradle with SonarQube - Should run Gradle with SonarQube analysis', function(done) {
+    it('Gradle with SonarQube - Should run Gradle with SonarQube', function(done) {
         // Arrange
 
         setResponseFile('gradleGood.json');
@@ -665,7 +665,7 @@ describe('gradle Suite', function() {
             });
     });
 
-    it('Gradle with SonarQube - Should run Gradle with SonarQube analysis and apply required parameters for older server versions', function(done) {
+    it('Gradle with SonarQube - Should run Gradle with SonarQube and apply required parameters for older server versions', function(done) {
         // Arrange
         setResponseFile('gradleGood.json');
 
@@ -687,6 +687,68 @@ describe('gradle Suite', function() {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.ran('gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword'),
+                    'should have run the gradle wrapper with the appropriate SonarQube arguments');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Gradle with SonarQube - Should run Gradle with SonarQube and override project parameters if specified', function(done) {
+        // Arrange
+
+        setResponseFile('gradleGood.json');
+
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr);
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+        tr.setInput('sqProjectName', 'test_sqProjectName');
+        tr.setInput('sqProjectKey', 'test_sqProjectKey');
+        tr.setInput('sqProjectVersion', 'test_sqProjectVersion');
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran('gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
+                    'should have run the gradle wrapper with the appropriate SonarQube arguments');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Gradle with SonarQube - Should run Gradle with SonarQube and override project parameters if specified', function(done) {
+        // Arrange
+
+        setResponseFile('gradleGood.json');
+
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr);
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+        tr.setInput('sqProjectName', 'test_sqProjectName');
+        tr.setInput('sqProjectKey', 'test_sqProjectKey');
+        tr.setInput('sqProjectVersion', 'test_sqProjectVersion');
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran('gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
                 done();
             })

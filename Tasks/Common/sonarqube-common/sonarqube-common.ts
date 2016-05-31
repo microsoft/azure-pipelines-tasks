@@ -3,12 +3,13 @@
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
-// Creates the tool runner for executing SonarQube.
-export function applySonarQubeParams(toolRunner:ToolRunner, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?):ToolRunner {
-
+// Applies required parameters for connecting a Java-based plugin to SonarQube.
+// sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
+export function applySonarQubeConnectionParams(toolRunner:ToolRunner, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?):ToolRunner {
     toolRunner.arg('-Dsonar.host.url=' + sqHostUrl);
     toolRunner.arg('-Dsonar.login=' + sqHostUsername);
     toolRunner.arg('-Dsonar.password=' + sqHostPassword);
+
     if (sqDbUrl) {
         toolRunner.arg('-Dsonar.jdbc.url=' + sqDbUrl);
     }
@@ -17,6 +18,22 @@ export function applySonarQubeParams(toolRunner:ToolRunner, sqHostUrl, sqHostUse
     }
     if (sqDbPassword) {
         toolRunner.arg('-Dsonar.jdbc.password=' + sqDbPassword);
+    }
+
+    return toolRunner;
+}
+
+// Applies optional parameters for manually specifying the project name, key and version to SonarQube.
+// This will override any user settings.
+export function applySonarQubeAnalysisParams(toolRunner:ToolRunner, sqProjectName?, sqProjectKey?, sqProjectVersion?):ToolRunner {
+    if (sqProjectName) {
+        toolRunner.arg('-Dsonar.projectName=' + sqProjectName);
+    }
+    if (sqProjectKey) {
+        toolRunner.arg('-Dsonar.projectKey=' + sqProjectKey);
+    }
+    if (sqProjectVersion) {
+        toolRunner.arg('-Dsonar.projectVersion=' + sqProjectVersion);
     }
 
     return toolRunner;

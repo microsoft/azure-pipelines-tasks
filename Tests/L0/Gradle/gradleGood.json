@@ -38,6 +38,10 @@
         "gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword": {
             "code": 0,
             "stdout": "Maven package and SQ analysis (older version) done"
+        },
+        "gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion": {
+            "code": 0,
+            "stdout": "Maven package and SQ analysis (project name / key / version override) done"
         }
     },
     "checkPath": {

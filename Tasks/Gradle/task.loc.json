@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 39
+    "Patch": 40
   },
   "demands": [
     "java"
@@ -241,6 +241,33 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "sqProjectName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectName",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqProjectKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectKey",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectKey",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqProjectVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectVersion",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectVersion",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

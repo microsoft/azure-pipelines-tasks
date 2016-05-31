@@ -28,19 +28,26 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.To
     gradleRun.arg(['-I', initScriptPath]);
     gradleRun.arg(['sonarqube']);
 
-    // #2: Configure parameters to connect to the SonarQube server for reporting
+    // #2: Configure additional command-line parameters
+    // Add parameters to connect to the SonarQube server for reporting
     var sqEndpoint:SonarQubeEndpoint = sqCommon.getSonarQubeEndpointFromInput("sqConnectedServiceName");
 
     // SQ servers lower than 5.2 require additional parameters (null if not set / not required)
     if (tl.getBoolInput('sqDbDetailsRequired')) {
-        var sqDbUrl = tl.getInput('sqDbUrl', false);
-        var sqDbUsername = tl.getInput('sqDbUsername', false);
-        var sqDbPassword = tl.getInput('sqDbPassword', false);
-        gradleRun = sqCommon.applySonarQubeParams(gradleRun, sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password, sqDbUrl, sqDbUsername, sqDbPassword);
+        var sqDbUrl:string = tl.getInput('sqDbUrl', false);
+        var sqDbUsername:string = tl.getInput('sqDbUsername', false);
+        var sqDbPassword:string = tl.getInput('sqDbPassword', false);
+        gradleRun = sqCommon.applySonarQubeConnectionParams(gradleRun, sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password, sqDbUrl, sqDbUsername, sqDbPassword);
     }
     else {
-        gradleRun = sqCommon.applySonarQubeParams(gradleRun, sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password);
+        gradleRun = sqCommon.applySonarQubeConnectionParams(gradleRun, sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password);
     }
+
+    // Add parameters to specify the SonarQube project properties (if given by the user)
+    var projectName:string = tl.getInput('sqProjectName', false);
+    var projectKey:string = tl.getInput('sqProjectKey', false);
+    var projectVersion:string = tl.getInput('sqProjectVersion', false);
+    gradleRun = sqCommon.applySonarQubeAnalysisParams(gradleRun, projectName, projectKey, projectVersion);
 
     return gradleRun;
 }
