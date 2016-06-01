@@ -171,8 +171,7 @@
             ]
         },
         "Node": {
-            "target": "VSTest.js",
-            "argumentFormat": ""
+            "target": "vstest.js"
         }
     }
 }

@@ -117,19 +117,18 @@ describe('VsTest Suite', function () {
         })
     }
     
+    it('Vstest task without test results  files input', (done) => {
 		//setResponseFile('shellscriptGood.json');
 		
 		var tr = new trm.TaskRunner('VSTest');
 		tr.run()
-		.then(() => {
-           
+		.then(() => {           
 			assert(tr.resultWasSet, 'task should have set a result');
-			assert(tr.stderr.length == 0, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stderr.length > 0, 'should have written to stderr');
+            assert(tr.failed, 'task should have failed');
 			done();
 		})
 		.fail((err) => {
-            console.log("++++++++++++++++++++++++++++++++++++++++" + err);
 			done(err);
 		});
 	})
