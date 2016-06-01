@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 28
+        "Patch": 29
     },
     "demands": [
 
     ],
-    "minimumAgentVersion": "1.97.0",
+    "minimumAgentVersion": "1.101.0",
     "groups":  [
         {
             "name": "testMachineGroups",
