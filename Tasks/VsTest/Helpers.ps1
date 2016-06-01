@@ -143,8 +143,7 @@ function GetResultsLocation {
 
     # If this is a runsettings file then try to get the custom results location from it
     
-    if((([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -eq 0) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".tmp", $True) -eq 0)) -And 
-    !(Test-Path $runSettingsFilePath -pathtype container))
+    if(!(CheckIfDirectory $runSettingsFilePath) -And (CheckIfRunsettings $runSettingsFilePath))
     {
         $runSettingsForTestResults = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
         $resultsDirElement = $runSettingsForTestResults.SelectNodes("//RunSettings/RunConfiguration/ResultsDirectory")
@@ -165,4 +164,22 @@ function GetResultsLocation {
     }
 
     return $null
+}
+
+function CheckIfRunsettings($runSettingsFilePath)
+{
+    if(([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -eq 0) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".tmp", $True) -eq 0))
+    {
+        return $true
+    }
+    return $false
+}
+
+function CheckIfDirectory($filePath)
+{
+    if(Test-Path $filePath -pathtype container)
+    {
+        return $true
+    }
+    return $false
 }
