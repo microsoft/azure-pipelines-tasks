@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 25
   },
   "demands": [
     "azureps"
@@ -71,11 +71,6 @@
   "execution": {
     "PowerShell3": {
       "target": "AzurePowerShell.ps1"
-    },
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\AzurePowerShell-Legacy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
     }
   },
   "messages": {
