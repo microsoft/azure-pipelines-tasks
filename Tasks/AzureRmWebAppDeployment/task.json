@@ -6,7 +6,6 @@
 	"helpMarkDown": "[More Information](http://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -14,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 6
     },
     "minimumAgentVersion": "1.99.0",
 	"groups": [
@@ -83,6 +82,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\***.zip` can be also used here."
+        },
+        {
+            "name": "SetParametersFile",
+            "type": "filePath",
+            "label": "SetParameters File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
         },
         {
             "name": "RemoveAdditionalFilesFlag",

@@ -6,7 +6,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -14,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 6
   },
   "minimumAgentVersion": "1.99.0",
   "groups": [
@@ -83,6 +82,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Package"
+    },
+    {
+      "name": "SetParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SetParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
     },
     {
       "name": "RemoveAdditionalFilesFlag",

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 36
+        "Patch": 38
     },
     "demands": [
     ],
@@ -30,12 +30,6 @@
             "isExpanded": true
         },
         {
-            "name": "testDistribution",
-            "displayName": "Test Distribution",
-            "tags" : [ "Preview" ],
-            "isExpanded": true
-        },
-        {
             "name": "reportingOptions",
             "displayName": "Reporting Options",
             "isExpanded": false
@@ -48,7 +42,7 @@
             "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. `Eg: dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name",
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. Eg: `dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name",
             "groupName": "setupOptions"
         },
         {
@@ -57,7 +51,7 @@
             "label": "Test Drop Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy` task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
             "groupName": "setupOptions"
         },
         {
@@ -164,7 +158,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Tests will be distributed based on the number of machines provided instead of number of test containers. Note that tests within a dll might also be distributed to multiple machines.",
-            "groupName": "testDistribution"
+            "groupName": "executionOptions"
         },
         {
  	          "name": "testRunTitle", 

@@ -47,16 +47,21 @@
         "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass -f pom.xml sonar:sonar": {
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
+        },
+        "/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd": {
+          "code": 0,
+          "stdout": "Maven package and PMD analysis done"
         }
     },
     "checkPath": {
         "/home/bin/maven/bin/mvn": true,
+        "/home/bin/maven": true,
         "/home/bin/maven2": true,
         "pom.xml": true
     },
     "getVariable": {
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
-        "agent.buildDirectory": "/user/build",
+        "System.DefaultWorkingDirectory": "/user/build",
         "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}"
     },

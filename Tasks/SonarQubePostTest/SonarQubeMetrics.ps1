@@ -46,7 +46,7 @@ function FetchQualityGateDetails
     $analysisId = GetAnalysisIdFromCache             
     Assert (![String]::IsNullOrEmpty($analysisId)) "WaitForAnalysisToFinish should be called first."
        
-    $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$analysisId" $true
+    $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$analysisId"
     return $response
 }
 
@@ -55,7 +55,7 @@ function FetchQualityGateDetails
 #
 function FetchMetricNames
 {
-    $response = InvokeGetRestMethod "/api/metrics/search?ps=500&f=name" $false
+    $response = InvokeGetRestMethod "/api/metrics/search?ps=500&f=name"
     Assert (HasElements $response) "No metrics were found"
     
     return $response.metrics
@@ -138,7 +138,7 @@ function IsAnalysisFinished
     param ([string]$taskId)
     
     # response is in json and ps deserialize it automatically
-    $response = InvokeGetRestMethod "/api/ce/task?id=$taskId" $true    
+    $response = InvokeGetRestMethod "/api/ce/task?id=$taskId" 
     $status = $response.task.status
     
     Write-Verbose "The task status is $status"
@@ -158,7 +158,7 @@ function QueryAnalysisId
 {
     param ([string]$taskId)
        
-    $response = InvokeGetRestMethod "/api/ce/task?id=$taskId" $true    
+    $response = InvokeGetRestMethod "/api/ce/task?id=$taskId"
     return $response.task.analysisId      
 }
 

@@ -30,6 +30,14 @@
         "gradlew /o /p t i /o /n /s build test deploy": {
             "code": 0,
             "stdout": "More sample gradle output"
+        },
+        "gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion": {
+            "code": 0,
+            "stdout": "Maven package and SQ analysis done"
+        },
+        "gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion": {
+            "code": 0,
+            "stdout": "Maven package and SQ analysis (older version) done"
         }
     },
     "checkPath": {
@@ -37,13 +45,25 @@
         "/home/repo/src": true
     },
     "getVariable": {
-        "ANT_HOME": "/user/local/bin/ANT",
-        "JAVA_HOME_8_X86": "/user/local/bin/Java8"
+        "JAVA_HOME_8_X86": "/user/local/bin/Java8",
+        "System.DefaultWorkingDirectory": "/user/build",
+        "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}"
     },
     "rmRF": {
         "CCReport43F6D5EF": {
             "success": true,
             "message": "success"
         }
+    },
+    "find": {
+        "/user/build": [
+            "/user/build/fun/test-123.xml"
+        ]
+    },
+    "match": {
+        "**/TEST-*.xml": [
+            "/user/build/fun/test-123.xml"
+        ]
     }
 }

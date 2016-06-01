@@ -1,8 +1,15 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import tl = require('vsts-task-lib/task');
 import os = require('os');
 import path = require('path');
+import fs = require('fs');
+
+import tl = require('vsts-task-lib/task');
+import sqCommon = require ('sonarqube-common/sonarqube-common');
+import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
+
+// Lowercased file names are to lessen the likelihood of xplat issues
+import codeAnalysis = require('./mavencodeanalysis');
 
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
@@ -107,14 +114,17 @@ else {
 
 // Maven task orchestration occurs as follows:
 // 1. Check that Maven exists by executing it to retrieve its version.
-// 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
-// 3. Always try to run the SonarQube analysis if it is enabled.
+// 2. Apply any goals for static code analysis tools selected by the user.
+// 3. Run Maven. Compilation or test errors will cause this to fail.
+// 4. Always try to run the SonarQube analysis if it is enabled.
 //    In case the build has failed, the analysis will still succeed but the report will have less data. 
-// 4. Always publish test results even if tests fail, causing this task to fail.
-// 5. If #2 above failed, exit with an error code to mark the entire step as failed. Same for #4.
+// 5. Attempt to collate and upload static code analysis build summaries and artifacts.
+// 6. Always publish test results even if tests fail, causing this task to fail.
+// 7. If #2, #4 or #5 above failed, exit with an error code to mark the entire step as failed.
 
 var userRunFailed: boolean = false;
 var sonarQubeRunFailed: boolean = false;
+var pmdRunFailed: boolean = false;
 
 // Setup tool runner that executes Maven only to retrieve its version
 var mvnGetVersion = tl.createToolRunner(mvnExec);
@@ -134,6 +144,9 @@ mvnGetVersion.exec()
         mvnRun.pathArg(mavenPOMFile);
         mvnRun.argString(mavenOptions);
         mvnRun.arg(mavenGoals);
+
+        // Add goals for static code analysis tools
+        mvnRun = codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
     
         // Read Maven standard output
         mvnRun.on('stdout', function(data) {
@@ -161,6 +174,20 @@ mvnGetVersion.exec()
         console.error("SonarQube analysis failed");
         sonarQubeRunFailed = true;
     })
+    .then(function (code) { // Pick up files from the Java code analysis tools
+        // The files won't be created if the build failed, and the user should probably fix their build first
+        if (userRunFailed) {
+            console.error('Could not retrieve code analysis results - Maven run failed.');
+            return;
+        }
+
+        codeAnalysis.uploadCodeAnalysisResults();
+    })
+    .fail(function (err) {
+        console.error(err.message);
+        console.error("PMD analysis failed");
+        pmdRunFailed = true;
+    })
     .then(function() {
         // 4. Always publish test results even if tests fail, causing this task to fail.
         if (publishJUnitResults == 'true') {
@@ -169,7 +196,7 @@ mvnGetVersion.exec()
         publishCodeCoverage(isCodeCoverageOpted);
     
         // Set overall success or failure
-        if (userRunFailed || sonarQubeRunFailed) {
+        if (userRunFailed || sonarQubeRunFailed || pmdRunFailed) {
             tl.exit(1); // Set task failure
         }
         else {
@@ -186,7 +213,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
     // Check for pattern in testResultsFiles
     if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
         tl.debug('Pattern found in testResultsFiles parameter');
-        var buildFolder = tl.getVariable('agent.buildDirectory');
+        var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
         tl.debug(`buildFolder=${buildFolder}`);
         var allFiles = tl.find(buildFolder);
         matchingJUnitResultFiles = tl.match(allFiles, testResultsFiles, {
@@ -312,13 +339,15 @@ function pathExistsAsFile(path: string) {
 // Gets the SonarQube tool runner if SonarQube analysis is enabled.
 function getSonarQubeRunner() {
     if (!tl.getBoolInput('sqAnalysisEnabled')) {
-        console.log("SonarQube analysis is not enabled");
+        // Looks like: 'SonarQube analysis is not enabled.'
+        console.log(tl.loc('sqAnalysis_isNotEnabled'));
         return;
     }
 
-    console.log("SonarQube analysis is enabled");
+    // Looks like: 'SonarQube analysis is enabled.'
+    console.log(tl.loc('sqAnalysis_isEnabled'));
     var mvnsq;
-    var sqEndpoint = getSonarQubeEndpointDetails("sqConnectedServiceName");
+    var sqEndpoint:SonarQubeEndpoint = sqCommon.getSonarQubeEndpointFromInput("sqConnectedServiceName");
 
     if (tl.getBoolInput('sqDbDetailsRequired')) {
         var sqDbUrl = tl.getInput('sqDbUrl', false);
@@ -338,86 +367,12 @@ function getSonarQubeRunner() {
     return mvnsq;
 }
 
-// Gets SonarQube connection endpoint details.
-function getSonarQubeEndpointDetails(inputFieldName) {
-    var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)"
-    if (!tl.getEndpointUrl) {
-        throw new Error(errorMessage);
-    }
-
-    var genericEndpoint = tl.getInput(inputFieldName);
-    if (!genericEndpoint) {
-        throw new Error(errorMessage);
-    }
-
-    var hostUrl = tl.getEndpointUrl(genericEndpoint, false);
-    if (!hostUrl) {
-        throw new Error(errorMessage);
-    }
-
-    // Currently the username and the password are required, but in the future they will not be mandatory
-    // - so not validating the values here
-    var hostUsername = getSonarQubeAuthParameter(genericEndpoint, 'username');
-    var hostPassword = getSonarQubeAuthParameter(genericEndpoint, 'password');
-    tl.debug("hostUsername: " + hostUsername);
-
-    return {
-        "Url": hostUrl,
-        "Username": hostUsername,
-        "Password": hostPassword
-    };
-}
-
-// Gets a SonarQube authentication parameter from the specified connection endpoint.
-// The endpoint stores the auth details as JSON. Unfortunately the structure of the JSON has changed through time, namely the keys were sometimes upper-case.
-// To work around this, we can perform case insensitive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
-// See https://github.com/Microsoft/vso-agent/blob/bbabbcab3f96ef0cfdbae5ef8237f9832bef5e9a/src/agent/plugins/release/artifact/jenkinsArtifact.ts for a similar implementation
-function getSonarQubeAuthParameter(endpoint, paramName) {
-
-    var paramValue = null;
-    var auth = tl.getEndpointAuthorization(endpoint, false);
-
-    if (auth.scheme != "UsernamePassword") {
-        throw new Error("The authorization scheme " + auth.scheme + " is not supported for a SonarQube endpoint. Please use a username and a password.");
-    }
-
-    var parameters = Object.getOwnPropertyNames(auth['parameters']);
-
-    var keyName;
-    parameters.some(function(key) {
-
-        if (key.toLowerCase() === paramName.toLowerCase()) {
-            keyName = key;
-
-            return true;
-        }
-    });
-
-    paramValue = auth['parameters'][keyName];
-
-    return paramValue;
-}
-
 // Creates the tool runner for executing SonarQube.
 function createMavenSonarQubeRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?) {
     var mvnsq = tl.createToolRunner(mvnExec);
 
-    mvnsq.arg('-Dsonar.host.url=' + sqHostUrl);
-    if (sqHostUsername) {
-        mvnsq.arg('-Dsonar.login=' + sqHostUsername);
-    }
-    if (sqHostPassword) {
-        mvnsq.arg('-Dsonar.password=' + sqHostPassword);
-    }
-    if (sqDbUrl) {
-        mvnsq.arg('-Dsonar.jdbc.url=' + sqDbUrl);
-    }
-    if (sqDbUsername) {
-        mvnsq.arg('-Dsonar.jdbc.username=' + sqDbUsername);
-    }
-    if (sqDbPassword) {
-        mvnsq.arg('-Dsonar.jdbc.password=' + sqDbPassword);
-    }
+    mvnsq = sqCommon.applySonarQubeConnectionParams(mvnsq, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword);
+
     if (typeof execFileJacoco != "undefined" && execFileJacoco) {
         mvnsq.arg('-Dsonar.jacoco.reportPath=' + execFileJacoco);
     }
