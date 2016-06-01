@@ -10,7 +10,7 @@ $runSettingsFilePath=""
 . $PSScriptRoot\..\..\..\Tasks\VsTest\Helpers.ps1
 $returnedFilePath = SetupRunSettingsFileForParallel "true" $runSettingsFilePath "1" 
 Assert-AreNotEqual $runSettingsFilePath $returnedFilePath
-
+ 
 $fileExists = Test-Path $returnedFilePath
 Assert-AreEqual $true $fileExists
 

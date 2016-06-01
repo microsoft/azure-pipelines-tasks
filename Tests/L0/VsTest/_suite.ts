@@ -79,5 +79,37 @@ describe('VsTest Suite', function () {
 		it('(RunSettingsForParallel.ReturnsSameFileIfParallelIsTrueAndFileNameIsTestSettingsFile) returns same file if parallel flag is true and runsettings input is a testsettings file', (done) => {
             psr.run(path.join(__dirname, 'RunSettingsForParallel.ReturnsSameFileIfParallelIsTrueAndFileNameIsTestSettingsFile.ps1'), done);
         })
+
+        it('(GetResultsLocationReturnsPathFromRunsettings) returns the custom results location from runsettings', (done) => {
+            psr.run(path.join(__dirname, 'GetResultsLocationReturnsPathFromRunsettings.ps1'), done);
+        })
+
+        it('(GetResultsLocationReturnsPathFromRunsettingsForRelativePaths) returns the custom results location from runsettings for relative paths', (done) => {
+            psr.run(path.join(__dirname, 'GetResultsLocationReturnsPathFromRunsettingsForRelativePaths.ps1'), done);
+        })
+
+        it('(GetResultsLocationReturnsNullForRunsettingsWithoutResultsDirectory) returns null if there is no results location in runsettings', (done) => {
+            psr.run(path.join(__dirname, 'GetResultsLocationReturnsNullForRunsettingsWithoutResultsDirectory.ps1'), done);
+        })
+
+        it('(GetResultsLocationReturnsPathForTmpFile) returns the custom results location for tmp file extension', (done) => {
+            psr.run(path.join(__dirname, 'GetResultsLocationReturnsPathForTmpFile.ps1'), done);
+        })
+
+        it('(GetResultsReturnsNullForTestsettings) returns null for any other file type', (done) => {
+            psr.run(path.join(__dirname, 'GetResultsReturnsNullForTestsettings.ps1'), done);
+        })
+
+        it('(GetResultsLocationReturnsNullForDirectory) returns the null for directory specified as runsettings', (done) => {
+            psr.run(path.join(__dirname, 'GetResultsLocationReturnsNullForDirectory.ps1'), done);
+        })
+
+        it('(DefaultTestResultsDirectoryIsUsedIfnorunsettings) vstest invoked with  default test results directory if no settings is specified', (done) => {
+            psr.run(path.join(__dirname, 'DefaultTestResultsDirectoryIsUsedIfnorunsettings.ps1'), done);
+        })
+
+        it('(DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed) vstest invoked with  default test results directory if override run parameters is used', (done) => {
+            psr.run(path.join(__dirname, 'DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed.ps1'), done);
+        })
     }
 });
