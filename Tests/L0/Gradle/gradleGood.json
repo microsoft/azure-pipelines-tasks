@@ -9,12 +9,12 @@
             "stdout": "subprojects: []",
             "stderr": ""
         },
-        "gradlew build jacocoTestReport": {
+        "gradlew clean build jacocoTestReport": {
             "code": 0,
             "stdout": "Sample output",
             "stderr": ""
         },
-        "gradlew build cobertura": {
+        "gradlew clean build cobertura": {
             "code": 0,
             "stdout": "Sample output",
             "stderr": ""

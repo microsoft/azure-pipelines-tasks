@@ -3,8 +3,6 @@
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
-
-// Lowercased file names are to lessen the likelihood of xplat issues
 import sqGradle = require('./gradlesonar');
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
@@ -22,15 +20,25 @@ if (!cwd) {
 tl.cd(cwd);
 
 var gb = tl.createToolRunner(wrapperScript);
+var javaHomeSelection = tl.getInput('javaHomeSelection', true);
+var specifiedJavaHome = null;
+var ccTool = tl.getInput('codeCoverageTool');
+var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
+var testResultsFiles = tl.getInput('testResultsFiles', true);
+var summaryFile: string = null;
+var reportDirectory: string = null;
+var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
+
+if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
+    gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
+}
 
 gb.argString(tl.getInput('options', false));
-gb.arg(tl.getDelimitedInput('tasks', ' ', true));
+gb.arg(inputTasks);
 gb = sqGradle.applyEnabledSonarQubeArguments(gb);
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
-var javaHomeSelection = tl.getInput('javaHomeSelection', true);
-var specifiedJavaHome = null;
-
 if (javaHomeSelection == 'JDKVersion') {
     tl.debug('Using JDK version to find and set JAVA_HOME');
     var jdkVersion = tl.getInput('jdkVersion');
@@ -53,40 +61,30 @@ else {
     var jdkUserInputPath = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
 }
-
 if (specifiedJavaHome) {
     tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
     process.env['JAVA_HOME'] = specifiedJavaHome;
 }
 
-var ccTool = tl.getInput('codeCoverageTool');
-var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
-
 if (isCodeCoverageOpted) {
-    var summaryFile: string = null;
-    var reportDirectory: string = null;
-    enableCodeCoverage()
+    tl.debug("Option to enable code coverage was selected and is being applied.");
+    enableCodeCoverage();
 }
-else {
-    tl.debug("Option to enable code coverage was not selected and is being skipped.");
-}
-
-var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
-var testResultsFiles = tl.getInput('testResultsFiles', true);
 
 gb.exec()
-    .then(function(code) {
+    .then(function (code) {
         publishTestResults(publishJUnitResults, testResultsFiles);
-        publishCodeCoverage(isCodeCoverageOpted)
+        publishCodeCoverage(isCodeCoverageOpted);
         tl.exit(code);
     })
-    .fail(function(err) {
+    .fail(function (err) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         console.error(err.message);
         tl.debug('taskRunner fail');
         tl.exit(1);
     })
 
+/* Functions for Publish Test Results, Code Coverage */
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
     if (publishJUnitResults) {
         //check for pattern in testResultsFiles
@@ -136,7 +134,6 @@ function enableCodeCoverage() {
 
     summaryFile = path.join(reportDirectory, summaryFileName);
     var buildFile = path.join(buildRootPath, "build.gradle");
-
     tl.rmRF(reportDirectory, true);
 
     var buildProps: { [key: string]: string } = {};
@@ -179,7 +176,7 @@ function isMultiModuleProject(wrapperScript: string): boolean {
 
 function publishCodeCoverage(isCodeCoverageOpted: boolean) {
     if (isCodeCoverageOpted) {
-        if (pathExistsAsFile(summaryFile)) {
+        if (tl.exist(summaryFile)) {
             tl.debug("Summary file = " + summaryFile);
             tl.debug("Report directory = " + reportDirectory);
             tl.debug("Publishing code coverage results to TFS");
@@ -189,14 +186,5 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
         else {
             tl.warning("No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details.");
         }
-    }
-}
-
-function pathExistsAsFile(path: string) {
-    try {
-        return tl.stats(path).isFile();
-    }
-    catch (error) {
-        return false;
     }
 }
