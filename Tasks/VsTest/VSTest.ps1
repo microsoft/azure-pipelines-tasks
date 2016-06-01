@@ -94,7 +94,6 @@ try
         $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
         $workingDirectory = $artifactsDirectory
-        $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
 
         if($runInParallel -eq "True")
         {
@@ -108,6 +107,17 @@ try
     
         $defaultCpuCount = "0"    
         $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
+
+        #If there is settings file and no override parameters, try to get the custom resutls location
+        if(![System.String]::IsNullOrWhiteSpace($runSettingsFileWithParallel) -and !$overrideTestrunParameters)
+        {
+            $testResultsDirectory = GetResultsLocation $runSettingsFileWithParallel 
+        }
+        if(!$testResultsDirectory)
+        {
+            $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+        } 
+        Write-Verbose "Test results directory: $testResultsDirectory"
     
         Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
     
