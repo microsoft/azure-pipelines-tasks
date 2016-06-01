@@ -34,12 +34,12 @@ try{
 		Throw (Get-VstsLocString -Key "Invalidwebapppackagepathprovided")
 	}
 
-	$SetParametersFile = $SetParametersFile.Trim('"').Trim()
+	$SetParametersFile = "$SetParametersFile".Trim('"').Trim()
 
 
 	# Load all dependent files for execution
-	. $PSScriptRoot/AzureUtility.ps1 -Force
-	. $PSScriptRoot/Utility.ps1 -Force
+	. $PSScriptRoot/AzureUtility.ps1
+	. $PSScriptRoot/Utility.ps1
 	. $PSScriptRoot/FindInstalledMSDeploy.ps1
 
 	# Importing required version of azure cmdlets according to azureps installed on machine

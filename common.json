@@ -1,11 +1,11 @@
 {
-  "AzurePowerShell": [
-    {
-      "module": "VstsAzureHelpers_",
-      "dest": "ps_modules"
-    }
-  ],
-  "AzureRMWebAppDeployment": [
+    "AzurePowerShell": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
+    "AzureRMWebAppDeployment": [
         {
             "module": "VstsAzureHelpers_",
             "dest": "ps_modules"

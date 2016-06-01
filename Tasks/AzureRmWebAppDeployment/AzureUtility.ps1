@@ -7,19 +7,19 @@ function Get-AzureUtility
 
     $minimumAzureVersion = New-Object System.Version(0, 9, 9)
 	
-	$azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
+    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
     $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
 	
-	Write-Verbose "Current AzureRM.profile version : $currentVersion "
+    Write-Verbose "Current AzureRM.profile version : $currentVersion "
 	
-	if( !$versionCompatible -and $currentVersion -gt $minimumAzureVersion )
-	{
-		$azureUtilityRequiredVersion = $azureUtilityNewVersion
-	}
-	else
-	{
-		$azureUtilityRequiredVersion = $azureUtilityOldVersion
-	}
+    if( !$versionCompatible -and $currentVersion -gt $minimumAzureVersion )
+    {
+	    $azureUtilityRequiredVersion = $azureUtilityNewVersion  
+    }
+    else
+    {
+	    $azureUtilityRequiredVersion = $azureUtilityOldVersion
+    }
 	
     Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
     return $azureUtilityRequiredVersion
