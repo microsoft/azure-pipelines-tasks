@@ -149,18 +149,18 @@ function GetResultsLocation {
         $runSettingsForTestResults = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
         $resultsDirElement = $runSettingsForTestResults.SelectNodes("//RunSettings/RunConfiguration/ResultsDirectory")
 
-		if($resultsDirElement -And $resultsDirElement.Count -ne 0)
-		{
+        if($resultsDirElement -And $resultsDirElement.Count -ne 0)
+        {
             $customLocation = $runSettingsForTestResults.RunSettings.RunConfiguration.ResultsDirectory       
             if([io.path]::IsPathRooted($customLocation))
             {
-		        return $customLocation
+                return $customLocation
             }
-	        else
-	        {
+            else
+            {
                 # Resutls directory is relative to the location of runsettings
-		        return [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
-	        }
+                return [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
+            }
         }        
     }
 
