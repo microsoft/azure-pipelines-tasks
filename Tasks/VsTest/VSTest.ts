@@ -30,8 +30,26 @@ try{
     var testAssemblyFiles = [];
     if(testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
         tl.debug('Pattern found in solution parameter.');
+        var excludeTestAssemblies = [];
         var allFiles = tl.find(sourcesDirectory);
-        testAssemblyFiles = tl.match(allFiles, testAssembly, {matchBase: true});
+        var testAssemblyFilters = testAssembly.split(';');
+        testAssemblyFilters.forEach(function(testAssemblyFilter){
+            if(testAssemblyFilter.startsWith("-:")){
+                if(testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0){                    
+                    excludeTestAssemblies = excludeTestAssemblies.concat(getFilteredFiles(testAssemblyFilter.substr(2), allFiles));
+                }
+                else{
+                    excludeTestAssemblies.push(testAssemblyFilter.substr(2));
+                }
+            }
+            else if(testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0){
+                testAssemblyFiles = testAssemblyFiles.concat(getFilteredFiles(testAssemblyFilter, allFiles));
+            }
+            else{
+                testAssemblyFiles.push(testAssemblyFilter);
+            }
+        });
+        testAssemblyFiles = removeArrayFromArray(testAssemblyFiles, excludeTestAssemblies);              
     }
     else{
         tl.debug('No Pattern found in solution parameter.');
@@ -42,7 +60,8 @@ try{
         });
     }
 
-    if (testAssemblyFiles && testAssemblyFiles.length != 0) {   
+    if (testAssemblyFiles && testAssemblyFiles.length != 0) { 
+        testAssemblyFiles = removeDuplicatesFromArray(testAssemblyFiles);  
         var workingDirectory = path.join(sourcesDirectory, "..");     
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function(resultsDirectory){
             invokeVSTest(resultsDirectory).then(function(code){
@@ -142,6 +161,40 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     return defer.promise;
 }
 
+function getFilteredFiles(filesFilter: string, allFiles: string[]): string[] {
+    if(os.type().match(/^Win/)){
+        return tl.match(allFiles, filesFilter, {matchBase: true, nocase: true});
+    }
+    else{
+        return tl.match(allFiles, filesFilter, {matchBase: true});
+    }  
+}
+
+// removes elements of array2 from array1
+function removeArrayFromArray(array1: string[], array2: string[]): string[]{
+    for(var i = array1.length; i--;) {
+        if(array2.indexOf(array1[i]) >= 0) {
+            array1.splice(i, 1);
+        }
+    }
+    
+    return array1;      
+}
+
+function removeDuplicatesFromArray(inputArray: string[]): string[]{
+    if(inputArray){
+        var outputArray = [];
+        inputArray.forEach(function(input){
+            if(outputArray.indexOf(input) < 0){
+                outputArray.push(input);
+            }
+        });
+        
+        return outputArray;    
+    }
+    return inputArray;    
+}
+
 function cleanUp(temporarySettingsFile: string){
     //cleanup the runsettings file
     if(temporarySettingsFile && runSettingsFile != temporarySettingsFile){
@@ -188,24 +241,33 @@ function overrideTestRunParametersIfRequired(settingsFile:string): Q.Promise<str
         readFileContents(runSettingsFile, "utf-8").then(function(xmlContents){
             var parser = new xml2js.Parser();
             parser.parseString(xmlContents, function (err, result) {
-                if(!err && result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] && 
-                        result.RunSettings.TestRunParameters[0].Parameter){
-                    var parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
-                    parametersArray.forEach(function(parameter){
-                        var key = parameter.$.name;
-                        if(overrideParameters[key]){
-                            parameter.$.value = overrideParameters[key];
-                        } 
-                    });
-                    var builder = new xml2js.Builder();
-                    var overridedRunSettings = builder.buildObject(result);
-                    saveToFile(overridedRunSettings).then(function(fileName){
-                            defer.resolve(fileName);
-                    });
-                }
-                else{
+                if(err){
+                    tl.warning("Error occured while reading run settings file. Error : " + err);
+                    tl.debug("Error occured while overriding test run parameters. Continuing...");
                     defer.resolve(settingsFile);
                 }
+                else{
+                    if(result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] && 
+                        result.RunSettings.TestRunParameters[0].Parameter){
+                        var parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
+                        parametersArray.forEach(function(parameter){
+                            var key = parameter.$.name;
+                            if(overrideParameters[key]){
+                                parameter.$.value = overrideParameters[key];
+                            } 
+                        });
+                        tl.debug("Overriding test run parameters.");
+                        var builder = new xml2js.Builder();
+                        var overridedRunSettings = builder.buildObject(result);
+                        saveToFile(overridedRunSettings).then(function(fileName){
+                                defer.resolve(fileName);
+                        });
+                    }
+                    else{
+                        tl.debug("No test run parameters found to override.");
+                        defer.resolve(settingsFile);
+                    }   
+                }                
             });
         });
         
@@ -273,25 +335,35 @@ function setupRunSettingsFileForParallel(settingsFile : string): Q.Promise<strin
                 readFileContents(settingsFile, "utf-8").then(function(xmlContents){
                     var parser = new xml2js.Parser();
                     parser.parseString(xmlContents, function (err, result) {
-                        if(!result.RunSettings){
-                             tl.warning("Failed to set run in parallel. Invalid run settings file."); 
-                             defer.resolve(settingsFile); 
-                        }
-                        else if(!result.RunSettings.RunConfiguration || !result.RunSettings.RunConfiguration[0]){
-                            result.RunSettings.RunConfiguration = { MaxCpuCount: 0 };
+                        if(err){
+                            tl.warning("Error occured while reading run settings file. Error : " + err);
+                            tl.debug("Error occured while setting run in parallel. Continuing...");
+                            defer.resolve(settingsFile);
                         }
                         else{
-                            var runConfigArray = result.RunSettings.RunConfiguration[0];
-                            runConfigArray.MaxCpuCount = 0;
-                        }
-                        
-                        var builder = new xml2js.Builder();
-                        var runSettingsForParallel = builder.buildObject(result);
-                        saveToFile(runSettingsForParallel).then(function(fileName){
-                            cleanUp(settingsFile);
-                            defer.resolve(fileName);
-                            return defer.promise;
-                        });
+                            if(result.RunSettings === undefined){
+                                tl.warning("Failed to set run in parallel. Invalid run settings file."); 
+                                defer.resolve(settingsFile); 
+                            }
+                            else if(!result.RunSettings){
+                                result.RunSettings = {RunConfiguration: { MaxCpuCount: 0 }};
+                            }
+                            else if(!result.RunSettings.RunConfiguration || !result.RunSettings.RunConfiguration[0]){
+                                result.RunSettings.RunConfiguration = { MaxCpuCount: 0 };
+                            }
+                            else{
+                                var runConfigArray = result.RunSettings.RunConfiguration[0];
+                                runConfigArray.MaxCpuCount = 0;
+                            }
+                            
+                            var builder = new xml2js.Builder();
+                            var runSettingsForParallel = builder.buildObject(result);
+                            saveToFile(runSettingsForParallel).then(function(fileName){
+                                cleanUp(settingsFile);
+                                defer.resolve(fileName);
+                                return defer.promise;
+                            });   
+                        }                        
                     });
                  });
             }
