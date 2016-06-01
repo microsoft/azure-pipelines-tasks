@@ -132,16 +132,13 @@ function enableCodeCoverage() {
         else {
             var reportingTaskName = "jacocoTestReport";
         }
-        
-        summaryFile = path.join(reportDirectory, summaryFileName);
     }
     else if (ccTool.toLowerCase() == "cobertura") {
         var summaryFileName = "coverage.xml";
         var reportingTaskName = "cobertura";
-                
-        summaryFile = path.join(reportDirectory, summaryFileName);              
     }
 
+    summaryFile = path.join(reportDirectory, summaryFileName);      
     var buildFile = path.join(buildRootPath, "build.gradle");
 
     tl.rmRF(reportDirectory, true);
