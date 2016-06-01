@@ -49,5 +49,6 @@
   "loc.messages.Runningmsdeploycommand0": "Running msdeploy command: `n`t{0}",
   "loc.messages.msdeploycommandransuccessfully": "msdeploy command ran successfully.",
   "loc.messages.filePathFindFilesSearchPattern0": "filePath = Find-Files -SearchPattern {0}",
-  "loc.messages.filePath0": "filePath = {0}"
+  "loc.messages.filePath0": "filePath = {0}",
+  "loc.messages.UnabletofindpublishUrlforWebApp0": "Unable to find publish Url for WebApp '{0}'."
 }

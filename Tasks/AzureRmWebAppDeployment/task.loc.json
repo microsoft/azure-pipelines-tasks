@@ -197,6 +197,7 @@
     "Runningmsdeploycommand0": "ms-resource:loc.messages.Runningmsdeploycommand0",
     "msdeploycommandransuccessfully": "ms-resource:loc.messages.msdeploycommandransuccessfully",
     "filePathFindFilesSearchPattern0": "ms-resource:loc.messages.filePathFindFilesSearchPattern0",
-    "filePath0": "ms-resource:loc.messages.filePath0"
+    "filePath0": "ms-resource:loc.messages.filePath0",
+    "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0"
   }
 }

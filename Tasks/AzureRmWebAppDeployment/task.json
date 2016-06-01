@@ -197,6 +197,7 @@
         "Runningmsdeploycommand0": "Running msdeploy command: `n`t{0}",
         "msdeploycommandransuccessfully": "msdeploy command ran successfully.",
         "filePathFindFilesSearchPattern0": "filePath = Find-Files -SearchPattern {0}",
-	    "filePath0":"filePath = {0}"
+	      "filePath0":"filePath = {0}",
+   		  "UnabletofindpublishUrlforWebApp0":"Unable to find publish Url for WebApp '{0}'."
     }
 }
