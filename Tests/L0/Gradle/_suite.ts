@@ -526,8 +526,6 @@ describe('gradle Suite', function() {
             });
     })
     
-    
-    
     it('Gradle with jacoco selected and report generation failed should call enable but not publish code coverage.', (done) => {
         setResponseFile('gradleGood.json');
     
