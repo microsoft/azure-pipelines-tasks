@@ -133,3 +133,53 @@ function Locate-VSVersion()
 	}
 	return $version
 }
+
+function GetResultsLocation {
+	[cmdletbinding()]
+	[OutputType([System.String])]
+	param(		
+		[string]$runSettingsFilePath		
+	)
+
+    # If this is a runsettings file then try to get the custom results location from it
+    
+    if(!(CheckIfDirectory $runSettingsFilePath) -And (CheckIfRunsettings $runSettingsFilePath))
+    {
+        $runSettingsForTestResults = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
+        $resultsDirElement = $runSettingsForTestResults.SelectNodes("//RunSettings/RunConfiguration/ResultsDirectory")
+
+        if($resultsDirElement -And $resultsDirElement.Count -ne 0)
+        {
+            $customLocation = $runSettingsForTestResults.RunSettings.RunConfiguration.ResultsDirectory       
+            if([io.path]::IsPathRooted($customLocation))
+            {
+                return $customLocation
+            }
+            else
+            {
+                # Resutls directory is relative to the location of runsettings
+                return [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
+            }
+        }        
+    }
+
+    return $null
+}
+
+function CheckIfRunsettings($runSettingsFilePath)
+{
+    if(([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".runsettings", $True) -eq 0) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".tmp", $True) -eq 0))
+    {
+        return $true
+    }
+    return $false
+}
+
+function CheckIfDirectory($filePath)
+{
+    if(Test-Path $filePath -pathtype container)
+    {
+        return $true
+    }
+    return $false
+}
