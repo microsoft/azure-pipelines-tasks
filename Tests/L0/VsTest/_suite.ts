@@ -11,6 +11,10 @@ var shell = require('shelljs');
 var ps = shell.which('powershell');
 var psr = null;
 
+function setResponseFile(name: string) {
+	process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
+}
+
 describe('VsTest Suite', function () {
     this.timeout(20000);
 
@@ -112,4 +116,21 @@ describe('VsTest Suite', function () {
             psr.run(path.join(__dirname, 'DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed.ps1'), done);
         })
     }
+    
+		//setResponseFile('shellscriptGood.json');
+		
+		var tr = new trm.TaskRunner('VSTest');
+		tr.run()
+		.then(() => {
+           
+			assert(tr.resultWasSet, 'task should have set a result');
+			assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+			done();
+		})
+		.fail((err) => {
+            console.log("++++++++++++++++++++++++++++++++++++++++" + err);
+			done(err);
+		});
+	})
 });
