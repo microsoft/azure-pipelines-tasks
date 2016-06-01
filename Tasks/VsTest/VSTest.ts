@@ -27,41 +27,9 @@ try {
     //Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
-    var testAssemblyFiles = [];
-    if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
-        tl.debug('Pattern found in solution parameter.');
-        var excludeTestAssemblies = [];
-        var allFiles = tl.find(sourcesDirectory);
-        var testAssemblyFilters = testAssembly.split(';');
-        testAssemblyFilters.forEach(function(testAssemblyFilter) {
-            if (testAssemblyFilter.startsWith("-:")) {
-                if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
-                    excludeTestAssemblies = excludeTestAssemblies.concat(getFilteredFiles(testAssemblyFilter.substr(2), allFiles));
-                }
-                else {
-                    excludeTestAssemblies.push(testAssemblyFilter.substr(2));
-                }
-            }
-            else if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
-                testAssemblyFiles = testAssemblyFiles.concat(getFilteredFiles(testAssemblyFilter, allFiles));
-            }
-            else {
-                testAssemblyFiles.push(testAssemblyFilter);
-            }
-        });
-        testAssemblyFiles = removeArrayFromArray(testAssemblyFiles, excludeTestAssemblies);
-    }
-    else {
-        tl.debug('No Pattern found in solution parameter.');
-        testAssembly.replace(';;', "`0")  // Borrowed from Legacy File Handler
-        var assemblies = testAssembly.split(';');
-        assemblies.forEach(function(assembly) {
-            testAssemblyFiles.push(assembly);
-        });
-    }
+    var testAssemblyFiles = getTestAssemblies();    
 
-    if (testAssemblyFiles && testAssemblyFiles.length != 0) {
-        testAssemblyFiles = removeDuplicatesFromArray(testAssemblyFiles);
+    if (testAssemblyFiles && testAssemblyFiles.size != 0) {
         var workingDirectory = path.join(sourcesDirectory, "..");
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function(resultsDirectory) {
             invokeVSTest(resultsDirectory).then(function(code) {
@@ -84,6 +52,41 @@ try {
 catch (error) {
     //Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
     throw error;
+}
+
+function getTestAssemblies() : Set<string>{
+    var testAssemblyFiles = [];
+    if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
+        tl.debug('Pattern found in solution parameter.');
+        var excludeTestAssemblies = [];
+        var allFiles = tl.find(sourcesDirectory);
+        var testAssemblyFilters = testAssembly.split(';');
+        testAssemblyFilters.forEach(function(testAssemblyFilter) {
+            if (testAssemblyFilter.startsWith("-:")) {
+                if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
+                    excludeTestAssemblies = excludeTestAssemblies.concat(getFilteredFiles(testAssemblyFilter.substr(2), allFiles));
+                }
+                else {
+                    excludeTestAssemblies.push(testAssemblyFilter.substr(2));
+                }
+            }
+            else if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
+                testAssemblyFiles = testAssemblyFiles.concat(getFilteredFiles(testAssemblyFilter, allFiles));
+            }
+            else {
+                testAssemblyFiles.push(testAssemblyFilter);
+            }
+        });
+        testAssemblyFiles = testAssemblyFiles.filter(x=> excludeTestAssemblies.indexOf(x) < 0);
+    }
+    else {
+        tl.debug('No Pattern found in solution parameter.');
+        var assemblies = testAssembly.split(';');
+        assemblies.forEach(function(assembly) {
+            testAssemblyFiles.push(assembly);
+        });
+    }
+    return new Set(testAssemblyFiles);
 }
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
@@ -161,47 +164,6 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     return defer.promise;
 }
 
-function getFilteredFiles(filesFilter: string, allFiles: string[]): string[] {
-    if (os.type().match(/^Win/)) {
-        return tl.match(allFiles, filesFilter, { matchBase: true, nocase: true });
-    }
-    else {
-        return tl.match(allFiles, filesFilter, { matchBase: true });
-    }
-}
-
-// removes elements of array2 from array1
-function removeArrayFromArray(array1: string[], array2: string[]): string[] {
-    for (var i = array1.length; i--;) {
-        if (array2.indexOf(array1[i]) >= 0) {
-            array1.splice(i, 1);
-        }
-    }
-
-    return array1;
-}
-
-function removeDuplicatesFromArray(inputArray: string[]): string[] {
-    if (inputArray) {
-        var outputArray = [];
-        inputArray.forEach(function(input) {
-            if (outputArray.indexOf(input) < 0) {
-                outputArray.push(input);
-            }
-        });
-
-        return outputArray;
-    }
-    return inputArray;
-}
-
-function cleanUp(temporarySettingsFile: string) {
-    //cleanup the runsettings file
-    if (temporarySettingsFile && runSettingsFile != temporarySettingsFile) {
-        tl.rmRF(temporarySettingsFile, true);
-    }
-}
-
 function publishTestResults(testResultsDirectory: string) {
     if (testResultsDirectory) {
         var allFilesInResultsDirectory = tl.find(testResultsDirectory);
@@ -214,6 +176,22 @@ function publishTestResults(testResultsDirectory: string) {
             //Write-Host "##vso[task.logissue type=warning;code=002003;]"
             tl.warning("No results found to publish.");
         }
+    }
+}
+
+function getFilteredFiles(filesFilter: string, allFiles: string[]): string[] {
+    if (os.type().match(/^Win/)) {
+        return tl.match(allFiles, filesFilter, { matchBase: true, nocase: true });
+    }
+    else {
+        return tl.match(allFiles, filesFilter, { matchBase: true });
+    }
+}
+
+function cleanUp(temporarySettingsFile: string) {
+    //cleanup the runsettings file
+    if (temporarySettingsFile && runSettingsFile != temporarySettingsFile) {
+        tl.rmRF(temporarySettingsFile, true);
     }
 }
 
@@ -277,7 +255,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
 
 function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
     var allFiles = tl.find(rootDirectory);
-    var adapterFiles = tl.match(allFiles, "**\packages\**\*TestAdapter.dll", { matchBase: true });
+    var adapterFiles = tl.match(allFiles, "**\\packages\\**\\*TestAdapter.dll", { matchBase: true });
     if (adapterFiles && adapterFiles.length != 0) {
         for (var i = 0; i < adapterFiles.length; i++) {
             var adapterFile = adapterFiles[i];
