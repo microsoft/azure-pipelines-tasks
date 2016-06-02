@@ -320,7 +320,7 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 								archives.forEach(function (archive) {
 									gutil.log('Download archive dependency: ' + archive.archiveName + ' from: ' + archive.url);
 
-									var file = fs.createWriteStream(path.join(path.dirname(dependenciesjson), archive.archiveName));
+									var file = fs.createWriteStream(path.join(_tempPath, archive.archiveName));
 									request.get(archive.url)
 										.on('response', function (response) {
 											if (response.statusCode != 200) {
@@ -335,7 +335,7 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 									file.on('finish', function () {
 										file.close();
 										gutil.log('Unzip to: ' + path.join(path.dirname(dependenciesjson), archive.dest));
-										gulp.src(path.join(path.dirname(dependenciesjson), archive.archiveName))
+										gulp.src(path.join(_tempPath, archive.archiveName))
 											.pipe(unzip())
 											.pipe(gulp.dest(path.join(path.dirname(dependenciesjson), archive.dest)))
 											.on('end', function () {
@@ -348,7 +348,7 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 												})
 
 											    gutil.log('Remove download .zip file.');
-												shell.rm(path.join(path.dirname(dependenciesjson), archive.archiveName));
+												shell.rm(path.join(_tempPath, archive.archiveName));
 											});
 									});
 								})
