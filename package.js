@@ -341,11 +341,13 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 											.on('end', function () {
 												gutil.log('Validate download files.');
 												archive.files.forEach(function (file) {
+													gutil.log('Checking download file:' + file);
 													if (!fs.existsSync(path.join(path.dirname(dependenciesjson), archive.dest, file))) {
 														throw new Error('File expected does not exist: ' + path.join(path.dirname(dependenciesjson), archive.dest, file));
 													}
 												})
 
+											    gutil.log('Remove download .zip file.');
 												shell.rm(path.join(path.dirname(dependenciesjson), archive.archiveName));
 											});
 									});
