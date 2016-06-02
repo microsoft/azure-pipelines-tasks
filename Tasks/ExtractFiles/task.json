@@ -48,7 +48,7 @@
     }
   ],  "execution": {
     "Node": {
-      "target": "extractFiles.js",
+      "target": "extractfilestask.js",
       "argumentFormat": ""
     }
   }
