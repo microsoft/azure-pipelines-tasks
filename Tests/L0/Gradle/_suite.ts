@@ -637,6 +637,31 @@ describe('gradle Suite', function() {
             });
     });
 
+ it('Gradle with Cobertura and SonarQube', (done) => {
+        setResponseFile('gradleGood.json');
+    
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr);
+        tr.setInput('codeCoverageTool', 'Cobertura');
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+        tr.setInput('sqProjectName', 'test_sqProjectName');
+        tr.setInput('sqProjectKey', 'test_sqProjectKey');
+        tr.setInput('sqProjectVersion', 'test_sqProjectVersion');
+    
+        tr.run()
+            .then(() => {
+                assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
+                assert(tr.ran('gradlew build cobertura sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.cobertura.reportPath=CCReport43F6D5EF/coverage.xml'), 'it should have run gradlew build');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    
     it('Gradle with SonarQube - Should run Gradle with SonarQube', function(done) {
         // Arrange
 
@@ -658,7 +683,7 @@ describe('gradle Suite', function() {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.ran('gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
+                assert(tr.ran('gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
                 done();
             })
@@ -693,7 +718,7 @@ describe('gradle Suite', function() {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.ran('gradlew build -I /gradle/sonar.gradle sonarqube -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
+                assert(tr.ran('gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
                 done();
             })
@@ -702,5 +727,4 @@ describe('gradle Suite', function() {
                 done(err);
             });
     });
-
 });
