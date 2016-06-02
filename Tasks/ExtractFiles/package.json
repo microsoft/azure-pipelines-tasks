@@ -1,0 +1,19 @@
+{
+  "name": "extractFiles",
+  "version": "1.0.0",
+  "description": "Extract Files Task",
+  "main": "extractFiles.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "collections": "3.0.0"
+  }
+}
