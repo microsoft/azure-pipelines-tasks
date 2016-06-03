@@ -230,8 +230,11 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 			}
 
 			var tgtPath;
+			var promises = [];
+			var deferred = Q.defer();
+			promises.push(deferred.promise);
 
-			validateTask(folderName, task)
+			promises.push(validateTask(folderName, task)
 				.then(function () {
 					// Copy the task to the layout folder.
 					gutil.log('Packaging: ' + task.name);
@@ -312,11 +315,18 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 						filter(function (file) {
 							return file.match(/(\/|\\)dependencies\.json$/);
 						});
+
+					var finisheddependenciesjson = 0;
 					if (alldependenciesjson) {
+						if (alldependenciesjson.length == 0) {
+							deferred.resolve();
+						}
+
 						alldependenciesjson.forEach(function (dependenciesjson) {
 							var dependencies = require(dependenciesjson);
 							if (dependencies.archivePackages) {
 								var archives = dependencies.archivePackages;
+								var finishedarchiveCount = 0;
 								archives.forEach(function (archive) {
 									gutil.log('Download archive dependency: ' + archive.archiveName + ' from: ' + archive.url);
 
@@ -347,26 +357,35 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 													}
 												})
 
-											    gutil.log('Remove download .zip file.');
+												gutil.log('Remove download .zip file.');
 												shell.rm(path.join(_tempPath, archive.archiveName));
+												finishedarchiveCount++;
+												if (finishedarchiveCount == archives.length) {
+													finisheddependenciesjson++;
+													if (finisheddependenciesjson == alldependenciesjson.length) {
+														gutil.log('Finished all dependencies download.');
+														deferred.resolve();
+													}
+												}
 											});
 									});
-								})
+								});
+							} else {
+								deferred.resolve();
 							}
 						});
+					} else {
+						deferred.resolve();
 					}
+				}));
 
-					return;
-				})
-				.then(function () {
-					return createStrings(task, tgtPath, dirName);
-				})
-				.then(function () {
-					done();
-				})
-				.fail(function (err) {
-					done(err);
-				})
+			Q.all(promises).then(function () {
+				return createStrings(task, tgtPath, dirName);
+			}).then(function () {
+				done();
+			}).fail(function (err) {
+				done(err);
+			});
 		});
 }
 
