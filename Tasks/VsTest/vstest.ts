@@ -27,7 +27,7 @@ try {
     //Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
-    var testAssemblyFiles = getTestAssemblies();    
+    var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.size != 0) {
         var workingDirectory = path.join(sourcesDirectory, "..");
@@ -54,7 +54,7 @@ catch (error) {
     throw error;
 }
 
-function getTestAssemblies() : Set<string>{
+function getTestAssemblies(): Set<string> {
     var testAssemblyFiles = [];
     if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
         tl.debug('Pattern found in solution parameter.');
@@ -247,8 +247,11 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                     }
                 }
             });
-        });
-
+        })
+            .fail(function(err) {
+                tl.warning(err);
+                defer.resolve(settingsFile);
+            });
     }
     return defer.promise;
 }
@@ -288,7 +291,11 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
                     defer.resolve(defaultResultsDirectory);
                 }
             });
-        });
+        })
+            .fail(function(err) {
+                tl.warning(err);
+                defer.resolve(defaultResultsDirectory);
+            });
     }
     return defer.promise;
 }
@@ -344,7 +351,12 @@ function setupRunSettingsFileForParallel(settingsFile: string): Q.Promise<string
                             });
                         }
                     });
-                });
+                })
+                    .fail(function(err) {
+                        tl.warning(err);
+                        tl.debug("Error occured while setting run in parallel. Continuing...");
+                        defer.resolve(settingsFile);
+                    });
             }
         }
     }
