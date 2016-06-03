@@ -1,4 +1,5 @@
 Trace-VstsEnteringInvocation $MyInvocation
+Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 # Get inputs.
 $scriptPath = Get-VstsInput -Name ScriptPath -Require

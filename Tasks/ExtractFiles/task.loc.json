@@ -1,0 +1,56 @@
+{
+  "id": "5e1e3830-fbfb-11e5-aab1-090c92bc4988",
+  "name": "ExtractFiles",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "0"
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "archiveFilePatterns",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.archiveFilePatterns",
+      "defaultValue": "*.zip",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.archiveFilePatterns",
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      }
+    },
+    {
+      "name": "destinationFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.destinationFolder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationFolder"
+    },
+    {
+      "name": "cleanDestinationFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanDestinationFolder",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "extractfilestask.js",
+      "argumentFormat": ""
+    }
+  }
+}

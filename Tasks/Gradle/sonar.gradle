@@ -16,11 +16,6 @@ allprojects {
         if (project.getParent() == null && !project.plugins.hasPlugin('org.sonarqube')) {
             //Add sonar plugin only to root projects, and only if it is not already applied
             project.apply plugin: 'org.sonarqube'
-        }
-
-        // Warn if the project name has not been set
-        if (project.name.equalsIgnoreCase("s")) {
-            logger.warn('Project name is not set.')
-        }
+        }      
     }
 }
