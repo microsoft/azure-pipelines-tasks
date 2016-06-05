@@ -10,7 +10,7 @@ var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', 
 var destinationFolder :string  = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
 
-var repoRoot : string = path.resolve(tl.getVariable('build.sourcesDirectory') || '');
+var repoRoot : string = tl.getVariable('build.sourcesDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
 var win = os.type().match(/^Win/);
@@ -57,7 +57,7 @@ function findFiles(): string[] {
 
         if (parseResult.file != null) {
             try {
-                var stats = fs.statSync(parseResult.file);
+                var stats = tl.stats(parseResult.file);
                 if (stats.isFile()) {
                     if (matchingFilesSet.add(parseResult.file)) {
                         tl.debug('adding file: ' + parseResult.file);
@@ -74,10 +74,12 @@ function findFiles(): string[] {
         } else {
             console.log('Searching for: ' + parseResult.search + ' under directory: ' + parseResult.directory);
 
-            if (!fs.existsSync(parseResult.directory)) {
+            var stats = tl.stats(parseResult.directory);
+                
+            if (!stats) {
                 failTask('Search failed because the specified search directory: ' + parseResult.directory + ' does not exist.');
-            } else if (!fs.lstatSync(parseResult.directory).isDirectory()) {
-                failTask('Search failed because the specified search directory: ' + file + ' is not a directory.');
+            } else if (!stats.isDirectory()) {
+                failTask('Search failed because the specified search directory: ' + parseResult.directory + ' is not a directory.');
             }
 
             var allFiles = tl.find(parseResult.directory);
@@ -88,7 +90,8 @@ function findFiles(): string[] {
             // ensure only files are added, since our search results may include directories
             for (var j = 0; j < matched.length; j++) {
                 var match = path.normalize(matched[j]);
-                if (fs.lstatSync(match).isFile()) {
+                var stats = tl.stats(match);
+                if (stats.isFile()) {
                     if (matchingFilesSet.add(match)){
                         tl.debug('adding file: ' + match);
                     }
@@ -144,7 +147,7 @@ function makeAbsolute(normalizedPath: string): string {
 
     var result = normalizedPath;
     if (!path.isAbsolute(normalizedPath)) {
-        result = repoRoot + path.sep + normalizedPath;
+        result = path.join(repoRoot, normalizedPath);
         console.log('Relative file path: '+ normalizedPath+' resolving to: ' + result);
     }
     return result;
@@ -251,13 +254,12 @@ function failTask(message: string) {
 // 2 - Everything is going to be blocked by I/O anyway.
 for (var i = 0; i < files.length; i++) {
     var file = files[i];
-    if (!fs.existsSync(file)) {
+    var stats = tl.stats(file);
+    if (!stats) {
         failTask('Extraction failed for file: ' + file + ' because it does not exist.');
-    }
-    else if (fs.lstatSync(file).isDirectory()) {
+    } else if (stats.isDirectory()) {
         failTask('Extraction failed for file: ' + file + ' because it is a directory.');
     }
-    
     
     if(win) {
         if(isTar(file)){

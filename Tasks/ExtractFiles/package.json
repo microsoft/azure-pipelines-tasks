@@ -1,6 +1,6 @@
 {
   "name": "extractFiles",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extract Files Task",
   "main": "extractfilestask.js",
   "repository": {
