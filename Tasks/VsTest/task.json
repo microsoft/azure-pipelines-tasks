@@ -173,5 +173,8 @@
         "Node": {
             "target": "vstest.js"
         }
+    },
+    "messages": {
+        "VstestReturnCode": "Vstest exited with return code: %d"
     }
 }

@@ -35,13 +35,17 @@ try {
             invokeVSTest(resultsDirectory).then(function(code) {
                 try {
                     publishTestResults(resultsDirectory);
-                    tl.exit(code);
+                    tl.setResult(code, tl.loc('VstestReturnCode', code));
                 }
                 catch (error) {
                     //Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
                     throw error;
                 }
-            });
+            })
+                .fail(function(err) {
+                    //Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+                    throw err;
+                });
         });
     }
     else {
@@ -157,9 +161,21 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         tl.error(err);
                         defer.resolve(1);
                     });
+            })
+                .fail(function(err) {
+                    tl.error(err);
+                    defer.resolve(1);
+                });
+        })
+            .fail(function(err) {
+                tl.error(err);
+                defer.resolve(1);
             });
+    })
+        .fail(function(err) {
+            tl.error(err);
+            defer.resolve(1);
         });
-    });
 
     return defer.promise;
 }
@@ -239,7 +255,12 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                         var overridedRunSettings = builder.buildObject(result);
                         saveToFile(overridedRunSettings).then(function(fileName) {
                             defer.resolve(fileName);
-                        });
+                        })
+                            .fail(function(err) {
+                                tl.debug("Error occured while overriding test run parameters. Continuing...");
+                                tl.warning(err);
+                                defer.resolve(settingsFile);
+                            });
                     }
                     else {
                         tl.debug("No test run parameters found to override.");
@@ -249,6 +270,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
             });
         })
             .fail(function(err) {
+                tl.debug("Error occured while overriding test run parameters. Continuing...");
                 tl.warning(err);
                 defer.resolve(settingsFile);
             });
@@ -293,6 +315,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
             });
         })
             .fail(function(err) {
+                tl.debug("Error occured while reading test result directory from run settings. Continuing...")
                 tl.warning(err);
                 defer.resolve(defaultResultsDirectory);
             });
@@ -314,7 +337,12 @@ function setupRunSettingsFileForParallel(settingsFile: string): Q.Promise<string
                 saveToFile(runSettingsForParallel).then(function(fileName) {
                     defer.resolve(fileName);
                     return defer.promise;
-                });
+                })
+                    .fail(function(err) {
+                        tl.debug("Error occured while setting run in parallel. Continuing...");
+                        tl.warning(err);
+                        defer.resolve(settingsFile);
+                    });
             }
             else {
                 tl.debug("Adding maxcpucount element to runsettings file provided.");
@@ -348,7 +376,12 @@ function setupRunSettingsFileForParallel(settingsFile: string): Q.Promise<string
                                 cleanUp(settingsFile);
                                 defer.resolve(fileName);
                                 return defer.promise;
-                            });
+                            })
+                                .fail(function(err) {
+                                    tl.debug("Error occured while setting run in parallel. Continuing...");
+                                    tl.warning(err);
+                                    defer.resolve(settingsFile);
+                                });
                         }
                     });
                 })
@@ -474,19 +507,9 @@ function readFileContents(filePath: string, encoding: string): Q.Promise<string>
 }
 
 function pathExistsAsFile(path: string) {
-    try {
-        return tl.stats(path).isFile();
-    }
-    catch (error) {
-        return false;
-    }
+    return tl.exist(path) && tl.stats(path).isFile();
 }
 
 function pathExistsAsDirectory(path: string) {
-    try {
-        return tl.stats(path).isDirectory();
-    }
-    catch (error) {
-        return false;
-    }
+    return tl.exist(path) && tl.stats(path).isDirectory();
 }

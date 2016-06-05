@@ -173,5 +173,8 @@
     "Node": {
       "target": "vstest.js"
     }
+  },
+  "messages": {
+    "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode"
   }
 }
