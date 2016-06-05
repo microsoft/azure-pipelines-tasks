@@ -23,8 +23,8 @@ try {
     var configuration: string = tl.getInput('configuration');
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
-    
-    //Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
+
+    tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var testAssemblyFiles = getTestAssemblies();
@@ -38,23 +38,23 @@ try {
                     tl.setResult(code, tl.loc('VstestReturnCode', code));
                 }
                 catch (error) {
-                    //Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+                    tl._writeLine("##vso[task.logissue type=error;code=" + error + ";TaskName=VSTest]");
                     throw error;
                 }
             })
                 .fail(function(err) {
-                    //Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+                    tl._writeLine("##vso[task.logissue type=error;code=" + err + ";TaskName=VSTest]");
                     throw err;
                 });
         });
     }
     else {
-        //Write-Host "##vso[task.logissue type=warning;code=002004;]"
+        tl._writeLine("##vso[task.logissue type=warning;code=002004;]");
         tl.warning("No test assemblies found matching the pattern: " + testAssembly);
     }
 }
 catch (error) {
-    //Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+    tl._writeLine("##vso[task.logissue type=error;code=" + error + ";TaskName=VSTest]");
     throw error;
 }
 
@@ -189,7 +189,7 @@ function publishTestResults(testResultsDirectory: string) {
             tp.publish(resultFiles, "false", platform, configuration, testRunTitle, publishRunAttachments);
         }
         else {
-            //Write-Host "##vso[task.logissue type=warning;code=002003;]"
+            tl._writeLine("##vso[task.logissue type=warning;code=002003;]");
             tl.warning("No results found to publish.");
         }
     }
