@@ -272,14 +272,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\gradle.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node": {
       "target": "gradletask.js",
       "argumentFormat": ""
@@ -287,6 +279,7 @@
   },
   "messages": {
     "sqAnalysis_isEnabled": "ms-resource:loc.messages.sqAnalysis_isEnabled",
-    "sqAnalysis_isNotEnabled": "ms-resource:loc.messages.sqAnalysis_isNotEnabled"
+    "sqAnalysis_isNotEnabled": "ms-resource:loc.messages.sqAnalysis_isNotEnabled",
+    "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode"
   }
 }

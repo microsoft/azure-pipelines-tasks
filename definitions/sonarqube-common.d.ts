@@ -11,6 +11,9 @@ declare module 'sonarqube-common/sonarqube-common' {
     // This will override any user settings.
     export function applySonarQubeAnalysisParams(toolRunner:ToolRunner, projectName?, projectKey?, projectVersion?):ToolRunner;
 
+    // Makes SonarQube run in issues mode if this is a PR build
+    export function applySonarQubeIssuesModeInPrBuild(toolrunner:ToolRunner):ToolRunner;
+    
     // Data class returned from getSonarQubeEndpointDetails()
     export class SonarQubeEndpoint {
         constructor(Url, Username, Password);

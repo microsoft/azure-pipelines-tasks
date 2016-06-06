@@ -49,7 +49,9 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.To
     var projectName:string = tl.getInput('sqProjectName', true);
     var projectKey:string = tl.getInput('sqProjectKey', true);
     var projectVersion:string = tl.getInput('sqProjectVersion', true);
+    
     gradleRun = sqCommon.applySonarQubeAnalysisParams(gradleRun, projectName, projectKey, projectVersion);
+    gradleRun = sqCommon.applySonarQubeIssuesModeInPrBuild(gradleRun);
 
     return gradleRun;
 }
