@@ -11,6 +11,8 @@
   "loc.input.help.target": "在此项目中生成这些目标。使用分号分隔多个目标。",
   "loc.input.label.outputDir": "输出目录",
   "loc.input.label.configuration": "配置",
+  "loc.input.label.clean": "清理",
+  "loc.input.help.clean": "在生成前运行清理生成(/t:clean)。",
   "loc.input.label.msbuildLocation": "MSBuild 位置",
   "loc.input.help.msbuildLocation": "可以选择提供 MSBuild 的路径。默认为搜索最新版本。",
   "loc.input.label.msbuildArguments": "MSBuild 参数",

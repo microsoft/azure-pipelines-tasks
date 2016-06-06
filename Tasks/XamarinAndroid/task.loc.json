@@ -65,6 +65,14 @@
       "required": false
     },
     {
+      "name": "clean",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.clean",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.clean"
+    },
+    {
       "name": "msbuildLocation",
       "type": "string",
       "label": "ms-resource:loc.input.label.msbuildLocation",

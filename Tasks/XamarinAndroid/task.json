@@ -65,6 +65,14 @@
             "required": false
         },
         {
+            "name": "clean",
+            "type": "boolean",
+            "label": "Clean",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
+        },
+        {
             "name": "msbuildLocation",
             "type": "string",
             "label": "MSBuild Location",

@@ -2,6 +2,7 @@ param(
     [string]$project, 
     [string]$target, 
     [string]$configuration,
+    [string]$clean,
     [string]$outputDir,
     [string]$msbuildLocation, 
     [string]$msbuildArguments,
@@ -13,6 +14,7 @@ Write-Verbose "Entering script XamarinAndroid.ps1"
 Write-Verbose "project = $project"
 Write-Verbose "target = $target"
 Write-Verbose "configuration = $configuration"
+Write-Verbose "clean = $clean"
 Write-Verbose "outputDir = $outputDir"
 Write-Verbose "msbuildLocation = $msbuildLocation"
 Write-Verbose "msbuildArguments = $msbuildArguments"
@@ -53,6 +55,12 @@ if ($configuration)
 {
     Write-Verbose "adding configuration: $configuration"
     $args = "$args /p:configuration=$configuration"
+}
+
+if ($clean.ToLower() -eq 'true')
+{
+    Write-Verbose "adding /t:clean"
+    $args = "$args /t:clean"
 }
 
 if ($target)

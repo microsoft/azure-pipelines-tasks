@@ -11,6 +11,8 @@
   "loc.input.help.target": "在此專案中建置這些目標。請使用分號以區隔多個目標。",
   "loc.input.label.outputDir": "輸出目錄",
   "loc.input.label.configuration": "組態",
+  "loc.input.label.clean": "清除",
+  "loc.input.help.clean": "在組建之前執行乾淨的組建 (/t:clean)。",
   "loc.input.label.msbuildLocation": "MSBuild 位置",
   "loc.input.help.msbuildLocation": "選擇性地提供 MSBuild 的路徑。其預設為搜尋最新版本。",
   "loc.input.label.msbuildArguments": "MSBuild 引數",
