@@ -88,7 +88,7 @@ describe('General Suite', function() {
 				
                 var targetJs = task.execution['Node'].target;
                 if(targetJs.search(/[A-Z]/g) >= 0) {
-                    console.error('Has uppercase in task.json\'s excution.node.target for tasks: ' + path.relative(tasksRootFolder, taskjson));
+                    console.error('Has uppercase in task.json\'s execution.node.target for tasks: ' + path.relative(tasksRootFolder, taskjson));
                     assert(false, 'Has uppercase is dangerous for xplat tasks.' + taskjson);
                 }
 			}

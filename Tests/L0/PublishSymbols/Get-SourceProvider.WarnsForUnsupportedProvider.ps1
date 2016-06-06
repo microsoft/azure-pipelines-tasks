@@ -15,7 +15,7 @@ $actual = Get-SourceProvider
 
 # Assert.
 Assert-IsNullOrEmpty $actual
-# Asserting that dispose was called isn't partically interesting for the flow
+# Asserting that dispose was called isn't particularly interesting for the flow
 # exercised by this test case. However, it does validate that dispose would
 # would get called properly for other providers.
 Assert-WasCalled Invoke-DisposeSourceProvider -Times 1 -ParametersEvaluator {

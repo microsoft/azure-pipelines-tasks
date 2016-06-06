@@ -124,7 +124,7 @@
             "label": "Class Files Directories",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi-module project. Specify a comma-seperated list of relative paths from the Maven POM file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
+            "helpMarkDown": "This field is required for a multi-module project. Specify a comma-separated list of relative paths from the Maven POM file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {

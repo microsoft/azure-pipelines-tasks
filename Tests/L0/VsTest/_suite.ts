@@ -31,7 +31,7 @@ describe('VsTest Suite', function () {
         it('(VsTest-NoTestAssemblies) throws if no test assemblies provided as input', (done) => {
             psr.run(path.join(__dirname, 'ThrowsIfAssembliesNotProvided.ps1'), done);
         })
-        it('(VsTest-NoSourceDiretory) throws if no source directory is found', (done) => {
+        it('(VsTest-NoSourceDirectory) throws if no source directory is found', (done) => {
             psr.run(path.join(__dirname, 'ThrowsIfNoSourceDirectoryFound.ps1'), done);
         })
         it('(2015U1Check.ReturnsTrueIfTaefFileIsFound) returns true if taef file is found', (done) => {

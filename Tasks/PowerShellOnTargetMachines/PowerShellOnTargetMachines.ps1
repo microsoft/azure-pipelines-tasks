@@ -80,7 +80,7 @@ $telemetryCodes =
   "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
   "AZUREPLATFORM_UnknownGetRMVMError" = "AZUREPLATFORM_UnknownGetRMVMError";
   "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
-  "PREREQ_UnsupportedAzurePSVerion" = "PREREQ_UnsupportedAzurePSVerion";
+  "PREREQ_UnsupportedAzurePSVersion" = "PREREQ_UnsupportedAzurePSVersion";
   "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";
   "PREREQ_InvalidServiceConnectionType" = "PREREQ_InvalidServiceConnectionType";
   "PREREQ_AzureRMModuleNotFound" = "PREREQ_AzureRMModuleNotFound";
@@ -181,9 +181,9 @@ function Get-ResourceWinRmConfig
         }
     }
 
-    elseif($environment.Provider -ne $null)      #  For standerd environment provider will be null
+    elseif($environment.Provider -ne $null)      #  For standard environment provider will be null
     {
-        Write-Verbose "`t Environment is not standerd environment. Https port has higher precedence"
+        Write-Verbose "`t Environment is not standard environment. Https port has higher precedence"
 
         Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpsPortKeyName"
         if($isAgentVersion97)
@@ -232,7 +232,7 @@ function Get-ResourceWinRmConfig
    }
    else
    {
-        Write-Verbose "`t Environment is standerd environment. Http port has higher precedence"
+        Write-Verbose "`t Environment is standard environment. Http port has higher precedence"
 
         Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName"
         if($isAgentVersion97)
