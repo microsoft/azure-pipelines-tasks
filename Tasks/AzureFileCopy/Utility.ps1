@@ -125,7 +125,7 @@ function Validate-AzurePowershellVersion
     if(!$versionCompatible)
     {
         Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVersion"
-        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at http://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
+        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at https://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell" -ArgumentList $minimumAzureVersion)
     }
 
     Write-Verbose "Validated the required azure powershell version is greater than or equal to 0.9.0"
@@ -191,7 +191,7 @@ function ThrowError
 {
     param([string]$errorMessage)
 
-    $readmelink = "http://aka.ms/azurefilecopyreadme"
+    $readmelink = "https://aka.ms/azurefilecopyreadme"
     $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
     throw "$errorMessage $helpMessage"
 }
