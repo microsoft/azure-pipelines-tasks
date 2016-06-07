@@ -7,6 +7,9 @@ import path = require('path');
 // Lowercased file names are to lessen the likelihood of xplat issues
 import sqGradle = require('./gradlesonar');
 
+// Set up localization resource file
+tl.setResourcePath(path.join( __dirname, 'task.json'));
+
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
