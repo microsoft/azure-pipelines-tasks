@@ -37,7 +37,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "SSH.js",
+      "target": "ssh.js",
       "argumentFormat": ""
     }
   }
