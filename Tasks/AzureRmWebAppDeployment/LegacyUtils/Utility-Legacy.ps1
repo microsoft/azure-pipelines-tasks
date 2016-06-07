@@ -19,14 +19,14 @@ function Get-MsDeployExePath
     if( [string]::IsNullOrEmpty($MSDeployExePath) )
     {
 
-        Write-Verbose  (Get-VstsLocString -Key "UsinglocalMSDeployexe")  
+        Write-Verbose  (Get-LocalizedString -Key "Using local MSDeploy.exe")  
         $currentDir = (Get-Item -Path ".\").FullName
         $msDeployExeDir = Join-Path $currentDir "MSDeploy3.6"
         $MSDeployExePath = Join-Path $msDeployExeDir "msdeploy.exe"
     
     }
  
-    Write-Host (Get-VstsLocString -Key msdeployexeislocatedat0 -ArgumentList $MSDeployExePath)
+    Write-Host (Get-LocalizedString -Key "msdeploy.exe is located at '{0}'" -ArgumentList $MSDeployExePath)
 
     return $MSDeployExePath
 }
@@ -38,13 +38,13 @@ function Get-SingleFile
 
     if ($files -is [system.array])
     {
-        throw (Get-VstsLocString -Key Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone -ArgumentList $pattern)
+        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern {0}. There can be only one." -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
-            throw (Get-VstsLocString -Key Nofileswerefoundtodeploywithsearchpattern0 -ArgumentList $pattern)
+            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}." -ArgumentList $pattern)
         }
 
         return $files
@@ -55,9 +55,9 @@ function Get-SingleFilePath
 {
     param([String][Parameter(Mandatory=$true)] $file)
 
-    Write-Host (Get-VstsLocString -Key filePathFindFilesSearchPattern0 -ArgumentList $file)
-    $filePath = Find-VstsFiles -LegacyPattern $file
-    Write-Host (Get-VstsLocString -Key filePath0 -ArgumentList $filePath)
+    Write-Host (Get-LocalizedString -Key "filePath = Find-Files -SearchPattern {0}" -ArgumentList $file)
+    $filePath = Find-Files -SearchPattern $file
+    Write-Host (Get-LocalizedString -Key "filePath = {0}" -ArgumentList $filePath)
 
     $filePath = Get-SingleFile -files $filePath -pattern $file
     return $filePath
@@ -182,7 +182,7 @@ function Run-MsDeployCommand
     $msDeployCmd = "`"$msDeployExePath`" $msDeployCmdArgs"
     $msDeployCmdForLogs = Get-MsDeployCmdForLogs -msDeployCmd $msDeployCmd
 
-    Write-Host (Get-VstsLocString -Key Runningmsdeploycommand0 -ArgumentList $msDeployCmdForLogs)
+    Write-Host (Get-LocalizedString -Key "Running msdeploy command: `n`t{0}" -ArgumentList $msDeployCmdForLogs)
     Run-Command -command $msDeployCmd
-    Write-Host (Get-VstsLocString -Key msdeploycommandransuccessfully )
+    Write-Host (Get-LocalizedString -Key "msdeploy command ran successfully.")
 }
