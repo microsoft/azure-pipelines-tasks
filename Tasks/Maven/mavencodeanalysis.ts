@@ -11,9 +11,6 @@ import pmd = require('./mavenpmd');
 import {AnalysisResult} from './analysisresult';
 import {ModuleAnalysis} from './moduleanalysis';
 
-// Set up for localization
-tl.setResourcePath(path.join( __dirname, 'task.json'));
-
 // Cache build variables are cached globally as they cannot change during the same build.
 var sourcesDir:string;
 var stagingDir:string;
