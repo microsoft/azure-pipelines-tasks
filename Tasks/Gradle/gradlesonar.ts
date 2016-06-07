@@ -11,6 +11,9 @@ import trm = require('vsts-task-lib/toolrunner');
 import sqCommon = require('sonarqube-common/sonarqube-common');
 import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 
+// Set up localization resource file
+tl.setResourcePath(path.join( __dirname, 'task.json'));
+
 // Apply arguments to enable SonarQube analysis
 export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.ToolRunner {
     if (!isSonarQubeEnabled()) {
