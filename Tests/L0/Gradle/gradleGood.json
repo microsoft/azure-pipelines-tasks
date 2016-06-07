@@ -30,6 +30,18 @@
         "gradlew /o /p t i /o /n /s build test deploy": {
             "code": 0,
             "stdout": "More sample gradle output"
+        },
+        "gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion": {
+            "code": 0,
+            "stdout": "Gradle build and SQ analysis done"
+        },
+        "gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion": {
+            "code": 0,
+            "stdout": "Gradle build and SQ analysis with db details done"
+        },
+       "gradlew build cobertura sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.cobertura.reportPath=CCReport43F6D5EF/coverage.xml": {
+            "code": 0,
+            "stdout": "Gradle build, Cobertura Code Coverage and SQ analysis done"
         }
     },
     "checkPath": {
@@ -38,7 +50,14 @@
     },
     "getVariable": {
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
-        "System.DefaultWorkingDirectory": "/user/build"
+        "System.DefaultWorkingDirectory": "/user/build",
+        "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}"
+    },
+    "stats": {
+        "CCReport43F6D5EF\\coverage.xml": {
+            "isFile": true
+        }
     },
     "rmRF": {
         "CCReport43F6D5EF": {

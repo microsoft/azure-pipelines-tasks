@@ -1028,9 +1028,10 @@ describe('Maven Suite', function() {
     it('Maven with PMD - Executes PMD and uploads results when multiple modules are present', function(done) {
         // In the test data:
         // /: pom.xml, no target/
-        // /util/: pom.xml, target/
+        // /util/: pom.xml, target/, has violations
         // /ignored/: pom.xml, no target/
-        // /leveltwo/app/: pom.xml, target/
+        // /backend/: pom.xml, target/, has no violations - not expecting uploads from this module
+        // /leveltwo/app/: pom.xml, target/, has violations
         // /leveltwo/static/: no pom.xml, target/
 
         // Arrange
@@ -1078,10 +1079,13 @@ describe('Maven Suite', function() {
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
 
+                // assert artifacts not uploaded
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=app;artifactname=') > -1,
                     'should have uploaded PMD build artifacts for the "app" module');
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=util;artifactname=') > -1,
                     'should have uploaded PMD build artifacts for the "util" module');
+                assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=backend;artifactname=') < 0,
+                    'should not have uploaded PMD build artifacts for the "backend" module');
 
                 assertBuildSummaryContainsLine(testStgDir, 'PMD found 6 violations in 4 files.');
 

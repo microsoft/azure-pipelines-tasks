@@ -7,7 +7,7 @@ function InvokePreBuildTask
     Write-Verbose "Server Url: $($serviceEndpoint.Url)"
 
     $currentDir = (Get-Item -Path ".\" -Verbose).FullName
-    $bootstrapperDir = [System.IO.Path]::Combine($currentDir, "MSBuild.SonarQube.Runner-1.1") # the MSBuild.SonarQube.Runner is version specific
+    $bootstrapperDir = [System.IO.Path]::Combine($currentDir, "SonarQube.Bootstrapper") 
     $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQube.Runner.exe")
     $dashboardUrl = GetDashboardUrl $serviceEndpoint.Url $projectKey
     Write-Verbose "Dashboard Url: $dashboardUrl"
@@ -32,13 +32,13 @@ function StoreParametersInTaskContext
 	param(
 		  [string]$hostUrl,
 		  [string]$bootstrapperPath,
-		  [string]$dahsboardUrl,
+		  [string]$dashboardUrl,
           [string]$includeFullReport, 
           [string]$breakBuild)
 	
     SetTaskContextVariable "MSBuild.SonarQube.Internal.BootstrapperPath" $bootstrapperPath    
     SetTaskContextVariable "MSBuild.SonarQube.HostUrl" $hostUrl
-    SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dahsboardUrl   
+    SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dashboardUrl   
     SetTaskContextVariable "MSBuild.SonarQube.Internal.BreakBuild" $breakBuild
     SetTaskContextVariable "MSBuild.SonarQube.Internal.IncludeFullReport" $includeFullReport        
 }

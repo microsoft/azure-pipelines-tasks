@@ -58,7 +58,7 @@
       "type": "string",
       "label": "Number of permissible threshold violations",
       "required": false,
-      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsucessful."
+      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsuccessful."
     }
   ],
   "instanceNameFormat": "Cloud Load Test $(LoadTest)",

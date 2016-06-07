@@ -312,14 +312,19 @@ function Invoke-NuGetRestore {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Warning (Get-VstsLocString -Key MSB_RestoreNuGetPackagesDeprecated)
+        try {
+            $nuGetPath = Assert-VstsPath -LiteralPath "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\externals\nuget\NuGet.exe" -PathType Leaf -PassThru
+        } catch {
+            # Temporary fallback logic for legacy Windows agent.
+            $nuGetPath = Assert-VstsPath -LiteralPath "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\NuGet.exe" -PathType Leaf -PassThru
+        }
 
-        $nugetPath = Assert-VstsPath -LiteralPath "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\NuGet.exe" -PathType Leaf -PassThru
         if ($env:NUGET_EXTENSIONS_PATH) {
             Write-Host (Get-VstsLocString -Key MSB_DetectedNuGetExtensionsLoaderPath0 -ArgumentList $env:NUGET_EXTENSIONS_PATH)
         }
 
         $directory = [System.IO.Path]::GetDirectoryName($file)
-        Invoke-VstsTool -FileName $nugetPath -Arguments "restore `"$file`" -NonInteractive" -WorkingDirectory $directory -RequireExitCodeZero
+        Invoke-VstsTool -FileName $nuGetPath -Arguments "restore `"$file`" -NonInteractive" -WorkingDirectory $directory -RequireExitCodeZero
         if ($LASTEXITCODE -ne 0) {
             Write-VstsSetResult -Result Failed -DoNotThrow
         }

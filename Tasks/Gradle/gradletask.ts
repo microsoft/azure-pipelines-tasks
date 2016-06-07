@@ -4,6 +4,9 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 
+// Lowercased file names are to lessen the likelihood of xplat issues
+import sqGradle = require('./gradlesonar');
+
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
@@ -22,6 +25,7 @@ var gb = tl.createToolRunner(wrapperScript);
 
 gb.argString(tl.getInput('options', false));
 gb.arg(tl.getDelimitedInput('tasks', ' ', true));
+
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
 var javaHomeSelection = tl.getInput('javaHomeSelection', true);
@@ -58,14 +62,18 @@ if (specifiedJavaHome) {
 var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 
+var summaryFile: string = null;
+
 if (isCodeCoverageOpted) {
-    var summaryFile: string = null;
     var reportDirectory: string = null;
     enableCodeCoverage()
 }
 else {
     tl.debug("Option to enable code coverage was not selected and is being skipped.");
 }
+
+gb = sqGradle.applyEnabledSonarQubeArguments(gb);
+gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile );
 
 var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
 var testResultsFiles = tl.getInput('testResultsFiles', true);
@@ -117,7 +125,7 @@ function enableCodeCoverage() {
 
     if (ccTool.toLowerCase() == "jacoco") {
         var summaryFileName = "summary.xml";
-
+        
         if (isMultiModule) {
             var reportingTaskName = "jacocoRootReport";
         }
@@ -130,7 +138,7 @@ function enableCodeCoverage() {
         var reportingTaskName = "cobertura";
     }
 
-    summaryFile = path.join(reportDirectory, summaryFileName);
+    summaryFile = path.join(reportDirectory, summaryFileName);      
     var buildFile = path.join(buildRootPath, "build.gradle");
 
     tl.rmRF(reportDirectory, true);

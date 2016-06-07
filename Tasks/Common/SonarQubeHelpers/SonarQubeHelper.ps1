@@ -94,7 +94,7 @@ function Retry
 }
 
 #
-# Retry a specific command until the results is true. Returns true if the command succeded. Timeout and retry delay are in seconds. Usage:  
+# Retry a specific command until the results is true. Returns true if the command succeeded. Timeout and retry delay are in seconds. Usage:  
 #
 #   $command = { GetStatus -eq "Complete" } 
 #   RetryUntilTrue $command -timeout 60 -retryDelay 1 -Verbose
@@ -137,12 +137,13 @@ function RetryUntilTrue
     return $true;  
 }
 
+#
+# Invoke a SonarQube GET Rest API and fetch the response. This method uses the configured SonarQube server host url, as well as basic auth 
+# based on the user provided username / password 
+#
 function InvokeGetRestMethod
 {
-    param (
-        [Parameter(Mandatory=$true)][string]$query, 
-        [bool]$useAuth=$false)
-
+    param ([Parameter(Mandatory=$true)][string]$query)
                 
     $sonarQubeHostUrl = GetTaskContextVariable "MSBuild.SonarQube.HostUrl"     
     $sonarQubeHostUrl  = $sonarQubeHostUrl.TrimEnd("/");
@@ -150,17 +151,12 @@ function InvokeGetRestMethod
     Assert (![System.String]::IsNullOrWhiteSpace($sonarQubeHostUrl)) "Could not retrieve the SonarQube host url"
 
     $request = $sonarQubeHostUrl + $query;
-    
-    if ($useAuth)
-    {      
-       $authHeader = CreateBasicAuthHeaderFromEndpoint
+    $authHeader = CreateBasicAuthHeaderFromEndpoint
 
-       if (![String]::IsNullOrWhiteSpace($authHeader))
-       {
-            $allheaders = @{Authorization = $authHeader}        
-       }
-       
-    }  
+    if (![String]::IsNullOrWhiteSpace($authHeader))
+    {
+        $allheaders = @{Authorization = $authHeader}        
+    }
 
     # Fix for HTTPS websites that support only TLS 1.2, as described by https://jira.sonarsource.com/browse/SONARMSBRU-169
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls

@@ -6,7 +6,7 @@ To learn more about the general usage of the task, please see https://msdn.micro
 
 ###The different parameters of the task are explained below:
 
-- **Machines:**	Required Field. Provide the comma seperated list of machine names or "Azure Resource Group / Test Machine Group" name or Variable name containing the list of machines which should be used to run tests.
+- **Machines:**	Required Field. Provide the comma separated list of machine names or "Azure Resource Group / Test Machine Group" name or Variable name containing the list of machines which should be used to run tests.
 
 - **Test Drop Location:**	Required Field. Location on the Test machine(s) where the test binaries have been copied to.  ‘Windows Machine File Copy’ task or ‘Azure File Copy’ task (for Azure machines) can be used. System Environment Variables from the agent machines can also be used in specifying the drop location. For example, c:\tests or %systemdrive%\Tests
 
@@ -87,7 +87,7 @@ If this is not the case, testagent should be manually downloaded from official m
 
 -	**Usage Error Conditions**
 
-	a.	Using same test machines across different machine groups, and running builds (with any BDT tasks) parallely against those machine groups is not supported.
+	a.	Using same test machines across different machine groups, and running builds (with any BDT tasks) parallelly against those machine groups is not supported.
 	
 	b.	Cancelling an inprogress build/release with BDT tasks is not supported. If you do cancel, your subsequent builds may misbehave.
 	

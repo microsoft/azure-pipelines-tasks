@@ -61,7 +61,7 @@ function New-TfsGitSrcSrvIniContent {
         "TFS_EXTRACT_TARGET=%targ%\%var5%\%fnvar%(%var6%)%fnbksl%(%var7%)"
         # The "commitId" arg requires the full commit ID.
         #
-        # The /applyfilters switch indicates whether to conver LF to CRLF. The source file hashes are
+        # The /applyfilters switch indicates whether to convert LF to CRLF. The source file hashes are
         # embedded in the PDB files and the debugger will reject the source file as a match if the
         # downloaded file's hash doesn't match the hash embedded in the PDB file. We make the assumption
         # the PDB was built from a source file with CRLFs. In some edge case were this is not true, the

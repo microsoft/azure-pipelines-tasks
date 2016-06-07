@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 26
     },
     "groups": [
         {
@@ -36,7 +36,7 @@
             "type": "string",
             "label": "Arguments",
             "defaultValue": "",
-            "helpMarkDown": "Arguments passed to the tool",
+            "helpMarkDown": "Arguments passed to the tool. Use double quotes to escape spaces.",
             "required": false
         },
         {
