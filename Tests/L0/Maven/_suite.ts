@@ -1003,6 +1003,8 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
 
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
@@ -1072,6 +1074,8 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
 
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
@@ -1129,6 +1133,8 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
 
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
@@ -1186,6 +1192,9 @@ describe('Maven Suite', function() {
                 assert(taskRunner.succeeded, 'task should not have failed');
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
 
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
