@@ -10,9 +10,8 @@ function Get-AzureUtility
     $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
     $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
 	
-    Write-Verbose "Current AzureRM.profile version : $currentVersion "
 	
-    if( !$versionCompatible -and $currentVersion -gt $minimumAzureVersion )
+    if( !$currentVersion -and $currentVersion -gt $minimumAzureVersion )
     {
 	    $azureUtilityRequiredVersion = $azureUtilityNewVersion  
     }
