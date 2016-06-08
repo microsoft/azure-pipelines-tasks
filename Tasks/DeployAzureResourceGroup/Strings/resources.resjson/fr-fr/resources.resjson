@@ -20,7 +20,7 @@
   "loc.input.label.location": "Emplacement",
   "loc.input.help.location": "Emplacement pour le déploiement du groupe de ressources. Si le groupe de ressources existe déjà dans l'abonnement, cette valeur est ignorée.",
   "loc.input.label.csmFile": "Modèle",
-  "loc.input.help.csmFile": "Spécifiez le chemin du modèle Azure Resource Manager. Pour plus d'informations sur les modèles, consultez http://aka.ms/azuretemplates. Pour être immédiatement opérationnel, utilisez le modèle http://aka.ms/sampletemplate.",
+  "loc.input.help.csmFile": "Spécifiez le chemin du modèle Azure Resource Manager. Pour plus d'informations sur les modèles, consultez https://aka.ms/azuretemplates. Pour être immédiatement opérationnel, utilisez le modèle https://aka.ms/sampletemplate.",
   "loc.input.label.csmParametersFile": "Paramètres du modèle",
   "loc.input.help.csmParametersFile": "Spécifiez le chemin d'accès pour le fichier de paramètres correspondant au modèle de gestionnaire des ressources Azure.",
   "loc.input.label.overrideParameters": "Remplacer les paramètres de modèle",

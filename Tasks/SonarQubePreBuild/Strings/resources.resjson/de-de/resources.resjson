@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SonarQube für MSBuild – Analyse starten",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Qualitätsprofil von SonarQube abrufen, um die Analyse zu konfigurieren",
   "loc.instanceNameFormat": "Qualitätsprofil von SonarQube abrufen",
   "loc.group.displayName.serverSettings": "SonarQube-Server",
@@ -22,9 +22,9 @@
   "loc.input.label.dbPassword": "DB-Benutzerkennwort",
   "loc.input.help.dbPassword": "Nur SonarQube Server 5.1 und ältere Versionen. Das Kennwort des Datenbankbenutzers, z. B. \"sonar.jdbc.username\".",
   "loc.input.label.cmdLineArgs": "Zusätzliche Einstellungen",
-  "loc.input.help.cmdLineArgs": "Geben Sie getrennte Einstellungen im folgenden Format an: \"/d:propertyName=propertyValue\". Die normalen Escaperegeln der Befehlszeile gelten. Weitere Informationen zu den Einstellungen finden Sie in der [SonarQube-Dokumentation](http://go.microsoft.com/fwlink/?LinkID=624390).",
+  "loc.input.help.cmdLineArgs": "Geben Sie getrennte Einstellungen im folgenden Format an: \"/d:propertyName=propertyValue\". Die normalen Escaperegeln der Befehlszeile gelten. Weitere Informationen zu den Einstellungen finden Sie in der [SonarQube-Dokumentation](https://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "Einstellungsdatei",
-  "loc.input.help.configFile": "Sie können die Einstellungen auch in Form einer Konfigurationsdatei angeben. Eine Vorlage finden Sie [hier](http://go.microsoft.com/fwlink/?LinkID=620062).",
+  "loc.input.help.configFile": "Sie können die Einstellungen auch in Form einer Konfigurationsdatei angeben. Eine Vorlage finden Sie [hier](https://go.microsoft.com/fwlink/?LinkID=620062).",
   "loc.input.label.breakBuild": "Buildfehler bei Quality Gate-Fehler (SQ 5.3+)",
-  "loc.input.help.breakBuild": "Diese Option ist nur bei Verwendung eines SonarQube-Servers 5.3 oder höher verfügbar. Sie führt zu Verzögerungen, weil der Build warten muss, bis SonarQube die Analyse beendet hat. [Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "Diese Option ist nur bei Verwendung eines SonarQube-Servers 5.3 oder höher verfügbar. Sie führt zu Verzögerungen, weil der Build warten muss, bis SonarQube die Analyse beendet hat. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "소스 인덱싱 및 기호 게시 ",
-  "loc.helpMarkDown": "소스 코드를 인덱싱하고 파일 공유에 기호 게시<br/>[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "소스 코드를 인덱싱하고 파일 공유에 기호 게시<br/>[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "소스 코드를 인덱싱하고 파일 공유에 기호 게시",
   "loc.instanceNameFormat": "기호 경로 게시: $(SymbolsPath)",
   "loc.group.displayName.advanced": "고급",

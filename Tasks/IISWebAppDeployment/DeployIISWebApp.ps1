@@ -36,7 +36,7 @@
     [string]$deployInParallel
     )
 
-Write-Warning "The preview IIS Web App Deployment task has been deprecated and will be removed soon. An IIS Web App Deployment extension has been released in the Visual Studio Team Services marketplace at http://aka.ms/iisextn. Install the extension, and use its tasks in the Build/Release definitions, and delete the preview task from the definition."
+Write-Warning "The preview IIS Web App Deployment task has been deprecated and will be removed soon. An IIS Web App Deployment extension has been released in the Visual Studio Team Services marketplace at https://aka.ms/iisextn. Install the extension, and use its tasks in the Build/Release definitions, and delete the preview task from the definition."
 Write-Verbose "Entering script DeployIISWebApp.ps1" -Verbose
 
 $hostName = [string]::Empty

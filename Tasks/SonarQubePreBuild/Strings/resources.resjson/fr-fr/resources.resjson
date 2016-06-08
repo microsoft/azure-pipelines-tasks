@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SonarQube pour MSBuild - Commencer l'analyse",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Extraire le profil de qualité de SonarQube pour configurer l'analyse",
   "loc.instanceNameFormat": "Extraire le profil de qualité de SonarQube",
   "loc.group.displayName.serverSettings": "Serveur SonarQube",
@@ -22,9 +22,9 @@
   "loc.input.label.dbPassword": "Mot de passe de l'utilisateur de la base de données",
   "loc.input.help.dbPassword": "Serveur SonarQube 5.1 et versions antérieures uniquement. Mot de passe pour l'utilisateur de la base de données, à savoir sonar.jdbc.motdepasse",
   "loc.input.label.cmdLineArgs": "Paramètres supplémentaires",
-  "loc.input.help.cmdLineArgs": "Paramètres séparés par un espace au format suivant : /d:propertyName=propertyValue. Les règles d'échappement normales relatives aux lignes de commande s'appliquent. Pour plus d'informations sur les paramètres, consultez les [documents SonarQube](http://go.microsoft.com/fwlink/?LinkID=624390).",
+  "loc.input.help.cmdLineArgs": "Paramètres séparés par un espace au format suivant : /d:propertyName=propertyValue. Les règles d'échappement normales relatives aux lignes de commande s'appliquent. Pour plus d'informations sur les paramètres, consultez les [documents SonarQube](https://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "Fichier de paramètres",
-  "loc.input.help.configFile": "Vous pouvez également spécifier les paramètres à l'aide d'un fichier de configuration. Un modèle est disponible [ici](http://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.help.configFile": "Vous pouvez également spécifier les paramètres à l'aide d'un fichier de configuration. Un modèle est disponible [ici](https://go.microsoft.com/fwlink/?LinkID=620062)",
   "loc.input.label.breakBuild": "Arrêter la génération en cas d'échec d'un point de contrôle qualité (Quality Gate). (SQ 5.3+)",
-  "loc.input.help.breakBuild": "Cette option est uniquement disponible quand vous utilisez un serveur SonarQube 5.3 (ou une version supérieure). Elle entraîne des retards, car la build doit attendre que SonarQube finisse l'analyse. [Plus d'informations](http://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "Cette option est uniquement disponible quand vous utilisez un serveur SonarQube 5.3 (ou une version supérieure). Elle entraîne des retards, car la build doit attendre que SonarQube finisse l'analyse. [Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

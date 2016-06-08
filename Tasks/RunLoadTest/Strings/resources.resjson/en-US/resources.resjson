@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Cloud-based Load Test",
-  "loc.helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976).",
   "loc.description": "Runs the load test in the cloud with Visual Studio Team Services",
   "loc.instanceNameFormat": "Cloud Load Test $(LoadTest)",
   "loc.input.label.connectedServiceName": "Registered connection",
@@ -12,5 +12,5 @@
   "loc.input.label.LoadTest": "Load test file",
   "loc.input.help.LoadTest": "The load test filename to be used under the load test folder specified above.",
   "loc.input.label.ThresholdLimit": "Number of permissible threshold violations",
-  "loc.input.help.ThresholdLimit": "Number of threshold violations above which the load test outcome is considered unsucessful."
+  "loc.input.help.ThresholdLimit": "Number of threshold violations above which the load test outcome is considered unsuccessful."
 }

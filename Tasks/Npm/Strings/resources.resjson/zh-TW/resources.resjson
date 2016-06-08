@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "執行 npm 命令",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "進階",

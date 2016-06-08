@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Web 应用部署",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "使用 Web 部署将 Visual Studio Web 项目发布到 Microsoft Azure Web 应用",
   "loc.instanceNameFormat": "Azure 部署: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure 订阅",

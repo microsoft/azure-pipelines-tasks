@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание базы данных SQL Server",
-  "loc.helpMarkDown": "[Подробнее...](http://aka.ms/sqlserverdacpackreadme)",
+  "loc.helpMarkDown": "[Подробнее...](https://aka.ms/sqlserverdacpackreadme)",
   "loc.description": "Развертывание базы данных SQL Server с помощью DACPAC",
   "loc.instanceNameFormat": "Развертывание DACPAC-файла SQL: $(DacpacFile)",
   "loc.group.displayName.deployment": "Развертывание",

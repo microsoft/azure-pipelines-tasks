@@ -3,7 +3,7 @@
     "name": "Ant",
     "friendlyName": "Ant",
     "description": "Build with Apache Ant",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613718)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613718)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 44
+        "Patch": 45
     },
     "demands": [
         "ant"

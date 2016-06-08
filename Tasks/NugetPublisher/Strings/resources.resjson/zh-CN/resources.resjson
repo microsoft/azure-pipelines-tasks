@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 发布服务器",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=627417)",
   "loc.description": "将 nupkg 文件上载到 NuGet 服务器",
   "loc.instanceNameFormat": "NuGet 发布服务器 $(solution)",
   "loc.group.displayName.advanced": "高级",

@@ -28,5 +28,5 @@
   "loc.input.label.includeFullReport": "Include full analysis report in the build summary (SQ 5.3+)",
   "loc.input.help.includeFullReport": "This option will delay the build until the SonarQube analysis is completed.",
   "loc.input.label.breakBuild": "Fail the build on quality gate failure (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](http://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

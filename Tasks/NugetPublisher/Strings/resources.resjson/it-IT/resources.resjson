@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Strumento di pubblicazione pacchetti NuGet",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=627417)",
   "loc.description": "Carica file nupkg in un server NuGet",
   "loc.instanceNameFormat": "Strumento di pubblicazione pacchetti NuGet $(solution)",
   "loc.group.displayName.advanced": "Avanzate",

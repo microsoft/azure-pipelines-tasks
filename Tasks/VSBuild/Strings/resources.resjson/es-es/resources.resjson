@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Compilación de Visual Studio",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Compilar con MSBuild y establecer la propiedad version de Visual Studio",
   "loc.instanceNameFormat": "Compilar solución $(solution)",
   "loc.group.displayName.advanced": "Avanzado",

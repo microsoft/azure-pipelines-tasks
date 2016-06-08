@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Deprecated] IIS Web App Deployment",
-  "loc.helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Deploy by MSDeploy, create/update website & app pools",
   "loc.instanceNameFormat": "[Deprecated] Deploy IIS App: $(WebDeployPackage)",
   "loc.group.displayName.deployment": "Deployment",

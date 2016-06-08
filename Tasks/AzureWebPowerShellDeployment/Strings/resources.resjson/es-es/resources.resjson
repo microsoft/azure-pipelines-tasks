@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de aplicaciones web de Azure",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Publicar un proyecto web de Visual Studio en una aplicación web de Microsoft Azure con Web Deploy",
   "loc.instanceNameFormat": "Implementación de Azure: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",

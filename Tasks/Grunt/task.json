@@ -3,7 +3,7 @@
     "name": "Grunt",
     "friendlyName": "Grunt",
     "description": "The JavaScript Task Runner",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627413)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627413)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 19
+        "Patch": 20
     },
     "demands": [
         "node.js"

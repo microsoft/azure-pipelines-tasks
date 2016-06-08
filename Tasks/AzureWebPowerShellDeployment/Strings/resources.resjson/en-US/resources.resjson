@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Web App Deployment",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Publish a Visual Studio Web project to a Microsoft Azure Web App using Web Deploy",
   "loc.instanceNameFormat": "Azure Deployment: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",

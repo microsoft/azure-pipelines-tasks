@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Index Sources & Publish Symbols",
-  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Index your source code and publish symbols to a file share",
   "loc.instanceNameFormat": "Publish symbols path: $(SymbolsPath)",
   "loc.group.displayName.advanced": "Advanced",

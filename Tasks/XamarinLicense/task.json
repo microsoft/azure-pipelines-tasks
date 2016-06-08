@@ -3,7 +3,7 @@
     "name": "XamarinLicense",
     "friendlyName": "Xamarin License",
     "description": "Activate or deactivate Xamarin licenses",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613739)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613739)",
     "category": "Utility",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 17
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",

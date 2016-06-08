@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Сборка Android",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613716)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Сборка приложения Android с помощью Gradle и при необходимости запуск эмулятора для модульных тестов",
   "loc.instanceNameFormat": "Сборка Android $(gradleProj)",
   "loc.group.displayName.avdOptions": "Параметры виртуального устройства Android (AVD)",

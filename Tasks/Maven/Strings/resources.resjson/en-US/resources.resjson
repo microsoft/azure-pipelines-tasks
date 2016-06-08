@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Build with Apache Maven",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
@@ -40,7 +40,7 @@
   "loc.input.label.mavenSetM2Home": "Set M2_HOME variable",
   "loc.input.help.mavenSetM2Home": "Sets the M2_HOME variable to a custom Maven installation path.",
   "loc.input.label.sqAnalysisEnabled": "Run SonarQube Analysis",
-  "loc.input.help.sqAnalysisEnabled": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first.",
+  "loc.input.help.sqAnalysisEnabled": "Run a [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first.",
   "loc.input.label.sqConnectedServiceName": "SonarQube Endpoint",
   "loc.input.help.sqConnectedServiceName": "The SonarQube server generic endpoint",
   "loc.input.label.sqDbDetailsRequired": "The SonarQube server version is lower than 5.2",

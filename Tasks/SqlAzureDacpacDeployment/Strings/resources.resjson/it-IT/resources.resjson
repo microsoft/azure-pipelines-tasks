@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione database SQL di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](http://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Consente di distribuire il database SQL di Azure con DACPAC",
   "loc.instanceNameFormat": "Distribuisci DACPAC SQL di Azure: $(DacpacFile)",
   "loc.group.displayName.target": "Destinazione",

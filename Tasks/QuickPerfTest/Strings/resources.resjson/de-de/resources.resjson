@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Cloudbasierter Webleistungstest",
-  "loc.helpMarkDown": "Diese Aufgabe kann verwendet werden, um einen cloudbasierten Auslastungstest unter Verwendung von Visual Studio Online auszulösen. [Weitere Informationen](http://go.microsoft.com/fwlink/?linkid=613203)",
+  "loc.helpMarkDown": "Diese Aufgabe kann verwendet werden, um einen cloudbasierten Auslastungstest unter Verwendung von Visual Studio Online auszulösen. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=613203)",
   "loc.description": "Führt den schnellen Webleistungstest in der Cloud mit Visual Studio Online aus",
   "loc.instanceNameFormat": "Schneller Webleistungstest $(testName)",
   "loc.input.label.connectedServiceName": "Registrierte Verbindung",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "Powershell: $(scriptName)",
   "loc.group.displayName.advanced": "詳細設定",

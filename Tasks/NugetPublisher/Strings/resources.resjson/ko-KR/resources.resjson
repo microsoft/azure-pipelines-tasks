@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 게시자",
-  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=627417)",
   "loc.description": "nupkg 파일을 NuGet 서버에 업로드합니다.",
   "loc.instanceNameFormat": "NuGet 게시자 $(solution)",
   "loc.group.displayName.advanced": "고급",

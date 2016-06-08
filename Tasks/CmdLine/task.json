@@ -3,7 +3,7 @@
     "name": "CmdLine",
     "friendlyName": "Command Line",
     "description": "Run a command line with arguments",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613735)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613735)",
     "category": "Utility",
     "visibility": [
         "Build",

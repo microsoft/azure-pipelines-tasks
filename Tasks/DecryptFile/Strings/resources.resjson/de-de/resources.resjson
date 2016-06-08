@@ -4,7 +4,7 @@
   "loc.instanceNameFormat": "Entschlüsseln $(inFile)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.cipher": "Verschlüsselungsverfahren",
-  "loc.input.help.cipher": "Das zu verwendenden Verschlüsselungsverfahren. Eine vollständige Liste der möglichen Werte finden Sie unter \"[Cipher Suite Names](http://go.microsoft.com/fwlink/?LinkID=627129)\".",
+  "loc.input.help.cipher": "Das zu verwendenden Verschlüsselungsverfahren. Eine vollständige Liste der möglichen Werte finden Sie unter \"[Cipher Suite Names](https://go.microsoft.com/fwlink/?LinkID=627129)\".",
   "loc.input.label.inFile": "Verschlüsselte Datei",
   "loc.input.help.inFile": "Der relative Pfad der zu entschlüsselnden Datei.",
   "loc.input.label.passphrase": "Passphrase",
