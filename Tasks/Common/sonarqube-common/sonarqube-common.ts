@@ -3,9 +3,15 @@
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
+// Simple data class for a SonarQube generic endpoint
+export class SonarQubeEndpoint {
+    constructor(public Url, public Username, public Password) {
+    }
+}
+
 // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
 // sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
-export function applySonarQubeConnectionParams(toolRunner:ToolRunner, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?):ToolRunner {
+export function applySonarQubeConnectionParams(toolRunner: ToolRunner, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?): ToolRunner {
     toolRunner.arg('-Dsonar.host.url=' + sqHostUrl);
     toolRunner.arg('-Dsonar.login=' + sqHostUsername);
     toolRunner.arg('-Dsonar.password=' + sqHostPassword);
@@ -23,9 +29,9 @@ export function applySonarQubeConnectionParams(toolRunner:ToolRunner, sqHostUrl,
     return toolRunner;
 }
 
-// Applies optional parameters for manually specifying the project name, key and version to SonarQube.
+// Applies parameters for manually specifying the project name, key and version to SonarQube.
 // This will override any user settings.
-export function applySonarQubeAnalysisParams(toolRunner:ToolRunner, sqProjectName?, sqProjectKey?, sqProjectVersion?):ToolRunner {
+export function applySonarQubeAnalysisParams(toolRunner: ToolRunner, sqProjectName?, sqProjectKey?, sqProjectVersion?): ToolRunner {
     if (sqProjectName) {
         toolRunner.arg('-Dsonar.projectName=' + sqProjectName);
     }
@@ -39,13 +45,25 @@ export function applySonarQubeAnalysisParams(toolRunner:ToolRunner, sqProjectNam
     return toolRunner;
 }
 
-export class SonarQubeEndpoint {
-    constructor(public Url, public Username, public Password) {
+// Run SQ analysis in issues mode, but only in PR builds
+export function applySonarQubeIssuesModeInPrBuild(toolrunner: ToolRunner) {
+
+    if (isPrBuild()) {
+        console.log(tl.loc('sqAnalysis_IncrementalMode'));
+
+        toolrunner.arg("-Dsonar.analysis.mode=issues");
+        toolrunner.arg("-Dsonar.report.export.path=sonar-report.json");
     }
+    else
+    {
+        tl.debug("Running a full SonarQube analysis");
+    }
+
+    return toolrunner;
 }
 
 // Gets SonarQube connection endpoint details.
-export function getSonarQubeEndpointFromInput(inputFieldName):SonarQubeEndpoint {
+export function getSonarQubeEndpointFromInput(inputFieldName): SonarQubeEndpoint {
     var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)";
     if (!tl.getEndpointUrl) {
         throw new Error(errorMessage);
@@ -99,4 +117,25 @@ function getSonarQubeAuthParameter(endpoint, paramName) {
     }
 
     return paramValue;
+}
+
+// Returns true if this build was triggered in response to a PR
+//
+// Remark: this logic is temporary until the platform provides a more robust way of determining PR builds; 
+// Note that PR builds are only supported on TfsGit
+function isPrBuild(): boolean {
+    let sourceBranch: string = tl.getVariable('build.sourceBranch');
+    let sccProvider: string = tl.getVariable('build.repository.provider');
+
+    tl.debug("Source Branch: " + sourceBranch);
+    tl.debug("Scc Provider: " + sccProvider);
+
+    return !isNullOrEmpty(sccProvider) &&
+        sccProvider.toLowerCase() === "tfsgit" &&
+        !isNullOrEmpty(sourceBranch) &&
+        sourceBranch.toLowerCase().startsWith("refs/pull/");
+}
+
+function isNullOrEmpty(str) {
+    return str === undefined || str === null || str.length === 0;
 }
