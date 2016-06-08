@@ -6,6 +6,7 @@ import Q = require('q');
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import path = require('path');
+import os = require('os');
 var shell = require('shelljs');
 
 function setResponseFile(name: string) {
@@ -24,6 +25,13 @@ describe('ExtractFiles Suite', function() {
     after(function() {
         
     });
+
+    var win = os.type().match(/^Win/);
+    if(!win){
+        //TODO tests only run on windows at the moment.
+        return;
+    }
+    
 
     //simplest case; one file, with default for cleanDestinationFolder
     it('extracts foo.zip', (done) => {

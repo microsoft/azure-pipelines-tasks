@@ -10,7 +10,7 @@ import tr = require('../../lib/vsts-task-lib/toolRunner');
 
 import pmd = require('../../../Tasks/Maven/mavenpmd');
 import ca = require('../../../Tasks/Maven/mavencodeanalysis');
-import ar = require('../../../Tasks/Maven//analysisResult');
+import ar = require('../../../Tasks/Maven/analysisresult');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
