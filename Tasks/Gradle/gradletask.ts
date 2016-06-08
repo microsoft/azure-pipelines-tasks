@@ -4,7 +4,6 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 
-import sqCommon = require('sonarqube-common/sonarqube-common');
 import sqGradle = require('./gradlesonar');
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);

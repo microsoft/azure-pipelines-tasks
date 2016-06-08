@@ -2,7 +2,6 @@
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import path = require("path");
 
 // Simple data class for a SonarQube generic endpoint
 export class SonarQubeEndpoint {
@@ -67,20 +66,17 @@ export function applySonarQubeIssuesModeInPrBuild(toolrunner: ToolRunner) {
 export function getSonarQubeEndpointFromInput(inputFieldName): SonarQubeEndpoint {
     var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)";
     if (!tl.getEndpointUrl) {
-        tl.error(errorMessage);
-        tl.exit(1);
+        throw new Error(errorMessage);
     }
 
     var genericEndpoint = tl.getInput(inputFieldName);
     if (!genericEndpoint) {
-        tl.error(errorMessage);
-        tl.exit(1);
+        throw new Error(errorMessage);
     }
 
     var hostUrl = tl.getEndpointUrl(genericEndpoint, false);
     if (!hostUrl) {
-        tl.error(errorMessage);
-        tl.exit(1);
+        throw new Error(errorMessage);
     }
 
     // Currently the username and the password are required, but in the future they will not be mandatory

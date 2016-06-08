@@ -272,6 +272,14 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\gradle.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
+    },
     "Node": {
       "target": "gradletask.js",
       "argumentFormat": ""
