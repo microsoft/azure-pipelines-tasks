@@ -50,6 +50,8 @@ The task is used to deploy a Web  project to an existing Azure Web App. The mand
 
 * **Package\*:** Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here.
 
+* **SetParameters File:** The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment.
+
 * **Remove Additional Files at Destination:** Select the option to delete the files in the AzureRM Web App that have no matching files in the Web App zip package. This will ensure that during the Web project deployment any additional files in the AzureRM Web App are deleted, and the only files in the AzureRM Web App are the ones in the Web App zip package.
 
 * **Exclude Files from the App_Data Folder:** Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App. This is a useful option to select, if a local database or a WebJob has been deployed earlier to the AzureRM Web App, and they should not be deleted in the subsequent deployments of the Web project.
@@ -67,4 +69,3 @@ The task is used to deploy a Web  project to an existing Azure Web App. The mand
 
 ## Known Issues
   - The task has not been tested and verified for ASP.NET Core 1 web applications.
-
