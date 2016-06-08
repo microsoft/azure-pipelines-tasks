@@ -22,5 +22,5 @@
   "loc.input.help.AdditionalArguments": "複製檔案時所要套用的其他 robocopy 引數，例如 /min:33553332 /l。",
   "loc.input.label.ResourceFilteringMethod": "選取電腦依據 ",
   "loc.input.label.MachineNames": "篩選準則",
-  "loc.input.help.MachineNames": "此輸入只對電腦群組有效，電腦的簡單列表或輸出變數目前尚無法支援。請以 dbserver.fabrikam.com、webserver.fabrikam.com、192.168.12.34 等形式提供電腦清單，或以 Role:DB; OS:Win8.1 等提供標記清單。若提供多個標記，工作會在所有具有指定標記的電腦上執行。若為 Azure 資源群組，請提供虛擬機器的名稱 (例如 ffweb、ffdb)。預設會在所有電腦上執行此工作。"
+  "loc.input.help.MachineNames": "此輸入只對電腦群組有效，電腦的簡單列表或輸出變數目前尚無法支援。請以 dbserver.fabrikam.com、webserver.fabrikam.com、192.168.12.34 等形式提供電腦清單，或以 Role:DB; OS:Win8.1 等形式提供標記清單。若提供多個標記，工作會在所有具有指定標記的電腦上執行。預設會在所有電腦上執行此工作。"
 }
