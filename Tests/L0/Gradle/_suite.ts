@@ -13,7 +13,7 @@ function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-function setDefaultInputs(tr:TaskRunner):TaskRunner {
+function setDefaultInputs(tr: TaskRunner, enableSonarQubeAnalysis: boolean): TaskRunner {
     tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
     tr.setInput('options', '');
     tr.setInput('tasks', 'build');
@@ -21,10 +21,36 @@ function setDefaultInputs(tr:TaskRunner):TaskRunner {
     tr.setInput('jdkVersion', 'default');
     tr.setInput('publishJUnitResults', 'true');
     tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+
+    if (enableSonarQubeAnalysis) {
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+        tr.setInput('sqProjectName', 'test_sqProjectName');
+        tr.setInput('sqProjectKey', 'test_sqProjectKey');
+        tr.setInput('sqProjectVersion', 'test_sqProjectVersion');
+    }
+    else {
+        tr.setInput('sqAnalysisEnabled', 'false');
+    }
+
     return tr;
 }
 
-describe('gradle Suite', function() {
+function setResponseAndBuildVars(initialResponseFile:string, finalResponseFile:string, envVars: Array<[string,string]> ) {
+
+    var responseJsonFilePath: string = path.join(__dirname, initialResponseFile);
+    var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+    for (var envVar of envVars)
+    {
+        responseJsonContent.getVariable[envVar[0]]= envVar[1];
+    }
+
+    var newResponseFilePath: string = path.join(__dirname, finalResponseFile);
+    fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+    setResponseFile(path.basename(newResponseFilePath));
+}
+
+describe('gradle Suite', function () {
     this.timeout(20000);
 
     before((done) => {
@@ -32,17 +58,17 @@ describe('gradle Suite', function() {
         done();
     });
 
-    after(function() {
+    after(function () {
 
     });
-	
+
     //TODO: The 'Test Run Title' and 'Code Coverage Tool' fields are 
     //      not used by the NodeJS task currently and so are not tested.
 
 
     it('run gradle with all default inputs', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -51,7 +77,7 @@ describe('gradle Suite', function() {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew build'), 'it should have run gradlew build');
@@ -65,10 +91,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with missing wrapperScript', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -77,7 +103,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('cwd', '/home/repo/src2');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run gradle');
@@ -91,10 +117,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with INVALID wrapperScript', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', '/home/gradlew');
         tr.setInput('options', '');
@@ -104,7 +130,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('cwd', '/home/repo/src2');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run gradle');
@@ -118,10 +144,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with cwd set to valid path', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -131,7 +157,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('cwd', '/home/repo/src');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew build'), 'it should have run gradlew build');
@@ -145,10 +171,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with cwd set to INVALID path', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -158,7 +184,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('cwd', '/home/repo/src2');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run gradle');
@@ -172,10 +198,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with options set', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
@@ -184,7 +210,7 @@ describe('gradle Suite', function() {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew /o /p t i /o /n /s build'), 'it should have run gradlew /o /p t i /o /n /s build');
@@ -198,10 +224,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with tasks not set', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
@@ -209,7 +235,7 @@ describe('gradle Suite', function() {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run gradle');
@@ -223,10 +249,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with tasks set to multiple', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
@@ -235,7 +261,7 @@ describe('gradle Suite', function() {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew /o /p t i /o /n /s build test deploy'), 'it should have run gradlew /o /p t i /o /n /s build test deploy');
@@ -249,10 +275,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with missing publishJUnitResults input', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -260,7 +286,7 @@ describe('gradle Suite', function() {
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew build'), 'it should have run gradlew build');
@@ -274,10 +300,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with publishJUnitResults set to "garbage"', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -286,7 +312,7 @@ describe('gradle Suite', function() {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'garbage');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew build'), 'it should have run gradlew build');
@@ -300,10 +326,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('fails if missing testResultsFiles input', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
@@ -311,7 +337,7 @@ describe('gradle Suite', function() {
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run gradle');
@@ -325,10 +351,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('fails if missing javaHomeSelection input', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
@@ -336,7 +362,7 @@ describe('gradle Suite', function() {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run gradle');
@@ -350,10 +376,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with jdkVersion set to 1.8', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -363,7 +389,7 @@ describe('gradle Suite', function() {
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('jdkVersion', '1.8');
         tr.setInput('jdkArchitecture', 'x86');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew build'), 'it should have run gradlew build');
@@ -378,10 +404,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with jdkVersion set to 1.5', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -391,7 +417,7 @@ describe('gradle Suite', function() {
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('jdkVersion', '1.5');
         tr.setInput('jdkArchitecture', 'x86');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run gradle');
@@ -405,10 +431,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('run gradle with Valid inputs but it fails', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -417,7 +443,7 @@ describe('gradle Suite', function() {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew build FAIL'), 'it should have run gradlew build FAIL');
@@ -432,10 +458,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with jacoco selected should call enable and publish code coverage for a single module project.', (done) => {
         setResponseFile('gradleCCSingleModule.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -445,7 +471,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('codeCoverageTool', 'JaCoCo');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
@@ -463,10 +489,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with jacoco selected should call enable and publish code coverage for a multi module project.', (done) => {
         setResponseFile('gradleCCMultiModule.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -476,7 +502,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('codeCoverageTool', 'JaCoCo');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
@@ -494,10 +520,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with cobertura selected should call enable and publish code coverage.', (done) => {
         setResponseFile('gradleCCSingleModule.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -507,7 +533,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('codeCoverageTool', 'Cobertura');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
@@ -525,10 +551,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with jacoco selected and report generation failed should call enable but not publish code coverage.', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -538,7 +564,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('codeCoverageTool', 'JaCoCo');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
@@ -555,10 +581,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle with cobertura selected and report generation failed should call enable but not publish code coverage.', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -568,7 +594,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
         tr.setInput('codeCoverageTool', 'Cobertura');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
@@ -585,10 +611,10 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Gradle build with publish test results.', (done) => {
         setResponseFile('gradleGood.json');
-    
+
         var tr = new TaskRunner('gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -598,7 +624,7 @@ describe('gradle Suite', function() {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         tr.setInput('codeCoverageTool', 'None');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0)
@@ -612,12 +638,96 @@ describe('gradle Suite', function() {
             });
     })
 
-    it('Gradle with SonarQube - Should run Gradle with all default inputs when SonarQube analysis disabled', function(done) {
+    it('Gradle with SQ in a PR build - SQ issues mode analysis', function (done) {
+
         // Arrange
-        setResponseFile('gradleGood.json');
+        setResponseAndBuildVars(
+            'gradleSonarQube.json',
+             this.test.title + '_response.json',
+              [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"]])
 
         var tr = new TaskRunner('gradle', true, true);
-        tr = setDefaultInputs(tr);
+        tr = setDefaultInputs(tr, true);
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran('gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json'), 'sq issues mode');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+    
+     it('Gradle with SQ - source branch not a PR branch', function (done) {
+
+        // Arrange
+        setResponseAndBuildVars(
+            'gradleSonarQube.json',
+             this.test.title + '_response.json',
+              [["build.sourceBranch", "other/6/master"], ["build.repository.provider", "TFSGit"]])
+
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr, true);
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran('gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'), 'it should not run in issues mode');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+    
+     it('Gradle with SQ - scc is not TfsGit', function (done) {
+
+        // Arrange
+        setResponseAndBuildVars(
+            'gradleSonarQube.json',
+             this.test.title + '_response.json',
+              [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "ExternalGit"]])
+
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr, true);
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran('gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'), 'it should not run in issues mode');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Gradle with SonarQube - Should run Gradle with all default inputs when SonarQube analysis disabled', function (done) {
+        // Arrange
+        setResponseFile('gradleSonarQube.json');
+
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr, false);
         tr.setInput('sqAnalysisEnabled', 'false');
 
         // Act
@@ -637,18 +747,13 @@ describe('gradle Suite', function() {
             });
     });
 
- it('Gradle with Cobertura and SonarQube', (done) => {
-        setResponseFile('gradleGood.json');
-    
+    it('Gradle with Cobertura and SonarQube', (done) => {
+        setResponseFile('gradleSonarQube.json');
+
         var tr = new TaskRunner('gradle', true, true);
-        tr = setDefaultInputs(tr);
+        tr = setDefaultInputs(tr, true);
         tr.setInput('codeCoverageTool', 'Cobertura');
-        tr.setInput('sqAnalysisEnabled', 'true');
-        tr.setInput('sqConnectedServiceName', 'ID1');
-        tr.setInput('sqProjectName', 'test_sqProjectName');
-        tr.setInput('sqProjectKey', 'test_sqProjectKey');
-        tr.setInput('sqProjectVersion', 'test_sqProjectVersion');
-    
+
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
@@ -661,19 +766,14 @@ describe('gradle Suite', function() {
                 done(err);
             });
     })
-    
-    it('Gradle with SonarQube - Should run Gradle with SonarQube', function(done) {
+
+    it('Gradle with SonarQube - Should run Gradle with SonarQube', function (done) {
         // Arrange
 
-        setResponseFile('gradleGood.json');
+        setResponseFile('gradleSonarQube.json');
 
         var tr = new TaskRunner('gradle', true, true);
-        tr = setDefaultInputs(tr);
-        tr.setInput('sqAnalysisEnabled', 'true');
-        tr.setInput('sqConnectedServiceName', 'ID1');
-        tr.setInput('sqProjectName', 'test_sqProjectName');
-        tr.setInput('sqProjectKey', 'test_sqProjectKey');
-        tr.setInput('sqProjectVersion', 'test_sqProjectVersion');
+        tr = setDefaultInputs(tr, true);
 
         // Act
         tr.run()
@@ -693,17 +793,12 @@ describe('gradle Suite', function() {
             });
     });
 
-    it('Gradle with SonarQube - Should run Gradle with SonarQube and apply required parameters for older server versions', function(done) {
+    it('Gradle with SonarQube - Should run Gradle with SonarQube and apply required parameters for older server versions', function (done) {
         // Arrange
-        setResponseFile('gradleGood.json');
+        setResponseFile('gradleSonarQube.json');
 
         var tr = new TaskRunner('gradle', true, true);
-        tr = setDefaultInputs(tr);
-        tr.setInput('sqAnalysisEnabled', 'true');
-        tr.setInput('sqConnectedServiceName', 'ID1');
-        tr.setInput('sqProjectName', 'test_sqProjectName');
-        tr.setInput('sqProjectKey', 'test_sqProjectKey');
-        tr.setInput('sqProjectVersion', 'test_sqProjectVersion');
+        tr = setDefaultInputs(tr, true);
 
         tr.setInput('sqDbDetailsRequired', 'true');
         tr.setInput('sqDbUrl', 'jdbc:test:tcp://localhost:8080/sonar');

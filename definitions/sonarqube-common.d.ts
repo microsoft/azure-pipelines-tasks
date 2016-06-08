@@ -22,4 +22,7 @@ declare module 'sonarqube-common/sonarqube-common' {
 
     // Fetches configured SonarQube endpoint details.
     export function getSonarQubeEndpointFromInput(inputFieldName):SonarQubeEndpoint;
+
+    // In PR builds, configures the SQ analysis to issues mode
+    export function applySonarQubeIssuesModeInPrBuild(toolrunner: ToolRunner);
 }
