@@ -459,7 +459,16 @@ function Instantiate-Environment
     Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName"
 
     Write-Verbose "Adding environment $outputVariable to output variables"
-    Set-TaskVariable -Variable $outputVariable -Value $outputVariable
+    if($env:system_prefervstshost -eq "true")
+    {
+        Write-Verbose "Converting environment as json and setting as output variable"        
+        $envStr = $environment.ToString() -replace "`n|`r"
+        write-host "##vso[task.setvariable variable=$outputVariable;issecret=true;]$envStr"        
+    }
+    else
+    {
+        Set-TaskVariable -Variable $outputVariable -Value $outputVariable
+    }
     Write-Verbose "Added the environment $outputVariable to output variable"
 }
 
