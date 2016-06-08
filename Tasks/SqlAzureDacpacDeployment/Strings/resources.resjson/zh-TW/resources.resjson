@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceName": "Azure 傳統訂用帳戶",
   "loc.input.help.ConnectedServiceName": "要作為部署 SQL Dacpac 檔案目標的 Azure 傳統訂用帳戶",
   "loc.input.label.ConnectedServiceNameARM": "Azure RM 訂用帳戶",
-  "loc.input.help.ConnectedServiceNameARM": "要作為部署 SQL Dacpac 檔案的目標 Azure 資源管理員訂用帳戶",
+  "loc.input.help.ConnectedServiceNameARM": "要作為部署 SQL Dacpac 檔案的目標 Azure Resource Manager 訂用帳戶",
   "loc.input.label.DacpacFile": "DACPAC 檔案",
   "loc.input.help.DacpacFile": "自動化代理程式或 UNC 路徑上可為自動化代理程式存取的 DACPAC 檔案位置，例如 \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac。也可在此使用預先定義的系統變數，例如 $(agent.releaseDirectory)",
   "loc.input.label.ServerName": "Azure SQL Server 名稱",

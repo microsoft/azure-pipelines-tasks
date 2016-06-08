@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceName": "Классическая подписка Azure",
   "loc.input.help.ConnectedServiceName": "Классическая подписка Azure, предназначенная для развертывания DACPAC-файлов SQL",
   "loc.input.label.ConnectedServiceNameARM": "Подписка на диспетчер ресурсов Azure",
-  "loc.input.help.ConnectedServiceNameARM": "Подписка на диспетчер ресурсов Azure, предназначенная для развертывания DACPAC-файлов SQL",
+  "loc.input.help.ConnectedServiceNameARM": "Подписка на Azure Resource Manager, предназначенная для развертывания DACPAC-файлов SQL",
   "loc.input.label.DacpacFile": "DACPAC-файл",
   "loc.input.help.DacpacFile": "Расположение DACPAC-файла в агенте автоматизации или по UNC-пути, доступному для агента автоматизации, например \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Также можно использовать предварительно заданные системные переменные, например $(agent.releaseDirectory).",
   "loc.input.label.ServerName": "Имя Azure SQL Server",

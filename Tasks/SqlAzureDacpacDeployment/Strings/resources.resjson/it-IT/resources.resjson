@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure classico",
   "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure classico usata come destinazione per la distribuzione di file Dacpac SQL",
   "loc.input.label.ConnectedServiceNameARM": "Sottoscrizione di Gestione risorse di Azure",
-  "loc.input.help.ConnectedServiceNameARM": "Sottoscrizione di Gestione risorse di Azure usata come destinazione per la distribuzione di file Dacpac SQL",
+  "loc.input.help.ConnectedServiceNameARM": "Sottoscrizione di Azure Resource Manager usata come destinazione per la distribuzione di file Dacpac SQL",
   "loc.input.label.DacpacFile": "File DACPAC",
   "loc.input.help.DacpacFile": "Percorso del file DACPAC nell'agente di automazione o in un percorso UNC accessibile all'agente di automazione, ad esempio \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. È anche possibile usare variabili di sistema predefinite, ad esempio $(agent.releaseDirectory).",
   "loc.input.label.ServerName": "Nome del server di Azure SQL",
