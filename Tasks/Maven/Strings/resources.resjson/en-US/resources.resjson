@@ -55,6 +55,7 @@
   "loc.input.help.pmdAnalysisEnabled": "Use the PMD Java static analysis tool to look for bugs in the code.",
   "loc.messages.sqAnalysis_isEnabled": "SonarQube analysis is enabled.",
   "loc.messages.sqAnalysis_isNotEnabled": "SonarQube analysis is not enabled.",
+  "loc.messages.sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
   "loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",

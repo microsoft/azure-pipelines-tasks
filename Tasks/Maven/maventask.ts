@@ -9,7 +9,7 @@ import sqCommon = require ('sonarqube-common/sonarqube-common');
 import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 
 // Lowercased file names are to lessen the likelihood of xplat issues
-import codeAnalysis = require('./mavencodeanalysis');
+import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
 
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
@@ -362,6 +362,7 @@ function getSonarQubeRunner() {
     mvnsq.arg('-f');
     mvnsq.pathArg(mavenPOMFile);
     mvnsq.argString(mavenOptions); // add the user options to allow further customization of the SQ run
+    mvnsq = sqCommon.applySonarQubeIssuesModeInPrBuild(mvnsq); // in PR builds run SQ in issues mode 
     mvnsq.arg("sonar:sonar");
 
     return mvnsq;

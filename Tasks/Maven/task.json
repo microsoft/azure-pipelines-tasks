@@ -291,7 +291,7 @@
         "Node": {
             "target": "maventask.js",
             "argumentFormat": ""
-        },
+         },
         "PowerShell": {
             "target": "$(currentDirectory)\\maven.ps1",
             "argumentFormat": "",
@@ -304,6 +304,7 @@
     "messages": {
         "sqAnalysis_isEnabled": "SonarQube analysis is enabled.",
         "sqAnalysis_isNotEnabled": "SonarQube analysis is not enabled.",
+        "sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",

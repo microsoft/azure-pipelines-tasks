@@ -8,9 +8,9 @@ import fs = require('fs');
 
 import tr = require('../../lib/vsts-task-lib/toolRunner');
 
-import pmd = require('../../../Tasks/Maven/mavenpmd');
-import ca = require('../../../Tasks/Maven/mavencodeanalysis');
-import ar = require('../../../Tasks/Maven//analysisResult');
+import pmd = require('../../../Tasks/Maven/CodeAnalysis/mavenpmd');
+import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
+import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisResult');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -95,6 +95,21 @@ function assertBuildSummaryContainsLine(stagingDir:string, expectedLine:string):
     var buildSummaryString:string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
 
     assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
+}
+
+// Creates a new response json file based on an initial one and some env variables 
+function setResponseAndBuildVars(initialResponseFile:string, finalResponseFile:string, envVars: Array<[string,string]> ) {
+
+    var responseJsonFilePath: string = path.join(__dirname, initialResponseFile);
+    var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+    for (var envVar of envVars)
+    {
+        responseJsonContent.getVariable[envVar[0]]= envVar[1];
+    }
+
+    var newResponseFilePath: string = path.join(__dirname, finalResponseFile);
+    fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+    setResponseFile(path.basename(newResponseFilePath));
 }
 
 describe('Maven Suite', function() {
@@ -670,6 +685,13 @@ describe('Maven Suite', function() {
     })
 
     it('run maven including SonarQube analysis', (done) => {
+       
+       // not a valid PR branch
+       setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"]])
+
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -699,6 +721,13 @@ describe('Maven Suite', function() {
     })
 
     it('run maven including SonarQube analysis (with db details)', (done) => {
+
+       // not a valid PR branch 
+       setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "ExternalGit"]])
+
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -1199,4 +1228,39 @@ describe('Maven Suite', function() {
                 done(err);
             });
     });
+
+    it('during PR builds SonarQube analysis runs in issues mode', (done) => {
+
+       setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"]])
+
+        var tr = new trm.TaskRunner('maven', true);
+        tr.setInput('mavenVersionSelection', 'Default');
+        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('options', '');
+        tr.setInput('goals', 'package');
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('publishJUnitResults', 'false');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+        
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })   
 });
