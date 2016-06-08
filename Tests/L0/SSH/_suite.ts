@@ -93,19 +93,15 @@ describe('SSH Suite', function() {
                 done(err);
             });
     })
-    it('Fails when password is not provided in the endpoint', (done) => {
+    it('Empty password/passphrase is valid in the endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
         var tr = new trm.TaskRunner('SSH', true, true);
         tr.setInput('sshEndpoint', 'IDPasswordNotSet');
-        tr.setInput('commands', 'ls -l');
 
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run any tools');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.failed, 'task should have failed');
-                assert(tr.stderr.indexOf('Endpoint auth not present: IDPasswordNotSet') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                assert(tr.succeeded, 'task should not have errors');
                 done();
             })
             .fail((err) => {

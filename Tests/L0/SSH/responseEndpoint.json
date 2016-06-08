@@ -16,6 +16,7 @@
     "ENDPOINT_AUTH_PARAMETER_IDUserNameNotSet_PASSWORD": "password",
 
     "ENDPOINT_AUTH_PARAMETER_IDPasswordNotSet_USERNAME": "user",
+    "ENDPOINT_DATA_IDPasswordNotSet_HOST": "host",
 
     "ENDPOINT_AUTH_PARAMETER_IDHostNotSet_USERNAME": "user",
     "ENDPOINT_AUTH_PARAMETER_IDHostNotSet_PASSWORD": "password",
