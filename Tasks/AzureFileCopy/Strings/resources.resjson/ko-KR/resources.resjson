@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 파일 복사",
-  "loc.helpMarkDown": "[자세한 정보](http://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[자세한 정보](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Azure Blob 또는 VM에 파일 복사",
   "loc.instanceNameFormat": "$(Destination) 파일 복사",
   "loc.group.displayName.output": "Output",

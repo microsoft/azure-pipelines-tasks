@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gradle",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613720)",
   "loc.description": "Générer à l'aide d'un script du wrapper Gradle",
   "loc.instanceNameFormat": "gradlew $(tasks)",
   "loc.group.displayName.junitTestResults": "Résultats du test JUnit",

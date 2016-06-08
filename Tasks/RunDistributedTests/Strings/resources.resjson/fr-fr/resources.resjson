@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Exécuter les tests fonctionnels",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Exécuter des tests codés de l'interface utilisateur/Selenium/fonctionnels sur un ensemble de machines (à l'aide de l'agent de test)",
   "loc.instanceNameFormat": "Exécuter les tests $(sourcefilters) sur $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Options de configuration",

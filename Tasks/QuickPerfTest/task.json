@@ -3,7 +3,7 @@
   "name": "QuickPerfTest",
   "friendlyName": "Cloud-based Web Performance Test",
   "description": "Runs a quick web performance test in the cloud with Visual Studio Team Services",
-  "helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203).",
   "category": "Test",
   "visibility": [
                   "Build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [
     "msbuild",

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The AzureRM Web App Deployment task is used to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works with the [Azure Resource Manager APIs](https://azure.microsoft.com/en-in/documentation/articles/resource-manager-deployment-model/) only. The underlying technology used by the task is [Web Deploy](http://www.iis.net/downloads/microsoft/web-deploy).
+The AzureRM Web App Deployment task is used to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works with the [Azure Resource Manager APIs](https://azure.microsoft.com/en-in/documentation/articles/resource-manager-deployment-model/) only. The underlying technology used by the task is [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy).
 
 The task is **under development and is available to a limited set of accounts on Visual Studio Team Services (VSTS)**. The [video](https://www.youtube.com/watch?v=uQ2qCmaZ_Ag&feature=youtu.be) describes the features that are available in the task currently.
 
@@ -22,7 +22,7 @@ The task is used to deploy a Web  project to an existing Azure Web App. The Web 
 
 To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Team Services using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
 
-Create the [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) service endpoint, use **'Azure Resource Manager'** endpoint type, for more details follow the steps listed in the link [here](http://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
+Create the [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) service endpoint, use **'Azure Resource Manager'** endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 
 The task does not work with the Azure Classic service endpoint and it will not list these connections in the parameters in the task.
 
@@ -32,7 +32,7 @@ The task needs the Azure PowerShell version to be installed on the automation ag
 
 ### Web Deploy
 
-Web Deploy (msdeploy.exe) is used to deploy the web application to the Azure Web App.  Install it on the automation agent using the [Microsoft Web Platform Installer](http://www.microsoft.com/web/gallery/install.aspx?appid=wdeploynosmo). Note that the link will open Web PI with the Web Deploy showing-up ready to install. The Web Deploy 3.5 needs to be installed without the bundled SQL support. There is no need to choose any custom settings while installing Web Deploy. After installing the Web Deploy is available at C:\\Program Files (x86)\\IIS\\Microsoft Web Deploy V3.
+Web Deploy (msdeploy.exe) is used to deploy the web application to the Azure Web App.  Install it on the automation agent using the [Microsoft Web Platform Installer](https://www.microsoft.com/web/gallery/install.aspx?appid=wdeploynosmo). Note that the link will open Web PI with the Web Deploy showing-up ready to install. The Web Deploy 3.5 needs to be installed without the bundled SQL support. There is no need to choose any custom settings while installing Web Deploy. After installing the Web Deploy is available at C:\\Program Files (x86)\\IIS\\Microsoft Web Deploy V3.
 
 ## Parameters of the task
 

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Облачный нагрузочный тест",
-  "loc.helpMarkDown": "Эту задачу можно использовать для активации облачного нагрузочного теста с помощью Visual Studio Online. [Подробнее](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.helpMarkDown": "Эту задачу можно использовать для активации облачного нагрузочного теста с помощью Visual Studio Online. [Подробнее](https://go.microsoft.com/fwlink/?linkid=546976).",
   "loc.description": "Запуск нагрузочного теста в облаке с помощью Visual Studio Online",
   "loc.instanceNameFormat": "Облачный нагрузочный тест $(LoadTest)",
   "loc.input.label.connectedServiceName": "Зарегистрированное подключение",

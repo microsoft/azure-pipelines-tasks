@@ -2,7 +2,7 @@
 
 ###Overview
 The Visual Studio Test using Test Agent task should be used when you want to run tests on remote machines and you cannot run tests on build machine. Typical scenarios – tests that require additional installations on the test machines like different browsers for Selenium tests, running Coded UI Tests or a specific OS configuration or execute lots of unit tests faster on multiple machines etc. You can run unit tests, integration tests, functional tests – any test that you can execute using vstest runner. Given multiple machines in the Test Machine Group, the task can do parallel distributed execution of your tests. Parallelism is at the test assembly level. To use this task, *it needs to be preceded with “Visual Studio Test Agent Deployment” task*.
-To learn more about the general usage of the task, please see https://msdn.microsoft.com/en-us/library/mt270062.aspx and http://blogs.msdn.com/b/visualstudioalm/archive/2015/06/28/10618066.aspx
+To learn more about the general usage of the task, please see https://msdn.microsoft.com/en-us/library/mt270062.aspx and https://blogs.msdn.com/b/visualstudioalm/archive/2015/06/28/10618066.aspx
 
 ###The different parameters of the task are explained below:
 
@@ -28,7 +28,7 @@ For more information, see https://msdn.microsoft.com/en-us/library/jj155796.aspx
 - **Run Settings File:** File Path to a runsettings or testsettings file can be specified here. The path can be to a file in the repository or a path to a file on the Build Agent machine. Use $(Build.SourcesDirectory) to access the root project folder. For more information on these files, please see https://msdn.microsoft.com/library/jj635153.aspx
 
 - **Override TestRun Parameters:**	Override parameters defined in the TestRunParameters section of the runsettings file. For example: Platform=$(platform);Port=8080 
-For more information, please see http://blogs.msdn.com/b/visualstudioalm/archive/2015/09/04/supplying-run-time-parameters-to-tests.aspx
+For more information, please see https://blogs.msdn.com/b/visualstudioalm/archive/2015/09/04/supplying-run-time-parameters-to-tests.aspx
 
 - **Test Configurations:**	Report the configuration on which the Test case was run. Field is used for reporting purposes only. Syntax: <Expression for Test method name(s)> : <Configuration ID from MTM>. 
 For example, FullyQualifiedName~Chrome:12 will report all test methods which have Chrome in their Fully Qualified name and map them to Configuration ID 12 defined in MTM. Use DefaultTestConfiguration:<Id> as a catch all

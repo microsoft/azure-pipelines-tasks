@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ligne de commande",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "Exécuter une ligne de commande avec des arguments",
   "loc.instanceNameFormat": "Exécuter $(filename)",
   "loc.group.displayName.advanced": "Avancé",

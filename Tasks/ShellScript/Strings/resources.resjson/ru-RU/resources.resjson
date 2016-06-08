@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Сценарий оболочки",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613738)",
   "loc.description": "Запуск сценария оболочки с помощью Bash",
   "loc.instanceNameFormat": "Сценарий оболочки $(scriptPath)",
   "loc.group.displayName.advanced": "Дополнительно",

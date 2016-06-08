@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=627413)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=627413)",
   "loc.description": "JavaScript タスク ランナー",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "詳細設定 ",

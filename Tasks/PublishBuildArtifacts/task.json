@@ -3,7 +3,7 @@
     "name": "PublishBuildArtifacts",
     "friendlyName": "Publish Build Artifacts",
     "description": "Publish Build artifacts to the server or a file share",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=708390)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708390)",
     "category": "Utility",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 32
+        "Patch": 33
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -23,7 +23,7 @@
             "label": "Path to Publish",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root, wildcards is not supported. Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
+            "helpMarkDown": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root, wildcards is not supported. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
         },
         {
             "name": "ArtifactName",

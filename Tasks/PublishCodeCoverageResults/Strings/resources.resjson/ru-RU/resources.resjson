@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Опубликовать результаты оценки объемов протестированного кода",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "Publish code coverage results to VSTS/TFS",
   "loc.instanceNameFormat": "Опубликовать результаты оценки объемов протестированного кода $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Средство оценки объемов протестированного кода",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "命令行",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "使用参数运行命令行",
   "loc.instanceNameFormat": "运行 $(filename)",
   "loc.group.displayName.advanced": "高级",

@@ -20,7 +20,7 @@
   "loc.input.label.location": "위치",
   "loc.input.help.location": "리소스 그룹을 배포할 위치입니다. 리소스 그룹이 구독에 이미 있는 경우 이 값은 무시됩니다.",
   "loc.input.label.csmFile": "템플릿",
-  "loc.input.help.csmFile": "Azure 리소스 관리자 템플릿의 경로를 지정하세요. 템플릿에 대한 자세한 내용은 http://aka.ms/azuretemplates를 참조하세요. 바로 시작하려면 http://aka.ms/sampletemplate 템플릿을 사용하세요.",
+  "loc.input.help.csmFile": "Azure 리소스 관리자 템플릿의 경로를 지정하세요. 템플릿에 대한 자세한 내용은 https://aka.ms/azuretemplates를 참조하세요. 바로 시작하려면 https://aka.ms/sampletemplate 템플릿을 사용하세요.",
   "loc.input.label.csmParametersFile": "템플릿 매개 변수",
   "loc.input.help.csmParametersFile": "Azure 리소스 관리자 템플릿에 해당하는 매개 변수 파일의 경로를 지정하세요.",
   "loc.input.label.overrideParameters": "템플릿 매개 변수 재정의",

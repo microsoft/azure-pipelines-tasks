@@ -214,7 +214,7 @@ function Get-ResourceWinRmConfig
                if ([string]::IsNullOrEmpty($winrmHttpPort))
                {
                    Write-TaskSpecificTelemetry "PREREQ_NoWinRMHTTPPort"
-                   throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "http://aka.ms/azuresetup" )
+                   throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "https://aka.ms/azuresetup" )
                }
                else
                {
@@ -263,7 +263,7 @@ function Get-ResourceWinRmConfig
                if ([string]::IsNullOrEmpty($winrmHttpsPort))
                {
                    Write-TaskSpecificTelemetry "PREREQ_NoWinRMHTTPSPort"
-                   throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "http://aka.ms/azuresetup" )
+                   throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "https://aka.ms/azuresetup" )
                }
                else
                {

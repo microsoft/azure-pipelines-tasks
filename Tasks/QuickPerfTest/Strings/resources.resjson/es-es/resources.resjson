@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Prueba de rendimiento de web basada en la nube",
-  "loc.helpMarkDown": "Esta tarea se puede usar para desencadenar una prueba de carga basada en la nube con Visual Studio Online. [Más información](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.helpMarkDown": "Esta tarea se puede usar para desencadenar una prueba de carga basada en la nube con Visual Studio Online. [Más información](https://go.microsoft.com/fwlink/?linkid=613203).",
   "loc.description": "Ejecutar la prueba rápida de rendimiento web en la nube con Visual Studio Online",
   "loc.instanceNameFormat": "Prueba rápida de rendimiento web $(testName)",
   "loc.input.label.connectedServiceName": "Conexión registrada",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=627413)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=627413)",
   "loc.description": "Средство запуска задач JavaScript",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "Дополнительно",

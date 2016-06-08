@@ -2,11 +2,11 @@
 
 ###Parameters for Maven build task are explained below
 
-- **Maven POM file :** This is a Required field. Provide relative path from the repo root to the Maven POM .xml file. [Click here to know more about POM] (http://maven.apache.org/guides/introduction/introduction-to-the-pom.html)
+- **Maven POM file :** This is a Required field. Provide relative path from the repo root to the Maven POM .xml file. [Click here to know more about POM] (https://maven.apache.org/guides/introduction/introduction-to-the-pom.html)
 
 - **Options :** Specify any Maven options you want to use
 
-- **Goal(s) :** In most cases, set this to `package` to compile your code and package it into a .war file. If you leave this argument blank, the build will fail. [Click here to know more about Maven Build Lifecycle](http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
+- **Goal(s) :** In most cases, set this to `package` to compile your code and package it into a .war file. If you leave this argument blank, the build will fail. [Click here to know more about Maven Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
 
 ####JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
@@ -39,7 +39,7 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 ####SonarQube Analysis
 
-- **Run SonarQube Analysis :** You can choose to run SonarQube analysis after executing the current goals. 'install' or 'package' goals should be executed first. To know more about this option [click here](http://blogs.msdn.com/b/visualstudioalm/archive/2015/10/08/the-maven-build-task-now-simplifies-sonarqube-analysis.aspx)
+- **Run SonarQube Analysis :** You can choose to run SonarQube analysis after executing the current goals. 'install' or 'package' goals should be executed first. To know more about this option [click here](https://blogs.msdn.com/b/visualstudioalm/archive/2015/10/08/the-maven-build-task-now-simplifies-sonarqube-analysis.aspx)
 
 
 

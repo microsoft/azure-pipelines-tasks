@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "PowerShell-Skript ausführen",
   "loc.instanceNameFormat": "PowerShell: $(scriptName)",
   "loc.group.displayName.advanced": "Erweitert",

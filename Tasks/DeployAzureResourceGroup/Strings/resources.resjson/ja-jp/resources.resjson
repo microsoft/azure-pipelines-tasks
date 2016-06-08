@@ -20,7 +20,7 @@
   "loc.input.label.location": "場所",
   "loc.input.help.location": "リソース グループを展開する場所。リソース グループが既にサブスクリプションに存在する場合、この値は無視されます。",
   "loc.input.label.csmFile": "テンプレート",
-  "loc.input.help.csmFile": "Azure リソース マネージャー テンプレートへのパスを指定します。テンプレートについて詳しくは http://aka.ms/azuretemplates をご覧ください。すぐに作業を開始するには、テンプレート http://aka.ms/sampletemplate をご使用ください。",
+  "loc.input.help.csmFile": "Azure リソース マネージャー テンプレートへのパスを指定します。テンプレートについて詳しくは https://aka.ms/azuretemplates をご覧ください。すぐに作業を開始するには、テンプレート https://aka.ms/sampletemplate をご使用ください。",
   "loc.input.label.csmParametersFile": "テンプレート パラメーター",
   "loc.input.help.csmParametersFile": "Azure リソース マネージャー テンプレートのパラメーター ファイルのパスを指定します。",
   "loc.input.label.overrideParameters": "テンプレート パラメーターのオーバーライド",

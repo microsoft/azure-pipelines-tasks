@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "執行功能測試",
-  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "在一組電腦 (使用 Test Agent) 上執行自動程式化 UI/Selenium/功能測試",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 執行測試 $(sourcefilters) ",
   "loc.group.displayName.setupOptions": "設定選項",

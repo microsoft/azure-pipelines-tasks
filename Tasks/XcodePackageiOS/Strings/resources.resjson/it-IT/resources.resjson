@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "iOS pacchetto Xcode",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613731)",
   "loc.description": "Consente di generare un file con estensione ipa dall'output della compilazione Xcode",
   "loc.instanceNameFormat": "Pacchetto Xcode $(appName)",
   "loc.group.displayName.advanced": "Avanzate",

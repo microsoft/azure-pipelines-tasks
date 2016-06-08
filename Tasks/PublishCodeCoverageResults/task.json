@@ -3,7 +3,7 @@
     "name": "PublishCodeCoverageResults",
     "friendlyName": "Publish Code Coverage Results",
     "description": "Publish code coverage results to VSTS/TFS",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=626485)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=626485)",
     "category": "Test",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [],
     "minimumAgentVersion": "1.90.0",

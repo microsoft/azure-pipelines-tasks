@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure クラウド サービスの配置",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Azure クラウド サービスのデプロイ",
   "loc.instanceNameFormat": "Azure 配置: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "新しいサービスを作成するための詳細設定のオプション",

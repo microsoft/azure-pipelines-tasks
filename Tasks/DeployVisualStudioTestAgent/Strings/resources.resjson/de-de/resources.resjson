@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent-Bereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=625976)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "Stellen Sie den Test-Agent für die Ausführung von Tests auf einer Computergruppe bereit, und konfigurieren Sie ihn.",
   "loc.instanceNameFormat": "TestAgent auf $(testMachineGroup) bereitstellen",
   "loc.group.displayName.testMachineGroups": "Testcomputergruppe",
@@ -26,7 +26,7 @@
   "loc.input.label.runAsProcess": "Interaktiver Prozess",
   "loc.input.help.runAsProcess": "Gibt an, ob der Test-Agent als interaktiver Prozess ausgeführt werden muss, erforderlich für Tests der programmierten UI.",
   "loc.input.label.agentLocation": "Test-Agent-Speicherort",
-  "loc.input.help.agentLocation": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `http://go.microsoft.com/fwlink/?LinkId=536423`",
+  "loc.input.help.agentLocation": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`",
   "loc.input.label.updateTestAgent": "Test-Agent aktualisieren",
   "loc.input.help.updateTestAgent": "Geben Sie optional an, ob der Test-Agent aktualisiert werden muss.",
   "loc.input.label.isDataCollectionOnly": "Nur Datensammlung aktivieren",

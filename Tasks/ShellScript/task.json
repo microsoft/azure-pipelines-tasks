@@ -3,7 +3,7 @@
     "name": "ShellScript",
     "friendlyName": "Shell Script",
     "description": "Run a shell script using bash",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613738)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "sh"

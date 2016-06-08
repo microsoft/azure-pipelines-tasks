@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613728)",
   "loc.description": "使用 Xamarin 生成 Android 应用",
   "loc.instanceNameFormat": "生成 Xamarin.Android 项目 $(project)",
   "loc.group.displayName.msbuildOptions": "MSBuild 选项",

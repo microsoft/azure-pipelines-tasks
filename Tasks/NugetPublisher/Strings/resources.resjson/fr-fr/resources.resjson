@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet Publisher",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=627417)",
   "loc.description": "Charge les fichiers nupkg sur un serveur NuGet",
   "loc.instanceNameFormat": "NuGet Publisher $(solution)",
   "loc.group.displayName.advanced": "Avancé",

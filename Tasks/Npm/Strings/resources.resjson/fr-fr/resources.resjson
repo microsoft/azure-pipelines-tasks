@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "Exécuter une commande npm",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "Avancé",

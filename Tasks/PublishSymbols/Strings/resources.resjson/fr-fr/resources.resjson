@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Indexer les sources et publier les symboles",
-  "loc.helpMarkDown": "Indexer votre code source et publier des symboles dans un partage de fichiers<br/>[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Indexer votre code source et publier des symboles dans un partage de fichiers<br/>[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Indexer votre code source, et publier les symboles sur un partage de fichiers",
   "loc.instanceNameFormat": "Publier le chemin d'accès des symboles : $(SymbolsPath)",
   "loc.group.displayName.advanced": "Avancé",

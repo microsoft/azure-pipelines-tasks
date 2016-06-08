@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Compilar con Apache Maven",
   "loc.instanceNameFormat": "$(mavenPOMFile) de Maven",
   "loc.group.displayName.junitTestResults": "Resultados de pruebas JUnit",
@@ -40,7 +40,7 @@
   "loc.input.label.mavenSetM2Home": "Establecer variable M2_HOME",
   "loc.input.help.mavenSetM2Home": "Establezca la variable M2_HOME en la ruta de instalación predeterminada de Maven.",
   "loc.input.label.sqAnalysisEnabled": "Ejecutar análisis de SonarQube",
-  "loc.input.help.sqAnalysisEnabled": "Ejecute un [análisis de SonarQube](http://go.microsoft.com/fwlink/?LinkID=708598) después de ejecutar los objetivos actuales. Deben ejecutarse primero los objetivos \"instalar\" o \"paquete\".",
+  "loc.input.help.sqAnalysisEnabled": "Ejecute un [análisis de SonarQube](https://go.microsoft.com/fwlink/?LinkID=708598) después de ejecutar los objetivos actuales. Deben ejecutarse primero los objetivos \"instalar\" o \"paquete\".",
   "loc.input.label.sqConnectedServiceName": "Extremo de SonarQube",
   "loc.input.help.sqConnectedServiceName": "Extremo que especifica el servidor de SonarQube que se va a usar",
   "loc.input.label.sqDbDetailsRequired": "La versión del servidor de SonarQube es anterior a la 5.2",

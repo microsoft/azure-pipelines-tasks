@@ -3,7 +3,7 @@
     "name": "Maven",
     "friendlyName": "Maven",
     "description": "Build with Apache Maven",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 52
+        "Patch": 53
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -229,7 +229,7 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
+            "helpMarkDown": "Run a [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
         },
         {
             "name": "sqConnectedServiceName",

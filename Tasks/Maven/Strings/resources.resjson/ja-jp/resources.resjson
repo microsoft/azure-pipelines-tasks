@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Apache Maven でビルドします",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "JUnit のテスト結果",
@@ -40,7 +40,7 @@
   "loc.input.label.mavenSetM2Home": "M2_HOME 変数の設定",
   "loc.input.help.mavenSetM2Home": "M2_HOME 変数をカスタム Maven インストール パスに設定します。",
   "loc.input.label.sqAnalysisEnabled": "SonarQube の解析を実行",
-  "loc.input.help.sqAnalysisEnabled": "現在の目標を実行したら、[SonarQube 解析](http://go.microsoft.com/fwlink/?LinkID=708598) を実施します。'install' または 'package' の目標は最初に実行する必要があります。",
+  "loc.input.help.sqAnalysisEnabled": "現在の目標を実行したら、[SonarQube 解析](https://go.microsoft.com/fwlink/?LinkID=708598) を実施します。'install' または 'package' の目標は最初に実行する必要があります。",
   "loc.input.label.sqConnectedServiceName": "SonarQube エンドポイント",
   "loc.input.help.sqConnectedServiceName": "SonarQube サーバーを使用するよう指定するエンドポイント",
   "loc.input.label.sqDbDetailsRequired": "SonarQube サーバーのバージョンは 5.2 より前です",

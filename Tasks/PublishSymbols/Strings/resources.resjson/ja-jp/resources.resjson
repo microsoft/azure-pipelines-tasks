@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "ソースのインデックス作成およびシンボルの発行",
-  "loc.helpMarkDown": "ソース コードにインデックスを作成し、シンボルをファイル共有に発行します<br/>[詳細](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "ソース コードにインデックスを作成し、シンボルをファイル共有に発行します<br/>[詳細](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "ソース コードにインデックスを作成し、シンボルをファイル共有に発行します",
   "loc.instanceNameFormat": "シンボル パスの発行: $(SymbolsPath)",
   "loc.group.displayName.advanced": "詳細設定",

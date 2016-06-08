@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS Web アプリケーション配置",
-  "loc.helpMarkDown": "[詳細] (http://aka.ms/iiswebappdeployreadme)",
+  "loc.helpMarkDown": "[詳細] (https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "MSDeploy で展開し、Web サイトとアプリ プールを作成またはアップデートします",
   "loc.instanceNameFormat": "IIS アプリ: $(WebDeployPackage) の展開",
   "loc.group.displayName.deployment": "配置",

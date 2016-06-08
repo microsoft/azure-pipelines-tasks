@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gradle",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613720)",
   "loc.description": "Build using a Gradle wrapper script",
   "loc.instanceNameFormat": "gradlew $(tasks)",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
@@ -34,7 +34,7 @@
   "loc.input.label.jdkArchitecture": "JDK Architecture",
   "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of the JDK.",
   "loc.input.label.sqAnalysisEnabled": "Run SonarQube Analysis",
-  "loc.input.help.sqAnalysisEnabled": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first.",
+  "loc.input.help.sqAnalysisEnabled": "Run a [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first.",
   "loc.input.label.sqConnectedServiceName": "SonarQube Endpoint",
   "loc.input.help.sqConnectedServiceName": "The endpoint that specifies the SonarQube server to use",
   "loc.input.label.sqProjectName": "SonarQube Project Name",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание веб-приложения Azure",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Публикация веб-проекта Visual Studio в веб-приложении Microsoft Azure с помощью веб-развертывания",
   "loc.instanceNameFormat": "Развертывание Azure: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Подписка Azure",
