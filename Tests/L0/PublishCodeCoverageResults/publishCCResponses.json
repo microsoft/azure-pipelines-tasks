@@ -1,6 +1,6 @@
 {
     "getVariable": {
-        "agent.buildDirectory": "/someDir"
+        "System.DefaultWorkingDirectory": "/someDir"
     },
     "find": {
         "/someDir": [

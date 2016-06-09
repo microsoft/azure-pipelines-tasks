@@ -12,13 +12,13 @@ tl.debug('summaryFileLocation: ' + summaryFileLocation);
 tl.debug('reportDirectory: ' + reportDirectory);
 tl.debug('additionalCodeCoverageFiles: ' + additionalCodeCoverageFiles);
 
-if(additionalCodeCoverageFiles && (additionalCodeCoverageFiles.indexOf('*') >= 0 || additionalCodeCoverageFiles.indexOf('?') >= 0)) {
-  var buildFolder = tl.getVariable('agent.buildDirectory');
+if (additionalCodeCoverageFiles && (additionalCodeCoverageFiles.indexOf('*') >= 0 || additionalCodeCoverageFiles.indexOf('?') >= 0)) {
+  var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
   var allFiles = tl.find(buildFolder);
   var codeCoverageFiles = tl.match(allFiles, additionalCodeCoverageFiles, { matchBase: true });
 }
-else if(additionalCodeCoverageFiles) {
-  var  codeCoverageFiles = [additionalCodeCoverageFiles];
+else if (additionalCodeCoverageFiles) {
+  var codeCoverageFiles = [additionalCodeCoverageFiles];
 }
 
 var ccp = new tl.CodeCoveragePublisher();
