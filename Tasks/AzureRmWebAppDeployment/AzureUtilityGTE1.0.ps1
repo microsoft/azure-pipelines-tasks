@@ -104,12 +104,12 @@ function Get-AzureRMWebAppSlotPublishingProfileARM
 
 function Construct-AzureWebAppConnectionObject
 {
-    param([String][Parameter(Mandatory=$true)] $kuduHostName,
-          [Object][Parameter(Mandatory=$true)] $webAppProfileForMSDeploy)
+    param([Object][Parameter(Mandatory=$true)] $webAppProfileForMSDeploy)
 
     # Get userName and userPassword to access kuduServer
     $userName = $webAppProfileForMSDeploy.userName
     $userPassword = $webAppProfileForMSDeploy.userPWD
+    $kuduHostName = $webAppProfileForMSDeploy.PublishUrl
     Write-Verbose "`t Username is:'$userName' to access KuduHostName:'$kuduHostName'."
 
     $azureRMWebAppConnectionDetails = @{}
