@@ -3,7 +3,7 @@
   "name": "AzureWebPowerShellDeployment",
   "friendlyName": "Azure Web App Deployment",
   "description": "Publish a Visual Studio Web project to a Microsoft Azure Web App using Web Deploy",
-  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 32
+    "Patch": 33
   },
   "demands": [
     "azureps"

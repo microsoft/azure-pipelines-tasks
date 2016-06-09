@@ -12,7 +12,7 @@ This provides open examples on how we write tasks which will help you write othe
 
 ## How to Use Tasks
 
-[Documentation is here](http://aka.ms/tfbuild)
+[Documentation is here](https://aka.ms/tfbuild)
 
 ## Writing Tasks
 

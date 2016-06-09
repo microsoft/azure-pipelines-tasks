@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 文件复制",
-  "loc.helpMarkDown": "[详细信息](http://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[详细信息](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "将文件复制到 Azure blob 或 VM",
   "loc.instanceNameFormat": "$(Destination) 文件复制",
   "loc.group.displayName.output": "Output",

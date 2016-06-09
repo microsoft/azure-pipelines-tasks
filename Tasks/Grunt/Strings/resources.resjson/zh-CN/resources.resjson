@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[详细信息]((http://go.microsoft.com/fwlink/?LinkID=627413)",
+  "loc.helpMarkDown": "[详细信息]((https://go.microsoft.com/fwlink/?LinkID=627413)",
   "loc.description": "JavaScript 任务运行程序",
   "loc.instanceNameFormat": "Grunt $(targets)",
   "loc.group.displayName.advanced": "高级",

@@ -4,7 +4,7 @@
   "loc.instanceNameFormat": "解密 $(inFile)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.cipher": "密码",
-  "loc.input.help.cipher": "要使用的加密密码。有关可能的值的完整列表，请参阅 [密码组名称](http://go.microsoft.com/fwlink/?LinkID=627129)。",
+  "loc.input.help.cipher": "要使用的加密密码。有关可能的值的完整列表，请参阅 [密码组名称](https://go.microsoft.com/fwlink/?LinkID=627129)。",
   "loc.input.label.inFile": "已加密文件",
   "loc.input.help.inFile": "要解密的文件的相对路径。",
   "loc.input.label.passphrase": "密码",

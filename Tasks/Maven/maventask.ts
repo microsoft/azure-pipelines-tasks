@@ -11,6 +11,9 @@ import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 // Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./mavencodeanalysis');
 
+// Set up localization resource file
+tl.setResourcePath(path.join( __dirname, 'task.json'));
+
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
 var mavenVersionSelection: string = tl.getInput('mavenVersionSelection', true);

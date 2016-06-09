@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Запуск функциональных тестов",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Запуск закодированных тестов пользовательских интерфейсов, Selenium или функциональных тестов в наборе компьютеров (с использованием агента тестирования)",
   "loc.instanceNameFormat": "Выполнить тесты $(sourcefilters) для $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Параметры настройки",

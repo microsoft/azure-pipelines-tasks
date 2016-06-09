@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL-Datenbankbereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](http://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Azure SQL-Datenbank mithilfe von DACPAC bereitstellen",
   "loc.instanceNameFormat": "Azure SQL DACPAC bereitstellen: $(DacpacFile)",
   "loc.group.displayName.target": "Ziel",

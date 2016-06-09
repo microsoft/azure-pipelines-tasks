@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Shell Script",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
   "loc.description": "Run a shell script using bash",
   "loc.instanceNameFormat": "Shell Script $(scriptPath)",
   "loc.group.displayName.advanced": "Advanced",

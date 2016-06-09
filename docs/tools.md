@@ -99,7 +99,7 @@ If the range cannot be satisfied, the default version will be downloaded.  The d
 
 After that call, the location to that 
 
-Tasks are run out of proc so there's no case where the path is poisoined for the next task.
+Tasks are run out of proc so there's no case where the path is poisoned for the next task.
 
 No need to take os or arch in the api.  The api can discover that easily.
 
@@ -145,6 +145,6 @@ TODO: flush out how our images run the installers and/or discovery scripts
 
 ## Capabilities
 
-TODO: Writing up how to make capabilities extensibile rather than being a hard coded set in the agent (busted).
+TODO: Writing up how to make capabilities extensible rather than being a hard coded set in the agent (busted).
 
 

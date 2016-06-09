@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613729)",
   "loc.description": "Xamarin を使用して Mac OS 上で iOS アプリをビルドします",
   "loc.instanceNameFormat": "Xamarin.iOS ソリューションのビルド $(solution)",
   "loc.input.label.solution": "ソリューション",

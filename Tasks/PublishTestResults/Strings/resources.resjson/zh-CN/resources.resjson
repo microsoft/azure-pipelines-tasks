@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "发布测试结果",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Publish Test Results to VSTS/TFS",
   "loc.instanceNameFormat": "发布测试结果 $(testResultsFiles)",
   "loc.group.displayName.advanced": "高级",

@@ -128,7 +128,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version)
 }
 
 
-function TestAgent-UnRegsiter
+function TestAgent-UnRegister
 {
  param
     (
@@ -150,4 +150,4 @@ function Test-IsAdmin
     return $prp.IsInRole($adm)
 }
 
-$output = TestAgent-UnRegsiter -TestAgentVersion $TestAgentVersion
+$output = TestAgent-UnRegister -TestAgentVersion $TestAgentVersion

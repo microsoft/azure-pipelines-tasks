@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement de base de données SQL Azure",
-  "loc.helpMarkDown": "[Plus d'informations](http://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Déployer la base de données SQL Azure avec DACPAC",
   "loc.instanceNameFormat": "Déployer Azure SQL DACPAC : $(DacpacFile)",
   "loc.group.displayName.target": "Cible",

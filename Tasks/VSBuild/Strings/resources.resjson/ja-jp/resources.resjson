@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio のビルド",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "MSBuild を使用してビルドし、Visual Studio のバージョンを適切に設定します",
   "loc.instanceNameFormat": "ソリューション $(solution) のビルド",
   "loc.group.displayName.advanced": "詳細設定",

@@ -1,12 +1,12 @@
 function InvokeMSBuildRunnerPostTest
 {
-	$bootstrapperPath = GetBootsrapperPath
+	$bootstrapperPath = GetBootstrapperPath
 	$arguments = GetMSBuildRunnerPostTestArgs
 
 	Invoke-BatchScript $bootstrapperPath -Arguments $arguments
 }
 
-function GetBootsrapperPath
+function GetBootstrapperPath
 {
 	$bootstrapperPath = GetTaskContextVariable "MSBuild.SonarQube.Internal.BootstrapperPath" 
 

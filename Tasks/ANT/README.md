@@ -2,11 +2,11 @@
 
 ###Parameters for Ant build task are explained below
 
-- **Ant Build File :** This is a Required field. Provide relative path from the repository root to the Ant build file. To know more [click here](http://ant.apache.org/manual/using.html#buildfile)
+- **Ant Build File :** This is a Required field. Provide relative path from the repository root to the Ant build file. To know more [click here](https://ant.apache.org/manual/using.html#buildfile)
 
-- **Options :** Provide any options to pass to the Ant command line. You can provide your own properties (for example, `-DmyProperty=myPropertyValue`) and also use built-in variables (for example, `-DcollectionId=$(system.collectionId)`). Alternatively, the built-in variables are already set as environment variables during the build and can be passed directly (for example, `-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%)` To know more [click here](http://ant.apache.org/manual/running.html#options)
+- **Options :** Provide any options to pass to the Ant command line. You can provide your own properties (for example, `-DmyProperty=myPropertyValue`) and also use built-in variables (for example, `-DcollectionId=$(system.collectionId)`). Alternatively, the built-in variables are already set as environment variables during the build and can be passed directly (for example, `-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%)` To know more [click here](https://ant.apache.org/manual/running.html#options)
 
-- **Target(s) :** Provide The task(s) for Ant to execute for this build. To know more [click here](http://ant.apache.org/manual/targets.html#targets)
+- **Target(s) :** Provide The task(s) for Ant to execute for this build. To know more [click here](https://ant.apache.org/manual/targets.html#targets)
 
 ####JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS

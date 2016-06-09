@@ -5,6 +5,9 @@ import fs = require('fs');
 import path = require('path');
 import sqGradle = require('./gradlesonar');
 
+// Set up localization resource file
+tl.setResourcePath(path.join( __dirname, 'task.json'));
+
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
@@ -37,6 +40,8 @@ if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
 gb.argString(tl.getInput('options', false));
 gb.arg(inputTasks);
 gb = sqGradle.applyEnabledSonarQubeArguments(gb);
+gb.arg(tl.getDelimitedInput('tasks', ' ', true));
+
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
 if (javaHomeSelection == 'JDKVersion') {
@@ -70,6 +75,9 @@ if (isCodeCoverageOpted) {
     tl.debug("Option to enable code coverage was selected and is being applied.");
     enableCodeCoverage();
 }
+
+gb = sqGradle.applyEnabledSonarQubeArguments(gb);
+gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile );
 
 gb.exec()
     .then(function (code) {
@@ -119,7 +127,7 @@ function enableCodeCoverage() {
 
     if (ccTool.toLowerCase() == "jacoco") {
         var summaryFileName = "summary.xml";
-
+        
         if (isMultiModule) {
             var reportingTaskName = "jacocoRootReport";
         }
@@ -132,7 +140,7 @@ function enableCodeCoverage() {
         var reportingTaskName = "cobertura";
     }
 
-    summaryFile = path.join(reportDirectory, summaryFileName);
+    summaryFile = path.join(reportDirectory, summaryFileName);      
     var buildFile = path.join(buildRootPath, "build.gradle");
     tl.rmRF(reportDirectory, true);
 

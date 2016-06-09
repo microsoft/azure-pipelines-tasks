@@ -3,7 +3,7 @@
     "name": "PublishTestResults",
     "friendlyName": "Publish Test Results",
     "description": "Publish Test Results to VSTS/TFS",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613742)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 29
+        "Patch": 30
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",

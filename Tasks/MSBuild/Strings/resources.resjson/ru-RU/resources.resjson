@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Сборка с помощью MSBuild",
   "loc.instanceNameFormat": "Сборка решения $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",

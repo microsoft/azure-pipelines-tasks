@@ -13,7 +13,7 @@ import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 
 // Apply arguments to enable SonarQube analysis
 export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.ToolRunner {
-    if (!tl.getBoolInput('sqAnalysisEnabled')) {
+    if (!isSonarQubeEnabled()) {
         // Looks like: 'SonarQube analysis is not enabled.'
         console.log(tl.loc('sqAnalysis_isNotEnabled'));
         return gradleRun;
@@ -27,8 +27,8 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.To
     var initScriptPath:string = path.join(__dirname, 'sonar.gradle');
 
     // Specify that the build should run the init script
-    gradleRun.arg(['-I', initScriptPath]);
     gradleRun.arg(['sonarqube']);
+    gradleRun.arg(['-I', initScriptPath]);
 
     // #2: Configure additional command-line parameters
     // Add parameters to connect to the SonarQube server for reporting
@@ -52,4 +52,18 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.To
     gradleRun = sqCommon.applySonarQubeAnalysisParams(gradleRun, projectName, projectKey, projectVersion);
 
     return gradleRun;
+}
+
+// Points SonarQube to the CC file as it is in a non-standard location. Not required for Jacoco. 
+export function applySonarQubeCodeCoverageArguments(gradleRun: trm.ToolRunner, isCodeCoverageEnabled:boolean, ccTool:string, reportPath:string):trm.ToolRunner {
+    
+    if (isSonarQubeEnabled() && isCodeCoverageEnabled && ccTool.toLowerCase() == "cobertura" && reportPath ) {
+        gradleRun.arg("-Dsonar.cobertura.reportPath="+reportPath);
+    }
+    
+    return gradleRun;
+}
+
+function isSonarQubeEnabled():boolean {
+    return tl.getBoolInput('sqAnalysisEnabled')
 }

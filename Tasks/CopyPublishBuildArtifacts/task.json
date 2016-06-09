@@ -3,7 +3,7 @@
     "name": "CopyPublishBuildArtifacts",
     "friendlyName": "Copy and Publish Build Artifacts",
     "description": "Copy Build artifacts to staging folder then publish Build artifacts to the server or a file share using minimatch patterns",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613725)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613725)",
     "category": "Utility",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 24
+        "Patch": 25
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -31,7 +31,7 @@
             "label": "Contents",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "File or folder paths to include as part of the artifact.  Supports multiple lines or minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=613725)"
+            "helpMarkDown": "File or folder paths to include as part of the artifact.  Supports multiple lines or minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=613725)"
         },
         {
             "name": "ArtifactName",

@@ -3,7 +3,7 @@
     "name": "Gradle",
     "friendlyName": "Gradle",
     "description": "Build using a Gradle wrapper script",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613720)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 40
+        "Patch": 42
     },
     "demands": [
         "java"
@@ -194,7 +194,7 @@
           "required": true,
           "defaultValue": "false",
           "groupName": "CodeAnalysis",
-          "helpMarkDown": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
+          "helpMarkDown": "Run a [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
         },
         {
           "name": "sqConnectedServiceName",
@@ -210,7 +210,7 @@
             "type": "string",
             "label": "SonarQube Project Name",
             "required": true,
-            "helpMarkDown": "The SonarQube project name, i.e. sonar.projectName. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "helpMarkDown": "The SonarQube project name, i.e. sonar.projectName.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },
@@ -219,7 +219,7 @@
             "type": "string",
             "label": "SonarQube Project Key",
             "required": true,
-            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },
@@ -228,7 +228,7 @@
             "type": "string",
             "label": "SonarQube Project Version",
             "required": true,
-            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion. If not set, the plugin will select its own default. See: http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle",
+            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },

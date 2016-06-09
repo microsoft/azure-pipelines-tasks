@@ -3,7 +3,7 @@
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 24
+        "Patch": 26
     },
     "demands": [
         "azureps"
@@ -71,11 +71,6 @@
     "execution": {
         "PowerShell3": {
             "target": "AzurePowerShell.ps1"
-        },
-        "AzurePowerShell": {
-            "target": "$(currentDirectory)\\AzurePowerShell-Legacy.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
     },
     "messages": {

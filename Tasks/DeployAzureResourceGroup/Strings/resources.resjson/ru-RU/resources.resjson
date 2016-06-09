@@ -20,7 +20,7 @@
   "loc.input.label.location": "Расположение",
   "loc.input.help.location": "Расположение для развертывания группы ресурсов. Если группа ресурсов уже существует в подписке, этот параметр игнорируется.",
   "loc.input.label.csmFile": "Шаблон",
-  "loc.input.help.csmFile": "Укажите путь к шаблону диспетчера ресурсов Azure. Дополнительные сведения о шаблонах см. по ссылке http://aka.ms/azuretemplates. Чтобы начать работу немедленно, используйте шаблон http://aka.ms/sampletemplate.",
+  "loc.input.help.csmFile": "Укажите путь к шаблону диспетчера ресурсов Azure. Дополнительные сведения о шаблонах см. по ссылке https://aka.ms/azuretemplates. Чтобы начать работу немедленно, используйте шаблон https://aka.ms/sampletemplate.",
   "loc.input.label.csmParametersFile": "Параметры шаблона",
   "loc.input.help.csmParametersFile": "Укажите путь к файлу параметров для шаблона Диспетчера ресурсов Azure.",
   "loc.input.label.overrideParameters": "Переопределить параметры шаблона",

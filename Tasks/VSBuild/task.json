@@ -3,7 +3,7 @@
     "name": "VSBuild",
     "friendlyName": "Visual Studio Build",
     "description": "Build with MSBuild and set the Visual Studio version property",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 31
+        "Patch": 33
     },
     "demands": [
         "msbuild",

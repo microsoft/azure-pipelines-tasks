@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 版本",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "使用 MSBuild 生成并设置 Visual Studio 版本属性",
   "loc.instanceNameFormat": "生成解决方案 $(solution)",
   "loc.group.displayName.advanced": "高级",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gulp",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "Задача потоковой передачи Node.js на основе системы сборки",
   "loc.instanceNameFormat": "Gulp $(targets)",
   "loc.group.displayName.advanced": "Дополнительно",

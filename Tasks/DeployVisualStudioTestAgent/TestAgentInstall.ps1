@@ -63,7 +63,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 			}
 			catch
 			{
-				Write-Verbose -Verbose "Error occured while retrying the Test Agent installation"
+				Write-Verbose -Verbose "Error occurred while retrying the Test Agent installation"
 				throw ("The return code {0} was not expected during installation of Test Agent. Check the installation logs for more details." -f $exitCode.ToString())
 			}
 		}
@@ -135,7 +135,7 @@ function Get-RegistryValue {
 	catch
 	{
 		$exceptionText = ($_ | Out-String).Trim()
-		Write-Verbose "Exception occured in GetRegistryValueIgnoreError: $exceptionText" -verbose
+		Write-Verbose "Exception occurred in GetRegistryValueIgnoreError: $exceptionText" -verbose
 	}
 
 	return $null

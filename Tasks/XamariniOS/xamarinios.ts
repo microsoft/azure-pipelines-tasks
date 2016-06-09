@@ -38,7 +38,7 @@ tl.cd(cwd);
 var onFailedExecution = function (err) {
     // Error executing
     tl.debug('ToolRunner execution failure: ' + err);
-    tl.error('See http://go.microsoft.com/fwlink/?LinkId=760847');
+    tl.error('See https://go.microsoft.com/fwlink/?LinkId=760847');
     tl.exit(1);
 }
 var deleteKeychain:trm.ToolRunner = null;

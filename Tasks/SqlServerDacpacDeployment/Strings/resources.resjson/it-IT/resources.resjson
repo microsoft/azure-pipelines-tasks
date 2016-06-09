@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione database SQL Server",
-  "loc.helpMarkDown": "[Altre informazioni](http://aka.ms/sqlserverdacpackreadme)",
+  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/sqlserverdacpackreadme)",
   "loc.description": "Consente di distribuire il database SQL Server con DACPAC",
   "loc.instanceNameFormat": "Distribuisci DACPAC SQL: $(DacpacFile)",
   "loc.group.displayName.deployment": "Distribuzione",

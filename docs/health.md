@@ -50,6 +50,7 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | DeleteFiles                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | DeployAzureResourceGroup       | | | | | |
 | DeployVisualStudioTestAgent    | | | | | |
+| ExtractFiles                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | Gradle                         |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
 | Grunt                          | | | | | |
 | Gulp                           | | | | | |
