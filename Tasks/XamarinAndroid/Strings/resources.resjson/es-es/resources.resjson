@@ -11,8 +11,6 @@
   "loc.input.help.target": "Compile estos destinos en este proyecto. Use puntos y comas para separar distintos destinos.",
   "loc.input.label.outputDir": "Directorio de salida",
   "loc.input.label.configuration": "Configuración",
-  "loc.input.label.clean": "Limpiar",
-  "loc.input.help.clean": "Ejecute una compilación limpia (/t:clean) antes de realizar la compilación.",
   "loc.input.label.msbuildLocation": "Ubicación de MSBuild",
   "loc.input.help.msbuildLocation": "Proporcione opcionalmente la ruta de acceso a MSBuild. Se establece de forma predeterminada para buscar la última versión.",
   "loc.input.label.msbuildArguments": "Argumentos de MSBuild",

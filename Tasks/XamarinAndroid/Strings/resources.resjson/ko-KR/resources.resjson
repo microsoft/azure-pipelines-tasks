@@ -11,8 +11,6 @@
   "loc.input.help.target": "이 프로젝트에서 이 대상을 빌드하세요. 여러 대상을 구분하려면 세미콜론을 사용하세요.",
   "loc.input.label.outputDir": "출력 디렉터리",
   "loc.input.label.configuration": "구성",
-  "loc.input.label.clean": "클린",
-  "loc.input.help.clean": "빌드에 앞서 클린 빌드(/t:clean)를 실행합니다.",
   "loc.input.label.msbuildLocation": "MSBuild 위치",
   "loc.input.help.msbuildLocation": "원하는 경우 MSBuild의 경로를 제공하세요. 기본값은 최신 버전 검색입니다.",
   "loc.input.label.msbuildArguments": "MSBuild 인수",

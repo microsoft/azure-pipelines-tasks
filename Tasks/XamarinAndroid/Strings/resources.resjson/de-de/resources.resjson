@@ -11,8 +11,6 @@
   "loc.input.help.target": "Erstellt diese Ziele in diesem Projekt. Trennen Sie mehrere Ziele mit einem Semikolon.",
   "loc.input.label.outputDir": "Ausgabeverzeichnis",
   "loc.input.label.configuration": "Konfiguration",
-  "loc.input.label.clean": "Bereinigen",
-  "loc.input.help.clean": "Führt einen bereinigten Build (\"/t:clean\") vor dem Build aus.",
   "loc.input.label.msbuildLocation": "MSBuild-Speicherort",
   "loc.input.help.msbuildLocation": "Geben Sie optional den Pfad zu MSBuild an. Standardmäßig wird nach der aktuellen Version gesucht.",
   "loc.input.label.msbuildArguments": "MSBuild-Argumente",

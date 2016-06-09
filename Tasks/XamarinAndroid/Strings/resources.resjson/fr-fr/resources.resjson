@@ -11,8 +11,6 @@
   "loc.input.help.target": "Générez ces cibles dans ce projet. Utilisez un point-virgule pour séparer plusieurs cibles.",
   "loc.input.label.outputDir": "Répertoire de sortie",
   "loc.input.label.configuration": "Configuration",
-  "loc.input.label.clean": "Nettoyer",
-  "loc.input.help.clean": "Exécutez un nettoyage de build (/t:clean) avant d'effectuer la génération.",
   "loc.input.label.msbuildLocation": "Emplacement de MSBuild",
   "loc.input.help.msbuildLocation": "Indiquez éventuellement le chemin d'accès à MSBuild. Il s'agit généralement de rechercher la dernière version.",
   "loc.input.label.msbuildArguments": "Arguments MSBuild",

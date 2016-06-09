@@ -11,8 +11,6 @@
   "loc.input.help.target": "Выполнить сборку этих целевых объектов в этом проекте. Несколько целевых объектов указываются через точку с запятой.",
   "loc.input.label.outputDir": "Выходной каталог",
   "loc.input.label.configuration": "Конфигурация",
-  "loc.input.label.clean": "Очистить",
-  "loc.input.help.clean": "Выполните очистку сборки (/t:clean) перед сборкой.",
   "loc.input.label.msbuildLocation": "Расположение MSBuild",
   "loc.input.help.msbuildLocation": "При необходимости укажите путь к MSBuild. По умолчанию ищется последняя версия.",
   "loc.input.label.msbuildArguments": "Аргументы MSBuild",

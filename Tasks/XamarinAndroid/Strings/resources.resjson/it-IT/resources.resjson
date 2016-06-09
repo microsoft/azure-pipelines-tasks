@@ -11,8 +11,6 @@
   "loc.input.help.target": "Consente di compilare queste destinazioni nel progetto. Usare il punto e virgola per separare più destinazioni.",
   "loc.input.label.outputDir": "Directory di output",
   "loc.input.label.configuration": "Configurazione",
-  "loc.input.label.clean": "Pulisci",
-  "loc.input.help.clean": "Esegue una compilazione pulita (/t:clean) prima della compilazione.",
   "loc.input.label.msbuildLocation": "Percorso MSBuild",
   "loc.input.help.msbuildLocation": "Consente, facoltativamente, di specificare il percorso di MSBuild. Per impostazione predefinita, verrà cercata la versione più recente.",
   "loc.input.label.msbuildArguments": "Argomenti MSBuild",
