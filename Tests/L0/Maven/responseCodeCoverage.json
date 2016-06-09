@@ -86,6 +86,14 @@
         "CCReport43F6D5EF/jacoco.xml": true,
         "target/site/cobertura/coverage.xml": true
     },
+    "stats": {
+        "CCReport43F6D5EF/jacoco.xml": {
+            "isFile": true
+        },
+        "target/site/cobertura/coverage.xml": {
+            "isFile": true
+        }
+    },
     "rmRF": {
         "target": {
             "success": true,

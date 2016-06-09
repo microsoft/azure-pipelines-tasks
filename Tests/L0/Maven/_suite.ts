@@ -746,7 +746,6 @@ describe('Maven Suite', function() {
 
         tr.run()
             .then(() => {
-                console.log(tr.stdout);
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
@@ -1007,15 +1006,12 @@ describe('Maven Suite', function() {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=root;artifactname=') > -1,
                     'should have uploaded PMD build artifacts');
-
                 assertBuildSummaryContainsLine(testStgDir, 'PMD found 3 violations in 2 files.');
 
                 done();
@@ -1078,12 +1074,10 @@ describe('Maven Suite', function() {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-
                 // assert artifacts not uploaded
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=app;artifactname=') > -1,
                     'should have uploaded PMD build artifacts for the "app" module');
@@ -1091,7 +1085,6 @@ describe('Maven Suite', function() {
                     'should have uploaded PMD build artifacts for the "util" module');
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=backend;artifactname=') < 0,
                     'should not have uploaded PMD build artifacts for the "backend" module');
-
                 assertBuildSummaryContainsLine(testStgDir, 'PMD found 6 violations in 4 files.');
 
                 done();
@@ -1137,7 +1130,6 @@ describe('Maven Suite', function() {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
                     'should have run maven without PMD arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') < 1,
@@ -1187,8 +1179,6 @@ describe('Maven Suite', function() {
         // Act
         taskRunner.run()
             .then(() => {
-                //console.log(taskRunner.stdout);
-
                 // Assert
                 assert(taskRunner.succeeded, 'task should not have failed');
                 assert(taskRunner.resultWasSet, 'should have set a result');
@@ -1196,7 +1186,6 @@ describe('Maven Suite', function() {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
 
