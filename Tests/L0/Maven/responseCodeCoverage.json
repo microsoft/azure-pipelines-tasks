@@ -11,11 +11,19 @@
             "code": 0,
             "stdout": "Maven package done"
         },
+        "/home/bin/maven/bin/mvn -f pom.xml clean package": {
+            "code": 0,
+            "stdout": "Maven package done"
+        },
         "/home/bin/maven2/bin/mvn -version": {
             "code": 0,
             "stdout": "Maven version 1.0.0"
         },
         "/home/bin/maven2/bin/mvn -f pom.xml package": {
+            "code": 0,
+            "stdout": "Maven package done"
+        },
+        "/home/bin/maven2/bin/mvn -f pom.xml clean package": {
             "code": 0,
             "stdout": "Maven package done"
         },
@@ -73,6 +81,10 @@
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
+    },
+    "exist": {
+        "CCReport43F6D5EF/jacoco.xml": true,
+        "target/site/cobertura/coverage.xml": true
     },
     "stats": {
         "CCReport43F6D5EF/jacoco.xml": {
