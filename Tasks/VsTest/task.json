@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 39
+    "Patch": 40
   },
   "demands": [
     "vstest"
@@ -104,68 +104,77 @@
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013"
             }
+        },
+        {
+            "name": "pathtoCustomTestAdapters",
+            "type": "string",
+            "label": "Path to Custom Test Adapters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+            "groupName": "advancedExecutionOptions"
+        },
+        {
+            "name": "otherConsoleOptions",
+            "type": "string",
+            "label": "Other console options",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
+            "groupName": "advancedExecutionOptions"
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test Run Title",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a name for the Test Run.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "platform",
+            "type": "string",
+            "label": "Platform",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "configuration",
+            "type": "string",
+            "label": "Configuration",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "publishRunAttachments",
+            "type": "boolean",
+            "label": "Upload Test Attachments",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Opt in/out of publishing test run level attachments.",
+            "groupName": "reportingOptions"
+        }
+    ],
+    "instanceNameFormat": "Test Assemblies $(testAssembly)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\VSTest.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)",
+            "platforms": [
+                "windows"
+            ]
+        },
+        "Node": {
+            "target": "vstest.js"
+        }
     },
-    {
-      "name": "pathtoCustomTestAdapters",
-      "type": "string",
-      "label": "Path to Custom Test Adapters",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
-      "groupName":"advancedExecutionOptions"
-    },
-    {
-      "name": "otherConsoleOptions",
-      "type": "string",
-      "label": "Other console options",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
-      "groupName": "advancedExecutionOptions"
-    },
-    {
-      "name": "testRunTitle", 
-      "type": "string", 
-      "label": "Test Run Title", 
-      "defaultValue":"", 
-      "required":false,
-      "helpMarkDown": "Provide a name for the Test Run.",
-      "groupName":  "reportingOptions"
-    },
-    {
-      "name": "platform", 
-      "type": "string", 
-      "label": "Platform", 
-      "defaultValue":"", 
-      "required":false,
-      "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
-      "groupName":  "reportingOptions"
-    },
-    {
-      "name": "configuration", 
-      "type": "string", 
-      "label": "Configuration", 
-      "defaultValue":"", 
-      "required":false,
-      "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
-      "groupName":  "reportingOptions"
-    },
-    {
-      "name": "publishRunAttachments",
-      "type": "boolean",
-      "label": "Upload Test Attachments",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "Opt in/out of publishing test run level attachments.",
-      "groupName":  "reportingOptions"
+    "messages": {
+        "VstestReturnCode": "Vstest exited with return code: %d"
     }
-  ],
-  "instanceNameFormat": "Test Assemblies $(testAssembly)",
-  "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\VSTest.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    }
-  }
 }

@@ -1,0 +1,78 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "VS140COMNTools": "/vs/path"
+    },
+    "find": {
+        "/source/dir": [
+            "someDir/someFile2",
+            "/someDir/someFile1"
+        ]
+    },
+    "match": {
+        "/some/*pattern": [
+            "some/path/one",
+            "some/path/two"
+        ],
+        "/exclude/*pattern": [
+            "some/path/two",
+            "some/path/three"
+        ],
+        "*.trx": [
+            "a.trx"
+        ],
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "exec": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one some/path/two /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /TestCaseFilter:testFilter /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /EnableCodeCoverage /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file consoleOptions /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /Settings:settings.runsettings /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx /TestAdapterPath:path/to/customadapters": {
+            "code": 0,
+            "stdout": "vstest"
+        }
+    },
+    "rmRF": {
+        "\\source\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "exist": {
+        "settings.runsettings": true,
+        "path/to/customadapters": true
+    },
+    "stats": {
+        "settings.runsettings": {
+            "isFile": true
+        },
+        "path/to/customadapters": {
+            "isDirectory": true
+        }
+    }
+}
