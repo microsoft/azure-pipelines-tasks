@@ -71,7 +71,7 @@ function Get-WebAppRGName
         {
             Write-Verbose "[Azure Call] Web App: $webAppName not found"
 
-            Throw (Get-VstsLocString -Key "WebApp0notfound" -ArgumentList $webAppName)
+            Throw "Web App: '$webAppName' not found."
         }
     }
 }
