@@ -19,7 +19,8 @@ function Invoke-BuildTools {
         [string]$MSBuildLocation,
         [string]$MSBuildArguments,
         [switch]$Clean,
-        [switch]$NoTimelineLogger)
+        [switch]$NoTimelineLogger,
+        [switch]$CreateLogFile)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -29,10 +30,20 @@ function Invoke-BuildTools {
             }
 
             if ($Clean) {
-                Invoke-MSBuild -ProjectFile $file -Targets Clean -LogFile "$file-clean.log" -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger
+                $splat = @{ }
+                if ($CreateLogFile) {
+                    $splat["LogFile"] = "$file-clean.log"
+                }
+
+                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
             }
 
-            Invoke-MSBuild -ProjectFile $file -LogFile "$file.log" -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger
+            $splat = @{ }
+            if ($CreateLogFile) {
+                $splat["LogFile"] = "$file.log"
+            }
+
+            Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
         }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

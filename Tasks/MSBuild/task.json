@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 39
+        "Patch": 40
     },
     "demands": [
         "msbuild"
@@ -79,6 +79,15 @@
             "label": "Record Project Details",
             "defaultValue": "false",
             "required": false,
+            "groupName": "advanced"
+        },
+        {
+            "name": "createLogFile",
+            "type": "boolean",
+            "label": "Create Log File",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Optionally create a log file (Windows only).",
             "groupName": "advanced"
         },
         {
