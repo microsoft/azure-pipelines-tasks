@@ -49,7 +49,7 @@ function Get-RegistryValue {
 	catch
 	{
 		$exceptionText = ($_ | Out-String).Trim()
-		Write-Verbose "Exception occured in GetRegistryValueIgnoreError: $exceptionText" -verbose
+		Write-Verbose "Exception occurred in GetRegistryValueIgnoreError: $exceptionText" -verbose
 	}
 
 	return $null

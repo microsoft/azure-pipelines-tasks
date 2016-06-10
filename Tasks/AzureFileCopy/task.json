@@ -3,7 +3,7 @@
   "name": "AzureFileCopy",
   "friendlyName": "Azure File Copy",
   "description": "Copy files to Azure blob or VM(s)",
-  "helpMarkDown": "[More Information](http://aka.ms/azurefilecopyreadme)",
+  "helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 57
+    "Patch": 58
   },
   "demands": [
     "azureps"

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "使用 Apache Maven 生成",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "JUnit 测试结果",
@@ -40,7 +40,7 @@
   "loc.input.label.mavenSetM2Home": "设置 M2_HOME 变量",
   "loc.input.help.mavenSetM2Home": "将 M2_HOME 变量设置为自定义 Maven 安装路径。",
   "loc.input.label.sqAnalysisEnabled": "运行 SonarQube 分析",
-  "loc.input.help.sqAnalysisEnabled": "在执行当前目标后运行 [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598)。应首先执行 \"install\" 或 \"package\" 目标。",
+  "loc.input.help.sqAnalysisEnabled": "在执行当前目标后运行 [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598)。应首先执行 \"install\" 或 \"package\" 目标。",
   "loc.input.label.sqConnectedServiceName": "SonarQube 终结点",
   "loc.input.help.sqConnectedServiceName": "指定要使用的 SonarQube 服务器的终结点",
   "loc.input.label.sqDbDetailsRequired": "SonarQube 服务器版本低于 5.2",

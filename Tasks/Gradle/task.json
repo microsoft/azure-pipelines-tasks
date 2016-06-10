@@ -3,7 +3,7 @@
     "name": "Gradle",
     "friendlyName": "Gradle",
     "description": "Build using a Gradle wrapper script",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613720)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613720)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 41
+        "Patch": 42
     },
     "demands": [
         "java"
@@ -194,7 +194,7 @@
           "required": true,
           "defaultValue": "false",
           "groupName": "CodeAnalysis",
-          "helpMarkDown": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
+          "helpMarkDown": "Run a [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
         },
         {
           "name": "sqConnectedServiceName",

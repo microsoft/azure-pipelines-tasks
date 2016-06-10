@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=627413)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=627413)",
   "loc.description": "El ejecutor de tareas de JavaScript",
   "loc.instanceNameFormat": "$(targets) de Grunt",
   "loc.group.displayName.advanced": "Avanzado",

@@ -81,7 +81,7 @@ declare module "shelljs"
     /**
      * Copies files. The wildcard * is accepted.
      * @param {string}   options Available options: -f (force), -r, -R (recursive)
-     * @param {strin]}   source  The source.
+     * @param {string}   source  The source.
      * @param {string}   dest    The destination.
      */
     export function cp(options: string, source: string, dest: string): void;
@@ -179,7 +179,7 @@ declare module "shelljs"
 
     /**
      * Evaluates expression using the available primaries and returns corresponding value.
-     * @param  {string}  option '-b': true if path is a block device; '-c': true if path is a character device; '-d': true if path is a directory; '-e': true if path exists; '-f': true if path is a regular file; '-L': true if path is a symboilc link; '-p': true if path is a pipe (FIFO); '-S': true if path is a socket
+     * @param  {string}  option '-b': true if path is a block device; '-c': true if path is a character device; '-d': true if path is a directory; '-e': true if path exists; '-f': true if path is a regular file; '-L': true if path is a symbolic link; '-p': true if path is a pipe (FIFO); '-S': true if path is a socket
      * @param  {string}  path   The path.
      * @return {boolean}        See option parameter.
      */

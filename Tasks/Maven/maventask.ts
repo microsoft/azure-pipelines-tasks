@@ -5,11 +5,14 @@ import path = require('path');
 import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
-import sqCommon = require ('sonarqube-common/sonarqube-common');
+import sqCommon = require('sonarqube-common/sonarqube-common');
 import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./mavencodeanalysis');
+
+// Set up localization resource file
+tl.setResourcePath(path.join( __dirname, 'task.json'));
 
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
@@ -18,6 +21,8 @@ var mavenGoals: string[] = tl.getDelimitedInput('goals', ' ', true); // This ass
 var mavenOptions: string = tl.getInput('options', false); // Options can have spaces and quotes so we need to treat this as one string and not try to parse it
 var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
+var ccTool = tl.getInput('codeCoverageTool');
+var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -34,7 +39,7 @@ if (mavenVersionSelection == 'Path') {
 }
 else {
     // mavenVersionSelection is set to 'Default'
-    
+
     // First, look for Maven in the M2_HOME variable
     var m2HomeEnvVar: string = null;
     m2HomeEnvVar = tl.getVariable('M2_HOME');
@@ -97,9 +102,6 @@ if (specifiedJavaHome) {
     tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
-var ccTool = tl.getInput('codeCoverageTool');
-var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
-
 if (isCodeCoverageOpted) {
     var summaryFile: string = null;
     var reportDirectory: string = null;
@@ -132,35 +134,38 @@ mvnGetVersion.arg('-version');
 
 // 1. Check that Maven exists by executing it to retrieve its version.
 mvnGetVersion.exec()
-    .fail(function(err) {
+    .fail(function (err) {
         console.error("Maven is not installed on the agent");
         tl.exit(1);  // tl.exit sets the step result but does not stop execution
         process.exit(1);
     })
-    .then(function(code) {
+    .then(function (code) {
         // Setup tool runner to execute Maven goals
         var mvnRun = tl.createToolRunner(mvnExec);
         mvnRun.arg('-f');
         mvnRun.pathArg(mavenPOMFile);
         mvnRun.argString(mavenOptions);
+        if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
+            mvnRun.arg('clean');
+        }
         mvnRun.arg(mavenGoals);
 
         // Add goals for static code analysis tools
         mvnRun = codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
-    
+
         // Read Maven standard output
-        mvnRun.on('stdout', function(data) {
+        mvnRun.on('stdout', function (data) {
             processMavenOutput(data);
         });
-    
+
         // 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
         return mvnRun.exec(); // Run Maven with the user specified goals
     })
-    .fail(function(err) {
+    .fail(function (err) {
         console.error(err.message);
         userRunFailed = true; // Record the error and continue
     })
-    .then(function(code) {
+    .then(function (code) {
         // 3. Always try to run the SonarQube analysis if it is enabled.
         var mvnsq = getSonarQubeRunner();
         if (mvnsq) {
@@ -169,7 +174,7 @@ mvnGetVersion.exec()
             return mvnsq.exec()
         }
     })
-    .fail(function(err) {
+    .fail(function (err) {
         console.error(err.message);
         console.error("SonarQube analysis failed");
         sonarQubeRunFailed = true;
@@ -188,13 +193,13 @@ mvnGetVersion.exec()
         console.error("PMD analysis failed");
         pmdRunFailed = true;
     })
-    .then(function() {
+    .then(function () {
         // 4. Always publish test results even if tests fail, causing this task to fail.
         if (publishJUnitResults == 'true') {
             publishJUnitTestResults(testResultsFiles);
         }
         publishCodeCoverage(isCodeCoverageOpted);
-    
+
         // Set overall success or failure
         if (userRunFailed || sonarQubeRunFailed || pmdRunFailed) {
             tl.exit(1); // Set task failure
@@ -260,8 +265,8 @@ function enableCodeCoverage() {
 
     if (ccTool.toLowerCase() == "jacoco") {
         execFileJacoco = path.join(reportDirectory, "jacoco.exec");
-    }    
-        
+    }
+
     // clean any previously generated files.
     tl.rmRF(targetDirectory, true);
     tl.rmRF(reportDirectory, true);
@@ -293,7 +298,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
         if (ccTool.toLowerCase() == "jacoco") {
             var mvnReport = tl.createToolRunner(mvnExec);
             mvnReport.arg('-f');
-            if (pathExistsAsFile(reportPOMFile)) {
+            if (tl.exist(reportPOMFile)) {
                 // multi module project
                 mvnReport.pathArg(reportPOMFile);
                 mvnReport.arg("verify");
@@ -302,9 +307,9 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
                 mvnReport.pathArg(mavenPOMFile);
                 mvnReport.arg(ccReportTask);
             }
-            mvnReport.exec().then(function(code) {
+            mvnReport.exec().then(function (code) {
                 publishCCToTfs();
-            }).fail(function(err) {
+            }).fail(function (err) {
                 tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
             });
         }
@@ -315,7 +320,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
 }
 
 function publishCCToTfs() {
-    if (pathExistsAsFile(summaryFile)) {
+    if (tl.exist(summaryFile)) {
         tl.debug("Summary file = " + summaryFile);
         tl.debug("Report directory = " + reportDirectory);
         tl.debug("Publishing code coverage results to TFS");
@@ -324,15 +329,6 @@ function publishCCToTfs() {
     }
     else {
         tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
-    }
-}
-
-function pathExistsAsFile(path: string) {
-    try {
-        return tl.stats(path).isFile();
-    }
-    catch (error) {
-        return false;
     }
 }
 
@@ -347,7 +343,7 @@ function getSonarQubeRunner() {
     // Looks like: 'SonarQube analysis is enabled.'
     console.log(tl.loc('sqAnalysis_isEnabled'));
     var mvnsq;
-    var sqEndpoint:SonarQubeEndpoint = sqCommon.getSonarQubeEndpointFromInput("sqConnectedServiceName");
+    var sqEndpoint: SonarQubeEndpoint = sqCommon.getSonarQubeEndpointFromInput("sqConnectedServiceName");
 
     if (tl.getBoolInput('sqDbDetailsRequired')) {
         var sqDbUrl = tl.getInput('sqDbUrl', false);

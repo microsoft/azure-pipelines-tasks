@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure File Copy",
-  "loc.helpMarkDown": "[More Information](http://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copy files to Azure blob or VM(s)",
   "loc.instanceNameFormat": "$(Destination) File Copy",
   "loc.group.displayName.output": "Output",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613729)",
   "loc.description": "在 Mac OS 上使用 Xamarin 建置 iOS 應用程式",
   "loc.instanceNameFormat": "建置 Xamarin.iOS 方案 $(solution)",
   "loc.input.label.solution": "方案",

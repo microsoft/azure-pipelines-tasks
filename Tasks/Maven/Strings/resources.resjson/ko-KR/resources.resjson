@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Apache Maven으로 빌드",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "JUnit 테스트 결과",
@@ -40,7 +40,7 @@
   "loc.input.label.mavenSetM2Home": "M2_HOME 변수 설정",
   "loc.input.help.mavenSetM2Home": "Maven 설치 경로를 사용자 지정하려면 M2_HOME 변수를 설정하세요.",
   "loc.input.label.sqAnalysisEnabled": "SonarQube 분석 실행",
-  "loc.input.help.sqAnalysisEnabled": "현재 목표를 실행한 후 [SonarQube 분석](http://go.microsoft.com/fwlink/?LinkID=708598)을 실행하세요. '설치' 또는 '패키지' 목표를 먼저 실행해야 합니다.",
+  "loc.input.help.sqAnalysisEnabled": "현재 목표를 실행한 후 [SonarQube 분석](https://go.microsoft.com/fwlink/?LinkID=708598)을 실행하세요. '설치' 또는 '패키지' 목표를 먼저 실행해야 합니다.",
   "loc.input.label.sqConnectedServiceName": "SonarQube 끝점",
   "loc.input.help.sqConnectedServiceName": "사용할 SonarQube Server를 지정하는 끝점",
   "loc.input.label.sqDbDetailsRequired": "SonarQube Server 버전이 5.2 미만입니다.",

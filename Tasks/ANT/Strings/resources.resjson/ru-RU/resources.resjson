@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613718)",
   "loc.description": "Сборка с помощью Apache Ant",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "Результаты теста JUnit",

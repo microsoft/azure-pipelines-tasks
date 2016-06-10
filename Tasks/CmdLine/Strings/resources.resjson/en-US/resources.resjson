@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Command Line",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "Run a command line with arguments",
   "loc.instanceNameFormat": "Run $(filename)",
   "loc.group.displayName.advanced": "Advanced",

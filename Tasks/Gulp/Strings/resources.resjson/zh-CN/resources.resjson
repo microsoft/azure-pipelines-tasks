@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gulp",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "基于生成系统的 Node.js 流任务",
   "loc.instanceNameFormat": "Gulp $(targets)",
   "loc.group.displayName.advanced": "高级",

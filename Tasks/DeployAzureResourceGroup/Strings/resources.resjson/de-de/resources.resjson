@@ -20,7 +20,7 @@
   "loc.input.label.location": "Speicherort",
   "loc.input.help.location": "Der Speicherort für die Bereitstellung der Ressourcengruppe. Wenn die Ressourcengruppe bereits im Abonnement vorhanden ist, wird dieser Wert ignoriert.",
   "loc.input.label.csmFile": "Vorlage",
-  "loc.input.help.csmFile": "Geben Sie den Pfad zur Azure-Ressourcen-Manager-Vorlage an. Weitere Informationen zu den Vorlagen finden Sie unter \"http://aka.ms/azuretemplates\". Wenn Sie sofort beginnen möchten, verwenden Sie die Vorlage \"http://aka.ms/sampletemplate\".",
+  "loc.input.help.csmFile": "Geben Sie den Pfad zur Azure-Ressourcen-Manager-Vorlage an. Weitere Informationen zu den Vorlagen finden Sie unter \"https://aka.ms/azuretemplates\". Wenn Sie sofort beginnen möchten, verwenden Sie die Vorlage \"https://aka.ms/sampletemplate\".",
   "loc.input.label.csmParametersFile": "Vorlagenparameter",
   "loc.input.help.csmParametersFile": "Geben Sie den Pfad für die Parameterdatei für die Azure-Ressourcen-Manager-Vorlage an.",
   "loc.input.label.overrideParameters": "Vorlagenparameter überschreiben",

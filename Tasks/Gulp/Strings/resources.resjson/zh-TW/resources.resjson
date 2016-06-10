@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gulp",
-  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "Node.js 串流工作建置系統",
   "loc.instanceNameFormat": "Gulp $(targets)",
   "loc.group.displayName.advanced": "進階",

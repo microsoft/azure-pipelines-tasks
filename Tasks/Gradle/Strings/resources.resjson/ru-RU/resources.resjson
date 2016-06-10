@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gradle",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613720)",
   "loc.description": "Сборка с помощью скрипта программы-оболочки Gradle",
   "loc.instanceNameFormat": "gradlew $(tasks)",
   "loc.group.displayName.junitTestResults": "Результаты теста JUnit",

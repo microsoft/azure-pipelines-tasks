@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Funktionstests ausführen",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Führen Sie Tests der programmierten UI, Selenium-Tests oder Funktionstests für eine Computergruppe (mithilfe des Test-Agents) aus.",
   "loc.instanceNameFormat": "Tests $(sourcefilters) für $(testMachineGroup) ausführen",
   "loc.group.displayName.setupOptions": "Setupoptionen",

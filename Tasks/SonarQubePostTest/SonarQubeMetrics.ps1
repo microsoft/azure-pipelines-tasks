@@ -173,7 +173,7 @@ function GetTaskStatusFile
     if (![System.IO.File]::Exists($reportTaskFile))
     {
         Write-Verbose "Could not find the task details file at $reportTaskFile"
-        throw "Cannot determine if the analysis has finished. Possible cause: your SonarQube server version is lower than 5.3 - for more details see http://go.microsoft.com/fwlink/?LinkId=722407"
+        throw "Cannot determine if the analysis has finished. Possible cause: your SonarQube server version is lower than 5.3 - for more details see https://go.microsoft.com/fwlink/?LinkId=722407"
     }
 
     return $reportTaskFile

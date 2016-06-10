@@ -3,7 +3,7 @@
   "name": "CloudLoadTest",
   "friendlyName": "Cloud-based Load Test",
   "description": "Runs the load test in the cloud with Visual Studio Team Services",
-  "helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976).",
   "category": "Test",
   "visibility": [
     "Build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [
     "msbuild",
@@ -58,7 +58,7 @@
       "type": "string",
       "label": "Number of permissible threshold violations",
       "required": false,
-      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsucessful."
+      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsuccessful."
     }
   ],
   "instanceNameFormat": "Cloud Load Test $(LoadTest)",

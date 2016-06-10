@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement d'applications web IIS",
-  "loc.helpMarkDown": "[Plus d'informations](http://aka.ms/iiswebappdeployreadme)",
+  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Effectuer le déploiement avec MSDeploy, créer/mettre à jour un site web et un pool d'applications",
   "loc.instanceNameFormat": "Déployer une application IIS : $(WebDeployPackage)",
   "loc.group.displayName.deployment": "Déploiement",

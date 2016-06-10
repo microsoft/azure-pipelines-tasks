@@ -211,7 +211,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
         <tr>
             <td>
                 <p align="left">
-                    ##vso[artifact.associate]artfact location
+                    ##vso[artifact.associate]artifact location
                 </p>
             </td>
             <td>

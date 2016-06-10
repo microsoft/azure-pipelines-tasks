@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SonarQube per MSBuild - Inizia analisi",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Recupera il profilo di qualità da SonarQube per configurare l'analisi",
   "loc.instanceNameFormat": "Recupera il profilo di qualità da SonarQube",
   "loc.group.displayName.serverSettings": "Server SonarQube",
@@ -22,9 +22,9 @@
   "loc.input.label.dbPassword": "Password utente database",
   "loc.input.help.dbPassword": "Solo server SonarQube 5.1 e versioni precedenti. Password per l'utente del database, ad esempio sonar.jdbc.password",
   "loc.input.label.cmdLineArgs": "Impostazioni aggiuntive",
-  "loc.input.help.cmdLineArgs": "Impostazioni delimitate da spazi in formato /d:nomeProprietà=valoreProprietà. Vengono applicate le normali regole di escape della riga di comando. Per altre informazioni sulle impostazioni, vedere la [documentazione di SonarQube](http://go.microsoft.com/fwlink/?LinkID=624390)",
+  "loc.input.help.cmdLineArgs": "Impostazioni delimitate da spazi in formato /d:nomeProprietà=valoreProprietà. Vengono applicate le normali regole di escape della riga di comando. Per altre informazioni sulle impostazioni, vedere la [documentazione di SonarQube](https://go.microsoft.com/fwlink/?LinkID=624390)",
   "loc.input.label.configFile": "File di impostazioni",
-  "loc.input.help.configFile": "È anche possibile specificare le impostazioni con un file di configurazione. Un modello è disponibile [qui](http://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.help.configFile": "È anche possibile specificare le impostazioni con un file di configurazione. Un modello è disponibile [qui](https://go.microsoft.com/fwlink/?LinkID=620062)",
   "loc.input.label.breakBuild": "Interrompi compilazione in caso di errore al quality gate (SonarQube 5.3 e versioni successive)",
-  "loc.input.help.breakBuild": "Questa opzione è disponibile solo quando si usa un server SonarQube 5.3 o versione successiva. Consente di introdurre ritardi perché la compilazione deve attendere che SonarQube completi l'analisi. [Altre informazioni](http://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "Questa opzione è disponibile solo quando si usa un server SonarQube 5.3 o versione successiva. Consente di introdurre ritardi perché la compilazione deve attendere che SonarQube completi l'analisi. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

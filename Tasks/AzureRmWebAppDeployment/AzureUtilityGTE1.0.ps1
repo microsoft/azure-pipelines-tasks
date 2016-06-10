@@ -10,7 +10,7 @@ function Get-AzureRMWebAppARM
 
     if( $azureWebApp.Count -eq 0 ) 
     {
-        Throw (Get-LocalizedString -Key "Web App: '{0}' not found." -ArgumentList $Name)
+        Throw (Get-VstsLocString -Key "WebApp0notfound" -ArgumentList $Name)
     }
     
     return $azureWebApp
@@ -39,7 +39,7 @@ function Get-AzureRMWebAppPublishUrlARM
     }
 
     if( $azureRMWebAppProfileDetails -eq $null ){
-        Throw (Get-LocalizedString -Key "Unable to find webapp publish profile details for webapp {0}." -ArgumentList $webAppName)
+        Throw (Get-VstsLocString -Key "Unabletofindwebapppublishprofiledetailsforwebapp0" -ArgumentList $webAppName)
     }
 
     return $azureRMWebAppProfileDetails.destinationAppUrl

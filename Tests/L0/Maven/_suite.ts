@@ -10,7 +10,7 @@ import tr = require('../../lib/vsts-task-lib/toolRunner');
 
 import pmd = require('../../../Tasks/Maven/mavenpmd');
 import ca = require('../../../Tasks/Maven/mavencodeanalysis');
-import ar = require('../../../Tasks/Maven//analysisResult');
+import ar = require('../../../Tasks/Maven/analysisresult');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -747,7 +747,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
                 // calls maven to generate cc report.
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
@@ -782,7 +782,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
                 assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\/jacoco.exec -f pom.xml sonar:sonar'), 'it should have run SQ analysis');               
                 // calls maven to generate cc report.
@@ -816,7 +816,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
                 // calls maven to generate cc report.
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
@@ -850,7 +850,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=pom.xml;summaryfile=target\/site\/cobertura\/coverage.xml;reportdirectory=target\/site\/cobertura;reportbuildfile=CCReportPomA4D283EG.xml;buildtool=Maven;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
@@ -883,7 +883,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
@@ -915,7 +915,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=pom.xml;summaryfile=target\/site\/cobertura\/coverage.xml;reportdirectory=target\/site\/cobertura;reportbuildfile=CCReportPomA4D283EG.xml;buildtool=Maven;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
@@ -1003,16 +1003,15 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=root;artifactname=') > -1,
                     'should have uploaded PMD build artifacts');
-
                 assertBuildSummaryContainsLine(testStgDir, 'PMD found 3 violations in 2 files.');
 
                 done();
@@ -1072,13 +1071,13 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-
                 // assert artifacts not uploaded
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=app;artifactname=') > -1,
                     'should have uploaded PMD build artifacts for the "app" module');
@@ -1086,7 +1085,6 @@ describe('Maven Suite', function() {
                     'should have uploaded PMD build artifacts for the "util" module');
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=backend;artifactname=') < 0,
                     'should not have uploaded PMD build artifacts for the "backend" module');
-
                 assertBuildSummaryContainsLine(testStgDir, 'PMD found 6 violations in 4 files.');
 
                 done();
@@ -1129,8 +1127,9 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
                     'should have run maven without PMD arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') < 1,
@@ -1180,13 +1179,13 @@ describe('Maven Suite', function() {
         // Act
         taskRunner.run()
             .then(() => {
-                //console.log(taskRunner.stdout);
-
                 // Assert
                 assert(taskRunner.succeeded, 'task should not have failed');
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
-
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
 

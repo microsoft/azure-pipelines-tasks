@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Web アプリの配置",
-  "loc.helpMarkDown": "[詳細] (http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Web 配置を使用した Microsoft Azure Web アプリへの Visual Studio Web プロジェクトの発行",
   "loc.instanceNameFormat": "Azure 配置: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",

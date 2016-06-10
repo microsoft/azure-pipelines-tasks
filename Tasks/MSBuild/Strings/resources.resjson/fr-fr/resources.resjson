@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Générer avec MSBuild",
   "loc.instanceNameFormat": "Générer la solution $(solution)",
   "loc.group.displayName.advanced": "Avancé",

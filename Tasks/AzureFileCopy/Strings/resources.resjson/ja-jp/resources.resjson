@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure ファイル コピー",
-  "loc.helpMarkDown": "[詳細] (http://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[詳細] (https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Azure BLOB または VM へのファイルのコピー",
   "loc.instanceNameFormat": "$(Destination) ファイル コピー",
   "loc.group.displayName.output": "Output",

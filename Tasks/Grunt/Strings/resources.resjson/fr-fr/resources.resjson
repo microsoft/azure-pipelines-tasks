@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=627413)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=627413)",
   "loc.description": "The JavaScript Task Runner",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "Avancé",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Web App-Bereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Ein Visual Studio-Webprojekt mithilfe von Web Deploy als Microsoft Azure Web App veröffentlichen",
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",

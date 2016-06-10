@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gradle",
-  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613720)",
   "loc.description": "Gradle 래퍼 스크립트를 사용하여 빌드",
   "loc.instanceNameFormat": "gradlew $(tasks)",
   "loc.group.displayName.junitTestResults": "JUnit 테스트 결과",

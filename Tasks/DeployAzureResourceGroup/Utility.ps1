@@ -67,7 +67,7 @@ function Validate-AzurePowerShellVersion
     if(!$versionCompatible)
     {
         Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVersion"
-        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "http://aka.ms/azps")
+        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "https://aka.ms/azps")
     }
 
     Write-Verbose "Validated the required azure powershell version"
@@ -78,7 +78,7 @@ function Check-AzureRMInstalled
     if(!(Get-Module -Name "AzureRM*" -ListAvailable))
     {
         Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
-        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
+        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "https://aka.ms/azps")
     }
 }
 
@@ -794,13 +794,13 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             }
 
             $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources `
-                                                       -ThrowOnTotalUnavaialbility $false -debugLogsFlag $debugLogsFlag
+                                                       -ThrowOnTotalUnavailability $false -debugLogsFlag $debugLogsFlag
         }
 
         $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources `
                                                 -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap -debugLogsFlag $debugLogsFlag
         $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources `
-                                                -ThrowOnTotalUnavaialbility $true -debugLogsFlag $debugLogsFlag
+                                                -ThrowOnTotalUnavailability $true -debugLogsFlag $debugLogsFlag
 
         foreach ($resource in $azureRMVMResources)
         {

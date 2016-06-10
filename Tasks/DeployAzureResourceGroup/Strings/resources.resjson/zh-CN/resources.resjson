@@ -20,7 +20,7 @@
   "loc.input.label.location": "位置",
   "loc.input.help.location": "部署资源组的位置。如果订阅中已存在该资源组，则将忽略此值。",
   "loc.input.label.csmFile": "模板",
-  "loc.input.help.csmFile": "指定 Azure 资源管理器模板的路径。有关模板的详细信息，请参阅 http://aka.ms/azuretemplates。若要立即开始使用，请使用模板 http://aka.ms/sampletemplate。",
+  "loc.input.help.csmFile": "指定 Azure 资源管理器模板的路径。有关模板的详细信息，请参阅 https://aka.ms/azuretemplates。若要立即开始使用，请使用模板 https://aka.ms/sampletemplate。",
   "loc.input.label.csmParametersFile": "模板参数",
   "loc.input.help.csmParametersFile": "为 Azure 资源管理器模板的参数文件指定路径。",
   "loc.input.label.overrideParameters": "替代模板参数",

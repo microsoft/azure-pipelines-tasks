@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613729)",
   "loc.description": "iOS-App mit Xamarin auf Mac OS erstellen",
   "loc.instanceNameFormat": "Xamarin.iOS-Projektmappe $(solution) erstellen",
   "loc.input.label.solution": "Projektmappe",

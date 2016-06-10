@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Сборка с помощью Apache Maven",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.group.displayName.junitTestResults": "Результаты теста JUnit",
@@ -40,7 +40,7 @@
   "loc.input.label.mavenSetM2Home": "Задать переменную M2_HOME",
   "loc.input.help.mavenSetM2Home": "Задайте переменную M2_HOME для настраиваемого пути установки Maven.",
   "loc.input.label.sqAnalysisEnabled": "Запустить анализ SonarQube",
-  "loc.input.help.sqAnalysisEnabled": "Запуск [анализа SonarQube](http://go.microsoft.com/fwlink/?LinkID=708598) после выполнения текущих целей. Цели \"install\" (установить) или \"package\" (упаковать) должны быть выполнены первыми.",
+  "loc.input.help.sqAnalysisEnabled": "Запуск [анализа SonarQube](https://go.microsoft.com/fwlink/?LinkID=708598) после выполнения текущих целей. Цели \"install\" (установить) или \"package\" (упаковать) должны быть выполнены первыми.",
   "loc.input.label.sqConnectedServiceName": "Конечная точка SonarQube",
   "loc.input.help.sqConnectedServiceName": "Конечная точка, которая указывает используемый сервер SonarQube",
   "loc.input.label.sqDbDetailsRequired": "Версия сервера SonarQube ниже, чем 5.2",

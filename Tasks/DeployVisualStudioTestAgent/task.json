@@ -3,7 +3,7 @@
     "name": "DeployVisualStudioTestAgent",
     "friendlyName": "Visual Studio Test Agent Deployment",
     "description": "Deploy and configure Test Agent to run tests on a set of machines",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=625976)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
     "category": "Test",
     "visibility": [     
                   "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 29
+        "Patch": 30
     },
     "demands": [
 
@@ -142,7 +142,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `http://go.microsoft.com/fwlink/?LinkId=536423`"
+            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`"
         },
         {
             "name": "updateTestAgent",

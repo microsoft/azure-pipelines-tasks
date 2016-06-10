@@ -449,7 +449,7 @@ describe('gradle Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew build jacocoTestReport'), 'it should have run gradlew build');
+                assert(tr.ran('gradlew clean build jacocoTestReport'), 'it should have run clean gradlew build');
                 assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
@@ -480,7 +480,7 @@ describe('gradle Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew build jacocoRootReport'), 'it should have run gradlew build');
+                assert(tr.ran('gradlew clean build jacocoRootReport'), 'it should have run gradlew clean build');
                 assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=true;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
@@ -511,7 +511,7 @@ describe('gradle Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew build cobertura'), 'it should have run gradlew build');
+                assert(tr.ran('gradlew clean build cobertura'), 'it should have run gradlew clean build');
                 assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=coverage.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=CCReport43F6D5EF\\coverage.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
@@ -542,7 +542,7 @@ describe('gradle Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew build jacocoTestReport'), 'it should have run gradlew build');
+                assert(tr.ran('gradlew clean build jacocoTestReport'), 'it should have run gradlew clean build');
                 assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish\]/) < 0, 'should not have called publish code coverage.');
@@ -572,7 +572,7 @@ describe('gradle Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew build cobertura'), 'it should have run gradlew build');
+                assert(tr.ran('gradlew clean build cobertura'), 'it should have run gradlew clean build');
                 assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=coverage.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish\]/) < 0, 'should not have called publish code coverage.');
@@ -628,11 +628,11 @@ describe('gradle Suite', function() {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(tr.ran('gradlew build'), 'it should have run only the default settings');
                 done();
             })
             .fail((err) => {
-                console.log(tr.stdout);
                 done(err);
             });
     });
@@ -652,7 +652,7 @@ describe('gradle Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew build cobertura sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.cobertura.reportPath=CCReport43F6D5EF/coverage.xml'), 'it should have run gradlew build');
+                assert(tr.ran('gradlew clean build cobertura sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.cobertura.reportPath=CCReport43F6D5EF/coverage.xml'), 'it should have run gradlew build');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
@@ -683,12 +683,12 @@ describe('gradle Suite', function() {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(tr.ran('gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
                 done();
             })
             .fail((err) => {
-                console.log(tr.stdout);
                 done(err);
             });
     });
@@ -718,12 +718,12 @@ describe('gradle Suite', function() {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(tr.ran('gradlew build sonarqube -I /gradle/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
                 done();
             })
             .fail((err) => {
-                console.log(tr.stdout);
                 done(err);
             });
     });

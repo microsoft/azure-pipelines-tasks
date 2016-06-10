@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL Database 部署",
-  "loc.helpMarkDown": "[詳細資訊](http://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "使用 DACPAC 部署 Azure SQL DB",
   "loc.instanceNameFormat": "部署 Azure SQL DACPAC: $(DacpacFile)",
   "loc.group.displayName.target": "目標",

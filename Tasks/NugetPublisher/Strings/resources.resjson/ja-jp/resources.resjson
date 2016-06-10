@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet パブリッシャー",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=627417)",
   "loc.description": "Nupkg ファイルを NuGet サーバーにアップロードします",
   "loc.instanceNameFormat": "NuGet パブリッシャー $(solution)",
   "loc.group.displayName.advanced": "詳細設定",

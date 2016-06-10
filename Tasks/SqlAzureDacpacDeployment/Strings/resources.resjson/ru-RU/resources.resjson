@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание базы данных SQL Azure",
-  "loc.helpMarkDown": "[Подробнее...](http://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Подробнее...](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Развертывание базы данных SQL Azure с помощью DACPAC",
   "loc.instanceNameFormat": "Развертывание DACPAC-файла SQL Azure: $(DacpacFile)",
   "loc.group.displayName.target": "Целевой объект",

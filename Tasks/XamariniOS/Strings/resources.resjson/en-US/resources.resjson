@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613729)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613729)",
   "loc.description": "Build an iOS app with Xamarin on Mac OS",
   "loc.instanceNameFormat": "Build Xamarin.iOS solution $(solution)",
   "loc.group.displayName.sign": "Signing & Provisioning",

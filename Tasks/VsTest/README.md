@@ -23,7 +23,7 @@ Include patterns start with ‘+:’, and exclude patterns with ‘-:’ (Defaul
 - **Run Settings File:**	Path to a runsettings or testsettings file can be specified here. The path can be to a file in the repository or a path to file on disk. Use $(Build.SourcesDirectory) to access the root project folder. For more information on these files, please see https://msdn.microsoft.com/library/jj635153.aspx
 
 - **Override TestRun Parameters:**	Override parameters defined in the TestRunParameters section of the runsettings file. For example: Platform=$(platform);Port=8080
-For more information, please see http://blogs.msdn.com/b/visualstudioalm/archive/2015/09/04/supplying-run-time-parameters-to-tests.aspx
+For more information, please see https://blogs.msdn.com/b/visualstudioalm/archive/2015/09/04/supplying-run-time-parameters-to-tests.aspx
 
 - **Code Coverage Enabled:**	If set, this will collect code coverage information during the run and upload the results to the server. This is supported for .net and C++ projects only. To customize Code Coverage analysis and manage inclusions and exclusions, please see https://msdn.microsoft.com/library/jj159530.aspx
 	

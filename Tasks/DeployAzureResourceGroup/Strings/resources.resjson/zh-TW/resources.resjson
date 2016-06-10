@@ -20,7 +20,7 @@
   "loc.input.label.location": "位置",
   "loc.input.help.location": "資源群組的部署位置。若訂用帳戶中已有該資源，將會忽略此值。",
   "loc.input.label.csmFile": "範本",
-  "loc.input.help.csmFile": "請指定 Azure 資源管理員範本的路徑。如需範本的詳細資訊，請參閱 http://aka.ms/azuretemplates。若要立即啟動，請使用範本 http://aka.ms/sampletemplate。",
+  "loc.input.help.csmFile": "請指定 Azure 資源管理員範本的路徑。如需範本的詳細資訊，請參閱 https://aka.ms/azuretemplates。若要立即啟動，請使用範本 https://aka.ms/sampletemplate。",
   "loc.input.label.csmParametersFile": "範本參數",
   "loc.input.help.csmParametersFile": "指定 Azure 資源管理員範本之參數檔案的路徑。",
   "loc.input.label.overrideParameters": "覆寫範本參數",

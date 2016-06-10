@@ -2,24 +2,24 @@ $ErrorActionPreference = 'Stop'
 
 function Get-AzureUtility
 {
-    $currentVersion =  Get-AzureCmdletsVersion
+    $currentVersion =  (Get-Module -Name AzureRM.profile).Version
     Write-Verbose  "Installed Azure PowerShell version: $currentVersion"
 
     $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
-
+	
     $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
     $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
-
-    if(!$versionCompatible)
+	
+	
+    if( !$currentVersion -and $currentVersion -gt $minimumAzureVersion )
     {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
+	    $azureUtilityRequiredVersion = $azureUtilityNewVersion  
     }
     else
     {
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
+	    $azureUtilityRequiredVersion = $azureUtilityOldVersion
     }
-
+	
     Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
     return $azureUtilityRequiredVersion
 }
@@ -58,7 +58,7 @@ function Get-AzureRMWebAppConnectionDetailsWithSpecificSlot
           [String][Parameter(Mandatory=$true)] $resourceGroupName,
           [String][Parameter(Mandatory=$true)] $slotName)
 
-    Write-Host (Get-LocalizedString -Key "Getting connection details for azureRM WebApp:'{0}' under Slot:'{1}'." -ArgumentList $webAppName, $slotName)
+    Write-Host (Get-VstsLocString -Key "GettingconnectiondetailsforazureRMWebApp0underSlot1" -ArgumentList $webAppName, $slotName)
 
     $kuduHostName = $webAppName + "-" + $slotName + ".scm.azurewebsites.net"
     Write-Verbose "`t Using KuduHostName:'$kuduHostName' for azureRM WebApp:'$webAppName' under Slot:'$slotName'."
@@ -69,7 +69,7 @@ function Get-AzureRMWebAppConnectionDetailsWithSpecificSlot
     # construct object to store webApp connection details
     $azureRMWebAppConnectionDetailsWithSpecificSlot = Construct-AzureWebAppConnectionObject -kuduHostName $kuduHostName -webAppProfileForMSDeploy $webAppProfileForMSDeploy
 
-    Write-Host (Get-LocalizedString -Key "Got connection details for azureRM WebApp:'{0}' under Slot:'{1}'." -ArgumentList $webAppName, $slotName)
+    Write-Host (Get-VstsLocString -Key "GotconnectiondetailsforazureRMWebApp0underSlot1" -ArgumentList $webAppName, $slotName)
     return $azureRMWebAppConnectionDetailsWithSpecificSlot
 }
 
@@ -77,7 +77,7 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
 {
     param([String][Parameter(Mandatory=$true)] $webAppName)
 
-    Write-Host (Get-LocalizedString -Key "Getting connection details for azureRM WebApp:'{0}' under Production Slot." -ArgumentList $webAppName)
+    Write-Host (Get-VstsLocString -Key "GettingconnectiondetailsforazureRMWebApp0underProductionSlot" -ArgumentList $webAppName)
 
     $kuduHostName = $webAppName + ".scm.azurewebsites.net"
     Write-Verbose  "`t Using KuduHostName:'$kuduHostName' for azureRM WebApp:'$webAppName' under default Slot."
@@ -86,7 +86,7 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
     $azureRMWebAppDetails = Get-AzureRMWebAppDetails -webAppName $webAppName
 
     if( $azureRMWebAppDetails.Count -eq 0 ){   
-	   Throw (Get-LocalizedString -Key "WebApp '{0}' does not exist." -ArgumentList $webAppName)
+	   Throw (Get-VstsLocString -Key "WebApp0doesnotexist" -ArgumentList $webAppName)
     }
 
     # Get resourcegroup name under which azure webApp exists
@@ -102,7 +102,7 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
     # construct object to store webApp connection details
     $azureRMWebAppConnectionDetailsWithProductionSlot = Construct-AzureWebAppConnectionObject -kuduHostName $kuduHostName -webAppProfileForMSDeploy $webAppProfileForMSDeploy
 
-    Write-Host (Get-LocalizedString -Key "Got connection details for azureRM WebApp:'{0}' under Production Slot." -ArgumentList $webAppName)
+    Write-Host (Get-VstsLocString -Key "GotconnectiondetailsforazureRMWebApp0underProductionSlot" -ArgumentList $webAppName)
     return $azureRMWebAppConnectionDetailsWithProductionSlot
 }
 
