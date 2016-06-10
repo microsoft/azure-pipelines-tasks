@@ -64,11 +64,11 @@ var runxbuild = function (fn) {
         var xbuild = tl.createToolRunner(xbuildToolPath);
         xbuild.pathArg(fn);
 
+		if(clean) {
+            xbuild.arg('/t:Clean');
+        }
         if (target) {
             xbuild.arg('/t:' + target);
-        }
-        if(clean) {
-            xbuild.arg('/t:Clean');
         }
         xbuild.arg('/t:PackageForAndroid');
         if (msbuildArguments) {
