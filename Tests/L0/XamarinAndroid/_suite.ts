@@ -353,7 +353,7 @@ describe('XamarinAndroid Suite', function() {
 		
 		tr.run()
 		.then(() => {
-            assert(tr.ran('/home/bin/xbuild /user/build/fun/project.csproj /t:My Target /t:Clean /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android');
+            assert(tr.ran('/home/bin/xbuild /user/build/fun/project.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android');
             assert(tr.invokedToolCount == 1, 'should have only run XamarinAndroid 1 time');
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -381,9 +381,9 @@ describe('XamarinAndroid Suite', function() {
 		
 		tr.run()
 		.then(() => {
-            assert(tr.ran('/home/bin/xbuild /user/build/fun/project1.csproj /t:My Target /t:Clean /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 1');
-            assert(tr.ran('/home/bin/xbuild /user/build/fun/project2.csproj /t:My Target /t:Clean /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 2');
-            assert(tr.ran('/home/bin/xbuild /user/build/fun/project3.csproj /t:My Target /t:Clean /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 3');
+            assert(tr.ran('/home/bin/xbuild /user/build/fun/project1.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 1');
+            assert(tr.ran('/home/bin/xbuild /user/build/fun/project2.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 2');
+            assert(tr.ran('/home/bin/xbuild /user/build/fun/project3.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 3');
             assert(tr.invokedToolCount == 3, 'should have only run XamarinAndroid 3 times');
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
