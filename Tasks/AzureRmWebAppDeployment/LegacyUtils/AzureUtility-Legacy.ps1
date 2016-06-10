@@ -60,14 +60,11 @@ function Get-AzureRMWebAppConnectionDetailsWithSpecificSlot
 
     Write-Host (Get-LocalizedString -Key "Getting connection details for azureRM WebApp:'{0}' under Slot:'{1}'." -ArgumentList $webAppName, $slotName)
 
-    $kuduHostName = $webAppName + "-" + $slotName + ".scm.azurewebsites.net"
-    Write-Verbose "`t Using KuduHostName:'$kuduHostName' for azureRM WebApp:'$webAppName' under Slot:'$slotName'."
-
     # Get webApp publish profile Object for MSDeploy
     $webAppProfileForMSDeploy =  Get-AzureRMWebAppProfileForMSDeployWithSpecificSlot -webAppName $webAppName -resourceGroupName $resourceGroupName -slotName $slotName
 
     # construct object to store webApp connection details
-    $azureRMWebAppConnectionDetailsWithSpecificSlot = Construct-AzureWebAppConnectionObject -kuduHostName $kuduHostName -webAppProfileForMSDeploy $webAppProfileForMSDeploy
+    $azureRMWebAppConnectionDetailsWithSpecificSlot = Construct-AzureWebAppConnectionObject -webAppProfileForMSDeploy $webAppProfileForMSDeploy
 
     Write-Host (Get-LocalizedString -Key "Got connection details for azureRM WebApp:'{0}' under Slot:'{1}'." -ArgumentList $webAppName, $slotName)
     return $azureRMWebAppConnectionDetailsWithSpecificSlot
@@ -78,9 +75,6 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
     param([String][Parameter(Mandatory=$true)] $webAppName)
 
     Write-Host (Get-LocalizedString -Key "Getting connection details for azureRM WebApp:'{0}' under Production Slot." -ArgumentList $webAppName)
-
-    $kuduHostName = $webAppName + ".scm.azurewebsites.net"
-    Write-Verbose  "`t Using KuduHostName:'$kuduHostName' for azureRM WebApp:'$webAppName' under default Slot."
 
     # Get azurerm webApp details
     $azureRMWebAppDetails = Get-AzureRMWebAppDetails -webAppName $webAppName
@@ -100,7 +94,7 @@ function Get-AzureRMWebAppConnectionDetailsWithProductionSlot
     $webAppProfileForMSDeploy =  Get-AzureRMWebAppProfileForMSDeployWithProductionSlot -webAppName $webAppName -resourceGroupName $resourceGroupName
 
     # construct object to store webApp connection details
-    $azureRMWebAppConnectionDetailsWithProductionSlot = Construct-AzureWebAppConnectionObject -kuduHostName $kuduHostName -webAppProfileForMSDeploy $webAppProfileForMSDeploy
+    $azureRMWebAppConnectionDetailsWithProductionSlot = Construct-AzureWebAppConnectionObject -webAppProfileForMSDeploy $webAppProfileForMSDeploy
 
     Write-Host (Get-LocalizedString -Key "Got connection details for azureRM WebApp:'{0}' under Production Slot." -ArgumentList $webAppName)
     return $azureRMWebAppConnectionDetailsWithProductionSlot
