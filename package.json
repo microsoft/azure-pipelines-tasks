@@ -41,8 +41,6 @@
     "shelljs": "0.3.0",
     "through2": "2.0.1",
     "typescript": "1.8.7",
-    "validator": "3.33.0",
-    "regedit": "2.2.6",	
-    "xml2js": "0.4.16"
+    "validator": "3.33.0"
   }
 }
