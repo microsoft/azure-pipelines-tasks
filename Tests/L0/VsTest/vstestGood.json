@@ -63,11 +63,15 @@
             "message": "success"
         }
     },
-    "stats":{
-        "settings.runsettings" :{
+    "exist": {
+        "settings.runsettings": true,
+        "path/to/customadapters": true
+    },
+    "stats": {
+        "settings.runsettings": {
             "isFile": true
         },
-        "path/to/customadapters" :{
+        "path/to/customadapters": {
             "isDirectory": true
         }
     }
