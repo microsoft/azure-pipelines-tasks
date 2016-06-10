@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 19
+        "Patch": 22
     },
     "demands": [
         "node.js"
@@ -23,6 +23,16 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
+        },
+        {
+            "name": "junitTestResults",
+            "displayName": "JUnit Test Results",
+            "isExpanded": true
+        },
+        {
+            "name": "codeCoverage",
+            "displayName": "Code Coverage",
+            "isExpanded": true
         }
     ],
     "instanceNameFormat": "grunt $(targets)",
@@ -68,6 +78,54 @@
             "required": true,
             "helpMarkDown": "grunt-cli to run when agent can't find global installed grunt-cli  Defaults to the grunt-cli under node_modules folder of cwd.",
             "groupName": "advanced"
+        },
+        {
+            "name": "publishJUnitResults",
+            "type": "boolean",
+            "label": "Publish to TFS/Team Services",
+            "required": true,
+            "defaultValue": "true",
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Gradle build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services."
+        },
+        {
+            "name": "testResultsFiles",
+            "type": "filePath",
+            "label": "Test Results Files",
+            "defaultValue": "**/TEST-*.xml",
+            "required": true,
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
+            "visibleRule": "publishJUnitResults = true"
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test Run Title",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Provide a name for the test run.",
+            "visibleRule": "publishJUnitResults = true"
+        },
+        {
+            "name": "enableCodeCoverage",
+            "type": "boolean",
+            "label": "Enable Code Coverage",
+            "required": true,
+            "defaultValue": "true",
+            "groupName" : "codeCoverage",
+            "helpMarkDown": "Select this option to enable Code Coverage"
+        },
+        {
+            "name": "testFiles",
+            "type": "string",
+            "label": "Test Files",
+            "defaultValue": "test/*.js",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Provide all test code files",
+            "visibleRule": "enableCodeCoverage = true"
         }
     ],
     "execution": {
