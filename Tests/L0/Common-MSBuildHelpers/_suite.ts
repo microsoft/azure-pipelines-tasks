@@ -61,6 +61,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Invoke-BuildTools) skips clean if specified', (done) => {
             psr.run(path.join(__dirname, 'Invoke-BuildTools.SkipsCleanIfSpecified.ps1'), done);
         })
+        it('(Invoke-BuildTools) skips create log file if specified', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-BuildTools.SkipsCreateLogFileIfSpecified.ps1'), done);
+        })
         it('(Invoke-BuildTools) skips restore if specified', (done) => {
             psr.run(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfSpecified.ps1'), done);
         })
