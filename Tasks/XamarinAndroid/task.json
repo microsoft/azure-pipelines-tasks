@@ -70,7 +70,7 @@
             "label": "Clean",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
+            "helpMarkDown": "Passes the clean target (/t:clean) during build."
         },
         {
             "name": "msbuildLocation",
