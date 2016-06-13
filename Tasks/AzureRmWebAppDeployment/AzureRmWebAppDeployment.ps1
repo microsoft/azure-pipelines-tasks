@@ -7,6 +7,7 @@ try{
 
 	# Get inputs.
 	$WebAppName = Get-VstsInput -Name WebAppName -Require
+    $WebAppType = Get-vstsInput -Name WebAppType 
 	$DeployToSlotFlag = Get-VstsInput -Name DeployToSlotFlag -Require -AsBool
 	$ResourceGroupName = Get-VstsInput -Name ResourceGroupName
 	$SlotName = Get-VstsInput -Name SlotName
@@ -18,6 +19,10 @@ try{
 	$AdditionalArguments = Get-VstsInput -Name AdditionalArguments 
 	$WebAppUri = Get-VstsInput -Name WebAppUri
 	$SetParametersFile = Get-VstsInput -Name SetParametersFile
+
+    #Defined constant webapp types
+    $ASP_DOT_NET_4 = "ASPdotNet4"
+    $ASP_DOT_NET_5 = "ASPdotNet5"
 
 	# Initialize Azure.
 
@@ -53,8 +58,22 @@ try{
 	# Get msdeploy.exe path
 	$msDeployExePath = Get-MsDeployExePath
 
-	# Ensure that at most a package (.zip) file is found
-	$packageFilePath = Get-SingleFilePath -file $Package
+	if( $WebAppType -eq $ASP_DOT_NET_4 )
+    {
+        # Ensure that at most a package (.zip) file is found
+        $packageFilePath = Get-SingleFilePath -file $Package
+    }
+    elseif( $WebAppType -eq $ASP_DOT_NET_5 )
+    {
+
+        $packageFilePath  = "$package\wwwroot"
+
+        if( ! ( ( Test-Path $package ) -and (Test-Path $packageFilePath) ) )
+        {
+            throw (Get-VstsLocString -Key Specifiedpath0doesntexist -ArgumentList $package)
+        }
+
+    }
 
     # Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
     if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\" ) -or [string]::IsNullOrEmpty($SetParametersFile) ){
@@ -71,9 +90,17 @@ try{
 	$webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag -slotName $SlotName
 
 	# Construct arguments for msdeploy command
-	$msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFilePath -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
-										   -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments `
-										   -setParametersFile $setParametersFilePath
+	if( $WebAppType -eq $ASP_DOT_NET_4   )
+    {
+         $msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFilePath -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
+                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments `
+                                       -setParametersFile $setParametersFilePath
+    }
+    elseif( $WebAppType -eq $ASP_DOT_NET_5 )
+    {
+         $msDeployCmdArgs = Get-MsDeployAspDotNet5CmdArgs -wwwRootDir $packageFilePath -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
+                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -AdditionalArguments $AdditionalArguments
+    }
 
 	# Deploy azureRM webApp using msdeploy Command
 	Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs

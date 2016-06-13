@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "minimumAgentVersion": "1.99.0",
   "groups": [
@@ -31,6 +31,18 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "WebAppType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppType",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppType",
+      "defaultValue": "ASPdotNet4",
+      "options": {
+        "ASPdotNet4": "ASP.Net 4.0",
+        "ASPdotNet5": "ASP.Net 5.0"
+      }
     },
     {
       "name": "WebAppName",
@@ -89,7 +101,8 @@
       "label": "ms-resource:loc.input.label.SetParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile",
+      "visibleRule": "WebAppType = ASPdotNet4"
     },
     {
       "name": "RemoveAdditionalFilesFlag",
@@ -121,7 +134,8 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
+      "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication",
+      "visibleRule": "WebAppType = ASPdotNet4"
     },
     {
       "name": "AdditionalArguments",
@@ -198,6 +212,7 @@
     "msdeploycommandransuccessfully": "ms-resource:loc.messages.msdeploycommandransuccessfully",
     "filePathFindFilesSearchPattern0": "ms-resource:loc.messages.filePathFindFilesSearchPattern0",
     "filePath0": "ms-resource:loc.messages.filePath0",
-    "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0"
+    "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0",
+    "Specifiedpath0doesntexist": "ms-resource:loc.messages.Specifiedpath0doesntexist"
   }
 }
