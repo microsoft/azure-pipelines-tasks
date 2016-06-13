@@ -10,6 +10,8 @@ var fs = require('fs');
 var xml2js = require('xml2js');
 
 try {
+    tl.setResourcePath(path.join( __dirname, 'task.json'));
+	
     var vsTestVersion: string = tl.getInput('vsTestVersion');
     var testAssembly: string = tl.getInput('testAssembly', true);
     var testFiltercriteria: string = tl.getInput('testFiltercriteria');
