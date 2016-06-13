@@ -121,6 +121,19 @@ function SetCredentialsNuGetConfigAndSaveTemp
         [uri]$targetFeed
     )
 
+    #check that the config has a configuration section
+    if($nugetConfig.configuration -eq $null)
+    {
+        if($nugetConfig.packages -ne $null)
+        {
+            throw (Get-LocalizedString -Key "An invalid NuGet.config was passed to the NuGet Installer step. Check the settings for this build step and confirm you selected NuGet.config rather than packages.config.")
+        }
+        else
+        {
+            throw (Get-LocalizedString -Key "An invalid NuGet.config was passed to the NuGet Installer step.")
+        }
+    }
+
     $credentialsSection = $nugetConfig.SelectSingleNode("configuration/packageSourceCredentials")
     if($credentialsSection -eq $null)
     {
