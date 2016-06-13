@@ -6,9 +6,9 @@
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
     "category": "Utility",
     "visibility": [
-                  "Build",
-                  "Release"
-                  ],    
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
@@ -21,9 +21,9 @@
     "minimumAgentVersion": "1.96.2",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -39,44 +39,44 @@
                 "filePath": "File Path"
             }
         },
-        { 
-            "name": "scriptName", 
-            "type": "filePath", 
-            "label": "Script filename", 
-            "defaultValue":"", 
-            "required":true,
+        {
+            "name": "scriptName",
+            "type": "filePath",
+            "label": "Script filename",
+            "defaultValue": "",
+            "required": true,
             "visibleRule": "scriptType = filePath",
-            "helpMarkDown": "Path of the script to execute. Should be fully qualified path or relative to the default working directory." 
+            "helpMarkDown": "Path of the script to execute. Should be fully qualified path or relative to the default working directory."
         },
-        { 
-            "name": "arguments", 
-            "type": "string", 
-            "label": "Arguments", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters" 
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters"
         },
-        { 
-            "name": "workingFolder", 
-            "type": "filePath", 
-            "label": "Working folder", 
-            "defaultValue":"", 
-            "required":false,
+        {
+            "name": "workingFolder",
+            "type": "filePath",
+            "label": "Working folder",
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
-            "groupName":"advanced"
+            "groupName": "advanced"
         },
-        { 
-            "name": "inlineScript", 
-            "type": "multiLine", 
-            "label": "Inline Script", 
-            "defaultValue":"# You can write your powershell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n Write-Host \"Hello World\"", 
-            "required":true,
+        {
+            "name": "inlineScript",
+            "type": "multiLine",
+            "label": "Inline Script",
+            "defaultValue": "# You can write your powershell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n Write-Host \"Hello World\"",
+            "required": true,
             "helpMarkDown": "",
             "visibleRule": "scriptType = inlineScript",
             "properties": {
                 "resizable": "true",
-                "rows" : "10",
-                "maxLength" : "500"
+                "rows": "10",
+                "maxLength": "500"
             }
         }
     ],
