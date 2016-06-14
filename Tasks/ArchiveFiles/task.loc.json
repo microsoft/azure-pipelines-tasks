@@ -29,7 +29,7 @@
       "name": "rootFolder",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.rootFolder",
-      "defaultValue": "$(Build.BinariesDirectory)/output",
+      "defaultValue": "$(Build.BinariesDirectory)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.rootFolder"
     },
@@ -37,7 +37,7 @@
       "name": "includeRootFolder",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeRootFolder",
-      "defaultValue": "*",
+      "defaultValue": true,
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.includeRootFolder"
     },
@@ -76,7 +76,7 @@
       "name": "archiveFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.archiveFile",
-      "defaultValue": "output_$(Build.BuildId).zip",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.archiveFile",
       "groupName": "archive"

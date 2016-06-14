@@ -29,17 +29,17 @@
       "name": "rootFolder",
       "type": "filePath",
       "label": "Root folder (or file) to archive",
-      "defaultValue": "$(Build.BinariesDirectory)/output",
+      "defaultValue": "$(Build.BinariesDirectory)",
       "required": true,
       "helpMarkDown": "The root folder to add to the archive.  Everything under this folder will be added to the resulting archive."
     },
     {
       "name": "includeRootFolder",
       "type": "boolean",
-      "label": "Include root folder archive paths",
-      "defaultValue": "*",
+      "label": "Include root folder in archive paths",
+      "defaultValue": true,
       "required": true,
-      "helpMarkDown": "If true, the root folder will be included in all filepaths within the archive, otherwise all file paths will start one level lower.  For example, if the selected Root Folder is '/home/user/output/classes/', and contained 'com/acme/Main.class', the resulting archive would contain 'classes/com/acme/Main.class' if the root folder is included, or 'com/acme/Main.class', if the root folder is not included."
+      "helpMarkDown": "If set, the root folder will be included in all filepaths within the archive, otherwise all file paths will start one level lower.  <br/><br/>For example, suppose the selected Root Folder is <b>`/home/user/output/classes/`</b>, and contains <b>`com/acme/Main.class`</b>. <ul><li>If set, the resulting archive would contain <b>`classes/com/acme/Main.class`</b>.</li><li>If not set, the resulting archive would contain <b>`com/acme/Main.class`</b>.</li></ul>"
     },
     {
       "name": "archiveType",
@@ -76,7 +76,7 @@
       "name": "archiveFile",
       "type": "filePath",
       "label": "Archive file to create",
-      "defaultValue": "output_$(Build.BuildId).zip",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip",
       "required": true,
       "helpMarkDown": "Specify the name of the archive file to create.  For example to create 'foo.tgz', select the 'tar' Archive type, 'gz' for Tar compression.",
       "groupName": "archive"
