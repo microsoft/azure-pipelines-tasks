@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "运行 PowerShell 脚本",
   "loc.instanceNameFormat": "Powershell: $(scriptName)",
   "loc.group.displayName.advanced": "高级",

@@ -42,7 +42,7 @@ function Get-AzureRMWebAppPublishUrlARM
     $azureRMWebAppProfileDetails = $azureRMWebAppProfileDetails | Where-Object { $_.PublishMethod -eq 'MSDeploy'}
 
     if( $azureRMWebAppProfileDetails.Count -eq 0 -or $azureRMWebAppProfileDetails.DestinationAppUri -eq $null ){
-        Throw (Get-LocalizedString -Key "Unable to find publish Url for WebApp '{0}'." -ArgumentList $webAppName)
+        Throw (Get-VstsLocString -Key "UnabletofindpublishUrlforWebApp0" -ArgumentList $webAppName)
     }
 
     return $azureRMWebAppProfileDetails.DestinationAppUri.OriginalString
@@ -71,7 +71,7 @@ function Get-WebAppRGName
         {
             Write-Verbose "[Azure Call] Web App: $webAppName not found"
 
-            Throw (Get-LocalizedString -Key "Web App: '{0}' not found." -ArgumentList $webAppName)
+            Throw "Web App: '$webAppName' not found."
         }
     }
 }
@@ -79,12 +79,12 @@ function Get-WebAppRGName
 
 function Construct-AzureWebAppConnectionObject
 {
-    param([String][Parameter(Mandatory=$true)] $kuduHostName,
-          [Object][Parameter(Mandatory=$true)] $webAppProfileForMSDeploy)
+    param([Object][Parameter(Mandatory=$true)] $webAppProfileForMSDeploy)
 
     # Get userName and userPassword to access kuduServer
     $userName = $webAppProfileForMSDeploy.userName
     $userPassword = $webAppProfileForMSDeploy.UserPassword
+    $kuduHostName = $webAppProfileForMSDeploy.PublishUrl
     Write-Verbose "`t Username is:'$userName' to access KuduHostName:'$kuduHostName'."
 
     $azureRMWebAppConnectionDetails = @{}

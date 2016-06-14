@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613728)",
   "loc.description": "Xamarin を使用して Android アプリをビルドします",
   "loc.instanceNameFormat": "Xamarin.Android プロジェクトのビルド $(project)",
   "loc.group.displayName.msbuildOptions": "MSBuild オプション",

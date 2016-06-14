@@ -3,7 +3,7 @@
     "name": "AndroidBuild",
     "friendlyName": "Android Build (deprecated; use Gradle)",
     "description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613716)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "demands" : [
 	    "AndroidSDK"

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL 데이터베이스 배포",
-  "loc.helpMarkDown": "[자세한 정보](http://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[자세한 정보](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "DACPAC를 사용하여 Azure SQL DB 배포",
   "loc.instanceNameFormat": "Azure SQL DACPAC 배포: $(DacpacFile)",
   "loc.group.displayName.target": "대상",

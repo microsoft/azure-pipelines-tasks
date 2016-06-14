@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Build with MSBuild",
   "loc.instanceNameFormat": "Build solution $(solution)",
   "loc.group.displayName.advanced": "Advanced",
@@ -15,6 +15,8 @@
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
   "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.logProjectEvents": "Record Project Details",
+  "loc.input.label.createLogFile": "Create Log File",
+  "loc.input.help.createLogFile": "Optionally create a log file (Windows only).",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild Version",
   "loc.input.help.msbuildVersion": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild(Mono) will be used.",

@@ -1,8 +1,8 @@
-# Deploy Visual Studio Test Agent Task
+﻿# Deploy Visual Studio Test Agent Task
 
 ###Overview
 The Deploy Test agent task is used to Deploy the Test Agent to a set of machines. This Test Agent can then be used to enable data collection or run Distributed Tests using the ‘Visual Studio Test using Test Agent’ task. 
-To learn more about the general usage of the task, please see https://msdn.microsoft.com/en-us/library/mt270062.aspx and http://blogs.msdn.com/b/visualstudioalm/archive/2015/06/28/10618066.aspx
+To learn more about the general usage of the task, please see https://msdn.microsoft.com/en-us/library/mt270062.aspx and https://blogs.msdn.com/b/visualstudioalm/archive/2015/06/28/10618066.aspx
 
 ###Prerequisites
 The task requires:
@@ -25,7 +25,7 @@ To dynamically deploy Azure resource groups with virtual machines in them use th
 
 ###The different parameters of the task are explained below:
 
-- **Machines:** Required Field. Provide the comma seperated list of machine names or "Azure Resource Group / Test Machine Group" name or Variable name containing the list of machines on which the Test Agent should be deployed.
+- **Machines:** Required Field. Provide the comma separated list of machine names or "Azure Resource Group / Test Machine Group" name or Variable name containing the list of machines on which the Test Agent should be deployed.
 
 - **Admin Login:** Required Field in case of Flat Machines or if you have used one of the Dynamic machine provisioning tasks like "Azure Resource Group Deployment". Username should be an admin on the Test Machines on which Test Agent is being deployed. Multiple formats like Domain\username, username, Machinename\username and .\username are supported. Note that UPN format like username@domain.com and built in System accounts like “NT Authority\System” are not supported
 
@@ -45,9 +45,9 @@ To dynamically deploy Azure resource groups with virtual machines in them use th
 
   For example, Coded UI or Selenium tests that are running on full fidelity browsers would need this checked.
 
-- **Test Agent Location:**	Use this to supply a path to the Test Agent (vstf_testagent.exe) which is different from the default (http://go.microsoft.com/fwlink/?LinkId=536423). 
+- **Test Agent Location:**	Use this to supply a path to the Test Agent (vstf_testagent.exe) which is different from the default (https://go.microsoft.com/fwlink/?LinkId=536423).
   
-  For example, if you have stored a local copy of the Test Agent within your network, you can speicfy a path to that. Local path or a network location can be specified and location should be accessible by either buildagent (with the identity it is running with) OR testagent (with the identity its configured with above). For Azure test machines, web location can be provided. 
+  For example, if you have stored a local copy of the Test Agent within your network, you can specify a path to that. Local path or a network location can be specified and location should be accessible by either buildagent (with the identity it is running with) OR testagent (with the identity its configured with above). For Azure test machines, web location can be provided. 
 
 - **Update Test Agent:**	If Test Agent is already deployed on a machine, this option checks to see if there is an update available for that version of the Test Agent. Unchecking the box will skip the update check
 

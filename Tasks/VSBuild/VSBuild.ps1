@@ -13,6 +13,7 @@ try {
     [bool]$clean = Get-VstsInput -Name Clean -AsBool
     [bool]$restoreNugetPackages = Get-VstsInput -Name RestoreNugetPackages -AsBool
     [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
+    [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
     if ([string]$vsLocation = Get-VstsInput -Name VSLocation) {
         Write-Warning (Get-VstsLocString -Key VSLocationDeprecated0 -ArgumentList $vsLocation)
         $vsLocation = $null
@@ -37,7 +38,7 @@ try {
     $MSBuildLocation = Select-MSBuildLocation -VSVersion $VSVersion -Architecture $MSBuildArchitecture
     $MSBuildArgs = Format-MSBuildArguments -MSBuildArguments $MSBuildArgs -Platform $Platform -Configuration $Configuration -VSVersion $VSVersion
     $global:ErrorActionPreference = 'Continue'
-    Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents)
+    Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }

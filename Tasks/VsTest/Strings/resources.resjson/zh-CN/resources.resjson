@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 测试",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "使用 Visual Studio 测试运行器运行测试",
   "loc.instanceNameFormat": "测试程序集 $(testAssembly)",
   "loc.group.displayName.executionOptions": "执行选项",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gulp",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "Sistema di compilazione basato su attività di streaming di Node.js",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Avanzate",

@@ -3,7 +3,7 @@
     "name": "SqlAzureDacpacDeployment",
     "friendlyName": "Azure SQL Database Deployment",
     "description": "Deploy Azure SQL DB using DACPAC",
-    "helpMarkDown": "[More Information](http://aka.ms/sqlazuredeployreadme)",
+    "helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
         "azureps",

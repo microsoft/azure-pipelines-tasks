@@ -57,6 +57,7 @@ $ErrorActionPreference = "Stop"
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
 # Load all dependent files for execution

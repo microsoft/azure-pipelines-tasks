@@ -32,8 +32,8 @@ processInputs() 													// Process inputs to task and create xcv, xcb, impo
 		return code;
 	})												
 	.then(packageApps)												// Package apps if configured
-	.then(function(code) {											// On success, exit
-		tl.exit(code);
+	.then(function(code) {                                          // Success
+		tl.setResult(tl.TaskResult.Succeeded);
 	})
 	.fin(function(code) {
 		process.env['DEVELOPER_DIR'] = origXcodeDeveloperDir;
@@ -48,7 +48,7 @@ processInputs() 													// Process inputs to task and create xcv, xcb, impo
 	.fail(function(err) {
 		console.error(err.message);
 		tl.debug('taskRunner fail');
-		tl.exit(1);
+		tl.setResult(tl.TaskResult.Failed, err);
 	});
 
 function processInputs() {  

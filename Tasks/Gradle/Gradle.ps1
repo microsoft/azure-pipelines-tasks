@@ -12,8 +12,8 @@ param(
     [string]$javaHomeSelection,
     [string]$jdkVersion,      # JDK version
     [string]$jdkArchitecture,  # JDK arch
-    [string]$jdkUserInputPath
-
+    [string]$jdkUserInputPath,
+    [string]$sqAnalysisEnabled
 )
 
 Function CmdletHasMember($memberName) {
@@ -33,6 +33,13 @@ if($isCoverageEnabled)
     Write-Verbose "codeCoverageTool = $codeCoverageTool" 
     Write-Verbose "classFilesDirectory = $classFilesDirectory" 
     Write-Verbose "classFilter = $classFilter"
+}
+
+# SonarQube analysis is not supported on Powershell, output a warning message
+if($sqAnalysisEnabled)
+{
+    Write-Warning "SonarQube analysis is not yet supported on Windows and hosted agents."
+    Write-Warning "Please use a dedicated Unix agent to enable this feature: https://github.com/Microsoft/vsts-agent"
 }
 
 Write-Verbose "javaHomeSelection = $javaHomeSelection"

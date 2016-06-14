@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bereitstellung des Azure-Clouddiensts",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Azure-Clouddienst bereitstellen",
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Erweiterte Optionen für das Erstellen des neuen Diensts.",

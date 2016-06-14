@@ -1,4 +1,4 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
 
 import path = require('path');
 import fs = require('fs');
@@ -10,9 +10,6 @@ import trm = require('vsts-task-lib/toolrunner');
 import pmd = require('./mavenpmd');
 import {AnalysisResult} from './analysisresult';
 import {ModuleAnalysis} from './moduleanalysis';
-
-// Set up for localization
-tl.setResourcePath(path.join( __dirname, 'task.json'));
 
 // Cache build variables are cached globally as they cannot change during the same build.
 var sourcesDir:string;

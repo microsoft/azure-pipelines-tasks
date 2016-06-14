@@ -191,7 +191,7 @@ if (files.length > 0) {
         tl.debug('file:' + file + ' will be copied.');
     })
     
-    // clean target folder if requied
+    // clean target folder if required
     if (cleanTargetFolder) {
         console.log(tl.loc('CleaningTargetFolder', targetFolder));
         tl.rmRF(targetFolder);

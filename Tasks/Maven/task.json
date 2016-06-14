@@ -3,7 +3,7 @@
     "name": "Maven",
     "friendlyName": "Maven",
     "description": "Build with Apache Maven",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613723)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 51
+        "Patch": 53
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -124,7 +124,7 @@
             "label": "Class Files Directories",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "This field is required for a multi-module project. Specify a comma-seperated list of relative paths from the Maven POM file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
+            "helpMarkDown": "This field is required for a multi-module project. Specify a comma-separated list of relative paths from the Maven POM file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
@@ -229,7 +229,7 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Run a [SonarQube analysis](http://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
+            "helpMarkDown": "Run a [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
         },
         {
             "name": "sqConnectedServiceName",
@@ -291,7 +291,7 @@
         "Node": {
             "target": "maventask.js",
             "argumentFormat": ""
-        },
+         },
         "PowerShell": {
             "target": "$(currentDirectory)\\maven.ps1",
             "argumentFormat": "",
@@ -302,9 +302,12 @@
         }
     },
     "messages": {
-      "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
-      "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
-      "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
-      "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations."
+        "sqAnalysis_isEnabled": "SonarQube analysis is enabled.",
+        "sqAnalysis_isNotEnabled": "SonarQube analysis is not enabled.",
+        "sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
+        "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
+        "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
+        "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
+        "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations."
     }
 }

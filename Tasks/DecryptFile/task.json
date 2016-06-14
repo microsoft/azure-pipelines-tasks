@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "groups": [
         {
@@ -29,7 +29,7 @@
             "label": "Cypher",
             "defaultValue": "des3",
             "required": true,
-            "helpMarkDown": "Encryption cypher to use. See [cypher suite names](http://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values."
+            "helpMarkDown": "Encryption cypher to use. See [cypher suite names](https://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values."
         },
         {
             "name": "inFile",

@@ -11,11 +11,19 @@
             "code": 0,
             "stdout": "Maven package done"
         },
+        "/home/bin/maven/bin/mvn -f pom.xml clean package": {
+            "code": 0,
+            "stdout": "Maven package done"
+        },
         "/home/bin/maven2/bin/mvn -version": {
             "code": 0,
             "stdout": "Maven version 1.0.0"
         },
         "/home/bin/maven2/bin/mvn -f pom.xml package": {
+            "code": 0,
+            "stdout": "Maven package done"
+        },
+        "/home/bin/maven2/bin/mvn -f pom.xml clean package": {
             "code": 0,
             "stdout": "Maven package done"
         },
@@ -43,6 +51,10 @@
         "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml sonar:sonar": {
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
+        },        
+        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar": {
+            "code": 0,
+            "stdout": "Maven package and SQ in issues mode"
         },
         "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass -f pom.xml sonar:sonar": {
             "code": 0,

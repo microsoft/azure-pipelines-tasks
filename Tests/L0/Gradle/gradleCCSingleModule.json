@@ -9,12 +9,12 @@
             "stdout": "subprojects: []",
             "stderr": ""
         },
-        "gradlew build jacocoTestReport": {
+        "gradlew clean build jacocoTestReport": {
             "code": 0,
             "stdout": "Sample output",
             "stderr": ""
         },
-        "gradlew build cobertura": {
+        "gradlew clean build cobertura": {
             "code": 0,
             "stdout": "Sample output",
             "stderr": ""
@@ -39,6 +39,12 @@
     "getVariable": {
         "ANT_HOME": "/user/local/bin/ANT",
         "JAVA_HOME_8_X86": "/user/local/bin/Java8"
+    },
+    "exist": {
+        "CCReport43F6D5EF\\summary.xml": true,
+        "CCReport43F6D5EF\\coverage.xml": true,
+        "CCReport43F6D5EF/summary.xml": true,
+        "CCReport43F6D5EF/coverage.xml": true
     },
     "stats": {
         "CCReport43F6D5EF\\summary.xml": {

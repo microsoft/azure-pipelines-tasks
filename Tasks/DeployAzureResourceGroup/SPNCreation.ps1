@@ -53,7 +53,7 @@ Write-Output "SPN creation completed successfully (SPN Name: $spnName)" -Verbose
 
 #Assign role to SPN
 Write-Output "Waiting for SPN creation to reflect in Directory before Role assignment"
-sleep 20
+Start-Sleep 20
 Write-Output "Assigning role ($spnRole) to SPN App ($appId)" -Verbose
 New-AzureRmRoleAssignment -RoleDefinitionName $spnRole -ServicePrincipalName $appId
 Write-Output "SPN role assignment completed successfully" -Verbose

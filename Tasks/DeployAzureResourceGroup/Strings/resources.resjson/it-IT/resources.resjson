@@ -20,7 +20,7 @@
   "loc.input.label.location": "Percorso",
   "loc.input.help.location": "Percorso per la distribuzione del gruppo di risorse. Se il gruppo di risorse esiste già nella sottoscrizione, questo valore verrà ignorato.",
   "loc.input.label.csmFile": "Modello",
-  "loc.input.help.csmFile": "Consente di specificare il percorso del modello Gestione risorse di Azure. Per altre informazioni sui modelli, vedere http://aka.ms/azuretemplates. Per iniziare subito, usare il modello http://aka.ms/sampletemplate.",
+  "loc.input.help.csmFile": "Consente di specificare il percorso del modello Gestione risorse di Azure. Per altre informazioni sui modelli, vedere https://aka.ms/azuretemplates. Per iniziare subito, usare il modello https://aka.ms/sampletemplate.",
   "loc.input.label.csmParametersFile": "Parametri modello",
   "loc.input.help.csmParametersFile": "Consente di specificare il percorso del file dei parametri del modello di Gestione risorse di Azure.",
   "loc.input.label.overrideParameters": "Esegui override dei parametri del modello",

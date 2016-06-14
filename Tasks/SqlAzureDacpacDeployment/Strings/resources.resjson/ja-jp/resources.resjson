@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL Database の配置",
-  "loc.helpMarkDown": "[詳細] (http://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[詳細] (https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "DACPAC を使用して Azure SQL DB を展開します",
   "loc.instanceNameFormat": "Azure SQL DACPAC: $(DacpacFile) を展開します",
   "loc.group.displayName.target": "ターゲット ",

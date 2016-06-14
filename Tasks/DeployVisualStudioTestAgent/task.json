@@ -3,7 +3,7 @@
     "name": "DeployVisualStudioTestAgent",
     "friendlyName": "Visual Studio Test Agent Deployment",
     "description": "Deploy and configure Test Agent to run tests on a set of machines",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=625976)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
     "category": "Test",
     "visibility": [     
                   "Build",
@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 28
+        "Patch": 30
     },
     "demands": [
 
     ],
-    "minimumAgentVersion": "1.97.0",
+    "minimumAgentVersion": "1.101.0",
     "groups":  [
         {
             "name": "testMachineGroups",
@@ -43,7 +43,7 @@
             "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. `Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. `Eg: $(variableName)` Or provide a Machine Group Name.",
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name.",
             "groupName": "testMachineGroups"
         },
         {
@@ -142,7 +142,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `http://go.microsoft.com/fwlink/?LinkId=536423`"
+            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`"
         },
         {
             "name": "updateTestAgent",

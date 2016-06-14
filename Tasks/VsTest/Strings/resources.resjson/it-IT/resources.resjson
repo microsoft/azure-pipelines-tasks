@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Test con Visual Studio",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Consente di eseguire test con Visual Studio Test Runner",
   "loc.instanceNameFormat": "Assembly di test $(testAssembly)",
   "loc.group.displayName.executionOptions": "Opzioni di esecuzione",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement d'un service cloud Azure",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Déployer un service cloud Azure",
   "loc.instanceNameFormat": "Déploiement Azure : $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Options avancées pour la création d'un service",

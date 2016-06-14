@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "クラウド ベースのロード テスト",
-  "loc.helpMarkDown": "このタスクを使用して、Visual Studio Online を使用するクラウド ベースのロード テストを起動できます。[詳細](http://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.helpMarkDown": "このタスクを使用して、Visual Studio Online を使用するクラウド ベースのロード テストを起動できます。[詳細](https://go.microsoft.com/fwlink/?linkid=546976).",
   "loc.description": "Visual Studio Online を使用して、クラウドでロード テストを実行します",
   "loc.instanceNameFormat": "クラウド ロード テスト $(LoadTest)",
   "loc.input.label.connectedServiceName": "登録された接続",

@@ -3,7 +3,7 @@
   "name": "PowerShellOnTargetMachines",
   "friendlyName": "PowerShell on Target Machines",
   "description": "Execute PowerShell scripts on remote machine(s)",
-  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?linkid=627414)",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -13,9 +13,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 32
+    "Patch": 34
   },
-  "minimumAgentVersion": "1.98.0",
+  "minimumAgentVersion": "1.102.0",
   "groups": [
     {
       "name": "deployment",

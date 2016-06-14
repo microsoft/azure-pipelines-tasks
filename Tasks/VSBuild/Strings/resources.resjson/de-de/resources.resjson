@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio-Build",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Erstellen Sie den Build mit MSBuild, und legen Sie die Visual Studio-Versionseigenschaft fest.",
   "loc.instanceNameFormat": "Projektmappe $(solution) erstellen",
   "loc.group.displayName.advanced": "Erweitert",

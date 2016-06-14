@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Test de performances web basé sur le cloud",
-  "loc.helpMarkDown": "Cette tâche peut être utilisée pour déclencher un test de charge basé sur le cloud à l'aide de Visual Studio Online. [En savoir plus](http://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.helpMarkDown": "Cette tâche peut être utilisée pour déclencher un test de charge basé sur le cloud à l'aide de Visual Studio Online. [En savoir plus](https://go.microsoft.com/fwlink/?linkid=613203).",
   "loc.description": "Exécuter le test rapide de performances web dans le cloud, avec Visual Studio Online",
   "loc.instanceNameFormat": "Test rapide de performances web $(testName)",
   "loc.input.label.connectedServiceName": "Connexion enregistrée",

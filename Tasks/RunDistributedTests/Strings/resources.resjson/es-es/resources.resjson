@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ejecutar pruebas funcionales",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Ejecutar pruebas automatizadas de IU, pruebas de Selenium o pruebas funcionales en un conjunto de máquinas (mediante el agente de pruebas)",
   "loc.instanceNameFormat": "Ejecutar pruebas $(sourcefilters) en $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Opciones de instalación",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SonarQube para MSBuild - Iniciar el análisis",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Capturar el perfil de calidad desde SonarQube para configurar el análisis",
   "loc.instanceNameFormat": "Capturar el perfil de calidad desde SonarQube",
   "loc.group.displayName.serverSettings": "Servidor de SonarQube",
@@ -22,9 +22,9 @@
   "loc.input.label.dbPassword": "Contraseña del usuario de la base de datos",
   "loc.input.help.dbPassword": "Solo el servidor de SonarQube 5.1 o versiones anteriores. La contraseña para el usuario de la base de datos, es decir, sonar.jdbc.password",
   "loc.input.label.cmdLineArgs": "Configuración adicional",
-  "loc.input.help.cmdLineArgs": "Opciones de configuración separadas por espacios con el formato: /d:nombreDePropiedad=valorDePropiedad. Se aplican las reglas de escape estándar de la línea de comandos. Para obtener más información sobre la configuración, consulte la [documentación de SonarQube](http://go.microsoft.com/fwlink/?LinkID=624390)",
+  "loc.input.help.cmdLineArgs": "Opciones de configuración separadas por espacios con el formato: /d:nombreDePropiedad=valorDePropiedad. Se aplican las reglas de escape estándar de la línea de comandos. Para obtener más información sobre la configuración, consulte la [documentación de SonarQube](https://go.microsoft.com/fwlink/?LinkID=624390)",
   "loc.input.label.configFile": "Archivo de configuración",
-  "loc.input.help.configFile": "También puede especificar la configuración mediante un archivo de configuración. Hay una plantilla disponible [aquí](http://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.help.configFile": "También puede especificar la configuración mediante un archivo de configuración. Hay una plantilla disponible [aquí](https://go.microsoft.com/fwlink/?LinkID=620062)",
   "loc.input.label.breakBuild": "Error de compilación ocasionado en la puerta de calidad (SQ 5.3+)",
-  "loc.input.help.breakBuild": "Esta opción solo está disponible cuando se utiliza un servidor SonarQube 5.3 o una versión posterior. Esto ocasionará retrasos, ya que la compilación debe esperar a que SonarQube complete el análisis. [Más información](http://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "Esta opción solo está disponible cuando se utiliza un servidor SonarQube 5.3 o una versión posterior. Esto ocasionará retrasos, ya que la compilación debe esperar a que SonarQube complete el análisis. [Más información](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

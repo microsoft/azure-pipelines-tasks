@@ -24,7 +24,7 @@
         "/usr/local/bin/istanbul": true,
         "/usr/local/bin/node_modules/istanbul/lib/cli.js": true,
         "gruntfile.js": true
-    },        
+    },
     "exist": {
         "/usr/local/bin/grunt": true
     },

@@ -3,7 +3,7 @@
     "name": "Grunt",
     "friendlyName": "Grunt",
     "description": "The JavaScript Task Runner",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627413)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627413)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 28
+        "Patch": 21
     },
     "demands": [
         "node.js"
@@ -114,7 +114,7 @@
             "label": "Enable Code Coverage",
             "required": true,
             "defaultValue": "true",
-            "groupName" : "codeCoverage",
+            "groupName": "codeCoverage",
             "helpMarkDown": "Select this option to enable Code Coverage"
         },
         {

@@ -67,7 +67,7 @@ function Validate-AzurePowerShellVersion
     if(!$versionCompatible)
     {
         Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVersion"
-        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "http://aka.ms/azps")
+        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "https://aka.ms/azps")
     }
 
     Write-Verbose "Validated the required azure powershell version"
@@ -78,7 +78,7 @@ function Check-AzureRMInstalled
     if(!(Get-Module -Name "AzureRM*" -ListAvailable))
     {
         Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
-        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "http://aka.ms/azps")
+        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "https://aka.ms/azps")
     }
 }
 
@@ -450,16 +450,17 @@ function Instantiate-Environment
     Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName"
     if((gcm Register-Environment).Parameters.ContainsKey("Persist"))
     {
-        $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -TagsList $tagsList -Persist
+        $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -TagsList $tagsList -Persist        
+        Write-Verbose "Completed Register-Environment for : $resourceGroupName, adding environment $outputVariable to output variables"
+        Set-TaskVariable -Variable $outputVariable -Value $outputVariable        
     }
     else
     {
         $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -TagsList $tagsList
-    }
-    Write-Verbose "Completed Register-Environment cmdlet call for resource group : $resourceGroupName"
-
-    Write-Verbose "Adding environment $outputVariable to output variables"
-    Set-TaskVariable -Variable $outputVariable -Value $outputVariable
+        Write-Verbose "Completed Register-Environment for : $resourceGroupName, converting environment as json and setting as output variable" -verbose       
+        $envStr = $environment.ToString() -replace "`n|`r"
+        write-host "##vso[task.setvariable variable=$outputVariable;issecret=true;]$envStr"  
+    }    
     Write-Verbose "Added the environment $outputVariable to output variable"
 }
 
@@ -794,13 +795,13 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             }
 
             $winRmHttpsPortMap = Get-MachineNameFromId -Map $winRmHttpsPortMap -MapParameter "Front End port" -azureRMVMResources $azureRMVMResources `
-                                                       -ThrowOnTotalUnavaialbility $false -debugLogsFlag $debugLogsFlag
+                                                       -ThrowOnTotalUnavailability $false -debugLogsFlag $debugLogsFlag
         }
 
         $fqdnMap = Get-MachinesFqdnsForPublicIP -resourceGroupName $resourceGroupName -publicIPAddressResources $publicIPAddressResources `
                                                 -networkInterfaceResources $networkInterfaceResources -azureRMVMResources $azureRMVMResources -fqdnMap $fqdnMap -debugLogsFlag $debugLogsFlag
         $fqdnMap = Get-MachineNameFromId -resourceGroupName $resourceGroupName -Map $fqdnMap -MapParameter "FQDN" -azureRMVMResources $azureRMVMResources `
-                                                -ThrowOnTotalUnavaialbility $true -debugLogsFlag $debugLogsFlag
+                                                -ThrowOnTotalUnavailability $true -debugLogsFlag $debugLogsFlag
 
         foreach ($resource in $azureRMVMResources)
         {

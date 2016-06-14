@@ -3,7 +3,7 @@
     "name": "PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",
     "description": "Index your source code and publish symbols to a file share",
-    "helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](http://go.microsoft.com/fwlink/?LinkID=613722)",
+    "helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 27
+        "Patch": 28
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [

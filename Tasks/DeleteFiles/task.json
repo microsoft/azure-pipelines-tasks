@@ -3,7 +3,7 @@
     "name": "DeleteFiles",
     "friendlyName": "Delete Files",
     "description": "Delete files or folders. (The minimatch patterns will only match file paths, not folder paths)",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=722333)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=722333)",
     "category": "Utility",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "demands": [],
     "minimumAgentVersion": "1.92.0",
@@ -23,7 +23,7 @@
             "label": "Source Folder",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The source folder that the deletion(s) will be run from.  Empty is the root of the repo.  Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
+            "helpMarkDown": "The source folder that the deletion(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
         },
         {
             "name": "Contents",
@@ -31,7 +31,7 @@
             "label": "Contents",
             "defaultValue": "myFileShare",
             "required": true,
-            "helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=722333)"
+            "helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=722333)"
         }
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",

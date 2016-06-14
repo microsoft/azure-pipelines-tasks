@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "機能テストの実行",
-  "loc.helpMarkDown": "[詳細] (http://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "一連のコンピューターでコード化された UI/ Selenium/機能の各テストを実行する (テスト エージェントを使用)",
   "loc.instanceNameFormat": "$(testMachineGroup) でのテスト $(sourcefilters) の実行",
   "loc.group.displayName.setupOptions": "セットアップ オプション",

@@ -973,6 +973,7 @@ declare module "path" {
     export function basename(p: string, ext?: string): string;
     export function extname(p: string): string;
     export var sep: string;
+    export function isAbsolute(p: string): boolean;
 }
 
 declare module "string_decoder" {
@@ -1119,7 +1120,7 @@ declare module "crypto" {
         update(data: any): void;
         sign(private_key: string, output_format: string): string;
     }
-    export function createVerify(algorith: string): Verify;
+    export function createVerify(algorithm: string): Verify;
     interface Verify {
         update(data: any): void;
         verify(object: string, signature: string, signature_format?: string): boolean;
@@ -1289,7 +1290,7 @@ declare module "assert" {
         export function equal(actual: any, expected: any, message?: string): void;
         export function notEqual(actual: any, expected: any, message?: string): void;
         export function deepEqual(actual: any, expected: any, message?: string): void;
-        export function notDeepEqual(acutal: any, expected: any, message?: string): void;
+        export function notDeepEqual(actual: any, expected: any, message?: string): void;
         export function strictEqual(actual: any, expected: any, message?: string): void;
         export function notStrictEqual(actual: any, expected: any, message?: string): void;
         export var throws: {

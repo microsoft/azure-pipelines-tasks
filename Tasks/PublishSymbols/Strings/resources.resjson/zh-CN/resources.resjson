@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "为源编制索引并发布符号",
-  "loc.helpMarkDown": "为你的源代码编制索引并将符号发布到文件共享<br/>[详细信息](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "为你的源代码编制索引并将符号发布到文件共享<br/>[详细信息](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "为你的源代码编制索引并将符号发布到文件共享",
   "loc.instanceNameFormat": "发布符号路径: $(SymbolsPath)",
   "loc.group.displayName.advanced": "高级",

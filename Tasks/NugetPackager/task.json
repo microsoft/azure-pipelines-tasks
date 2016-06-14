@@ -3,13 +3,13 @@
     "name": "NuGetPackager",
     "friendlyName": "NuGet Packager",
     "description": "Creates nupkg outputs from csproj or nuspec files",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=627416)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
     "category": "Package",
     "author": "Lawrence Gripper",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 66
+        "Patch": 67
     },
     "demands": [
     "Cmd"
@@ -42,7 +42,7 @@
             "type": "boolean",
             "label": "Include referenced projects",
             "defaultValue": "false",
-            "helpMarkDown": "Include referenced projects either as dependencies or as part of the package. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](http://docs.nuget.org/consume/command-line-reference#pack-command) at NuGet.org."
+            "helpMarkDown": "Include referenced projects either as dependencies or as part of the package. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.nuget.org/consume/command-line-reference#pack-command) at NuGet.org."
         },
         {
             "name": "outputdir",
@@ -57,7 +57,7 @@
             "type": "pickList",
             "label": "Automatic package versioning",
             "defaultValue":"false",
-            "helpMarkDown": "If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](http://go.microsoft.com/fwlink/?LinkID=627416)'.",
+            "helpMarkDown": "If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'.",
             "required":true,
             "groupName": "versioning",
             "options": {

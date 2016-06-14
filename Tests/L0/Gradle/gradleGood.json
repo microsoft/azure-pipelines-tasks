@@ -9,12 +9,12 @@
             "stdout": "subprojects: []",
             "stderr": ""
         },
-        "gradlew build jacocoTestReport": {
+        "gradlew clean build jacocoTestReport": {
             "code": 0,
             "stdout": "Sample output",
             "stderr": ""
         },
-        "gradlew build cobertura": {
+        "gradlew clean build cobertura": {
             "code": 0,
             "stdout": "Sample output",
             "stderr": ""
@@ -30,7 +30,7 @@
         "gradlew /o /p t i /o /n /s build test deploy": {
             "code": 0,
             "stdout": "More sample gradle output"
-        }
+        }      
     },
     "checkPath": {
         "gradlew": true,
@@ -38,7 +38,14 @@
     },
     "getVariable": {
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
-        "System.DefaultWorkingDirectory": "/user/build"
+        "System.DefaultWorkingDirectory": "/user/build",
+        "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}"
+    },
+    "stats": {
+        "CCReport43F6D5EF\\coverage.xml": {
+            "isFile": true
+        }
     },
     "rmRF": {
         "CCReport43F6D5EF": {

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione del servizio cloud di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Consente di distribuire un servizio cloud di Azure",
   "loc.instanceNameFormat": "Distribuzione Azure: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Opzioni avanzate per la creazione del nuovo servizio",

@@ -3,7 +3,7 @@
   "name": "IISWebAppDeployment",
   "friendlyName": "[Deprecated] IIS Web App Deployment",
   "description": "Deploy by MSDeploy, create/update website & app pools",
-  "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
+  "helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [
   ],

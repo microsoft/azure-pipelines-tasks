@@ -15,11 +15,11 @@
             "code": 0,
             "stdout": "npm output here"
         },
-        "/usr/local/bin/istanbul cover --report cobertura ./node_modules/mocha/bin/_mocha **/build/test/*.js -- --ui bdd -t 5000":{
+        "/usr/local/bin/istanbul cover --report cobertura ./node_modules/mocha/bin/_mocha **/build/test/*.js -- --ui bdd -t 5000": {
             "code": 0,
             "stdout": "istanbul output here"
         },
-        "/usr/local/bin/node_modules/istanbul/lib/cli.js cover --report cobertura ./node_modules/mocha/bin/_mocha **/build/test/*.js -- --ui bdd -t 5000":{
+        "/usr/local/bin/node_modules/istanbul/lib/cli.js cover --report cobertura ./node_modules/mocha/bin/_mocha **/build/test/*.js -- --ui bdd -t 5000": {
             "code": 0,
             "stdout": "istanbul output here"
         }
@@ -32,7 +32,7 @@
         "/usr/local/bin/node_modules/istanbul/lib/cli.js": true,
         "gulpfile.js": true,
         "**/build/test/*.js": true
-    },     
+    },
     "exist": {
         "/usr/local/bin/gulp": true
     },
@@ -46,5 +46,5 @@
     },
     "getVariable": {
         "System.DefaultWorkingDirectory": "/user/build"
-        }
+    }
 }

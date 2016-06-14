@@ -8,9 +8,9 @@ import fs = require('fs');
 
 import tr = require('../../lib/vsts-task-lib/toolRunner');
 
-import pmd = require('../../../Tasks/Maven/mavenpmd');
-import ca = require('../../../Tasks/Maven/mavencodeanalysis');
-import ar = require('../../../Tasks/Maven//analysisResult');
+import pmd = require('../../../Tasks/Maven/CodeAnalysis/mavenpmd');
+import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
+import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisResult');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -95,6 +95,21 @@ function assertBuildSummaryContainsLine(stagingDir:string, expectedLine:string):
     var buildSummaryString:string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
 
     assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
+}
+
+// Creates a new response json file based on an initial one and some env variables 
+function setResponseAndBuildVars(initialResponseFile:string, finalResponseFile:string, envVars: Array<[string,string]> ) {
+
+    var responseJsonFilePath: string = path.join(__dirname, initialResponseFile);
+    var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+    for (var envVar of envVars)
+    {
+        responseJsonContent.getVariable[envVar[0]]= envVar[1];
+    }
+
+    var newResponseFilePath: string = path.join(__dirname, finalResponseFile);
+    fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+    setResponseFile(path.basename(newResponseFilePath));
 }
 
 describe('Maven Suite', function() {
@@ -670,6 +685,13 @@ describe('Maven Suite', function() {
     })
 
     it('run maven including SonarQube analysis', (done) => {
+       
+       // not a valid PR branch
+       setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"]])
+
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -699,6 +721,13 @@ describe('Maven Suite', function() {
     })
 
     it('run maven including SonarQube analysis (with db details)', (done) => {
+
+       // not a valid PR branch 
+       setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "ExternalGit"]])
+
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -747,7 +776,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
                 // calls maven to generate cc report.
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
@@ -782,7 +811,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
                 assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\/jacoco.exec -f pom.xml sonar:sonar'), 'it should have run SQ analysis');               
                 // calls maven to generate cc report.
@@ -816,7 +845,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
                 // calls maven to generate cc report.
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
@@ -850,7 +879,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=pom.xml;summaryfile=target\/site\/cobertura\/coverage.xml;reportdirectory=target\/site\/cobertura;reportbuildfile=CCReportPomA4D283EG.xml;buildtool=Maven;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
@@ -883,7 +912,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
@@ -915,7 +944,7 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=pom.xml;summaryfile=target\/site\/cobertura\/coverage.xml;reportdirectory=target\/site\/cobertura;reportbuildfile=CCReportPomA4D283EG.xml;buildtool=Maven;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
@@ -1003,16 +1032,15 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=root;artifactname=') > -1,
                     'should have uploaded PMD build artifacts');
-
                 assertBuildSummaryContainsLine(testStgDir, 'PMD found 3 violations in 2 files.');
 
                 done();
@@ -1072,13 +1100,13 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-
                 // assert artifacts not uploaded
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=app;artifactname=') > -1,
                     'should have uploaded PMD build artifacts for the "app" module');
@@ -1086,7 +1114,6 @@ describe('Maven Suite', function() {
                     'should have uploaded PMD build artifacts for the "util" module');
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=backend;artifactname=') < 0,
                     'should not have uploaded PMD build artifacts for the "backend" module');
-
                 assertBuildSummaryContainsLine(testStgDir, 'PMD found 6 violations in 4 files.');
 
                 done();
@@ -1129,8 +1156,9 @@ describe('Maven Suite', function() {
                 // Assert
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
                     'should have run maven without PMD arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') < 1,
@@ -1180,13 +1208,13 @@ describe('Maven Suite', function() {
         // Act
         taskRunner.run()
             .then(() => {
-                //console.log(taskRunner.stdout);
-
                 // Assert
                 assert(taskRunner.succeeded, 'task should not have failed');
                 assert(taskRunner.resultWasSet, 'should have set a result');
                 assert(taskRunner.stdout.length > 0, 'should have written to stdout');
-
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
 
@@ -1199,4 +1227,39 @@ describe('Maven Suite', function() {
                 done(err);
             });
     });
+
+    it('during PR builds SonarQube analysis runs in issues mode', (done) => {
+
+       setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"]])
+
+        var tr = new trm.TaskRunner('maven', true);
+        tr.setInput('mavenVersionSelection', 'Default');
+        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('options', '');
+        tr.setInput('goals', 'package');
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('publishJUnitResults', 'false');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+        
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })   
 });

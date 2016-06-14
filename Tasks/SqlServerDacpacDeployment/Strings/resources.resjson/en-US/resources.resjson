@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SQL Server Database Deployment",
-  "loc.helpMarkDown": "[More Information](http://aka.ms/sqlserverdacpackreadme)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlserverdacpackreadme)",
   "loc.description": "Deploy SQL Server Database using DACPAC",
   "loc.instanceNameFormat": "Deploy SQL DACPAC: $(DacpacFile)",
   "loc.group.displayName.deployment": "Deployment",
