@@ -37,9 +37,14 @@ function getSevenZipLocation() : string {
 
 function findFiles(): string[] {
     if(includeRootFolder){
-        return [rootFolder];
+        return [path.basename(rootFolder)];
     } else {
-        return fs.readdirSync(rootFolder);
+        var fullPaths: string[] = fs.readdirSync(rootFolder);
+        var baseNames: string[] = [];
+        for(var i=0; i<fullPaths.length; i++){
+            baseNames[i] = path.basename(fullPaths[i]);
+        }
+        return baseNames;
     }
 }
 
@@ -74,16 +79,18 @@ if (tl.exist(archiveFile)) {
         } catch(e){
             failTask('Specified archive file: ' + archiveFile + ' can not be created because it can not be accessed: ' + e);
         }
+    } else {
+        // undocumented feature; if the archive exists, add to it which works for zip, wim, tar, and 7z formats.
+        console.log('Archive file: '+archiveFile +' already exists.  Attempting to add files to it.');
     }
-    //TODO fail task, or just append to archive as possible?
 }
 
 function getOptions() {
     if(includeRootFolder){
-        console.log("cwd (include)= "+path.dirname(rootFolder))
+        tl.debug("cwd (include root folder)= "+path.dirname(rootFolder));
         return {cwd: path.dirname(rootFolder)};
     } else {
-        console.log("cwd (don't include)= "+rootFolder)
+        tl.debug("cwd (exclude root folder)= "+rootFolder);
         return {cwd: rootFolder};
     }
 }
@@ -107,6 +114,7 @@ function zipArchive(archive: string, files : string []) {
         xpZipLocation = tl.which('zip', true);
     }
     var zip = tl.createToolRunner(xpZipLocation);
+    zip.arg('-r');
     zip.arg(archive);
     for(var i=0; i<files.length; i++){
         zip.arg(files[i]);
@@ -116,12 +124,16 @@ function zipArchive(archive: string, files : string []) {
 
 // linux & mac only
 function tarArchive(archive: string, compression: string, files: string[]) {
-    tl.debug('Creating archive with tar: ' + archive);
+    tl.debug('Creating archive with tar: ' + archive+ ' using compression: '+compression);
     if (typeof xpTarLocation == "undefined") {
         xpTarLocation = tl.which('tar', true);
     }
     var tar = tl.createToolRunner(xpTarLocation);
-    tar.arg('-c');
+    if(tl.exist(archive)){
+        tar.arg('-r'); // append files to existing tar
+    } else {
+        tar.arg('-c'); // create new tar otherwise
+    }
     if(compression){
         tar.arg('--'+compression);
     }
@@ -187,15 +199,22 @@ function computeTarName(archiveName : string) : string {
     }
     // foo.anything --> foo.tar
     else if (lowerArchiveName.lastIndexOf('.') > 0){
-        console.log('archiveName = '+archiveName);
         return archiveName.substring(0, lowerArchiveName.lastIndexOf('.'))+'.tar';
     }
     // foo --> foo.tar
     return lowerArchiveName + '.tar';
 }
 
+//ensure output folder exists
+var destinationFolder = path.dirname(archiveFile);
+tl.debug("Checking for archive destination folder:"+destinationFolder);
+if(!tl.exist(destinationFolder)){
+    tl.debug("Destination folder does not exist, creating:"+destinationFolder);
+    tl.mkdirP(destinationFolder);
+}
+
 if(win) { // windows only
-    if(archiveType == "default"){
+    if(archiveType == "default"){ //default is zip format
         sevenZipArchive(archiveFile, "zip", files);
     } else if(archiveType == "tar"){
         var tarCompression: string = tl.getInput('tarCompression', true);
@@ -203,38 +222,49 @@ if(win) { // windows only
             sevenZipArchive(archiveFile, archiveType, files);        
         } else {
             var tarFile = computeTarName(archiveFile);
-            // this file could already exist, but not checking because by default files will be added to it
-            // create the tar file
-            sevenZipArchive(tarFile, archiveType, files);
-            // compress the tar file
-            var sevenZipCompressionFlag = tarCompression;
-            if(sevenZipCompressionFlag == 'gz'){
-                sevenZipCompressionFlag = 'gzip';
-            } else if (sevenZipCompressionFlag == 'bz2'){
-                sevenZipCompressionFlag = 'bzip2';
+            var tarExists = tl.exist(tarFile);
+            try {
+                if(tarExists){
+                    console.log('Intermediate tar: '+tarFile +' already exists.  Attempting to add files to it.');
+                }
+                
+                // this file could already exist, but not checking because by default files will be added to it
+                // create the tar file
+                sevenZipArchive(tarFile, archiveType, files);
+                // compress the tar file
+                var sevenZipCompressionFlag = tarCompression;
+                if(tarCompression == 'gz'){
+                    sevenZipCompressionFlag = 'gzip';
+                } else if (tarCompression == 'bz2'){
+                    sevenZipCompressionFlag = 'bzip2';
+                }
+                sevenZipArchive(archiveFile, sevenZipCompressionFlag, [tarFile]);
+            } finally {
+                // delete the tar file if we created it.
+                if(!tarExists){
+                    fs.unlinkSync(tarFile);
+                }
             }
-            sevenZipArchive(archiveFile, sevenZipCompressionFlag, [tarFile]);
-            // delete the tar file
-            fs.unlinkSync(tarFile);
         }
     } else {
         sevenZipArchive(archiveFile, archiveType, files);
     }
 } else { // not windows
-    if(archiveType == "tar"){
+    if (archiveType == "default"){ //default is zip format
+        zipArchive(archiveFile, files);
+    } else if(archiveType == "tar"){
+        var tarCompression: string = tl.getInput('tarCompression', true);
         var tarCompressionFlag;
         if(tarCompression == "none"){
             tarCompressionFlag = null;
-        } else if (tarCompressionFlag == "gz"){
+        } else if (tarCompression == "gz"){
             tarCompressionFlag = "gz";
-        } else if (tarCompressionFlag == "bz2"){
+        } else if (tarCompression == "bz2"){
             tarCompressionFlag = "bzip2";
-        } else if (tarCompressionFlag == "xz"){
+        } else if (tarCompression == "xz"){
             tarCompressionFlag = "xz";
         }
         tarArchive(archiveFile, tarCompressionFlag, files);
-    } else if (archiveType == "zip"){
-        zipArchive(archiveFile, files);
     } else {
         sevenZipArchive(archiveFile, archiveType, files);
     }
