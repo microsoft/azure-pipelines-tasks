@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 53
+        "Patch": 59
     },
     "demands": [
         "node.js"
@@ -137,6 +137,8 @@
     "messages": {
         "GulpNotInstalled": "Gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
         "GulpReturnCode": "Gulp exited with return code: %d",
-        "GulpFailed": "Gulp failed with error: %s"
+        "GulpFailed": "Gulp failed with error: %s",
+        "NpmFailed": "Npm failed with error: %s",
+        "IstanbulFailed": "Istanbul failed with error: %s"
     }
 }

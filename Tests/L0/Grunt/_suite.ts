@@ -31,6 +31,9 @@ describe('Grunt Suite', function() {
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'false');
 		if (os.type().match(/^Win/)) {
         	tr.setInput('cwd', 'c:/fake/wd');
     	}
@@ -41,7 +44,7 @@ describe('Grunt Suite', function() {
 		tr.run()
 		.then(() => {
             assert(tr.ran('/usr/local/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
-            assert(tr.invokedToolCount == 1, 'should have only run grunt');
+            assert(tr.invokedToolCount == 2, 'should have only run grunt');
 
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
@@ -57,6 +60,9 @@ describe('Grunt Suite', function() {
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'false');
 		if (os.type().match(/^Win/)) {
         	tr.setInput('cwd', 'c:/fake/wd');
     	}
@@ -73,7 +79,7 @@ describe('Grunt Suite', function() {
 				assert(tr.ran('/usr/local/bin/node /fake/wd/node_modules/grunt-cli/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
 			}
             
-            assert(tr.invokedToolCount == 1, 'should have only run grunt');
+            assert(tr.invokedToolCount == 2, 'should have only run grunt');
 
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
@@ -83,12 +89,71 @@ describe('Grunt Suite', function() {
 			done(err);
 		});
 	})	
+
+	it('runs a gruntFile when code coverage is enabled', (done) => {
+		setResponseFile('gruntGlobalGood.json');
+		
+		var tr = new trm.TaskRunner('Grunt');
+		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFiles', '**/build/test/*.js');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
+		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+		tr.run()
+		.then(() => {
+            assert(tr.ran('/usr/local/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
+            assert(tr.invokedToolCount == 3, 'should have only npm, grunt and istanbul');
+			assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})	
+
+	it('runs a gruntFile when publishJUnitTestResults is false', (done) => {
+		setResponseFile('gruntGlobalGood.json');
+		
+		var tr = new trm.TaskRunner('Grunt');
+		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'false');
+		tr.setInput('enableCodeCoverage', 'false');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
+		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+		tr.run()
+		.then(() => {
+            assert(tr.ran('/usr/local/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
+            assert(tr.invokedToolCount == 2, 'should have only npm, grunt and istanbul');
+			assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
 	
 	it('fails if grunt-cli no exist globally and locally', (done) => {
 		setResponseFile('gruntNoGruntCli.json');
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'false');
 		if (os.type().match(/^Win/)) {
         	tr.setInput('cwd', 'c:/fake/wd');
     	}
@@ -136,11 +201,48 @@ describe('Grunt Suite', function() {
 		});
 	})
 
+	it('fails if npm fails', (done) => {
+		setResponseFile('npmFails.json');
+		
+		var tr = new trm.TaskRunner('Grunt');
+		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'false');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
+		tr.setInput('targets', 'build test');
+		tr.setInput('arguments', '-v');
+		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+		tr.run()
+		.then(() => {
+			
+            assert(tr.invokedToolCount == 1, 'should have only run npm');
+
+            // success scripts don't necessarily set a result
+			var expectedErr = '/usr/local/bin/npm failed with return code: 1';
+			assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
+			assert(tr.stderr.length > 0, 'should not have written to stderr');
+            assert(tr.failed, 'task should have failed');
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
 	it('fails if grunt fails', (done) => {
 		setResponseFile('gruntFails.json');
 		
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'false');
 		if (os.type().match(/^Win/)) {
         	tr.setInput('cwd', 'c:/fake/wd');
     	}
@@ -154,11 +256,40 @@ describe('Grunt Suite', function() {
 		.then(() => {
 			
             assert(tr.ran('/usr/local/bin/grunt build test --gruntfile gruntfile.js -v'), 'it should have run grunt');
-            assert(tr.invokedToolCount == 1, 'should have only run Grunt');
+            assert(tr.invokedToolCount == 2, 'should have only run npm and Grunt');
 
             // success scripts don't necessarily set a result
 			var expectedErr = '/usr/local/bin/grunt failed with return code: 1';
 			assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
+			assert(tr.stderr.length > 0, 'should not have written to stderr');
+            assert(tr.failed, 'task should have failed');
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
+	it('fails if istanbul fails', (done) => {
+		setResponseFile('istanbulFails.json');
+		
+		var tr = new trm.TaskRunner('Grunt');
+		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFiles', '**/build/test/*.js');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
+		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+		tr.run()
+		.then(() => {
+            assert(tr.invokedToolCount == 3, 'should have only run npm and Grunt');
+			assert(tr.stdErrContained("Istanbul failed with error"), 'Istanbul should have failed');
 			assert(tr.stderr.length > 0, 'should not have written to stderr');
             assert(tr.failed, 'task should have failed');
 			done();
@@ -232,4 +363,120 @@ describe('Grunt Suite', function() {
 			done(err);
 		});
 	})
-});
+
+	it('Fails when test result files input is not provided', (done) => {
+		setResponseFile('gruntGlobalGood.json');
+		
+		var tr = new trm.TaskRunner('Grunt');
+		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('enableCodeCoverage', 'false');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
+		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+		tr.run()
+		.then(() => {
+            assert(tr.stderr.length > 0, 'should have written to stderr');
+			assert(tr.stdErrContained('Input required: testResultsFiles'));
+			assert(tr.failed, 'task should have failed');
+			assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
+	it('gives warning and runs when test result files input does not match any file', (done) => {
+		setResponseFile('gruntGlobalGood.json');
+		
+		var tr = new trm.TaskRunner('Grunt');
+		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '/invalid/input');
+		tr.setInput('enableCodeCoverage', 'false');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
+		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+		tr.run()
+		.then(() => {
+            assert(tr.ran('/usr/local/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
+			assert(tr.stderr.length == 0, 'should not have written to stderr');
+			assert(tr.invokedToolCount == 2, 'should run completely');
+			assert(tr.stdout.search('No pattern found in testResultsFiles parameter') >=0 , 'should give a warning for test file pattern not matched.');
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
+	it('Fails when test source files input is not provided for coverage', (done) => {
+		setResponseFile('gruntGlobalGood.json');
+		
+		var tr = new trm.TaskRunner('Grunt');
+		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'true');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
+		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+		tr.run()
+		.then(() => {
+            assert(tr.stderr.length > 0, 'should have written to stderr');
+			assert(tr.stdErrContained('Input required: testFiles'));
+			assert(tr.failed, 'task should have failed');
+			assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
+	it('fails when test source files input does not match any file', (done) => {
+		setResponseFile('invalidTestSource.json');
+		
+		var tr = new trm.TaskRunner('Grunt');
+		tr.setInput('gruntFile', 'gruntfile.js');
+		tr.setInput('publishJUnitResults', 'true');
+		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFiles', '/invalid/input');
+		if (os.type().match(/^Win/)) {
+        	tr.setInput('cwd', 'c:/fake/wd');
+    	}
+		else {
+			tr.setInput('cwd', '/fake/wd');	
+		}
+		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+		tr.run()
+		.then(() => {
+            assert(tr.stderr.length > 0, 'should have written to stderr');
+			assert(tr.failed, 'task should have failed');
+			assert(tr.invokedToolCount == 3, 'should exit while running istanbul');
+			assert(tr.stdErrContained('Istanbul failed with error'));
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+	})
+
+
+});	

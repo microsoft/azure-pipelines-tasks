@@ -45,7 +45,7 @@ gt.arg(tl.getDelimitedInput('targets', ' ', false));
 var enableCoverage = tl.getBoolInput('enableCodeCoverage');
 
 if(enableCoverage){
-	var testSrc = tl.getPathInput('testFiles', true, true);
+	var testSrc = tl.getPathInput('testFiles', true, false);
 	
 	if(os.type().match(/^Win/)){
 		var istanbul = tl.createToolRunner(tl.which('istanbul', true));
@@ -80,10 +80,14 @@ gt.exec()
 			publishTestResults(publishJUnitResults, testResultsFiles);
 			publishCodeCoverage(summaryFile);
 			tl.setResult(tl.TaskResult.Succeeded, tl.loc('GulpReturnCode', code));
+		})
+		.fail(function(err){
+			publishTestResults(publishJUnitResults, testResultsFiles);
+			tl.debug('taskRunner fail');
+			tl.setResult(tl.TaskResult.Failed, tl.loc('IstanbulFailed', err.message));
 		});
 	}else{
 		publishTestResults(publishJUnitResults, testResultsFiles);
-		publishCodeCoverage(summaryFile);
 		tl.setResult(tl.TaskResult.Succeeded, tl.loc('GulpReturnCode', code));
 	}
 	

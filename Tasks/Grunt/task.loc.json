@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 22
+    "Patch": 28
   },
   "demands": [
     "node.js"
@@ -137,6 +137,8 @@
   "messages": {
     "GruntCliNotInstalled": "ms-resource:loc.messages.GruntCliNotInstalled",
     "GruntReturnCode": "ms-resource:loc.messages.GruntReturnCode",
-    "GruntFailed": "ms-resource:loc.messages.GruntFailed"
+    "GruntFailed": "ms-resource:loc.messages.GruntFailed",
+    "NpmFailed": "ms-resource:loc.messages.NpmFailed",
+    "IstanbulFailed": "ms-resource:loc.messages.IstanbulFailed"
   }
 }

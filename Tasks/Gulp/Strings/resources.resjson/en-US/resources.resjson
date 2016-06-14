@@ -28,5 +28,7 @@
   "loc.input.help.testFiles": "Provide all test code files",
   "loc.messages.GulpNotInstalled": "Gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
   "loc.messages.GulpReturnCode": "Gulp exited with return code: %d",
-  "loc.messages.GulpFailed": "Gulp failed with error: %s"
+  "loc.messages.GulpFailed": "Gulp failed with error: %s",
+  "loc.messages.NpmFailed": "Npm failed with error: %s",
+  "loc.messages.IstanbulFailed": "Istanbul failed with error: %s"
 }

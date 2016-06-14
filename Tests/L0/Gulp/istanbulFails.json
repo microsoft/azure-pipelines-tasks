@@ -16,12 +16,14 @@
             "stdout": "npm output here"
         },
         "/usr/local/bin/istanbul cover --report cobertura ./node_modules/mocha/bin/_mocha **/build/test/*.js -- --ui bdd -t 5000":{
-            "code": 0,
-            "stdout": "istanbul output here"
+            "code": 1,
+            "stdout": "istanbul output here",
+            "stderr": "istanbul failed with this output"
         },
         "/usr/local/bin/node_modules/istanbul/lib/cli.js cover --report cobertura ./node_modules/mocha/bin/_mocha **/build/test/*.js -- --ui bdd -t 5000":{
-            "code": 0,
-            "stdout": "istanbul output here"
+            "code": 1,
+            "stdout": "istanbul output here",
+            "stderr": "istanbul failed with this output"
         }
     },
     "checkPath": {
