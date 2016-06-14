@@ -113,7 +113,7 @@
             "type": "boolean",
             "label": "Enable Code Coverage",
             "required": true,
-            "defaultValue": "true",
+            "defaultValue": "false",
             "groupName": "codeCoverage",
             "helpMarkDown": "Select this option to enable Code Coverage"
         },
