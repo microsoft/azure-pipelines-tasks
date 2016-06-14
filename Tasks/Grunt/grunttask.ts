@@ -53,13 +53,14 @@ if (enableCoverage) {
 	} else {
 		var istanbul = tl.createToolRunner(tl.which('./node_modules/istanbul/lib/cli.js', true));
 	}
-	istanbul.argString('cover --report cobertura');
+	istanbul.argString('cover --report cobertura --report html');
 	istanbul.arg('./node_modules/mocha/bin/_mocha');
 	istanbul.arg(testSrc);
 	istanbul.argString('-- --ui bdd -t 5000');
 
 	var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
 	var summaryFile = path.join(buildFolder, 'coverage/cobertura-coverage.xml');
+	var reportDirectory = path.join(buildFolder, 'coverage/');
 }
 
 var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
@@ -117,5 +118,5 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
 
 function publishCodeCoverage(summaryFile) {
 	var ccPublisher = new tl.CodeCoveragePublisher();
-	ccPublisher.publish('cobertura', summaryFile, "", "");
+	ccPublisher.publish('cobertura', summaryFile, reportDirectory, "");
 }
