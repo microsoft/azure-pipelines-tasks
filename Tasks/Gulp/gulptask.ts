@@ -33,9 +33,9 @@ else {
 // optional - no targets will concat nothing
 gt.arg(tl.getDelimitedInput('targets', ' ', false));
 
-var enableCoverage = tl.getBoolInput('enableCodeCoverage');
+var isCodeCoverageEnabled = tl.getBoolInput('enableCodeCoverage');
 
-if (enableCoverage) {
+if (isCodeCoverageEnabled) {
 	var npm = tl.createToolRunner(tl.which('npm', true));
 	npm.argString('install istanbul');
 
@@ -64,7 +64,7 @@ var testResultsFiles = tl.getInput('testResultsFiles', publishJUnitResults);
 gt.exec()
 	.then(function (code) {
 		publishTestResults(publishJUnitResults, testResultsFiles);
-		if (enableCoverage) {
+		if (isCodeCoverageEnabled) {
 			npm.exec().then(function () {
 				istanbul.exec().then(function (code) {
 					publishCodeCoverage(summaryFile);
