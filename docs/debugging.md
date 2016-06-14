@@ -15,7 +15,7 @@ Now run a gulp build.
 
 Next, create a launch.json file -- goto the debug section in VS Code, and click the gear icon, this will create a .vscode/launch.json file.
 
-Edit the file as necessary.  You can run straigth from the _build/Tasks, folder for the task you wish to debug, or you can copy the build artifacts into the Task itself and run from there, if you choose the copy rought (as I do), you will need to copy node_modules, and the generated .js and .js.map, along with any other build artifacts (e.g. in Archive files, 7zip).  After the first build, assuming no structural changes are made, you will only need to copy the .js and .js.map files for subsequent builds.
+Edit the file as necessary.  You can run straight from the _build/Tasks, folder for the task you wish to debug, or you can copy the build artifacts into the Task itself and run from there.  If you choose the copy route, you will need to copy node_modules, and the generated .js and .js.map, along with any other build artifacts (e.g. in ArchiveFiles, 7zip), and this will allow you to debug directly from your source.  After the first build & copy, assuming no structural changes are made, you will only need to copy the .js and .js.map files for subsequent builds.
 
 Here it will run the ArchiveFiles task with the specified input arguments:
 
@@ -24,7 +24,7 @@ Here it will run the ArchiveFiles task with the specified input arguments:
             "name": "Launch tar.gz",
             "type": "node",
             "request": "launch",
-            "program": "C:\\git\\github\\vsts-tasks\\Tasks\\ArchiveFiles\\archivefiles.js",
+            "program": "C:\\git\\github\\vsts-tasks\\Tasks\\ArchiveFiles\\archivefiles.ts",
             "stopOnEntry": false,
             "args": [],
             "cwd": "C:\\git\\github\\vsts-tasks\\_build\\Tasks\\ArchiveFiles\\",
@@ -48,3 +48,5 @@ Here it will run the ArchiveFiles task with the specified input arguments:
             "outDir": "${workspaceRoot}\\_build\\Tasks\\ArchiveFiles\\"
         }
 </pre>
+
+I've run into some issues with line numbers not matching directly between the typescript and generated javascript when debugging which pretty much makes the debugger unusable.  Being unable to get around this issue at the moment, I'm sadly back to console.log(), but at least this launch file will allow you to run from within VSCode.  

@@ -69,7 +69,7 @@
         "default": "gz",
         "bz2": "bz2",
         "xz": "xz",
-        "none": "none"
+        "none": "None"
       }
     },
     {
