@@ -1,7 +1,7 @@
 {
   "name": "archiveFiles",
   "version": "1.0.0",
-  "description": "Arvhive Files Task",
+  "description": "Archive Files Task",
   "main": "archivefiles.js",
   "repository": {
     "type": "git",
@@ -12,8 +12,5 @@
   "bugs": {
     "url": "https://github.com/Microsoft/vsts-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
-  "dependencies": {
-    "collections": "3.0.0"
-  }
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme"
 }
