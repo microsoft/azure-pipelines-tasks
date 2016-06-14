@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Archive Files",
+  "loc.helpMarkDown": "[More Information](TODO)",
+  "loc.description": "Archive files using a variety of compression formats such as .7z, .rar, .tar.gz, and .zip.",
+  "loc.instanceNameFormat": "Archive files $(message)",
+  "loc.group.displayName.archive": "Archive",
+  "loc.input.label.rootFolder": "Root folder (or file) to archive",
+  "loc.input.help.rootFolder": "The root folder to add to the archive.  Everything under this folder will be added to the resulting archive.",
+  "loc.input.label.includeRootFolder": "Include root folder archive paths",
+  "loc.input.help.includeRootFolder": "If true, the root folder will be included in all filepaths within the archive, otherwise all file paths will start one level lower.  For example, if the selected Root Folder is '/home/user/output/classes/', and contained 'com/acme/Main.class', the resulting archive would contain 'classes/com/acme/Main.class' if the root folder is included, or 'com/acme/Main.class', if the root folder is not included.",
+  "loc.input.label.archiveType": "Archive type",
+  "loc.input.help.archiveType": "Specify the compression scheme used.  To create a 'foo.jar', for example, choose the 'zip' for the compression, and specify 'foo.jar' as the archive file to create.  For all tar files (including compressed ones), choose 'tar'.",
+  "loc.input.label.tarCompression": "Tar compression",
+  "loc.input.help.tarCompression": "Optionally choose compression scheme, or choose 'none' to create an uncompressed tar file.",
+  "loc.input.label.archiveFile": "Archive file to create",
+  "loc.input.help.archiveFile": "Specify the name of the archive file to create.  For example to create 'foo.tgz', select the 'tar' Archive type, 'gz' for Tar compression.",
+  "loc.input.label.replaceExistingArchive": "Replace existing archive",
+  "loc.input.help.replaceExistingArchive": "If an existing archive exists, specify whether to overwrite it.  Otherwise files will be added to it."
+}

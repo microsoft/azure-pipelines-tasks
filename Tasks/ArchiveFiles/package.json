@@ -1,0 +1,19 @@
+{
+  "name": "archiveFiles",
+  "version": "1.0.0",
+  "description": "Arvhive Files Task",
+  "main": "archivefiles.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "collections": "3.0.0"
+  }
+}

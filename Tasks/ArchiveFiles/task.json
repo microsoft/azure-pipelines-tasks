@@ -1,0 +1,100 @@
+{
+  "id": "d8b84976-e99a-4b86-b885-4849694435b0",
+  "name": "ArchiveFiles",
+  "friendlyName": "Archive Files",
+  "description": "Archive files using a variety of compression formats such as .7z, .rar, .tar.gz, and .zip.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "[More Information](TODO)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "0"
+  },
+  "groups": [
+        {
+          "name": "archive",
+          "displayName": "Archive",
+          "isExpanded": true
+        }
+    ],
+  "instanceNameFormat": "Archive files $(message)",
+  "inputs": [
+    {
+      "name": "rootFolder",
+      "type": "filePath",
+      "label": "Root folder (or file) to archive",
+      "defaultValue": "$(Build.BinariesDirectory)/output",
+      "required": true,
+      "helpMarkDown": "The root folder to add to the archive.  Everything under this folder will be added to the resulting archive."
+    },
+    {
+      "name": "includeRootFolder",
+      "type": "boolean",
+      "label": "Include root folder archive paths",
+      "defaultValue": "*",
+      "required": true,
+      "helpMarkDown": "If true, the root folder will be included in all filepaths within the archive, otherwise all file paths will start one level lower.  For example, if the selected Root Folder is '/home/user/output/classes/', and contained 'com/acme/Main.class', the resulting archive would contain 'classes/com/acme/Main.class' if the root folder is included, or 'com/acme/Main.class', if the root folder is not included."
+    },
+    {
+      "name": "archiveType",
+      "type": "pickList",
+      "label": "Archive type",
+      "required": true,
+      "defaultValue": "default",
+      "helpMarkDown": "Specify the compression scheme used.  To create a 'foo.jar', for example, choose the 'zip' for the compression, and specify 'foo.jar' as the archive file to create.  For all tar files (including compressed ones), choose 'tar'.",
+      "groupName": "archive",
+      "options": {
+          "default": "zip",
+          "7z": "7z",
+          "tar" : "tar",
+          "wim" : "wim"
+      }
+    },
+    {
+      "name": "tarCompression",
+      "type": "pickList",
+      "label": "Tar compression",
+      "required": false,
+      "defaultValue": "gz",
+      "helpMarkDown": "Optionally choose compression scheme, or choose 'none' to create an uncompressed tar file.",
+      "groupName": "archive",
+      "visibleRule":"archiveType = tar",
+      "options": {
+          "default": "gz",
+          "bz2": "bz2",
+          "xz": "xz",
+          "none": "none"
+      }
+    },
+    {
+      "name": "archiveFile",
+      "type": "filePath",
+      "label": "Archive file to create",
+      "defaultValue": "output_$(Build.BuildId).zip",
+      "required": true,
+      "helpMarkDown": "Specify the name of the archive file to create.  For example to create 'foo.tgz', select the 'tar' Archive type, 'gz' for Tar compression.",
+      "groupName": "archive"
+    },
+    {
+      "name": "replaceExistingArchive",
+      "type": "boolean",
+      "label": "Replace existing archive",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "If an existing archive exists, specify whether to overwrite it.  Otherwise files will be added to it.",
+      "groupName": "archive"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "archivefiles.js",
+      "argumentFormat": ""
+    }
+  }
+}
