@@ -86,7 +86,7 @@
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Gradle build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Gulp build to TFS/Team Services."
         },
         {
             "name": "testResultsFiles",
@@ -111,20 +111,20 @@
         {
             "name": "enableCodeCoverage",
             "type": "boolean",
-            "label": "Enable Code Coverage",
+            "label": "Run Istanbul",
             "required": true,
             "defaultValue": "false",
             "groupName": "codeCoverage",
-            "helpMarkDown": "Select this option to enable Code Coverage"
+            "helpMarkDown": "Select this option to enable Code Coverage using Istanbul."
         },
         {
             "name": "testFiles",
             "type": "string",
-            "label": "Test Files",
+            "label": "Test Script Files",
             "defaultValue": "test/*.js",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Provide all test code files",
+            "helpMarkDown": "Provide the path to your test script files",
             "visibleRule": "enableCodeCoverage = true"
         }
     ],
