@@ -13,9 +13,6 @@ var cwd = tl.getPathInput('cwd', true, false);
 tl.mkdirP(cwd);
 tl.cd(cwd);
 
-var npm = tl.createToolRunner(tl.which('npm', true));
-npm.argString('install istanbul');
-
 var grunt = tl.which('grunt', false);
 
 tl.debug('check path : ' + grunt);
@@ -46,6 +43,9 @@ gt.argString(tl.getInput('arguments', false));
 var enableCoverage = tl.getBoolInput('enableCodeCoverage');
 
 if (enableCoverage) {
+	var npm = tl.createToolRunner(tl.which('npm', true));
+	npm.argString('install istanbul');
+	
 	var testSrc = tl.getPathInput('testFiles', true, false);
 
 	if (os.type().match(/^Win/)) {
