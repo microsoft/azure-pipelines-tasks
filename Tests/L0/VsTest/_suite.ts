@@ -118,6 +118,7 @@ describe('VsTest Suite', function() {
     }
 
     it('Vstest task without test results files input', (done) => {
+        setResponseFile('vstestGood.json');
         var tr = new trm.TaskRunner('VSTest');
         tr.run()
             .then(() => {
