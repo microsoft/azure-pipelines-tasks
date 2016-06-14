@@ -44,7 +44,7 @@ describe('Gulp Suite', function () {
 		tr.run()
 			.then(() => {
 				assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
-				assert(tr.invokedToolCount == 2, 'should have only run Gulp');
+				assert(tr.invokedToolCount == 1, 'should have only run Gulp');
 
 				assert(tr.stderr.length == 0, 'should not have written to stderr');
 				assert(tr.succeeded, 'task should have succeeded');
@@ -79,7 +79,7 @@ describe('Gulp Suite', function () {
 					assert(tr.ran('/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js'), 'it should have run gulp');
 				}
 
-				assert(tr.invokedToolCount == 2, 'should have only run gulp');
+				assert(tr.invokedToolCount == 1, 'should have only run gulp');
 
 				assert(tr.stderr.length == 0, 'should not have written to stderr');
 				assert(tr.succeeded, 'task should have succeeded');
@@ -136,7 +136,7 @@ describe('Gulp Suite', function () {
 		tr.run()
 			.then(() => {
 				assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
-				assert(tr.invokedToolCount == 2, 'should have only run Gulp');
+				assert(tr.invokedToolCount == 1, 'should have only run Gulp');
 
 				assert(tr.stderr.length == 0, 'should not have written to stderr');
 				assert(tr.succeeded, 'task should have succeeded');
@@ -282,7 +282,8 @@ describe('Gulp Suite', function () {
 		tr.setInput('gulpFile', 'gulpfile.js');
 		tr.setInput('publishJUnitResults', 'true');
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-		tr.setInput('enableCodeCoverage', 'false');
+		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFiles', '**/build/test/*.js');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
 		}
@@ -292,7 +293,7 @@ describe('Gulp Suite', function () {
 		tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 		tr.run()
 			.then(() => {
-				assert(tr.invokedToolCount == 1, 'should have exited before running gulp');
+				assert(tr.invokedToolCount == 2, 'should have exited before running gulp');
 
 				// success scripts don't necessarily set a result
 				var expectedErr = '/usr/local/bin/npm failed with return code: 1';
@@ -324,7 +325,7 @@ describe('Gulp Suite', function () {
 		tr.run()
 			.then(() => {
 				assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
-				assert(tr.invokedToolCount == 2, 'should have run npm and gulp');
+				assert(tr.invokedToolCount == 1, 'should have run npm and gulp');
 
 				// success scripts don't necessarily set a result
 				var expectedErr = '/usr/local/bin/gulp failed with return code: 1';
@@ -419,7 +420,7 @@ describe('Gulp Suite', function () {
             .then(() => {
 				assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
 				assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.invokedToolCount == 2, 'should run completely');
+                assert(tr.invokedToolCount == 1, 'should run completely');
                 assert(tr.stdout.search('No pattern found in testResultsFiles parameter') >= 0, 'should give a warning for test file pattern not matched.');
 				done();
             })

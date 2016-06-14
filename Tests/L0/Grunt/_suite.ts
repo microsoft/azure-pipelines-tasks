@@ -44,7 +44,7 @@ describe('Grunt Suite', function () {
 		tr.run()
 			.then(() => {
 				assert(tr.ran('/usr/local/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
-				assert(tr.invokedToolCount == 2, 'should have only run grunt');
+				assert(tr.invokedToolCount == 1, 'should have only run grunt');
 
 				assert(tr.stderr.length == 0, 'should not have written to stderr');
 				assert(tr.succeeded, 'task should have succeeded');
@@ -79,7 +79,7 @@ describe('Grunt Suite', function () {
 					assert(tr.ran('/usr/local/bin/node /fake/wd/node_modules/grunt-cli/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
 				}
 
-				assert(tr.invokedToolCount == 2, 'should have only run grunt');
+				assert(tr.invokedToolCount == 1, 'should have only run grunt');
 
 				assert(tr.stderr.length == 0, 'should not have written to stderr');
 				assert(tr.succeeded, 'task should have succeeded');
@@ -136,7 +136,7 @@ describe('Grunt Suite', function () {
 		tr.run()
 			.then(() => {
 				assert(tr.ran('/usr/local/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
-				assert(tr.invokedToolCount == 2, 'should have only npm, grunt and istanbul');
+				assert(tr.invokedToolCount == 1, 'should have only run grunt');
 				assert(tr.stderr.length == 0, 'should not have written to stderr');
 				assert(tr.succeeded, 'task should have succeeded');
 				done();
@@ -208,20 +208,18 @@ describe('Grunt Suite', function () {
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-		tr.setInput('enableCodeCoverage', 'false');
+		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFiles', '**/build/test/*.js');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
 		}
 		else {
 			tr.setInput('cwd', '/fake/wd');
 		}
-		tr.setInput('targets', 'build test');
-		tr.setInput('arguments', '-v');
 		tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
 		tr.run()
 			.then(() => {
-
-				assert(tr.invokedToolCount == 1, 'should have only run npm');
+				assert(tr.invokedToolCount == 2, 'should have only run npm');
 
 				// success scripts don't necessarily set a result
 				var expectedErr = '/usr/local/bin/npm failed with return code: 1';
@@ -256,7 +254,7 @@ describe('Grunt Suite', function () {
 			.then(() => {
 
 				assert(tr.ran('/usr/local/bin/grunt build test --gruntfile gruntfile.js -v'), 'it should have run grunt');
-				assert(tr.invokedToolCount == 2, 'should have only run npm and Grunt');
+				assert(tr.invokedToolCount == 1, 'should have only run npm and Grunt');
 
 				// success scripts don't necessarily set a result
 				var expectedErr = '/usr/local/bin/grunt failed with return code: 1';
@@ -411,7 +409,7 @@ describe('Grunt Suite', function () {
 			.then(() => {
 				assert(tr.ran('/usr/local/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
 				assert(tr.stderr.length == 0, 'should not have written to stderr');
-				assert(tr.invokedToolCount == 2, 'should run completely');
+				assert(tr.invokedToolCount == 1, 'should run completely');
 				assert(tr.stdout.search('No pattern found in testResultsFiles parameter') >= 0, 'should give a warning for test file pattern not matched.');
 				done();
 			})
@@ -440,7 +438,7 @@ describe('Grunt Suite', function () {
 				assert(tr.stderr.length > 0, 'should have written to stderr');
 				assert(tr.stdErrContained('Input required: testFiles'));
 				assert(tr.failed, 'task should have failed');
-				assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+				assert(tr.invokedToolCount == 0, 'should exit before running grunt');
 
 				done();
 			})
