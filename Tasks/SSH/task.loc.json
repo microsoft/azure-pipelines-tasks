@@ -1,0 +1,44 @@
+{
+  "id": "91443475-df55-4874-944b-39253b558790",
+  "name": "SSH",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "sshEndpoint",
+      "type": "connectedService:ssh",
+      "label": "ms-resource:loc.input.label.sshEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sshEndpoint"
+    },
+    {
+      "name": "commands",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.commands",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.commands"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "ssh.js",
+      "argumentFormat": ""
+    }
+  }
+}
