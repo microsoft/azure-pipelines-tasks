@@ -10,8 +10,8 @@ var fs = require('fs');
 var xml2js = require('xml2js');
 
 try {
-    tl.setResourcePath(path.join( __dirname, 'task.json'));
-	
+    tl.setResourcePath(path.join(__dirname, 'task.json'));
+
     var vsTestVersion: string = tl.getInput('vsTestVersion');
     var testAssembly: string = tl.getInput('testAssembly', true);
     var testFiltercriteria: string = tl.getInput('testFiltercriteria');
@@ -214,7 +214,12 @@ function getFilteredFiles(filesFilter: string, allFiles: string[]): string[] {
 function cleanUp(temporarySettingsFile: string) {
     //cleanup the runsettings file
     if (temporarySettingsFile && runSettingsFile != temporarySettingsFile) {
-        tl.rmRF(temporarySettingsFile, true);
+        try {
+            tl.rmRF(temporarySettingsFile, true);
+        }
+        catch (error) {
+            //ignore. just cleanup.
+        }
     }
 }
 
@@ -432,11 +437,12 @@ function setRunInParallellIfApplicable(vsVersion: number) {
     if (runInParallel) {
         if (!isNaN(vsVersion) && vsVersion >= 14) {
             var vs14Common = tl.getVariable("VS140COMNTools");
-            if ((vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) || vsVersion > 14) {
+            if (vsVersion > 14 || (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll")))) {
                 setRegistryKeyForParallelExecution(vsVersion);
                 return;
             }
         }
+        resetRunInParallel();
     }
 }
 
