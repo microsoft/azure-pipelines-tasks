@@ -15,8 +15,10 @@
     [string]$connectionString,
     [string]$publishProfile,
     [string]$additionalArguments,
-    [string]$deployInParallel    
+    [string]$deployInParallel
     )
+
+Write-Warning "The preview SQL Server Database Deployment task has been deprecated and will be removed soon. An SQL Server Database Deployment task has been released as an extension in the Visual Studio Team Services marketplace at https://aka.ms/iisextn. Install the extension, and use its tasks in the Build/Release definitions, and delete the preview task from the definition."
 
 Write-Verbose "Entering script DeployToSqlServer.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
