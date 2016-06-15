@@ -28,6 +28,10 @@ export function collectPmdOutput(rootDir:string) : AnalysisResult {
 
     var pmdXmlFilePath = path.join(rootDir, 'target', 'pmd.xml');
     result = collectPmdXml(result, pmdXmlFilePath);
+    if (!result)
+    {
+        return null;
+    }
 
     // if there are no violations, there will be no HTML report
     if (result.totalViolations > 0) {
@@ -54,6 +58,7 @@ function collectPmdHtml(analysisResult:AnalysisResult, path:string):AnalysisResu
 function collectPmdXml(analysisResult:AnalysisResult, path:string):AnalysisResult {
     if (!tl.exist(path)) {
         tl.debug('PMD XML not found at ' + path);
+        return null;
     }
 
     var pmdXmlFileContents = fs.readFileSync(path, 'utf-8');

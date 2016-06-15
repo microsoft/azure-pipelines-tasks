@@ -2,14 +2,16 @@
 
 import path = require('path');
 import fs = require('fs');
+import util = require('util');
 
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 
 // Lowercased names are to lessen the likelihood of xplat issues
-import pmd = require('./mavenpmd');
 import {AnalysisResult} from './analysisresult';
 import {ModuleAnalysis} from './moduleanalysis';
+import pmd = require('./mavenpmd');
+import sq = require('./mavensonar');
 
 // Cache build variables are cached globally as they cannot change during the same build.
 var sourcesDir:string;
@@ -29,25 +31,21 @@ export function applyEnabledCodeAnalysisGoals(mvnRun: trm.ToolRunner):trm.ToolRu
 // Extract data from code analysis output files and upload results to build server
 export function uploadCodeAnalysisResults():void {
     // Return early if no analysis tools are enabled
-    var enabledCodeAnalysisTools = getEnabledCodeAnalysisTools();
-    if (enabledCodeAnalysisTools.length < 1) {
+    var enabledCodeAnalysisTools: Set<string> = getEnabledCodeAnalysisTools();
+    //Special case: SonarQube integration does not use this method to upload its results
+    enabledCodeAnalysisTools.delete(sq.toolName);
+
+    if (enabledCodeAnalysisTools.size < 1) {
         return;
     }
 
     // Retrieve build variables
     sourcesDir = tl.getVariable('build.sourcesDirectory');
-    stagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
+    stagingDir = getMasterStagingDirectory();
     buildNumber = tl.getVariable('build.buildNumber');
 
     // Discover maven modules
     var modules:ModuleAnalysis[] = findCandidateModules(sourcesDir);
-
-    // Special case: if the root turns up as a module, the automatic name won't do
-    modules.forEach((module:ModuleAnalysis) => {
-        if (module.rootDirectory == sourcesDir) {
-            module.moduleName = 'root';
-        }
-    });
 
     tl.debug('Discovered ' + modules.length + ' Maven modules to upload results from: ');
     modules.forEach((module:ModuleAnalysis) => {
@@ -67,26 +65,40 @@ export function uploadCodeAnalysisResults():void {
 }
 
 // Returns the names of any enabled code analysis tools, or empty array if none.
-function getEnabledCodeAnalysisTools():string[] {
-    var result:string[] = [];
+function getEnabledCodeAnalysisTools(): Set<string> {
+    var result: Set<string> = new Set<string>();
 
     if (tl.getBoolInput('pmdAnalysisEnabled', false)) {
-        console.log('PMD analysis is enabled');
-        result.push(pmd.toolName);
+        result.add(pmd.toolName);
+    }
+
+    if (tl.getBoolInput('sqAnalysisEnabled', false)) {
+        result.add(sq.toolName);
     }
 
     return result;
 }
 
 // Returns true if the given code analysis tool is enabled
-function isCodeAnalysisToolEnabled(toolName:string) {
+export function isCodeAnalysisToolEnabled(toolName:string): boolean {
     // Get the list of enabled tools, return whether or not toolName is contained in it
-    return (getEnabledCodeAnalysisTools().indexOf(toolName) > -1);
+    var result = getEnabledCodeAnalysisTools().has(toolName);
+    if (result) {
+        // Looks like: 'SonarQube analysis is enabled.'
+        console.log(tl.loc('codeAnalysis_toolIsEnabled', toolName));
+    }
+    return result;
 }
 
 // Returns the full path of the staging directory for a given tool.
-function getStagingDirectory(toolName:string):string {
+function getToolStagingDirectory(toolName:string):string {
     return path.join(stagingDir, toolName.toLowerCase());
+}
+
+export function getMasterStagingDirectory() {
+    var masterStgDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
+    tl.mkdirP(masterStgDir);
+    return masterStgDir;
 }
 
 function cleanDirectory(targetDirectory:string):boolean {
@@ -101,7 +113,7 @@ function cleanDirectory(targetDirectory:string):boolean {
 // There is a possibility of both false positives if the above two factors are identified in a directory
 // that is not an actual Maven module, or if the module is not currently being built.
 // The possibility of false positives should be taken into account when this method is called.
-function findCandidateModules(directory:string):ModuleAnalysis[] {
+export function findCandidateModules(directory:string):ModuleAnalysis[] {
     var result:ModuleAnalysis[] = [];
     var filesInDirectory:string[] = fs.readdirSync(directory);
 
@@ -120,14 +132,21 @@ function findCandidateModules(directory:string):ModuleAnalysis[] {
         }
     });
 
+    // Special case: if the root turns up as a module, the automatic name won't do
+    result.forEach((module:ModuleAnalysis) => {
+        if (module.rootDirectory == tl.getVariable('build.sourcesDirectory')) {
+            module.moduleName = 'root';
+        }
+    });
+
     return result;
 }
 
 // Discover analysis results from enabled tools and associate them with the modules they came from
-function processAndAssignAnalysisResults(enabledCodeAnalysisTools:string[], modules:ModuleAnalysis[]):ModuleAnalysis[] {
+function processAndAssignAnalysisResults(enabledCodeAnalysisTools:Set<string>, modules:ModuleAnalysis[]):ModuleAnalysis[] {
     modules.forEach((module:ModuleAnalysis) => {
         // PMD
-        if (enabledCodeAnalysisTools.indexOf(pmd.toolName) > -1) {
+        if (enabledCodeAnalysisTools.has(pmd.toolName)) {
             var pmdResults:AnalysisResult = pmd.collectPmdOutput(module.rootDirectory);
             if (pmdResults) {
                 module.analysisResults[pmdResults.toolName] = pmdResults;
@@ -139,7 +158,7 @@ function processAndAssignAnalysisResults(enabledCodeAnalysisTools:string[], modu
 }
 
 // Create a build summary from the analysis results of modules
-function createAndUploadBuildSummary(enabledTools:string[], modules:ModuleAnalysis[]):void {
+function createAndUploadBuildSummary(enabledTools:Set<string>, modules:ModuleAnalysis[]):void {
     var buildSummaryLines:string[] = [];
 
     enabledTools.forEach((toolName:string) => {
@@ -235,7 +254,7 @@ function createSummaryLine(toolName:string, analysisResults:AnalysisResult[]):st
 }
 
 // Upload build artifacts from all modules
-function uploadBuildArtifactsFromModules(enabledTools:string[], modules:ModuleAnalysis[]) {
+function uploadBuildArtifactsFromModules(enabledTools:Set<string>, modules:ModuleAnalysis[]) {
     enabledTools.forEach((toolName:string) => {
         modules.forEach((module:ModuleAnalysis) => {
             uploadBuildArtifactsFromModule(toolName, module);
@@ -251,6 +270,11 @@ function uploadBuildArtifactsFromModule(toolName:string, moduleAnalysis:ModuleAn
         analysisResult = moduleAnalysis.analysisResults[toolName];
     }
 
+    if (!analysisResult) {
+        tl.debug(util.format("No analysis result found for %s analysis of %s", toolName, moduleAnalysis.moduleName));
+        return;
+    }
+
     // If there are no files to upload or there were no violations, return early
     if (!analysisResult.filesToUpload || analysisResult.filesToUpload.length < 1) {
         console.log('Skipping artifact upload: No artifacts from ' + toolName + ' analysis of module ' + moduleAnalysis.moduleName);
@@ -262,7 +286,7 @@ function uploadBuildArtifactsFromModule(toolName:string, moduleAnalysis:ModuleAn
     }
 
     // We create a staging directory to copy files to before group uploading them
-    var localStagingDir:string = path.join(getStagingDirectory(toolName), moduleAnalysis.moduleName);
+    var localStagingDir:string = path.join(getToolStagingDirectory(toolName), moduleAnalysis.moduleName);
     tl.mkdirP(localStagingDir);
 
     // Copy files to a staging directory so that they can all be uploaded at once

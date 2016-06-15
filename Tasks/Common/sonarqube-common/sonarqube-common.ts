@@ -1,5 +1,8 @@
 /// <reference path="../../../definitions/vsts-task-lib.d.ts" />
 
+import path = require('path');
+import fs = require('fs');
+
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
@@ -85,6 +88,28 @@ export function getSonarQubeEndpointFromInput(inputFieldName): SonarQubeEndpoint
     var hostPassword = getSonarQubeAuthParameter(genericEndpoint, 'password');
 
     return new SonarQubeEndpoint(hostUrl, hostUsername, hostPassword);
+}
+
+// Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
+// The returned object contains the following properties:
+//   projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
+export function getSonarQubeTaskReport(sonarPluginFolder: string) {
+    var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
+    if (!tl.exist(reportFilePath)) {
+        tl.debug('Task report not found at: ' + reportFilePath);
+        return null;
+    }
+
+    var reportFileString: string = fs.readFileSync(reportFilePath, 'utf-8');
+    var reportLines: string[] = reportFileString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
+
+    var reportObject = {};
+    reportLines.forEach((reportLine:string) => {
+        var reportKeyValuePair: string[] = reportLine.split('=');
+        reportObject[reportKeyValuePair[0]] = reportKeyValuePair[1]
+    });
+
+    return reportObject;
 }
 
 // Gets a SonarQube authentication parameter from the specified connection endpoint.
