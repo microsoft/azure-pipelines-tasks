@@ -83,7 +83,6 @@
             "name": "publishJUnitResults",
             "type": "boolean",
             "label": "Publish to TFS/Team Services",
-            "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
             "helpMarkDown": "Select this option to publish JUnit test results produced by the Gulp build to TFS/Team Services."
@@ -93,7 +92,6 @@
             "type": "filePath",
             "label": "Test Results Files",
             "defaultValue": "**/TEST-*.xml",
-            "required": true,
             "groupName": "junitTestResults",
             "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
             "visibleRule": "publishJUnitResults = true"

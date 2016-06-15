@@ -83,7 +83,6 @@
       "name": "publishJUnitResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
-      "required": true,
       "defaultValue": "true",
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
@@ -112,7 +111,6 @@
       "name": "enableCodeCoverage",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableCodeCoverage",
-      "required": true,
       "defaultValue": "false",
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.enableCodeCoverage"

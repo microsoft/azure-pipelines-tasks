@@ -83,7 +83,6 @@
       "name": "publishJUnitResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
-      "required": true,
       "defaultValue": "true",
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
@@ -93,7 +92,6 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testResultsFiles",
       "defaultValue": "**/TEST-*.xml",
-      "required": true,
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
       "visibleRule": "publishJUnitResults = true"

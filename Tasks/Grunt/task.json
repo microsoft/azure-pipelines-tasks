@@ -83,7 +83,6 @@
             "name": "publishJUnitResults",
             "type": "boolean",
             "label": "Publish to TFS/Team Services",
-            "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
             "helpMarkDown": "Select this option to publish JUnit test results produced by the Grunt build to TFS/Team Services."
@@ -112,7 +111,6 @@
             "name": "enableCodeCoverage",
             "type": "boolean",
             "label": "Run Istanbul",
-            "required": true,
             "defaultValue": "false",
             "groupName": "codeCoverage",
             "helpMarkDown": "Select this option to enable Code Coverage using Istanbul."
