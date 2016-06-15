@@ -1,106 +1,106 @@
 {
-  "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
-  "name": "VSTest",
-  "friendlyName": "Visual Studio Test",
-  "description": "Run tests with Visual Studio test runner",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
-  "category": "Test",
-  "visibility": [
-                "Build",
-                "Release"
-                ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 41
-  },
-  "demands": [
-    "vstest"
-  ],
-  "minimumAgentVersion": "1.89.0",
-  "groups": [
-    {
-      "name": "executionOptions",
-      "displayName": "Execution Options",
-      "isExpanded": true
+    "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
+    "name": "VSTest",
+    "friendlyName": "Visual Studio Test",
+    "description": "Run tests with Visual Studio test runner",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+    "category": "Test",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 41
     },
-    {
-      "name": "advancedExecutionOptions",
-      "displayName": "Advanced Execution Options",
-      "isExpanded": false
-    },
-    {
-      "name": "reportingOptions",
-      "displayName": "Reporting Options",
-      "isExpanded": false
-    }
-  ],
-  "inputs": [
-    {
-      "name": "testAssembly",
-      "type": "string",
-      "label": "Test Assembly",
-      "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
-      "required": true,
-      "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj.",
-      "groupName": "executionOptions"
-    },
-    {
-      "name": "testFiltercriteria",
-      "type": "string",
-      "label": "Test Filter criteria",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
-      "groupName": "executionOptions"
-    },
-    {
-      "name": "runSettingsFile",
-      "type": "filePath",
-      "label": "Run Settings File",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
-      "groupName": "executionOptions"
-    },
-    {
-      "name": "overrideTestrunParameters",
-      "type": "string",
-      "label": "Override TestRun Parameters",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
-      "groupName": "executionOptions"      
-    },     
-    {
-      "name": "codeCoverageEnabled",
-      "type": "boolean",
-      "label": "Code Coverage Enabled",
-      "defaultValue": "False",
-      "required": false,
-      "helpMarkDown": "Collect code coverage information from the Test run.",
-      "groupName": "executionOptions"
-    },
-    {
-      "name": "runInParallel",
-      "type": "boolean",
-      "label": "Run In Parallel",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Enable parallel execution of your tests.",
-      "groupName": "executionOptions"
-    },
-    {
-      "name": "vsTestVersion",
-      "type": "pickList",
-      "label": "VSTest version",
-      "defaultValue": "14.0",
-      "required": false,
-      "helpMarkDown": "The version of VSTest to use.",
-      "groupName":"advancedExecutionOptions",
-      "options": {
-                "latest":  "Latest",
+    "demands": [
+        "vstest"
+    ],
+    "minimumAgentVersion": "1.89.0",
+    "groups": [
+        {
+            "name": "executionOptions",
+            "displayName": "Execution Options",
+            "isExpanded": true
+        },
+        {
+            "name": "advancedExecutionOptions",
+            "displayName": "Advanced Execution Options",
+            "isExpanded": false
+        },
+        {
+            "name": "reportingOptions",
+            "displayName": "Reporting Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "testAssembly",
+            "type": "string",
+            "label": "Test Assembly",
+            "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
+            "required": true,
+            "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "testFiltercriteria",
+            "type": "string",
+            "label": "Test Filter criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "runSettingsFile",
+            "type": "filePath",
+            "label": "Run Settings File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "overrideTestrunParameters",
+            "type": "string",
+            "label": "Override TestRun Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "codeCoverageEnabled",
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Collect code coverage information from the Test run.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "runInParallel",
+            "type": "boolean",
+            "label": "Run In Parallel",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Enable parallel execution of your tests.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "vsTestVersion",
+            "type": "pickList",
+            "label": "VSTest version",
+            "defaultValue": "14.0",
+            "required": false,
+            "helpMarkDown": "The version of VSTest to use.",
+            "groupName": "advancedExecutionOptions",
+            "options": {
+                "latest": "Latest",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013"
             }
@@ -175,6 +175,15 @@
         }
     },
     "messages": {
-        "VstestReturnCode": "Vstest exited with return code: %d"
+        "VstestReturnCode": "Vstest exited with return code: %d",
+        "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s",
+        "VstestNotFound": "Vstest of version %d not found.",
+        "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests",
+        "NoResultsToPublish": "No results found to publish.",
+        "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s",
+        "RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
+        "FailedToSetRunInParallel": "Failed to set run in parallel. Invalid run settings file.",
+        "UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
+        "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s"
     }
 }

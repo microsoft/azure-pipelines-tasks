@@ -53,7 +53,7 @@ try {
     }
     else {
         tl._writeLine("##vso[task.logissue type=warning;code=002004;]");
-        tl.warning("No test assemblies found matching the pattern: " + testAssembly);
+        tl.warning(tl.loc('NoMatchingTestAssemblies', testAssembly));
     }
 }
 catch (error) {
@@ -108,8 +108,13 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                     setRunInParallellIfApplicable(vsVersion);
                     setupRunSettingsFileForParallel(runInParallel, overriddenSettingsFile)
                         .then(function(parallelRunSettingsFile) {
-                            var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
-                            var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
+                            var vstestPath = tl.getVariable("VSTest_" + vsVersion.toFixed(1));
+                            if (!vstestPath) {
+                                tl.warning(tl.loc('VstestNotFound', vsVersion));
+                                defer.resolve(1);
+                                return defer.promise;
+                            }
+                            var vstestLocation = path.join(vstestPath, "vstest.console.exe");
                             var vstest = tl.createToolRunner(vstestLocation);
 
                             testAssemblyFiles.forEach(function(testAssembly) {
@@ -164,7 +169,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                                 })
                                 .fail(function(err) {
                                     cleanUp(parallelRunSettingsFile);
-                                    tl.warning("Vstest failed with error. Check logs for failures. There might be failed tests");
+                                    tl.warning(tl.loc('VstestFailed'));
                                     tl.error(err);
                                     defer.resolve(1);
                                 });
@@ -197,7 +202,7 @@ function publishTestResults(testResultsDirectory: string) {
         }
         else {
             tl._writeLine("##vso[task.logissue type=warning;code=002003;]");
-            tl.warning("No results found to publish.");
+            tl.warning(tl.loc('NoResultsToPublish'));
         }
     }
 }
@@ -250,7 +255,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
             var parser = new xml2js.Parser();
             parser.parseString(xmlContents, function(err, result) {
                 if (err) {
-                    tl.warning("Error occured while reading run settings file. Error : " + err);
+                    tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
                     tl.debug("Error occured while overriding test run parameters. Continuing...");
                     defer.resolve(settingsFile);
                     return defer.promise;
@@ -342,7 +347,7 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
     var defer = Q.defer<string>();
     if (runInParallel) {
         if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
-            tl.warning("Run in Parallel is not supported with testsettings file.");
+            tl.warning(tl.loc('RunInParallelNotSupported'));
             defer.resolve(settingsFile);
             return defer.promise;
         }
@@ -368,14 +373,14 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
                     var parser = new xml2js.Parser();
                     parser.parseString(xmlContents, function(err, result) {
                         if (err) {
-                            tl.warning("Error occured while reading run settings file. Error : " + err);
+                            tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
                             tl.debug("Error occured while setting run in parallel. Continuing...");
                             defer.resolve(settingsFile);
                             return defer.promise;
                         }
 
                         if (result.RunSettings === undefined) {
-                            tl.warning("Failed to set run in parallel. Invalid run settings file.");
+                            tl.warning(tl.loc('FailedToSetRunInParallel'));
                             defer.resolve(settingsFile);
                             return defer.promise;
                         }
@@ -447,7 +452,7 @@ function setRunInParallellIfApplicable(vsVersion: number) {
 }
 
 function resetRunInParallel() {
-    tl.warning("Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.");
+    tl.warning(tl.loc('UpdateOneOrHigherRequired'));
     runInParallel = false;
 }
 
@@ -503,11 +508,11 @@ function setRegistryKeyForParallelExecution(vsVersion: number) {
             };
             regedit.putValue(values, function(err) {
                 if (err) {
-                    tl.warning("Error occured while setting registry key, Error: " + err);
+                    tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
                 }
             });
         } else {
-            tl.warning("Error occured while creating registry key, Error: " + err);
+            tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
         }
     });
 }

@@ -1,7 +1,8 @@
 {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
-        "VS140COMNTools": "/vs/path"
+        "VS140COMNTools": "/vs/path",
+        "VSTest_14.0": "/vs/IDE/CommonExtensions/Microsoft/TestWindow"
     },
     "find": {
         "/source/dir": [
