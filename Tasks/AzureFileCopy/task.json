@@ -13,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 58
+    "Patch": 59
   },
   "demands": [
     "azureps"
   ],
-    "minimumAgentVersion": "1.98.0",
+    "minimumAgentVersion": "1.102.0",
     "groups": [
          {
              "name": "output",
@@ -275,7 +275,7 @@
       "target": "EnvironmentNameRM",
       "endpointId": "$(ConnectedServiceNameARM)",
       "dataSourceName": "AzureVirtualMachinesV2Id",
-      "resultTemplate": "{{#extractResource resourceGroups}}"
+	  "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
     }
   ],
   "instanceNameFormat": "$(Destination) File Copy",
