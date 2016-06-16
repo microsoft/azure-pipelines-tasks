@@ -1,0 +1,24 @@
+{
+    "getVariable": {
+        "ENDPOINT_URL_ID1": "bogusURL",
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
+        "build.sourcesDirectory": "c:\\"
+    },
+    "exist" : {
+        "c:/rootFolder": true
+    },
+    "find": {
+        "c:/rootFolder": [
+            "c:/rootFolder/a",
+            "c:/rootFolder/b",
+            "c:/rootFolder/c"
+        ]
+    },
+    "match": {
+        "*": [
+            "c:/rootFolder/a",
+            "c:/rootFolder/b",
+            "c:/rootFolder/c"
+        ]
+    }
+}
