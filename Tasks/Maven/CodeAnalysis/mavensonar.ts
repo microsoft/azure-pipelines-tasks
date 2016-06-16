@@ -49,50 +49,14 @@ export function getSonarQubeRunner(mvnPath:string, mavenPOMFile: string, mavenOp
 
 // Upload a build summary with links to available SonarQube dashboards for further analysis details.
 export function uploadSonarQubeBuildSummary(): void {
-    // Collect all unique dashboard URLs
-    // project key -> dashboard URL
-    var dashboardUrlsByProjectKey: Map<string, string> = new Map<string, string>();
-
-    var sourcesDir = tl.getVariable('build.sourcesDirectory');
-    var modules:ModuleAnalysis[] = codeAnalysis.findCandidateModules(sourcesDir);
-    modules.forEach((module: ModuleAnalysis) => {
-        var taskReport = sqCommon.getSonarQubeTaskReport(path.join(module.rootDirectory, 'target', 'sonar'));
-        if (taskReport) {
-            dashboardUrlsByProjectKey.set(taskReport['projectKey'], taskReport['dashboardUrl']);
-        }
-    });
-
-    dashboardUrlsByProjectKey.delete(null);
-
-    if (dashboardUrlsByProjectKey.size < 1) {
-        tl.debug('Expected to find SonarQube report file(s) on disk, but found none.');
-        return;
-    }
-
-    // Create a build summary line-by-line, write it out and upload
-    var buildSummaryLines:string[] = [];
-    var lineBodyText:string;
-
-   for (let projectKey of dashboardUrlsByProjectKey.keys()) {
-       // If there is more than one project key, we will append it to the build summary line text
-       if (dashboardUrlsByProjectKey.size > 1) {
-           // Looks like: "Detailed SonarQube report (foo)"
-           lineBodyText = tl.loc('sqAnalysisBuildSummaryLine_SomeProjects', projectKey);
-       } else {
-           // Looks like: "Detailed SonarQube report"
-           lineBodyText = tl.loc('sqAnalysisBuildSummaryLine_OneProject');
-       }
-
-       buildSummaryLines.push(util.format('[%s >](%s "%s Dashboard")',
-           lineBodyText, dashboardUrlsByProjectKey.get(projectKey), projectKey));
-   };
+    var taskReport: Map<string, string> =
+        sqCommon.getSonarQubeTaskReport(path.join(tl.getVariable('build.sourcesDirectory'), 'target', 'sonar'));
 
     // Save and upload build summary
-    // Looks like: "[Detailed SonarQube report (foo) >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")  \r\n
-    // [Detailed SonarQube report (bar) >](https://mySQserver:9000/dashboard/index/bar "bar Dashboard")  \r\n"
-    var buildSummaryContents:string = buildSummaryLines.join("  \r\n"); // Double space is end of line in markdown
-    var buildSummaryFilePath:string = path.join(codeAnalysis.getMasterStagingDirectory(), 'SonarQubeBuildSummary.md');
-    fs.writeFileSync(buildSummaryFilePath, buildSummaryContents);
+    // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
+    var buildSummaryContents:string = createSonarQubeBuildSummary(taskReport);
+
+    var buildSummaryFilePath = saveSonarQubeBuildSummary(buildSummaryContents);
     tl.debug('Uploading build summary from ' + buildSummaryFilePath);
 
     tl.command('task.addattachment', {
@@ -109,4 +73,17 @@ function createMavenSonarQubeRunner(mvnPath: string, sqHostUrl: string, sqHostUs
     mvnsq = sqCommon.applySonarQubeConnectionParams(mvnsq, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword);
 
     return mvnsq;
+}
+
+// Creates the string that comprises the build summary text.
+function createSonarQubeBuildSummary(taskReport: Map<string, string>): string {
+    return util.format('[%s >](%s "%s Dashboard")',
+        tl.loc('sqAnalysisBuildSummaryLine_OneProject'), taskReport.get('dashboardUrl'), taskReport.get('projectKey'));
+}
+
+// Saves the build summary string and returns the file path it was saved to.
+function saveSonarQubeBuildSummary(contents: string): string {
+    var filePath:string = path.join(codeAnalysis.getCodeAnalysisStagingDirectory(), 'SonarQubeBuildSummary.md');
+    fs.writeFileSync(filePath, contents);
+    return filePath;
 }

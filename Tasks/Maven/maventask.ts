@@ -183,7 +183,7 @@ mvnGetVersion.exec()
     .fail(function (err) {
         console.error(err.message);
         // Looks like: "SonarQube analysis failed."
-        console.error(tl.loc('codeAnalysis_toolFailed', sqMaven.toolName));
+        console.error(tl.loc('codeAnalysis_ToolFailed', sqMaven.toolName));
         sonarQubeRunFailed = true;
     })
     .then(function (code) { // Pick up files from the Java code analysis tools
@@ -198,7 +198,7 @@ mvnGetVersion.exec()
     .fail(function (err) {
         console.error(err.message);
         // Looks like: "Code analysis failed."
-        console.error(tl.loc('codeAnalysis_toolFailed', 'Code'));
+        console.error(tl.loc('codeAnalysis_ToolFailed', 'Code'));
         pmdRunFailed = true;
     })
     .then(function () {

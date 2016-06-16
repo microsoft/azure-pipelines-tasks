@@ -685,7 +685,7 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('run maven including SonarQube analysis', (done) => {
+    it('run maven including SonarQube analysis', function(done) {
         // Arrange
         createTempDirsForCodeAnalysisTests();
         var testSrcDir:string = path.join(__dirname, 'data', 'multimodule');
