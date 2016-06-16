@@ -110,7 +110,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         .then(function(parallelRunSettingsFile) {
                             var vstestPath = tl.getVariable("VSTest_" + vsVersion.toFixed(1));
                             if (!vstestPath) {
-                                tl.warning(tl.loc('VstestNotFound', vsVersion));
+                                tl.error(tl.loc('VstestNotFound', vsVersion));
                                 defer.resolve(1);
                                 return defer.promise;
                             }
