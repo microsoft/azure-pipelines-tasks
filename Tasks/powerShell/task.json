@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "DotNetFramework"
@@ -42,7 +42,7 @@
         {
             "name": "scriptName",
             "type": "filePath",
-            "label": "Script filename",
+            "label": "Script Path",
             "defaultValue": "",
             "required": true,
             "visibleRule": "scriptType = filePath",
@@ -78,6 +78,15 @@
                 "rows": "10",
                 "maxLength": "500"
             }
+        },
+        {
+            "name": "failOnStandardError",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure. This feature requires an agent version 1.102 or higher, to enable not failing on STDERR.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "PowerShell Script",
@@ -87,7 +96,8 @@
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
             "inlineScript": "$(inlineScript)",
-            "scriptType": "$(scriptType)"
+            "scriptType": "$(scriptType)",
+            "failOnStandardError": "$(failOnStandardError)"
         }
     }
 }
