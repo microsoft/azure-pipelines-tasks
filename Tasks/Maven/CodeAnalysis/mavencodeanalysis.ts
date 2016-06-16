@@ -41,7 +41,7 @@ export function uploadCodeAnalysisResults():void {
 
     // Retrieve build variables
     sourcesDir = tl.getVariable('build.sourcesDirectory');
-    stagingDir = getMasterStagingDirectory();
+    stagingDir = getCodeAnalysisStagingDirectory();
     buildNumber = tl.getVariable('build.buildNumber');
 
     // Discover maven modules
@@ -62,50 +62,6 @@ export function uploadCodeAnalysisResults():void {
     uploadBuildArtifactsFromModules(enabledCodeAnalysisTools, modules);
     // Analysis summaries
     createAndUploadBuildSummary(enabledCodeAnalysisTools, modules);
-}
-
-// Returns the names of any enabled code analysis tools, or empty array if none.
-function getEnabledCodeAnalysisTools(): Set<string> {
-    var result: Set<string> = new Set<string>();
-
-    if (tl.getBoolInput('pmdAnalysisEnabled', false)) {
-        result.add(pmd.toolName);
-    }
-
-    if (tl.getBoolInput('sqAnalysisEnabled', false)) {
-        result.add(sq.toolName);
-    }
-
-    return result;
-}
-
-// Returns true if the given code analysis tool is enabled
-export function isCodeAnalysisToolEnabled(toolName:string): boolean {
-    // Get the list of enabled tools, return whether or not toolName is contained in it
-    var result = getEnabledCodeAnalysisTools().has(toolName);
-    if (result) {
-        // Looks like: 'SonarQube analysis is enabled.'
-        console.log(tl.loc('codeAnalysis_toolIsEnabled', toolName));
-    }
-    return result;
-}
-
-// Returns the full path of the staging directory for a given tool.
-function getToolStagingDirectory(toolName:string):string {
-    return path.join(stagingDir, toolName.toLowerCase());
-}
-
-export function getMasterStagingDirectory() {
-    var masterStgDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
-    tl.mkdirP(masterStgDir);
-    return masterStgDir;
-}
-
-function cleanDirectory(targetDirectory:string):boolean {
-    tl.rmRF(targetDirectory);
-    tl.mkdirP(targetDirectory);
-
-    return tl.exist(targetDirectory);
 }
 
 // Identifies maven modules below the root by the presence of a pom.xml file and a /target/ directory,
@@ -140,6 +96,50 @@ export function findCandidateModules(directory:string):ModuleAnalysis[] {
     });
 
     return result;
+}
+
+export function getCodeAnalysisStagingDirectory() {
+    var masterStgDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
+    tl.mkdirP(masterStgDir);
+    return masterStgDir;
+}
+
+// Returns true if the given code analysis tool is enabled
+export function isCodeAnalysisToolEnabled(toolName:string): boolean {
+    // Get the list of enabled tools, return whether or not toolName is contained in it
+    var result = getEnabledCodeAnalysisTools().has(toolName);
+    if (result) {
+        // Looks like: 'SonarQube analysis is enabled.'
+        console.log(tl.loc('codeAnalysis_ToolIsEnabled', toolName));
+    }
+    return result;
+}
+
+// Returns the names of any enabled code analysis tools, or empty array if none.
+function getEnabledCodeAnalysisTools(): Set<string> {
+    var result: Set<string> = new Set<string>();
+
+    if (tl.getBoolInput('pmdAnalysisEnabled', false)) {
+        result.add(pmd.toolName);
+    }
+
+    if (tl.getBoolInput('sqAnalysisEnabled', false)) {
+        result.add(sq.toolName);
+    }
+
+    return result;
+}
+
+// Returns the full path of the staging directory for a given tool.
+function getToolStagingDirectory(toolName:string):string {
+    return path.join(stagingDir, toolName.toLowerCase());
+}
+
+function cleanDirectory(targetDirectory:string):boolean {
+    tl.rmRF(targetDirectory);
+    tl.mkdirP(targetDirectory);
+
+    return tl.exist(targetDirectory);
 }
 
 // Discover analysis results from enabled tools and associate them with the modules they came from

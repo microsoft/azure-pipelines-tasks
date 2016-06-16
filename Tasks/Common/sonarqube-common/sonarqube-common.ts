@@ -93,23 +93,14 @@ export function getSonarQubeEndpointFromInput(inputFieldName): SonarQubeEndpoint
 // Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
 // The returned object contains the following properties:
 //   projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
-export function getSonarQubeTaskReport(sonarPluginFolder: string) {
+export function getSonarQubeTaskReport(sonarPluginFolder: string): Map<string, string> {
     var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
     if (!tl.exist(reportFilePath)) {
         tl.debug('Task report not found at: ' + reportFilePath);
         return null;
     }
 
-    var reportFileString: string = fs.readFileSync(reportFilePath, 'utf-8');
-    var reportLines: string[] = reportFileString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
-
-    var reportObject = {};
-    reportLines.forEach((reportLine:string) => {
-        var reportKeyValuePair: string[] = reportLine.split('=');
-        reportObject[reportKeyValuePair[0]] = reportKeyValuePair[1]
-    });
-
-    return reportObject;
+    return createTaskReportMapFromFile(reportFilePath);
 }
 
 // Gets a SonarQube authentication parameter from the specified connection endpoint.
@@ -163,4 +154,19 @@ function isPrBuild(): boolean {
 
 function isNullOrEmpty(str) {
     return str === undefined || str === null || str.length === 0;
+}
+
+// Constructs a map out of an existing report-task.txt file. File must exist on disk.
+function createTaskReportMapFromFile(taskReportFile: string): Map<string, string> {
+
+    var reportFileString: string = fs.readFileSync(taskReportFile, 'utf-8');
+    var reportLines: string[] = reportFileString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
+
+    var reportMap = new Map<string, string>();
+    reportLines.forEach((reportLine:string) => {
+        var reportKeyValuePair: string[] = reportLine.split('=');
+        reportMap.set(reportKeyValuePair[0], reportKeyValuePair[1]);
+    });
+
+    return reportMap;
 }

@@ -302,12 +302,12 @@
         }
     },
     "messages": {
-        "codeAnalysis_toolIsEnabled": "%s analysis is enabled.",
-        "codeAnalysis_toolFailed": "%s analysis failed.",
+        "codeAnalysis_ToolIsEnabled": "%s analysis is enabled.",
+        "codeAnalysis_ToolFailed": "%s analysis failed.",
         "sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
         "sqAnalysis_BuildSummaryTitle": "SonarQube Analysis Report",
         "sqAnalysisBuildSummaryLine_OneProject": "Detailed SonarQube report",
-        "sqAnalysisBuildSummaryLine_SomeProjects": "Detailed SonarQube report (%s)",
+        "sqAnalysisBuildSummary_NoReportTaskFileFound": "Expected to find SonarQube report file(s) on disk, but found none.",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",

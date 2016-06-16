@@ -5,7 +5,7 @@ declare module 'sonarqube-common/sonarqube-common' {
 
     // Data class returned from getSonarQubeEndpointDetails()
     export class SonarQubeEndpoint {
-        constructor(Url, Username, Password);
+        constructor(Url: string, Username: string, Password: string);
         Url: string;
         Username: string;
         Password: string;
@@ -26,5 +26,5 @@ declare module 'sonarqube-common/sonarqube-common' {
     export function getSonarQubeEndpointFromInput(inputFieldName):SonarQubeEndpoint;
 
     // Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
-    export function getSonarQubeTaskReport(sonarPluginFolder: string);
+    export function getSonarQubeTaskReport(sonarPluginFolder: string): Map<string, string>;
 }

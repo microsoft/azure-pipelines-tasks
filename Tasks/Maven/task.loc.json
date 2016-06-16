@@ -302,12 +302,12 @@
     }
   },
   "messages": {
-    "codeAnalysis_toolIsEnabled": "ms-resource:loc.messages.codeAnalysis_toolIsEnabled",
-    "codeAnalysis_toolFailed": "ms-resource:loc.messages.codeAnalysis_toolFailed",
+    "codeAnalysis_ToolIsEnabled": "ms-resource:loc.messages.codeAnalysis_ToolIsEnabled",
+    "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
     "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
     "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
     "sqAnalysisBuildSummaryLine_OneProject": "ms-resource:loc.messages.sqAnalysisBuildSummaryLine_OneProject",
-    "sqAnalysisBuildSummaryLine_SomeProjects": "ms-resource:loc.messages.sqAnalysisBuildSummaryLine_SomeProjects",
+    "sqAnalysisBuildSummary_NoReportTaskFileFound": "ms-resource:loc.messages.sqAnalysisBuildSummary_NoReportTaskFileFound",
     "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
     "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
     "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
