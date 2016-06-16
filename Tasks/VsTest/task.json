@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 41
+        "Patch": 42
     },
     "demands": [
         "vstest"
@@ -175,15 +175,15 @@
         }
     },
     "messages": {
-        "VstestReturnCode": "Vstest exited with return code: %d",
-        "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s",
-        "VstestNotFound": "Vstest of version %d not found.",
-        "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests",
+        "VstestReturnCode": "Vstest exited with return code: %d.",
+        "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
+        "VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
+        "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
         "NoResultsToPublish": "No results found to publish.",
-        "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s",
+        "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
         "RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
         "FailedToSetRunInParallel": "Failed to set run in parallel. Invalid run settings file.",
         "UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
-        "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s"
+        "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s."
     }
 }
