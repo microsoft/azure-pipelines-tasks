@@ -36,11 +36,8 @@ if (isCodeCoverageEnabled) {
 	var npm = tl.createToolRunner(tl.which('npm', true));
 	npm.argString('install istanbul');
 	var testSrc = tl.getPathInput('testFiles', true, false);
-	if (os.type().match(/^Win/)) {
-		var istanbul = tl.createToolRunner(tl.which('istanbul', true));
-	} else {
-		var istanbul = tl.createToolRunner(tl.which('./node_modules/istanbul/lib/cli.js', true));
-	}
+	var istanbul = tl.createToolRunner(tl.which('node', true));
+	istanbul.arg('./node_modules/istanbul/lib/cli.js');
 	istanbul.argString('cover --report cobertura --report html');
 	istanbul.arg('./node_modules/mocha/bin/_mocha');
 	istanbul.arg(testSrc);
