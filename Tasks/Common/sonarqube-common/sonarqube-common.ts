@@ -8,7 +8,7 @@ import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
 // Simple data class for a SonarQube generic endpoint
 export class SonarQubeEndpoint {
-    constructor(public Url, public Username, public Password) {
+    constructor(public Url: string, public Username: string, public Password: string) {
     }
 }
 
