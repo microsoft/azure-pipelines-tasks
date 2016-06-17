@@ -56,6 +56,8 @@ try{
 	# Ensure that at most a package (.zip) file is found
 	$packageFilePath = Get-SingleFilePath -file $Package
 
+    $packageFilePath = Substitute-ConfigurationParameters -PackageFile $packageFilePath
+
     # Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
     if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\" ) -or [string]::IsNullOrEmpty($SetParametersFile) ){
 	   $setParametersFilePath = ""
