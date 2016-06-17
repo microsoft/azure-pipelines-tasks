@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 58
+    "Patch": 57
   },
   "demands": [
     "azureps"
@@ -275,7 +275,7 @@
       "target": "EnvironmentNameRM",
       "endpointId": "$(ConnectedServiceNameARM)",
       "dataSourceName": "AzureVirtualMachinesV2Id",
-      "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
+      "resultTemplate": "{{#extractResource resourceGroups}}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

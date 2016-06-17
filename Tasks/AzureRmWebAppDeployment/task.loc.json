@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 6
   },
   "minimumAgentVersion": "1.99.0",
   "groups": [
@@ -163,7 +163,7 @@
         "WebAppName": "$(WebAppName)",
         "ResourceGroupName": "$(ResourceGroupName)"
       },
-      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+      "resultTemplate": "{{#extractResource slots}}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
