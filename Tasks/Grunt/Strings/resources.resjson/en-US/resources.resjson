@@ -22,7 +22,7 @@
   "loc.input.help.testResultsFiles": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
   "loc.input.label.testRunTitle": "Test Run Title",
   "loc.input.help.testRunTitle": "Provide a name for the test run.",
-  "loc.input.label.enableCodeCoverage": "Run Istanbul",
+  "loc.input.label.enableCodeCoverage": "Enable Code Coverage",
   "loc.input.help.enableCodeCoverage": "Select this option to enable Code Coverage using Istanbul.",
   "loc.input.label.testFramework": "Test Framework",
   "loc.input.help.testFramework": "Select your test framework.",

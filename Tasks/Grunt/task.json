@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 37
+        "Patch": 21
     },
     "demands": [
         "node.js"
@@ -110,7 +110,7 @@
         {
             "name": "enableCodeCoverage",
             "type": "boolean",
-            "label": "Run Istanbul",
+            "label": "Enable Code Coverage",
             "defaultValue": "false",
             "groupName": "codeCoverage",
             "helpMarkDown": "Select this option to enable Code Coverage using Istanbul."

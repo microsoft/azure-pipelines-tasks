@@ -66,7 +66,7 @@ gt.exec().then(function (code) {
 				jasmineInit.exec().then(function (code) {
 					istanbul.exec().then(function (code) {
 						publishCodeCoverage(summaryFile);
-						tl.setResult(tl.TaskResult.Succeeded, tl.loc('GulpReturnCode', code));
+						tl.setResult(tl.TaskResult.Succeeded, tl.loc('GruntReturnCode', code));
 					}).fail(function (err) {
 						tl.debug('taskRunner fail');
 						tl.setResult(tl.TaskResult.Failed, tl.loc('IstanbulFailed', err.message));
@@ -75,7 +75,7 @@ gt.exec().then(function (code) {
 			} else {
 				istanbul.exec().then(function (code) {
 					publishCodeCoverage(summaryFile);
-					tl.setResult(tl.TaskResult.Succeeded, tl.loc('GulpReturnCode', code));
+					tl.setResult(tl.TaskResult.Succeeded, tl.loc('GruntReturnCode', code));
 				}).fail(function (err) {
 					tl.debug('taskRunner fail');
 					tl.setResult(tl.TaskResult.Failed, tl.loc('IstanbulFailed', err.message));
