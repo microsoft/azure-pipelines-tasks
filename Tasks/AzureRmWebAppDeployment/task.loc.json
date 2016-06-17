@@ -163,7 +163,7 @@
         "WebAppName": "$(WebAppName)",
         "ResourceGroupName": "$(ResourceGroupName)"
       },
-      "resultTemplate": "{{#extractResource slots}}"
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
