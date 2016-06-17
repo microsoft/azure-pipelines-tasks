@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 25
+    "Patch": 77
   },
   "demands": [
     "node.js"
@@ -114,6 +114,19 @@
       "defaultValue": "false",
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.enableCodeCoverage"
+    },
+    {
+      "name": "testFramework",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testFramework",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "Mocha",
+      "helpMarkDown": "ms-resource:loc.input.help.testFramework",
+      "options": {
+        "Mocha": "Mocha",
+        "Jasmine": "Jasmine"
+      }
     },
     {
       "name": "testFiles",

@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 21
+        "Patch": 37
     },
     "demands": [
         "node.js"
@@ -114,6 +114,19 @@
             "defaultValue": "false",
             "groupName": "codeCoverage",
             "helpMarkDown": "Select this option to enable Code Coverage using Istanbul."
+        },
+        {
+            "name": "testFramework",
+            "type": "pickList",
+            "label": "Test Framework",
+            "required": false,
+            "groupName": "codeCoverage",
+            "defaultValue": "Mocha",
+            "helpMarkDown": "Select your test framework.",
+            "options": {
+                "Mocha": "Mocha",
+                "Jasmine": "Jasmine"
+            }
         },
         {
             "name": "testFiles",

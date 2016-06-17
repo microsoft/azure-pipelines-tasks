@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 25
+        "Patch": 77
     },
     "demands": [
         "node.js"
@@ -109,11 +109,24 @@
         {
             "name": "enableCodeCoverage",
             "type": "boolean",
-            "label": "Run Istanbul",
+            "label": "Enable code Coverage",
             "required": true,
             "defaultValue": "false",
             "groupName": "codeCoverage",
             "helpMarkDown": "Select this option to enable Code Coverage using Istanbul."
+        },
+        {
+            "name": "testFramework",
+            "type": "pickList",
+            "label": "Test Framework",
+            "required": false,
+            "groupName": "codeCoverage",
+            "defaultValue": "Mocha",
+            "helpMarkDown": "Select your test framework.",
+            "options": {
+                "Mocha": "Mocha",
+                "Jasmine": "Jasmine"
+            }
         },
         {
             "name": "testFiles",
