@@ -10,6 +10,24 @@
               "MSDeploy3.6/Microsoft.Web.Deployment.Tracing.dll",
               "MSDeploy3.6/msdeploy.exe"
             ]
+        },
+        {
+            "archiveName": "7zip.zip",
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+            "dest": "./",
+            "files": [
+              "7zip/7z.exe",
+              "7zip/7z.dll",
+              "7zip/License.txt"
+            ]
+        },
+        {
+            "archiveName": "Microsoft.Web.Xdt.zip",
+            "url": "https://dtlazurestorage.blob.core.windows.net/tools/Microsoft.Web.Xdt.zip",
+            "dest": "./",
+            "files": [
+              "Microsoft.Web.Xdt/Microsoft.Web.XmlTransform.dll"
+            ]
         }
     ]
 }

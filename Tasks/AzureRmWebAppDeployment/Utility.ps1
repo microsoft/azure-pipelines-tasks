@@ -158,7 +158,7 @@ function Run-Command
     }
 	catch [System.Exception]
     {
-        throw $_.Exception.Message    
+        throw $_.Exception.Message
     }
 
 }

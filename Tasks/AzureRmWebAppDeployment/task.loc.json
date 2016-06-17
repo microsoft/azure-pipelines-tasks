@@ -12,14 +12,19 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 8
+    "Minor": 1,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
   "groups": [
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    },
+    {
+      "name": "configtransforms",
+      "displayName": "ms-resource:loc.group.displayName.configtransforms",
       "isExpanded": true
     }
   ],
@@ -132,6 +137,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
+      "name": "XmlTransformation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformation",
+      "defaultValue": "false",
+      "groupName": "configtransforms",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
+    },
+    {
       "name": "WebAppUri",
       "type": "string",
       "label": "ms-resource:loc.input.label.WebAppUri",
@@ -198,6 +211,7 @@
     "msdeploycommandransuccessfully": "ms-resource:loc.messages.msdeploycommandransuccessfully",
     "filePathFindFilesSearchPattern0": "ms-resource:loc.messages.filePathFindFilesSearchPattern0",
     "filePath0": "ms-resource:loc.messages.filePath0",
-    "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0"
+    "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0",
+    "XmlTranform0failedforfile1": "ms-resource:loc.messages.XmlTranform0failedforfile1"
   }
 }
