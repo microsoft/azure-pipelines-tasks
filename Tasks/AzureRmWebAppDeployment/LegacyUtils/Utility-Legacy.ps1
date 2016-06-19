@@ -140,6 +140,55 @@ function Get-MsDeployCmdArgs
     return $msDeployCmdArgs
 }
 
+function Get-MsDeployAspDotNet5CmdArgs
+{
+
+    param([String][Parameter(Mandatory=$true)] $wwwRootDir,
+        [String][Parameter(Mandatory=$true)] $webAppNameForMSDeployCmd,
+        [Object][Parameter(Mandatory=$true)] $azureRMWebAppConnectionDetails,
+        [String][Parameter(Mandatory=$true)] $removeAdditionalFilesFlag,
+        [String][Parameter(Mandatory=$true)] $excludeFilesFromAppDataFlag,
+        [String][Parameter(Mandatory=$true)] $takeAppOfflineFlag,
+        [String][Parameter(Mandatory=$false)] $AdditionalArguments)
+    
+        
+    $msDeployCmdArgs = [String]::Empty
+    Write-Verbose "Constructing msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
+
+    # msdeploy argument containing source and destination details to sync
+    $msDeployCmdArgs = [String]::Format('-verb:sync -source:IisApp="{0}" -dest:IisApp="{2}",ComputerName="https://{1}/msdeploy.axd",UserName="{3}",Password="{4}",AuthType="Basic"' `
+                                        , $wwwRootDir, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
+
+    # msdeploy argument to block deletion from happening
+    if($removeAdditionalFilesFlag -ne "true")
+    {
+        $msDeployCmdArgs += " -enableRule:DoNotDeleteRule"
+    }
+
+    # msdeploy argument to take app offline
+    if($takeAppOfflineFlag -eq "true")
+    {
+        $msDeployCmdArgs += " -enableRule:AppOffline"
+    }
+
+    # msdeploy argument to exclude files in App_Data folder
+    if($excludeFilesFromAppDataFlag -eq "true")
+    {
+        $msDeployCmdArgs += [String]::Format(' -skip:Directory="\\App_Data"')
+    }
+    
+    # msploy additional arguments 
+    if( -not [String]::IsNullOrEmpty($AdditionalArguments)){
+        $msDeployCmdArgs += ( " " + $AdditionalArguments)
+    }
+
+    $msDeployCmdArgs += ( " " + "-enableLink:contentLibExtension" )
+    $msDeployCmdArgs += ( " " + "-retryAttempts:2" )
+
+    Write-Verbose "Constructed msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
+    return $msDeployCmdArgs
+}
+
 function Run-Command
 {
     param([String][Parameter(Mandatory=$true)] $command)

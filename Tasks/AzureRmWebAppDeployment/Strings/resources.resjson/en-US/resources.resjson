@@ -6,6 +6,8 @@
   "loc.group.displayName.output": "Output",
   "loc.input.label.ConnectedServiceName": "AzureRM Subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
+  "loc.input.label.WebAppType": "WebApp Type",
+  "loc.input.help.WebAppType": "Select webapp type that you are deploying",
   "loc.input.label.WebAppName": "Web App Name",
   "loc.input.help.WebAppName": "Enter or Select the name of an existing AzureRM Web Application.",
   "loc.input.label.DeployToSlotFlag": "Deploy to Slot",
@@ -50,5 +52,6 @@
   "loc.messages.msdeploycommandransuccessfully": "msdeploy command ran successfully.",
   "loc.messages.filePathFindFilesSearchPattern0": "filePath = Find-Files -SearchPattern {0}",
   "loc.messages.filePath0": "filePath = {0}",
-  "loc.messages.UnabletofindpublishUrlforWebApp0": "Unable to find publish Url for WebApp '{0}'."
+  "loc.messages.UnabletofindpublishUrlforWebApp0": "Unable to find publish Url for WebApp '{0}'.",
+  "loc.messages.Specifiedpath0doesntexist": "Specified path '{0}' doesn't exist ."
 }

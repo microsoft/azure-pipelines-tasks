@@ -33,6 +33,18 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
+            "name": "WebAppType",
+            "type": "pickList",
+            "label": "WebApp Type",
+            "required": false,
+            "helpMarkDown": "Select webapp type that you are deploying",
+            "defaultValue": "ASPdotNet4",
+            "options": {
+                "ASPdotNet4": "ASP.Net 4.0",
+                "ASPdotNet5": "ASP.Net 5.0"
+            }
+        },
+        {
             "name": "WebAppName",
             "type": "pickList",
             "label": "Web App Name",
@@ -89,7 +101,8 @@
             "label": "SetParameters File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
+            "helpMarkDown": "Optional: location of the SetParameters.xml file to use.",
+            "visibleRule": "WebAppType = ASPdotNet4"
         },
         {
             "name": "RemoveAdditionalFilesFlag",
@@ -121,7 +134,8 @@
             "label": "Virtual Application",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root."
+            "helpMarkDown": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root.",
+            "visibleRule": "WebAppType = ASPdotNet4"
         },
         {
             "name": "AdditionalArguments",
@@ -198,6 +212,7 @@
         "msdeploycommandransuccessfully": "msdeploy command ran successfully.",
         "filePathFindFilesSearchPattern0": "filePath = Find-Files -SearchPattern {0}",
         "filePath0":"filePath = {0}",
-        "UnabletofindpublishUrlforWebApp0":"Unable to find publish Url for WebApp '{0}'."
+        "UnabletofindpublishUrlforWebApp0":"Unable to find publish Url for WebApp '{0}'.",
+        "Specifiedpath0doesntexist":"Specified path '{0}' doesn't exist ."
     }
 }
