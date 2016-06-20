@@ -12,7 +12,7 @@ function UnzipWebDeployPkg
 
     Write-Verbose "Unzipping Web Deploy Package $PackagePath to $TempUnzippedPath"
 
-    $UnzipCommand = "`"$7ZipExePath`" x $PackageFile -o $TempUnzippedPath -y" 
+    $UnzipCommand = "`"$7ZipExePath`" x $PackageFile -o$TempUnzippedPath -y" 
     Run-Command -command $UnzipCommand
 
     Write-Verbose "Unzipped Web Deploy Package $PackagePath to $TempUnzippedPath"
