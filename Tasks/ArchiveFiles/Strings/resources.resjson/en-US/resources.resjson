@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Archive Files",
-  "loc.helpMarkDown": "[More Information](TODO)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
   "loc.description": "Archive files using a variety of compression formats such as .7z, .rar, .tar.gz, and .zip.",
   "loc.instanceNameFormat": "Archive files $(message)",
   "loc.group.displayName.archive": "Archive",
