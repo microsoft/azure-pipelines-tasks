@@ -29,7 +29,7 @@ $input = @{
 & $PSScriptRoot\..\..\..\Tasks\DeployVisualStudioTestAgent\DeployTestAgent.ps1 @input
 
 Assert-WasCalled Invoke-DeployTestAgent -ArgumentsEvaluator {
-$args.Length -eq 36
+    $args.Length -eq 36
 }
 
 Assert-WasCalled Invoke-DeployTestAgent -ParametersEvaluator {
@@ -51,4 +51,4 @@ Assert-WasCalled Invoke-DeployTestAgent -ParametersEvaluator {
 	$DataCollectionOnly -eq 'isDataCollectionOnly' -and
 	$VerifyTestMachinesAreInUseScriptLocation -like '*VerifyTestMachinesAreInUse.ps1' -and
 	$CheckAgentInstallationScriptLocation -like '*CheckTestAgentInstallation.ps1'
-    }
+}
