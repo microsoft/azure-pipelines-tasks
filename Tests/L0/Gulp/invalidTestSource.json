@@ -15,12 +15,7 @@
             "code": 0,
             "stdout": "npm output here"
         },
-        "/usr/local/bin/istanbul cover --report cobertura --report html ./node_modules/mocha/bin/_mocha /invalid/input -- --ui bdd -t 5000": {
-            "code": 1,
-            "stdout": "istanbul output here",
-            "stderr": "istanbul failed with this output"
-        },
-        "/usr/local/bin/node_modules/istanbul/lib/cli.js cover --report cobertura --report html ./node_modules/mocha/bin/_mocha /invalid/input -- --ui bdd -t 5000": {
+        "/usr/local/bin/node ./node_modules/istanbul/lib/cli.js cover --report cobertura --report html ./node_modules/mocha/bin/_mocha /invalid/input": {
             "code": 1,
             "stdout": "istanbul output here",
             "stderr": "istanbul failed with this output"

@@ -98,6 +98,7 @@ describe('Grunt Suite', function () {
 		tr.setInput('publishJUnitResults', 'true');
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('testFiles', '**/build/test/*.js');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -209,6 +210,7 @@ describe('Grunt Suite', function () {
 		tr.setInput('publishJUnitResults', 'true');
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('testFiles', '**/build/test/*.js');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -276,6 +278,7 @@ describe('Grunt Suite', function () {
 		tr.setInput('publishJUnitResults', 'true');
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('testFiles', '**/build/test/*.js');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -426,6 +429,7 @@ describe('Grunt Suite', function () {
 		tr.setInput('publishJUnitResults', 'true');
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFramework', 'Mocha');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
 		}
@@ -455,6 +459,7 @@ describe('Grunt Suite', function () {
 		tr.setInput('publishJUnitResults', 'true');
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
+		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('testFiles', '/invalid/input');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
