@@ -212,6 +212,7 @@
     "filePathFindFilesSearchPattern0": "ms-resource:loc.messages.filePathFindFilesSearchPattern0",
     "filePath0": "ms-resource:loc.messages.filePath0",
     "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0",
-    "XmlTranform0failedforfile1": "ms-resource:loc.messages.XmlTranform0failedforfile1"
+    "XmlTranform0failedforfile1": "ms-resource:loc.messages.XmlTranform0failedforfile1",
+    "Noormorethanonetranformationfile0found": "ms-resource:loc.messages.Noormorethanonetranformationfile0found"
   }
 }

@@ -54,5 +54,6 @@
   "loc.messages.filePathFindFilesSearchPattern0": "filePath = Find-Files -SearchPattern {0}",
   "loc.messages.filePath0": "filePath = {0}",
   "loc.messages.UnabletofindpublishUrlforWebApp0": "Unable to find publish Url for WebApp '{0}'.",
-  "loc.messages.XmlTranform0failedforfile1": "Xml Tranform {0} failed for file {1}."
+  "loc.messages.XmlTranform0failedforfile1": "Xml Tranform {0} failed for file {1}.",
+  "loc.messages.Noormorethanonetranformationfile0found": "No or more than one tranformation file '{0}' found."
 }

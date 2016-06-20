@@ -8,14 +8,16 @@ function UnzipWebDeployPkg
     )
 
     $7ZipExePath =  "$PSScriptRoot\7zip\7z.exe"
-    $TempUnzippedPath = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName()))
+    $TempUnzippedPath = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+    New-Item -ItemType Directory -Path $TempUnzippedPath | Out-Null
 
-    Write-Verbose "Unzipping Web Deploy Package $PackagePath to $TempUnzippedPath"
+    Write-Verbose "Unzipping Web Deploy Package $PackagePath to `"$TempUnzippedPath`""
 
-    $UnzipCommand = "`"$7ZipExePath`" x $PackageFile -o$TempUnzippedPath -y" 
+    $UnzipCommand = "`"$7ZipExePath`" x `"$PackagePath`" -o`"$TempUnzippedPath`" -y > NUL"
+    Write-Verbose "Running command : $UnzipCommand"
     Run-Command -command $UnzipCommand
 
-    Write-Verbose "Unzipped Web Deploy Package $PackagePath to $TempUnzippedPath"
+    Write-Verbose "Unzipped Web Deploy Package `"$PackagePath`" to `"$TempUnzippedPath`""
     return $TempUnzippedPath
 }
 
@@ -29,16 +31,17 @@ function CreateWebDeployPkg
     )
 
     $7ZipExePath =  "$PSScriptRoot\7zip\7z.exe"
-    $TempPkgPath = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+    $TempPkgPath = (Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())) + ".zip"
 
     Write-Verbose "Zipping Web Deploy Package Folder $UnzippedPkgPath to $TempPkgPath"
 
-    $ZipCommand = "`"$7ZipExePath`" a -tzip $TempPkgPath $UnzippedPkgPath\* -y" 
+    $ZipCommand = "`"$7ZipExePath`" a -tzip `"$TempPkgPath`" `"$UnzippedPkgPath\*`" -y" 
     Run-Command -command $ZipCommand
 
     Write-Verbose "Zipped Web Deploy Package Folder $UnzippedPkgPath to $TempPkgPath"
 
     Write-Verbose "Deleting temporary folder and package: $UnzippedPkgPath, $TempPkgPath"
-    Move-Item -Path $TempPkgPath -Destination $FinalPackagePath
+    Remove-Item -Path $FinalPackagePath -Force
     Remove-Item -Path $UnzippedPkgPath -Force
+    Copy-Item -Path "$TempPkgPath" -Destination "$FinalPackagePath" -Force
 }

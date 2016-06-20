@@ -43,7 +43,7 @@ try{
     . $PSScriptRoot/Utility.ps1
     . $PSScriptRoot/FindInstalledMSDeploy.ps1
     . $PSScriptRoot/CompressionUtility.ps1
-	. $PSScriptRoot/XdtTranformation.ps1
+	. $PSScriptRoot/XdtTransformation.ps1
 
     # Importing required version of azure cmdlets according to azureps installed on machine
     $azureUtility = Get-AzureUtility
@@ -64,14 +64,11 @@ try{
         # Unzip the source package
         $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
         # Search for all the web.config files
-        $webconfigFiles = Find-VstsFiles -LegacyPattern "web.config" -LiteralDirectory $unzippedPath
-        # Search for all Web.Release.Config and Web.Environment.config
-        $releaseTransformFile = Get-SingleFilePath -file "$unzippedPath\web.release.config"
-        $environmentTransformFile = Get-SingleFilePath -file ("$unzippedPath\web.$env:RELEASE_ENVIRONMENTNAME.config")
+        $webconfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\web.config" -IncludeFiles
         # Foreach web.config file apply Web.Release.Config and Web.Environment.config
         foreach ($configFile in $webconfigFiles) {
-            ApplyTransformation -baseFile $configFile -tranformFile $releaseTransformFile
-            ApplyTransformation -baseFile $configFile -tranformFile $environmentTransformFile
+            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config" -unzippedPath $unzippedPath
+            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -unzippedPath $unzippedPath
         }
         # Zip folder again
         CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
