@@ -126,7 +126,8 @@
       "options": {
         "Mocha": "Mocha",
         "Jasmine": "Jasmine"
-      }
+      },
+      "visibleRule": "enableCodeCoverage = true"
     },
     {
       "name": "testFiles",
