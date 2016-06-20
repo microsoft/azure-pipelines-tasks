@@ -41,7 +41,7 @@ if (isCodeCoverageEnabled) {
 	istanbul.arg('./node_modules/istanbul/lib/cli.js');
 	istanbul.argString('cover --report cobertura --report html');
 	if (testFramework.toLowerCase() == 'jasmine') {
-		istanbul.arg('./node_modules/jasmine/bin/jasmine.js');
+		istanbul.argString('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
 	} else {
 		istanbul.arg('./node_modules/mocha/bin/_mocha');
 	}
