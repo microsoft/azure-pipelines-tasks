@@ -5,13 +5,14 @@ import os = require('os');
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 
+var repoRoot : string = tl.getVariable('build.sourcesDirectory');
+
 var rootFolder: string = makeAbsolute(path.normalize(tl.getPathInput('rootFolder', true, false).trim()));
 var includeRootFolder:  boolean = tl.getBoolInput('includeRootFolder', true); 
 var archiveType: string = tl.getInput('archiveType', true);
 var archiveFile: string = path.normalize(tl.getPathInput('archiveFile', true, false).trim());
 var replaceExistingArchive: boolean = tl.getBoolInput('replaceExistingArchive', true);
 
-var repoRoot : string = tl.getVariable('build.sourcesDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
 var win = os.type().match(/^Win/);
@@ -80,7 +81,6 @@ if (tl.exist(archiveFile)) {
             failTask('Specified archive file: ' + archiveFile + ' can not be created because it can not be accessed: ' + e);
         }
     } else {
-        // undocumented feature; if the archive exists, add to it which works for zip, wim, tar, and 7z formats.
         console.log('Archive file: '+archiveFile +' already exists.  Attempting to add files to it.');
     }
 }

@@ -36,10 +36,10 @@
     {
       "name": "includeRootFolder",
       "type": "boolean",
-      "label": "Include root folder in archive paths",
+      "label": "Prefix root folder name to archive paths",
       "defaultValue": true,
       "required": true,
-      "helpMarkDown": "If set, the root folder will be included in all filepaths within the archive.  Otherwise, all file paths will start one level lower.  <br/><br/>For example, suppose the selected root folder is <b>`/home/user/output/classes/`</b>, and contains <b>`com/acme/Main.class`</b>. <ul><li>If set, the resulting archive would contain <b>`classes/com/acme/Main.class`</b>.</li><li>If not set, the resulting archive would contain <b>`com/acme/Main.class`</b>.</li></ul>"
+      "helpMarkDown": "If selected, the root folder name will be prefixed to file paths within the archive.  Otherwise, all file paths will start one level lower.<p>For example, suppose the selected root folder is: <b>`/home/user/output/classes/`</b>, and contains: <b>`com/acme/Main.class`</b>. <ul><li>If selected, the resulting archive would contain: <b>`classes/com/acme/Main.class`</b>.</li><li>Otherwise, the resulting archive would contain: <b>`com/acme/Main.class`</b>.</li></ul>"
     },
     {
       "name": "archiveType",
