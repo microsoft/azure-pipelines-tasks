@@ -1,5 +1,6 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
+import Q = require('q');
 import os = require('os');
 import path = require('path');
 import fs = require('fs');
@@ -7,6 +8,7 @@ import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
+import sqCommon = require('sonarqube-common/sonarqube-common');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
@@ -168,22 +170,27 @@ mvnGetVersion.exec()
     })
     .then(function (code) {
         // 3. Always try to run the SonarQube analysis if it is enabled.
-        if (codeAnalysis.isCodeAnalysisToolEnabled(sqMaven.toolName)) {
+        if (sqCommon.isSonarQubeAnalysisEnabled()) {
             var mvnsq:ToolRunner = sqMaven.getSonarQubeRunner(mvnExec, mavenPOMFile, mavenOptions, execFileJacoco);
-            var result;
             if (mvnsq) {
                 // Run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures).
                 // Note that running sonar:sonar along with the user goals is not supported due to a SonarQube bug.
-                mvnsq.exec().then((code) => {
-                    sqMaven.uploadSonarQubeBuildSummary();
-                });
+                mvnsq.exec()
+                    .then((code) => {
+                        sqMaven.uploadSonarQubeBuildSummary();
+                    }).fail((err) =>{
+                        console.error(err.message);
+                        // Looks like: "SonarQube analysis failed."
+                        console.error(tl.loc('codeAnalysis_ToolFailed', sqCommon.toolName));
+                        sonarQubeRunFailed = true;
+                    });
             }
         }
     })
     .fail(function (err) {
         console.error(err.message);
         // Looks like: "SonarQube analysis failed."
-        console.error(tl.loc('codeAnalysis_ToolFailed', sqMaven.toolName));
+        console.error(tl.loc('codeAnalysis_ToolFailed', sqCommon.toolName));
         sonarQubeRunFailed = true;
     })
     .then(function (code) { // Pick up files from the Java code analysis tools

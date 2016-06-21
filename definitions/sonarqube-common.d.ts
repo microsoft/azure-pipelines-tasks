@@ -3,6 +3,8 @@
 declare module 'sonarqube-common/sonarqube-common' {
     import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
+    export const toolName: string;
+
     // Data class returned from getSonarQubeEndpointDetails()
     export class SonarQubeEndpoint {
         constructor(Url: string, Username: string, Password: string);
@@ -10,6 +12,9 @@ declare module 'sonarqube-common/sonarqube-common' {
         Username: string;
         Password: string;
     }
+
+    // Returns true if SonarQube integration is enabled.
+    export function isSonarQubeAnalysisEnabled(): boolean;
 
     // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
     // sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
@@ -26,5 +31,5 @@ declare module 'sonarqube-common/sonarqube-common' {
     export function getSonarQubeEndpointFromInput(inputFieldName):SonarQubeEndpoint;
 
     // Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
-    export function getSonarQubeTaskReport(sonarPluginFolder: string): Map<string, string>;
+    export function uploadSonarQubeBuildSummary(sqBuildFolder: string): void;
 }

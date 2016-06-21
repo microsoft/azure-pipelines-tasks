@@ -306,6 +306,7 @@
     "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
     "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
     "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
+    "sqAnalysis_TaskReportInvalid": "ms-resource:loc.messages.sqAnalysis_TaskReportInvalid",
     "sqAnalysisBuildSummaryLine_OneProject": "ms-resource:loc.messages.sqAnalysisBuildSummaryLine_OneProject",
     "sqAnalysisBuildSummary_NoReportTaskFileFound": "ms-resource:loc.messages.sqAnalysisBuildSummary_NoReportTaskFileFound",
     "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",

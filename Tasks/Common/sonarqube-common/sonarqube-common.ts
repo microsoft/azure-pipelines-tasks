@@ -2,14 +2,28 @@
 
 import path = require('path');
 import fs = require('fs');
+import util = require('util');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
+
+import {TaskReport} from  './taskreport';
+
+export const toolName: string = 'SonarQube';
 
 // Simple data class for a SonarQube generic endpoint
 export class SonarQubeEndpoint {
     constructor(public Url: string, public Username: string, public Password: string) {
     }
+}
+
+// Returns true if SonarQube integration is enabled.
+export function isSonarQubeAnalysisEnabled(): boolean {
+    var result = tl.getBoolInput('sqAnalysisEnabled', false);
+    if (result) {
+        tl.debug(tl.loc('codeAnalysis_ToolIsEnabled', toolName));
+    }
+    return result;
 }
 
 // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
@@ -90,17 +104,20 @@ export function getSonarQubeEndpointFromInput(inputFieldName): SonarQubeEndpoint
     return new SonarQubeEndpoint(hostUrl, hostUsername, hostPassword);
 }
 
-// Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
-// The returned object contains the following properties:
-//   projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
-export function getSonarQubeTaskReport(sonarPluginFolder: string): Map<string, string> {
-    var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
-    if (!tl.exist(reportFilePath)) {
-        tl.debug('Task report not found at: ' + reportFilePath);
-        return null;
-    }
+// Upload a build summary with links to available SonarQube dashboards for further analysis details.
+export function uploadSonarQubeBuildSummary(sqBuildFolder: string): void {
+    // Save and upload build summary
+    // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
+    var buildSummaryContents:string = createSonarQubeBuildSummary(sqBuildFolder);
 
-    return createTaskReportMapFromFile(reportFilePath);
+    var buildSummaryFilePath = saveSonarQubeBuildSummary(buildSummaryContents);
+
+    tl.debug('Uploading build summary from ' + buildSummaryFilePath);
+
+    tl.command('task.addattachment', {
+        'type': 'Distributedtask.Core.Summary',
+        'name': tl.loc('sqAnalysis_BuildSummaryTitle')
+    }, buildSummaryFilePath);
 }
 
 // Gets a SonarQube authentication parameter from the specified connection endpoint.
@@ -156,17 +173,66 @@ function isNullOrEmpty(str) {
     return str === undefined || str === null || str.length === 0;
 }
 
-// Constructs a map out of an existing report-task.txt file. File must exist on disk.
-function createTaskReportMapFromFile(taskReportFile: string): Map<string, string> {
+// Creates the string that comprises the build summary text, given the location of the /sonar build folder.
+function createSonarQubeBuildSummary(sqBuildFolder: string): string {
+    var taskReport: TaskReport = getSonarQubeTaskReport(sqBuildFolder);
+    if (!taskReport) {
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+    }
 
+    return util.format('[%s >](%s "%s Dashboard")',
+        tl.loc('sqAnalysisBuildSummaryLine_OneProject'), taskReport.dashboardUrl, taskReport.projectKey);
+}
+
+// Returns the location of the SonarQube integration staging directory.
+export /* public for test purposes */ function getSonarQubeStagingDirectory(): string {
+    var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
+    tl.mkdirP(sqStagingDir);
+    return sqStagingDir;
+}
+
+// Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
+// The returned object contains the following properties:
+//   projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
+function getSonarQubeTaskReport(sonarPluginFolder: string): TaskReport {
+    var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
+    if (!tl.exist(reportFilePath)) {
+        tl.debug('Task report not found at: ' + reportFilePath);
+        return null;
+    }
+
+    return createTaskReportFromFile(reportFilePath);
+}
+
+// Constructs a map out of an existing report-task.txt file. File must exist on disk.
+function createTaskReportFromFile(taskReportFile: string): TaskReport {
     var reportFileString: string = fs.readFileSync(taskReportFile, 'utf-8');
+    if (!reportFileString) {
+        return null;
+    }
+
     var reportLines: string[] = reportFileString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
 
     var reportMap = new Map<string, string>();
     reportLines.forEach((reportLine:string) => {
-        var reportKeyValuePair: string[] = reportLine.split('=');
-        reportMap.set(reportKeyValuePair[0], reportKeyValuePair[1]);
+        var splitLine: string[] = reportLine.split('=');
+        if (splitLine.length > 1) {
+            reportMap.set(splitLine[0], splitLine.slice(1, splitLine.length).join());
+        }
     });
 
-    return reportMap;
+    var result:TaskReport;
+    try {
+        return result = TaskReport.createTaskReportFromMap(reportMap);
+    } catch (err) {
+        tl.debug(err.message);
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+    }
+}
+
+// Saves the build summary string and returns the file path it was saved to.
+function saveSonarQubeBuildSummary(contents: string): string {
+    var filePath:string = path.join(getSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
+    fs.writeFileSync(filePath, contents);
+    return filePath;
 }

@@ -12,11 +12,9 @@ import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 import codeAnalysis = require('./mavencodeanalysis');
 import sqCommon = require('sonarqube-common/sonarqube-common');
 
-export const toolName:string = 'SonarQube';
-
 // Gets the SonarQube tool runner if SonarQube analysis is enabled.
 export function getSonarQubeRunner(mvnPath:string, mavenPOMFile: string, mavenOptions: string, execFileJacoco?: string): ToolRunner {
-    if (!codeAnalysis.isCodeAnalysisToolEnabled(this.toolName)) {
+    if (!sqCommon.isSonarQubeAnalysisEnabled()) {
         return;
     }
 
@@ -49,20 +47,8 @@ export function getSonarQubeRunner(mvnPath:string, mavenPOMFile: string, mavenOp
 
 // Upload a build summary with links to available SonarQube dashboards for further analysis details.
 export function uploadSonarQubeBuildSummary(): void {
-    var taskReport: Map<string, string> =
-        sqCommon.getSonarQubeTaskReport(path.join(tl.getVariable('build.sourcesDirectory'), 'target', 'sonar'));
-
-    // Save and upload build summary
-    // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
-    var buildSummaryContents:string = createSonarQubeBuildSummary(taskReport);
-
-    var buildSummaryFilePath = saveSonarQubeBuildSummary(buildSummaryContents);
-    tl.debug('Uploading build summary from ' + buildSummaryFilePath);
-
-    tl.command('task.addattachment', {
-        'type': 'Distributedtask.Core.Summary',
-        'name': tl.loc('sqAnalysis_BuildSummaryTitle')
-    }, buildSummaryFilePath);
+    var sqBuildFolder: string = path.join(tl.getVariable('build.sourcesDirectory'), 'target', 'sonar');
+    sqCommon.uploadSonarQubeBuildSummary(sqBuildFolder);
 }
 
 // Creates the tool runner for executing SonarQube.
@@ -73,17 +59,4 @@ function createMavenSonarQubeRunner(mvnPath: string, sqHostUrl: string, sqHostUs
     mvnsq = sqCommon.applySonarQubeConnectionParams(mvnsq, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword);
 
     return mvnsq;
-}
-
-// Creates the string that comprises the build summary text.
-function createSonarQubeBuildSummary(taskReport: Map<string, string>): string {
-    return util.format('[%s >](%s "%s Dashboard")',
-        tl.loc('sqAnalysisBuildSummaryLine_OneProject'), taskReport.get('dashboardUrl'), taskReport.get('projectKey'));
-}
-
-// Saves the build summary string and returns the file path it was saved to.
-function saveSonarQubeBuildSummary(contents: string): string {
-    var filePath:string = path.join(codeAnalysis.getCodeAnalysisStagingDirectory(), 'SonarQubeBuildSummary.md');
-    fs.writeFileSync(filePath, contents);
-    return filePath;
 }

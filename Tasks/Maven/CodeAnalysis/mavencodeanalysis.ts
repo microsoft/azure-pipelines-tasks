@@ -29,11 +29,9 @@ export function applyEnabledCodeAnalysisGoals(mvnRun: trm.ToolRunner):trm.ToolRu
 }
 
 // Extract data from code analysis output files and upload results to build server
-export function uploadCodeAnalysisResults():void {
+export function uploadCodeAnalysisResults(): void {
     // Return early if no analysis tools are enabled
     var enabledCodeAnalysisTools: Set<string> = getEnabledCodeAnalysisTools();
-    //Special case: SonarQube integration does not use this method to upload its results
-    enabledCodeAnalysisTools.delete(sq.toolName);
 
     if (enabledCodeAnalysisTools.size < 1) {
         return;
@@ -99,9 +97,9 @@ export function findCandidateModules(directory:string):ModuleAnalysis[] {
 }
 
 export function getCodeAnalysisStagingDirectory() {
-    var masterStgDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
-    tl.mkdirP(masterStgDir);
-    return masterStgDir;
+    var caStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
+    tl.mkdirP(caStagingDir);
+    return caStagingDir;
 }
 
 // Returns true if the given code analysis tool is enabled
@@ -123,10 +121,6 @@ function getEnabledCodeAnalysisTools(): Set<string> {
         result.add(pmd.toolName);
     }
 
-    if (tl.getBoolInput('sqAnalysisEnabled', false)) {
-        result.add(sq.toolName);
-    }
-
     return result;
 }
 
@@ -142,14 +136,14 @@ function cleanDirectory(targetDirectory:string):boolean {
     return tl.exist(targetDirectory);
 }
 
-// Discover analysis results from enabled tools and associate them with the modules they came from
+// Discover analysis results from enabled tools and associate them with the modules they cameF from
 function processAndAssignAnalysisResults(enabledCodeAnalysisTools:Set<string>, modules:ModuleAnalysis[]):ModuleAnalysis[] {
     modules.forEach((module:ModuleAnalysis) => {
         // PMD
         if (enabledCodeAnalysisTools.has(pmd.toolName)) {
             var pmdResults:AnalysisResult = pmd.collectPmdOutput(module.rootDirectory);
             if (pmdResults) {
-                module.analysisResults[pmdResults.toolName] = pmdResults;
+                module.analysisResultsByToolName.set(pmdResults.toolName, pmdResults);
             }
         }
     });
@@ -200,7 +194,7 @@ function getToolAnalysisResults(modules:ModuleAnalysis[], toolName:string):Analy
     var toolAnalysisResults:AnalysisResult[] = [];
 
     modules.forEach((module:ModuleAnalysis) => {
-        var moduleAnalysisResult:AnalysisResult = module.analysisResults[toolName];
+        var moduleAnalysisResult:AnalysisResult = module.analysisResultsByToolName.get(toolName);
         if (moduleAnalysisResult) {
             toolAnalysisResults.push(moduleAnalysisResult);
         }
@@ -212,8 +206,8 @@ function getToolAnalysisResults(modules:ModuleAnalysis[], toolName:string):Analy
 function getTotalViolationsInModules(modules:ModuleAnalysis[]):number {
     var totalViolationsInBuild:number = 0;
     modules.forEach((module:ModuleAnalysis) => {
-        for (var toolName in module.analysisResults) { // The for-in loop gives the keys, not the values
-            totalViolationsInBuild += module.analysisResults[toolName].totalViolations;
+        for (let analysisResult of module.analysisResultsByToolName.values()) {
+            totalViolationsInBuild += analysisResult.totalViolations;
         }
     });
     return totalViolationsInBuild;
@@ -266,8 +260,8 @@ function uploadBuildArtifactsFromModules(enabledTools:Set<string>, modules:Modul
 // Each tool-module combination uploads its own build artifact.
 function uploadBuildArtifactsFromModule(toolName:string, moduleAnalysis:ModuleAnalysis):void {
     var analysisResult:AnalysisResult;
-    if (moduleAnalysis.analysisResults[toolName]) {
-        analysisResult = moduleAnalysis.analysisResults[toolName];
+    if (moduleAnalysis.analysisResultsByToolName.has(toolName)) {
+        analysisResult = moduleAnalysis.analysisResultsByToolName.get(toolName);
     }
 
     if (!analysisResult) {
