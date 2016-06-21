@@ -6,7 +6,7 @@
 )
 
 # Load modules
-. $PSScriptRoot/XMLSubstituter.ps1 -Force
+. $PSScriptRoot/XMLSubstituter-Legacy.ps1 -Force
 
 # Defined supported MIME type
 $ApplicationXmlMimeType = "application/xml"

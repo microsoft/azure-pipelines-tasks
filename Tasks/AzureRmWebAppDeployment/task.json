@@ -21,7 +21,11 @@
             "name": "output",
             "displayName": "Output",
             "isExpanded": true
-        }
+        },{
+			      "name": "XMLConfigurationTransformation",
+            "displayName": "XML Configuration Transformation",
+            "isExpanded": true
+		}
     ],
     "inputs": [
         {
@@ -139,6 +143,15 @@
             "defaultValue": "",
             "groupName": "output",
             "helpMarkDown": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task."
+        },
+		    {
+            "name": "VariableSubstitution",
+            "type": "boolean",
+            "label": "Variable Substitution",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "XMLConfigurationTransformation",
+            "helpMarkDown": "Variables defined in the Defination will be automatically substitued in the appSettings,applicationSettings and connectionStrings section of the config files. If the same variable are defined in the Defination and Environment, then the En variables will be supersede the defination variables. Variable substitution is run after config Transformations."
         }
     ],
     "dataSourceBindings": [

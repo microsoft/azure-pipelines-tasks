@@ -27,7 +27,7 @@ function Substitute-ConfigurationParameters
 
     # Extract content of package file
     $7ZipExtractionCommand = "sz x $PackageFile -o$PackageExtractionDirectory -y" 
-    Invoke-Expression  $7ZipExtractionCommand | Out-Null
+    Invoke-Expression  $7ZipExtractionCommand
     
     if ($LASTEXITCODE -ne 0)
     {
@@ -35,14 +35,14 @@ function Substitute-ConfigurationParameters
     }
 
     # Variable substitution in web.config files
-    . .\VariableSubstituter.ps1 -WebAppFolderPath $PackageExtractionDirectory -ConfigFileRegex "Web.*Config"
+    . $PSScriptRoot\VariableSubstituter-Legacy.ps1 -WebAppFolderPath $PackageExtractionDirectory -ConfigFileRegex "Web.*Config"
 
     # Recompress extracted content after substituting variables
 
     $FinalPackageFile = "$SystemTempDirectory\$PackageFileName"
     $7ZipCompressionCommand = "sz a -tzip '$FinalPackageFile' '$PackageExtractionDirectory\*' -y"
     
-    Invoke-Expression  $7ZipCompressionCommand | Out-Null
+    Invoke-Expression  $7ZipCompressionCommand
 
     if ($LASTEXITCODE -ne 0)
     {

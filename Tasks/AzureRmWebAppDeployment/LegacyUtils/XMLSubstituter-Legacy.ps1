@@ -28,7 +28,7 @@
 
          if( $node -eq $null )
          {
-             Write-Verbose "Unable to find node with tag '$tag' in provided xml file" 
+             Write-Verbose "Unable to find node with tag '$tag' in provided xml file" -Verbose
              continue
          }
          
@@ -84,6 +84,16 @@ function  Update-XMLNodeAttributes
 
     )
     
+    <# Reading environment variables [ ToDo : Remove ]
+    $definedEnvVariables = Get-ChildItem Env: 
+
+    $envVariablesToTest = @{}
+
+    foreach( $envVar in $definedEnvVariables ) 
+    {
+        $envVariablesToTest.Add( $envVar.Name , $envVar.Value ) 
+    } #>
+
     if( $node -eq $null )
     {
         Write-Verbose "Unable to find node with tag '$tag' in provided xml file" -Verbose
@@ -100,7 +110,7 @@ function  Update-XMLNodeAttributes
         foreach( $childNodeAttribute in $childNodeAttributes )
         {
             #$taskContextValueForAttribute = $envVariablesToTest.Get_Item($childNodeAttribute.Name) 
-            $taskContextValueForAttribute = Get-VstsTaskVariable -Name $childNodeAttribute.Name 
+            $taskContextValueForAttribute = Get-TaskVariable $distributedTaskContext $childNodeAttribute.Name 
             if( $taskContextValueForAttribute ){
                 $childNode.SetAttribute($childNodeAttribute.Name,$taskContextValueForAttribute)
             }
@@ -110,7 +120,7 @@ function  Update-XMLNodeAttributes
         $valueForKeyAttribute = $childNode.GetAttribute("key")
         if( $valueForKeyAttribute )
         {
-            $taskContextValueOfKeyBasedAttribute = Get-VstsTaskVariable -Name $valueForKeyAttribute
+            $taskContextValueOfKeyBasedAttribute = Get-TaskVariable $distributedTaskContext $valueForKeyAttribute
             #$taskContextValueOfKeyBasedAttribute = $envVariablesToTest.Get_Item($valueForKeyAttribute) 
             if( $taskContextValueOfKeyBasedAttribute )
             {
