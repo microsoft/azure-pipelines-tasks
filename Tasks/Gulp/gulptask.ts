@@ -2,8 +2,6 @@
 
 import path = require('path');
 import tl = require('vsts-task-lib/task');
-import fs = require('fs');
-import os = require('os');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
