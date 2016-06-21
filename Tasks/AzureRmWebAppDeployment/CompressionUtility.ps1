@@ -8,7 +8,7 @@ function UnzipWebDeployPkg
     )
 
     $7ZipExePath =  "$PSScriptRoot\7zip\7z.exe"
-    $TempUnzippedPath = Join-Path ($env:Temp) ([Guid]::NewGuid())
+    $TempUnzippedPath = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
     New-Item -ItemType Directory -Path $TempUnzippedPath | Out-Null
 
     Write-Verbose "Unzipping Web Deploy Package $PackagePath to `"$TempUnzippedPath`""
@@ -31,11 +31,11 @@ function CreateWebDeployPkg
     )
 
     $7ZipExePath =  "$PSScriptRoot\7zip\7z.exe"
-    $TempPkgPath = (Join-Path ($env:Temp) ([Guid]::NewGuid())) + ".zip"
+    $TempPkgPath = (Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())) + ".zip"
 
     Write-Verbose "Zipping Web Deploy Package Folder $UnzippedPkgPath to $TempPkgPath"
 
-    $ZipCommand = "`"$7ZipExePath`" a -tzip `"$TempPkgPath`" `"$UnzippedPkgPath\*`" -y" 
+    $ZipCommand = "`"$7ZipExePath`" a -tzip `"$TempPkgPath`" `"$UnzippedPkgPath\*`" -y > NUL" 
     Run-Command -command $ZipCommand
 
     Write-Verbose "Zipped Web Deploy Package Folder $UnzippedPkgPath to $TempPkgPath"
