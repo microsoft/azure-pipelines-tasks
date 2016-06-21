@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "AzureRM Web App Deployment ( Preview )",
+  "loc.friendlyName": "AzureRM Web App Deployment",
   "loc.helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Deploy the web project to the AzureRM Web App using Web Deploy",
   "loc.instanceNameFormat": "Deploy AzureRM Web App: $(WebAppName)",
-  "loc.group.displayName.output": "Output",
   "loc.group.displayName.configtransforms": "XML Configuration Transformations",
+  "loc.group.displayName.output": "Output",
   "loc.input.label.ConnectedServiceName": "AzureRM Subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.WebAppName": "Web App Name",
