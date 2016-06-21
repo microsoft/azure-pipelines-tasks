@@ -1,3 +1,6 @@
+$script:qualityGateStatus = ""
+$script:analysisId = ""
+
 #region Public 
 
 #
@@ -6,18 +9,16 @@
 # Remark: this only works for SQ version 5.3+
 #
 function GetOrFetchQualityGateStatus
-{
-    $qualityGateStatus = GetTaskContextVariable "MSBuild.SonarQube.QualityGateStatus"
-    
-    if ([String]::IsNullOrEmpty($qualityGateStatus))
+{    
+    if ([String]::IsNullOrEmpty($script:qualityGateStatus))
     {
-        $qualityGateStatus = FetchQualityGateStatus  
-        SetTaskContextVariable "MSBuild.SonarQube.QualityGateStatus" $qualityGateStatus              
+        $script:qualityGateStatus = FetchQualityGateStatus  
+        SetTaskContextVariable "MSBuild.SonarQube.QualityGateStatus" $script:qualityGateStatus
     }
     
-    Assert (![String]::IsNullOrEmpty($qualityGateStatus)) "Could not fetch the quality gate status"
+    Assert (![String]::IsNullOrEmpty($script:qualityGateStatus)) "Could not fetch the quality gate status"
     
-    return $qualityGateStatus
+    return $script:qualityGateStatus
 }
 
 #
@@ -27,15 +28,13 @@ function GetOrFetchQualityGateStatus
 #
 function WaitForAnalysisToFinish
 {
-    $analysisId = GetAnalysisIdFromCache    
-    
-    if ([String]::IsNullOrEmpty($analysisId))
+    if ([String]::IsNullOrEmpty($script:analysisId))
     {
-        $analysisId = WaitForAnalysisToFinishInternal
-        SetTaskContextVariable "MSBuild.SonarQube.AnalysisId" $analysisId
+        $script:analysisId = WaitForAnalysisToFinishInternal
+        SetTaskContextVariable "MSBuild.SonarQube.AnalysisId" $script:analysisId
     }    
     
-    Assert (![String]::IsNullOrEmpty($analysisId)) "Could not fetch the analysis id"
+    Assert (![String]::IsNullOrEmpty($script:analysisId)) "Could not fetch the analysis id"
 }
 
 
@@ -43,10 +42,9 @@ function FetchQualityGateDetails
 {
     param ([Array]$errors,[Array]$warnings)
     
-    $analysisId = GetAnalysisIdFromCache             
-    Assert (![String]::IsNullOrEmpty($analysisId)) "WaitForAnalysisToFinish should be called first."
+    Assert (![String]::IsNullOrEmpty($script:analysisId)) "WaitForAnalysisToFinish should be called first."
        
-    $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$analysisId"
+    $response = InvokeGetRestMethod "/api/qualitygates/project_status?analysisId=$script:analysisId"
     return $response
 }
 
@@ -195,12 +193,6 @@ function GetAnalysisCompleteTimeout
     }
 
     return $timeout;
-}
-
-function GetAnalysisIdFromCache
-{
-    $analysisId = GetTaskContextVariable "MSBuild.SonarQube.AnalysisId"  
-    return $analysisId
 }
 
 #endregion
