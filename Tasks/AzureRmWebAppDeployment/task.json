@@ -146,7 +146,7 @@
         },
         {
             "name": "XdtFilesRoot",
-            "type": "string",
+            "type": "filePath",
             "label": "Xdt Transformation Files Path",
             "defaultValue" : "",
             "groupName": "configtransforms",
