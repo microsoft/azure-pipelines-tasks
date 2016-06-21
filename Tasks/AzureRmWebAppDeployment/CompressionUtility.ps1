@@ -8,7 +8,7 @@ function UnzipWebDeployPkg
     )
 
     $7ZipExePath =  "$PSScriptRoot\7zip\7z.exe"
-    $TempUnzippedPath = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+    $TempUnzippedPath = Join-Path ($env:Temp) ([Guid]::NewGuid())
     New-Item -ItemType Directory -Path $TempUnzippedPath | Out-Null
 
     Write-Verbose "Unzipping Web Deploy Package $PackagePath to `"$TempUnzippedPath`""
@@ -31,7 +31,7 @@ function CreateWebDeployPkg
     )
 
     $7ZipExePath =  "$PSScriptRoot\7zip\7z.exe"
-    $TempPkgPath = (Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())) + ".zip"
+    $TempPkgPath = (Join-Path ($env:Temp) ([Guid]::NewGuid())) + ".zip"
 
     Write-Verbose "Zipping Web Deploy Package Folder $UnzippedPkgPath to $TempPkgPath"
 
@@ -41,7 +41,6 @@ function CreateWebDeployPkg
     Write-Verbose "Zipped Web Deploy Package Folder $UnzippedPkgPath to $TempPkgPath"
 
     Write-Verbose "Deleting temporary folder and package: $UnzippedPkgPath, $TempPkgPath"
-    Remove-Item -Path $FinalPackagePath -Force
-    Remove-Item -Path $UnzippedPkgPath -Force
-    Copy-Item -Path "$TempPkgPath" -Destination "$FinalPackagePath" -Force
+    Remove-Item -Path $FinalPackagePath -Force -Verbose
+    Move-Item -Path "$TempPkgPath" -Destination "$FinalPackagePath" -Force -Verbose
 }

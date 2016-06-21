@@ -19,6 +19,7 @@ try{
     $WebAppUri = Get-VstsInput -Name WebAppUri
     $SetParametersFile = Get-VstsInput -Name SetParametersFile
     $XmlTransformation = Get-VstsInput -Name XmlTransformation
+    $XdtFilesRoot = Get-VstsInput -Name XdtFilesRoot
 
     # Initialize Azure.
 
@@ -67,8 +68,11 @@ try{
         $webconfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\web.config" -IncludeFiles
         # Foreach web.config file apply Web.Release.Config and Web.Environment.config
         foreach ($configFile in $webconfigFiles) {
-            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config" -unzippedPath $unzippedPath
-            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -unzippedPath $unzippedPath
+            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config" -xdtFilesRoot $XdtFilesRoot
+            if($env:RELEASE_ENVIRONMENTNAME.config)
+            {
+                FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -xdtFilesRoot $XdtFilesRoot
+            }
         }
         # Zip folder again
         CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath

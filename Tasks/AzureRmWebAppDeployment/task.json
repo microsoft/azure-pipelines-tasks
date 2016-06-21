@@ -142,7 +142,17 @@
             "label": "Transformation",
             "defaultValue" : "false",
             "groupName": "configtransforms",
-            "helpMarkDown": "The config transforms will be run for *.Release.config and *.<EnvironmentName>.config on all the web.config files."
+            "helpMarkDown": "The config transforms will be run for \\*.Release.config and \\*.&#060;EnvironmentName&#062;.config on all the web.config files."
+        },
+        {
+            "name": "XdtFilesRoot",
+            "type": "string",
+            "label": "Xdt Transformation Files Path",
+            "defaultValue" : "",
+            "groupName": "configtransforms",
+            "visibleRule": "XmlTransformation = true",
+            "required":true,
+            "helpMarkDown": "Root folder for searching for \\*.Release.config and \\*.&#060;EnvironmentName&#062;.config recursively."
         },
         {
             "name": "WebAppUri",
