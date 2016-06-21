@@ -57,6 +57,7 @@
   "loc.messages.codeAnalysis_ToolFailed": "%s analysis failed.",
   "loc.messages.sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
   "loc.messages.sqAnalysis_BuildSummaryTitle": "SonarQube Analysis Report",
+  "loc.messages.sqAnalysis_TaskReportInvalid": "Invalid or missing task report. Check SonarQube finished successfully.",
   "loc.messages.sqAnalysisBuildSummaryLine_OneProject": "Detailed SonarQube report",
   "loc.messages.sqAnalysisBuildSummary_NoReportTaskFileFound": "Expected to find SonarQube report file(s) on disk, but found none.",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
