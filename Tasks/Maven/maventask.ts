@@ -26,6 +26,7 @@ var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+var isSonarQubeEnabled:boolean = false;
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -170,7 +171,9 @@ mvnGetVersion.exec()
     })
     .then(function (code) {
         // 3. Always try to run the SonarQube analysis if it is enabled.
-        if (sqCommon.isSonarQubeAnalysisEnabled()) {
+        isSonarQubeEnabled = sqCommon.isSonarQubeAnalysisEnabled();
+        if (isSonarQubeEnabled) {
+            tl.debug(tl.loc('codeAnalysis_ToolIsEnabled', sqCommon.toolName));
             var mvnsq:ToolRunner = sqMaven.getSonarQubeRunner(mvnExec, mavenPOMFile, mavenOptions, execFileJacoco);
             if (mvnsq) {
                 // Run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures).

@@ -302,6 +302,7 @@
         }
     },
     "messages": {
+        "sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: {0}",
         "codeAnalysis_ToolIsEnabled": "%s analysis is enabled.",
         "codeAnalysis_ToolFailed": "%s analysis failed.",
         "sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
