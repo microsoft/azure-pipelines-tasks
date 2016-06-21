@@ -387,172 +387,203 @@ function IsTestImapctCollectorPresent(dataCollectorArray) {
     return found;
 }
 
-function setupRunSettingsFileForTestImpact(vsVersion, settingsFile) {
+function UpdateRunSettingsFile(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    tl.debug("Adding test impact data collector element to runsettings file provided.");
+    readFileContents(settingsFile, "utf-8")
+        .then(function (xmlContents) {
+            var parser = new xml2js.Parser();
+            parser.parseString(xmlContents, function (err, result) {
+                if (err) {
+                    tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
+                    tl.debug(exitErrorMessage);
+                    defer.resolve(settingsFile);
+                    return defer.promise;
+                }
+                if (result.RunSettings === undefined) {
+                    tl.warning(tl.loc('FailedToSetTestImpactCollectorRunSettings'));
+                    defer.resolve(settingsFile);
+                    return defer.promise;
+                }
+                var dataCollectorNode = null;
+                if (!result.RunSettings.DataCollectionRunSettings) {
+                    tl.debug("Updating runsettings file from DataCollectionSettings node");
+                    result.RunSettings = { DataCollectionRunSettings : { DataCollectors: { DataCollector :{} } } };
+                    dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
+                }
+                else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
+                    tl.debug("Updating runsettings file from DataCollectors node");
+                    result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
+                    dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
+                }
+                else {
+                    var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
+                    if(!dataCollectorArray) {
+                        tl.debug("Updating runsettings file from DataCollector node");
+                        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
+                        dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
+                    }
+                    else
+                    {
+                        if (!IsTestImapctCollectorPresent(dataCollectorArray)) {
+                            tl.debug("Updating runsettings file, adding a DataCollector node");
+                            dataCollectorArray.push({});
+                            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector = dataCollectorArray;
+                            dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+                        }
+                    }
+                }
+                if(dataCollectorNode) {
+                    tl.debug("Setting attributes for test impact data collector");
+                    dataCollectorNode.$ = GetTestImpactAttributes(vsVersion);
+                }
+                var builder = new xml2js.Builder();
+                var runSettingsForTestImpact = builder.buildObject(result);
+                saveToFile(runSettingsForTestImpact, ".runsettings")
+                    .then(function (fileName) {
+                    cleanUp(settingsFile);
+                    defer.resolve(fileName);
+                    return defer.promise;
+                })
+                    .fail(function (err) {
+                    tl.debug(exitErrorMessage);
+                    tl.warning(err);
+                    defer.resolve(settingsFile);
+                });
+            });
+        })
+        .fail(function (err) {
+            tl.warning(err);
+            tl.debug(exitErrorMessage);
+            defer.resolve(settingsFile);
+        });
+    return defer.promise;
+}
+
+function UpdateTestSettingsFile(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    tl.debug("Adding test impact data collector element to testsettings file provided.");
+    readFileContents(settingsFile, "utf-8")
+        .then(function (xmlContents) {
+            var parser = new xml2js.Parser();
+            parser.parseString(xmlContents, function (err, result) {
+                if (err) {
+                    tl.warning(tl.loc('ErrorWhileReadingTestSettings', err));
+                    tl.debug(exitErrorMessage);
+                    defer.resolve(settingsFile);
+                    return defer.promise;
+                }
+                if (result.TestSettings === undefined) {
+                    tl.warning(tl.loc('FailedToSetTestImpactCollectorTestSettings'));
+                    defer.resolve(settingsFile);
+                    return defer.promise;
+                }
+                var dataCollectorNode = null;
+                if (!result.TestSettings.Execution) {
+                    tl.debug("Updating testsettings file from Execution node");
+                    result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {} } } } };
+                    dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
+                }
+                else if (!result.TestSettings.Execution[0].AgentRule) {
+                    tl.debug("Updating testsettings file from AgentRule node");
+                    result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {} } } };
+                    dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
+                }
+                else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
+                    tl.debug("Updating testsettings file from DataCollectors node");
+                    result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {} } };
+                    dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
+                }
+                else{
+                    var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
+                    if (!dataCollectorArray) {
+                        tl.debug("Updating testsettings file from DataCollector node");
+                        result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {} };
+                        dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
+                    }
+                    else {
+                        if (!IsTestImapctCollectorPresent(dataCollectorArray)) {
+                            tl.debug("Updating testsettings file, adding a DataCollector node");
+                            dataCollectorArray.push({});
+                            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector = dataCollectorArray;
+                            dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+                        }
+                    }
+                }
+                if (dataCollectorNode) {
+                    tl.debug("Setting attributes for test impact data collector");
+                    dataCollectorNode.$ = GetTestImpactAttributes(vsVersion);
+                }
+                var builder = new xml2js.Builder();
+                var runSettingsForTestImpact = builder.buildObject(result);
+                saveToFile(runSettingsForTestImpact, ".testsettings")
+                    .then(function (fileName) {
+                    cleanUp(settingsFile);
+                    defer.resolve(fileName);
+                    return defer.promise;
+                })
+                    .fail(function (err) {
+                    tl.debug(exitErrorMessage);
+                    tl.warning(err);
+                    defer.resolve(settingsFile);
+                });
+            });
+        })
+        .fail(function (err) {
+            tl.warning(err);
+            tl.debug(exitErrorMessage);
+            defer.resolve(settingsFile);
+        });
+    return defer.promise;
+}
+
+
+function CreateRunSettingsForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    tl.debug("No settings file provided or the provided settings file does not exist. Creating test settings file for enabling test impact data collector.");
+    var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
+        '<DataCollector uri="' + GetTICollectorURI() + '" ' +
+        'assemblyQualifiedName="' +  GetTIAssemblyQualifiedName(vsVersion) + '" ' +
+        'friendlyName="' + GetTIFriendlyName() + '"/>' +
+        '</DataCollectors></DataCollectionRunSettings></RunSettings>';
+    saveToFile(runSettingsForTIA, ".runsettings")
+        .then(function (fileName) {
+            defer.resolve(fileName);
+            return defer.promise;
+        })
+        .fail(function (err) {
+            tl.debug(exitErrorMessage);
+            tl.warning(err);
+            defer.resolve(settingsFile);
+        });
+    return defer.promise;
+}
+
+function setupRunSettingsFileForTestImpact(vsVersion: number, settingsFile: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     var tiaEnabled = tl.getVariable('tia.enabled');
     var exitErrorMessage = "Error occured while setting in test impact data collector. Continuing...";
     if (tiaEnabled && tiaEnabled == "true") {
         if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
-            tl.debug("Adding test impact data collector element to testsettings file provided.");
-            readFileContents(settingsFile, "utf-8")
-                .then(function (xmlContents) {
-                var parser = new xml2js.Parser();
-                parser.parseString(xmlContents, function (err, result) {
-                    if (err) {
-                        tl.warning(tl.loc('ErrorWhileReadingTestSettings', err));
-                        tl.debug(exitErrorMessage);
-                        defer.resolve(settingsFile);
-                        return defer.promise;
-                    }
-                    if (result.TestSettings === undefined) {
-                        tl.warning(tl.loc('FailedToSetTestImpactCollectorTestSettings'));
-                        defer.resolve(settingsFile);
-                        return defer.promise;
-                    }
-                    var dataCollectorNode = null;
-                    if (!result.TestSettings.Execution) {
-                        tl.debug("Updating testsettings file from Execution node");
-                        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {} } } } };
-                        dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
-                    }
-                    else if (!result.TestSettings.Execution[0].AgentRule) {
-                        tl.debug("Updating testsettings file from AgentRule node");
-                        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {} } } };
-                        dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
-                    }
-                    else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
-                        tl.debug("Updating testsettings file from DataCollectors node");
-                        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {} } };
-                        dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
-                    }
-                    else{
-                        var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
-                        if (!dataCollectorArray) {
-                            tl.debug("Updating testsettings file from DataCollector node");
-                            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {} };
-                            dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
-                        }
-                        else {
-                            if (!IsTestImapctCollectorPresent(dataCollectorArray)) {
-                                tl.debug("Updating testsettings file, adding a DataCollector node");
-                                dataCollectorArray.push({});
-                                result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector = dataCollectorArray;
-                                dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
-                            }
-                        }
-                    }
-                    if (dataCollectorNode) {
-                        tl.debug("Setting attributes for test impact data collector");
-                        dataCollectorNode.$ = GetTestImpactAttributes(vsVersion);
-                    }
-                    var builder = new xml2js.Builder();
-                    var runSettingsForTestImpact = builder.buildObject(result);
-                    saveToFile(runSettingsForTestImpact, ".testsettings")
-                        .then(function (fileName) {
-                        cleanUp(settingsFile);
-                        defer.resolve(fileName);
-                        return defer.promise;
-                    })
-                        .fail(function (err) {
-                        tl.debug(exitErrorMessage);
-                        tl.warning(err);
-                        defer.resolve(settingsFile);
-                    });
+            UpdateTestSettingsFile(vsVersion,settingsFile, exitErrorMessage)
+                .then(function(updatedFile) {
+                    defer.resolve(updatedFile);
+                    return defer.promise;
                 });
-            })
-                .fail(function (err) {
-                tl.warning(err);
-                tl.debug(exitErrorMessage);
-                defer.resolve(settingsFile);
-            });
         }
         else if (!settingsFile || settingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(settingsFile)) {
-            tl.debug("No settings file provided or the provided settings file does not exist. Creating test settings file for enabling test impact data collector.");
-            var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
-                '<DataCollector uri="' + GetTICollectorURI() + '" ' +
-                'assemblyQualifiedName="' +  GetTIAssemblyQualifiedName(vsVersion) + '" ' +
-                'friendlyName="' + GetTIFriendlyName() + '"/>' +
-                '</DataCollectors></DataCollectionRunSettings></RunSettings>';
-            saveToFile(runSettingsForTIA, ".runsettings")
-                .then(function (fileName) {
-                defer.resolve(fileName);
-                return defer.promise;
-            })
-                .fail(function (err) {
-                tl.debug(exitErrorMessage);
-                tl.warning(err);
-                defer.resolve(settingsFile);
-            });
+            CreateRunSettingsForTestImpact(vsVersion,settingsFile, exitErrorMessage)
+                .then(function(updatedFile) {
+                    defer.resolve(updatedFile);
+                    return defer.promise;
+                });
         }
         else {
-            tl.debug("Adding test impact data collector element to runsettings file provided.");
-            readFileContents(settingsFile, "utf-8")
-                .then(function (xmlContents) {
-                var parser = new xml2js.Parser();
-                parser.parseString(xmlContents, function (err, result) {
-                    if (err) {
-                        tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
-                        tl.debug(exitErrorMessage);
-                        defer.resolve(settingsFile);
-                        return defer.promise;
-                    }
-                    if (result.RunSettings === undefined) {
-                        tl.warning(tl.loc('FailedToSetTestImpactCollectorRunSettings'));
-                        defer.resolve(settingsFile);
-                        return defer.promise;
-                    }
-                    var dataCollectorNode = null;
-                    if (!result.RunSettings.DataCollectionRunSettings) {
-                        tl.debug("Updating runsettings file from DataCollectionSettings node");
-                        result.RunSettings = { DataCollectionRunSettings : { DataCollectors: { DataCollector :{} } } };
-                        dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
-                    }
-                    else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
-                        tl.debug("Updating runsettings file from DataCollectors node");
-                        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
-                        dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
-                    }
-                    else {
-                        var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
-                        if(!dataCollectorArray) {
-                            tl.debug("Updating runsettings file from DataCollector node");
-                            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
-                            dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
-                        }
-                        else
-                        {
-                            if (!IsTestImapctCollectorPresent(dataCollectorArray)) {
-                                tl.debug("Updating runsettings file, adding a DataCollector node");
-                                dataCollectorArray.push({});
-                                result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector = dataCollectorArray;
-                                dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
-                            }
-                        }
-                    }
-                    if(dataCollectorNode) {
-                        tl.debug("Setting attributes for test impact data collector");
-                        dataCollectorNode.$ = GetTestImpactAttributes(vsVersion);
-                    }
-                    var builder = new xml2js.Builder();
-                    var runSettingsForTestImpact = builder.buildObject(result);
-                    saveToFile(runSettingsForTestImpact, ".runsettings")
-                        .then(function (fileName) {
-                        cleanUp(settingsFile);
-                        defer.resolve(fileName);
-                        return defer.promise;
-                    })
-                        .fail(function (err) {
-                        tl.debug(exitErrorMessage);
-                        tl.warning(err);
-                        defer.resolve(settingsFile);
-                    });
+            UpdateRunSettingsFile(vsVersion,settingsFile, exitErrorMessage)
+                .then(function(updatedFile){
+                    defer.resolve(updatedFile);
+                    return defer.promise;
                 });
-            })
-                .fail(function (err) {
-                tl.warning(err);
-                tl.debug(exitErrorMessage);
-                defer.resolve(settingsFile);
-            });
         }
     }
     else {
