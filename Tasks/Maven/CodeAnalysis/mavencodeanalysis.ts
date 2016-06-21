@@ -39,7 +39,7 @@ export function uploadCodeAnalysisResults(): void {
 
     // Retrieve build variables
     sourcesDir = tl.getVariable('build.sourcesDirectory');
-    stagingDir = getCodeAnalysisStagingDirectory();
+    stagingDir = getOrCreateCodeAnalysisStagingDirectory();
     buildNumber = tl.getVariable('build.buildNumber');
 
     // Discover maven modules
@@ -96,7 +96,7 @@ export function findCandidateModules(directory:string):ModuleAnalysis[] {
     return result;
 }
 
-export function getCodeAnalysisStagingDirectory() {
+export function getOrCreateCodeAnalysisStagingDirectory() {
     var caStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
     tl.mkdirP(caStagingDir);
     return caStagingDir;

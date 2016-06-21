@@ -19,11 +19,7 @@ export class SonarQubeEndpoint {
 
 // Returns true if SonarQube integration is enabled.
 export function isSonarQubeAnalysisEnabled(): boolean {
-    var result = tl.getBoolInput('sqAnalysisEnabled', false);
-    if (result) {
-        tl.debug(tl.loc('codeAnalysis_ToolIsEnabled', toolName));
-    }
-    return result;
+    return tl.getBoolInput('sqAnalysisEnabled', false);
 }
 
 // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
@@ -185,7 +181,7 @@ function createSonarQubeBuildSummary(sqBuildFolder: string): string {
 }
 
 // Returns the location of the SonarQube integration staging directory.
-export /* public for test purposes */ function getSonarQubeStagingDirectory(): string {
+function getOrCreateSonarQubeStagingDirectory(): string {
     var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
     tl.mkdirP(sqStagingDir);
     return sqStagingDir;
@@ -207,8 +203,10 @@ function getSonarQubeTaskReport(sonarPluginFolder: string): TaskReport {
 // Constructs a map out of an existing report-task.txt file. File must exist on disk.
 function createTaskReportFromFile(taskReportFile: string): TaskReport {
     var reportFileString: string = fs.readFileSync(taskReportFile, 'utf-8');
-    if (!reportFileString) {
-        return null;
+    if (!reportFileString || reportFileString.length < 1) {
+        tl.debug('Error reading file:' + reportFileString);
+        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 
     var reportLines: string[] = reportFileString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
@@ -221,18 +219,18 @@ function createTaskReportFromFile(taskReportFile: string): TaskReport {
         }
     });
 
-    var result:TaskReport;
     try {
-        return result = TaskReport.createTaskReportFromMap(reportMap);
+        return TaskReport.createTaskReportFromMap(reportMap);
     } catch (err) {
         tl.debug(err.message);
+        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
         throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 }
 
 // Saves the build summary string and returns the file path it was saved to.
 function saveSonarQubeBuildSummary(contents: string): string {
-    var filePath:string = path.join(getSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
+    var filePath:string = path.join(getOrCreateSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
     fs.writeFileSync(filePath, contents);
     return filePath;
 }

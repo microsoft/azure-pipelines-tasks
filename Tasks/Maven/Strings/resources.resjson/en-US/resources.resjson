@@ -53,6 +53,7 @@
   "loc.input.help.sqDbPassword": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
   "loc.input.label.pmdAnalysisEnabled": "Run PMD Analysis",
   "loc.input.help.pmdAnalysisEnabled": "Use the PMD Java static analysis tool to look for bugs in the code.",
+  "loc.messages.sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: {0}",
   "loc.messages.codeAnalysis_ToolIsEnabled": "%s analysis is enabled.",
   "loc.messages.codeAnalysis_ToolFailed": "%s analysis failed.",
   "loc.messages.sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",

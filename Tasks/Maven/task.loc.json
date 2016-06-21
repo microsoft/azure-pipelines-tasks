@@ -302,6 +302,7 @@
     }
   },
   "messages": {
+    "sqCommon_CreateTaskReport_MissingField": "ms-resource:loc.messages.sqCommon_CreateTaskReport_MissingField",
     "codeAnalysis_ToolIsEnabled": "ms-resource:loc.messages.codeAnalysis_ToolIsEnabled",
     "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
     "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
