@@ -287,7 +287,8 @@
   },
   "messages": {
     "sqAnalysis_isEnabled": "ms-resource:loc.messages.sqAnalysis_isEnabled",
-    "sqAnalysis_isNotEnabled": "ms-resource:loc.messages.sqAnalysis_isNotEnabled",
-    "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode"
+    "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
+    "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
+    "sqAnalysisBuildSummaryLine_OneProject": "ms-resource:loc.messages.sqAnalysisBuildSummaryLine_OneProject"
   }
 }
