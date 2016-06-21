@@ -38,8 +38,11 @@
   "loc.messages.VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
   "loc.messages.NoResultsToPublish": "No results found to publish.",
   "loc.messages.ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
+  "loc.messages.ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
   "loc.messages.RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
   "loc.messages.FailedToSetRunInParallel": "Failed to set run in parallel. Invalid run settings file.",
   "loc.messages.UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
-  "loc.messages.ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s."
+  "loc.messages.ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
+  "loc.messages.FailedToSetTestImpactCollectorTestSettings": "Failed to set Test Impact Collector. Invalid test settings file.",
+  "loc.messages.FailedToSetTestImpactCollectorRunSettings": "Failed to set Test Impact Collector. Invalid run settings file."
 }
