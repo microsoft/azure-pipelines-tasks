@@ -15,7 +15,7 @@ import sqCommon = require('sonarqube-common/sonarqube-common');
 // Gets the SonarQube tool runner if SonarQube analysis is enabled.
 export function getSonarQubeRunner(mvnPath:string, mavenPOMFile: string, mavenOptions: string, execFileJacoco?: string): ToolRunner {
     if (!sqCommon.isSonarQubeAnalysisEnabled()) {
-        return;
+        return null;
     }
 
     var mvnsq: ToolRunner;
