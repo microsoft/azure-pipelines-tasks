@@ -1,15 +1,18 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
+import Q = require('q');
 import os = require('os');
 import path = require('path');
 import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
-import sqCommon = require('sonarqube-common/sonarqube-common');
+import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
+import sqCommon = require('sonarqube-common/sonarqube-common');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
+import sqMaven = require('./CodeAnalysis/mavensonar');
 
 // Set up localization resource file
 tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -167,16 +170,27 @@ mvnGetVersion.exec()
     })
     .then(function (code) {
         // 3. Always try to run the SonarQube analysis if it is enabled.
-        var mvnsq = getSonarQubeRunner();
-        if (mvnsq) {
-            // Run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures).
-            // Note that running sonar:sonar along with the user goals is not supported due to a SonarQube bug.
-            return mvnsq.exec()
+        if (sqCommon.isSonarQubeAnalysisEnabled()) {
+            var mvnsq:ToolRunner = sqMaven.getSonarQubeRunner(mvnExec, mavenPOMFile, mavenOptions, execFileJacoco);
+            if (mvnsq) {
+                // Run Maven with the sonar:sonar goal, even if the user-goal Maven failed (e.g. test failures).
+                // Note that running sonar:sonar along with the user goals is not supported due to a SonarQube bug.
+                mvnsq.exec()
+                    .then((code) => {
+                        sqMaven.uploadSonarQubeBuildSummary();
+                    }).fail((err) =>{
+                        console.error(err.message);
+                        // Looks like: "SonarQube analysis failed."
+                        console.error(tl.loc('codeAnalysis_ToolFailed', sqCommon.toolName));
+                        sonarQubeRunFailed = true;
+                    });
+            }
         }
     })
     .fail(function (err) {
         console.error(err.message);
-        console.error("SonarQube analysis failed");
+        // Looks like: "SonarQube analysis failed."
+        console.error(tl.loc('codeAnalysis_ToolFailed', sqCommon.toolName));
         sonarQubeRunFailed = true;
     })
     .then(function (code) { // Pick up files from the Java code analysis tools
@@ -190,7 +204,8 @@ mvnGetVersion.exec()
     })
     .fail(function (err) {
         console.error(err.message);
-        console.error("PMD analysis failed");
+        // Looks like: "Code analysis failed."
+        console.error(tl.loc('codeAnalysis_ToolFailed', 'Code'));
         pmdRunFailed = true;
     })
     .then(function () {
@@ -209,7 +224,7 @@ mvnGetVersion.exec()
         }
 
         // Do not force an exit as publishing results is async and it won't have finished 
-    })
+    });
 
 // Publishes JUnit test results from files matching the specified pattern.
 function publishJUnitTestResults(testResultsFiles: string) {
@@ -274,7 +289,7 @@ function enableCodeCoverage() {
 
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = mavenPOMFile;
-    buildProps['classfilter'] = classFilter
+    buildProps['classfilter'] = classFilter;
     buildProps['classfilesdirectories'] = classFilesDirectories;
     buildProps['sourcedirectories'] = sourceDirectories;
     buildProps['summaryfile'] = summaryFile;
@@ -330,51 +345,6 @@ function publishCCToTfs() {
     else {
         tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
     }
-}
-
-// Gets the SonarQube tool runner if SonarQube analysis is enabled.
-function getSonarQubeRunner() {
-    if (!tl.getBoolInput('sqAnalysisEnabled')) {
-        // Looks like: 'SonarQube analysis is not enabled.'
-        console.log(tl.loc('sqAnalysis_isNotEnabled'));
-        return;
-    }
-
-    // Looks like: 'SonarQube analysis is enabled.'
-    console.log(tl.loc('sqAnalysis_isEnabled'));
-    var mvnsq;
-    var sqEndpoint: SonarQubeEndpoint = sqCommon.getSonarQubeEndpointFromInput("sqConnectedServiceName");
-
-    if (tl.getBoolInput('sqDbDetailsRequired')) {
-        var sqDbUrl = tl.getInput('sqDbUrl', false);
-        var sqDbUsername = tl.getInput('sqDbUsername', false);
-        var sqDbPassword = tl.getInput('sqDbPassword', false);
-        mvnsq = createMavenSonarQubeRunner(sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password, sqDbUrl, sqDbUsername, sqDbPassword);
-    }
-    else {
-        mvnsq = createMavenSonarQubeRunner(sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password);
-    }
-
-    mvnsq.arg('-f');
-    mvnsq.pathArg(mavenPOMFile);
-    mvnsq.argString(mavenOptions); // add the user options to allow further customization of the SQ run
-    mvnsq = sqCommon.applySonarQubeIssuesModeInPrBuild(mvnsq); // in PR builds run SQ in issues mode 
-    mvnsq.arg("sonar:sonar");
-
-    return mvnsq;
-}
-
-// Creates the tool runner for executing SonarQube.
-function createMavenSonarQubeRunner(sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?) {
-    var mvnsq = tl.createToolRunner(mvnExec);
-
-    mvnsq = sqCommon.applySonarQubeConnectionParams(mvnsq, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl, sqDbUsername, sqDbPassword);
-
-    if (typeof execFileJacoco != "undefined" && execFileJacoco) {
-        mvnsq.arg('-Dsonar.jacoco.reportPath=' + execFileJacoco);
-    }
-
-    return mvnsq;
 }
 
 // Processes Maven output for errors and warnings and reports them to the build summary.

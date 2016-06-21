@@ -4,10 +4,6 @@ import {AnalysisResult} from './analysisresult';
 export class ModuleAnalysis {
     moduleName: string;
     rootDirectory: string;
-    analysisResults:ToolAnalysisResultsDict = {};
-}
-
-// A dictionary of toolName:string -> analysisResult:AnalysisResult
-interface ToolAnalysisResultsDict {
-    [toolName:string]:AnalysisResult
+    // A map of toolName:string -> analysisResult:AnalysisResult
+    analysisResultsByToolName: Map<string, AnalysisResult> = new Map<string, AnalysisResult>();
 }
