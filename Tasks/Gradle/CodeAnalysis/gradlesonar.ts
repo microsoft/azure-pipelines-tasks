@@ -1,5 +1,5 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/sonarqube-common.d.ts" />
+/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../../definitions/sonarqube-common.d.ts" />
 
 import path = require('path');
 import fs = require('fs');
@@ -11,16 +11,12 @@ import trm = require('vsts-task-lib/toolrunner');
 import sqCommon = require('sonarqube-common/sonarqube-common');
 import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
 
-// Apply arguments to enable SonarQube analysis
+// Apply arguments to enable SonarQube analysis.
+// Returns the changed toolRunner. Has no effect if SonarQube is not enabled.
 export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.ToolRunner {
-    if (!isSonarQubeEnabled()) {
-        // Looks like: 'SonarQube analysis is not enabled.'
-        console.log(tl.loc('sqAnalysis_isNotEnabled'));
+    if (!sqCommon.isSonarQubeAnalysisEnabled()) {
         return gradleRun;
     }
-
-    // Looks like: 'SonarQube analysis is enabled.'
-    console.log(tl.loc('sqAnalysis_isEnabled'));
 
     // #1: Inject custom script to the Gradle build, triggering a SonarQube run
     // Add a custom initialisation script to the Gradle run that will apply the SonarQube plugin and task
@@ -56,16 +52,19 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.To
     return gradleRun;
 }
 
-// Points SonarQube to the CC file as it is in a non-standard location. Not required for Jacoco. 
+// Points SonarQube to the CC file as it is in a non-standard location. Not required for Jacoco.
+// Returns the changed toolRunner. Has no effect if SonarQube or code coverage is not enabled.
 export function applySonarQubeCodeCoverageArguments(gradleRun: trm.ToolRunner, isCodeCoverageEnabled:boolean, ccTool:string, reportPath:string):trm.ToolRunner {
-    
-    if (isSonarQubeEnabled() && isCodeCoverageEnabled && ccTool.toLowerCase() == "cobertura" && reportPath ) {
+    // Apply relevant arguments if both SonarQube and code coverage features are enabled
+    if (sqCommon.isSonarQubeAnalysisEnabled() && isCodeCoverageEnabled && ccTool.toLowerCase() == "cobertura" && reportPath ) {
         gradleRun.arg("-Dsonar.cobertura.reportPath="+reportPath);
     }
-    
+
     return gradleRun;
 }
 
-function isSonarQubeEnabled():boolean {
-    return tl.getBoolInput('sqAnalysisEnabled')
+// Upload a build summary with links to available SonarQube dashboards for further analysis details.
+export function uploadSonarQubeBuildSummary(): void {
+    var sqBuildFolder: string = path.join(tl.getVariable('build.sourcesDirectory'), 'build', 'sonar');
+    sqCommon.uploadSonarQubeBuildSummary(sqBuildFolder);
 }

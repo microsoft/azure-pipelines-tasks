@@ -6,14 +6,14 @@
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
     "category": "Utility",
     "visibility": [
-                  "Build",
-                  "Release"
-                  ],    
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "DotNetFramework"
@@ -21,9 +21,9 @@
     "minimumAgentVersion": "1.96.2",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -39,45 +39,54 @@
                 "filePath": "File Path"
             }
         },
-        { 
-            "name": "scriptName", 
-            "type": "filePath", 
-            "label": "Script filename", 
-            "defaultValue":"", 
-            "required":true,
+        {
+            "name": "scriptName",
+            "type": "filePath",
+            "label": "Script Path",
+            "defaultValue": "",
+            "required": true,
             "visibleRule": "scriptType = filePath",
-            "helpMarkDown": "Path of the script to execute. Should be fully qualified path or relative to the default working directory." 
+            "helpMarkDown": "Path of the script to execute. Should be fully qualified path or relative to the default working directory."
         },
-        { 
-            "name": "arguments", 
-            "type": "string", 
-            "label": "Arguments", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters" 
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Arguments passed to the PowerShell script.  Either ordinal parameters or named parameters"
         },
-        { 
-            "name": "workingFolder", 
-            "type": "filePath", 
-            "label": "Working folder", 
-            "defaultValue":"", 
-            "required":false,
+        {
+            "name": "workingFolder",
+            "type": "filePath",
+            "label": "Working folder",
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
-            "groupName":"advanced"
+            "groupName": "advanced"
         },
-        { 
-            "name": "inlineScript", 
-            "type": "multiLine", 
-            "label": "Inline Script", 
-            "defaultValue":"# You can write your powershell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n Write-Host \"Hello World\"", 
-            "required":true,
+        {
+            "name": "inlineScript",
+            "type": "multiLine",
+            "label": "Inline Script",
+            "defaultValue": "# You can write your powershell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n Write-Host \"Hello World\"",
+            "required": true,
             "helpMarkDown": "",
             "visibleRule": "scriptType = inlineScript",
             "properties": {
                 "resizable": "true",
-                "rows" : "10",
-                "maxLength" : "500"
+                "rows": "10",
+                "maxLength": "500"
             }
+        },
+        {
+            "name": "failOnStandardError",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure. This feature requires an agent version 1.102 or higher, to enable not failing on STDERR.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "PowerShell Script",
@@ -87,7 +96,8 @@
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
             "inlineScript": "$(inlineScript)",
-            "scriptType": "$(scriptType)"
+            "scriptType": "$(scriptType)",
+            "failOnStandardError": "$(failOnStandardError)"
         }
     }
 }

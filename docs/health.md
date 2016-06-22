@@ -31,6 +31,7 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 |      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
 |------------------|------|------|------|----|----------|
 | Ant                            |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
+| ArchiveFiles                   | | | | | |
 | AndroidSigning                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | AzureCloudPowerShellDeployment | | | | | |
 | AzureFileCopy                  | | | | | |
