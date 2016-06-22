@@ -213,6 +213,27 @@ describe('VsTest Suite', function() {
             });
     })
 
+    it('Vstest task when vstest of specified version is not found', (done) => {
+        setResponseFile('vstestFails.json'); // this response file does not have vs 2013
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '12.0');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.failed, 'task should have failed');
+                assert(!tr.ran('\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx'), 'should not have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish/) < 0, 'should not have published test results.');
+                assert(tr.stdout.search(/Vstest of version 12 is not found. Try again with a visual studio version that exists on your build agent machine./) >= 0, 'should have displayed warning.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('Vstest task with test case filter', (done) => {
         setResponseFile('vstestGood.json');
         var tr = new trm.TaskRunner('VSTest');
@@ -291,6 +312,98 @@ describe('VsTest Suite', function() {
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran('\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /Settings:settings.runsettings /logger:trx'), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('Vstest task with run in parallel and vs 2013', (done) => {
+        setResponseFile('vstestGood.json');
+
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '12.0');
+        tr.setInput('runInParallel', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran('\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx'), 'should have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel./) >= 0, 'should have given a warning for update1 or higher requirement');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('Vstest task with run in parallel and vs 2014 below update1', (done) => {
+        setResponseFile('vstestGood.json');
+
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '14.0'); // response file sets below update1
+        tr.setInput('runInParallel', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran('\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx'), 'should have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel./) >= 0, 'should have given a warning for update1 or higher requirement');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('Vstest task with run in parallel and vs 2015', (done) => {
+        setResponseFile('vstestGood.json');
+
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '15.0');
+        tr.setInput('runInParallel', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran('\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx'), 'should have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel./) < 0, 'should not have given a warning for update1 or higher requirement');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('Vstest task with run in parallel and vs 2014 update1 or higher', (done) => {
+        setResponseFile('vstestRunInParallel.json');
+
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '14.0'); // response file sets above update1
+        tr.setInput('runInParallel', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran('\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx'), 'should have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel./) < 0, 'should not have given a warning for update1 or higher requirement.');
                 done();
             })
             .fail((err) => {

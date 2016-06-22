@@ -13,9 +13,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
-    "minimumAgentVersion": "1.99.0",
+    "minimumAgentVersion": "1.102.0",
         "groups": [
         {
             "name": "output",
@@ -163,7 +163,7 @@
                 "WebAppName": "$(WebAppName)",
                 "ResourceGroupName": "$(ResourceGroupName)"
             },
-            "resultTemplate": "{{#extractResource slots}}"
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
     "instanceNameFormat": "Deploy AzureRM Web App: $(WebAppName)",

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 41
+    "Patch": 42
   },
   "demands": [
     "vstest"
@@ -175,6 +175,15 @@
     }
   },
   "messages": {
-    "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode"
+    "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
+    "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
+    "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
+    "VstestFailed": "ms-resource:loc.messages.VstestFailed",
+    "NoResultsToPublish": "ms-resource:loc.messages.NoResultsToPublish",
+    "ErrorWhileReadingRunSettings": "ms-resource:loc.messages.ErrorWhileReadingRunSettings",
+    "RunInParallelNotSupported": "ms-resource:loc.messages.RunInParallelNotSupported",
+    "FailedToSetRunInParallel": "ms-resource:loc.messages.FailedToSetRunInParallel",
+    "UpdateOneOrHigherRequired": "ms-resource:loc.messages.UpdateOneOrHigherRequired",
+    "ErrorOccuredWhileSettingRegistry": "ms-resource:loc.messages.ErrorOccuredWhileSettingRegistry"
   }
 }
