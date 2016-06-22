@@ -110,15 +110,13 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                             setRunInParallellIfApplicable(vsVersion);
                             setupRunSettingsFileForParallel(runInParallel, runSettingswithTestImpact)
                             .then(function(parallelRunSettingsFile) {
-                                var tmpVersion = vsVersion + ".0";
-                                var vstestPath = tl.getVariable("VSTest_" + tmpVersion);
-                                if (!vstestPath) {
-                                    tl.error(tl.loc('VstestNotFound', tmpVersion));
+                                var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
+                                if (!vsCommon) {
+                                    tl.error(tl.loc('VstestNotFound', vsVersion));
                                     defer.resolve(1);
                                     return defer.promise;
                                 }
-
-                                var vstestLocation = path.join(vstestPath, "vstest.console.exe");
+                                var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
                                 var vstest = tl.createToolRunner(vstestLocation);
 
                                 testAssemblyFiles.forEach(function(testAssembly) {
@@ -540,7 +538,7 @@ function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: st
 
 function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
     var defer = Q.defer<string>();
-    tl.debug("No settings file provided or the provided settings file does not exist. Creating test settings file for enabling test impact data collector.");
+    tl.debug("No settings file provided or the provided settings file does not exist. Creating run settings file for enabling test impact data collector.");
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
         '<DataCollector uri="' + getTICollectorURI() + '" ' +
         'assemblyQualifiedName="' +  getTIAssemblyQualifiedName(vsVersion) + '" ' +
