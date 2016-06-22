@@ -7,6 +7,7 @@ import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import psm = require('../../lib/psRunner');
 import path = require('path');
+import os = require('os');
 var shell = require('shelljs');
 var ps = shell.which('powershell');
 var psr = null;
@@ -115,6 +116,11 @@ describe('VsTest Suite', function() {
         it('(DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed) vstest invoked with  default test results directory if override run parameters is used', (done) => {
             psr.run(path.join(__dirname, 'DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed.ps1'), done);
         })
+    }
+
+    if (!os.type().match(/^Win/)) {
+        console.log("Skipping vstest tests. Vstest tests run only on windows.")
+        return;
     }
 
     it('Vstest task without test results files input', (done) => {
