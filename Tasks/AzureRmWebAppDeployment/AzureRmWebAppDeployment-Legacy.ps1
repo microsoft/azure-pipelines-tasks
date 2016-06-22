@@ -37,7 +37,13 @@ param
 	[String] $AdditionalArguments,
 
     [String] [Parameter(Mandatory = $false)]
-    [string]$WebAppUri
+    [string]$WebAppUri,
+
+    [String] [Parameter(Mandatory = $false)]
+	[String] $XmlTransformation,
+
+    [String] [Parameter(Mandatory = $true)]
+    [string]$XdtFilesRoot
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
@@ -55,6 +61,8 @@ Write-Verbose "TakeAppOfflineFlag = $TakeAppOfflineFlag"
 Write-Verbose "VirtualApplication = $VirtualApplication"
 Write-Verbose "AdditionalArguments = $AdditionalArguments"
 Write-Verbose "WebAppUri = $WebAppUri"
+Write-Verbose "XmlTransformation = $XmlTransformation"
+Write-Verbose "XdtFilesRoot = $XdtFilesRoot"
 
 $WebAppUri = $WebAppUri.Trim()
 $Package = $Package.Trim('"').Trim()
@@ -72,7 +80,9 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 # Load all dependent files for execution
 . $PSScriptRoot/LegacyUtils/AzureUtility-Legacy.ps1 
 . $PSScriptRoot/LegacyUtils/Utility-Legacy.ps1 
+. $PSScriptRoot/LegacyUtils/XdtTransformation-Legacy.ps1
 . $PSScriptRoot/FindInstalledMSDeploy.ps1
+. $PSScriptRoot/CompressionUtility.ps1
 
  # Importing required version of azure cmdlets according to azureps installed on machine
  $azureUtility = Get-AzureUtility
@@ -89,6 +99,25 @@ $msDeployExePath = Get-MsDeployExePath
 
 # Ensure that at most a package (.zip) file is found
 $packageFilePath = Get-SingleFilePath -file $Package
+
+if($XmlTransformation -eq "true")
+{
+    # Unzip the source package
+    $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
+    # Search for all the web.config files
+    $webconfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\web.config" -IncludeFiles
+    # Foreach web.config file apply Web.Release.Config and Web.Environment.config
+    foreach ($configFile in $webconfigFiles) {
+        FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config" -xdtFilesRoot $XdtFilesRoot
+        if($env:RELEASE_ENVIRONMENTNAME.config)
+        {
+            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -xdtFilesRoot $XdtFilesRoot
+        }
+    }
+    # Zip folder again
+    CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
+}
+
 
 # Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
 if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -or [string]::IsNullOrEmpty($SetParametersFile)){
