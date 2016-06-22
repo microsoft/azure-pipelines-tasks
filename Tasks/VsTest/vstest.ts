@@ -108,13 +108,13 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                     setRunInParallellIfApplicable(vsVersion);
                     setupRunSettingsFileForParallel(runInParallel, overriddenSettingsFile)
                         .then(function(parallelRunSettingsFile) {
-                            var vstestPath = tl.getVariable("VSTest_" + vsVersion.toFixed(1));
-                            if (!vstestPath) {
+                            var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
+                            if (!vsCommon) {
                                 tl.error(tl.loc('VstestNotFound', vsVersion));
                                 defer.resolve(1);
                                 return defer.promise;
-                            }
-                            var vstestLocation = path.join(vstestPath, "vstest.console.exe");
+                            }                            
+                            var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
                             var vstest = tl.createToolRunner(vstestLocation);
 
                             testAssemblyFiles.forEach(function(testAssembly) {
