@@ -21,6 +21,11 @@
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true
+    },
+    {
+      "name": "XMLConfigurationTransformation",
+      "displayName": "ms-resource:loc.group.displayName.XMLConfigurationTransformation",
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -139,6 +144,15 @@
       "defaultValue": "",
       "groupName": "output",
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
+    },
+    {
+      "name": "VariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.VariableSubstitution",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "XMLConfigurationTransformation",
+      "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
     }
   ],
   "dataSourceBindings": [
