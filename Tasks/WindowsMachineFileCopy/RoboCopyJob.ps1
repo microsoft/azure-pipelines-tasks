@@ -22,10 +22,14 @@ param (
         $filesToCopy = Split-Path $sourcePath -Leaf
     }
 
-    Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
-    [void][reflection.assembly]::LoadFrom( $_.FullName )
-    Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
+    if(Test-Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
+    {
+        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
+        [void][reflection.assembly]::LoadFrom( $_.FullName )
+        Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
+        }
     }
+    
     import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
     
     function ThrowError
