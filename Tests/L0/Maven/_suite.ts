@@ -933,13 +933,12 @@ describe('Maven Suite', function() {
             });
     });
 
-    it('Maven with SonarQube - Does not fails if report-task.txt is missing during a PR build', function(done) {
+    it('Maven with SonarQube - Does not fail if report-task.txt is missing during a PR build', function(done) {
         // Arrange
         createTempDirsForSonarQubeTests();
         var testSrcDir:string = __dirname;
         var testStgDir:string = path.join(__dirname, '_temp');
 
-        // not a valid PR branch
         setResponseAndBuildVars(
             'response.json',
             'new_response.json',

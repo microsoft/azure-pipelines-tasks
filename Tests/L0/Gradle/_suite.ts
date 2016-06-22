@@ -1074,6 +1074,60 @@ describe('gradle Suite', function () {
             });
     });
 
+    it('Gradle with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = __dirname
+        var testStgDir:string = path.join(__dirname, '_temp');
+
+        setResponseAndBuildVars(
+            'gradleSonarQube.json',
+            this.test.title + '_response.json',
+            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
+            ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr, true);
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length < 1, 'should not have written to stderr');
+                assert(tr.ran(
+                        'gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json'
+                    ), 'should have run the gradle wrapper with the appropriate SonarQube arguments');
+
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > -1,
+                    'should have uploaded a SonarQube Analysis Report build summary');
+                assertSonarQubeBuildSummaryContains(testStgDir,
+                    'Detailed SonarQube reports are not available for pull request builds.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
     it('Gradle with SonarQube - Should run Gradle with SonarQube and apply required parameters for older server versions', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
