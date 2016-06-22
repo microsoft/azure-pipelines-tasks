@@ -51,8 +51,11 @@
   "loc.input.help.sqDbUsername": "SonarQube server 5.1 and lower only. Enter the username for the database user (i.e. sonar.jdbc.username).",
   "loc.input.label.sqDbPassword": "Db User Password",
   "loc.input.help.sqDbPassword": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
-  "loc.messages.sqAnalysis_isEnabled": "SonarQube analysis is enabled.",
+  "loc.messages.sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: {0}",
+  "loc.messages.codeAnalysis_ToolIsEnabled": "%s analysis is enabled.",
+  "loc.messages.codeAnalysis_ToolFailed": "%s analysis failed.",
   "loc.messages.sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
   "loc.messages.sqAnalysis_BuildSummaryTitle": "SonarQube Analysis Report",
+  "loc.messages.sqAnalysis_TaskReportInvalid": "Invalid or missing task report. Check SonarQube finished successfully.",
   "loc.messages.sqAnalysisBuildSummaryLine_OneProject": "Detailed SonarQube report"
 }
