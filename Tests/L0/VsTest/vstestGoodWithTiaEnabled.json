@@ -1,7 +1,8 @@
 {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
-        "VS140COMNTools": "/vs/path"
+        "VS140COMNTools": "/vs/path",
+		"tia.enabled": "true"
     },
     "find": {
         "/source/dir": [
@@ -27,10 +28,18 @@
         }
     },
     "exist": {
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true,
+		"settings.runsettings": true,
+		"settings.testsettings": true
     },
     "stats": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
+            "isFile": true
+        },
+		"settings.runsettings": {
+            "isFile": true
+        },
+		"settings.testsettings": {
             "isFile": true
         }
     }
