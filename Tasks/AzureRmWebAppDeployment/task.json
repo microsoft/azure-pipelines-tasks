@@ -5,18 +5,18 @@
     "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
+    "visibility": [
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "minimumAgentVersion": "1.102.0",
-        "groups": [
+    "groups": [
         {
             "name": "output",
             "displayName": "Output",
@@ -168,7 +168,7 @@
     ],
     "instanceNameFormat": "Deploy AzureRM Web App: $(WebAppName)",
     "execution": {
-       "AzurePowerShell": {
+        "AzurePowerShell": {
             "target": "$(currentDirectory)\\AzureRmWebAppDeployment-Legacy.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
@@ -197,7 +197,7 @@
         "Runningmsdeploycommand0": "Running msdeploy command: `n`t{0}",
         "msdeploycommandransuccessfully": "msdeploy command ran successfully.",
         "filePathFindFilesSearchPattern0": "filePath = Find-Files -SearchPattern {0}",
-        "filePath0":"filePath = {0}",
-        "UnabletofindpublishUrlforWebApp0":"Unable to find publish Url for WebApp '{0}'."
+        "filePath0": "filePath = {0}",
+        "UnabletofindpublishUrlforWebApp0": "Unable to find publish Url for WebApp '{0}'."
     }
 }
