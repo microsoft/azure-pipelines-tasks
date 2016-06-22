@@ -171,13 +171,22 @@ function isNullOrEmpty(str) {
 
 // Creates the string that comprises the build summary text, given the location of the /sonar build folder.
 function createSonarQubeBuildSummary(sqBuildFolder: string): string {
+    // Task report is not created for PR builds
+    if (isPrBuild()) {
+        // Looks like: Detailed SonarQube reports are not available for pull request builds.
+        return tl.loc('sqAnalysis_BuildSummaryNotAvailableInPrBuild');
+    }
+
     var taskReport: TaskReport = getSonarQubeTaskReport(sqBuildFolder);
     if (!taskReport) {
         throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 
-    return util.format('[%s >](%s "%s Dashboard")',
-        tl.loc('sqAnalysisBuildSummaryLine_OneProject'), taskReport.dashboardUrl, taskReport.projectKey);
+    var linkToDashBoard = util.format('[%s >](%s "%s Dashboard")',
+        // Looks like: Detailed SonarQube report
+        tl.loc('sqAnalysis_BuildSummary_LinkText'), taskReport.dashboardUrl, taskReport.projectKey);
+
+    return linkToDashBoard;
 }
 
 // Returns the location of the SonarQube integration staging directory.

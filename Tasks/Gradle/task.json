@@ -291,7 +291,8 @@
         "codeAnalysis_ToolFailed": "%s analysis failed.",
         "sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
         "sqAnalysis_BuildSummaryTitle": "SonarQube Analysis Report",
+        "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "Detailed SonarQube reports are not available for pull request builds.",
         "sqAnalysis_TaskReportInvalid": "Invalid or missing task report. Check SonarQube finished successfully.",
-        "sqAnalysisBuildSummaryLine_OneProject": "Detailed SonarQube report"
+        "sqAnalysis_BuildSummary_LinkText": "Detailed SonarQube report"
     }
 }
