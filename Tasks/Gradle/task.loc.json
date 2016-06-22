@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 42
+    "Patch": 43
   },
   "demands": [
     "java"
@@ -291,7 +291,8 @@
     "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
     "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
     "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
+    "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "ms-resource:loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild",
     "sqAnalysis_TaskReportInvalid": "ms-resource:loc.messages.sqAnalysis_TaskReportInvalid",
-    "sqAnalysisBuildSummaryLine_OneProject": "ms-resource:loc.messages.sqAnalysisBuildSummaryLine_OneProject"
+    "sqAnalysis_BuildSummary_LinkText": "ms-resource:loc.messages.sqAnalysis_BuildSummary_LinkText"
   }
 }

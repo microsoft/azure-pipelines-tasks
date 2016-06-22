@@ -836,8 +836,7 @@ describe('Maven Suite', function() {
         setResponseAndBuildVars(
             'response.json',
             'new_response.json',
-            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
-                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+            [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
         var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
@@ -879,7 +878,6 @@ describe('Maven Suite', function() {
                 done(err);
             });
     });
-
 
     it('Maven with SonarQube - Fails when report-task.txt is missing', function(done) {
         // Arrange
@@ -891,8 +889,7 @@ describe('Maven Suite', function() {
         setResponseAndBuildVars(
             'response.json',
             'new_response.json',
-            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
-                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+            [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
         var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
@@ -923,6 +920,7 @@ describe('Maven Suite', function() {
 
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
                     'should not have uploaded a SonarQube Analysis Report build summary');
+
                 assert(tr.stderr.indexOf('Invalid or missing task report. Check SonarQube finished successfully.') > -1,
                     'should have output an error about a failure to find the task report');
                 done();
@@ -934,6 +932,62 @@ describe('Maven Suite', function() {
                 done(err);
             });
     });
+
+    it('Maven with SonarQube - Does not fail if report-task.txt is missing during a PR build', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = __dirname;
+        var testStgDir:string = path.join(__dirname, '_temp');
+
+        setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
+                assert(tr.ran(
+                    '/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
+                    ), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length < 1, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > 0,
+                    'should have uploaded a SonarQube Analysis Report build summary');
+                assertSonarQubeBuildSummaryContains(testStgDir,
+                    'Detailed SonarQube reports are not available for pull request builds.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
 
     it('maven calls enable code coverage and publish code coverage when jacoco is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
