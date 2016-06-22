@@ -352,27 +352,27 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
     return defer.promise;
 }
 
-function GetTICollectorURI () {
+function getTICollectorURI () {
     return "datacollector://microsoft/TestImpact/1.0";
 }
 
-function GetTIAssemblyQualifiedName(vsVersion) {
+function getTIAssemblyQualifiedName(vsVersion) {
     return "Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Version=" + vsVersion + ".0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 }
 
-function GetTIFriendlyName() {
+function getTIFriendlyName() {
     return "Test Impact";
 }
 
-function GetTestImpactAttributes(vsVersion) {
-    return { uri: GetTICollectorURI(),
-             assemblyQualifiedName: GetTIAssemblyQualifiedName(vsVersion),
-             friendlyName: GetTIFriendlyName() };
+function getTestImpactAttributes(vsVersion) {
+    return { uri: getTICollectorURI(),
+             assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
+             friendlyName: getTIFriendlyName() };
 }
 
-function IsTestImapctCollectorPresent(dataCollectorArray) {
+function isTestImapctCollectorPresent(dataCollectorArray) {
     var found = false;
-    var tiaFriendlyName = GetTIFriendlyName();
+    var tiaFriendlyName = getTIFriendlyName();
     for (var i = 0; i < dataCollectorArray.length; i++) {
         try {
             if (dataCollectorArray[i].$.friendlyName === tiaFriendlyName) {
@@ -387,7 +387,7 @@ function IsTestImapctCollectorPresent(dataCollectorArray) {
     return found;
 }
 
-function UpdateRunSettingsFile(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
+function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
     var defer = Q.defer<string>();
     tl.debug("Adding test impact data collector element to runsettings file provided.");
     readFileContents(settingsFile, "utf-8")
@@ -425,7 +425,7 @@ function UpdateRunSettingsFile(vsVersion: number, settingsFile: string, exitErro
                     }
                     else
                     {
-                        if (!IsTestImapctCollectorPresent(dataCollectorArray)) {
+                        if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                             tl.debug("Updating runsettings file, adding a DataCollector node");
                             dataCollectorArray.push({});
                             result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector = dataCollectorArray;
@@ -435,7 +435,7 @@ function UpdateRunSettingsFile(vsVersion: number, settingsFile: string, exitErro
                 }
                 if(dataCollectorNode) {
                     tl.debug("Setting attributes for test impact data collector");
-                    dataCollectorNode.$ = GetTestImpactAttributes(vsVersion);
+                    dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
                 }
                 var builder = new xml2js.Builder();
                 var runSettingsForTestImpact = builder.buildObject(result);
@@ -460,7 +460,7 @@ function UpdateRunSettingsFile(vsVersion: number, settingsFile: string, exitErro
     return defer.promise;
 }
 
-function UpdateTestSettingsFile(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
+function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
     var defer = Q.defer<string>();
     tl.debug("Adding test impact data collector element to testsettings file provided.");
     readFileContents(settingsFile, "utf-8")
@@ -502,7 +502,7 @@ function UpdateTestSettingsFile(vsVersion: number, settingsFile: string, exitErr
                         dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
                     }
                     else {
-                        if (!IsTestImapctCollectorPresent(dataCollectorArray)) {
+                        if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                             tl.debug("Updating testsettings file, adding a DataCollector node");
                             dataCollectorArray.push({});
                             result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector = dataCollectorArray;
@@ -512,7 +512,7 @@ function UpdateTestSettingsFile(vsVersion: number, settingsFile: string, exitErr
                 }
                 if (dataCollectorNode) {
                     tl.debug("Setting attributes for test impact data collector");
-                    dataCollectorNode.$ = GetTestImpactAttributes(vsVersion);
+                    dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
                 }
                 var builder = new xml2js.Builder();
                 var runSettingsForTestImpact = builder.buildObject(result);
@@ -538,13 +538,13 @@ function UpdateTestSettingsFile(vsVersion: number, settingsFile: string, exitErr
 }
 
 
-function CreateRunSettingsForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
+function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     tl.debug("No settings file provided or the provided settings file does not exist. Creating test settings file for enabling test impact data collector.");
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
-        '<DataCollector uri="' + GetTICollectorURI() + '" ' +
-        'assemblyQualifiedName="' +  GetTIAssemblyQualifiedName(vsVersion) + '" ' +
-        'friendlyName="' + GetTIFriendlyName() + '"/>' +
+        '<DataCollector uri="' + getTICollectorURI() + '" ' +
+        'assemblyQualifiedName="' +  getTIAssemblyQualifiedName(vsVersion) + '" ' +
+        'friendlyName="' + getTIFriendlyName() + '"/>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
     saveToFile(runSettingsForTIA, ".runsettings")
         .then(function (fileName) {
@@ -565,21 +565,21 @@ function setupRunSettingsFileForTestImpact(vsVersion: number, settingsFile: stri
     var exitErrorMessage = "Error occured while setting in test impact data collector. Continuing...";
     if (tiaEnabled && tiaEnabled == "true") {
         if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
-            UpdateTestSettingsFile(vsVersion,settingsFile, exitErrorMessage)
+            updateTestSettingsFileForTestImpact(vsVersion,settingsFile, exitErrorMessage)
                 .then(function(updatedFile) {
                     defer.resolve(updatedFile);
                     return defer.promise;
                 });
         }
         else if (!settingsFile || settingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(settingsFile)) {
-            CreateRunSettingsForTestImpact(vsVersion,settingsFile, exitErrorMessage)
+            createRunSettingsForTestImpact(vsVersion,settingsFile, exitErrorMessage)
                 .then(function(updatedFile) {
                     defer.resolve(updatedFile);
                     return defer.promise;
                 });
         }
         else {
-            UpdateRunSettingsFile(vsVersion,settingsFile, exitErrorMessage)
+            updateRunSettingsFileForTestImpact(vsVersion,settingsFile, exitErrorMessage)
                 .then(function(updatedFile){
                     defer.resolve(updatedFile);
                     return defer.promise;
