@@ -1,7 +1,8 @@
 {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
-        "VS140COMNTools": "/vs/path"
+        "VS140COMNTools": "/vs/path",
+		"tia.enabled": "false"
     },
     "find": {
         "/source/dir": [
@@ -18,6 +19,10 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
             "code": 0,
             "stdout": "vstest"
+        },
+		"\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /Settings:settings.runsettings /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
         }
     },
     "rmRF": {
@@ -27,10 +32,18 @@
         }
     },
     "exist": {
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true,
+		"settings.runsettings": true,
+		"settings.testsettings": true
     },
     "stats": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
+            "isFile": true
+        },
+		"settings.runsettings": {
+            "isFile": true
+        },
+		"settings.testsettings": {
             "isFile": true
         }
     }
