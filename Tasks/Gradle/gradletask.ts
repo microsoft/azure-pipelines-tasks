@@ -37,7 +37,7 @@ var testResultsFiles = tl.getInput('testResultsFiles', true);
 var summaryFile: string = null;
 var reportDirectory: string = null;
 var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
-var isSonarQubeEnabled: boolean = false;
+var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
@@ -79,7 +79,7 @@ if (isCodeCoverageOpted) {
     enableCodeCoverage();
 }
 
-isSonarQubeEnabled = sqCommon.isSonarQubeAnalysisEnabled();
+
 if (isSonarQubeEnabled) {
     // Looks like: 'SonarQube analysis is enabled.'
     console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
