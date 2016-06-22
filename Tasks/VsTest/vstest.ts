@@ -370,10 +370,10 @@ function getTestImpactAttributes(vsVersion) {
 
 function isTestImapctCollectorPresent(dataCollectorArray) {
     var found = false;
-    var tiaFriendlyName = getTIFriendlyName();
+    var tiaFriendlyName = getTIFriendlyName().toUpperCase();
     for (var i = 0; i < dataCollectorArray.length; i++) {
         try {
-            if (dataCollectorArray[i].$.friendlyName === tiaFriendlyName) {
+            if (dataCollectorArray[i].$.friendlyName.toUpperCase() === tiaFriendlyName) {
                 tl.debug("Test impact data collector already present, will not add the node.");
                 found = true;
                 break;
