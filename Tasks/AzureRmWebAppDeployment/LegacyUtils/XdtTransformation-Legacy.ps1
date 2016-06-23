@@ -12,13 +12,13 @@ function FindAndApplyTransformation
         $xdtFilesRoot
     )
 
-    $tranformFiles = Find-VstsFiles -LegacyPattern "$xdtFilesRoot\**\$tranformFile" -IncludeFiles
+    $tranformFiles = Find-Files -SearchPattern "$xdtFilesRoot\**\$tranformFile"
 
     if($tranformFiles.Count -eq 0)
     {
         Write-Warning "No tranformation file '$tranformFile' found."
     }
-    elseif ($tranformFiles.Count -gt 1) 
+    elseif ($tranformFiles.Count -gt 1)
     {
         throw "More than one transformation file '$tranformFile' found."
     }
@@ -36,7 +36,6 @@ function FindAndApplyTransformation
 
     if($result -eq $false)
     {
-        Throw (Get-VstsLocString -Key "XmlTranform0failedforfile1" -ArgumentList $tranformFilePath, $baseFile)
         throw "Xml Tranform '$tranformFilePath' failed for file '$baseFile'."
     }
 

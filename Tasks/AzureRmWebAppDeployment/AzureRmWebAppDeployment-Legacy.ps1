@@ -103,7 +103,7 @@ if($XmlTransformation -eq "true")
     # Unzip the source package
     $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
     # Search for all the web.config files
-    $webconfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\web.config" -IncludeFiles
+    $webconfigFiles = Find-Files -SearchPattern "$unzippedPath\**\web.config"
     # Foreach web.config file apply Web.Release.Config and Web.Environment.config
     foreach ($configFile in $webconfigFiles) {
         FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config" -xdtFilesRoot $XdtFilesRoot
@@ -114,7 +114,7 @@ if($XmlTransformation -eq "true")
     }
 
     #Search for all *.exe.config
-    $exeConfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\*.exe.config" -IncludeFiles
+    $exeConfigFiles = Find-Files -SearchPattern "$unzippedPath\**\*.exe.config"
     # Foreach *.exe.config file apply ExeName.Release.exe.Config and ExeName.Environment.exe.config
     foreach ($exeCfgFile in $exeConfigFiles) {
         $exeName = $exeCfgFile.Substring(0, $exeCfgFile.IndexOf('.'))
