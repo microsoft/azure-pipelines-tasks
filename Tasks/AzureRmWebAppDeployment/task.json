@@ -213,6 +213,7 @@
         "filePath0":"filePath = {0}",
         "UnabletofindpublishUrlforWebApp0":"Unable to find publish Url for WebApp '{0}'.",
         "XmlTranform0failedforfile1":"Xml Tranform '{0}' failed for file '{1}'.",
-        "Noormorethanonetranformationfile0found":"No or more than one tranformation file '{0}' found."
+        "Noormorethanonetranformationfile0found":"No or more than one tranformation file '{0}' found.",
+        "XmlTransformationsAreNotSupportedForUncPackage0Input": "Xml Transformations are not supported for Unc package '{0}' input."
     }
 }

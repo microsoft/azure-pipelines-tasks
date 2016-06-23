@@ -186,3 +186,24 @@ function Run-MsDeployCommand
     Run-Command -command $msDeployCmd
     Write-Host (Get-LocalizedString -Key "msdeploy command ran successfully.")
 }
+
+function FindXdtFilesRoot
+{
+    param([String][Parameter(Mandatory=$true)] $msDeployPkg)
+
+    if([bool]([Uri]$msDeployPkg).IsUnc)
+    {
+        throw "Xml Transformations are not supported for Unc package '$msDeployPkg' input."
+    }
+    #In case of build search under default working directory
+    $XdtFilesRoot = $env:SYSTEM_DEFAULTWORKINGDIRECTORY
+
+    #In case of release get artifact root directory, which is two level deep in w.r.t default working directory
+    if($env:SYSTEM -eq "Release")
+    {
+        $endIndex = $XdtFilesRoot.Length + $msDeployPkg.IndexOf([System.IO.Path]::DirectorySeparatorChar, $XdtFilesRoot.Length, 2) - 2
+        $XdtFilesRoot = $msDeployPkg.Substring(0, $endIndex)
+    }
+
+    return $XdtFilesRoot
+}

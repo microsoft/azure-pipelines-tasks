@@ -189,5 +189,21 @@ function Run-MsDeployCommand
 
 function FindXdtFilesRoot
 {
-    return ""
+    param([String][Parameter(Mandatory=$true)] $msDeployPkg)
+
+    if([bool]([Uri]$msDeployPkg).IsUnc)
+    {
+        throw (Get-VstsLocString -Key "XmlTransformationsAreNotSupportedForUncPackage0Input" -ArgumentList $msDeployPkg)
+    }
+    #In case of build search under default working directory
+    $XdtFilesRoot = $env:SYSTEM_DEFAULTWORKINGDIRECTORY
+
+    #In case of release get artifact root directory, which is two level deep in w.r.t default working directory
+    if($env:SYSTEM -eq "Release")
+    {
+        $endIndex = $XdtFilesRoot.Length + $msDeployPkg.IndexOf([System.IO.Path]::DirectorySeparatorChar, $XdtFilesRoot.Length, 2) - 2
+        $XdtFilesRoot = $msDeployPkg.Substring(0, $endIndex)
+    }
+
+    return $XdtFilesRoot
 }

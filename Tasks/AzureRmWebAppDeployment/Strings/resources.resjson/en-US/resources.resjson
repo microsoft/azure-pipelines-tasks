@@ -31,8 +31,6 @@
   "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension.",
   "loc.input.label.XmlTransformation": "Transformation",
   "loc.input.help.XmlTransformation": "The config transforms will be run for \\*.Release.config and \\*.&#060;EnvironmentName&#062;.config on all the web.config files.",
-  "loc.input.label.XdtFilesRoot": "Xdt Transformation Files Path",
-  "loc.input.help.XdtFilesRoot": "Root folder for searching for \\*.Release.config and \\*.&#060;EnvironmentName&#062;.config recursively.",
   "loc.input.label.WebAppUri": "Web App Hosted Url",
   "loc.input.help.WebAppUri": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task.",
   "loc.messages.Invalidwebapppackagepathprovided": "Invalid webapp package path provided",
@@ -57,5 +55,6 @@
   "loc.messages.filePath0": "filePath = {0}",
   "loc.messages.UnabletofindpublishUrlforWebApp0": "Unable to find publish Url for WebApp '{0}'.",
   "loc.messages.XmlTranform0failedforfile1": "Xml Tranform '{0}' failed for file '{1}'.",
-  "loc.messages.Noormorethanonetranformationfile0found": "No or more than one tranformation file '{0}' found."
+  "loc.messages.Noormorethanonetranformationfile0found": "No or more than one tranformation file '{0}' found.",
+  "loc.messages.XmlTransformationsAreNotSupportedForUncPackage0Input": "Xml Transformations are not supported for Unc package '{0}' input."
 }

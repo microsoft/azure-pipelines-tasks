@@ -62,7 +62,7 @@ try{
     if($XmlTransformation -eq "true")
     {
         # Get xdtFilesRoot
-        $XdtFilesRoot = FindXdtFilesRoot
+        $XdtFilesRoot = FindXdtFilesRoot -msDeployPkg $packageFilePath
         # Unzip the source package
         $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
         # Search for all the web.config files
