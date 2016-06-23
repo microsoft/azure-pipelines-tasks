@@ -75,6 +75,18 @@ try{
                 FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -xdtFilesRoot $XdtFilesRoot
             }
         }
+
+        #Search for all *.exe.config
+        $exeConfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\*.exe.config" -IncludeFiles
+        # Foreach *.exe.config file apply ExeName.Release.exe.Config and ExeName.Environment.exe.config
+        foreach ($exeCfgFile in $exeConfigFiles) {
+            $exeName = $exeCfgFile.Substring(0, $exeCfgFile.IndexOf('.'))
+            FindAndApplyTransformation -baseFile $configFile -tranformFile "$exeName.release.exe.config" -xdtFilesRoot $XdtFilesRoot
+            if($env:RELEASE_ENVIRONMENTNAME.config)
+            {
+                FindAndApplyTransformation -baseFile $configFile -tranformFile "$exeName.$env:RELEASE_ENVIRONMENTNAME.exe.config" -xdtFilesRoot $XdtFilesRoot
+            }
+        }
         # Zip folder again
         CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
     }
