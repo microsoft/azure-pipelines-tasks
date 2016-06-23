@@ -145,16 +145,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
     },
     {
-      "name": "XdtFilesRoot",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.XdtFilesRoot",
-      "defaultValue": "",
-      "groupName": "configtransforms",
-      "visibleRule": "XmlTransformation = true",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.XdtFilesRoot"
-    },
-    {
       "name": "VariableSubstitution",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.VariableSubstitution",

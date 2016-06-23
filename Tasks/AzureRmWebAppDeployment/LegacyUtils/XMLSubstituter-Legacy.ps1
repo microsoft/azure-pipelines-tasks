@@ -14,6 +14,7 @@
    
     if ( -not ( Test-path $xmlFilePath ) ) {
         throw "XML file path '$xmlFilePath' doesn't exists."
+
     }
     
     # Extracting out content from xml file 
@@ -27,7 +28,7 @@
 
          if( $node -eq $null )
          {
-             Write-Verbose "Unable to find node with tag '$tag' in provided xml file" 
+             Write-Verbose "Unable to find node with tag '$tag' in provided xml file" -Verbose
              continue
          }
          
@@ -82,7 +83,7 @@ function  Update-XMLNodeAttributes
         $node
 
     )
-    
+
     if( $node -eq $null )
     {
         Write-Verbose "Unable to find node with tag '$tag' in provided xml file" -Verbose
@@ -98,8 +99,7 @@ function  Update-XMLNodeAttributes
 
         foreach( $childNodeAttribute in $childNodeAttributes )
         {
-            
-            $taskContextValueForAttribute = Get-VstsTaskVariable -Name $childNodeAttribute.Name 
+            $taskContextValueForAttribute = Get-TaskVariable $distributedTaskContext $childNodeAttribute.Name 
             if( $taskContextValueForAttribute ){
                 $childNode.SetAttribute($childNodeAttribute.Name,$taskContextValueForAttribute)
             }
@@ -109,12 +109,14 @@ function  Update-XMLNodeAttributes
         $valueForKeyAttribute = $childNode.GetAttribute("key")
         if( $valueForKeyAttribute )
         {
-            $taskContextValueOfKeyBasedAttribute = Get-VstsTaskVariable -Name $valueForKeyAttribute
+            $taskContextValueOfKeyBasedAttribute = Get-TaskVariable $distributedTaskContext $valueForKeyAttribute
             if( $taskContextValueOfKeyBasedAttribute )
             {
                 $childNode.SetAttribute("value",$taskContextValueOfKeyBasedAttribute)
             }
+
         }
+
     }  
         
 }

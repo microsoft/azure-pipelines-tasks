@@ -1,5 +1,6 @@
 ﻿function Substitute-Variables
 {  
+
     Param(
         [string][Parameter(mandatory=$true)] 
         $WebAppFolderPath,
@@ -8,7 +9,7 @@
     )
 
     # Load modules
-    . $PSScriptRoot/XMLSubstituter.ps1 -Force
+    . $PSScriptRoot/XMLSubstituter-Legacy.ps1 -Force
 
     # Defined supported MIME type
     $ApplicationXmlMimeType = "application/xml"
@@ -45,15 +46,14 @@
         # Compare mime type of file and invoke corresponding variable substituter
         if( $fileMimeType -eq $ApplicationXmlMimeType -or $fileMimeType -eq $TextXmlMimeType )
         {
-            
             $tags = @("appSettings", "connectionStrings", "configSections")
             Substitute-XMLAttributeValues -xmlFile $file.FullName -tags $tags
 
         }
     
     }
-}
 
+}
 
 function Get-MimeType()
 {
@@ -82,4 +82,3 @@ function Get-MimeType()
 
     return $mimeType
 }
-

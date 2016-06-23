@@ -1,5 +1,4 @@
-﻿. $PSScriptRoot/Utility.ps1
-
+﻿
 function UnzipWebDeployPkg
 {
     Param(

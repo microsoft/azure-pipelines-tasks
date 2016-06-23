@@ -1,4 +1,4 @@
-$XmlTranformDllPath = "$PSScriptRoot\Microsoft.Web.Xdt\Microsoft.Web.XmlTransform.dll"
+$XmlTranformDllPath = "$PSScriptRoot\..\Microsoft.Web.Xdt\Microsoft.Web.XmlTransform.dll"
 [Reflection.Assembly]::LoadFile($XmlTranformDllPath)
 
 function FindAndApplyTransformation

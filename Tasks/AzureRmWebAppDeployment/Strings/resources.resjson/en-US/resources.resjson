@@ -31,8 +31,6 @@
   "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension.",
   "loc.input.label.XmlTransformation": "Transformation",
   "loc.input.help.XmlTransformation": "The config transforms will be run for \\*.Release.config and \\*.&#060;EnvironmentName&#062;.config on all the web.config files.",
-  "loc.input.label.XdtFilesRoot": "Xdt Transformation Files Path",
-  "loc.input.help.XdtFilesRoot": "Root folder for searching for \\*.Release.config and \\*.&#060;EnvironmentName&#062;.config recursively.",
   "loc.input.label.VariableSubstitution": "Variable Substitution",
   "loc.input.help.VariableSubstitution": "Variables defined in the Defination will be automatically substitued in the appSettings,applicationSettings and connectionStrings section of the config files. If the same variable are defined in the Defination and Environment, then the En variables will be supersede the defination variables. Variable substitution is run after config Transformations.",
   "loc.input.label.WebAppUri": "Web App Hosted Url",

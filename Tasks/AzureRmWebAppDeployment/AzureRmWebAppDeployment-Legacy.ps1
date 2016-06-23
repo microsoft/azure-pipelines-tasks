@@ -42,8 +42,8 @@ param
     [String] [Parameter(Mandatory = $false)]
 	[String] $XmlTransformation,
 
-    [String] [Parameter(Mandatory = $true)]
-    [string]$XdtFilesRoot
+    [String] [Parameter(Mandatory = $false)]
+    $VariableSubstitution
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
@@ -62,7 +62,7 @@ Write-Verbose "VirtualApplication = $VirtualApplication"
 Write-Verbose "AdditionalArguments = $AdditionalArguments"
 Write-Verbose "WebAppUri = $WebAppUri"
 Write-Verbose "XmlTransformation = $XmlTransformation"
-Write-Verbose "XdtFilesRoot = $XdtFilesRoot"
+Write-Verbose "VariableSubstitution = $VariableSubstitution"
 
 $WebAppUri = $WebAppUri.Trim()
 $Package = $Package.Trim('"').Trim()
@@ -83,6 +83,7 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 . $PSScriptRoot/LegacyUtils/XdtTransformation-Legacy.ps1
 . $PSScriptRoot/FindInstalledMSDeploy.ps1
 . $PSScriptRoot/CompressionUtility.ps1
+. $PSScriptRoot/LegacyUtils/VariableSubstituter-Legacy.ps1
 
  # Importing required version of azure cmdlets according to azureps installed on machine
  $azureUtility = Get-AzureUtility
@@ -100,19 +101,26 @@ $msDeployExePath = Get-MsDeployExePath
 # Ensure that at most a package (.zip) file is found
 $packageFilePath = Get-SingleFilePath -file $Package
 
-if($XmlTransformation -eq "true")
+if($XmlTransformation -eq "true"  -or $VariableSubstitution -eq "true")
 {
     # Unzip the source package
     $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
-    # Search for all the web.config files
-    $webconfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\web.config" -IncludeFiles
-    # Foreach web.config file apply Web.Release.Config and Web.Environment.config
-    foreach ($configFile in $webconfigFiles) {
-        FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config" -xdtFilesRoot $XdtFilesRoot
-        if($env:RELEASE_ENVIRONMENTNAME.config)
-        {
-            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -xdtFilesRoot $XdtFilesRoot
+
+    if( $XmlTransformation -eq "true" )
+    {
+        # Search for all the web.config files
+        $webconfigFiles = Find-Files -SearchPattern "$unzippedPath\**\web.config" 
+        foreach ($configFile in $webconfigFiles) {
+            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config"
+            if($env:RELEASE_ENVIRONMENTNAME.config)
+            {
+                FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -xdtFilesRoot $XdtFilesRoot
+            }
         }
+    }
+    if( $VariableSubstitution -eq "true" )
+    {
+        Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "web.*config"
     }
     # Zip folder again
     CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
