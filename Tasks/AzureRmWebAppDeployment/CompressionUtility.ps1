@@ -1,6 +1,4 @@
-﻿. $PSScriptRoot/Utility.ps1
-
-function UnzipWebDeployPkg
+﻿function UnzipWebDeployPkg
 {
     Param(
         [String][Parameter(mandatory=$true)]
