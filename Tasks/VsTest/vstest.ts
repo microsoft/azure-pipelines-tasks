@@ -9,6 +9,15 @@ var uuid = require('node-uuid');
 var fs = require('fs');
 var xml2js = require('xml2js');
 
+const runSettingsExt = ".runsettings";
+const testSettingsExt = ".testsettings";
+const TIFriendlyName = "Test Impact";
+const TICollectorURI = "datacollector://microsoft/TestImpact/1.0";
+const TITestSettingsAgentNameTag = "testImpact-5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
+const TITestSettingsNameTag = "testSettings-5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
+const TITestSettingsIDTag = "5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
+const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
+
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -280,7 +289,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                     tl.debug("Overriding test run parameters.");
                     var builder = new xml2js.Builder();
                     var overridedRunSettings = builder.buildObject(result);
-                    saveToFile(overridedRunSettings, ".runsettings")
+                    saveToFile(overridedRunSettings, runSettingsExt)
                         .then(function(fileName) {
                             defer.resolve(fileName);
                         })
@@ -350,39 +359,68 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
     return defer.promise;
 }
 
-function getTICollectorURI () {
-    return "datacollector://microsoft/TestImpact/1.0";
-}
 
-function getTIAssemblyQualifiedName(vsVersion) {
+function getTIAssemblyQualifiedName(vsVersion : number): String {
     return "Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Version=" + vsVersion + ".0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 }
 
-function getTIFriendlyName() {
-    return "Test Impact";
+function getTestImpactAttributes(vsVersion: number) {
+    return { uri: TICollectorURI,
+        assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
+        friendlyName: TIFriendlyName
+    };
 }
 
-function getTestImpactAttributes(vsVersion) {
-    return { uri: getTICollectorURI(),
-             assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
-             friendlyName: getTIFriendlyName() };
-}
-
-function isTestImapctCollectorPresent(dataCollectorArray) {
+function isTestImapctCollectorPresent(dataCollectorArray): Boolean {
     var found = false;
-    var tiaFriendlyName = getTIFriendlyName().toUpperCase();
-    for (var i = 0; i < dataCollectorArray.length; i++) {
-        try {
-            if (dataCollectorArray[i].$.friendlyName.toUpperCase() === tiaFriendlyName) {
-                tl.debug("Test impact data collector already present, will not add the node.");
-                found = true;
-                break;
-            }
-        }
-        catch (e) {
+    var tiaFriendlyName = TIFriendlyName.toUpperCase();
+    for(var node of dataCollectorArray) {
+        if (node.$.friendlyName && node.$.friendlyName.toUpperCase() === tiaFriendlyName) {
+            tl.debug("Test impact data collector already present, will not add the node.");
+            found = true;
+            break;
         }
     }
     return found;
+}
+
+function updateRunSettings(result: any, vsVersion: number) {
+    var dataCollectorNode = null;
+    if (!result.RunSettings) {
+        tl.debug("Updating runsettings file from RunSettings node");
+        result.RunSettings = { DataCollectionRunSettings : { DataCollectors: { DataCollector :{} } } };
+        dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
+    }
+    else if (!result.RunSettings.DataCollectionRunSettings) {
+        tl.debug("Updating runsettings file from DataCollectionSettings node");
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector :{} } };
+        dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
+    }
+    else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
+        tl.debug("Updating runsettings file from DataCollectors node");
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
+        dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
+    }
+    else {
+        var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
+        if(!dataCollectorArray) {
+            tl.debug("Updating runsettings file from DataCollector node");
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
+            dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
+        }
+        else
+        {
+            if (!isTestImapctCollectorPresent(dataCollectorArray)) {
+                tl.debug("Updating runsettings file, adding a DataCollector node");
+                dataCollectorArray.push({});
+                dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+            }
+        }
+    }
+    if(dataCollectorNode) {
+        tl.debug("Setting attributes for test impact data collector");
+        dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+    }
 }
 
 function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
@@ -403,51 +441,12 @@ function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: str
                     defer.resolve(settingsFile);
                     return defer.promise;
                 }
-                var dataCollectorNode = null;
-                if (!result.RunSettings.DataCollectionRunSettings) {
-                    tl.debug("Updating runsettings file from DataCollectionSettings node");
-                    result.RunSettings = { DataCollectionRunSettings : { DataCollectors: { DataCollector :{} } } };
-                    dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
-                }
-                else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
-                    tl.debug("Updating runsettings file from DataCollectors node");
-                    result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
-                    dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
-                }
-                else {
-                    var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
-                    if(!dataCollectorArray) {
-                        tl.debug("Updating runsettings file from DataCollector node");
-                        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
-                        dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
-                    }
-                    else
-                    {
-                        if (!isTestImapctCollectorPresent(dataCollectorArray)) {
-                            tl.debug("Updating runsettings file, adding a DataCollector node");
-                            dataCollectorArray.push({});
-                            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector = dataCollectorArray;
-                            dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
-                        }
-                    }
-                }
-                if(dataCollectorNode) {
-                    tl.debug("Setting attributes for test impact data collector");
-                    dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
-                }
-                var builder = new xml2js.Builder();
-                var runSettingsForTestImpact = builder.buildObject(result);
-                saveToFile(runSettingsForTestImpact, ".runsettings")
-                    .then(function (fileName) {
-                    cleanUp(settingsFile);
-                    defer.resolve(fileName);
-                    return defer.promise;
-                })
-                    .fail(function (err) {
-                    tl.debug(exitErrorMessage);
-                    tl.warning(err);
-                    defer.resolve(settingsFile);
-                });
+                updateRunSettings(result, vsVersion);
+                writeXmlFile(result, settingsFile, runSettingsExt, exitErrorMessage)
+                    .then(function(filename) {
+                        defer.resolve(filename);
+                        return defer.promise;
+                    });
             });
         })
         .fail(function (err) {
@@ -455,6 +454,71 @@ function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: str
             tl.debug(exitErrorMessage);
             defer.resolve(settingsFile);
         });
+    return defer.promise;
+}
+
+function updatTestSettings(result: any, vsVersion: number) {
+    var dataCollectorNode = null;
+    if (!result.TestSettings) {
+        tl.debug("Updating testsettings file from TestSettings node");
+        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {} } } } };
+        result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag};
+        result.TestSettings.$ = {name : TITestSettingsNameTag , id :TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
+        dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
+    }
+    else if (!result.TestSettings.Execution) {
+        tl.debug("Updating testsettings file from Execution node");
+        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {} } } };
+        result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag};
+        dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
+    }
+    else if (!result.TestSettings.Execution[0].AgentRule) {
+        tl.debug("Updating testsettings file from AgentRule node");
+        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {} } } };
+        result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag};
+        dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
+    }
+    else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
+        tl.debug("Updating testsettings file from DataCollectors node");
+        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {} } };
+        dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
+    }
+    else{
+        var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
+        if (!dataCollectorArray) {
+            tl.debug("Updating testsettings file from DataCollector node");
+            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {} };
+            dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
+        }
+        else {
+            if (!isTestImapctCollectorPresent(dataCollectorArray)) {
+                tl.debug("Updating testsettings file, adding a DataCollector node");
+                dataCollectorArray.push({});
+                dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+            }
+        }
+    }
+    if (dataCollectorNode) {
+        tl.debug("Setting attributes for test impact data collector");
+        dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+    }
+}
+
+function writeXmlFile(result:any, settingsFile: string, fileExt: string ,exitErrorMessage: string): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    var builder = new xml2js.Builder();
+    var runSettingsForTestImpact = builder.buildObject(result);
+    saveToFile(runSettingsForTestImpact, fileExt)
+        .then(function (fileName) {
+        cleanUp(settingsFile);
+        defer.resolve(fileName);
+        return defer.promise;
+    })
+        .fail(function (err) {
+        tl.debug(exitErrorMessage);
+        tl.warning(err);
+        defer.resolve(settingsFile);
+    });
     return defer.promise;
 }
 
@@ -476,55 +540,12 @@ function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: st
                     defer.resolve(settingsFile);
                     return defer.promise;
                 }
-                var dataCollectorNode = null;
-                if (!result.TestSettings.Execution) {
-                    tl.debug("Updating testsettings file from Execution node");
-                    result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {} } } } };
-                    dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
-                }
-                else if (!result.TestSettings.Execution[0].AgentRule) {
-                    tl.debug("Updating testsettings file from AgentRule node");
-                    result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {} } } };
-                    dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
-                }
-                else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
-                    tl.debug("Updating testsettings file from DataCollectors node");
-                    result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {} } };
-                    dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
-                }
-                else{
-                    var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
-                    if (!dataCollectorArray) {
-                        tl.debug("Updating testsettings file from DataCollector node");
-                        result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {} };
-                        dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
-                    }
-                    else {
-                        if (!isTestImapctCollectorPresent(dataCollectorArray)) {
-                            tl.debug("Updating testsettings file, adding a DataCollector node");
-                            dataCollectorArray.push({});
-                            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector = dataCollectorArray;
-                            dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
-                        }
-                    }
-                }
-                if (dataCollectorNode) {
-                    tl.debug("Setting attributes for test impact data collector");
-                    dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
-                }
-                var builder = new xml2js.Builder();
-                var runSettingsForTestImpact = builder.buildObject(result);
-                saveToFile(runSettingsForTestImpact, ".testsettings")
-                    .then(function (fileName) {
-                    cleanUp(settingsFile);
-                    defer.resolve(fileName);
-                    return defer.promise;
-                })
-                    .fail(function (err) {
-                    tl.debug(exitErrorMessage);
-                    tl.warning(err);
-                    defer.resolve(settingsFile);
-                });
+                updatTestSettings(result, vsVersion);
+                writeXmlFile(result, settingsFile, testSettingsExt, exitErrorMessage)
+                    .then(function(filename) {
+                        defer.resolve(filename);
+                        return defer.promise;
+                    });
             });
         })
         .fail(function (err) {
@@ -540,11 +561,11 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     var defer = Q.defer<string>();
     tl.debug("No settings file provided or the provided settings file does not exist. Creating run settings file for enabling test impact data collector.");
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
-        '<DataCollector uri="' + getTICollectorURI() + '" ' +
+        '<DataCollector uri="' + TICollectorURI + '" ' +
         'assemblyQualifiedName="' +  getTIAssemblyQualifiedName(vsVersion) + '" ' +
-        'friendlyName="' + getTIFriendlyName() + '"/>' +
+        'friendlyName="' + TIFriendlyName + '"/>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
-    saveToFile(runSettingsForTIA, ".runsettings")
+    saveToFile(runSettingsForTIA, runSettingsExt)
         .then(function (fileName) {
             defer.resolve(fileName);
             return defer.promise;
@@ -561,7 +582,7 @@ function setupRunSettingsFileForTestImpact(vsVersion: number, settingsFile: stri
     var defer = Q.defer<string>();
     var tiaEnabled = tl.getVariable('tia.enabled');
     var exitErrorMessage = "Error occured while setting in test impact data collector. Continuing...";
-    if (tiaEnabled && tiaEnabled == "true") {
+    if (tiaEnabled && tiaEnabled.toLowerCase() == "true") {
         if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
             updateTestSettingsFileForTestImpact(vsVersion,settingsFile, exitErrorMessage)
                 .then(function(updatedFile) {
@@ -603,7 +624,7 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
         if (!settingsFile || settingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(settingsFile)) {
             tl.debug("No settings file provided or the provided settings file does not exist.");
             var runSettingsForParallel = '<?xml version="1.0" encoding="utf-8"?><RunSettings><RunConfiguration><MaxCpuCount>0</MaxCpuCount></RunConfiguration></RunSettings>';
-            saveToFile(runSettingsForParallel, ".runsettings")
+            saveToFile(runSettingsForParallel, runSettingsExt)
                 .then(function(fileName) {
                     defer.resolve(fileName);
                     return defer.promise;
@@ -646,7 +667,7 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
 
                         var builder = new xml2js.Builder();
                         var runSettingsForParallel = builder.buildObject(result);
-                        saveToFile(runSettingsForParallel, ".runsettings")
+                        saveToFile(runSettingsForParallel, runSettingsExt)
                             .then(function(fileName) {
                                 cleanUp(settingsFile);
                                 defer.resolve(fileName);
@@ -704,10 +725,6 @@ function resetRunInParallel() {
     runInParallel = false;
 }
 
-function compareNumbers(a,b) {
-    return a - b;
-}
-
 function locateVSVersion(): Q.Promise<number> {
     var defer = Q.defer<number>();
     var vsVersion = parseFloat(vsTestVersion);
@@ -721,7 +738,7 @@ function locateVSVersion(): Q.Promise<number> {
             var subkeys = entry.data.keys;
             var versions = getFloatsFromStringArray(subkeys);
             if (versions && versions.length > 0) {
-                versions.sort(compareNumbers);
+                versions.sort((a,b) => a-b);
                 defer.resolve(versions[versions.length - 1]);
                 return defer.promise;
             }
@@ -731,8 +748,8 @@ function locateVSVersion(): Q.Promise<number> {
     return defer.promise;
 }
 
-function getFloatsFromStringArray(inputArray) {
-    var outputArray = [];
+function getFloatsFromStringArray(inputArray: string[]): number[] {
+    var outputArray: number[] = [];
     var count;
     if (inputArray) {
         for (count = 0; count < inputArray.length; count++) {
