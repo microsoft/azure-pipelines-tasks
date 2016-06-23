@@ -18,7 +18,7 @@ declare module 'sonarqube-common/sonarqube-common' {
 
     // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
     // sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
-    export function applySonarQubeConnectionParams(toolRunner:ToolRunner, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?):ToolRunner;
+    export function applySonarQubeConnectionParams(toolRunner:ToolRunner): ToolRunner;
 
     // In PR builds, configures the SQ analysis to issues mode
     export function applySonarQubeIssuesModeInPrBuild(toolrunner: ToolRunner);
@@ -28,7 +28,7 @@ declare module 'sonarqube-common/sonarqube-common' {
     export function applySonarQubeAnalysisParams(toolRunner:ToolRunner, projectName?, projectKey?, projectVersion?):ToolRunner;
 
     // Fetches configured SonarQube endpoint details.
-    export function getSonarQubeEndpointFromInput(inputFieldName):SonarQubeEndpoint;
+    export function getSonarQubeEndpoint():SonarQubeEndpoint;
 
     // Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
     export function uploadSonarQubeBuildSummary(sqBuildFolder: string): void;

@@ -5,17 +5,19 @@ import fs = require('fs');
 import xml2js = require('xml2js');
 
 import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
 import {AnalysisResult} from './analysisresult';
 
 export const toolName:string = 'PMD';
 
-// Adds PMD goals, if selected by the user
-export function applyPmdArgs(mvnRun):void {
+// Adds PMD goals, if selected by the user.
+// Returns the modified ToolRunner object.
+export function applyPmdArgs(mvnRun): ToolRunner {
     // This setup will give a [WARNING] during Maven build due to missing cross-reference data when creating HTML output,
     // but generating the data is not related to PMD code analysis. The feature can be disabled with -DlinkXRef=false.
     mvnRun.arg(['pmd:pmd']);
+    return mvnRun;
 }
 
 // Extract analysis results from PMD output files. We expect PMD to write its analysis results files to their default
