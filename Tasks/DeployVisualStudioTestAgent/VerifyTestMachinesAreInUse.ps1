@@ -43,7 +43,7 @@ function Locate-TestVersion()
 		return $null
 	}
 	
-	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()} -ErrorAction SilentlyContinue
+	$keys = Get-ChildItem $regPath | Where-Object {$_.GetSubKeyNames() -contains "testagentcore"}
 	$version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
 
 	if ([string]::IsNullOrWhiteSpace($version))
@@ -58,7 +58,7 @@ function Get-SubKeysInFloatFormat($keys)
 	$targetKeys = @()      # New array
 	foreach ($key in $keys)
 	{
-		$targetKeys += [decimal] $key
+		$targetKeys += [decimal] $key.PSChildName
 	}
 
 	return $targetKeys
