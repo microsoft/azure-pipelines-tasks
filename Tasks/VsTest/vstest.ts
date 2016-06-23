@@ -42,9 +42,9 @@ try {
 
     if (testAssemblyFiles && testAssemblyFiles.size != 0) {
         var workingDirectory = path.join(sourcesDirectory, "..");
-        getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function(resultsDirectory) {
+        getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
             invokeVSTest(resultsDirectory)
-                .then(function(code) {
+                .then(function (code) {
                     try {
                         publishTestResults(resultsDirectory);
                         tl.setResult(code, tl.loc('VstestReturnCode', code));
@@ -54,7 +54,7 @@ try {
                         throw error;
                     }
                 })
-                .fail(function(err) {
+                .fail(function (err) {
                     tl._writeLine("##vso[task.logissue type=error;code=" + err + ";TaskName=VSTest]");
                     throw err;
                 });
@@ -77,7 +77,7 @@ function getTestAssemblies(): Set<string> {
         var excludeTestAssemblies = [];
         var allFiles = tl.find(sourcesDirectory);
         var testAssemblyFilters = testAssembly.split(';');
-        testAssemblyFilters.forEach(function(testAssemblyFilter) {
+        testAssemblyFilters.forEach(function (testAssemblyFilter) {
             if (testAssemblyFilter.startsWith("-:")) {
                 if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
                     excludeTestAssemblies = excludeTestAssemblies.concat(getFilteredFiles(testAssemblyFilter.substr(2), allFiles));
@@ -93,12 +93,12 @@ function getTestAssemblies(): Set<string> {
                 testAssemblyFiles.push(testAssemblyFilter);
             }
         });
-        testAssemblyFiles = testAssemblyFiles.filter(x=> excludeTestAssemblies.indexOf(x) < 0);
+        testAssemblyFiles = testAssemblyFiles.filter(x => excludeTestAssemblies.indexOf(x) < 0);
     }
     else {
         tl.debug('No Pattern found in solution parameter.');
         var assemblies = testAssembly.split(';');
-        assemblies.forEach(function(assembly) {
+        assemblies.forEach(function (assembly) {
             testAssemblyFiles.push(assembly);
         });
     }
@@ -111,96 +111,96 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         vsTestVersion = null;
     }
     overrideTestRunParametersIfRequired(runSettingsFile)
-        .then(function(overriddenSettingsFile) {
+        .then(function (overriddenSettingsFile) {
             locateVSVersion()
-                .then(function(vsVersion) {
-                    setupRunSettingsFileForTestImpact(vsVersion,overriddenSettingsFile)
-                        .then(function(runSettingswithTestImpact) {
+                .then(function (vsVersion) {
+                    setupRunSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
+                        .then(function (runSettingswithTestImpact) {
                             setRunInParallellIfApplicable(vsVersion);
                             setupRunSettingsFileForParallel(runInParallel, runSettingswithTestImpact)
-                            .then(function(parallelRunSettingsFile) {
-                                var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
-                                if (!vsCommon) {
-                                    tl.error(tl.loc('VstestNotFound', vsVersion));
-                                    defer.resolve(1);
-                                    return defer.promise;
-                                }
-                                var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
-                                var vstest = tl.createToolRunner(vstestLocation);
+                                .then(function (parallelRunSettingsFile) {
+                                    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
+                                    if (!vsCommon) {
+                                        tl.error(tl.loc('VstestNotFound', vsVersion));
+                                        defer.resolve(1);
+                                        return defer.promise;
+                                    }
+                                    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
+                                    var vstest = tl.createToolRunner(vstestLocation);
 
-                                testAssemblyFiles.forEach(function(testAssembly) {
-                                    var testAssemblyPath = testAssembly;
-                                    //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
-                                    if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
-                                        var expandedPath = path.join(sourcesDirectory, testAssembly);
-                                        if (pathExistsAsFile(expandedPath)) {
-                                            testAssemblyPath = expandedPath;
+                                    testAssemblyFiles.forEach(function (testAssembly) {
+                                        var testAssemblyPath = testAssembly;
+                                        //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
+                                        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
+                                            var expandedPath = path.join(sourcesDirectory, testAssembly);
+                                            if (pathExistsAsFile(expandedPath)) {
+                                                testAssemblyPath = expandedPath;
+                                            }
+                                        }
+                                        vstest.arg(testAssemblyPath);
+                                    });
+
+                                    if (testFiltercriteria) {
+                                        vstest.arg("/TestCaseFilter:" + testFiltercriteria);
+                                    }
+
+                                    if (parallelRunSettingsFile && pathExistsAsFile(parallelRunSettingsFile)) {
+                                        vstest.arg("/Settings:" + parallelRunSettingsFile);
+                                    }
+
+                                    if (codeCoverageEnabled) {
+                                        vstest.arg("/EnableCodeCoverage");
+                                    }
+
+                                    if (otherConsoleOptions) {
+                                        vstest.arg(otherConsoleOptions);
+                                    }
+
+                                    vstest.arg("/logger:trx");
+
+                                    if (pathtoCustomTestAdapters) {
+                                        if (pathExistsAsDirectory(pathtoCustomTestAdapters)) {
+                                            vstest.arg("/TestAdapterPath:\"" + pathtoCustomTestAdapters + "\"");
+                                        }
+                                        else {
+                                            vstest.arg("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
                                         }
                                     }
-                                    vstest.arg(testAssemblyPath);
+                                    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
+                                        vstest.arg("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+                                    }
+
+                                    tl.rmRF(testResultsDirectory, true);
+                                    tl.mkdirP(testResultsDirectory);
+                                    tl.cd(workingDirectory);
+                                    vstest.exec()
+                                        .then(function (code) {
+                                            cleanUp(parallelRunSettingsFile);
+                                            defer.resolve(code);
+                                        })
+                                        .fail(function (err) {
+                                            cleanUp(parallelRunSettingsFile);
+                                            tl.warning(tl.loc('VstestFailed'));
+                                            tl.error(err);
+                                            defer.resolve(1);
+                                        });
+                                })
+                                .fail(function (err) {
+                                    tl.error(err);
+                                    defer.resolve(1);
                                 });
-
-                                if (testFiltercriteria) {
-                                    vstest.arg("/TestCaseFilter:" + testFiltercriteria);
-                                }
-
-                                if (parallelRunSettingsFile && pathExistsAsFile(parallelRunSettingsFile)) {
-                                    vstest.arg("/Settings:" + parallelRunSettingsFile);
-                                }
-
-                                if (codeCoverageEnabled) {
-                                    vstest.arg("/EnableCodeCoverage");
-                                }
-
-                                if (otherConsoleOptions) {
-                                    vstest.arg(otherConsoleOptions);
-                                }
-
-                                vstest.arg("/logger:trx");
-
-                                if (pathtoCustomTestAdapters) {
-                                    if (pathExistsAsDirectory(pathtoCustomTestAdapters)) {
-                                        vstest.arg("/TestAdapterPath:\"" + pathtoCustomTestAdapters + "\"");
-                                    }
-                                    else {
-                                        vstest.arg("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
-                                    }
-                                }
-                                else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
-                                    vstest.arg("/TestAdapterPath:\"" + sourcesDirectory + "\"");
-                                }
-
-                                tl.rmRF(testResultsDirectory, true);
-                                tl.mkdirP(testResultsDirectory);
-                                tl.cd(workingDirectory);
-                                vstest.exec()
-                                    .then(function(code) {
-                                        cleanUp(parallelRunSettingsFile);
-                                        defer.resolve(code);
-                                    })
-                                    .fail(function(err) {
-                                        cleanUp(parallelRunSettingsFile);
-                                        tl.warning(tl.loc('VstestFailed'));
-                                        tl.error(err);
-                                        defer.resolve(1);
-                                    });
-                            })
-                            .fail(function(err) {
-                                tl.error(err);
-                                defer.resolve(1);
-                            });
                         })
-                        .fail(function(err) {
+                        .fail(function (err) {
                             tl.error(err);
                             defer.resolve(1);
                         });
                 })
-                .fail(function(err) {
+                .fail(function (err) {
                     tl.error(err);
                     defer.resolve(1);
                 });
         })
-        .fail(function(err) {
+        .fail(function (err) {
             tl.error(err);
             defer.resolve(1);
         });
@@ -255,7 +255,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
     var overrideParameters = {};
 
     var parameterStrings = overrideTestrunParameters.split(";");
-    parameterStrings.forEach(function(parameterString) {
+    parameterStrings.forEach(function (parameterString) {
         var pair = parameterString.split("=", 2);
         if (pair.length == 2) {
             var key = pair[0];
@@ -267,9 +267,9 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
     });
 
     readFileContents(runSettingsFile, "utf-8")
-        .then(function(xmlContents) {
+        .then(function (xmlContents) {
             var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function(err, result) {
+            parser.parseString(xmlContents, function (err, result) {
                 if (err) {
                     tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
                     tl.debug("Error occured while overriding test run parameters. Continuing...");
@@ -280,7 +280,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                 if (result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
                     result.RunSettings.TestRunParameters[0].Parameter) {
                     var parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
-                    parametersArray.forEach(function(parameter) {
+                    parametersArray.forEach(function (parameter) {
                         var key = parameter.$.name;
                         if (overrideParameters[key]) {
                             parameter.$.value = overrideParameters[key];
@@ -290,10 +290,10 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                     var builder = new xml2js.Builder();
                     var overridedRunSettings = builder.buildObject(result);
                     saveToFile(overridedRunSettings, runSettingsExt)
-                        .then(function(fileName) {
+                        .then(function (fileName) {
                             defer.resolve(fileName);
                         })
-                        .fail(function(err) {
+                        .fail(function (err) {
                             tl.debug("Error occured while overriding test run parameters. Continuing...");
                             tl.warning(err);
                             defer.resolve(settingsFile);
@@ -305,7 +305,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                 }
             });
         })
-        .fail(function(err) {
+        .fail(function (err) {
             tl.debug("Error occured while overriding test run parameters. Continuing...");
             tl.warning(err);
             defer.resolve(settingsFile);
@@ -339,9 +339,9 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
     }
 
     readFileContents(runSettingsFile, "utf-8")
-        .then(function(xmlContents) {
+        .then(function (xmlContents) {
             var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function(err, result) {
+            parser.parseString(xmlContents, function (err, result) {
                 if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
                     result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
                     defer.resolve(result.RunSettings.RunConfiguration[0].ResultsDirectory[0]);
@@ -351,7 +351,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
                 }
             });
         })
-        .fail(function(err) {
+        .fail(function (err) {
             tl.debug("Error occured while reading test result directory from run settings. Continuing...")
             tl.warning(err);
             defer.resolve(defaultResultsDirectory);
@@ -360,12 +360,13 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 }
 
 
-function getTIAssemblyQualifiedName(vsVersion : number): String {
+function getTIAssemblyQualifiedName(vsVersion: number): String {
     return "Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Version=" + vsVersion + ".0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 }
 
 function getTestImpactAttributes(vsVersion: number) {
-    return { uri: TICollectorURI,
+    return {
+        uri: TICollectorURI,
         assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
         friendlyName: TIFriendlyName
     };
@@ -374,7 +375,7 @@ function getTestImpactAttributes(vsVersion: number) {
 function isTestImapctCollectorPresent(dataCollectorArray): Boolean {
     var found = false;
     var tiaFriendlyName = TIFriendlyName.toUpperCase();
-    for(var node of dataCollectorArray) {
+    for (var node of dataCollectorArray) {
         if (node.$.friendlyName && node.$.friendlyName.toUpperCase() === tiaFriendlyName) {
             tl.debug("Test impact data collector already present, will not add the node.");
             found = true;
@@ -388,28 +389,27 @@ function updateRunSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings : { DataCollectors: { DataCollector :{} } } };
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: {} } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings) {
         tl.debug("Updating runsettings file from DataCollectionSettings node");
-        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector :{} } };
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: {} } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
         tl.debug("Updating runsettings file from DataCollectors node");
-        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {} } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
-        if(!dataCollectorArray) {
+        if (!dataCollectorArray) {
             tl.debug("Updating runsettings file from DataCollector node");
-            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors : { DataCollector:{} } };
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {} } };
             dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
         }
-        else
-        {
+        else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating runsettings file, adding a DataCollector node");
                 dataCollectorArray.push({});
@@ -417,13 +417,13 @@ function updateRunSettings(result: any, vsVersion: number) {
             }
         }
     }
-    if(dataCollectorNode) {
+    if (dataCollectorNode) {
         tl.debug("Setting attributes for test impact data collector");
         dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
     }
 }
 
-function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
+function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     tl.debug("Adding test impact data collector element to runsettings file provided.");
     readFileContents(settingsFile, "utf-8")
@@ -443,7 +443,7 @@ function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: str
                 }
                 updateRunSettings(result, vsVersion);
                 writeXmlFile(result, settingsFile, runSettingsExt, exitErrorMessage)
-                    .then(function(filename) {
+                    .then(function (filename) {
                         defer.resolve(filename);
                         return defer.promise;
                     });
@@ -462,20 +462,20 @@ function updatTestSettings(result: any, vsVersion: number) {
     if (!result.TestSettings) {
         tl.debug("Updating testsettings file from TestSettings node");
         result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {} } } } };
-        result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag};
-        result.TestSettings.$ = {name : TITestSettingsNameTag , id :TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
+        result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
+        result.TestSettings.$ = { name: TITestSettingsNameTag, id: TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution) {
         tl.debug("Updating testsettings file from Execution node");
         result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {} } } };
-        result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag};
+        result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug("Updating testsettings file from AgentRule node");
         result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {} } } };
-        result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag};
+        result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
@@ -483,7 +483,7 @@ function updatTestSettings(result: any, vsVersion: number) {
         result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {} } };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
     }
-    else{
+    else {
         var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating testsettings file from DataCollector node");
@@ -504,25 +504,25 @@ function updatTestSettings(result: any, vsVersion: number) {
     }
 }
 
-function writeXmlFile(result:any, settingsFile: string, fileExt: string ,exitErrorMessage: string): Q.Promise<string> {
+function writeXmlFile(result: any, settingsFile: string, fileExt: string, exitErrorMessage: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     var builder = new xml2js.Builder();
     var runSettingsForTestImpact = builder.buildObject(result);
     saveToFile(runSettingsForTestImpact, fileExt)
         .then(function (fileName) {
-        cleanUp(settingsFile);
-        defer.resolve(fileName);
-        return defer.promise;
-    })
+            cleanUp(settingsFile);
+            defer.resolve(fileName);
+            return defer.promise;
+        })
         .fail(function (err) {
-        tl.debug(exitErrorMessage);
-        tl.warning(err);
-        defer.resolve(settingsFile);
-    });
+            tl.debug(exitErrorMessage);
+            tl.warning(err);
+            defer.resolve(settingsFile);
+        });
     return defer.promise;
 }
 
-function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage:string): Q.Promise<string> {
+function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     tl.debug("Adding test impact data collector element to testsettings file provided.");
     readFileContents(settingsFile, "utf-8")
@@ -542,7 +542,7 @@ function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: st
                 }
                 updatTestSettings(result, vsVersion);
                 writeXmlFile(result, settingsFile, testSettingsExt, exitErrorMessage)
-                    .then(function(filename) {
+                    .then(function (filename) {
                         defer.resolve(filename);
                         return defer.promise;
                     });
@@ -562,7 +562,7 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     tl.debug("No settings file provided or the provided settings file does not exist. Creating run settings file for enabling test impact data collector.");
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
         '<DataCollector uri="' + TICollectorURI + '" ' +
-        'assemblyQualifiedName="' +  getTIAssemblyQualifiedName(vsVersion) + '" ' +
+        'assemblyQualifiedName="' + getTIAssemblyQualifiedName(vsVersion) + '" ' +
         'friendlyName="' + TIFriendlyName + '"/>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
     saveToFile(runSettingsForTIA, runSettingsExt)
@@ -584,22 +584,22 @@ function setupRunSettingsFileForTestImpact(vsVersion: number, settingsFile: stri
     var exitErrorMessage = "Error occured while setting in test impact data collector. Continuing...";
     if (tiaEnabled && tiaEnabled.toLowerCase() == "true") {
         if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
-            updateTestSettingsFileForTestImpact(vsVersion,settingsFile, exitErrorMessage)
-                .then(function(updatedFile) {
+            updateTestSettingsFileForTestImpact(vsVersion, settingsFile, exitErrorMessage)
+                .then(function (updatedFile) {
                     defer.resolve(updatedFile);
                     return defer.promise;
                 });
         }
         else if (!settingsFile || settingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(settingsFile)) {
-            createRunSettingsForTestImpact(vsVersion,settingsFile, exitErrorMessage)
-                .then(function(updatedFile) {
+            createRunSettingsForTestImpact(vsVersion, settingsFile, exitErrorMessage)
+                .then(function (updatedFile) {
                     defer.resolve(updatedFile);
                     return defer.promise;
                 });
         }
         else {
-            updateRunSettingsFileForTestImpact(vsVersion,settingsFile, exitErrorMessage)
-                .then(function(updatedFile){
+            updateRunSettingsFileForTestImpact(vsVersion, settingsFile, exitErrorMessage)
+                .then(function (updatedFile) {
                     defer.resolve(updatedFile);
                     return defer.promise;
                 });
@@ -625,11 +625,11 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
             tl.debug("No settings file provided or the provided settings file does not exist.");
             var runSettingsForParallel = '<?xml version="1.0" encoding="utf-8"?><RunSettings><RunConfiguration><MaxCpuCount>0</MaxCpuCount></RunConfiguration></RunSettings>';
             saveToFile(runSettingsForParallel, runSettingsExt)
-                .then(function(fileName) {
+                .then(function (fileName) {
                     defer.resolve(fileName);
                     return defer.promise;
                 })
-                .fail(function(err) {
+                .fail(function (err) {
                     tl.debug(exitErrorMessage);
                     tl.warning(err);
                     defer.resolve(settingsFile);
@@ -638,9 +638,9 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
         else {
             tl.debug("Adding maxcpucount element to runsettings file provided.");
             readFileContents(settingsFile, "utf-8")
-                .then(function(xmlContents) {
+                .then(function (xmlContents) {
                     var parser = new xml2js.Parser();
-                    parser.parseString(xmlContents, function(err, result) {
+                    parser.parseString(xmlContents, function (err, result) {
                         if (err) {
                             tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
                             tl.debug(exitErrorMessage);
@@ -668,19 +668,19 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
                         var builder = new xml2js.Builder();
                         var runSettingsForParallel = builder.buildObject(result);
                         saveToFile(runSettingsForParallel, runSettingsExt)
-                            .then(function(fileName) {
+                            .then(function (fileName) {
                                 cleanUp(settingsFile);
                                 defer.resolve(fileName);
                                 return defer.promise;
                             })
-                            .fail(function(err) {
+                            .fail(function (err) {
                                 tl.debug(exitErrorMessage);
                                 tl.warning(err);
                                 defer.resolve(settingsFile);
                             });
                     });
                 })
-                .fail(function(err) {
+                .fail(function (err) {
                     tl.warning(err);
                     tl.debug(exitErrorMessage);
                     defer.resolve(settingsFile);
@@ -694,10 +694,10 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
     return defer.promise;
 }
 
-function saveToFile(fileContents: string, extension:string): Q.Promise<string> {
+function saveToFile(fileContents: string, extension: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     var tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
-    fs.writeFile(tempFile, fileContents, function(err) {
+    fs.writeFile(tempFile, fileContents, function (err) {
         if (err) {
             defer.reject(err);
         }
@@ -733,12 +733,12 @@ function locateVSVersion(): Q.Promise<number> {
         return defer.promise;
     }
     var regPath = "HKLM\\SOFTWARE\\Microsoft\\VisualStudio";
-    regedit.list(regPath).on('data', function(entry) {
+    regedit.list(regPath).on('data', function (entry) {
         if (entry && entry.data && entry.data.keys) {
             var subkeys = entry.data.keys;
             var versions = getFloatsFromStringArray(subkeys);
             if (versions && versions.length > 0) {
-                versions.sort((a,b) => a-b);
+                versions.sort((a, b) => a - b);
                 defer.resolve(versions[versions.length - 1]);
                 return defer.promise;
             }
@@ -764,7 +764,7 @@ function getFloatsFromStringArray(inputArray: string[]): number[] {
 
 function setRegistryKeyForParallelExecution(vsVersion: number) {
     var regKey = "HKCU\\SOFTWARE\\Microsoft\\VisualStudio\\" + vsVersion.toFixed(1) + "_Config\\FeatureFlags\\TestingTools\\UnitTesting\\Taef";
-    regedit.createKey(regKey, function(err) {
+    regedit.createKey(regKey, function (err) {
         if (!err) {
             var values = {
                 [regKey]: {
@@ -774,7 +774,7 @@ function setRegistryKeyForParallelExecution(vsVersion: number) {
                     }
                 }
             };
-            regedit.putValue(values, function(err) {
+            regedit.putValue(values, function (err) {
                 if (err) {
                     tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
                 }
