@@ -1,0 +1,51 @@
+{
+  "id": "97EF6E59-B8CC-48AA-9937-1A01E35E7584",
+  "name": "ServiceFabricUpdateAppVersions",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "applicationPackagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.applicationPackagePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.applicationPackagePath"
+    },
+    {
+      "name": "versionSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSuffix",
+      "defaultValue": ".$(Build.BuildNumber)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.versionSuffix"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "version.ps1"
+    }
+  },
+  "messages": {
+    "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
+    "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
+    "SearchingForApplicationPackage": "ms-resource:loc.messages.SearchingForApplicationPackage",
+    "FoundApplicationPackage": "ms-resource:loc.messages.FoundApplicationPackage",
+    "UpdatedApplicationTypeVersion": "ms-resource:loc.messages.UpdatedApplicationTypeVersion",
+    "UpdatedServiceVersion": "ms-resource:loc.messages.UpdatedServiceVersion"
+  }
+}
