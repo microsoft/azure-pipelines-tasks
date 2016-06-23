@@ -187,8 +187,8 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         });
                 })
                 .fail(function(err) {
-                        tl.error(err);
-                        defer.resolve(1);
+                    tl.error(err);
+                    defer.resolve(1);
                 });
         })
         .fail(function(err) {
