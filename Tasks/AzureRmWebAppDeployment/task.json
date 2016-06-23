@@ -1,7 +1,7 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRMWebAppDeployment",
-    "friendlyName": "AzureRM Web App Deployment ( Preview )",
+    "friendlyName": "AzureRM Web App Deployment",
     "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
