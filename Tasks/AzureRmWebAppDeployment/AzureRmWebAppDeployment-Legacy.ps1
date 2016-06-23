@@ -33,17 +33,14 @@ param
     [String] [Parameter(Mandatory = $false)]
     $VirtualApplication,
 
-	[String] [Parameter(Mandatory = $false)]
-	[String] $AdditionalArguments,
+    [String] [Parameter(Mandatory = $false)]
+    [String] $AdditionalArguments,
 
     [String] [Parameter(Mandatory = $false)]
     [string]$WebAppUri,
 
     [String] [Parameter(Mandatory = $false)]
-	[String] $XmlTransformation,
-
-    [String] [Parameter(Mandatory = $true)]
-    [string]$XdtFilesRoot
+    [String] $XmlTransformation
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
@@ -62,7 +59,6 @@ Write-Verbose "VirtualApplication = $VirtualApplication"
 Write-Verbose "AdditionalArguments = $AdditionalArguments"
 Write-Verbose "WebAppUri = $WebAppUri"
 Write-Verbose "XmlTransformation = $XmlTransformation"
-Write-Verbose "XdtFilesRoot = $XdtFilesRoot"
 
 $WebAppUri = $WebAppUri.Trim()
 $Package = $Package.Trim('"').Trim()
@@ -102,6 +98,8 @@ $packageFilePath = Get-SingleFilePath -file $Package
 
 if($XmlTransformation -eq "true")
 {
+    # Get xdtFilesRoot
+    $XdtFilesRoot = FindXdtFilesRoot
     # Unzip the source package
     $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
     # Search for all the web.config files

@@ -19,7 +19,6 @@ try{
     $WebAppUri = Get-VstsInput -Name WebAppUri
     $SetParametersFile = Get-VstsInput -Name SetParametersFile
     $XmlTransformation = Get-VstsInput -Name XmlTransformation
-    $XdtFilesRoot = Get-VstsInput -Name XdtFilesRoot
 
     # Initialize Azure.
 
@@ -44,7 +43,7 @@ try{
     . $PSScriptRoot/Utility.ps1
     . $PSScriptRoot/FindInstalledMSDeploy.ps1
     . $PSScriptRoot/CompressionUtility.ps1
-	. $PSScriptRoot/XdtTransformation.ps1
+    . $PSScriptRoot/XdtTransformation.ps1
 
     # Importing required version of azure cmdlets according to azureps installed on machine
     $azureUtility = Get-AzureUtility
@@ -62,6 +61,8 @@ try{
 
     if($XmlTransformation -eq "true")
     {
+        # Get xdtFilesRoot
+        $XdtFilesRoot = FindXdtFilesRoot
         # Unzip the source package
         $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
         # Search for all the web.config files

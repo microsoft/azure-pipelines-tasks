@@ -186,3 +186,8 @@ function Run-MsDeployCommand
     Run-Command -command $msDeployCmd
     Write-Host (Get-VstsLocString -Key msdeploycommandransuccessfully )
 }
+
+function FindXdtFilesRoot
+{
+    return ""
+}
