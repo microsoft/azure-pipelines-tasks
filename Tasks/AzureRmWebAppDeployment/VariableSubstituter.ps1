@@ -12,7 +12,7 @@
 
     # Defined supported MIME type
     $ApplicationXmlMimeType = "application/xml"
-    $TextXmlMimeType = "application/xml"
+    $TextXmlMimeType = "text/xml"
     $ConfigExtension = ".config"
 
     # Find all configuration files
