@@ -154,7 +154,7 @@
             "required":true,
             "helpMarkDown": "Root folder for searching for \\*.Release.config and \\*.&#060;EnvironmentName&#062;.config recursively."
         },
-		{
+        {
             "name": "VariableSubstitution",
             "type": "boolean",
             "label": "Variable Substitution",
