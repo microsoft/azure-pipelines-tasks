@@ -19,7 +19,7 @@ try{
     $WebAppUri = Get-VstsInput -Name WebAppUri
     $SetParametersFile = Get-VstsInput -Name SetParametersFile
     $XmlTransformation = Get-VstsInput -Name XmlTransformation
-    $XdtFilesRoot = Get-VstsInput -Name XdtFilesRoot
+
     $VariableSubstitution = Get-VstsInput -Name VariableSubstitution
 
     # Initialize Azure.
@@ -64,6 +64,8 @@ try{
 
     if( $XmlTransformation -eq "true" -or $VariableSubstitution -eq "true")
     {
+        # Get xdtFilesRoot
+        $XdtFilesRoot = FindXdtFilesRoot -msDeployPkg $packageFilePath
         # Unzip the source package
         $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
         
@@ -79,6 +81,17 @@ try{
                     FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -xdtFilesRoot $XdtFilesRoot
                 }
             }
+			#Search for all *.exe.config
+        $exeConfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\*.exe.config" -IncludeFiles
+        # Foreach *.exe.config file apply ExeName.Release.exe.Config and ExeName.Environment.exe.config
+        foreach ($exeCfgFile in $exeConfigFiles) {
+            $exeName = $exeCfgFile.Substring(0, $exeCfgFile.IndexOf('.'))
+            FindAndApplyTransformation -baseFile $configFile -tranformFile "$exeName.release.exe.config" -xdtFilesRoot $XdtFilesRoot
+            if($env:RELEASE_ENVIRONMENTNAME.config)
+            {
+                FindAndApplyTransformation -baseFile $configFile -tranformFile "$exeName.$env:RELEASE_ENVIRONMENTNAME.exe.config" -xdtFilesRoot $XdtFilesRoot
+            }
+        }
          }
          if( $VariableSubstitution -eq "true" )
          {

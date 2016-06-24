@@ -222,6 +222,7 @@
     "filePath0": "ms-resource:loc.messages.filePath0",
     "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0",
     "XmlTranform0failedforfile1": "ms-resource:loc.messages.XmlTranform0failedforfile1",
-    "Noormorethanonetranformationfile0found": "ms-resource:loc.messages.Noormorethanonetranformationfile0found"
+    "Noormorethanonetranformationfile0found": "ms-resource:loc.messages.Noormorethanonetranformationfile0found",
+    "XmlTransformationsAreNotSupportedForUncPackage0Input": "ms-resource:loc.messages.XmlTransformationsAreNotSupportedForUncPackage0Input"
   }
 }

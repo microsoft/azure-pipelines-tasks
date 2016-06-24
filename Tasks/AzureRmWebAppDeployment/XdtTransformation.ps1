@@ -14,9 +14,13 @@ function FindAndApplyTransformation
 
     $tranformFiles = Find-VstsFiles -LegacyPattern "$xdtFilesRoot\**\$tranformFile" -IncludeFiles
 
-    if($tranformFiles.Count -ne 1)
+    if($tranformFiles.Count -eq 0)
     {
-        Throw (Get-VstsLocString -Key "Noormorethanonetranformationfile0found" -ArgumentList $tranformFile)
+        Write-Warning (Get-VstsLocString -Key "Notranformationfile0found" -ArgumentList $tranformFile)
+    }
+    elseif ($tranformFiles.Count -gt 1)
+    {
+        Throw (Get-VstsLocString -Key "Morethanonetranformationfile0found" -ArgumentList $tranformFile)
     }
 
     $baseDocument = New-Object -TypeName Microsoft.Web.XmlTransform.XmlTransformableDocument
