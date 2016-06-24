@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Jenkins Queue Job",
-  "loc.helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server",
+  "loc.helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server.  [More Information](http://go.microsoft.com/fwlink/?LinkId=816956).",
   "loc.description": "Queue a job on a Jenkins server",
   "loc.instanceNameFormat": "Queue Jenkins Job: $(jobName)",
   "loc.input.label.serverEndpoint": "Jenkins service endpoint",

@@ -3,7 +3,7 @@
     "name": "jenkinsQueueJobTask",
     "friendlyName": "Jenkins Queue Job",
     "description": "Queue a job on a Jenkins server",
-    "helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server",
+    "helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server.  [More Information](http://go.microsoft.com/fwlink/?LinkId=816956).",
     "category": "Build",
     "visibility": [
         "Build",
