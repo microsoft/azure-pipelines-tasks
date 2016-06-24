@@ -93,6 +93,11 @@ function  Update-XMLNodeAttributes
     foreach( $childNode in $node.ChildNodes )
     {   
 
+        if( $childNode.LocalName -eq "#comment" )
+        {
+           continue
+        }
+
         # Checks if any of attribute is defined as user variable in task context
         $childNodeAttributes = $childNode.Attributes
 
