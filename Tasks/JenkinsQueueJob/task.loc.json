@@ -1,0 +1,52 @@
+{
+  "id": "c24b86d4-4256-4925-9a29-246f81aa64a7",
+  "name": "jenkinsQueueJobTask",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft",
+  "demands": [],
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "serverEndpoint",
+      "type": "connectedService:Jenkins",
+      "label": "ms-resource:loc.input.label.serverEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint"
+    },
+    {
+      "name": "jobName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jobName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.jobName"
+    },
+    {
+      "name": "captureConsole",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.captureConsole",
+      "defaultValue": true,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.captureConsole"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "jenkinsqueuejobtask.js",
+      "argumentFormat": ""
+    }
+  }
+}
