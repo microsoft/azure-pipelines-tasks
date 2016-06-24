@@ -25,7 +25,7 @@ declare module 'sonarqube-common/sonarqube-common' {
 
     // Applies optional parameters for manually specifying the project name, key and version to SonarQube.
     // This will override any user settings.
-    export function applySonarQubeAnalysisParams(toolRunner:ToolRunner, projectName?, projectKey?, projectVersion?):ToolRunner;
+    export function applySonarQubeAnalysisParams(toolRunner:ToolRunner):ToolRunner;
 
     // Fetches configured SonarQube endpoint details.
     export function getSonarQubeEndpoint():SonarQubeEndpoint;

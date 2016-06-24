@@ -23,12 +23,12 @@ export function isSonarQubeAnalysisEnabled(): boolean {
 }
 
 // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
-export function applySonarQubeConnectionParams(mvnRun: ToolRunner): ToolRunner {
+export function applySonarQubeConnectionParams(toolRunner: ToolRunner): ToolRunner {
 
     var sqEndpoint: SonarQubeEndpoint = getSonarQubeEndpoint();
-    mvnRun.arg('-Dsonar.host.url=' + sqEndpoint.Url);
-    mvnRun.arg('-Dsonar.login=' + sqEndpoint.Username);
-    mvnRun.arg('-Dsonar.password=' + sqEndpoint.Password);
+    toolRunner.arg('-Dsonar.host.url=' + sqEndpoint.Url);
+    toolRunner.arg('-Dsonar.login=' + sqEndpoint.Username);
+    toolRunner.arg('-Dsonar.password=' + sqEndpoint.Password);
 
     // sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
     var sqDbUrl = tl.getInput('sqDbUrl', false);
@@ -36,29 +36,33 @@ export function applySonarQubeConnectionParams(mvnRun: ToolRunner): ToolRunner {
     var sqDbPassword = tl.getInput('sqDbPassword', false);
 
     if (sqDbUrl) {
-        mvnRun.arg('-Dsonar.jdbc.url=' + sqDbUrl);
+        toolRunner.arg('-Dsonar.jdbc.url=' + sqDbUrl);
     }
     if (sqDbUsername) {
-        mvnRun.arg('-Dsonar.jdbc.username=' + sqDbUsername);
+        toolRunner.arg('-Dsonar.jdbc.username=' + sqDbUsername);
     }
     if (sqDbPassword) {
-        mvnRun.arg('-Dsonar.jdbc.password=' + sqDbPassword);
+        toolRunner.arg('-Dsonar.jdbc.password=' + sqDbPassword);
     }
 
-    return mvnRun;
+    return toolRunner;
 }
 
 // Applies parameters for manually specifying the project name, key and version to SonarQube.
 // This will override any user settings.
-export function applySonarQubeAnalysisParams(toolRunner: ToolRunner, sqProjectName?, sqProjectKey?, sqProjectVersion?): ToolRunner {
-    if (sqProjectName) {
-        toolRunner.arg('-Dsonar.projectName=' + sqProjectName);
+export function applySonarQubeAnalysisParams(toolRunner: ToolRunner): ToolRunner {
+    var projectName:string = tl.getInput('sqProjectName', false);
+    var projectKey:string = tl.getInput('sqProjectKey', false);
+    var projectVersion:string = tl.getInput('sqProjectVersion', false);
+
+    if (projectName) {
+        toolRunner.arg('-Dsonar.projectName=' + projectName);
     }
-    if (sqProjectKey) {
-        toolRunner.arg('-Dsonar.projectKey=' + sqProjectKey);
+    if (projectKey) {
+        toolRunner.arg('-Dsonar.projectKey=' + projectKey);
     }
-    if (sqProjectVersion) {
-        toolRunner.arg('-Dsonar.projectVersion=' + sqProjectVersion);
+    if (projectVersion) {
+        toolRunner.arg('-Dsonar.projectVersion=' + projectVersion);
     }
 
     return toolRunner;

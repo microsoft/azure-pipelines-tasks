@@ -121,11 +121,10 @@ else {
 // 1. Check that Maven exists by executing it to retrieve its version.
 // 2. Apply any goals for static code analysis tools selected by the user.
 // 3. Run Maven. Compilation or test errors will cause this to fail.
-// 4. Always try to run the SonarQube analysis if it is enabled.
 //    In case the build has failed, the analysis will still succeed but the report will have less data. 
-// 5. Attempt to collate and upload static code analysis build summaries and artifacts.
-// 6. Always publish test results even if tests fail, causing this task to fail.
-// 7. If #2, #4 or #5 above failed, exit with an error code to mark the entire step as failed.
+// 4. Attempt to collate and upload static code analysis build summaries and artifacts.
+// 5. Always publish test results even if tests fail, causing this task to fail.
+// 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
 
 var userRunFailed: boolean = false;
 var codeAnalysisFailed: boolean = false;
@@ -152,7 +151,7 @@ mvnGetVersion.exec()
         }
         mvnRun.arg(mavenGoals);
 
-        // Add goals for static code analysis tools
+        // 2. Apply any goals for static code analysis tools selected by the user.
         mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
         mvnRun = codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
 
@@ -161,15 +160,15 @@ mvnGetVersion.exec()
             processMavenOutput(data);
         });
 
-        // 2. Run Maven with the user goals. Compilation or test errors will cause this to fail.
+        // 3. Run Maven. Compilation or test errors will cause this to fail.
         return mvnRun.exec(); // Run Maven with the user specified goals
     })
     .fail(function (err) {
         console.error(err.message);
         userRunFailed = true; // Record the error and continue
     })
-    .then(function (code) { // Upload build summaries for enabled code analysis tools (SonarQube, PMD, etc.)
-        // Pick up files from the Java code analysis tools
+    .then(function (code) {
+        // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
         // The files won't be created if the build failed, and the user should probably fix their build first
         if (userRunFailed) {
             console.error('Could not retrieve code analysis results - Maven run failed.');
@@ -189,13 +188,13 @@ mvnGetVersion.exec()
         codeAnalysisFailed = true;
     })
     .then(function () {
-        // 3. Always publish test results even if tests fail, causing this task to fail.
+        // 5. Always publish test results even if tests fail, causing this task to fail.
         if (publishJUnitResults == 'true') {
             publishJUnitTestResults(testResultsFiles);
         }
         publishCodeCoverage(isCodeCoverageOpted);
 
-        // Set overall success or failure
+        // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
         if (userRunFailed || codeAnalysisFailed) {
             tl.exit(1); // Set task failure
         }
