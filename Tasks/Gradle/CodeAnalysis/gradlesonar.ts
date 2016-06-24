@@ -28,25 +28,14 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.To
 
     // #2: Configure additional command-line parameters
     // Add parameters to connect to the SonarQube server for reporting
-    var sqEndpoint:SonarQubeEndpoint = sqCommon.getSonarQubeEndpointFromInput("sqConnectedServiceName");
+    var sqEndpoint: SonarQubeEndpoint = sqCommon.getSonarQubeEndpoint();
 
-    // SQ servers lower than 5.2 require additional parameters (null if not set / not required)
-    if (tl.getBoolInput('sqDbDetailsRequired')) {
-        var sqDbUrl:string = tl.getInput('sqDbUrl', false);
-        var sqDbUsername:string = tl.getInput('sqDbUsername', false);
-        var sqDbPassword:string = tl.getInput('sqDbPassword', false);
-        gradleRun = sqCommon.applySonarQubeConnectionParams(gradleRun, sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password, sqDbUrl, sqDbUsername, sqDbPassword);
-    }
-    else {
-        gradleRun = sqCommon.applySonarQubeConnectionParams(gradleRun, sqEndpoint.Url, sqEndpoint.Username, sqEndpoint.Password);
-    }
+
+    gradleRun = sqCommon.applySonarQubeConnectionParams(gradleRun);
 
     // Add parameters to specify the SonarQube project properties (if given by the user)
-    var projectName:string = tl.getInput('sqProjectName', true);
-    var projectKey:string = tl.getInput('sqProjectKey', true);
-    var projectVersion:string = tl.getInput('sqProjectVersion', true);
-    
-    gradleRun = sqCommon.applySonarQubeAnalysisParams(gradleRun, projectName, projectKey, projectVersion);
+    gradleRun = sqCommon.applySonarQubeAnalysisParams(gradleRun);
+
     gradleRun = sqCommon.applySonarQubeIssuesModeInPrBuild(gradleRun);
 
     return gradleRun;

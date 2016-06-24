@@ -23,11 +23,17 @@ export function isSonarQubeAnalysisEnabled(): boolean {
 }
 
 // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
-// sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
-export function applySonarQubeConnectionParams(toolRunner: ToolRunner, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?): ToolRunner {
-    toolRunner.arg('-Dsonar.host.url=' + sqHostUrl);
-    toolRunner.arg('-Dsonar.login=' + sqHostUsername);
-    toolRunner.arg('-Dsonar.password=' + sqHostPassword);
+export function applySonarQubeConnectionParams(toolRunner: ToolRunner): ToolRunner {
+
+    var sqEndpoint: SonarQubeEndpoint = getSonarQubeEndpoint();
+    toolRunner.arg('-Dsonar.host.url=' + sqEndpoint.Url);
+    toolRunner.arg('-Dsonar.login=' + sqEndpoint.Username);
+    toolRunner.arg('-Dsonar.password=' + sqEndpoint.Password);
+
+    // sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
+    var sqDbUrl = tl.getInput('sqDbUrl', false);
+    var sqDbUsername = tl.getInput('sqDbUsername', false);
+    var sqDbPassword = tl.getInput('sqDbPassword', false);
 
     if (sqDbUrl) {
         toolRunner.arg('-Dsonar.jdbc.url=' + sqDbUrl);
@@ -44,15 +50,19 @@ export function applySonarQubeConnectionParams(toolRunner: ToolRunner, sqHostUrl
 
 // Applies parameters for manually specifying the project name, key and version to SonarQube.
 // This will override any user settings.
-export function applySonarQubeAnalysisParams(toolRunner: ToolRunner, sqProjectName?, sqProjectKey?, sqProjectVersion?): ToolRunner {
-    if (sqProjectName) {
-        toolRunner.arg('-Dsonar.projectName=' + sqProjectName);
+export function applySonarQubeAnalysisParams(toolRunner: ToolRunner): ToolRunner {
+    var projectName:string = tl.getInput('sqProjectName', false);
+    var projectKey:string = tl.getInput('sqProjectKey', false);
+    var projectVersion:string = tl.getInput('sqProjectVersion', false);
+
+    if (projectName) {
+        toolRunner.arg('-Dsonar.projectName=' + projectName);
     }
-    if (sqProjectKey) {
-        toolRunner.arg('-Dsonar.projectKey=' + sqProjectKey);
+    if (projectKey) {
+        toolRunner.arg('-Dsonar.projectKey=' + projectKey);
     }
-    if (sqProjectVersion) {
-        toolRunner.arg('-Dsonar.projectVersion=' + sqProjectVersion);
+    if (projectVersion) {
+        toolRunner.arg('-Dsonar.projectVersion=' + projectVersion);
     }
 
     return toolRunner;
@@ -76,13 +86,13 @@ export function applySonarQubeIssuesModeInPrBuild(toolrunner: ToolRunner) {
 }
 
 // Gets SonarQube connection endpoint details.
-export function getSonarQubeEndpointFromInput(inputFieldName): SonarQubeEndpoint {
+export function getSonarQubeEndpoint(): SonarQubeEndpoint {
     var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)";
     if (!tl.getEndpointUrl) {
         throw new Error(errorMessage);
     }
 
-    var genericEndpoint = tl.getInput(inputFieldName);
+    var genericEndpoint = tl.getInput("sqConnectedServiceName");
     if (!genericEndpoint) {
         throw new Error(errorMessage);
     }
@@ -182,10 +192,9 @@ function createSonarQubeBuildSummary(sqBuildFolder: string): string {
         throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 
-    var linkToDashBoard = util.format('[%s >](%s "%s Dashboard")',
-        // Looks like: Detailed SonarQube report
-        tl.loc('sqAnalysis_BuildSummary_LinkText'), taskReport.dashboardUrl, taskReport.projectKey);
+    var linkToDashBoard: string = createLinkToSonarQubeDashboard(sqBuildFolder);
 
+    // Put the quality gate status and dashboard link sections together with the Markdown newline
     return linkToDashBoard;
 }
 
@@ -194,6 +203,18 @@ function getOrCreateSonarQubeStagingDirectory(): string {
     var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
     tl.mkdirP(sqStagingDir);
     return sqStagingDir;
+}
+
+// Creates a string containing Markdown of a link to the SonarQube dashboard for this project.
+function createLinkToSonarQubeDashboard(sqBuildFolder: string): string {
+    var taskReport: TaskReport = getSonarQubeTaskReport(sqBuildFolder);
+    if (!taskReport) {
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+    }
+
+    return util.format('[%s >](%s "%s Dashboard")',
+        // Looks like: Detailed SonarQube report
+        tl.loc('sqAnalysis_BuildSummary_LinkText'), taskReport.dashboardUrl, taskReport.projectKey);
 }
 
 // Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins

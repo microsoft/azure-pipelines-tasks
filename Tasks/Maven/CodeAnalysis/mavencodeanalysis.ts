@@ -5,13 +5,14 @@ import fs = require('fs');
 import util = require('util');
 
 import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import sqCommon = require('sonarqube-common/sonarqube-common');
 
 // Lowercased names are to lessen the likelihood of xplat issues
 import {AnalysisResult} from './analysisresult';
 import {ModuleAnalysis} from './moduleanalysis';
 import pmd = require('./mavenpmd');
-import sq = require('./mavensonar');
+import sqMaven = require('./mavensonar');
 
 // Cache build variables are cached globally as they cannot change during the same build.
 var sourcesDir:string;
@@ -19,20 +20,21 @@ var stagingDir:string;
 var buildNumber:string;
 
 // Apply goals for enabled code analysis tools
-export function applyEnabledCodeAnalysisGoals(mvnRun: trm.ToolRunner):trm.ToolRunner {
+export function applyEnabledCodeAnalysisGoals(mvnRun: ToolRunner): ToolRunner {
     // PMD
     if (isCodeAnalysisToolEnabled(pmd.toolName)) {
-        pmd.applyPmdArgs(mvnRun);
+        // Looks like: PMD analysis is enabled
+        console.log(tl.loc('codeAnalysis_ToolIsEnabled'), pmd.toolName);
+        mvnRun = pmd.applyPmdArgs(mvnRun);
     }
 
     return mvnRun;
 }
 
 // Extract data from code analysis output files and upload results to build server
-export function uploadCodeAnalysisResults(): void {
-    // Return early if no analysis tools are enabled
+// Has no effect if no code analysis tools are enabled.
+export function uploadCodeAnalysisBuildSummaryIfEnabled(): void {
     var enabledCodeAnalysisTools: Set<string> = getEnabledCodeAnalysisTools();
-
     if (enabledCodeAnalysisTools.size < 1) {
         return;
     }
