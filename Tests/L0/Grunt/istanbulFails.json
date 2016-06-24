@@ -15,12 +15,7 @@
             "code": 0,
             "stdout": "npm output here"
         },
-        "/usr/local/bin/istanbul cover --report cobertura --report html ./node_modules/mocha/bin/_mocha **/build/test/*.js": {
-            "code": 1,
-            "stdout": "istanbul output here",
-            "stderr": "istanbul failed with this output"
-        },
-        "/usr/local/bin/node ./node_modules/istanbul/lib/cli.js cover --report cobertura --report html ./node_modules/mocha/bin/_mocha **/build/test/*.js": {
+        "/usr/local/bin/node ./node_modules/istanbul/lib/cli.js cover --report cobertura --report html --hook-run-in-context -i .\\**\\build\\src\\*.js ./node_modules/mocha/bin/_mocha **/build/test/*.js": {
             "code": 1,
             "stdout": "istanbul output here",
             "stderr": "istanbul failed with this output"

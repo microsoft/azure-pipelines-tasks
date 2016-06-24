@@ -99,6 +99,7 @@ describe('Gulp Suite', function () {
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
+		tr.setInput('srcFiles', '**/build/src/*.js');
 		tr.setInput('testFiles', '**/build/test/*.js');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -285,6 +286,7 @@ describe('Gulp Suite', function () {
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
+		tr.setInput('srcFiles', '**/build/src/*.js');
 		tr.setInput('testFiles', '**/build/test/*.js');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -350,6 +352,7 @@ describe('Gulp Suite', function () {
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
+		tr.setInput('srcFiles', '**/build/src/*.js');
 		tr.setInput('testFiles', '**/build/test/*.js');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -441,6 +444,7 @@ describe('Gulp Suite', function () {
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
+		tr.setInput('srcFiles', '**/build/src/*.js');
 
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -473,6 +477,7 @@ describe('Gulp Suite', function () {
 		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
+		tr.setInput('srcFiles', '**/build/src/*.js');
 		tr.setInput('testFiles', '/invalid/input');
 
 		if (os.type().match(/^Win/)) {
