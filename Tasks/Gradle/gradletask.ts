@@ -179,6 +179,7 @@ function enableCodeCoverage() {
 function isMultiModuleProject(wrapperScript: string): boolean {
     var gradleBuild = tl.createToolRunner(wrapperScript);
     gradleBuild.arg("properties");
+    gradleBuild.argString(tl.getInput('options', false));
 
     var data = gradleBuild.execSync().stdout;
     if (typeof data != "undefined" && data) {
