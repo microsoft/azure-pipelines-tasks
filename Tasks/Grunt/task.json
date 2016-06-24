@@ -130,11 +130,20 @@
             "visibleRule": "enableCodeCoverage = true"
         },
         {
+            "name": "srcFiles",
+            "type": "string",
+            "label": "Source Files",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Provide the path to your source files which you want to hookRequire()",
+            "visibleRule": "enableCodeCoverage = true"
+        },
+        {
             "name": "testFiles",
             "type": "string",
             "label": "Test Script Files",
             "defaultValue": "test/*.js",
-            "required": false,
+            "required": true,
             "groupName": "codeCoverage",
             "helpMarkDown": "Provide the path to your test script files",
             "visibleRule": "enableCodeCoverage = true"

@@ -26,6 +26,8 @@
   "loc.input.help.enableCodeCoverage": "Select this option to enable Code Coverage using Istanbul.",
   "loc.input.label.testFramework": "Test Framework",
   "loc.input.help.testFramework": "Select your test framework.",
+  "loc.input.label.srcFiles": "Source Files",
+  "loc.input.help.srcFiles": "Provide the path to your source files which you want to hookRequire()",
   "loc.input.label.testFiles": "Test Script Files",
   "loc.input.help.testFiles": "Provide the path to your test script files",
   "loc.messages.GulpNotInstalled": "Gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",

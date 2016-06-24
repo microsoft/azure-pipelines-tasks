@@ -34,19 +34,22 @@ if (isCodeCoverageEnabled) {
 	var npm = tl.createToolRunner(tl.which('npm', true));
 	npm.argString('install istanbul');
 	var testFramework = tl.getInput('testFramework', true);
+	var srcFiles = tl.getPathInput('srcFiles', true, false);
 	var testSrc = tl.getPathInput('testFiles', true, false);
 	var istanbul = tl.createToolRunner(tl.which('node', true));
 	istanbul.arg('./node_modules/istanbul/lib/cli.js');
 	istanbul.argString('cover --report cobertura --report html');
+	if (srcFiles) {
+		istanbul.argString('--hook-run-in-context -i .\\' + path.join(srcFiles));
+	}
 	if (testFramework.toLowerCase() == 'jasmine') {
 		istanbul.argString('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
 	} else {
 		istanbul.arg('./node_modules/mocha/bin/_mocha');
 	}
 	istanbul.arg(testSrc);
-	var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
-	var summaryFile = path.join(buildFolder, 'coverage/cobertura-coverage.xml');
-	var reportDirectory = path.join(buildFolder, 'coverage/');
+	var summaryFile = path.join(cwd, 'coverage/cobertura-coverage.xml');
+	var reportDirectory = path.join(cwd, 'coverage/');
 }
 
 // optional - no targets will concat nothing
@@ -96,11 +99,20 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
             return 0;
         }
         var tp = new tl.TestPublisher("JUnit");
-        tp.publish(matchingTestResultsFiles, true, "", "", "", true);
+        try {
+			tp.publish(matchingTestResultsFiles, true, "", "", "", true);
+		} catch (error) {
+			tl.warning(error);
+		}
     }
 }
 
 function publishCodeCoverage(summaryFile) {
-	var ccPublisher = new tl.CodeCoveragePublisher();
-	ccPublisher.publish('cobertura', summaryFile, reportDirectory, "");
+	try{
+		var ccPublisher = new tl.CodeCoveragePublisher();
+		ccPublisher.publish('cobertura', summaryFile, reportDirectory, "");
+	} catch (error){
+		tl.debug(error);
+		throw error;
+	}
 }

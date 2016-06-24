@@ -130,11 +130,20 @@
       "visibleRule": "enableCodeCoverage = true"
     },
     {
+      "name": "srcFiles",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.srcFiles",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.srcFiles",
+      "visibleRule": "enableCodeCoverage = true"
+    },
+    {
       "name": "testFiles",
       "type": "string",
       "label": "ms-resource:loc.input.label.testFiles",
       "defaultValue": "test/*.js",
-      "required": false,
+      "required": true,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.testFiles",
       "visibleRule": "enableCodeCoverage = true"
