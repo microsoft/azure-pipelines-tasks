@@ -145,6 +145,15 @@
             "helpMarkDown": "The config transforms will be run for \\*.Release.config and \\*.&#060;EnvironmentName&#062;.config on all the web.config files."
         },
         {
+            "name": "VariableSubstitution",
+            "type": "boolean",
+            "label": "Variable Substitution",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "configtransforms",
+            "helpMarkDown": "Variables defined in the Defination will be automatically substitued in the appSettings,applicationSettings and connectionStrings section of the config files. If the same variable are defined in the Defination and Environment, then the En variables will be supersede the defination variables. Variable substitution is run after config Transformations."
+        },
+        {
             "name": "WebAppUri",
             "type": "string",
             "label": "Web App Hosted Url",

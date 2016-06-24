@@ -20,6 +20,8 @@ try{
     $SetParametersFile = Get-VstsInput -Name SetParametersFile
     $XmlTransformation = Get-VstsInput -Name XmlTransformation
 
+    $VariableSubstitution = Get-VstsInput -Name VariableSubstitution
+
     # Initialize Azure.
 
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
@@ -43,7 +45,8 @@ try{
     . $PSScriptRoot/Utility.ps1
     . $PSScriptRoot/FindInstalledMSDeploy.ps1
     . $PSScriptRoot/CompressionUtility.ps1
-    . $PSScriptRoot/XdtTransformation.ps1
+	. $PSScriptRoot/XdtTransformation.ps1
+    . $PSScriptRoot/VariableSubstituter.ps1
 
     # Importing required version of azure cmdlets according to azureps installed on machine
     $azureUtility = Get-AzureUtility
@@ -59,24 +62,26 @@ try{
     # Ensure that at most a package (.zip) file is found
     $packageFilePath = Get-SingleFilePath -file $Package
 
-    if($XmlTransformation -eq "true")
+    if( $XmlTransformation -eq "true" -or $VariableSubstitution -eq "true")
     {
         # Get xdtFilesRoot
         $XdtFilesRoot = FindXdtFilesRoot -msDeployPkg $packageFilePath
         # Unzip the source package
         $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
-        # Search for all the web.config files
-        $webconfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\web.config" -IncludeFiles
-        # Foreach web.config file apply Web.Release.Config and Web.Environment.config
-        foreach ($configFile in $webconfigFiles) {
-            FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config" -xdtFilesRoot $XdtFilesRoot
-            if($env:RELEASE_ENVIRONMENTNAME.config)
-            {
-                FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -xdtFilesRoot $XdtFilesRoot
+        
+        if( $XmlTransformation -eq "true" )
+        {
+            # Search for all the web.config files
+            $webconfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\web.config" -IncludeFiles
+            # Foreach web.config file apply Web.Release.Config and Web.Environment.config
+            foreach ($configFile in $webconfigFiles) {
+                FindAndApplyTransformation -baseFile $configFile -tranformFile "web.release.config" -xdtFilesRoot $XdtFilesRoot
+                if($env:RELEASE_ENVIRONMENTNAME.config)
+                {
+                    FindAndApplyTransformation -baseFile $configFile -tranformFile "web.$env:RELEASE_ENVIRONMENTNAME.config" -xdtFilesRoot $XdtFilesRoot
+                }
             }
-        }
-
-        #Search for all *.exe.config
+			#Search for all *.exe.config
         $exeConfigFiles = Find-VstsFiles -LegacyPattern "$unzippedPath\**\*.exe.config" -IncludeFiles
         # Foreach *.exe.config file apply ExeName.Release.exe.Config and ExeName.Environment.exe.config
         foreach ($exeCfgFile in $exeConfigFiles) {
@@ -87,6 +92,12 @@ try{
                 FindAndApplyTransformation -baseFile $configFile -tranformFile "$exeName.$env:RELEASE_ENVIRONMENTNAME.exe.config" -xdtFilesRoot $XdtFilesRoot
             }
         }
+         }
+         if( $VariableSubstitution -eq "true" )
+         {
+            Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "*.config"
+         }
+
         # Zip folder again
         CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
     }

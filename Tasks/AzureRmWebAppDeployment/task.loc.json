@@ -145,6 +145,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
     },
     {
+      "name": "VariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.VariableSubstitution",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "configtransforms",
+      "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
+    },
+    {
       "name": "WebAppUri",
       "type": "string",
       "label": "ms-resource:loc.input.label.WebAppUri",
