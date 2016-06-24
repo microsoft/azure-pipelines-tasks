@@ -307,7 +307,7 @@ describe('ANT Suite', function() {
                 done(err);
             });
     })
-       
+
     it('Ant calls enable code coverage and publish code coverage when Cobertura is selected.', (done) => {
         setResponseFile('antCodeCoverage.json');
 
@@ -378,10 +378,10 @@ describe('ANT Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Ant build with Publish Test Results.', (done) => {
         setResponseFile('antGood.json');
-        
+
         var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
@@ -393,6 +393,32 @@ describe('ANT Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0)
+                done();
+            })
+            .fail((err) => {
+                assert.fail("task should not have failed");
+                done(err);
+            });
+    })
+
+    it('Ant build with Publish Test Results with no matching test result files.', (done) => {
+        setResponseFile('antGood.json');
+
+        var tr = new trm.TaskRunner('ANT');
+        tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('testResultsFiles', '**/InvalidTestFilter-*.xml');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('codeCoverageTool', 'None');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[results.publish\]/) < 0, 'publish test results should not have got called.');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.stdout.indexOf('task.issue type=warning;No test result files matching **/InvalidTestFilter-*.xml were found, so publishing JUnit test results is being skipped.') >= 0, 'should have produced warning.');
+                assert(tr.succeeded, 'task should have succeeded');
                 done();
             })
             .fail((err) => {

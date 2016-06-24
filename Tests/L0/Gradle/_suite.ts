@@ -704,6 +704,33 @@ describe('gradle Suite', function () {
                 done(err);
             });
     })
+    
+    it('Gradle build with publish test results with no matching test result files.', (done) => {
+        setResponseFile('gradleGood.json');
+
+        var tr = new TaskRunner('gradle');
+        tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('options', '');
+        tr.setInput('tasks', 'build');
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('testResultsFiles', '**/InvalidTestFilter-*.xml');
+        tr.setInput('codeCoverageTool', 'None');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[results.publish\]/) < 0, "publish test results should not have got called.")
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.stdout.indexOf('task.issue type=warning;No test result files matching **/InvalidTestFilter-*.xml were found, so publishing JUnit test results is being skipped.') >= 0, 'should have produced warning.');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
 
     it('Gradle with SQ in a PR build - SQ issues mode analysis', function (done) {
 

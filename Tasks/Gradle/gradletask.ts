@@ -89,7 +89,7 @@ if (isSonarQubeEnabled) {
 }
 
 gb.exec()
-    .then(function (code) {
+    .then(function(code) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted);
 
@@ -98,7 +98,7 @@ gb.exec()
         }
         tl.exit(code);
     })
-    .fail(function (err) {
+    .fail(function(err) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         console.error(err.message);
         tl.debug('taskRunner fail');
@@ -120,7 +120,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
             var matchingTestResultsFiles = [testResultsFiles];
         }
 
-        if (!matchingTestResultsFiles) {
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
             return 0;
         }
