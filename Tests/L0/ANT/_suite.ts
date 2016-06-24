@@ -416,8 +416,8 @@ describe('ANT Suite', function() {
             .then(() => {
                 assert(tr.stdout.search(/##vso\[results.publish\]/) < 0, 'publish test results should not have got called.');
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.stdout.indexOf('task.issue type=warning;No test result files matching **/InvalidTestFilter-*.xml were found, so publishing JUnit test results is being skipped.') >= 0, 'should have produced warning.');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');                
+                assert(tr.stdout.search(/##vso\[task.issue type=warning;\]No test result files matching/) >= 0, 'should have produced warning.');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
             })
