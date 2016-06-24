@@ -34,10 +34,13 @@ param
     $VirtualApplication,
 
 	[String] [Parameter(Mandatory = $false)]
-	[String] $AdditionalArguments,
+	$AdditionalArguments,
 
     [String] [Parameter(Mandatory = $false)]
-    [string]$WebAppUri
+    $WebAppUri,
+
+    [String] [Parameter(Mandatory = $false)]
+    $VariableSubstitution
 )
 
 Write-Verbose "Starting AzureRM WebApp Deployment Task"
@@ -55,6 +58,7 @@ Write-Verbose "TakeAppOfflineFlag = $TakeAppOfflineFlag"
 Write-Verbose "VirtualApplication = $VirtualApplication"
 Write-Verbose "AdditionalArguments = $AdditionalArguments"
 Write-Verbose "WebAppUri = $WebAppUri"
+Write-Verbose "VariableSubstitution = $VariableSubstitution"
 
 $WebAppUri = $WebAppUri.Trim()
 $Package = $Package.Trim('"').Trim()
@@ -73,6 +77,8 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 . $PSScriptRoot/LegacyUtils/AzureUtility-Legacy.ps1 
 . $PSScriptRoot/LegacyUtils/Utility-Legacy.ps1 
 . $PSScriptRoot/FindInstalledMSDeploy.ps1
+. $PSScriptRoot/CompressionUtility.ps1
+. $PSScriptRoot/LegacyUtils/VariableSubstituter-Legacy.ps1
 
  # Importing required version of azure cmdlets according to azureps installed on machine
  $azureUtility = Get-AzureUtility
@@ -89,6 +95,20 @@ $msDeployExePath = Get-MsDeployExePath
 
 # Ensure that at most a package (.zip) file is found
 $packageFilePath = Get-SingleFilePath -file $Package
+
+if( $VariableSubstitution -eq "true")
+{
+
+    # Unzip the source package
+    $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
+
+    
+    Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "*.config"
+    $packageFilePath = $unzippedPath+".zip"
+    
+    # Zip folder again
+    CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
+}
 
 # Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
 if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -or [string]::IsNullOrEmpty($SetParametersFile)){
