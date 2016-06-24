@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 43
+        "Patch": 44
     },
     "demands": [
         "vstest"
@@ -186,7 +186,9 @@
         "FailedToSetRunInParallel": "Failed to set run in parallel. Invalid run settings file.",
         "UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
         "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
-        "FailedToSetTestImpactCollectorTestSettings": "Failed to set Test Impact Collector. Invalid test settings file.",
-        "FailedToSetTestImpactCollectorRunSettings": "Failed to set Test Impact Collector. Invalid run settings file."
+        "ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
+        "ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
+        "ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
+        "ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run."
     }
 }

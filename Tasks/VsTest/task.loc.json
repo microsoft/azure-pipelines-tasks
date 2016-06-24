@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 43
+    "Patch": 44
   },
   "demands": [
     "vstest"
@@ -186,7 +186,9 @@
     "FailedToSetRunInParallel": "ms-resource:loc.messages.FailedToSetRunInParallel",
     "UpdateOneOrHigherRequired": "ms-resource:loc.messages.UpdateOneOrHigherRequired",
     "ErrorOccuredWhileSettingRegistry": "ms-resource:loc.messages.ErrorOccuredWhileSettingRegistry",
-    "FailedToSetTestImpactCollectorTestSettings": "ms-resource:loc.messages.FailedToSetTestImpactCollectorTestSettings",
-    "FailedToSetTestImpactCollectorRunSettings": "ms-resource:loc.messages.FailedToSetTestImpactCollectorRunSettings"
+    "ErrorWhileSettingTestImpactCollectorTestSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings",
+    "ErrorWhileSettingTestImpactCollectorRunSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings",
+    "ErrorWhileCreatingResponseFile": "ms-resource:loc.messages.ErrorWhileCreatingResponseFile",
+    "ErrorWhileUpdatingResponseFile": "ms-resource:loc.messages.ErrorWhileUpdatingResponseFile"
   }
 }

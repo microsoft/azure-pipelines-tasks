@@ -34,6 +34,8 @@ try {
     var configuration: string = tl.getInput('configuration');
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
+    var tiaEnabled = tl.getVariable('tia.enabled');
+    var tiaSelectorTool = tl.getVariable('tia.selectortool');
 
     tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
 
@@ -105,6 +107,190 @@ function getTestAssemblies(): Set<string> {
     return new Set(testAssemblyFiles);
 }
 
+function getVstestArguments(settingsFile: string): string[] {
+    var argsArray: string[] = [];
+    testAssemblyFiles.forEach(function (testAssembly) {
+        var testAssemblyPath = testAssembly;
+        //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
+        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(sourcesDirectory, testAssembly);
+            if (pathExistsAsFile(expandedPath)) {
+                testAssemblyPath = expandedPath;
+            }
+        }
+        argsArray.push(testAssemblyPath);
+    });
+    if (testFiltercriteria) {
+        argsArray.push("/TestCaseFilter:" + testFiltercriteria);
+    }
+    if (settingsFile && pathExistsAsFile(settingsFile)) {
+        argsArray.push("/Settings:" + settingsFile);
+    }
+    if (codeCoverageEnabled) {
+        argsArray.push("/EnableCodeCoverage");
+    }
+    if (otherConsoleOptions) {
+        argsArray.push(otherConsoleOptions);
+    }
+    argsArray.push("/logger:trx");
+    if (pathtoCustomTestAdapters) {
+        if (pathExistsAsDirectory(pathtoCustomTestAdapters)) {
+            argsArray.push("/TestAdapterPath:\"" + pathtoCustomTestAdapters + "\"");
+        }
+        else {
+            argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
+        }
+    }
+    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    }
+    return argsArray;
+}
+
+function addVstestArgs(argsArray: string[], vstest: any) {
+    argsArray.forEach(function (arr) {
+        vstest.arg(arr);
+    });
+}
+
+function updateResponseFile(argsArray: string[], responseFile: string): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
+        if (err) {
+            defer.reject(err);
+        }
+        defer.resolve(responseFile);
+    });
+    return defer.promise;
+}
+
+
+function generateResponseFile(): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    var tempFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    tl.debug("Response file will be generated at " + tempFile);
+    var selectortool = tl.createToolRunner(tiaSelectorTool);
+    selectortool.arg("GetImpactedtests");
+    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
+    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
+    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+    selectortool.arg("/token:" + tl.getVariable("System.AccessToken"));
+    selectortool.arg("/responsefile:" + tempFile);
+    selectortool.exec()
+        .then(function (code) {
+            defer.resolve(tempFile);
+        })
+        .fail(function (err) {
+            defer.reject(err);
+        });
+
+    return defer.promise;
+}
+
+function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
+    var defer = Q.defer<number>();
+    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
+    if (!vsCommon) {
+        tl.error(tl.loc('VstestNotFound', vsVersion));
+        defer.resolve(1);
+        return defer.promise;
+    }
+    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
+    var vstest = tl.createToolRunner(vstestLocation);
+    addVstestArgs(argsArray, vstest);
+
+    tl.rmRF(testResultsDirectory, true);
+    tl.mkdirP(testResultsDirectory);
+    tl.cd(workingDirectory);
+    vstest.exec()
+        .then(function (code) {
+            cleanUp(parallelRunSettingsFile);
+            defer.resolve(code);
+        })
+        .fail(function (err) {
+            cleanUp(parallelRunSettingsFile);
+            tl.warning(tl.loc('VstestFailed'));
+            tl.error(err);
+            defer.resolve(1);
+        });
+    return defer.promise;
+}
+
+function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
+    var defer = Q.defer<number>();
+    if (isTiaAllowed()) {
+        generateResponseFile()
+            .then(function (responseFile) {
+                if (isNonEmptyResponseFile(responseFile)) {
+                    updateResponseFile(getVstestArguments(settingsFile), responseFile)
+                        .then(function (updatedFile) {
+                            executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+                                .then(function (code) {
+                                    defer.resolve(code);
+                                })
+                                .fail(function (code) {
+                                    defer.resolve(code);
+                                })
+                                .finally(function () {
+                                    tl.debug("Deleting the response file " + responseFile)
+                                    tl.rmRF(responseFile, true);
+                                });
+                        })
+                        .fail(function (err) {
+                            tl.error(err);
+                            tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                                .then(function (code) {
+                                    defer.resolve(code);
+                                })
+                                .fail(function (code) {
+                                    defer.resolve(code);
+                                }).finally(function () {
+                                    tl.debug("Deleting the response file " + responseFile)
+                                    tl.rmRF(responseFile, true);
+                                });
+                        });
+                }
+                else {
+                    tl.debug("Empty response file detected. All tests will be executed.");
+                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                        .then(function (code) {
+                            defer.resolve(code);
+                        })
+                        .fail(function (code) {
+                            defer.resolve(code);
+                        })
+                        .finally(function () {
+                            tl.debug("Deleting the response file " + responseFile)
+                            tl.rmRF(responseFile, true);
+                        });
+                }
+            })
+            .fail(function (err) {
+                tl.error(err);
+                tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
+                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                    .then(function (code) {
+                        defer.resolve(code);
+                    })
+                    .fail(function (code) {
+                        defer.resolve(code);
+                    });
+            });
+    }
+    else {
+        tl.debug("Non TIA mode of test execution");
+        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+            .then(function (code) {
+                defer.resolve(code);
+            })
+            .fail(function (code) {
+                defer.resolve(code);
+            });
+    }
+    return defer.promise;
+}
+
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     var defer = Q.defer<number>();
     if (vsTestVersion.toLowerCase() == "latest") {
@@ -114,75 +300,17 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         .then(function (overriddenSettingsFile) {
             locateVSVersion()
                 .then(function (vsVersion) {
-                    setupRunSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
+                    setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                         .then(function (runSettingswithTestImpact) {
                             setRunInParallellIfApplicable(vsVersion);
                             setupRunSettingsFileForParallel(runInParallel, runSettingswithTestImpact)
                                 .then(function (parallelRunSettingsFile) {
-                                    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
-                                    if (!vsCommon) {
-                                        tl.error(tl.loc('VstestNotFound', vsVersion));
-                                        defer.resolve(1);
-                                        return defer.promise;
-                                    }
-                                    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
-                                    var vstest = tl.createToolRunner(vstestLocation);
-
-                                    testAssemblyFiles.forEach(function (testAssembly) {
-                                        var testAssemblyPath = testAssembly;
-                                        //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
-                                        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
-                                            var expandedPath = path.join(sourcesDirectory, testAssembly);
-                                            if (pathExistsAsFile(expandedPath)) {
-                                                testAssemblyPath = expandedPath;
-                                            }
-                                        }
-                                        vstest.arg(testAssemblyPath);
-                                    });
-
-                                    if (testFiltercriteria) {
-                                        vstest.arg("/TestCaseFilter:" + testFiltercriteria);
-                                    }
-
-                                    if (parallelRunSettingsFile && pathExistsAsFile(parallelRunSettingsFile)) {
-                                        vstest.arg("/Settings:" + parallelRunSettingsFile);
-                                    }
-
-                                    if (codeCoverageEnabled) {
-                                        vstest.arg("/EnableCodeCoverage");
-                                    }
-
-                                    if (otherConsoleOptions) {
-                                        vstest.arg(otherConsoleOptions);
-                                    }
-
-                                    vstest.arg("/logger:trx");
-
-                                    if (pathtoCustomTestAdapters) {
-                                        if (pathExistsAsDirectory(pathtoCustomTestAdapters)) {
-                                            vstest.arg("/TestAdapterPath:\"" + pathtoCustomTestAdapters + "\"");
-                                        }
-                                        else {
-                                            vstest.arg("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
-                                        }
-                                    }
-                                    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
-                                        vstest.arg("/TestAdapterPath:\"" + sourcesDirectory + "\"");
-                                    }
-
-                                    tl.rmRF(testResultsDirectory, true);
-                                    tl.mkdirP(testResultsDirectory);
-                                    tl.cd(workingDirectory);
-                                    vstest.exec()
+                                    runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
                                         .then(function (code) {
-                                            cleanUp(parallelRunSettingsFile);
                                             defer.resolve(code);
                                         })
-                                        .fail(function (err) {
-                                            cleanUp(parallelRunSettingsFile);
-                                            tl.warning(tl.loc('VstestFailed'));
-                                            tl.error(err);
-                                            defer.resolve(1);
+                                        .fail(function (code) {
+                                            defer.resolve(code);
                                         });
                                 })
                                 .fail(function (err) {
@@ -437,7 +565,7 @@ function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: str
                     return defer.promise;
                 }
                 if (result.RunSettings === undefined) {
-                    tl.warning(tl.loc('FailedToSetTestImpactCollectorRunSettings'));
+                    tl.warning(tl.loc('ErrorWhileSettingTestImpactCollectorRunSettings'));
                     defer.resolve(settingsFile);
                     return defer.promise;
                 }
@@ -536,7 +664,7 @@ function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: st
                     return defer.promise;
                 }
                 if (result.TestSettings === undefined) {
-                    tl.warning(tl.loc('FailedToSetTestImpactCollectorTestSettings'));
+                    tl.warning(tl.loc('ErrorWhileSettingTestImpactCollectorTestSettings'));
                     defer.resolve(settingsFile);
                     return defer.promise;
                 }
@@ -578,11 +706,10 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     return defer.promise;
 }
 
-function setupRunSettingsFileForTestImpact(vsVersion: number, settingsFile: string): Q.Promise<string> {
+function setupSettingsFileForTestImpact(vsVersion: number, settingsFile: string): Q.Promise<string> {
     var defer = Q.defer<string>();
-    var tiaEnabled = tl.getVariable('tia.enabled');
     var exitErrorMessage = "Error occured while setting in test impact data collector. Continuing...";
-    if (tiaEnabled && tiaEnabled.toLowerCase() == "true") {
+    if (isTiaAllowed()) {
         if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
             updateTestSettingsFileForTestImpact(vsVersion, settingsFile, exitErrorMessage)
                 .then(function (updatedFile) {
@@ -606,6 +733,7 @@ function setupRunSettingsFileForTestImpact(vsVersion: number, settingsFile: stri
         }
     }
     else {
+        tl.debug("Settings are not sufficient for setting test impact. Not updating the settings file");
         defer.resolve(settingsFile);
     }
     return defer.promise;
@@ -806,4 +934,18 @@ function pathExistsAsFile(path: string) {
 
 function pathExistsAsDirectory(path: string) {
     return tl.exist(path) && tl.stats(path).isDirectory();
+}
+
+function isNonEmptyResponseFile(responseFile: string): boolean {
+    if (pathExistsAsFile(responseFile) && tl.stats(responseFile).size) {
+        return true;
+    }
+    return false;
+}
+
+function isTiaAllowed(): boolean {
+    if (tiaEnabled && tiaEnabled.toUpperCase() == "TRUE" && tiaSelectorTool) {
+        return true;
+    }
+    return false;
 }
