@@ -33,6 +33,13 @@ param (
         Write-Verbose "Loading .NET assembly:`t$($_.name)"
         }
     }
+    else
+    {
+        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
+        {
+            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
+        }
+    }
 
     $enableDetailedLoggingOption = ''
     if ($enableDetailedLogging -eq "true")

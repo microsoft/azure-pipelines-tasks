@@ -29,6 +29,13 @@ param (
         Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
         }
     }
+    else
+    {
+        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
+        {
+            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
+        }
+    }
     
     import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
     
