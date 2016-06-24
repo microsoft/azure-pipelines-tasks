@@ -47,7 +47,14 @@
         if( $fileMimeType -eq $ApplicationXmlMimeType -or $fileMimeType -eq $TextXmlMimeType )
         {
             $tags = @("appSettings", "connectionStrings", "configSections")
-            Substitute-XMLAttributeValues -xmlFile $file.FullName -tags $tags
+            Try
+            {
+                Substitute-XMLAttributeValues -xmlFile $file.FullName -tags $tags
+            }
+            Catch
+            {
+                Write-Warning "Unable to subsitute in file $($file.Name) "
+            }
 
         }
     

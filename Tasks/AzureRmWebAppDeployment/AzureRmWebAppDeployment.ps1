@@ -82,7 +82,7 @@ try{
          }
          if( $VariableSubstitution -eq "true" )
          {
-            Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "web.*config"
+            Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "*.config"
          }
 
         # Zip folder again

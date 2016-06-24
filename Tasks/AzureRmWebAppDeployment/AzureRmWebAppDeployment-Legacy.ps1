@@ -120,7 +120,7 @@ if($XmlTransformation -eq "true"  -or $VariableSubstitution -eq "true")
     }
     if( $VariableSubstitution -eq "true" )
     {
-        Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "web.*config"
+        Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "*.config"
     }
     # Zip folder again
     CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
