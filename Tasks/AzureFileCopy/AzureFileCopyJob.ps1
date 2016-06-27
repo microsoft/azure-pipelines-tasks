@@ -28,7 +28,7 @@ param (
     Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
     Write-Verbose "additionalArguments = $additionalArguments"
 
-    if(Test-Path -Path '$env:AGENT_HOMEDIRECTORY\Agent\Worker')
+    if(Test-Path -Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
     {
         Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
             [void][reflection.assembly]::LoadFrom( $_.FullName )
