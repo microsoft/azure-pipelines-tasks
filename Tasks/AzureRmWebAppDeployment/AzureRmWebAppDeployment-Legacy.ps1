@@ -73,82 +73,95 @@ $SetParametersFile = $SetParametersFile.Trim('"').Trim()
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
-# Load all dependent files for execution
-. $PSScriptRoot/LegacyUtils/AzureUtility-Legacy.ps1 
-. $PSScriptRoot/LegacyUtils/Utility-Legacy.ps1 
-. $PSScriptRoot/FindInstalledMSDeploy.ps1
-. $PSScriptRoot/CompressionUtility.ps1
-. $PSScriptRoot/LegacyUtils/VariableSubstituter-Legacy.ps1
-
- # Importing required version of azure cmdlets according to azureps installed on machine
- $azureUtility = Get-AzureUtility
-
- Write-Verbose  "Loading $azureUtility"
- . $PSScriptRoot\LegacyUtils\$azureUtility
-
-$ErrorActionPreference = 'Stop'
-
-#### MAIN EXECUTION OF AZURERM WEBAPP DEPLOYMENT TASK BEGINS HERE ####
-
-# Get msdeploy.exe path
-$msDeployExePath = Get-MsDeployExePath
-
-# Ensure that at most a package (.zip) file is found
-$packageFilePath = Get-SingleFilePath -file $Package
-
-if( $VariableSubstitution -eq "true")
+try
 {
 
-    # Unzip the source package
-    $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
+    # Load all dependent files for execution
+    . $PSScriptRoot/LegacyUtils/AzureUtility-Legacy.ps1 
+    . $PSScriptRoot/LegacyUtils/Utility-Legacy.ps1 
+    . $PSScriptRoot/FindInstalledMSDeploy.ps1
+    . $PSScriptRoot/CompressionUtility.ps1
+    . $PSScriptRoot/LegacyUtils/VariableSubstituter-Legacy.ps1
+
+     # Importing required version of azure cmdlets according to azureps installed on machine
+     $azureUtility = Get-AzureUtility
+
+     Write-Verbose  "Loading $azureUtility"
+     . $PSScriptRoot\LegacyUtils\$azureUtility
+
+    $ErrorActionPreference = 'Stop'
+
+    #### MAIN EXECUTION OF AZURERM WEBAPP DEPLOYMENT TASK BEGINS HERE ####
+
+    # Get msdeploy.exe path
+    $msDeployExePath = Get-MsDeployExePath
+
+    # Ensure that at most a package (.zip) file is found
+    $packageFilePath = Get-SingleFilePath -file $Package
+
+    if( $VariableSubstitution -eq "true")
+    {
+
+        # Unzip the source package
+        $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
 
     
-    Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "*.config"
-    $packageFilePath = $unzippedPath+".zip"
+        Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "*.config"
+        $packageFilePath = $unzippedPath+".zip"
     
-    # Zip folder again
-    CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
+        # Zip folder again
+        CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
+    }
+
+    # Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
+    if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -or [string]::IsNullOrEmpty($SetParametersFile)){
+        $setParametersFilePath = ""
+    } else {
+        $setParametersFilePath = Get-SingleFilePath -file $SetParametersFile
+    }
+
+    # Get destination azureRM webApp connection details
+    $azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
+                                                                           -resourceGroupName $ResourceGroupName -slotName $SlotName
+
+    # webApp Name to be used in msdeploy command
+    $webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag -slotName $SlotName
+
+    # Construct arguments for msdeploy command
+    $msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFilePath -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
+                                           -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments `
+                                           -setParametersFile $setParametersFilePath
+
+    # Deploy azureRM webApp using msdeploy Command
+    Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs
+
+    # Get azure webapp hosted url
+    $azureWebsitePublishURL = Get-AzureRMWebAppPublishUrl -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
+                                                                           -resourceGroupName $ResourceGroupName -slotName $SlotName
+
+    # Publish azure webApp url
+    Write-Host (Get-LocalizedString -Key "Webapp successfully published at Url : {0}" -ArgumentList $azureWebsitePublishURL)
+
+    # Set ouput vairable with azureWebsitePublishUrl
+    if(-not [string]::IsNullOrEmpty($WebAppUri))
+    {
+	
+        if( [string]::IsNullOrEmpty($azureWebsitePublishURL))
+	    {
+		    Throw (Get-LocalizedString -Key "Unable to retrieve webapp publish url for webapp : '{0}'." -ArgumentList $webAppName)
+	    }
+	
+        Write-Host "##vso[task.setvariable variable=$WebAppUri;]$azureWebsitePublishURL"
+    }
 }
-
-# Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
-if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -or [string]::IsNullOrEmpty($SetParametersFile)){
-    $setParametersFilePath = ""
-} else {
-    $setParametersFilePath = Get-SingleFilePath -file $SetParametersFile
-}
-
-# Get destination azureRM webApp connection details
-$azureRMWebAppConnectionDetails = Get-AzureRMWebAppConnectionDetails -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
-                                                                       -resourceGroupName $ResourceGroupName -slotName $SlotName
-
-# webApp Name to be used in msdeploy command
-$webAppNameForMSDeployCmd = Get-WebAppNameForMSDeployCmd -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag -slotName $SlotName
-
-# Construct arguments for msdeploy command
-$msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFilePath -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
-                                       -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments `
-                                       -setParametersFile $setParametersFilePath
-
-# Deploy azureRM webApp using msdeploy Command
-Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs
-
-# Get azure webapp hosted url
-$azureWebsitePublishURL = Get-AzureRMWebAppPublishUrl -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
-                                                                       -resourceGroupName $ResourceGroupName -slotName $SlotName
-
-# Publish azure webApp url
-Write-Host (Get-LocalizedString -Key "Webapp successfully published at Url : {0}" -ArgumentList $azureWebsitePublishURL)
-
-# Set ouput vairable with azureWebsitePublishUrl
-if(-not [string]::IsNullOrEmpty($WebAppUri))
+Finally
 {
-	
-    if( [string]::IsNullOrEmpty($azureWebsitePublishURL))
-	{
-		Throw (Get-LocalizedString -Key "Unable to retrieve webapp publish url for webapp : '{0}'." -ArgumentList $webAppName)
-	}
-	
-    Write-Host "##vso[task.setvariable variable=$WebAppUri;]$azureWebsitePublishURL"
+    if( $VariableSubstitution -eq "true")
+    {
+        if( Test-Path $packageFilePath )
+        {
+            Remove-Item -Force $packageFilePath
+        }
+    }
+    Write-Verbose "Completed AzureRM WebApp Deployment Task"
 }
-
-Write-Verbose "Completed AzureRM WebApp Deployment Task"

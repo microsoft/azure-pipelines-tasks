@@ -115,6 +115,13 @@ try{
 	Write-Verbose "Completed AzureRM WebApp Deployment Task"
 
 } finally {
+    if( $VariableSubstitution -eq "true")
+    {
+        if( Test-Path $packageFilePath )
+        {
+            Remove-Item -Force $packageFilePath
+        }
+    }
     Trace-VstsLeavingInvocation $MyInvocation
 }
 
