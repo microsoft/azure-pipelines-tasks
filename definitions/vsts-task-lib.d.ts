@@ -313,6 +313,20 @@ declare module 'vsts-task-lib/task' {
 	 */
 	export function exist(path: string): boolean;
 	/**
+	 * Useful for determining the host operating system.
+	 * see [os.type](https://nodejs.org/api/os.html#os_os_type)
+	 *
+	 * @return      the name of the operating system
+	 */
+	export function osType(): string;
+	/**
+	 * Returns the process's current working directory.
+	 * see [process.cwd](https://nodejs.org/api/process.html#process_process_cwd)
+	 *
+	 * @return      the path to the current working directory of the process
+	 */
+	export function cwd(): string;
+	/**
 	 * Checks whether a path exists.
 	 * If the path does not exist, the task will fail with an error message. Execution will halt.
 	 *
@@ -358,6 +372,13 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   string
 	 */
 	export function which(tool: string, check?: boolean): string;
+	/**
+	 * Returns array of files in the given path, or in current directory if no path provided.  See shelljs.ls
+	 * @param  {string}   options  Available options: -R (recursive), -A (all files, include files beginning with ., except for . and ..)
+	 * @param  {string[]} paths    Paths to search.
+	 * @return {string[]}          An array of files in the given path(s).
+	 */
+	export function ls(options: string, paths: string[]): string[];
 	/**
 	 * Returns path of a tool had the tool actually been invoked.  Resolves via paths.
 	 * If you check and the tool does not exist, the task will fail with an error message and halt execution.
