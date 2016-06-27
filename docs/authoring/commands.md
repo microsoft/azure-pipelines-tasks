@@ -5,7 +5,7 @@ The general format for a logging command is:
 
 To invoke a logging command, simply emit the command via standard output. For example, from a PowerShell task:
 ```
-"##vso[task.setvariable variable=testvar;]testvalue"
+Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
 ```
 
 #### Task Logging Commands:
