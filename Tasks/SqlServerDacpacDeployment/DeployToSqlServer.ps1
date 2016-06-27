@@ -50,6 +50,11 @@ if( $publishProfile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $publishProfile 
 
 $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
 
+if( -Not (Test-Path -Path $sqlDeploymentScriptPath))
+{
+    $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
+}
+
 $sqlPackageOnTargetMachineBlock = Get-Content $sqlDeploymentScriptPath | Out-String
 
 $sqlPackageArguments = Get-SqlPackageCommandArguments -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
