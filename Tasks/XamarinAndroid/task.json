@@ -65,6 +65,14 @@
             "required": false
         },
         {
+            "name": "clean",
+            "type": "boolean",
+            "label": "Clean",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Passes the clean target (/t:clean) during build."
+        },
+        {
             "name": "msbuildLocation",
             "type": "string",
             "label": "MSBuild Location",

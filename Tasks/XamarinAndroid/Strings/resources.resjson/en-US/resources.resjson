@@ -12,6 +12,8 @@
   "loc.input.label.outputDir": "Output Directory",
   "loc.input.help.outputDir": "Optionally provide the output directory for the build. Example: $(build.binariesDirectory)/bin/Release.",
   "loc.input.label.configuration": "Configuration",
+  "loc.input.label.clean": "Clean",
+  "loc.input.help.clean": "Passes the clean target (/t:clean) during build.",
   "loc.input.label.msbuildLocation": "MSBuild Location",
   "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).  It defaults to searching for latest version.",
   "loc.input.label.msbuildArguments": "Additional Arguments",
