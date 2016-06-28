@@ -8,13 +8,17 @@
     },
     "exec": {
         "/usr/local/bin/gulp --gulpfile gulpfile.js": {
-            "code": 1,
-            "stdout": "gulp output here",
-            "stderr": "gulp failed with this output"
+            "code": 0,
+            "stdout": "gulp output here"
         },
         "/usr/local/bin/npm install istanbul": {
             "code": 0,
             "stdout": "npm output here"
+        },
+        "/usr/local/bin/node ./node_modules/istanbul/lib/cli.js cover --report cobertura --report html --hook-run-in-context -i .\\**\\build\\src\\*.js ./node_modules/mocha/bin/_mocha **/build/test/*.js": {
+            "code": 1,
+            "stdout": "istanbul output here",
+            "stderr": "istanbul failed with this output"
         }
     },
     "checkPath": {
@@ -23,7 +27,8 @@
         "/usr/local/bin/node": true,
         "/usr/local/bin/istanbul": true,
         "/usr/local/bin/node_modules/istanbul/lib/cli.js": true,
-        "gulpfile.js": true
+        "gulpfile.js": true,
+        "**/build/test/*.js": true
     },
     "exist": {
         "/usr/local/bin/gulp": true
@@ -31,6 +36,12 @@
     "match": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
+        ],
+        "**/*.js": [
+            "/test/test.js"
         ]
+    },
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/user/build"
     }
 }

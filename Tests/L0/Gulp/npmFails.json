@@ -8,13 +8,13 @@
     },
     "exec": {
         "/usr/local/bin/gulp --gulpfile gulpfile.js": {
-            "code": 1,
-            "stdout": "gulp output here",
-            "stderr": "gulp failed with this output"
+            "code": 0,
+            "stdout": "gulp output here"
         },
         "/usr/local/bin/npm install istanbul": {
-            "code": 0,
-            "stdout": "npm output here"
+            "code": 1,
+            "stdout": "npm output here",
+            "stderr": "npm failed with this output"
         }
     },
     "checkPath": {
@@ -31,6 +31,12 @@
     "match": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
+        ],
+        "**/*.js": [
+            "/test/test.js"
         ]
+    },
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/user/build"
     }
 }

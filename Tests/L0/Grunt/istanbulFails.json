@@ -16,8 +16,9 @@
             "stdout": "npm output here"
         },
         "/usr/local/bin/node ./node_modules/istanbul/lib/cli.js cover --report cobertura --report html --hook-run-in-context -i .\\**\\build\\src\\*.js ./node_modules/mocha/bin/_mocha **/build/test/*.js": {
-            "code": 0,
-            "stdout": "istanbul output here"
+            "code": 1,
+            "stdout": "istanbul output here",
+            "stderr": "istanbul failed with this output"
         }
     },
     "checkPath": {
