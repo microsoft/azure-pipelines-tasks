@@ -30,7 +30,7 @@
   "loc.input.label.AdditionalArguments": "Additional Arguments",
   "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension.",
   "loc.input.label.VariableSubstitution": "Variable Substitution",
-  "loc.input.help.VariableSubstitution": "Variables defined in the Defination will be automatically substitued in the appSettings,applicationSettings and connectionStrings section of the config files. If the same variable are defined in the Defination and Environment, then the En variables will be supersede the defination variables. Variable substitution is run after config Transformations.",
+  "loc.input.help.VariableSubstitution": "Variables defined in the Definition will be automatically substituted in the appSettings, applicationSettings and connectionStrings section of the config files. As of now variable substitution is not supported for variables of type 'secret'. <br/>In case of Release, if the same variable is defined both in the Release Definition and in the Environment, then the Environment variable value will supersede the Release Definition variable value.",
   "loc.input.label.WebAppUri": "Web App Hosted Url",
   "loc.input.help.WebAppUri": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task.",
   "loc.messages.Invalidwebapppackagepathprovided": "Invalid webapp package path provided",

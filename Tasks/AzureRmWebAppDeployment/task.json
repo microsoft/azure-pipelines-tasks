@@ -143,7 +143,7 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "configtransforms",
-            "helpMarkDown": "Variables defined in the Defination will be automatically substitued in the appSettings,applicationSettings and connectionStrings section of the config files. If the same variable are defined in the Defination and Environment, then the En variables will be supersede the defination variables. Variable substitution is run after config Transformations."
+            "helpMarkDown": "Variables defined in the Definition will be automatically substituted in the appSettings, applicationSettings and connectionStrings section of the config files. As of now variable substitution is not supported for variables of type 'secret'. <br/>In case of Release, if the same variable is defined both in the Release Definition and in the Environment, then the Environment variable value will supersede the Release Definition variable value."
         },
         {
             "name": "WebAppUri",
