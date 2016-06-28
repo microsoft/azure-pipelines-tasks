@@ -1,0 +1,14 @@
+{
+    "archivePackages": [
+        {
+            "archiveName": "7zip.zip",
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+            "dest": "./",
+            "files": [
+              "7zip/7z.exe",
+              "7zip/7z.dll",
+              "7zip/License.txt"
+            ]
+        }
+    ]
+}

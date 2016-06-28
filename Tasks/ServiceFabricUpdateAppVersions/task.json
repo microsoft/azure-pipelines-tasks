@@ -1,0 +1,51 @@
+{
+  "id": "97EF6E59-B8CC-48AA-9937-1A01E35E7584",
+  "name": "ServiceFabricUpdateAppVersions",
+  "friendlyName": "Update Service Fabric App Versions",
+  "description": "Automatically updates the versions of a packaged Service Fabric application.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "Update Service Fabric App Versions",
+  "inputs": [
+    {
+      "name": "applicationPackagePath",
+      "type": "filePath",
+      "label": "Application Package",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+    },
+    {
+      "name": "versionSuffix",
+      "type": "string",
+      "label": "Version Suffix",
+      "defaultValue": ".$(Build.BuildNumber)",
+      "required": true,
+      "helpMarkDown": "Value to append to the version values in the manifest files."
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "version.ps1"
+    }
+  },
+  "messages": {
+    "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
+    "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
+    "SearchingForApplicationPackage": "Searching for application package: {0}",
+    "FoundApplicationPackage": "Found application package: {0}",
+    "UpdatedApplicationTypeVersion": "Updated application type '{0}' to version '{1}'",
+    "UpdatedServiceVersion": "Updated service '{0}' to version '{1}'"
+  }
+}

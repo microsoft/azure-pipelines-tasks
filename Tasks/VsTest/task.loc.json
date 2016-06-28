@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 41
+    "Patch": 44
   },
   "demands": [
     "vstest"
@@ -175,6 +175,20 @@
     }
   },
   "messages": {
-    "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode"
+    "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
+    "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
+    "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
+    "VstestFailed": "ms-resource:loc.messages.VstestFailed",
+    "NoResultsToPublish": "ms-resource:loc.messages.NoResultsToPublish",
+    "ErrorWhileReadingRunSettings": "ms-resource:loc.messages.ErrorWhileReadingRunSettings",
+    "ErrorWhileReadingTestSettings": "ms-resource:loc.messages.ErrorWhileReadingTestSettings",
+    "RunInParallelNotSupported": "ms-resource:loc.messages.RunInParallelNotSupported",
+    "FailedToSetRunInParallel": "ms-resource:loc.messages.FailedToSetRunInParallel",
+    "UpdateOneOrHigherRequired": "ms-resource:loc.messages.UpdateOneOrHigherRequired",
+    "ErrorOccuredWhileSettingRegistry": "ms-resource:loc.messages.ErrorOccuredWhileSettingRegistry",
+    "ErrorWhileSettingTestImpactCollectorTestSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings",
+    "ErrorWhileSettingTestImpactCollectorRunSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings",
+    "ErrorWhileCreatingResponseFile": "ms-resource:loc.messages.ErrorWhileCreatingResponseFile",
+    "ErrorWhileUpdatingResponseFile": "ms-resource:loc.messages.ErrorWhileUpdatingResponseFile"
   }
 }

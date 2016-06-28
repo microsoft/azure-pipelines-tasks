@@ -21,14 +21,24 @@ param (
     Write-Verbose "skipCACheckOption = $skipCACheckOption"
     Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
 
-    Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
-    [void][reflection.assembly]::LoadFrom( $_.FullName )
-    Write-Verbose "Loading .NET assembly:`t$($_.name)"
-    }
+    if(Test-Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
+    {
+        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
+        [void][reflection.assembly]::LoadFrom( $_.FullName )
+        Write-Verbose "Loading .NET assembly:`t$($_.name)"
+        }
 
-    Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\*.dll | % {
-    [void][reflection.assembly]::LoadFrom( $_.FullName )
-    Write-Verbose "Loading .NET assembly:`t$($_.name)"
+        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\*.dll | % {
+        [void][reflection.assembly]::LoadFrom( $_.FullName )
+        Write-Verbose "Loading .NET assembly:`t$($_.name)"
+        }
+    }
+    else
+    {
+        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
+        {
+            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
+        }
     }
 
     $enableDetailedLoggingOption = ''

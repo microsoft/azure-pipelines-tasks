@@ -3,7 +3,12 @@
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
-import sqGradle = require('./gradlesonar');
+
+// Lowercased file names are to lessen the likelihood of xplat issues
+import sqCommon = require('sonarqube-common/sonarqube-common');
+import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
+
+import sqGradle = require('./CodeAnalysis/gradlesonar');
 
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -32,6 +37,7 @@ var testResultsFiles = tl.getInput('testResultsFiles', true);
 var summaryFile: string = null;
 var reportDirectory: string = null;
 var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
+var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
@@ -73,16 +79,26 @@ if (isCodeCoverageOpted) {
     enableCodeCoverage();
 }
 
-gb = sqGradle.applyEnabledSonarQubeArguments(gb);
-gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile);
+
+if (isSonarQubeEnabled) {
+    // Looks like: 'SonarQube analysis is enabled.'
+    console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
+
+    gb = sqGradle.applyEnabledSonarQubeArguments(gb);
+    gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile);
+}
 
 gb.exec()
-    .then(function (code) {
+    .then(function(code) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted);
+
+        if (isSonarQubeEnabled) {
+            sqGradle.uploadSonarQubeBuildSummary();
+        }
         tl.exit(code);
     })
-    .fail(function (err) {
+    .fail(function(err) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         console.error(err.message);
         tl.debug('taskRunner fail');
@@ -104,7 +120,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
             var matchingTestResultsFiles = [testResultsFiles];
         }
 
-        if (!matchingTestResultsFiles) {
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
             return 0;
         }
@@ -163,6 +179,7 @@ function enableCodeCoverage() {
 function isMultiModuleProject(wrapperScript: string): boolean {
     var gradleBuild = tl.createToolRunner(wrapperScript);
     gradleBuild.arg("properties");
+    gradleBuild.argString(tl.getInput('options', false));
 
     var data = gradleBuild.execSync().stdout;
     if (typeof data != "undefined" && data) {

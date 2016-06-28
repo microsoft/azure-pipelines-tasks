@@ -26,15 +26,15 @@ declare module 'vsts-task-lib/toolrunner' {
 	 * @param     ignoreReturnCode     optional.  defaults to failing on non zero.  ignore will not fail leaving it up to the caller
 	 */
 	export interface IExecOptions {
-	    cwd: string;
-	    env: {
+	    cwd?: string;
+	    env?: {
 	        [key: string]: string;
 	    };
-	    silent: boolean;
-	    failOnStdErr: boolean;
-	    ignoreReturnCode: boolean;
-	    outStream: stream.Writable;
-	    errStream: stream.Writable;
+	    silent?: boolean;
+	    failOnStdErr?: boolean;
+	    ignoreReturnCode?: boolean;
+	    outStream?: stream.Writable;
+	    errStream?: stream.Writable;
 	}
 	/**
 	 * Interface for exec results returned from synchronous exec functions

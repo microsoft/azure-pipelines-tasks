@@ -33,11 +33,11 @@
             "stdout": "Running Maven...",
             "stderr": "FAILED"
         },
-        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml sonar:sonar":{
+        "/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar":{
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
         },
-        "/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass -f pom.xml sonar:sonar":{
+        "/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar":{
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
         }

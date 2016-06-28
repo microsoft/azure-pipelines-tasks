@@ -115,7 +115,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
             var matchingTestResultsFiles = [testResultsFiles];
         }
 
-        if (!matchingTestResultsFiles) {
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
             return 0;
         }

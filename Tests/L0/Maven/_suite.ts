@@ -64,7 +64,6 @@ function setupMockResponsesForPaths(responseObject:any, paths: string[]) { // Ca
         message: "foo bar"
     };
 
-
     paths.forEach((path) => {
         responseObject.exist[path] = true;
         responseObject.checkPath[path] = true;
@@ -82,16 +81,37 @@ function createTempDirsForCodeAnalysisTests():void {
 
     if (!fs.existsSync(testTempDir)) {
         fs.mkdirSync(testTempDir);
+    }
 
-        if (!fs.existsSync(caTempDir)) {
-            fs.mkdirSync(caTempDir);
-        }
+    if (!fs.existsSync(caTempDir)) {
+        fs.mkdirSync(caTempDir);
     }
 }
 
+// Create temp dirs for mavencodeanalysis tests to save into
+function createTempDirsForSonarQubeTests():void {
+    var testTempDir:string = path.join(__dirname, '_temp');
+    var sqTempDir:string = path.join(testTempDir, '.sqAnalysis');
+
+    if (!fs.existsSync(testTempDir)) {
+        fs.mkdirSync(testTempDir);
+    }
+
+    if (!fs.existsSync(sqTempDir)) {
+        fs.mkdirSync(sqTempDir);
+    }
+}
+
+function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
+    assertBuildSummaryContains(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), expectedString);
+}
+
+function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString: string): void {
+    assertBuildSummaryContains(path.join(stagingDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), expectedString);
+}
+
 // Asserts the existence of a given line in the build summary file that is uploaded to the server.
-function assertBuildSummaryContainsLine(stagingDir:string, expectedLine:string):void {
-    var buildSummaryFilePath:string = path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md');
+function assertBuildSummaryContains(buildSummaryFilePath:string, expectedLine:string):void {
     var buildSummaryString:string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
 
     assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
@@ -102,6 +122,7 @@ function setResponseAndBuildVars(initialResponseFile:string, finalResponseFile:s
 
     var responseJsonFilePath: string = path.join(__dirname, initialResponseFile);
     var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+    responseJsonContent.getVariable = responseJsonContent.getVariable || {};
     for (var envVar of envVars)
     {
         responseJsonContent.getVariable[envVar[0]]= envVar[1];
@@ -684,49 +705,84 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('run maven including SonarQube analysis', (done) => {
-       
-       // not a valid PR branch
+    it('run maven including SonarQube analysis', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+
+        // not a valid PR branch
        setResponseAndBuildVars(
             'response.json',
             'new_response.json',
-            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"]])
+            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
-        var tr = new trm.TaskRunner('maven', true);
-        tr.setInput('mavenVersionSelection', 'Default');
-        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('goals', 'package');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('publishJUnitResults', 'false');
-        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
 
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml sonar:sonar'), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
+
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > 0,
+                    'should have uploaded a SonarQube Analysis Report build summary');
+                assertSonarQubeBuildSummaryContains(testStgDir,
+                    '[Detailed SonarQube report >](http://sonarqubeserver:9000/dashboard/index/test "test Dashboard")');
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
                 done(err);
             });
     })
 
-    it('run maven including SonarQube analysis (with db details)', (done) => {
+    it('run maven including SonarQube analysis (with db details)', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
 
-       // not a valid PR branch 
-       setResponseAndBuildVars(
+        // not a valid PR branch
+        setResponseAndBuildVars(
             'response.json',
             'new_response.json',
-            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "ExternalGit"]])
+            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
 
         var tr = new trm.TaskRunner('maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
@@ -747,18 +803,186 @@ describe('Maven Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass -f pom.xml sonar:sonar'), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
+
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > 0,
+                    'should have uploaded a SonarQube Analysis Report build summary');
+                assertSonarQubeBuildSummaryContains(testStgDir,
+                    '[Detailed SonarQube report >](http://sonarqubeserver:9000/dashboard/index/test "test Dashboard")');
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
                 done(err);
             });
     })
+
+
+    it('Maven with SonarQube - Fails when report-task.txt is invalid', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-invalid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+
+        // not a valid PR branch
+        setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.failed, 'task should not have succeeded');
+
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
+                    'should not have uploaded a SonarQube Analysis Report build summary');
+                assert(tr.stderr.indexOf('Invalid or missing task report. Check SonarQube finished successfully.') > -1,
+                    'should have output an error about a failure to find the task report');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
+    it('Maven with SonarQube - Fails when report-task.txt is missing', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = __dirname;
+        var testStgDir:string = path.join(__dirname, '_temp');
+
+        // not a valid PR branch
+        setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.failed, 'task should not have succeeded');
+
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
+                    'should not have uploaded a SonarQube Analysis Report build summary');
+
+                assert(tr.stderr.indexOf('Invalid or missing task report. Check SonarQube finished successfully.') > -1,
+                    'should have output an error about a failure to find the task report');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
+    it('Maven with SonarQube - Does not fail if report-task.txt is missing during a PR build', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = __dirname;
+        var testStgDir:string = path.join(__dirname, '_temp');
+
+        setResponseAndBuildVars(
+            'response.json',
+            'new_response.json',
+            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        tr.setInput('sqAnalysisEnabled', 'true');
+        tr.setInput('sqConnectedServiceName', 'ID1');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran(
+                    '/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
+                    ), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length < 1, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > 0,
+                    'should have uploaded a SonarQube Analysis Report build summary');
+                assertSonarQubeBuildSummaryContains(testStgDir,
+                    'Detailed SonarQube reports are not available for pull request builds.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
 
     it('maven calls enable code coverage and publish code coverage when jacoco is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
@@ -793,29 +1017,45 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('maven calls enable code coverage , publish code coverage and sonar analysis when jacoco  and sonar analysis is selected', (done) => {
-        setResponseFile('responseCodeCoverage.json');
-        var tr = new trm.TaskRunner('maven', true);
-        tr.setInput('mavenVersionSelection', 'default');
-        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('goals', 'package');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('codeCoverageTool', 'JaCoCo');
-        tr.setInput('publishJUnitResults', 'true');
-        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+    it('maven calls enable code coverage and publish code coverage and sonar analysis when jacoco and sonar analysis is selected', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+
+        // not a valid PR branch
+        setResponseAndBuildVars(
+            'responseCodeCoverage.json',
+            'new_response.json',
+            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('publishJUnitResults', 'true');
 
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
-                assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\/jacoco.exec -f pom.xml sonar:sonar'), 'it should have run SQ analysis');               
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\/jacoco.exec sonar:sonar'), 'it should have run SQ analysis');
                 // calls maven to generate cc report.
-                assert(tr.invokedToolCount == 4, 'should have only run maven 4 times');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=pom.xml;summaryfile=CCReport43F6D5EF\/jacoco.xml;reportdirectory=CCReport43F6D5EF;reportbuildfile=CCReportPomA4D283EG.xml;buildtool=Maven;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\/jacoco.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
@@ -824,6 +1064,9 @@ describe('Maven Suite', function() {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
                 assert.fail("should not have thrown error");
                 done(err);
             });
@@ -894,27 +1137,43 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('maven calls enable code coverage , publish code coverage and sonar analysis when cobertura is selected and sonar analysis enabled', (done) => {
-        setResponseFile('responseCodeCoverage.json');
-        var tr = new trm.TaskRunner('maven', true);
-        tr.setInput('mavenVersionSelection', 'default');
-        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('goals', 'package');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('codeCoverageTool', 'Cobertura');
-        tr.setInput('publishJUnitResults', 'true');
-        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+    it('maven calls enable code coverage and publish code coverage and sonar analysis when cobertura is selected and sonar analysis enabled', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+
+        // not a valid PR branch
+        setResponseAndBuildVars(
+            'responseCodeCoverage.json',
+            'new_response.json',
+            [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
+        tr.setInput('codeCoverageTool', 'Cobertura');
+        tr.setInput('publishJUnitResults', 'true');
 
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml clean package');
-                assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml sonar:sonar'), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=pom.xml;summaryfile=target\/site\/cobertura\/coverage.xml;reportdirectory=target\/site\/cobertura;reportbuildfile=CCReportPomA4D283EG.xml;buildtool=Maven;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=target\/site\/cobertura\/coverage.xml;reportdirectory=target\/site\/cobertura;\]/) >= 0, 'should have called publish code coverage.');
@@ -958,7 +1217,7 @@ describe('Maven Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Maven build with publish test results', (done) => {
         setResponseFile('response.json');
         var tr = new trm.TaskRunner('maven', true);
@@ -1041,7 +1300,7 @@ describe('Maven Suite', function() {
                     'should have uploaded a Code Analysis Report build summary');
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=root;artifactname=') > -1,
                     'should have uploaded PMD build artifacts');
-                assertBuildSummaryContainsLine(testStgDir, 'PMD found 3 violations in 2 files.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
 
                 done();
             })
@@ -1114,7 +1373,8 @@ describe('Maven Suite', function() {
                     'should have uploaded PMD build artifacts for the "util" module');
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=backend;artifactname=') < 0,
                     'should not have uploaded PMD build artifacts for the "backend" module');
-                assertBuildSummaryContainsLine(testStgDir, 'PMD found 6 violations in 4 files.');
+
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 6 violations in 4 files.');
 
                 done();
             })
@@ -1181,8 +1441,6 @@ describe('Maven Suite', function() {
         var testSrcDir:string = path.join(__dirname, 'data');
 
         // Add test file(s) to the response file so that tl.exist() and tl.checkPath() calls return correctly
-        var testXmlFilePath = path.join(testSrcDir, 'target', 'pmd.xml');
-        var testHtmlFilePath = path.join(testSrcDir, 'target', 'site', 'pmd.html');
         var srcResponseFilePath:string = path.join(__dirname, 'response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(srcResponseFilePath, 'utf-8'));
 
@@ -1228,38 +1486,50 @@ describe('Maven Suite', function() {
             });
     });
 
-    it('during PR builds SonarQube analysis runs in issues mode', (done) => {
+    it('during PR builds SonarQube analysis runs in issues mode', function(done) {
+        // Arrange
+        createTempDirsForSonarQubeTests();
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
 
-       setResponseAndBuildVars(
+        setResponseAndBuildVars(
             'response.json',
             'new_response.json',
-            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"]])
+            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
-        var tr = new trm.TaskRunner('maven', true);
-        tr.setInput('mavenVersionSelection', 'Default');
-        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('goals', 'package');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('publishJUnitResults', 'false');
-        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
-        
+
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.ran('/home/bin/maven/bin/mvn -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -f pom.xml -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
-                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
+                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
                 done(err);
             });
-    })   
+    })
 });

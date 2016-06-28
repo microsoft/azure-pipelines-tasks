@@ -27,6 +27,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -54,6 +55,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		//tr.setInput('project', '**/*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -81,6 +83,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/home*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -108,6 +111,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '/user/build/fun/project.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -135,6 +139,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '/user/build/fun/project2.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -162,6 +167,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Multiple*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -191,6 +197,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -219,6 +226,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -248,6 +256,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -275,6 +284,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '/home/bin2/');
@@ -305,6 +315,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '/home/bin/INVALID');
@@ -332,6 +343,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '"My Target"');
+		tr.setInput('clean', 'true');
 		tr.setInput('outputDir', '"/home/o u t/dir"');
 		tr.setInput('configuration', '"For Release"');
 		tr.setInput('msbuildArguments', '/m:1 "/p:temp=/home/temp dir/" /f');
@@ -341,7 +353,7 @@ describe('XamarinAndroid Suite', function() {
 		
 		tr.run()
 		.then(() => {
-            assert(tr.ran('/home/bin/xbuild /user/build/fun/project.csproj /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android');
+            assert(tr.ran('/home/bin/xbuild /user/build/fun/project.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android');
             assert(tr.invokedToolCount == 1, 'should have only run XamarinAndroid 1 time');
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -359,6 +371,7 @@ describe('XamarinAndroid Suite', function() {
 		var tr = new trm.TaskRunner('XamarinAndroid', true);
 		tr.setInput('project', '**/Multiple*.csproj');
 		tr.setInput('target', '"My Target"');
+		tr.setInput('clean', 'true');
 		tr.setInput('outputDir', '"/home/o u t/dir"');
 		tr.setInput('configuration', '"For Release"');
 		tr.setInput('msbuildArguments', '/m:1 "/p:temp=/home/temp dir/" /f');
@@ -368,9 +381,9 @@ describe('XamarinAndroid Suite', function() {
 		
 		tr.run()
 		.then(() => {
-            assert(tr.ran('/home/bin/xbuild /user/build/fun/project1.csproj /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 1');
-            assert(tr.ran('/home/bin/xbuild /user/build/fun/project2.csproj /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 2');
-            assert(tr.ran('/home/bin/xbuild /user/build/fun/project3.csproj /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 3');
+            assert(tr.ran('/home/bin/xbuild /user/build/fun/project1.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 1');
+            assert(tr.ran('/home/bin/xbuild /user/build/fun/project2.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 2');
+            assert(tr.ran('/home/bin/xbuild /user/build/fun/project3.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8'), 'it should have run xamarin android 3');
             assert(tr.invokedToolCount == 3, 'should have only run XamarinAndroid 3 times');
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length == 0, 'should not have written to stderr');

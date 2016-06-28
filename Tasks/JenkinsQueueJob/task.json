@@ -1,0 +1,52 @@
+{
+    "id": "c24b86d4-4256-4925-9a29-246f81aa64a7",
+    "name": "jenkinsQueueJobTask",
+    "friendlyName": "Jenkins Queue Job",
+    "description": "Queue a job on a Jenkins server",
+    "helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server.  [More Information](http://go.microsoft.com/fwlink/?LinkId=816956).",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft",
+    "demands": [],
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Queue Jenkins Job: $(jobName)",
+    "inputs": [
+      {
+        "name": "serverEndpoint",
+        "type": "connectedService:Jenkins",
+        "label": "Jenkins service endpoint",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint."
+      },     
+      {
+        "name": "jobName",
+        "type": "string",
+        "label": "Job name",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server."
+      },
+      {
+        "name": "captureConsole",
+        "type": "boolean",
+        "label": "Capture console output and wait for completion",
+        "defaultValue": true,
+        "required": true,
+        "helpMarkDown": "If selected, this step will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this step will successfully complete without waiting for the Jenkins build to run."
+      }
+    ],
+    "execution": {
+        "Node": {
+            "target": "jenkinsqueuejobtask.js",
+            "argumentFormat": ""
+        }
+    }
+}

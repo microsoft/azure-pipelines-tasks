@@ -1,20 +1,39 @@
 /// <reference path="../../../definitions/vsts-task-lib.d.ts" />
 
+import path = require('path');
+import fs = require('fs');
+import util = require('util');
+
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
+import {TaskReport} from  './taskreport';
+
+export const toolName: string = 'SonarQube';
+
 // Simple data class for a SonarQube generic endpoint
 export class SonarQubeEndpoint {
-    constructor(public Url, public Username, public Password) {
+    constructor(public Url: string, public Username: string, public Password: string) {
     }
 }
 
+// Returns true if SonarQube integration is enabled.
+export function isSonarQubeAnalysisEnabled(): boolean {
+    return tl.getBoolInput('sqAnalysisEnabled', false);
+}
+
 // Applies required parameters for connecting a Java-based plugin (Maven, Gradle) to SonarQube.
-// sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
-export function applySonarQubeConnectionParams(toolRunner: ToolRunner, sqHostUrl, sqHostUsername, sqHostPassword, sqDbUrl?, sqDbUsername?, sqDbPassword?): ToolRunner {
-    toolRunner.arg('-Dsonar.host.url=' + sqHostUrl);
-    toolRunner.arg('-Dsonar.login=' + sqHostUsername);
-    toolRunner.arg('-Dsonar.password=' + sqHostPassword);
+export function applySonarQubeConnectionParams(toolRunner: ToolRunner): ToolRunner {
+
+    var sqEndpoint: SonarQubeEndpoint = getSonarQubeEndpoint();
+    toolRunner.arg('-Dsonar.host.url=' + sqEndpoint.Url);
+    toolRunner.arg('-Dsonar.login=' + sqEndpoint.Username);
+    toolRunner.arg('-Dsonar.password=' + sqEndpoint.Password);
+
+    // sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
+    var sqDbUrl = tl.getInput('sqDbUrl', false);
+    var sqDbUsername = tl.getInput('sqDbUsername', false);
+    var sqDbPassword = tl.getInput('sqDbPassword', false);
 
     if (sqDbUrl) {
         toolRunner.arg('-Dsonar.jdbc.url=' + sqDbUrl);
@@ -31,15 +50,19 @@ export function applySonarQubeConnectionParams(toolRunner: ToolRunner, sqHostUrl
 
 // Applies parameters for manually specifying the project name, key and version to SonarQube.
 // This will override any user settings.
-export function applySonarQubeAnalysisParams(toolRunner: ToolRunner, sqProjectName?, sqProjectKey?, sqProjectVersion?): ToolRunner {
-    if (sqProjectName) {
-        toolRunner.arg('-Dsonar.projectName=' + sqProjectName);
+export function applySonarQubeAnalysisParams(toolRunner: ToolRunner): ToolRunner {
+    var projectName:string = tl.getInput('sqProjectName', false);
+    var projectKey:string = tl.getInput('sqProjectKey', false);
+    var projectVersion:string = tl.getInput('sqProjectVersion', false);
+
+    if (projectName) {
+        toolRunner.arg('-Dsonar.projectName=' + projectName);
     }
-    if (sqProjectKey) {
-        toolRunner.arg('-Dsonar.projectKey=' + sqProjectKey);
+    if (projectKey) {
+        toolRunner.arg('-Dsonar.projectKey=' + projectKey);
     }
-    if (sqProjectVersion) {
-        toolRunner.arg('-Dsonar.projectVersion=' + sqProjectVersion);
+    if (projectVersion) {
+        toolRunner.arg('-Dsonar.projectVersion=' + projectVersion);
     }
 
     return toolRunner;
@@ -63,13 +86,13 @@ export function applySonarQubeIssuesModeInPrBuild(toolrunner: ToolRunner) {
 }
 
 // Gets SonarQube connection endpoint details.
-export function getSonarQubeEndpointFromInput(inputFieldName): SonarQubeEndpoint {
+export function getSonarQubeEndpoint(): SonarQubeEndpoint {
     var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)";
     if (!tl.getEndpointUrl) {
         throw new Error(errorMessage);
     }
 
-    var genericEndpoint = tl.getInput(inputFieldName);
+    var genericEndpoint = tl.getInput("sqConnectedServiceName");
     if (!genericEndpoint) {
         throw new Error(errorMessage);
     }
@@ -85,6 +108,22 @@ export function getSonarQubeEndpointFromInput(inputFieldName): SonarQubeEndpoint
     var hostPassword = getSonarQubeAuthParameter(genericEndpoint, 'password');
 
     return new SonarQubeEndpoint(hostUrl, hostUsername, hostPassword);
+}
+
+// Upload a build summary with links to available SonarQube dashboards for further analysis details.
+export function uploadSonarQubeBuildSummary(sqBuildFolder: string): void {
+    // Save and upload build summary
+    // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
+    var buildSummaryContents:string = createSonarQubeBuildSummary(sqBuildFolder);
+
+    var buildSummaryFilePath = saveSonarQubeBuildSummary(buildSummaryContents);
+
+    tl.debug('Uploading build summary from ' + buildSummaryFilePath);
+
+    tl.command('task.addattachment', {
+        'type': 'Distributedtask.Core.Summary',
+        'name': tl.loc('sqAnalysis_BuildSummaryTitle')
+    }, buildSummaryFilePath);
 }
 
 // Gets a SonarQube authentication parameter from the specified connection endpoint.
@@ -138,4 +177,90 @@ function isPrBuild(): boolean {
 
 function isNullOrEmpty(str) {
     return str === undefined || str === null || str.length === 0;
+}
+
+// Creates the string that comprises the build summary text, given the location of the /sonar build folder.
+function createSonarQubeBuildSummary(sqBuildFolder: string): string {
+    // Task report is not created for PR builds
+    if (isPrBuild()) {
+        // Looks like: Detailed SonarQube reports are not available for pull request builds.
+        return tl.loc('sqAnalysis_BuildSummaryNotAvailableInPrBuild');
+    }
+
+    var taskReport: TaskReport = getSonarQubeTaskReport(sqBuildFolder);
+    if (!taskReport) {
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+    }
+
+    var linkToDashBoard: string = createLinkToSonarQubeDashboard(sqBuildFolder);
+
+    // Put the quality gate status and dashboard link sections together with the Markdown newline
+    return linkToDashBoard;
+}
+
+// Returns the location of the SonarQube integration staging directory.
+function getOrCreateSonarQubeStagingDirectory(): string {
+    var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
+    tl.mkdirP(sqStagingDir);
+    return sqStagingDir;
+}
+
+// Creates a string containing Markdown of a link to the SonarQube dashboard for this project.
+function createLinkToSonarQubeDashboard(sqBuildFolder: string): string {
+    var taskReport: TaskReport = getSonarQubeTaskReport(sqBuildFolder);
+    if (!taskReport) {
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+    }
+
+    return util.format('[%s >](%s "%s Dashboard")',
+        // Looks like: Detailed SonarQube report
+        tl.loc('sqAnalysis_BuildSummary_LinkText'), taskReport.dashboardUrl, taskReport.projectKey);
+}
+
+// Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
+// The returned object contains the following properties:
+//   projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
+function getSonarQubeTaskReport(sonarPluginFolder: string): TaskReport {
+    var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
+    if (!tl.exist(reportFilePath)) {
+        tl.debug('Task report not found at: ' + reportFilePath);
+        return null;
+    }
+
+    return createTaskReportFromFile(reportFilePath);
+}
+
+// Constructs a map out of an existing report-task.txt file. File must exist on disk.
+function createTaskReportFromFile(taskReportFile: string): TaskReport {
+    var reportFileString: string = fs.readFileSync(taskReportFile, 'utf-8');
+    if (!reportFileString || reportFileString.length < 1) {
+        tl.debug('Error reading file:' + reportFileString);
+        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+    }
+
+    var reportLines: string[] = reportFileString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
+
+    var reportMap = new Map<string, string>();
+    reportLines.forEach((reportLine:string) => {
+        var splitLine: string[] = reportLine.split('=');
+        if (splitLine.length > 1) {
+            reportMap.set(splitLine[0], splitLine.slice(1, splitLine.length).join());
+        }
+    });
+
+    try {
+        return TaskReport.createTaskReportFromMap(reportMap);
+    } catch (err) {
+        tl.debug(err.message);
+        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+    }
+}
+
+// Saves the build summary string and returns the file path it was saved to.
+function saveSonarQubeBuildSummary(contents: string): string {
+    var filePath:string = path.join(getOrCreateSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
+    fs.writeFileSync(filePath, contents);
+    return filePath;
 }
