@@ -11,7 +11,7 @@ $runsettings = @('<RunSettings><RunConfiguration>
 ')
 Set-Content -Value $runsettings -Path $temprunsettingsfile
 
-$resultsLocation = GetResultsLocation $temprunsettingsfile
+$resultsLocation = Get-ResultsLocation $temprunsettingsfile
 
 Assert-AreEqual 'C:\myResultsFolder' $resultsLocation 
 

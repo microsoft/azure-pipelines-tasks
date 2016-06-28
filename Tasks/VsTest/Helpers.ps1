@@ -27,7 +27,7 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 	)
 	
 	if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
-		$vsTestVersion = Locate-VSVersion
+		$vsTestVersion = Get-VSVersion
 	}
 	
 	$version = [int]($vsTestVersion)
@@ -115,7 +115,7 @@ function Get-SubKeysInFloatFormat($keys)
 	return $targetKeys
 }
 
-function Locate-VSVersion()
+function Get-VSVersion()
 {
 	#Find the latest version
 	$regPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio"
@@ -134,7 +134,7 @@ function Locate-VSVersion()
 	return $version
 }
 
-function GetResultsLocation {
+function Get-ResultsLocation {
 	[cmdletbinding()]
 	[OutputType([System.String])]
 	param(		
@@ -157,8 +157,11 @@ function GetResultsLocation {
             }
             else
             {
-                # Resutls directory is relative to the location of runsettings
-                return [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
+				if(![string]::IsNullOrWhiteSpace($customLocation))
+				{
+					# Resutls directory is relative to the location of runsettings
+					return [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
+				}
             }
         }        
     }
