@@ -133,6 +133,7 @@
       "name": "srcFiles",
       "type": "string",
       "label": "ms-resource:loc.input.label.srcFiles",
+      "defaultValue": "",
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.srcFiles",

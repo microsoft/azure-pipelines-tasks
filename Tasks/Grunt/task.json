@@ -133,6 +133,7 @@
             "name": "srcFiles",
             "type": "string",
             "label": "Source Files",
+            "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "Provide the path to your source files which you want to hookRequire()",

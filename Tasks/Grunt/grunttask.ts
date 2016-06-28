@@ -34,13 +34,13 @@ if (isCodeCoverageEnabled) {
 	var npm = tl.createToolRunner(tl.which('npm', true));
 	npm.argString('install istanbul');
 	var testFramework = tl.getInput('testFramework', true);
-	var srcFiles = tl.getPathInput('srcFiles', true, false);
+	var srcFiles = tl.getInput('srcFiles', false);
 	var testSrc = tl.getPathInput('testFiles', true, false);
 	var istanbul = tl.createToolRunner(tl.which('node', true));
 	istanbul.arg('./node_modules/istanbul/lib/cli.js');
 	istanbul.argString('cover --report cobertura --report html');
 	if (srcFiles) {
-		istanbul.argString('--hook-run-in-context -i .\\' + path.join(srcFiles));
+		istanbul.argString('-i .\\' + path.join(srcFiles));
 	}
 	if (testFramework.toLowerCase() == 'jasmine') {
 		istanbul.argString('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
@@ -65,6 +65,7 @@ gt.exec().then(function (code) {
 				publishCodeCoverage(summaryFile);
 				tl.setResult(tl.TaskResult.Succeeded, tl.loc('GruntReturnCode', code));
 			}).fail(function (err) {
+				publishCodeCoverage(summaryFile);
 				tl.debug('taskRunner fail');
 				tl.setResult(tl.TaskResult.Failed, tl.loc('IstanbulFailed', err.message));
 			});
@@ -94,7 +95,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
             tl.debug('No pattern found in testResultsFiles parameter');
             var matchingTestResultsFiles = [testResultsFiles];
         }
-        if (!matchingTestResultsFiles) {
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
             return 0;
         }
