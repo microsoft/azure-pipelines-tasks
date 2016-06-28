@@ -83,7 +83,7 @@
       "name": "publishJUnitResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
     },

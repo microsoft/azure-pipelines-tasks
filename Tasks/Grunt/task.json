@@ -83,7 +83,7 @@
             "name": "publishJUnitResults",
             "type": "boolean",
             "label": "Publish to TFS/Team Services",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "groupName": "junitTestResults",
             "helpMarkDown": "Select this option to publish JUnit test results produced by the Grunt build to TFS/Team Services."
         },
