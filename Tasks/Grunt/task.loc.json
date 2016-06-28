@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [
     "node.js"
@@ -83,7 +83,7 @@
       "name": "publishJUnitResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
     },

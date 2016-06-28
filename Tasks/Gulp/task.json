@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 25
+        "Patch": 26
     },
     "demands": [
         "node.js"
@@ -83,7 +83,7 @@
             "name": "publishJUnitResults",
             "type": "boolean",
             "label": "Publish to TFS/Team Services",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "groupName": "junitTestResults",
             "helpMarkDown": "Select this option to publish JUnit test results produced by the Gulp build to TFS/Team Services."
         },
