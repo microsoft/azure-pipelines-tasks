@@ -53,7 +53,7 @@
         ]
     },
     "match": {
-        "**/TEST-*.xml": [
+        "**/build/test-results/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
     }

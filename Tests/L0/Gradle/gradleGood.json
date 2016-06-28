@@ -61,6 +61,9 @@
     "match": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
+        ],
+        "**/build/test-results/TEST-*.xml": [
+            "/user/build/fun/test-results/test-123.xml"
         ]
     }
 }
