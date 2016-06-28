@@ -46,7 +46,7 @@
         # Compare mime type of file and invoke corresponding variable substituter
         if( $fileMimeType -eq $ApplicationXmlMimeType -or $fileMimeType -eq $TextXmlMimeType )
         {
-            $tags = @("appSettings", "connectionStrings", "configSections")
+            $tags = @("appSettings", "applicationSettings", "connectionStrings", "configSections")
             Try
             {
                 Substitute-XMLAttributeValues -xmlFile $file.FullName -tags $tags
