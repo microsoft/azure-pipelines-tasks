@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-jenkinsqueuejob",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "request": "^2.65.0"
   }
