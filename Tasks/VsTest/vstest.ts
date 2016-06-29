@@ -476,6 +476,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
                     resultDirectory = resultDirectory.trim();
                     
                     if (resultDirectory) {
+                        // path.resolve will take care if the result directory given in settings files is not absolute.
                         defer.resolve(path.resolve(path.dirname(runSettingsFile), resultDirectory));
                     }
                     else {
