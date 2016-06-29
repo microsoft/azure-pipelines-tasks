@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin 라이선스",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613739)",
   "loc.description": "Xamarin 라이선스 활성화 또는 비활성화",
   "loc.instanceNameFormat": "Xamarin 라이선스 $(action)",
   "loc.group.displayName.advanced": "고급",
@@ -8,7 +8,7 @@
   "loc.input.label.email": "메일",
   "loc.input.help.email": "Xamarin 계정 메일 주소.",
   "loc.input.label.password": "암호",
-  "loc.input.help.password": "Xamarin 계정 암호.",
+  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
   "loc.input.label.product": "Xamarin Product",
   "loc.input.help.product": "Xamarin product name.",
   "loc.input.label.timeout": "시간 제한(초)"

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de Base de datos SQL de Azure",
-  "loc.helpMarkDown": "[Más información](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Implementar Base de datos SQL de Azure con DACPAC",
   "loc.instanceNameFormat": "Implementar el DACPAC de SQL de Azure: $(DacpacFile)",
   "loc.group.displayName.target": "Destino",
@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceName": "Suscripción de Azure clásico",
   "loc.input.help.ConnectedServiceName": "Suscripción de Azure clásico de destino para implementar archivos DACPAC de SQL",
   "loc.input.label.ConnectedServiceNameARM": "Suscripción del Administrador de recursos de Azure",
-  "loc.input.help.ConnectedServiceNameARM": "Suscripción del Administrador de recursos de Azure al destino para implementar archivos DACPAC de SQL",
+  "loc.input.help.ConnectedServiceNameARM": "Suscripción de Azure Resource Manager de destino para implementar archivos DACPAC de SQL",
   "loc.input.label.DacpacFile": "Archivo DACPAC",
   "loc.input.help.DacpacFile": "Ubicación del archivo DACPAC en el agente de automatización o en una ruta de acceso UNC accesible al agente de automatización, como \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Aquí pueden usarse también variables predefinidas, como $(agent.releaseDirectory).",
   "loc.input.label.ServerName": "Nombre de Azure SQL Server",

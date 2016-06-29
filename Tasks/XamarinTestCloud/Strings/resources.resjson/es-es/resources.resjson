@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "Probar aplicaciones móviles con Xamarin Test Cloud mediante Xamarin.UITest",
   "loc.instanceNameFormat": "Probar $(app) con Xamarin.UITest en Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.app": "Archivo de la aplicación",
-  "loc.input.help.app": "Ruta de acceso relativa de la raíz del repositorio de las aplicaciones que se van a probar. Puede usar caracteres comodín. Por ejemplo, \"**\\*.apk\" para todos los archivos APK en todas las subcarpetas.",
+  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders.",
   "loc.input.label.dsym": "Archivo dSYM (solo en iOS)",
   "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "Clave de API del equipo",
@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "Ubicación de test-cloud.exe",
   "loc.input.label.optionalArgs": "Argumentos opcionales",
   "loc.input.help.optionalArgs": "Argumentos adicionales pasados a test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Publicar resultados en TFS o Team Services",
-  "loc.input.help.publishNUnitResults": "Si se selecciona la opción --nunit-xml, se pasará a test-cloud.exe. Los resultados del archivo XML NUnit se publicarán en TFS o Team Services."
+  "loc.input.label.publishNUnitResults": "Publish results to TFS/Team Services",
+  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to TFS/Team Services."
 }

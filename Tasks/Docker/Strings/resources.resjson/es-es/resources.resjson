@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Docker/README.md)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Implementar una imagen de Docker en una máquina remota",
   "loc.instanceNameFormat": "Implementación de Docker: $(Repository)",
   "loc.input.label.DockerEndpoint": "Extremo de Docker",

@@ -1,13 +1,18 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "PowerShell-Skript ausführen",
-  "loc.instanceNameFormat": "PowerShell: $(scriptName)",
+  "loc.instanceNameFormat": "PowerShell Script",
   "loc.group.displayName.advanced": "Erweitert",
-  "loc.input.label.scriptName": "Skriptdateiname",
+  "loc.input.label.scriptType": "Type",
+  "loc.input.help.scriptType": "Type of the script: File Path or Inline Script",
+  "loc.input.label.scriptName": "Script Path",
   "loc.input.help.scriptName": "Der Pfad des auszuführenden Skripts. Es muss sich um den vollqualifizierten Pfad oder einen Pfad relativ zum Standardarbeitsverzeichnis handeln.",
   "loc.input.label.arguments": "Argumente",
   "loc.input.help.arguments": "An das PowerShell-Skript übergebene Argumente. Entweder Ordnungszahl- oder benannte Parameter.",
   "loc.input.label.workingFolder": "Arbeitsordner",
-  "loc.input.help.workingFolder": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist."
+  "loc.input.help.workingFolder": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist.",
+  "loc.input.label.inlineScript": "Inline Script",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure. This feature requires an agent version 1.102 or higher, to enable not failing on STDERR."
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Издатель NuGet",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627417)",
   "loc.description": "Отправка NUPKG-файлов на сервер NuGet",
   "loc.instanceNameFormat": "Издатель NuGet $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",

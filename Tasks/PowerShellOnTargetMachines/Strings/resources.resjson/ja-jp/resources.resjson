@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "ターゲット コンピューターでの PowerShell",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "リモート コンピューター (複数可) で PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "$(EnvironmentName) での PowerShell の実行",
   "loc.group.displayName.deployment": "配置",
@@ -28,5 +28,5 @@
   "loc.input.label.ResourceFilteringMethod": "以下の条件でコンピューターを選択",
   "loc.input.help.ResourceFilteringMethod": "必要に応じて、コンピューター名またはタグを指定してコンピューターのサブセットを選びます。",
   "loc.input.label.MachineNames": "フィルター条件",
-  "loc.input.help.MachineNames": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
+  "loc.input.help.MachineNames": "この入力はマシン グループまたは出力変数にのみ使用でき、コンピューターのフラット リストではまだサポートされていません。マシンのリスト (dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34 など)、またはタグのリスト (Role:DB; OS:Win8.1 など) を指定します。複数のタグを指定した場合、指定されたタグを持つすべてのマシンでタスクが実行されます。既定では、タスクがすべてのマシンで実行されます。"
 }

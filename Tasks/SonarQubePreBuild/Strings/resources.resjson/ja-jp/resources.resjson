@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild 用の SonarQube - 分析開始",
-  "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "SonarQube から品質プロファイルを取得して、分析を構成します",
   "loc.instanceNameFormat": "SonarQube から品質プロファイルを取得します",
   "loc.group.displayName.serverSettings": "SonarQube サーバー",
@@ -10,7 +10,7 @@
   "loc.input.label.projectKey": "プロジェクト キー",
   "loc.input.help.projectKey": "SonarQube プロジェクトの一意キー (sonar.projectKey)",
   "loc.input.label.projectName": "プロジェクト名 ",
-  "loc.input.help.projectName": "SonarQube プロジェクト名 (sonar.ProjectName)",
+  "loc.input.help.projectName": "The SonarQube project name, i.e. sonar.projectName",
   "loc.input.label.projectVersion": "プロジェクト バージョン",
   "loc.input.help.projectVersion": "SonarQube プロジェクトのバージョン (sonar.projectVersion)",
   "loc.input.label.connectedServiceName": "SonarQube エンドポイント",
@@ -22,9 +22,11 @@
   "loc.input.label.dbPassword": "DB ユーザー パスワード",
   "loc.input.help.dbPassword": "SonarQube サーバー 5.1 以前のみ。データベース ユーザーのパスワード (sonar.jdbc.password)",
   "loc.input.label.cmdLineArgs": "追加設定 ",
-  "loc.input.help.cmdLineArgs": "/d:propertyName=propertyValue の形式を使用してスペース区切りで設定します。通常のコマンド ラインのエスケープ ルールが適用されます。設定の詳細については、[SonarQube の資料] (https://go.microsoft.com/fwlink/?LinkID=624390) をご覧ください。",
+  "loc.input.help.cmdLineArgs": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](https://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "設定ファイル ",
-  "loc.input.help.configFile": "設定は構成ファイルでも指定できます。テンプレートは [こちら] (https://go.microsoft.com/fwlink/?LinkID=620062) でご利用いただけます。",
+  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](https://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.label.includeFullReport": "Include full analysis report in the build summary (SQ 5.3+)",
+  "loc.input.help.includeFullReport": "This option will delay the build until the SonarQube analysis is completed.",
   "loc.input.label.breakBuild": "品質ゲートのエラー時にビルドを失敗とする (SQ 5.3+)",
-  "loc.input.help.breakBuild": "このオプションは、SonarQube サーバー 5.3 以降を使っている場合にのみ使用可能です。SonarQube が分析を完了するまでビルドを待機する必要があるため、遅延が発生します。[詳細情報] (https://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

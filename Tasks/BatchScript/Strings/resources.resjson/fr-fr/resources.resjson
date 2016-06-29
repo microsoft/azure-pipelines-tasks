@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Script de commandes",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613733)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613733)",
   "loc.description": "Exécuter un script cmd ou bat Windows, et lui permettre éventuellement de changer l'environnement",
   "loc.instanceNameFormat": "Exécuter le script $(filename)",
   "loc.group.displayName.advanced": "Avancé",

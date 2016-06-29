@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Compilazione Visual Studio",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Consente di compilare con MSBuild e di impostare la proprietà della versione di Visual Studio",
   "loc.instanceNameFormat": "Compila la soluzione $(solution)",
   "loc.group.displayName.advanced": "Avanzate",
@@ -18,6 +18,8 @@
   "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
   "loc.input.help.msbuildArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di MSBuild da eseguire.",
   "loc.input.label.logProjectEvents": "Registra dettagli progetto",
+  "loc.input.label.createLogFile": "Create Log File",
+  "loc.input.help.createLogFile": "Optionally create a log file (Windows only).",
   "loc.messages.MSBuildLocationDeprecated0": "Il parametro Percorso MSBuild è stato deprecato. Il valore '{0}' verrà ignorato.",
   "loc.messages.MSBuildNotFoundVersion0Architecture1": "MSBuild non è stato trovato per la versione '{0}' e l'architettura '{1}'.",
   "loc.messages.MSBuildVersionDeprecated0": "Il parametro Versione MSBuild è stato deprecato. Il valore '{0}' verrà ignorato.",

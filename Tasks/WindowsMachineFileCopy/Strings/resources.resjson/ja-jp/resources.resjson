@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows コンピューターのファイル コピー",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "ファイルをリモート コンピューター (複数可) にコピーします",
   "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "詳細設定のオプション",
@@ -22,5 +22,5 @@
   "loc.input.help.AdditionalArguments": "ファイルをコピーする場合に適用される追加の robocopy 引数 (/min:33553332 /l など)。",
   "loc.input.label.ResourceFilteringMethod": "以下の条件でコンピューターを選択",
   "loc.input.label.MachineNames": "フィルター条件",
-  "loc.input.help.MachineNames": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
+  "loc.input.help.MachineNames": "この入力はマシン グループにのみ使用でき、マシンのフラット リストまたは出力変数ではまだサポートされていません。マシンのリスト (dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34 など)、またはタグのリスト (Role:DB; OS:Win8.1 など) を指定します。複数のタグを指定した場合、指定されたタグを持つすべてのマシンでタスクが実行されます。既定では、タスクがすべてのマシンで実行されます。"
 }

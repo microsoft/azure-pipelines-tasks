@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Индексация исходного кода и публикация символов",
-  "loc.helpMarkDown": "Проиндексируйте исходный код и опубликуйте символы в общей папке.<br/>[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Индексация исходного кода и публикация символов в общем файловом ресурсе",
   "loc.instanceNameFormat": "Путь публикации символов: $(SymbolsPath)",
   "loc.group.displayName.advanced": "Дополнительно",

@@ -4,7 +4,7 @@
   "loc.instanceNameFormat": "Decrittografa $(inFile)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.cipher": "Crittografia",
-  "loc.input.help.cipher": "Tipo di crittografia da usare. Per un elenco completo dei possibili valori, vedere la pagina relativa ai [nomi della famiglia di opzioni per cipher](https://go.microsoft.com/fwlink/?LinkID=627129).",
+  "loc.input.help.cipher": "Encryption cypher to use. See [cypher suite names](https://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values.",
   "loc.input.label.inFile": "File crittografato",
   "loc.input.help.inFile": "Percorso relativo del file da decrittografare.",
   "loc.input.label.passphrase": "Passphrase",

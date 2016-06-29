@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Jenkins Queue Job",
+  "loc.helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server.  [More Information](http://go.microsoft.com/fwlink/?LinkId=816956).",
+  "loc.description": "Queue a job on a Jenkins server",
+  "loc.instanceNameFormat": "Queue Jenkins Job: $(jobName)",
+  "loc.input.label.serverEndpoint": "Jenkins service endpoint",
+  "loc.input.help.serverEndpoint": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint.",
+  "loc.input.label.jobName": "Job name",
+  "loc.input.help.jobName": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server.",
+  "loc.input.label.captureConsole": "Capture console output and wait for completion",
+  "loc.input.help.captureConsole": "If selected, this step will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this step will successfully complete without waiting for the Jenkins build to run."
+}

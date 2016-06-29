@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Сборка Xcode",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Сборка рабочей области Xcode на Mac OS",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "Подписывание и подготовка",

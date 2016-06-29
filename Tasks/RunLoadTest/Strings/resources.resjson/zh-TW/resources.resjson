@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "雲端式負載測試 ",
-  "loc.helpMarkDown": "可藉由此工作，使用 Visual Studio Online 來觸發雲端式負載測試。[詳細資訊](https://go.microsoft.com/fwlink/?linkid=546976)。",
-  "loc.description": "在雲端中執行負載測試，搭配 Visual Studio Online",
+  "loc.helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.description": "Runs the load test in the cloud with Visual Studio Team Services",
   "loc.instanceNameFormat": "雲端負載測試 $(LoadTest)",
   "loc.input.label.connectedServiceName": "已註冊的連接",
   "loc.input.help.connectedServiceName": "選取先前註冊的服務連接，以和雲端式負載測試服務溝通。請選擇 'Manage'，以註冊新的連接。",
@@ -12,5 +12,5 @@
   "loc.input.label.LoadTest": "負載測試檔案",
   "loc.input.help.LoadTest": "上述指定之負載測試資料夾下所用的負載測試檔案名稱。",
   "loc.input.label.ThresholdLimit": "允許的臨界值違規次數",
-  "loc.input.help.ThresholdLimit": "臨界值違規數目過多而負載測試結果視為不成功。"
+  "loc.input.help.ThresholdLimit": "Number of threshold violations above which the load test outcome is considered unsuccessful."
 }

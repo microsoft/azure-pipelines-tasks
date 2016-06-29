@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Chef/README.md)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "Durch Bearbeiten der Umgebungsattribute in Chef-Umgebungen bereitstellen",
   "loc.instanceNameFormat": "Durch Bearbeiten von Umgebungsattributen von Chef-Abonnement $(ChefServer) an Chef bereitstellen",
   "loc.input.label.connectedServiceName": "Chef-Verbindung",

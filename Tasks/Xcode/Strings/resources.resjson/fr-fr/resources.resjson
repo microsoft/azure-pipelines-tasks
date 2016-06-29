@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Build Xcode",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Générer un espace de travail Xcode sur Mac OS",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "Signature et configuration",

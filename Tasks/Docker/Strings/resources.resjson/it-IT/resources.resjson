@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Docker/README.md)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "Consente di distribuire un'immagine di Docker in un computer remoto",
   "loc.instanceNameFormat": "Distribuzione di Docker: $(Repository)",
   "loc.input.label.DockerEndpoint": "Endpoint di Docker",

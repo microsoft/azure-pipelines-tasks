@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Quellen indizieren und Symbole veröffentlichen",
-  "loc.helpMarkDown": "Quellcode indizieren und Symbole in Dateifreigabe veröffentlichen<br/>[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Quellcode indizieren und Symbole auf einer Dateifreigabe veröffentlichen",
   "loc.instanceNameFormat": "Pfad für Symbolveröffentlichung: $(SymbolsPath)",
   "loc.group.displayName.advanced": "Erweitert",

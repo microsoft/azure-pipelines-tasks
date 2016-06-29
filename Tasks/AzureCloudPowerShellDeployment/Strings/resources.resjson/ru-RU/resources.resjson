@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание облачной службы Azure",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Развертывание облачной службы Azure",
   "loc.instanceNameFormat": "Развертывание Azure: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Расширенные параметры для создания новой службы",

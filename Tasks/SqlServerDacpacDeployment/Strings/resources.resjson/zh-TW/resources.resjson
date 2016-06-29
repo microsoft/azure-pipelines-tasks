@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "SQL Server Database 部署",
-  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/sqlserverdacpackreadme)",
+  "loc.friendlyName": "[Deprecated] SQL Server Database Deploy",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlserverdacpackreadme)",
   "loc.description": "使用 DACPAC 部署 SQL Server 資料庫",
-  "loc.instanceNameFormat": "部署 SQL DACPAC: $(DacpacFile)",
+  "loc.instanceNameFormat": "[Deprecated] Deploy SQL DACPAC: $(DacpacFile)",
   "loc.group.displayName.deployment": "部署",
   "loc.group.displayName.target": "目標",
   "loc.group.displayName.advanced": "進階",

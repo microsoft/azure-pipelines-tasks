@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android 서명",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Android APK 파일 서명 및 정렬",
   "loc.instanceNameFormat": "APK 파일 $(files) 서명 및 정렬",
   "loc.group.displayName.jarsignerOptions": "Jarsigner 옵션",

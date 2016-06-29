@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 云服务部署",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "部署 Azure 云服务",
   "loc.instanceNameFormat": "Azure 部署: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "创建新服务的高级选项",

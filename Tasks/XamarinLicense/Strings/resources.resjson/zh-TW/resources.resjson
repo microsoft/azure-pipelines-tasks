@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin 授權",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613739)",
   "loc.description": "啟動或停用 Xamarin 授權",
   "loc.instanceNameFormat": "$(action) Xamarin 授權",
   "loc.group.displayName.advanced": "進階",
@@ -8,7 +8,7 @@
   "loc.input.label.email": "電子郵件",
   "loc.input.help.email": "Xamarin 帳戶電子郵件地址。",
   "loc.input.label.password": "密碼",
-  "loc.input.help.password": "Xamarin 帳戶密碼。",
+  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
   "loc.input.label.product": "Xamarin Product",
   "loc.input.help.product": "Xamarin product name.",
   "loc.input.label.timeout": "逾時 (以秒為單位)"

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[详细信息](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Docker/README.md)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Docker/README.md)",
   "loc.description": "将 Docker 图像部署到远程计算机",
   "loc.instanceNameFormat": "Docker 部署: $(Repository)",
   "loc.input.label.DockerEndpoint": "Docker 终结点",

@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "Xamarin.UITest を使用して Xamarin Test Cloud のモバイル アプリをテストします",
   "loc.instanceNameFormat": "Xamarin Test Cloud の Xamarin.UITest でのテスト $(app)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.app": "アプリ ファイル",
-  "loc.input.help.app": "リポジトリのルートを基準に指定した、テストするアプリ (複数可) の相対パス。ワイルドカードを使用できます。たとえば、すべてのサブフォルダー内のすべての APK ファイルの場合、`**\\*.apk` となります。",
+  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders.",
   "loc.input.label.dsym": "dSYM ファイル (iOS のみ)",
   "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "チーム API キー",
@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "test-cloud.exe の場所",
   "loc.input.label.optionalArgs": "オプションの引数",
   "loc.input.help.optionalArgs": "test-cloud.exe に渡す追加の引数。",
-  "loc.input.label.publishNUnitResults": "結果を TFS/Team Services に発行する",
-  "loc.input.help.publishNUnitResults": "選択された場合、--nunit-xml オプションが test-cloud.exe に渡されます。NUnit xml ファイルからの結果は、TFS/Team Services に発行されます。"
+  "loc.input.label.publishNUnitResults": "Publish results to TFS/Team Services",
+  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to TFS/Team Services."
 }

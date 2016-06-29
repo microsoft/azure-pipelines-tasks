@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Update Service Fabric App Versions",
+  "loc.helpMarkDown": "",
+  "loc.description": "Automatically updates the versions of a packaged Service Fabric application.",
+  "loc.instanceNameFormat": "Update Service Fabric App Versions",
+  "loc.input.label.applicationPackagePath": "Application Package",
+  "loc.input.help.applicationPackagePath": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
+  "loc.input.label.versionSuffix": "Version Suffix",
+  "loc.input.help.versionSuffix": "Value to append to the version values in the manifest files.",
+  "loc.messages.ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
+  "loc.messages.ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
+  "loc.messages.SearchingForApplicationPackage": "Searching for application package: {0}",
+  "loc.messages.FoundApplicationPackage": "Found application package: {0}",
+  "loc.messages.UpdatedApplicationTypeVersion": "Updated application type '{0}' to version '{1}'",
+  "loc.messages.UpdatedServiceVersion": "Updated service '{0}' to version '{1}'"
+}

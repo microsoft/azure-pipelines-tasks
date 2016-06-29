@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copie de fichiers Azure",
-  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copier les fichiers vers un objet blob ou des machines virtuelles Azure",
   "loc.instanceNameFormat": "$(Destination) Copie de fichiers",
   "loc.group.displayName.output": "Output",
@@ -38,7 +38,7 @@
   "loc.input.label.AdditionalArguments": "Arguments supplémentaires",
   "loc.input.help.AdditionalArguments": "Arguments AzCopy.exe supplémentaires copiés durant le chargement dans l'objet blob, ou le chargement dans la machine virtuelle, par exemple /NC:10.",
   "loc.input.label.enableCopyPrerequisites": "Activer les conditions préalables à la copie",
-  "loc.input.help.enableCopyPrerequisites": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs.",
+  "loc.input.help.enableCopyPrerequisites": "L'activation de cette option configure l'écouteur Windows Remote Management (WinRM) via le protocole HTTPS sur le port 5986, à l'aide d'un certificat auto-signé. Cette configuration est obligatoire pour effectuer une opération de copie sur des machines Azure. Si les machines virtuelles cibles sont associées à un équilibreur de charge, vérifiez que des règles NAT entrantes sont configurées pour le port cible (5986). S'applique uniquement aux machines virtuelles ARM.",
   "loc.input.label.CopyFilesInParallel": "Copier en parallèle",
   "loc.input.help.CopyFilesInParallel": "Si la valeur est true, les fichiers sont copiés en parallèle sur les machines cibles.",
   "loc.input.label.CleanTargetBeforeCopy": "Nettoyer la cible",

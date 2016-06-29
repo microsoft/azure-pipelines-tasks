@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "배치 스크립트",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613733)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613733)",
   "loc.description": "Windows cmd 또는 bat 스크립트를 실행하고 필요에 따라 환경을 변경할 수 있도록 허용",
   "loc.instanceNameFormat": "스크립트 $(filename) 실행",
   "loc.group.displayName.advanced": "고급",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Exécuter des tests avec Visual Studio Test Runner",
   "loc.instanceNameFormat": "Assemblys de test $(testAssembly)",
   "loc.group.displayName.executionOptions": "Déploiement",
@@ -31,5 +31,20 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Configuration sur laquelle les tests doivent être signalés. Si vous avez défini une variable pour la configuration dans votre tâche de build, utilisez-la ici.",
   "loc.input.label.publishRunAttachments": "Télécharger les pièces jointes du test",
-  "loc.input.help.publishRunAttachments": "Déploiement"
+  "loc.input.help.publishRunAttachments": "Déploiement",
+  "loc.messages.VstestReturnCode": "Vstest exited with return code: %d.",
+  "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
+  "loc.messages.VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
+  "loc.messages.VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
+  "loc.messages.NoResultsToPublish": "No results found to publish.",
+  "loc.messages.ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
+  "loc.messages.ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
+  "loc.messages.RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
+  "loc.messages.FailedToSetRunInParallel": "Failed to set run in parallel. Invalid run settings file.",
+  "loc.messages.UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
+  "loc.messages.ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
+  "loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
+  "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
+  "loc.messages.ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
+  "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run."
 }

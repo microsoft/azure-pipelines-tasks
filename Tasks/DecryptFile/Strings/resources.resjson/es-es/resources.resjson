@@ -4,7 +4,7 @@
   "loc.instanceNameFormat": "Descifrar $(inFile)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.cipher": "Cifrado",
-  "loc.input.help.cipher": "Cifrados disponibles para su uso. Consulte [nombres de conjuntos de cifrado](https://go.microsoft.com/fwlink/?LinkID=627129) para obtener una lista completa de los posibles valores.",
+  "loc.input.help.cipher": "Encryption cypher to use. See [cypher suite names](https://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values.",
   "loc.input.label.inFile": "Archivo cifrado",
   "loc.input.help.inFile": "Ruta relativa del archivo que se va a descifrar.",
   "loc.input.label.passphrase": "Frase de contraseña",

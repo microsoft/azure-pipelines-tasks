@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "用于 MSBuild 的 SonarQube - 开始分析",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "从 SonarQube 提取质量配置文件以配置分析",
   "loc.instanceNameFormat": "从 SonarQube 提取质量配置文件",
   "loc.group.displayName.serverSettings": "SonarQube 服务器",
@@ -10,7 +10,7 @@
   "loc.input.label.projectKey": "项目键",
   "loc.input.help.projectKey": "SonarQube 项目的唯一键，即 sonar.projectKey",
   "loc.input.label.projectName": "项目名",
-  "loc.input.help.projectName": "SonarQube 项目名，即 sonar.ProjectName",
+  "loc.input.help.projectName": "The SonarQube project name, i.e. sonar.projectName",
   "loc.input.label.projectVersion": "项目版本",
   "loc.input.help.projectVersion": "SonarQube 项目版本，即 sonar.projectVersion",
   "loc.input.label.connectedServiceName": "SonarQube 终结点",
@@ -22,9 +22,11 @@
   "loc.input.label.dbPassword": "Db 用户密码",
   "loc.input.help.dbPassword": "仅适用于 SonarQube 服务器 5.1 及更低版本。数据库用户的密码，即 sonar.jdbc.password",
   "loc.input.label.cmdLineArgs": "其他设置",
-  "loc.input.help.cmdLineArgs": "使用以下格式用空格分隔设置: /d:propertyName=propertyValue。常规命令行分隔规则适用。有关设置的更多详细信息，请查看 [SonarQube 文档](https://go.microsoft.com/fwlink/?LinkID=624390)。",
+  "loc.input.help.cmdLineArgs": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](https://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "设置文件",
-  "loc.input.help.configFile": "还可以通过配置文件指定设置。[此处](https://go.microsoft.com/fwlink/?LinkID=620062)提供了模板",
+  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](https://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.label.includeFullReport": "Include full analysis report in the build summary (SQ 5.3+)",
+  "loc.input.help.includeFullReport": "This option will delay the build until the SonarQube analysis is completed.",
   "loc.input.label.breakBuild": "生成因品质关故障而失败(SQ 5.3+)",
-  "loc.input.help.breakBuild": "仅当使用的是 SonarQube 服务器 5.3 或更高版本时，此选项才可用。由于必须等到 SonarQube 完成分析才能进行生成，因此存在延迟。[详细信息](https://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

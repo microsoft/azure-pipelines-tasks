@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio のビルド",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "MSBuild を使用してビルドし、Visual Studio のバージョンを適切に設定します",
   "loc.instanceNameFormat": "ソリューション $(solution) のビルド",
   "loc.group.displayName.advanced": "詳細設定",
@@ -18,6 +18,8 @@
   "loc.input.label.msbuildArchitecture": "MSBuild アーキテクチャ",
   "loc.input.help.msbuildArchitecture": "必要に応じて、実行する MSBuild のアーキテクチャ (x86、x64) を指定します。",
   "loc.input.label.logProjectEvents": "プロジェクトの詳細の記録",
+  "loc.input.label.createLogFile": "Create Log File",
+  "loc.input.help.createLogFile": "Optionally create a log file (Windows only).",
   "loc.messages.MSBuildLocationDeprecated0": "MSBuild の場所パラメーターは使用されていません。値 '{0}' を無視しています",
   "loc.messages.MSBuildNotFoundVersion0Architecture1": "MSBuild のバージョン '{0}' およびアーキテクチャ '{1}' が見つかりません。",
   "loc.messages.MSBuildVersionDeprecated0": "MSBuild のバージョン パラメーターは使用されていません。値 '{0}' を無視しています。",

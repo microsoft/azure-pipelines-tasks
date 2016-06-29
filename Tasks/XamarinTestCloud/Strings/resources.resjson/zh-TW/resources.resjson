@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "使用採用 Xamarin.UITest 的 Xamarin Test Cloud 測試行動應用程式",
   "loc.instanceNameFormat": "在 Xamarin Test Cloud 中使用 Xamarin.UITest 測試 $(app) ",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.app": "應用程式檔案",
-  "loc.input.help.app": "要測試的應用程式之儲存機制根路徑的相對路徑。可使用萬用字元。例如，`**\\*.apk` 即適用於所有子資料夾中的所有 APK 檔 。",
+  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders.",
   "loc.input.label.dsym": "dSYM 檔案 (僅限 iOS)",
   "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
   "loc.input.label.teamApiKey": "Team API 金鑰",
@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "test-cloud.exe 位置",
   "loc.input.label.optionalArgs": "選擇性引數",
   "loc.input.help.optionalArgs": "傳遞至 test-cloud.exe 的其他引數。",
-  "loc.input.label.publishNUnitResults": "將結果發行至 TFS/Team Services",
-  "loc.input.help.publishNUnitResults": "選取的情況下，--nunit-xml 選項將傳遞到 test-cloud.exe。NUnit xml 檔案的結果將發行到 TFS/Team Services。"
+  "loc.input.label.publishNUnitResults": "Publish results to TFS/Team Services",
+  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to TFS/Team Services."
 }

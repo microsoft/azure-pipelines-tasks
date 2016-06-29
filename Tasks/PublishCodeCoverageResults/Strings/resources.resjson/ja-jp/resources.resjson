@@ -1,14 +1,14 @@
 {
   "loc.friendlyName": "コード カバレッジ結果の発行",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "Publish code coverage results to VSTS/TFS",
   "loc.instanceNameFormat": "コード カバレッジ結果 $(summaryFileLocation) の発行",
   "loc.input.label.codeCoverageTool": "コード カバレッジ ツール",
   "loc.input.help.codeCoverageTool": "コード カバレッジ概要ファイルを生成したツールを選択します",
   "loc.input.label.summaryFileLocation": "概要ファイル",
-  "loc.input.help.summaryFileLocation": "行、メソッド、クラス カバレッジなどのコード カバレッジ統計を持つ、コード カバレッジ概要ファイルのパス。たとえば、$(Build.Repository.LocalPath)\\CodeCoverage\\Summary.xml と指定します。",
+  "loc.input.help.summaryFileLocation": "Path of code coverage summary file, which has code coverage statistics like line, method, class coverage. For example, $(Build.SourcesDirectory)/CodeCoverage/Summary.xml",
   "loc.input.label.reportDirectory": "レポート ディレクトリ",
-  "loc.input.help.reportDirectory": "コード カバレッジ レポート ディレクトリのパス。レポート ディレクトリはビルドに対して成果物として発行されます。たとえば、$(Build.Repository.LocalPath)\\CodeCoverageReport と指定します。",
+  "loc.input.help.reportDirectory": "Path of code coverage report directory. The report directory is published as an artifact against the build. For example, $(Build.SourcesDirectory)/CodeCoverageReport",
   "loc.input.label.additionalCodeCoverageFiles": "追加ファイル",
-  "loc.input.help.additionalCodeCoverageFiles": "ビルドに対して成果物として発行される、コード カバレッジ追加ファイルを指定する正規表現。たとえば、`$(Build.Repository.LocalPath)\\**\\*.exec` と指定します。"
+  "loc.input.help.additionalCodeCoverageFiles": "Regular expression specifying the additional code coverage files to be published as an artifact against the build. For example, `$(Build.SourcesDirectory)/**/*.exec`"
 }

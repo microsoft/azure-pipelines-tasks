@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL Database の配置",
-  "loc.helpMarkDown": "[詳細] (https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "DACPAC を使用して Azure SQL DB を展開します",
   "loc.instanceNameFormat": "Azure SQL DACPAC: $(DacpacFile) を展開します",
   "loc.group.displayName.target": "ターゲット ",
@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceName": "Azure クラシック サブスクリプション",
   "loc.input.help.ConnectedServiceName": "SQL Dacpac ファイルを配置する対象にする Azure クラシック サブスクリプション",
   "loc.input.label.ConnectedServiceNameARM": "Azure RM サブスクリプション",
-  "loc.input.help.ConnectedServiceNameARM": "SQL Dacpac ファイルを配置する対象にする Azure リソース マネージャー サブスクリプション",
+  "loc.input.help.ConnectedServiceNameARM": "SQL Dacpac ファイルを配置する対象にする Azure Resource Manager サブスクリプション",
   "loc.input.label.DacpacFile": "DACPAC ファイル",
   "loc.input.help.DacpacFile": "認証エージェントとして使用可能な自動化エージェントまたは UNC パス (\\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac など) 上の DACPAC ファイルの場所。$(agent.releaseDirectory) などの定義済みシステム変数も使用できます。",
   "loc.input.label.ServerName": "Azure SQL Server 名",

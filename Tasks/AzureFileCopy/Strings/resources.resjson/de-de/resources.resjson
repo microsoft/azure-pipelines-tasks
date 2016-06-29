@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure-Dateikopiervorgang",
-  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Dateien in Azure-Blobs oder VMs kopieren",
   "loc.instanceNameFormat": "$(Destination)-Dateikopiervorgang",
   "loc.group.displayName.output": "Output",
@@ -38,7 +38,7 @@
   "loc.input.label.AdditionalArguments": "Weitere Argumente",
   "loc.input.help.AdditionalArguments": "Zusätzliche AzCopy.exe-Argumente, die beim Hochladen in den BLOB oder beim Hochladen auf die virtuelle Maschine angewendet werden (z.B. \"/NC:10\").",
   "loc.input.label.enableCopyPrerequisites": "Kopiervoraussetzungen aktivieren",
-  "loc.input.help.enableCopyPrerequisites": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs.",
+  "loc.input.help.enableCopyPrerequisites": "Durch das Aktivieren dieser Option wird der Listener der Windows-Remoteverwaltung (Windows Remote Management, WinRM) über das HTTPS-Protokoll an Port 5986 mithilfe eines selbstsignierten Zertifikats konfiguriert. Diese Konfiguration ist zum Ausführen des Kopiervorgangs auf Azure-Computern erforderlich. Wenn die virtuellen Zielcomputer durch Lastenausgleich gesichert werden, stellen Sie sicher, dass die Regeln für eingehenden NAT-Datenverkehr für den Zielport (5986) konfiguriert sind. Gilt nur für virtuelle ARM-Computer.",
   "loc.input.label.CopyFilesInParallel": "Parallel kopieren",
   "loc.input.help.CopyFilesInParallel": "Wenn diese Option auf \"True\" festgelegt ist, werden Dateien parallel auf die Zielcomputer kopiert.",
   "loc.input.label.CleanTargetBeforeCopy": "Ziel bereinigen",

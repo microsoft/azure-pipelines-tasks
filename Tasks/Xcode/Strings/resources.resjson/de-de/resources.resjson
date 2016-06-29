@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xcode-Build",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Xcode-Arbeitsbereich auf Mac OS erstellen",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "Signierung und Bereitstellung",

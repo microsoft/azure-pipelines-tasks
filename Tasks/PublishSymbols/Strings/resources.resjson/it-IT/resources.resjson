@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Indicizza origini e pubblica simboli",
-  "loc.helpMarkDown": "Consente di indicizzare il codice sorgente e di pubblicare i simboli in una condivisione file.<br/>[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Consente di indicizza il codice sorgente e di pubblicare i simboli in una condivisione file",
   "loc.instanceNameFormat": "Percorso di pubblicazione simboli: $(SymbolsPath)",
   "loc.group.displayName.advanced": "Avanzate",

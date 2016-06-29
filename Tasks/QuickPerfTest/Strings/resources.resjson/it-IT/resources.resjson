@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Test prestazioni Web basato sul cloud",
-  "loc.helpMarkDown": "È possibile usare questa attività per attivare un test di carico basato sul cloud con Visual Studio Online. [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=613203).",
-  "loc.description": "Consente di eseguire il test prestazioni Web rapido nel cloud con Visual Studio Online",
+  "loc.helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.description": "Runs a quick web performance test in the cloud with Visual Studio Team Services",
   "loc.instanceNameFormat": "Test prestazioni Web rapido $(testName)",
   "loc.input.label.connectedServiceName": "Connessione registrata",
-  "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al servizio registrata in precedenza per comunicare con il servizio del test di carico basato sul cloud. Scegliere 'Gestisci' per registrare una nuova connessione.",
+  "loc.input.help.connectedServiceName": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new connection.",
   "loc.input.label.websiteUrl": "URL del sito Web",
-  "loc.input.help.websiteUrl": "Immettere l'URL del sito Web dell'applicazione nel formato http://www.your.app/home.html",
+  "loc.input.help.websiteUrl": "Enter your application website URL as http://www.your.app/home.html",
   "loc.input.label.testName": "Nome del test",
   "loc.input.help.testName": "Consente di assegnare un nome al test di carico per la verifica e la correlazione.",
   "loc.input.label.vuLoad": "Carico utente",
@@ -14,5 +14,5 @@
   "loc.input.label.runDuration": "Durata esecuzione (sec)",
   "loc.input.help.runDuration": "Durata dell'esecuzione dei test di carico espressa in secondi.",
   "loc.input.label.geoLocation": "Località di carico",
-  "loc.input.help.geoLocation": "Area geografica da cui generare il carico. Per altri dettagli, vedere la Guida relativa all'attività."
+  "loc.input.help.geoLocation": "Geographical region to generate the load from. See help for more details."
 }

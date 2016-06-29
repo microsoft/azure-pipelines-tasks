@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 테스트",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Visual Studio Test Runner로 테스트 실행",
   "loc.instanceNameFormat": "테스트 어셈블리 $(testAssembly)",
   "loc.group.displayName.executionOptions": "실행 옵션",
@@ -31,5 +31,20 @@
   "loc.input.label.configuration": "구성",
   "loc.input.help.configuration": "테스트를 보고해야 하는 구성입니다. 빌드 작업에서 구성에 사용할 변수를 정의한 경우, 여기에서 해당 변수를 사용하세요.",
   "loc.input.label.publishRunAttachments": "테스트 첨부 파일 업로드",
-  "loc.input.help.publishRunAttachments": "게시 테스트 실행 수준 첨부 파일의 옵트인(opt in)/옵트아웃(opt out)입니다."
+  "loc.input.help.publishRunAttachments": "게시 테스트 실행 수준 첨부 파일의 옵트인(opt in)/옵트아웃(opt out)입니다.",
+  "loc.messages.VstestReturnCode": "Vstest exited with return code: %d.",
+  "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
+  "loc.messages.VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
+  "loc.messages.VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
+  "loc.messages.NoResultsToPublish": "No results found to publish.",
+  "loc.messages.ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
+  "loc.messages.ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
+  "loc.messages.RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
+  "loc.messages.FailedToSetRunInParallel": "Failed to set run in parallel. Invalid run settings file.",
+  "loc.messages.UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
+  "loc.messages.ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
+  "loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
+  "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
+  "loc.messages.ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
+  "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run."
 }

@@ -1,13 +1,18 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "运行 PowerShell 脚本",
-  "loc.instanceNameFormat": "Powershell: $(scriptName)",
+  "loc.instanceNameFormat": "PowerShell Script",
   "loc.group.displayName.advanced": "高级",
-  "loc.input.label.scriptName": "脚本文件名",
+  "loc.input.label.scriptType": "Type",
+  "loc.input.help.scriptType": "Type of the script: File Path or Inline Script",
+  "loc.input.label.scriptName": "Script Path",
   "loc.input.help.scriptName": "要执行的脚本的路径。应是完全限定的路径或相对于默认工作目录。",
   "loc.input.label.arguments": "参数",
   "loc.input.help.arguments": "传递给 PowerShell 脚本的参数。是序号或命名参数",
   "loc.input.label.workingFolder": "工作文件夹",
-  "loc.input.help.workingFolder": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。"
+  "loc.input.help.workingFolder": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。",
+  "loc.input.label.inlineScript": "Inline Script",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure. This feature requires an agent version 1.102 or higher, to enable not failing on STDERR."
 }

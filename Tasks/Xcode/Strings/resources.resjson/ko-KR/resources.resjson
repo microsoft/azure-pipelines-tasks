@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xcode 빌드",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Mac OS에서 Xcode 작업 영역 빌드",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "서명 및 프로비전",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 클라우드 서비스 배포",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Azure 클라우드 서비스 배포",
   "loc.instanceNameFormat": "Azure 배포: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "새 서비스 만들기에 대한 고급 옵션",

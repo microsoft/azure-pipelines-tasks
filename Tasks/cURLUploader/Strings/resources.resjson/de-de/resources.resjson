@@ -1,19 +1,19 @@
 {
   "loc.friendlyName": "cURL-Dateiupload",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=627418)",
-  "loc.description": "Verwendet cURL zum Hochladen von Dateien mit unterstützten Protokollen (FTP, FTPS, SFTP, HTTP usw.)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.description": "Use cURL to upload files with FTP, FTPS, SFTP, HTTP, and more.",
   "loc.instanceNameFormat": "$(files) mit cURL hochladen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.files": "Dateien",
-  "loc.input.help.files": "Hochzuladende Dateien. Platzhalter können verwendet werden. Beispiel: \"**\\*.zip\" für alle ZIP-Dateien in allen Unterordnern.",
+  "loc.input.help.files": "File(s) to be uploaded. Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders.",
   "loc.input.label.username": "Benutzername",
-  "loc.input.help.username": "Geben Sie den Benutzernamen für die Serverauthentifizierung an.",
+  "loc.input.help.username": "Specify the username for server authentication.",
   "loc.input.label.password": "Kennwort",
-  "loc.input.help.password": "Geben Sie das Kennwort für die Serverauthentifizierung an. Dass Kennwort muss auf eine geheime Variable verweisen, die auf der Registerkarte für Variablen definiert ist.",
+  "loc.input.help.password": "Specify the password for server authentication. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
   "loc.input.label.url": "URL",
-  "loc.input.help.url": "Geben Sie die URL an, zu der die Dateien hochgeladen werden. Das Verzeichnis muss mit einem nachgestellten Schrägstrich enden. Mögliche Protokolle: DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET und TFTP.",
+  "loc.input.help.url": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`.",
   "loc.input.label.options": "Optionale Argumente",
   "loc.input.help.options": "Zusätzliche Argumente, die an cURL übergeben werden.",
   "loc.input.label.redirectStderr": "Standardfehler an Standardausgabe umleiten",
-  "loc.input.help.redirectStderr": "Fügen Sie \"--stderr -\" zu cURL hinzu. Standardmäßig schreibt cURL die Statusleiste in stderr, und beim Build wird dies als Fehlerausgabe verwendet. Dieses Verhalten wird unterdrückt."
+  "loc.input.help.redirectStderr": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior."
 }
