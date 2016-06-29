@@ -4,8 +4,9 @@ param()
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\VsTest\Helpers.ps1
 
-$temprunsettingsfile = [io.path]::ChangeExtension([io.path]::GetTempFileName(),"runsettings")
+$temprunsettingsfile = [io.path]::GetTempFileName()
 $runsettings = @('<RunSettings><RunConfiguration>
+<ResultsDirectory></ResultsDirectory> 
 </RunConfiguration></RunSettings>
 ')
 Set-Content -Value $runsettings -Path $temprunsettingsfile

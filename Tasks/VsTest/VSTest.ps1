@@ -111,7 +111,7 @@ try
         #If there is settings file and no override parameters, try to get the custom resutls location
         if(![System.String]::IsNullOrWhiteSpace($runSettingsFileWithParallel) -and !$overrideTestrunParameters)
         {
-            $testResultsDirectory = GetResultsLocation $runSettingsFileWithParallel 
+            $testResultsDirectory = Get-ResultsLocation $runSettingsFileWithParallel 
         }
         if(!$testResultsDirectory)
         {

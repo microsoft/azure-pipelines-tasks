@@ -11,7 +11,7 @@ $runsettings = @('<RunSettings><RunConfiguration>
 ')
 Set-Content -Value $runsettings -Path $tempsettingsfile
 
-$resultsLocation = GetResultsLocation $tempsettingsfile
+$resultsLocation = Get-ResultsLocation $tempsettingsfile
 
 $expectedLocation = [io.path]::Combine([io.path]::GetDirectoryName($tempsettingsfile), "myResultsFolder")
 Assert-AreEqual $expectedLocation $resultsLocation 
