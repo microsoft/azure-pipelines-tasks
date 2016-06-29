@@ -474,10 +474,8 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
                     result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
                     var resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
                     resultDirectory = resultDirectory.trim();
-                    if (resultDirectory && path.isAbsolute(resultDirectory)) {
-                        defer.resolve(resultDirectory);
-                    }
-                    else if (resultDirectory) {
+                    
+                    if (resultDirectory) {
                         defer.resolve(path.resolve(path.dirname(runSettingsFile), resultDirectory));
                     }
                     else {
