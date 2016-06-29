@@ -15,6 +15,38 @@
     return $certificate
 }
 
+function Set-UserAgent
+{
+    $serverString = "TFS"
+    if ($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI.ToLower().Contains("visualstudio.com".ToLower()))
+    {
+        $serverString = "VSTS"
+    }
+    
+    $userAgent = [string]::Empty
+    if ($env:SYSTEM_HOSTTYPE -ieq "build")
+    {
+        $userAgent = $serverString + "_" + $env:SYSTEM_COLLECTIONID + "_" + "build" + "_" + $env:SYSTEM_DEFINITIONID + "_" + $env:BUILD_BUILDID
+    }
+
+    if ($env:SYSTEM_HOSTTYPE -ieq "release")
+    {
+        $userAgent = $serverString + "_" + $env:SYSTEM_COLLECTIONID + "_" + "release" + "_" + $env:RELEASE_DEFINITIONID + "_" + $env:RELEASE_RELEASEID + "_" + $env:RELEASE_ENVIRONMENTID + "_" + $env:RELEASE_ATTEMPTNUMBER
+    }
+
+    if (Get-Module Azure)
+    {
+        Import-Module Azure
+    }
+
+    if (Get-module -Name Azurerm.profile -ListAvailable)
+    {
+        Import-Module Azurerm.profile
+    }
+
+    [Microsoft.Azure.Common.Authentication.AzureSession]::ClientFactory.AddUserAgent($UserAgent)
+}
+
 function Initialize-AzureSubscription {
     [CmdletBinding()]
     param(
