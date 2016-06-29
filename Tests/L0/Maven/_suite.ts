@@ -3,6 +3,7 @@
 
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
+import mockHelper = require('../../lib/mockHelper');
 import path = require('path');
 import fs = require('fs');
 
@@ -17,7 +18,7 @@ function setResponseFile(name: string) {
 }
 
 // Sets up a Maven TaskRunner instance with all of the required default settings
-function setupDefaultMavenTaskRunner():trm.TaskRunner {
+function setupDefaultMavenTaskRunner(): trm.TaskRunner {
     var taskRunner = new trm.TaskRunner('Maven', true, true);
     // default required settings
     taskRunner.setInput('mavenVersionSelection', 'Path');
@@ -34,8 +35,8 @@ function setupDefaultMavenTaskRunner():trm.TaskRunner {
 }
 
 // Recursively lists all files within the target folder, giving their full paths.
-function listFolderContents(folder):string[] {
-    var result:string[] = [];
+function listFolderContents(folder): string[] {
+    var result: string[] = [];
     var filesInFolder = fs.readdirSync(folder);
 
     filesInFolder.forEach(function (fileInFolder) {
@@ -48,36 +49,10 @@ function listFolderContents(folder):string[] {
     return result;
 }
 
-// Adds mock exist, checkPath, rmRF and mkdirP responses for given file paths.
-// Takes an object to add to and an array of file paths for which responses should be added.
-// Modifies and returns the argument object.
-function setupMockResponsesForPaths(responseObject:any, paths: string[]) { // Can't use rest arguments here (gulp-mocha complains)
-
-    // Create empty objects for responses only if they did not already exist (avoid overwriting existing responses)
-    responseObject.exist = responseObject.exist || {};
-    responseObject.checkPath = responseObject.checkPath || {};
-    responseObject.rmRF = responseObject.rmRF || {};
-    responseObject.mkdirP = responseObject.mkdirP || {};
-
-    var rmRFSuccessObj = {
-        success: true,
-        message: "foo bar"
-    };
-
-    paths.forEach((path) => {
-        responseObject.exist[path] = true;
-        responseObject.checkPath[path] = true;
-        responseObject.rmRF[path] = rmRFSuccessObj;
-        responseObject.mkdirP[path] = true;
-    });
-
-    return responseObject;
-}
-
 // Create temp dirs for mavencodeanalysis tests to save into
-function createTempDirsForCodeAnalysisTests():void {
-    var testTempDir:string = path.join(__dirname, '_temp');
-    var caTempDir:string = path.join(testTempDir, '.codeAnalysis');
+function createTempDirsForCodeAnalysisTests(): void {
+    var testTempDir: string = path.join(__dirname, '_temp');
+    var caTempDir: string = path.join(testTempDir, '.codeAnalysis');
 
     if (!fs.existsSync(testTempDir)) {
         fs.mkdirSync(testTempDir);
@@ -89,9 +64,9 @@ function createTempDirsForCodeAnalysisTests():void {
 }
 
 // Create temp dirs for mavencodeanalysis tests to save into
-function createTempDirsForSonarQubeTests():void {
-    var testTempDir:string = path.join(__dirname, '_temp');
-    var sqTempDir:string = path.join(testTempDir, '.sqAnalysis');
+function createTempDirsForSonarQubeTests(): void {
+    var testTempDir: string = path.join(__dirname, '_temp');
+    var sqTempDir: string = path.join(testTempDir, '.sqAnalysis');
 
     if (!fs.existsSync(testTempDir)) {
         fs.mkdirSync(testTempDir);
@@ -111,29 +86,13 @@ function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString:
 }
 
 // Asserts the existence of a given line in the build summary file that is uploaded to the server.
-function assertBuildSummaryContains(buildSummaryFilePath:string, expectedLine:string):void {
-    var buildSummaryString:string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
+function assertBuildSummaryContains(buildSummaryFilePath: string, expectedLine: string): void {
+    var buildSummaryString: string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
 
     assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
 }
 
-// Creates a new response json file based on an initial one and some env variables 
-function setResponseAndBuildVars(initialResponseFile:string, finalResponseFile:string, envVars: Array<[string,string]> ) {
-
-    var responseJsonFilePath: string = path.join(__dirname, initialResponseFile);
-    var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
-    responseJsonContent.getVariable = responseJsonContent.getVariable || {};
-    for (var envVar of envVars)
-    {
-        responseJsonContent.getVariable[envVar[0]]= envVar[1];
-    }
-
-    var newResponseFilePath: string = path.join(__dirname, finalResponseFile);
-    fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-    setResponseFile(path.basename(newResponseFilePath));
-}
-
-describe('Maven Suite', function() {
+describe('Maven Suite', function () {
     this.timeout(20000);
 
     before((done) => {
@@ -141,7 +100,7 @@ describe('Maven Suite', function() {
         done();
     });
 
-    after(function() {
+    after(function () {
 
     });
 
@@ -705,33 +664,33 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('run maven including SonarQube analysis', function(done) {
+    it('run maven including SonarQube analysis', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-       setResponseAndBuildVars(
-            'response.json',
-            'new_response.json',
+        var responseFilePath = mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'response.json'),
+            path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
                 ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var tr: trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
 
@@ -758,29 +717,29 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('run maven including SonarQube analysis (with db details)', function(done) {
+    it('run maven including SonarQube analysis (with db details)', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        setResponseAndBuildVars(
-            'response.json',
-            'new_response.json',
+        var responseFilePath = mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'response.json'),
+            path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
                 ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
@@ -824,32 +783,32 @@ describe('Maven Suite', function() {
     })
 
 
-    it('Maven with SonarQube - Fails when report-task.txt is invalid', function(done) {
+    it('Maven with SonarQube - Fails when report-task.txt is invalid', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-invalid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-invalid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        setResponseAndBuildVars(
-            'response.json',
-            'new_response.json',
+        var responseFilePath = mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'response.json'),
+            path.join(__dirname, 'new_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var tr: trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
 
@@ -876,32 +835,32 @@ describe('Maven Suite', function() {
             });
     });
 
-    it('Maven with SonarQube - Fails when report-task.txt is missing', function(done) {
+    it('Maven with SonarQube - Fails when report-task.txt is missing', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = __dirname;
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = __dirname;
+        var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        setResponseAndBuildVars(
-            'response.json',
-            'new_response.json',
+        var responseFilePath = mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'response.json'),
+            path.join(__dirname, 'new_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var tr: trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
 
@@ -929,32 +888,32 @@ describe('Maven Suite', function() {
             });
     });
 
-    it('Maven with SonarQube - Does not fail if report-task.txt is missing during a PR build', function(done) {
+    it('Maven with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = __dirname;
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = __dirname;
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'response.json',
-            'new_response.json',
+        var responseFilePath = mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'response.json'),
+            path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
                 ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var tr: trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
 
@@ -963,7 +922,7 @@ describe('Maven Suite', function() {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
                 assert(tr.ran(
                     '/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
-                    ), 'it should have run SQ analysis');
+                ), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length < 1, 'should not have written to stderr');
@@ -1017,33 +976,33 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('maven calls enable code coverage and publish code coverage and sonar analysis when jacoco and sonar analysis is selected', function(done) {
+    it('maven calls enable code coverage and publish code coverage and sonar analysis when jacoco and sonar analysis is selected', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        setResponseAndBuildVars(
-            'responseCodeCoverage.json',
-            'new_response.json',
+        var responseFilePath = mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'responseCodeCoverage.json'),
+            path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
                 ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var tr: trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
         tr.setInput('codeCoverageTool', 'JaCoCo');
@@ -1137,33 +1096,33 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('maven calls enable code coverage and publish code coverage and sonar analysis when cobertura is selected and sonar analysis enabled', function(done) {
+    it('maven calls enable code coverage and publish code coverage and sonar analysis when cobertura is selected and sonar analysis enabled', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        setResponseAndBuildVars(
-            'responseCodeCoverage.json',
-            'new_response.json',
+        var responseFilePath = mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'responseCodeCoverage.json'),
+            path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
                 ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var tr: trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
         tr.setInput('codeCoverageTool', 'Cobertura');
@@ -1248,27 +1207,27 @@ describe('Maven Suite', function() {
             });
     })
 
-    it('Maven with PMD - Executes PMD and uploads results when there is only a root module', function(done) {
+    it('Maven with PMD - Executes PMD and uploads results when there is only a root module', function (done) {
         // In the test data:
         // /: pom.xml, target/.
         // Expected: one module, root.
 
         // Arrange
         createTempDirsForCodeAnalysisTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'singlemodule');
-        var testStgDir:string = path.join(__dirname, '_temp');
-        var codeAnalysisStgDir:string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
-        var pmdStgDir:string = path.join(codeAnalysisStgDir, '.pmd'); // PMD subdir is used for artifact staging
-        var moduleStgDir:string = path.join(pmdStgDir, 'root'); // one and only one module in test data, called root
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
+        var pmdStgDir: string = path.join(codeAnalysisStgDir, '.pmd'); // PMD subdir is used for artifact staging
+        var moduleStgDir: string = path.join(pmdStgDir, 'root'); // one and only one module in test data, called root
 
-        var responseJsonFilePath:string = path.join(__dirname, 'response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Set mocked build variables
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
@@ -1277,12 +1236,12 @@ describe('Maven Suite', function() {
         responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
         // Set up the task runner with the test settings
-        var taskRunner:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
         taskRunner.setInput('pmdAnalysisEnabled', 'true');
 
         // Act
@@ -1312,7 +1271,7 @@ describe('Maven Suite', function() {
             });
     });
 
-    it('Maven with PMD - Executes PMD and uploads results when multiple modules are present', function(done) {
+    it('Maven with PMD - Executes PMD and uploads results when multiple modules are present', function (done) {
         // In the test data:
         // /: pom.xml, no target/
         // /util/: pom.xml, target/, has violations
@@ -1323,19 +1282,19 @@ describe('Maven Suite', function() {
 
         // Arrange
         createTempDirsForCodeAnalysisTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'multimodule');
-        var testStgDir:string = path.join(__dirname, '_temp');
-        var codeAnalysisStgDir:string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
-        var pmdStgDir:string = path.join(codeAnalysisStgDir, '.pmd'); // PMD subdir is used for artifact staging
+        var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
+        var pmdStgDir: string = path.join(codeAnalysisStgDir, '.pmd'); // PMD subdir is used for artifact staging
 
-        var responseJsonFilePath:string = path.join(__dirname, 'response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Set mocked build variables
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
@@ -1344,12 +1303,12 @@ describe('Maven Suite', function() {
         responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
         // Set up the task runner with the test settings
-        var taskRunner:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
         taskRunner.setInput('pmdAnalysisEnabled', 'true');
 
         // Act
@@ -1386,13 +1345,13 @@ describe('Maven Suite', function() {
             });
     });
 
-    it('Maven with PMD - Skips PMD goals if PMD is not enabled', function(done) {
+    it('Maven with PMD - Skips PMD goals if PMD is not enabled', function (done) {
         // Arrange
         createTempDirsForCodeAnalysisTests();
-        var testStgDir:string = path.join(__dirname, '_temp');
-        var testSrcDir:string = path.join(__dirname, 'data');
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data');
 
-        var responseJsonFilePath:string = path.join(__dirname, 'response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Set mocked build variables
@@ -1402,12 +1361,12 @@ describe('Maven Suite', function() {
         responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
         // Set up the task runner with the test settings
-        var taskRunner:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
         taskRunner.setInput('pmdAnalysisEnabled', 'false');
 
         // Act
@@ -1434,18 +1393,18 @@ describe('Maven Suite', function() {
             });
     });
 
-    it('Maven with PMD - Should succeed even if XML output cannot be found', function(done) {
+    it('Maven with PMD - Should succeed even if XML output cannot be found', function (done) {
         // Arrange
         createTempDirsForCodeAnalysisTests();
-        var testStgDir:string = path.join(__dirname, '_temp');
-        var testSrcDir:string = path.join(__dirname, 'data');
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data');
 
         // Add test file(s) to the response file so that tl.exist() and tl.checkPath() calls return correctly
-        var srcResponseFilePath:string = path.join(__dirname, 'response.json');
+        var srcResponseFilePath: string = path.join(__dirname, 'response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(srcResponseFilePath, 'utf-8'));
 
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Set mocked build variables
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
@@ -1453,14 +1412,14 @@ describe('Maven Suite', function() {
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
         responseJsonContent.getVariable['build.buildNumber'] = '1';
 
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
 
         // Set the newly-changed response file
         setResponseFile(path.basename(newResponseFilePath));
 
         // Set up the task runner with the test settings
-        var taskRunner:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
         taskRunner.setInput('pmdAnalysisEnabled', 'true');
 
         // Act
@@ -1486,32 +1445,32 @@ describe('Maven Suite', function() {
             });
     });
 
-    it('during PR builds SonarQube analysis runs in issues mode', function(done) {
+    it('during PR builds SonarQube analysis runs in issues mode', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'response.json',
-            'new_response.json',
+        var responseFilePath = mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'response.json'),
+            path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
                 ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, 'new_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr:trm.TaskRunner = setupDefaultMavenTaskRunner();
+        var tr: trm.TaskRunner = setupDefaultMavenTaskRunner();
         tr.setInput('sqAnalysisEnabled', 'true');
         tr.setInput('sqConnectedServiceName', 'ID1');
 

@@ -8,6 +8,8 @@ import trm = require('../../lib/taskRunner');
 import psm = require('../../lib/psRunner');
 import path = require('path');
 import os = require('os');
+import mockHelper = require('../../lib/mockHelper');
+import fs = require('fs');
 var shell = require('shelljs');
 var ps = shell.which('powershell');
 var psr = null;
@@ -16,7 +18,7 @@ function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('VsTest Suite', function() {
+describe('VsTest Suite', function () {
     this.timeout(20000);
 
     before((done) => {
@@ -28,7 +30,7 @@ describe('VsTest Suite', function() {
         done();
     });
 
-    after(function() {
+    after(function () {
         psr.kill();
     });
 
@@ -484,4 +486,87 @@ describe('VsTest Suite', function() {
                 done(err);
             });
     })
+
+    it('Vstest task with results directory as absolute path in run settings file', (done) => {
+        var settingsFilePath = path.join(__dirname, 'data', 'ResultsDirectoryWithAbsolutePath.runsettings');
+        var resultsDirectory = 'C:\\test'; // settings file has this result directory.
+
+        var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
+        responseJsonContent.rmRF = responseJsonContent.rmRF || {};
+        var newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('runSettingsFile', settingsFilePath);
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.indexOf("creating path: " + resultsDirectory) >= 0, 'should have created results directory.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Vstest task with results directory as relative path in run settings file', (done) => {
+        var settingsFilePath = path.join(__dirname, 'data', 'ResultsDirectoryWithRelativePath.runsettings');
+        var resultsDirectory = path.join(__dirname, 'data', 'result'); // settings file has this result directory.
+
+        var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
+        responseJsonContent.rmRF = responseJsonContent.rmRF || {};
+        var newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('runSettingsFile', settingsFilePath);
+
+        tr.run()
+            .then(() => {
+                //vstest task reads result directory from settings file and creates it.
+                assert(tr.stdout.indexOf("creating path: " + resultsDirectory) >= 0, 'should have created results directory.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Vstest task with results directory empty in run settings file', (done) => {
+        var settingsFilePath = path.join(__dirname, 'data', 'RunSettingsWithoutResultsDirectory.runsettings');
+        var resultsDirectory = '\\source\\TestResults'; // when results directory is empty in settings file, default result directory should be considered.
+
+        var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
+        responseJsonContent.rmRF = responseJsonContent.rmRF || {};
+        var newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('runSettingsFile', settingsFilePath);
+
+        tr.run()
+            .then(() => {
+                //vstest task reads result directory from settings file and creates it.
+                assert(tr.stdout.indexOf("creating path: " + resultsDirectory) >= 0, 'should have created results directory.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
 });
