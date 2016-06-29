@@ -44,14 +44,14 @@
             "type": "string",
             "label": "Configuration",
             "defaultValue": "$(Configuration)",
-            "required": true
+            "required": false
         },
         {
             "name": "sdk",
             "type": "string",
             "label": "SDK",
             "defaultValue": "$(SDK)",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Build an Xcode project or workspace against the specified SDK.  Run *xcodebuild -showsdks* to see the valid list of SDKs."
         },
         {

@@ -220,7 +220,7 @@ function run() {
                         //copy the provisioning profile file to ~/Library/MobileDevice/Provisioning Profiles
                         var userProfilesPath = path.join(process.env['HOME'], 'Library', 'MobileDevice', 'Provisioning Profiles');
                         tl.mkdirP(userProfilesPath); // Path may not exist if Xcode has not been run yet.
-                        var pathToProvProfile = path.join(userProfilesPath, provProfileUUID + '.mobileprovision');
+                        var pathToProvProfile = path.join(userProfilesPath, provProfileUUID.concat('.mobileprovision'));
                         tl.debug('pathToProvProfile = ' + pathToProvProfile);
                         var copyProvProfile = tl.createToolRunner(tl.which('cp', true));
                         copyProvProfile.arg('-f');

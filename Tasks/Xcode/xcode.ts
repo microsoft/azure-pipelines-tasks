@@ -34,7 +34,7 @@ async function run() {
             process.env['DEVELOPER_DIR'] = xcodeDeveloperDir;
         }
 
-        // Use xctool or xccode build based on flag
+        // Use xctool or xcodebuild based on flag
         var useXctool = tl.getBoolInput('useXctool', false);
         var tool = useXctool ? tl.which('xctool', true) : tl.which('xcodebuild', true);
         tl.debug('Tool selected: '+ tool);
@@ -47,12 +47,17 @@ async function run() {
         //setup build
         var xcb = tl.createToolRunner(tool);
 
-        // Add required flags
-        var sdk = tl.getInput('sdk', true);
-        xcb.arg('-sdk');
-        xcb.arg(sdk);
-        xcb.arg('-configuration');
-        xcb.arg(tl.getInput('configuration', true));
+        // Add common arguments for the build
+        var sdk = tl.getInput('sdk', false); //sdk is not required for watchkit
+        if(sdk) {
+            xcb.arg('-sdk');
+            xcb.arg(sdk);
+        }
+        var configuration = tl.getInput('configuration', false);
+        if(configuration) {
+            xcb.arg('-configuration');
+            xcb.arg(configuration);
+        }
 
         //Test Results publish inputs
         var testResultsFiles;
@@ -94,7 +99,7 @@ async function run() {
         var scheme = tl.getInput('scheme', false);
         if(scheme) {
             xcb.arg('-scheme');
-            xcb.arg(tl.getInput('scheme', true));
+            xcb.arg(scheme);
         } else {
             tl.debug('No scheme specified in task.');
         }
@@ -130,7 +135,7 @@ async function run() {
             //create a temporary keychain and install the p12 into that keychain
             if(p12 && fs.lstatSync(p12).isFile()) {
                 p12 = path.resolve(cwd, p12);
-                var keychain = path.join(cwd, '_tasktmp.keychain');
+                var keychain = path.join(cwd, '_xcodetasktmp.keychain');
 
                 //delete keychain if it exists
                 if (fs.existsSync(keychain)) {
@@ -184,10 +189,10 @@ async function run() {
                 findIdentity.pathArg(keychain);
                 findIdentity.on('stdout', function (data) {
                     if (data) {
-                        var matches = data.toString().trim().match(/\(.+\)/g);
+                        var matches = data.toString().trim().match(/\((.+)\)/g);
                         tl.debug('signing identity data = ' + matches);
                         if(matches) {
-                            signIdentity = matches[0].replace('(', '').replace(')', '');
+                            signIdentity = matches[0];
                         }
                     }
                 })
@@ -217,7 +222,7 @@ async function run() {
 
                 if(provProfileDetails) {
                     //write the provisioning profile to a plist
-                    var tmpPlist = path.join(cwd, '_tasktmpPlist');
+                    var tmpPlist = path.join(cwd, '_xcodetasktmpPlist');
                     fs.writeFileSync(tmpPlist, provProfileDetails);
                 } else {
                     throw 'Failed to find the details for specified provisioning profile.';
@@ -235,6 +240,7 @@ async function run() {
                     }
                 })
                 await plistTool.exec();
+
                 if(provProfileUUID) {
                     xcb.arg('PROVISIONING_PROFILE=' + provProfileUUID);
 
