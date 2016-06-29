@@ -671,7 +671,7 @@ describe('Maven Suite', function () {
         var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
@@ -724,7 +724,7 @@ describe('Maven Suite', function () {
         var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
@@ -790,7 +790,7 @@ describe('Maven Suite', function () {
         var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
@@ -842,7 +842,7 @@ describe('Maven Suite', function () {
         var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
@@ -894,7 +894,7 @@ describe('Maven Suite', function () {
         var testSrcDir: string = __dirname;
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
@@ -983,7 +983,7 @@ describe('Maven Suite', function () {
         var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'responseCodeCoverage.json'),
             path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
@@ -1103,7 +1103,7 @@ describe('Maven Suite', function () {
         var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'responseCodeCoverage.json'),
             path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
@@ -1451,7 +1451,7 @@ describe('Maven Suite', function () {
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],

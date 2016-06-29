@@ -699,7 +699,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
@@ -747,7 +747,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [["build.sourceBranch", "other/6/master"], ["build.repository.provider", "TFSGit"],
@@ -795,7 +795,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "ExternalGit"],
@@ -870,7 +870,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
@@ -914,7 +914,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
@@ -967,7 +967,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-invalid');
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
@@ -1017,7 +1017,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = __dirname
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
@@ -1067,7 +1067,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = __dirname
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
@@ -1121,7 +1121,7 @@ describe('gradle Suite', function () {
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
         var testStgDir: string = path.join(__dirname, '_temp');
 
-        var responseFilePath = mockHelper.setResponseAndBuildVars(
+        mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
             path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);

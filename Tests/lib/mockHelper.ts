@@ -11,6 +11,7 @@ export function setupMockResponsesForPaths(responseObject: any, paths: string[])
     responseObject.checkPath = responseObject.checkPath || {};
     responseObject.rmRF = responseObject.rmRF || {};
     responseObject.mkdirP = responseObject.mkdirP || {};
+    responseObject.stats = responseObject.stats || {};
 
     var rmRFSuccessObj = {
         success: true,

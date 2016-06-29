@@ -494,7 +494,6 @@ describe('VsTest Suite', function () {
         var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
         responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
-        responseJsonContent.rmRF = responseJsonContent.rmRF || {};
         var newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
@@ -521,7 +520,6 @@ describe('VsTest Suite', function () {
         var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
         responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
-        responseJsonContent.rmRF = responseJsonContent.rmRF || {};
         var newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
@@ -549,7 +547,6 @@ describe('VsTest Suite', function () {
         var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
         responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
-        responseJsonContent.rmRF = responseJsonContent.rmRF || {};
         var newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
