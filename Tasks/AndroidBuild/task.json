@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "demands" : [
 	    "AndroidSDK"
@@ -87,7 +87,7 @@
             "defaultValue":"Nexus 5",
             "required":false,
             "visibleRule": "createAvd = true",
-            "helpMarkDown": "The optional device definition to use. Can be a device index or id.",
+            "helpMarkDown": "The optional device definition to use. Can be a device index or ID.",
             "groupName":"avdOptions"
         },
         {
