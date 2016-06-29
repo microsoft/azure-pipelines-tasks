@@ -36,7 +36,7 @@ function run() {
                 tl.debug('DEVELOPER_DIR for build set to ' + xcodeDeveloperDir);
                 process.env['DEVELOPER_DIR'] = xcodeDeveloperDir;
             }
-            // Use xctool or xccode build based on flag
+            // Use xctool or xcodebuild based on flag
             var useXctool = tl.getBoolInput('useXctool', false);
             var tool = useXctool ? tl.which('xctool', true) : tl.which('xcodebuild', true);
             tl.debug('Tool selected: ' + tool);
@@ -46,23 +46,17 @@ function run() {
             yield xcv.exec();
             //setup build
             var xcb = tl.createToolRunner(tool);
-            // Add required flags
-            var sdk = tl.getInput('sdk', true);
-            xcb.arg('-sdk');
-            xcb.arg(sdk);
-            xcb.arg('-configuration');
-            xcb.arg(tl.getInput('configuration', true));
-            //Test Results publish inputs
-            var testResultsFiles;
-            var publishResults = tl.getBoolInput('publishJUnitResults', false);
-            var xctoolReporter = tl.getInput('xctoolReporter', false);
-            if (xctoolReporter && 0 !== xctoolReporter.length) {
-                var xctoolReporterString = xctoolReporter.split(":");
-                if (xctoolReporterString && xctoolReporterString.length === 2) {
-                    testResultsFiles = xctoolReporterString[1].trim();
-                }
+            // Add common arguments for the build
+            var sdk = tl.getInput('sdk', false); //sdk is not required for watchkit
+            if (sdk) {
+                xcb.arg('-sdk');
+                xcb.arg(sdk);
             }
-            tl.debug('testResultsFiles = ' + testResultsFiles);
+            var configuration = tl.getInput('configuration', false);
+            if (configuration) {
+                xcb.arg('-configuration');
+                xcb.arg(configuration);
+            }
             // Args: Add optional workspace flag
             var workspace = tl.getPathInput('xcWorkspacePath', false, false);
             if (tl.filePathSupplied('xcWorkspacePath')) {
@@ -76,7 +70,7 @@ function run() {
                     xcb.pathArg(workspaceMatches[0]);
                 }
                 else {
-                    tl._writeError('Workspace specified but it does not exist or is not a directory');
+                    throw 'Workspace specified but it does not exist or is not a directory';
                 }
             }
             else {
@@ -86,15 +80,10 @@ function run() {
             var scheme = tl.getInput('scheme', false);
             if (scheme) {
                 xcb.arg('-scheme');
-                xcb.arg(tl.getInput('scheme', true));
+                xcb.arg(scheme);
             }
             else {
                 tl.debug('No scheme specified in task.');
-            }
-            if (useXctool) {
-                if (xctoolReporter) {
-                    xcb.arg(['-reporter', 'plain', '-reporter', xctoolReporter]);
-                }
             }
             // Args: Add output path config
             xcb.arg(tl.getDelimitedInput('actions', ' ', true));
@@ -107,8 +96,28 @@ function run() {
             if (args) {
                 xcb.argString(args);
             }
+            //Test Results publish inputs
+            var testResultsFiles;
+            var publishResults = tl.getBoolInput('publishJUnitResults', false);
+            var xctoolReporter = tl.getInput('xctoolReporter', false);
+            if (xctoolReporter && 0 !== xctoolReporter.length) {
+                var xctoolReporterString = xctoolReporter.split(":");
+                if (xctoolReporterString && xctoolReporterString.length === 2) {
+                    testResultsFiles = path.resolve(cwd, xctoolReporterString[1].trim());
+                }
+            }
+            tl.debug('testResultsFiles = ' + testResultsFiles);
+            if (useXctool) {
+                if (xctoolReporter) {
+                    xcb.arg(['-reporter', 'plain', '-reporter', xctoolReporter]);
+                }
+            }
             //signing options
             var signMethod = tl.getInput('signMethod', false);
+            var deleteKeyChain = false;
+            var deleteKeyChainCommand;
+            var deleteProfile = false;
+            var deleteProfileCommand;
             if (signMethod === 'file') {
                 var iosSecurityTool = tl.which('/usr/bin/security', true);
                 var p12 = tl.getPathInput('p12', false, false);
@@ -118,13 +127,13 @@ function run() {
                 //create a temporary keychain and install the p12 into that keychain
                 if (p12 && fs.lstatSync(p12).isFile()) {
                     p12 = path.resolve(cwd, p12);
-                    var keychain = path.join(cwd, '_tasktmp.keychain');
+                    var keychain = path.join(cwd, '_xcodetasktmp.keychain');
                     //delete keychain if it exists
+                    deleteKeyChainCommand = tl.createToolRunner(iosSecurityTool);
+                    deleteKeyChainCommand.arg('delete-keychain');
+                    deleteKeyChainCommand.pathArg(keychain);
                     if (fs.existsSync(keychain)) {
-                        var deleteKeychain = tl.createToolRunner(iosSecurityTool);
-                        deleteKeychain.arg('delete-keychain');
-                        deleteKeychain.pathArg(keychain);
-                        yield deleteKeychain.exec();
+                        yield deleteKeyChainCommand.exec();
                     }
                     //create keychain
                     var keychainPwd = Math.random();
@@ -134,6 +143,8 @@ function run() {
                     createKeychain.arg(keychainPwd.toString());
                     createKeychain.pathArg(keychain);
                     yield createKeychain.exec();
+                    //we should clean up the keychain after the build is run
+                    deleteKeyChain = true;
                     //set keychain settings
                     var keychainSettings = tl.createToolRunner(iosSecurityTool);
                     keychainSettings.arg('set-keychain-settings');
@@ -165,10 +176,10 @@ function run() {
                     findIdentity.pathArg(keychain);
                     findIdentity.on('stdout', function (data) {
                         if (data) {
-                            var matches = data.toString().trim().match(/\(.+\)/g);
+                            var matches = data.toString().trim().match(/\((.+)\)/g);
                             tl.debug('signing identity data = ' + matches);
                             if (matches) {
-                                signIdentity = matches[0].replace('(', '').replace(')', '');
+                                signIdentity = matches[0];
                             }
                         }
                     });
@@ -197,7 +208,7 @@ function run() {
                     yield getProvProfileDetails.exec();
                     if (provProfileDetails) {
                         //write the provisioning profile to a plist
-                        var tmpPlist = path.join(cwd, '_tasktmpPlist');
+                        var tmpPlist = path.join(cwd, '_xcodetasktmp.plist');
                         fs.writeFileSync(tmpPlist, provProfileDetails);
                     }
                     else {
@@ -215,18 +226,30 @@ function run() {
                         }
                     });
                     yield plistTool.exec();
+                    //delete the temporary plist file
+                    var deletePlistCommand = tl.createToolRunner(tl.which('rm', true));
+                    deletePlistCommand.arg('-f');
+                    deletePlistCommand.pathArg(tmpPlist);
+                    yield deletePlistCommand.exec();
                     if (provProfileUUID) {
                         xcb.arg('PROVISIONING_PROFILE=' + provProfileUUID);
                         //copy the provisioning profile file to ~/Library/MobileDevice/Provisioning Profiles
                         var userProfilesPath = path.join(process.env['HOME'], 'Library', 'MobileDevice', 'Provisioning Profiles');
                         tl.mkdirP(userProfilesPath); // Path may not exist if Xcode has not been run yet.
-                        var pathToProvProfile = path.join(userProfilesPath, provProfileUUID.concat('.mobileprovision'));
+                        var pathToProvProfile = path.join(userProfilesPath, provProfileUUID.toString().trim().concat('.mobileprovision'));
                         tl.debug('pathToProvProfile = ' + pathToProvProfile);
                         var copyProvProfile = tl.createToolRunner(tl.which('cp', true));
                         copyProvProfile.arg('-f');
                         copyProvProfile.pathArg(provProfilePath); //source
                         copyProvProfile.pathArg(pathToProvProfile); //dest
                         yield copyProvProfile.exec();
+                        //setup to delete profile after build
+                        deleteProfile = tl.getBoolInput('removeProfile', false);
+                        if (deleteProfile && fs.existsSync(pathToProvProfile)) {
+                            deleteProfileCommand = tl.createToolRunner(tl.which('rm', true));
+                            deleteProfileCommand.arg('-f');
+                            deleteProfileCommand.pathArg(pathToProvProfile);
+                        }
                     }
                     else {
                         throw 'Failed to find provisioning profile UUID.';
@@ -279,21 +302,20 @@ function run() {
                     }
                 }
             }
-            //delete profile after build if needed
-            var removeProfile = tl.getBoolInput('removeProfile', false);
-            if (signMethod == 'file' && provProfileUUID && pathToProvProfile && removeProfile) {
-                var deleteCommand = tl.createToolRunner(tl.which('rm', true));
-                deleteCommand.arg('-f');
-                if (fs.existsSync(pathToProvProfile)) {
-                    deleteCommand.pathArg(pathToProvProfile);
-                    yield deleteCommand.exec();
-                }
-            }
+            tl.setResult(tl.TaskResult.Succeeded, 'Xcode task execution completed with no errors.');
         }
         catch (err) {
             tl.setResult(tl.TaskResult.Failed, err);
         }
         finally {
+            //delete provisioning profile if specified
+            if (deleteProfile && deleteProfileCommand) {
+                yield deleteProfileCommand.exec();
+            }
+            //clean up the temporary keychain, so it is not used in future builds
+            if (deleteKeyChain && deleteKeyChainCommand) {
+                yield deleteKeyChainCommand.exec();
+            }
         }
     });
 }

@@ -44,14 +44,14 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "$(Configuration)",
-      "required": true
+      "required": false
     },
     {
       "name": "sdk",
       "type": "string",
       "label": "ms-resource:loc.input.label.sdk",
       "defaultValue": "$(SDK)",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sdk"
     },
     {
