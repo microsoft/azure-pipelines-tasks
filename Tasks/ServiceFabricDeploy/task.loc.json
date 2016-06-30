@@ -1,0 +1,93 @@
+{
+  "id": "c6650aa0-185b-11e6-a47d-df93e7a34c64",
+  "name": "ServiceFabricDeploy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "publishProfilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.publishProfilePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishProfilePath"
+    },
+    {
+      "name": "applicationPackagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.applicationPackagePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.applicationPackagePath"
+    },
+    {
+      "name": "aadServiceConnectionName",
+      "type": "connectedService:servicefabric",
+      "label": "ms-resource:loc.input.label.aadServiceConnectionName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.aadServiceConnectionName"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "deploy.ps1"
+    }
+  },
+  "messages": {
+    "AzureActiveDirectoryNotSet": "ms-resource:loc.messages.AzureActiveDirectoryNotSet",
+    "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
+    "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
+    "SearchingForPublishProfile": "ms-resource:loc.messages.SearchingForPublishProfile",
+    "FoundPublishProfile": "ms-resource:loc.messages.FoundPublishProfile",
+    "SearchingForApplicationPackage": "ms-resource:loc.messages.SearchingForApplicationPackage",
+    "FoundApplicationPackage": "ms-resource:loc.messages.FoundApplicationPackage",
+    "ConnectedToCluster": "ms-resource:loc.messages.ConnectedToCluster",
+    "AadAuthority": "ms-resource:loc.messages.AadAuthority",
+    "ClusterAppId": "ms-resource:loc.messages.ClusterAppId",
+    "ClientAppId": "ms-resource:loc.messages.ClientAppId",
+    "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
+    "ServiceFabricSDKNotInstalled": "ms-resource:loc.messages.ServiceFabricSDKNotInstalled",
+    "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
+    "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
+    "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",
+    "SFSDK_UnableToReadAppTypeAndVersion": "ms-resource:loc.messages.SFSDK_UnableToReadAppTypeAndVersion",
+    "SFSDK_AppAlreadyExistsError": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsError",
+    "SFSDK_AppAlreadyExistsInfo": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsInfo",
+    "SFSDK_UnregisteringExistingAppType": "ms-resource:loc.messages.SFSDK_UnregisteringExistingAppType",
+    "SFSDK_UnableToUnregisterAppType": "ms-resource:loc.messages.SFSDK_UnableToUnregisterAppType",
+    "SFSDK_CopyingAppToImageStore": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStore",
+    "SFSDK_CopyingAppToImageStoreFailed": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStoreFailed",
+    "SFSDK_RegisterAppType": "ms-resource:loc.messages.SFSDK_RegisterAppType",
+    "SFSDK_RegisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_RegisterAppTypeFailed",
+    "SFSDK_RemoveAppPackage": "ms-resource:loc.messages.SFSDK_RemoveAppPackage",
+    "SFSDK_CreateApplication": "ms-resource:loc.messages.SFSDK_CreateApplication",
+    "SFSDK_CreateApplicationFailed": "ms-resource:loc.messages.SFSDK_CreateApplicationFailed",
+    "SFSDK_CreateApplicationSuccess": "ms-resource:loc.messages.SFSDK_CreateApplicationSuccess",
+    "SFSDK_AppDoesNotExist": "ms-resource:loc.messages.SFSDK_AppDoesNotExist",
+    "SFSDK_AppTypeMismatch": "ms-resource:loc.messages.SFSDK_AppTypeMismatch",
+    "SFSDK_UpgradeInProgressError": "ms-resource:loc.messages.SFSDK_UpgradeInProgressError",
+    "SFSDK_StartAppUpgrade": "ms-resource:loc.messages.SFSDK_StartAppUpgrade",
+    "SFSDK_UnregisterAppTypeOnUpgradeFailure": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeOnUpgradeFailure",
+    "SFSDK_WaitingForUpgrade": "ms-resource:loc.messages.SFSDK_WaitingForUpgrade",
+    "SFSDK_UnregisterUnusedVersions": "ms-resource:loc.messages.SFSDK_UnregisterUnusedVersions",
+    "SFSDK_UpgradeSuccess": "ms-resource:loc.messages.SFSDK_UpgradeSuccess",
+    "SFSDK_UpgradeRolledBack": "ms-resource:loc.messages.SFSDK_UpgradeRolledBack",
+    "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
+    "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError"
+  }
+}
