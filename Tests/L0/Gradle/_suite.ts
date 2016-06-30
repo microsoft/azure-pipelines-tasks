@@ -4,6 +4,7 @@
 
 import assert = require('assert');
 import fs = require('fs');
+import mockHelper = require('../../lib/mockHelper');
 import path = require('path');
 
 import trm = require('../../lib/taskRunner');
@@ -41,29 +42,15 @@ function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString:
 }
 
 // Asserts the existence of a given line in the build summary file that is uploaded to the server.
-function assertBuildSummaryContains(buildSummaryFilePath:string, expectedLine:string):void {
-    var buildSummaryString:string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
+function assertBuildSummaryContains(buildSummaryFilePath: string, expectedLine: string): void {
+    var buildSummaryString: string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
 
     assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
 }
 
-function setResponseAndBuildVars(initialResponseFile:string, finalResponseFile:string, envVars: Array<[string,string]> ) {
-
-    var responseJsonFilePath: string = path.join(__dirname, initialResponseFile);
-    var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
-    for (var envVar of envVars)
-    {
-        responseJsonContent.getVariable[envVar[0]]= envVar[1];
-    }
-
-    var newResponseFilePath: string = path.join(__dirname, finalResponseFile);
-    fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-    setResponseFile(path.basename(newResponseFilePath));
-}
-
 // Recursively lists all files within the target folder, giving their full paths.
-function listFolderContents(folder):string[] {
-    var result:string[] = [];
+function listFolderContents(folder): string[] {
+    var result: string[] = [];
     var filesInFolder = fs.readdirSync(folder);
 
     filesInFolder.forEach(function (fileInFolder) {
@@ -76,37 +63,10 @@ function listFolderContents(folder):string[] {
     return result;
 }
 
-// Adds mock exist, checkPath, rmRF and mkdirP responses for given file paths.
-// Takes an object to add to and an array of file paths for which responses should be added.
-// Modifies and returns the argument object.
-function setupMockResponsesForPaths(responseObject:any, paths: string[]) { // Can't use rest arguments here (gulp-mocha complains)
-
-    // Create empty objects for responses only if they did not already exist (avoid overwriting existing responses)
-    responseObject.exist = responseObject.exist || {};
-    responseObject.checkPath = responseObject.checkPath || {};
-    responseObject.rmRF = responseObject.rmRF || {};
-    responseObject.mkdirP = responseObject.mkdirP || {};
-
-    var rmRFSuccessObj = {
-        success: true,
-        message: "foo bar"
-    };
-
-
-    paths.forEach((path) => {
-        responseObject.exist[path] = true;
-        responseObject.checkPath[path] = true;
-        responseObject.rmRF[path] = rmRFSuccessObj;
-        responseObject.mkdirP[path] = true;
-    });
-
-    return responseObject;
-}
-
 // Create temp dirs for mavencodeanalysis tests to save into
-function createTempDirsForSonarQubeTests():void {
-    var testTempDir:string = path.join(__dirname, '_temp');
-    var sqTempDir:string = path.join(testTempDir, '.sqAnalysis');
+function createTempDirsForSonarQubeTests(): void {
+    var testTempDir: string = path.join(__dirname, '_temp');
+    var sqTempDir: string = path.join(testTempDir, '.sqAnalysis');
 
     if (!fs.existsSync(testTempDir)) {
         fs.mkdirSync(testTempDir);
@@ -704,7 +664,7 @@ describe('gradle Suite', function () {
                 done(err);
             });
     })
-    
+
     it('Gradle build with publish test results with no matching test result files.', (done) => {
         setResponseFile('gradleGood.json');
 
@@ -723,7 +683,6 @@ describe('gradle Suite', function () {
                 assert(tr.stdout.search(/##vso\[results.publish\]/) < 0, "publish test results should not have got called.")
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
-                console.log(tr.stdout);
                 assert(tr.stdout.search(/##vso\[task.issue type=warning;\]No test result files matching/) >= 0, 'should have produced warning.');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
@@ -737,25 +696,25 @@ describe('gradle Suite', function () {
 
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-             this.test.title + '_response.json',
-              [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
-                  ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
+            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
@@ -780,32 +739,32 @@ describe('gradle Suite', function () {
                 done(err);
             });
     });
-    
-     it('Gradle with SQ - source branch not a PR branch', function (done) {
+
+    it('Gradle with SQ - source branch not a PR branch', function (done) {
 
         // Arrange
         createTempDirsForSonarQubeTests();
-         var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-         var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-             this.test.title + '_response.json',
-              [["build.sourceBranch", "other/6/master"], ["build.repository.provider", "TFSGit"],
-                  ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-         var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
-         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
+            [["build.sourceBranch", "other/6/master"], ["build.repository.provider", "TFSGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
-         // Add fields corresponding to responses for mock filesystem operations for the following paths
-         // Staging directories
-         responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
-         // Test data files
-         responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
-         // Write and set the newly-changed response file
-         var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
-         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-         setResponseFile(path.basename(newResponseFilePath));
+        // Write and set the newly-changed response file
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
 
         var tr = new TaskRunner('gradle', true, true);
         tr = setDefaultInputs(tr, true);
@@ -828,32 +787,32 @@ describe('gradle Suite', function () {
                 done(err);
             });
     });
-    
-     it('Gradle with SQ - scc is not TfsGit', function (done) {
+
+    it('Gradle with SQ - scc is not TfsGit', function (done) {
 
         // Arrange
         createTempDirsForSonarQubeTests();
-         var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-         var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-             this.test.title + '_response.json',
-              [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "ExternalGit"],
-                 ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-         var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
-         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
+            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "ExternalGit"],
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
-         // Add fields corresponding to responses for mock filesystem operations for the following paths
-         // Staging directories
-         responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
-         // Test data files
-         responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
-         // Write and set the newly-changed response file
-         var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
-         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-         setResponseFile(path.basename(newResponseFilePath));
+        // Write and set the newly-changed response file
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
 
         var tr = new TaskRunner('gradle', true, true);
         tr = setDefaultInputs(tr, true);
@@ -908,24 +867,24 @@ describe('gradle Suite', function () {
 
     it('Gradle with Cobertura and SonarQube', function (done) {
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-            this.test.title + '_response.json',
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
@@ -952,24 +911,24 @@ describe('gradle Suite', function () {
     it('Gradle with SonarQube - Should run Gradle with SonarQube', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-            this.test.title + '_response.json',
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
@@ -1005,24 +964,24 @@ describe('gradle Suite', function () {
     it('Gradle with SonarQube - Fails if the task report is invalid', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-invalid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-invalid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-            this.test.title + '_response.json',
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
@@ -1055,24 +1014,24 @@ describe('gradle Suite', function () {
     it('Gradle with SonarQube - Fails if the task report is missing', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = __dirname
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = __dirname
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-            this.test.title + '_response.json',
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
@@ -1105,25 +1064,25 @@ describe('gradle Suite', function () {
     it('Gradle with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = __dirname
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = __dirname
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-            this.test.title + '_response.json',
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
             [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
-            ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
@@ -1139,8 +1098,8 @@ describe('gradle Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length < 1, 'should not have written to stderr');
                 assert(tr.ran(
-                        'gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json'
-                    ), 'should have run the gradle wrapper with the appropriate SonarQube arguments');
+                    'gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json'
+                ), 'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > -1,
                     'should have uploaded a SonarQube Analysis Report build summary');
@@ -1159,24 +1118,24 @@ describe('gradle Suite', function () {
     it('Gradle with SonarQube - Should run Gradle with SonarQube and apply required parameters for older server versions', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
-        var testStgDir:string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir: string = path.join(__dirname, '_temp');
 
-        setResponseAndBuildVars(
-            'gradleSonarQube.json',
-            this.test.title + '_response.json',
+        mockHelper.setResponseAndBuildVars(
+            path.join(__dirname, 'gradleSonarQube.json'),
+            path.join(__dirname, this.test.title + '_response.json'),
             [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var responseJsonFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
         // Add fields corresponding to responses for mock filesystem operations for the following paths
         // Staging directories
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
         // Test data files
-        responseJsonContent = setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
 
         // Write and set the newly-changed response file
-        var newResponseFilePath:string = path.join(__dirname, this.test.title + '_response.json');
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
