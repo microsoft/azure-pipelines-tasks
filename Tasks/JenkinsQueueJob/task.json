@@ -1,6 +1,6 @@
 {
     "id": "c24b86d4-4256-4925-9a29-246f81aa64a7",
-    "name": "jenkinsQueueJobTask",
+    "name": "JenkinsQueueJob",
     "friendlyName": "Jenkins Queue Job",
     "description": "Queue a job on a Jenkins server",
     "helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server.  [More Information](http://go.microsoft.com/fwlink/?LinkId=816956).",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Queue Jenkins Job: $(jobName)",
     "inputs": [

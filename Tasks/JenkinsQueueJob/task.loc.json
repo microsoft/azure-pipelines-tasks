@@ -1,6 +1,6 @@
 {
   "id": "c24b86d4-4256-4925-9a29-246f81aa64a7",
-  "name": "jenkinsQueueJobTask",
+  "name": "JenkinsQueueJob",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
