@@ -45,7 +45,7 @@ function Initialize-Azure {
 
         # Import/initialize the Azure module.
         Import-AzureModule -PreferredModule $preferredModules
-		Set-UserAgent
+        Set-UserAgent
         Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $storageAccount
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

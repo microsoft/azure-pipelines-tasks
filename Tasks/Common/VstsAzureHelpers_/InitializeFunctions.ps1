@@ -34,16 +34,6 @@ function Set-UserAgent
         $userAgent = $serverString + "_" + $env:SYSTEM_COLLECTIONID + "_" + "release" + "_" + $env:RELEASE_DEFINITIONID + "_" + $env:RELEASE_RELEASEID + "_" + $env:RELEASE_ENVIRONMENTID + "_" + $env:RELEASE_ATTEMPTNUMBER
     }
 
-    if (Get-Module Azure)
-    {
-        Import-Module Azure
-    }
-
-    if (Get-module -Name Azurerm.profile -ListAvailable)
-    {
-        Import-Module Azurerm.profile
-    }
-
     [Microsoft.Azure.Common.Authentication.AzureSession]::ClientFactory.AddUserAgent($UserAgent)
 }
 
