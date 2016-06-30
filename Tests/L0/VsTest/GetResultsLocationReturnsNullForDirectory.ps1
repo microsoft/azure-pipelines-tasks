@@ -7,6 +7,6 @@ param()
 $tempDirName = [System.Guid]::NewGuid().ToString() + '.runsettings'
 $tempDir = New-Item -Type Directory -Name $tempDirName
 
-$resultsLocation = GetResultsLocation $tempDirName
+$resultsLocation = Get-ResultsLocation $tempDirName
 
 Assert-AreEqual $null $resultsLocation 
