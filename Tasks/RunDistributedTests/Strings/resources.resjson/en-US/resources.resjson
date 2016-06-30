@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
   "loc.input.label.testConfigurations": "Test Configurations",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
   "loc.input.label.autMachineGroup": "Application Under Test Machines",
   "loc.input.help.autMachineGroup": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running"
 }
