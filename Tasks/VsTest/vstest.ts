@@ -204,8 +204,8 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.cd(workingDirectory);
 
     // listener for standard output
-    vstest.on('stdout', function (data) {
-        tl._outStream.write(data);
+    vstest.on('stdline', function (data) {
+        tl._writeLine(data)
     });
     // listener for error output
     vstest.on('errline', function (data) {
