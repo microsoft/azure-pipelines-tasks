@@ -13,6 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const path = require('path');
 const tl = require('vsts-task-lib/task');
 const fs = require('fs');
+const sign = require('ios-signing-common/ios-signing-common');
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -28,14 +29,15 @@ function run() {
             // Create output directory if not present
             tl.mkdirP(out);
             // Store original Xcode developer directory so we can restore it after build completes if its overridden
-            var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
-            // Set the path to the developer tools for this process call if not the default
-            var xcodeDeveloperDir = tl.getInput('xcodeDeveloperDir', false);
-            if (xcodeDeveloperDir) {
-                tl.debug('DEVELOPER_DIR was ' + origXcodeDeveloperDir);
-                tl.debug('DEVELOPER_DIR for build set to ' + xcodeDeveloperDir);
-                process.env['DEVELOPER_DIR'] = xcodeDeveloperDir;
-            }
+            /* var origXcodeDeveloperDir = process.env['DEVELOPER_DIR'];
+     
+             // Set the path to the developer tools for this process call if not the default
+             var xcodeDeveloperDir = tl.getInput('xcodeDeveloperDir', false);
+             if(xcodeDeveloperDir) {
+                 tl.debug('DEVELOPER_DIR was ' + origXcodeDeveloperDir)
+                 tl.debug('DEVELOPER_DIR for build set to ' + xcodeDeveloperDir);
+                 process.env['DEVELOPER_DIR'] = xcodeDeveloperDir;
+             }*/
             // Use xctool or xcodebuild based on flag
             var useXctool = tl.getBoolInput('useXctool', false);
             var tool = useXctool ? tl.which('xctool', true) : tl.which('xcodebuild', true);
@@ -114,12 +116,9 @@ function run() {
             }
             //signing options
             var signMethod = tl.getInput('signMethod', false);
-            var deleteKeyChain = false;
-            var deleteKeyChainCommand;
-            var deleteProfile = false;
-            var deleteProfileCommand;
+            var keychainToDelete;
+            var profileToDelete;
             if (signMethod === 'file') {
-                var iosSecurityTool = tl.which('/usr/bin/security', true);
                 var p12 = tl.getPathInput('p12', false, false);
                 var p12pwd = tl.getInput('p12pwd', false);
                 var provProfilePath = tl.getPathInput('provProfile', false);
@@ -128,131 +127,17 @@ function run() {
                 if (p12 && fs.lstatSync(p12).isFile()) {
                     p12 = path.resolve(cwd, p12);
                     var keychain = path.join(cwd, '_xcodetasktmp.keychain');
-                    //delete keychain if it exists
-                    deleteKeyChainCommand = tl.createToolRunner(iosSecurityTool);
-                    deleteKeyChainCommand.arg('delete-keychain');
-                    deleteKeyChainCommand.pathArg(keychain);
-                    if (fs.existsSync(keychain)) {
-                        yield deleteKeyChainCommand.exec();
-                    }
-                    //create keychain
                     var keychainPwd = Math.random();
-                    var createKeychain = tl.createToolRunner(iosSecurityTool);
-                    createKeychain.arg('create-keychain');
-                    createKeychain.arg('-p');
-                    createKeychain.arg(keychainPwd.toString());
-                    createKeychain.pathArg(keychain);
-                    yield createKeychain.exec();
-                    //we should clean up the keychain after the build is run
-                    deleteKeyChain = true;
-                    //set keychain settings
-                    var keychainSettings = tl.createToolRunner(iosSecurityTool);
-                    keychainSettings.arg('set-keychain-settings');
-                    keychainSettings.arg('-lut');
-                    keychainSettings.arg('7200');
-                    keychainSettings.pathArg(keychain);
-                    yield keychainSettings.exec();
-                    //unlock the keychain
-                    var unlock = tl.createToolRunner(iosSecurityTool);
-                    unlock.arg('unlock-keychain');
-                    unlock.arg('-p');
-                    unlock.arg(keychainPwd.toString());
-                    unlock.pathArg(keychain);
-                    yield unlock.exec();
-                    //import p12 cert into the keychain
-                    var importP12 = tl.createToolRunner(iosSecurityTool);
-                    importP12.arg('import');
-                    importP12.pathArg(p12);
-                    importP12.arg('-P');
-                    importP12.arg(p12pwd);
-                    importP12.arg(['-A', '-t', 'cert', '-f', 'pkcs12', '-k']);
-                    importP12.arg(keychain);
-                    yield importP12.exec();
+                    yield sign.installCertInTemporaryKeyChain(keychain, keychainPwd.toString(), p12, p12pwd);
                     xcb.arg('OTHER_CODE_SIGN_FLAGS=--keychain=' + keychain);
+                    keychainToDelete = keychain;
                     //find signing identity
-                    var signIdentity;
-                    var findIdentity = tl.createToolRunner(iosSecurityTool);
-                    findIdentity.arg(['find-identity', '-v', '-p', 'codesigning']);
-                    findIdentity.pathArg(keychain);
-                    findIdentity.on('stdout', function (data) {
-                        if (data) {
-                            var matches = data.toString().trim().match(/\((.+)\)/g);
-                            tl.debug('signing identity data = ' + matches);
-                            if (matches) {
-                                signIdentity = matches[0];
-                            }
-                        }
-                    });
-                    yield findIdentity.exec();
-                    if (signIdentity) {
-                        xcb.arg('CODE_SIGN_IDENTITY=' + signIdentity);
-                    }
-                    else {
-                        throw 'Failed to find iOS signing identity. Verify the signing and provisioning information provided.';
-                    }
-                    //find the provisioning profile UUID
-                    var provProfileDetails;
-                    var getProvProfileDetails = tl.createToolRunner(iosSecurityTool);
-                    getProvProfileDetails.arg(['cms', '-D', '-i']);
-                    getProvProfileDetails.pathArg(provProfilePath);
-                    getProvProfileDetails.on('stdout', function (data) {
-                        if (data) {
-                            if (provProfileDetails) {
-                                provProfileDetails = provProfileDetails.concat(data.toString().trim().replace(/[,\n\r\f\v]/gm, ''));
-                            }
-                            else {
-                                provProfileDetails = data.toString().trim().replace(/[,\n\r\f\v]/gm, '');
-                            }
-                        }
-                    });
-                    yield getProvProfileDetails.exec();
-                    if (provProfileDetails) {
-                        //write the provisioning profile to a plist
-                        var tmpPlist = path.join(cwd, '_xcodetasktmp.plist');
-                        fs.writeFileSync(tmpPlist, provProfileDetails);
-                    }
-                    else {
-                        throw 'Failed to find the details for specified provisioning profile.';
-                    }
-                    //use PlistBuddy to figure out the UUID
-                    var plist = tl.which('/usr/libexec/PlistBuddy', true);
-                    var plistTool = tl.createToolRunner(plist);
-                    plistTool.arg(['-c', 'Print UUID']);
-                    plistTool.pathArg(tmpPlist);
-                    var provProfileUUID;
-                    plistTool.on('stdout', function (data) {
-                        if (data) {
-                            provProfileUUID = data;
-                        }
-                    });
-                    yield plistTool.exec();
-                    //delete the temporary plist file
-                    var deletePlistCommand = tl.createToolRunner(tl.which('rm', true));
-                    deletePlistCommand.arg('-f');
-                    deletePlistCommand.pathArg(tmpPlist);
-                    yield deletePlistCommand.exec();
-                    if (provProfileUUID) {
-                        xcb.arg('PROVISIONING_PROFILE=' + provProfileUUID);
-                        //copy the provisioning profile file to ~/Library/MobileDevice/Provisioning Profiles
-                        var userProfilesPath = path.join(process.env['HOME'], 'Library', 'MobileDevice', 'Provisioning Profiles');
-                        tl.mkdirP(userProfilesPath); // Path may not exist if Xcode has not been run yet.
-                        var pathToProvProfile = path.join(userProfilesPath, provProfileUUID.toString().trim().concat('.mobileprovision'));
-                        tl.debug('pathToProvProfile = ' + pathToProvProfile);
-                        var copyProvProfile = tl.createToolRunner(tl.which('cp', true));
-                        copyProvProfile.arg('-f');
-                        copyProvProfile.pathArg(provProfilePath); //source
-                        copyProvProfile.pathArg(pathToProvProfile); //dest
-                        yield copyProvProfile.exec();
-                        //setup to delete profile after build
-                        deleteProfile = tl.getBoolInput('removeProfile', false);
-                        if (deleteProfile && fs.existsSync(pathToProvProfile)) {
-                            deleteProfileCommand = tl.createToolRunner(tl.which('rm', true));
-                            deleteProfileCommand.arg('-f');
-                            deleteProfileCommand.pathArg(pathToProvProfile);
-                        }
-                    }
-                    else {
-                        throw 'Failed to find provisioning profile UUID.';
+                    var signIdentity = yield sign.findSigningIdentity(keychain);
+                    xcb.arg('CODE_SIGN_IDENTITY=' + signIdentity);
+                    var provProfileUUID = yield sign.getProvisioningProfileUUID(provProfilePath);
+                    xcb.arg('PROVISIONING_PROFILE=' + provProfileUUID);
+                    if (removeProfile) {
+                        profileToDelete = provProfileUUID;
                     }
                 }
             }
@@ -309,12 +194,12 @@ function run() {
         }
         finally {
             //delete provisioning profile if specified
-            if (deleteProfile && deleteProfileCommand) {
-                yield deleteProfileCommand.exec();
+            if (profileToDelete) {
+                yield sign.deleteProvisioningProfile(profileToDelete);
             }
             //clean up the temporary keychain, so it is not used in future builds
-            if (deleteKeyChain && deleteKeyChainCommand) {
-                yield deleteKeyChainCommand.exec();
+            if (keychainToDelete) {
+                yield sign.deleteKeychain(keychainToDelete);
             }
         }
     });
