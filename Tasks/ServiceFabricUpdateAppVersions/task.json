@@ -4,7 +4,7 @@
   "friendlyName": "Update Service Fabric App Versions",
   "description": "Automatically updates the versions of a packaged Service Fabric application.",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "category": "Utility",
   "visibility": [
     "Build"
@@ -12,7 +12,7 @@
   "demands": [],
   "version": {
     "Major": "1",
-    "Minor": "0",
+    "Minor": "1",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.95.0",
@@ -33,11 +33,59 @@
       "defaultValue": ".$(Build.BuildNumber)",
       "required": true,
       "helpMarkDown": "Value to append to the version values in the manifest files."
+    },
+    {
+      "name": "updateOnlyChanged",
+      "type": "boolean",
+      "label": "Update only if changed",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "Incrementally update only the packages that have changed. Use the [deterministic compiler flag](https://go.microsoft.com/fwlink/?LinkId=808668) to ensure builds with the same inputs produce the same outputs."
+    },
+    {
+      "name": "pkgArtifactName",
+      "type": "string",
+      "label": "Package Artifact Name",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The name of the artifact containing the application package for comparison.",
+      "visibleRule": "updateOnlyChanged = true"
+    },
+    {
+      "name": "logAllChanges",
+      "type": "boolean",
+      "label": "Log all changes",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Compare all files in every package and log if the file was added, removed, or if its content changed. Otherwise, compare files in a package only until the first change is found for faster performance.",
+      "visibleRule": "updateOnlyChanged = true"
+    },
+    {
+      "name": "compareType",
+      "type": "pickList",
+      "label": "Compare against",
+      "defaultValue": "LastSuccessful",
+      "required": false,
+      "helpMarkDown": "The build for comparison.",
+      "options": {
+          "LastSuccessful": "Last Successful Build",
+          "Specific": "Specific Build"
+      },
+      "visibleRule": "updateOnlyChanged = true"
+    },
+    {
+      "name": "buildNumber",
+      "type": "string",
+      "label": "Build Number",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The build number for comparison.",
+      "visibleRule": "compareType = Specific"
     }
   ],
   "execution": {
     "PowerShell3": {
-      "target": "version.ps1"
+      "target": "Update-ApplicationVersions.ps1"
     }
   },
   "messages": {
@@ -45,7 +93,31 @@
     "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
     "SearchingForApplicationPackage": "Searching for application package: {0}",
     "FoundApplicationPackage": "Found application package: {0}",
-    "UpdatedApplicationTypeVersion": "Updated application type '{0}' to version '{1}'",
-    "UpdatedServiceVersion": "Updated service '{0}' to version '{1}'"
+    "VersionSuffixLabel" : "Version Suffix: '{0}'",
+    "BuildNumberNotSpecified" : "Build Number cannot be null or empty.",
+    "VstsRestApiFailed" : "Failed to communicate with VSTS: {0}",
+    "DownloadingArtifact" : "Downloading artifact '{0}'...",
+    "UnrecognizedArtifactType" : "Unrecognized artifact type '{0}'",
+    "PreviousBuildNumberLabel" : "Previous build number: '{0}'",
+    "PreviousBuildLocationLabel" : "Previous build location: '{0}'",
+    "NoPreviousSuccessfulBuild" : "Could not find previous build to compare against.",
+    "UpdatedApplicationTypeVersion": "Updated application type '{0}' to version '{1}'.",
+    "UpdatedServiceVerison": "Updated service '{0}' to version '{1}'.",
+    "UpdatedPackageVerison": "Updated package '{0}\\{1}' to version '{2}'.",
+    "UpdatedApplicationTypeVersionFromPrevious": "Updated application type '{0}' from version '{1}' to '{2}'.",
+    "UpdatedServiceVerisonFromPrevious": "Updated service '{0}' from version '{1}' to '{2}'.",
+    "UpdatedPackageVerisonFromPrevious": "Updated package '{0}\\{1}' from version '{2}' to '{3}'.",
+    "NewService" : "Service did not exist in the previous build.",
+    "NewPackage" : "Package did not exist in the previous build.",
+    "SearchingApplicationType" : "Searching application type '{0}' for changes...",
+    "SearchingService" : "Searching service '{0}' for changes...",
+    "SearchingPackage" : "Searching package '{0}' for changes...",
+    "AppManifestChanged" : "The application manifest has changed.",
+    "ServiceManifestChanged" : "The service manifest has changed.",
+    "PackageManifestChanged" : "The package element in the service manifest has changed.",
+    "FileRemoved" : "The file '{0}' has been removed.",
+    "FileAdded" : "The file '{0}' has been added.",
+    "FileChanged" : "The file '{0}' has changed.",
+    "NoChanges" : "Found no changes."
   }
 }

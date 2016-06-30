@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceManifest Name="ServicePkg"
-                 Version="1.0.0"
+<ServiceManifest Name="Service1Pkg"
+                 Version="0.9.9.OldSuffix"
                  xmlns="http://schemas.microsoft.com/2011/01/fabric"
                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -11,7 +11,7 @@
   </ServiceTypes>
 
   <!-- Code package is your service executable. -->
-  <CodePackage Name="Code" Version="1.0.0">
+  <CodePackage Name="Code" Version="1.0.0.OldSuffix">
     <EntryPoint>
       <ExeHost>
         <Program>Service.exe</Program>
@@ -22,9 +22,9 @@
 
   <!-- Config package is the contents of the Config directoy under PackageRoot that contains an 
        independently-updateable and versioned set of custom configuration settings for your service. -->
-  <ConfigPackage Name="Config" Version="1.0.0" />
+  <ConfigPackage Name="Config" Version="1.0.0.OldSuffix" />
 
-  <DataPackage Name="Data" Version="1.0.0" />
+  <DataPackage Name="Data" Version="1.0.0.OldSuffix" />
 
   <Resources>
     <Endpoints>

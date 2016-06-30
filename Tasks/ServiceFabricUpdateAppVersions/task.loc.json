@@ -12,7 +12,7 @@
   "demands": [],
   "version": {
     "Major": "1",
-    "Minor": "0",
+    "Minor": "1",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.95.0",
@@ -33,11 +33,59 @@
       "defaultValue": ".$(Build.BuildNumber)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.versionSuffix"
+    },
+    {
+      "name": "updateOnlyChanged",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.updateOnlyChanged",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.updateOnlyChanged"
+    },
+    {
+      "name": "pkgArtifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pkgArtifactName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pkgArtifactName",
+      "visibleRule": "updateOnlyChanged = true"
+    },
+    {
+      "name": "logAllChanges",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.logAllChanges",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.logAllChanges",
+      "visibleRule": "updateOnlyChanged = true"
+    },
+    {
+      "name": "compareType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.compareType",
+      "defaultValue": "LastSuccessful",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.compareType",
+      "options": {
+        "LastSuccessful": "Last Successful Build",
+        "Specific": "Specific Build"
+      },
+      "visibleRule": "updateOnlyChanged = true"
+    },
+    {
+      "name": "buildNumber",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildNumber",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildNumber",
+      "visibleRule": "compareType = Specific"
     }
   ],
   "execution": {
     "PowerShell3": {
-      "target": "version.ps1"
+      "target": "Update-ApplicationVersions.ps1"
     }
   },
   "messages": {
@@ -45,7 +93,31 @@
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForApplicationPackage": "ms-resource:loc.messages.SearchingForApplicationPackage",
     "FoundApplicationPackage": "ms-resource:loc.messages.FoundApplicationPackage",
+    "VersionSuffixLabel": "ms-resource:loc.messages.VersionSuffixLabel",
+    "BuildNumberNotSpecified": "ms-resource:loc.messages.BuildNumberNotSpecified",
+    "VstsRestApiFailed": "ms-resource:loc.messages.VstsRestApiFailed",
+    "DownloadingArtifact": "ms-resource:loc.messages.DownloadingArtifact",
+    "UnrecognizedArtifactType": "ms-resource:loc.messages.UnrecognizedArtifactType",
+    "PreviousBuildNumberLabel": "ms-resource:loc.messages.PreviousBuildNumberLabel",
+    "PreviousBuildLocationLabel": "ms-resource:loc.messages.PreviousBuildLocationLabel",
+    "NoPreviousSuccessfulBuild": "ms-resource:loc.messages.NoPreviousSuccessfulBuild",
     "UpdatedApplicationTypeVersion": "ms-resource:loc.messages.UpdatedApplicationTypeVersion",
-    "UpdatedServiceVersion": "ms-resource:loc.messages.UpdatedServiceVersion"
+    "UpdatedServiceVerison": "ms-resource:loc.messages.UpdatedServiceVerison",
+    "UpdatedPackageVerison": "ms-resource:loc.messages.UpdatedPackageVerison",
+    "UpdatedApplicationTypeVersionFromPrevious": "ms-resource:loc.messages.UpdatedApplicationTypeVersionFromPrevious",
+    "UpdatedServiceVerisonFromPrevious": "ms-resource:loc.messages.UpdatedServiceVerisonFromPrevious",
+    "UpdatedPackageVerisonFromPrevious": "ms-resource:loc.messages.UpdatedPackageVerisonFromPrevious",
+    "NewService": "ms-resource:loc.messages.NewService",
+    "NewPackage": "ms-resource:loc.messages.NewPackage",
+    "SearchingApplicationType": "ms-resource:loc.messages.SearchingApplicationType",
+    "SearchingService": "ms-resource:loc.messages.SearchingService",
+    "SearchingPackage": "ms-resource:loc.messages.SearchingPackage",
+    "AppManifestChanged": "ms-resource:loc.messages.AppManifestChanged",
+    "ServiceManifestChanged": "ms-resource:loc.messages.ServiceManifestChanged",
+    "PackageManifestChanged": "ms-resource:loc.messages.PackageManifestChanged",
+    "FileRemoved": "ms-resource:loc.messages.FileRemoved",
+    "FileAdded": "ms-resource:loc.messages.FileAdded",
+    "FileChanged": "ms-resource:loc.messages.FileChanged",
+    "NoChanges": "ms-resource:loc.messages.NoChanges"
   }
 }
