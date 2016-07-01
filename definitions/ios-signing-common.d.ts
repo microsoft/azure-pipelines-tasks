@@ -9,7 +9,7 @@ declare module 'ios-signing-common/ios-signing-common' {
      * @param p12CertPath, the P12 cert to be installed in the keychain
      * @param p12Pwd, the password for the P12 cert
      */
-    export function installCertInTemporaryKeyChain(keychainPath : string, keychainPwd: string, p12CertPath : string, p12Pwd: string);
+    export function installCertInTemporaryKeychain(keychainPath : string, keychainPwd: string, p12CertPath : string, p12Pwd: string);
 
     /**
     * Finds an iOS codesigning identity in the specified keychain
@@ -43,4 +43,9 @@ declare module 'ios-signing-common/ios-signing-common' {
      * @param uuid
      */
     export function deleteProvisioningProfile(uuid: string);
+
+    /**
+     * Gets the path to the iOS default keychain
+     */
+    export function getDefaultKeychainPath() : string;
 }

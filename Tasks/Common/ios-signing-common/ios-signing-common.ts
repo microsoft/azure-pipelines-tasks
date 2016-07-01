@@ -2,9 +2,9 @@ import fs = require('fs');
 import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
+import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
-var iosSecurityToolPath = '/usr/bin/security';
-var userProvisioningProfilesPath = path.join(process.env['HOME'], 'Library', 'MobileDevice', 'Provisioning Profiles');
+var userProvisioningProfilesPath = path.join(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
 
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain
@@ -13,13 +13,13 @@ var userProvisioningProfilesPath = path.join(process.env['HOME'], 'Library', 'Mo
  * @param p12CertPath, the P12 cert to be installed in the keychain
  * @param p12Pwd, the password for the P12 cert
  */
-export async function installCertInTemporaryKeyChain(keychainPath : string, keychainPwd: string, p12CertPath : string, p12Pwd: string) {
+export async function installCertInTemporaryKeychain(keychainPath : string, keychainPwd: string, p12CertPath : string, p12Pwd: string) {
 
     //delete keychain if exists
     await deleteKeychain(keychainPath);
 
     //create keychain
-    var createKeychainCommand =  tl.createToolRunner(tl.which(iosSecurityToolPath, true));
+    var createKeychainCommand : ToolRunner =  tl.createToolRunner(tl.which('security', true));
     createKeychainCommand.arg('create-keychain');
     createKeychainCommand.arg('-p');
     createKeychainCommand.arg(keychainPwd);
@@ -27,7 +27,7 @@ export async function installCertInTemporaryKeyChain(keychainPath : string, keyc
     await createKeychainCommand.exec();
 
     //update keychain settings
-    var keychainSettingsCommand = tl.createToolRunner(tl.which(iosSecurityToolPath, true));
+    var keychainSettingsCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
     keychainSettingsCommand.arg('set-keychain-settings');
     keychainSettingsCommand.arg('-lut');
     keychainSettingsCommand.arg('7200');
@@ -38,7 +38,7 @@ export async function installCertInTemporaryKeyChain(keychainPath : string, keyc
     await unlockKeychain(keychainPath, keychainPwd);
 
     //import p12 cert into the keychain
-    var importP12Command = tl.createToolRunner(tl.which(iosSecurityToolPath, true));
+    var importP12Command : ToolRunner = tl.createToolRunner(tl.which('security', true));
     importP12Command.arg('import');
     importP12Command.pathArg(p12CertPath);
     importP12Command.arg('-P');
@@ -55,10 +55,10 @@ export async function installCertInTemporaryKeyChain(keychainPath : string, keyc
  */
 export async function findSigningIdentity(keychainPath: string) {
     var signIdentity : string;
-    var findIdentity = tl.createToolRunner(tl.which(iosSecurityToolPath, true));
-    findIdentity.arg(['find-identity', '-v', '-p', 'codesigning']);
-    findIdentity.pathArg(keychainPath);
-    findIdentity.on('stdout', function (data) {
+    var findIdentityCmd : ToolRunner = tl.createToolRunner(tl.which('security', true));
+    findIdentityCmd.arg(['find-identity', '-v', '-p', 'codesigning']);
+    findIdentityCmd.pathArg(keychainPath);
+    findIdentityCmd.on('stdout', function (data) {
         if (data) {
             var matches = data.toString().trim().match(/\((.+)\)/g);
             tl.debug('signing identity data = ' + matches);
@@ -68,7 +68,7 @@ export async function findSigningIdentity(keychainPath: string) {
         }
     })
 
-    await findIdentity.exec();
+    await findIdentityCmd.exec();
     if(signIdentity) {
         tl.debug('findSigningIdentity = ' + signIdentity);
         return signIdentity;
@@ -85,11 +85,11 @@ export async function findSigningIdentity(keychainPath: string) {
 export async function getProvisioningProfileUUID(provProfilePath: string) {
 
     //find the provisioning profile UUID
-    var provProfileDetails;
-    var getProvProfileDetails = tl.createToolRunner(tl.which(iosSecurityToolPath, true));
-    getProvProfileDetails.arg(['cms', '-D', '-i']);
-    getProvProfileDetails.pathArg(provProfilePath);
-    getProvProfileDetails.on('stdout', function(data) {
+    var provProfileDetails : string;
+    var getProvProfileDetailsCmd : ToolRunner = tl.createToolRunner(tl.which('security', true));
+    getProvProfileDetailsCmd.arg(['cms', '-D', '-i']);
+    getProvProfileDetailsCmd.pathArg(provProfilePath);
+    getProvProfileDetailsCmd.on('stdout', function(data) {
         if(data) {
             if(provProfileDetails) {
                 provProfileDetails = provProfileDetails.concat(data.toString().trim().replace(/[,\n\r\f\v]/gm, ''));
@@ -98,7 +98,7 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
             }
         }
     })
-    await getProvProfileDetails.exec();
+    await getProvProfileDetailsCmd.exec();
 
     if(provProfileDetails) {
         //write the provisioning profile to a plist
@@ -108,11 +108,10 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
         throw 'Failed to find the details for provisioning profile: ' + provProfilePath;
     }
 
-    var provProfileUUID : string;
-
     //use PlistBuddy to figure out the UUID
+    var provProfileUUID : string;
     var plist = tl.which('/usr/libexec/PlistBuddy', true);
-    var plistTool = tl.createToolRunner(plist);
+    var plistTool : ToolRunner = tl.createToolRunner(plist);
     plistTool.arg(['-c', 'Print UUID']);
     plistTool.pathArg(tmpPlist);
     plistTool.on('stdout', function (data) {
@@ -123,7 +122,7 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
     await plistTool.exec();
 
     //delete the temporary plist file
-    var deletePlistCommand = tl.createToolRunner(tl.which('rm', true));
+    var deletePlistCommand : ToolRunner = tl.createToolRunner(tl.which('rm', true));
     deletePlistCommand.arg('-f');
     deletePlistCommand.pathArg(tmpPlist);
     await deletePlistCommand.exec();
@@ -131,12 +130,12 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
     if(provProfileUUID) {
         //copy the provisioning profile file to ~/Library/MobileDevice/Provisioning Profiles
         tl.mkdirP(userProvisioningProfilesPath); // Path may not exist if Xcode has not been run yet.
-        var pathToProvProfile = getProvisioningProfilePath(provProfileUUID);
-        var copyProvProfile = tl.createToolRunner(tl.which('cp', true));
-        copyProvProfile.arg('-f');
-        copyProvProfile.pathArg(provProfilePath); //source
-        copyProvProfile.pathArg(pathToProvProfile); //dest
-        await copyProvProfile.exec();
+        var pathToProvProfile : string = getProvisioningProfilePath(provProfileUUID);
+        var copyProvProfileCmd : ToolRunner = tl.createToolRunner(tl.which('cp', true));
+        copyProvProfileCmd.arg('-f');
+        copyProvProfileCmd.pathArg(provProfilePath); //source
+        copyProvProfileCmd.pathArg(pathToProvProfile); //dest
+        await copyProvProfileCmd.exec();
 
         return provProfileUUID;
     } else {
@@ -150,10 +149,10 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
  */
 export async function deleteKeychain(keychainPath: string) {
     if (fs.existsSync(keychainPath)) {
-        var deleteKeyChainCommand = tl.createToolRunner(tl.which(iosSecurityToolPath, true));
-        deleteKeyChainCommand.arg('delete-keychain');
-        deleteKeyChainCommand.pathArg(keychainPath);
-        await deleteKeyChainCommand.exec();
+        var deleteKeychainCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
+        deleteKeychainCommand.arg('delete-keychain');
+        deleteKeychainCommand.pathArg(keychainPath);
+        await deleteKeychainCommand.exec();
     }
 }
 
@@ -164,7 +163,7 @@ export async function deleteKeychain(keychainPath: string) {
  */
 export async function unlockKeychain(keychainPath: string, keychainPwd: string) {
     //unlock the keychain
-    var unlockCommand = tl.createToolRunner(tl.which(iosSecurityToolPath, true));
+    var unlockCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
     unlockCommand.arg('unlock-keychain');
     unlockCommand.arg('-p');
     unlockCommand.arg(keychainPwd.toString());
@@ -177,9 +176,12 @@ export async function unlockKeychain(keychainPath: string, keychainPwd: string) 
  * @param uuid
  */
 export async function deleteProvisioningProfile(uuid: string) {
-    var provProfilePath = getProvisioningProfilePath(uuid);
-    if(fs.exists(provProfilePath)) {
-        var deleteProfileCommand = tl.createToolRunner(tl.which('rm', true));
+    var provProfilePath : string = getProvisioningProfilePath(uuid);
+    tl.warning('Deleting provisioning profile: ' + provProfilePath);
+    if(fs.existsSync(provProfilePath)) {
+        tl.warning('Deleting provisioning profile: ' + provProfilePath);
+
+        var deleteProfileCommand : ToolRunner = tl.createToolRunner(tl.which('rm', true));
         deleteProfileCommand.arg('-f');
         deleteProfileCommand.pathArg(provProfilePath);
         await deleteProfileCommand.exec();
@@ -188,4 +190,20 @@ export async function deleteProvisioningProfile(uuid: string) {
 
 function getProvisioningProfilePath(uuid: string) : string {
     return path.join(userProvisioningProfilesPath, uuid.trim().concat('.mobileprovision'));
+}
+
+/**
+ * Gets the path to the iOS default keychain
+ */
+export async function getDefaultKeychainPath() {
+    var defaultKeychainPath : string;
+    var getKeychainCmd : ToolRunner = tl.createToolRunner(tl.which('security', true));
+    getKeychainCmd.arg('default-keychain');
+    getKeychainCmd.on('stdout', function (data) {
+        if (data) {
+            defaultKeychainPath = data.toString().trim().replace(/[",\n\r\f\v]/gm, '');
+        }
+    })
+    await getKeychainCmd.exec();
+    return defaultKeychainPath;
 }
