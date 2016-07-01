@@ -202,7 +202,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.rmRF(testResultsDirectory, true);
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
-    vstest.exec()
+    vstest.exec({failOnStdErr: true})
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
             defer.resolve(code);
