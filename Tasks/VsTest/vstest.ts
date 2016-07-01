@@ -202,25 +202,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.rmRF(testResultsDirectory, true);
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
-
-    // listener for standard output
-    vstest.on('stdline', function (line) {
-        tl._writeLine(line)
-    });
-    // listener for error output
-    vstest.on('errline', function (line) {
-        tl.error(line);
-    });
-    // listner for debug events
-    vstest.on('debug', function (message) {
-        tl.debug(message);
-    });
-
-    var argString = argsArray.join(' ') || '';
-    var cmdString = vstestLocation + ' ' + argString;
-    tl._outStream.write('[command]' + cmdString + os.EOL);
-
-    vstest.exec({silent: true})
+    vstest.exec({failOnStdErr: true})
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
             defer.resolve(code);
