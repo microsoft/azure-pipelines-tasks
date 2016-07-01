@@ -105,8 +105,14 @@ if ($jdkPath)
 
 $buildRootPath = $cwd
 $wrapperDirectory = Split-Path $wrapperScript -Parent
-$reportDirectoryName = [guid]::NewGuid()
+$reportDirectoryName = "ReportDirectory"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+
+if(Test-Path $reportDirectory)
+{
+   # delete any code coverage data 
+   rm -r $reportDirectory -force | Out-Null
+}
 
 # check if project is multi module gradle build or not
 $subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}
@@ -212,12 +218,5 @@ if($isCoverageEnabled)
 		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details." -Verbose
 	}   
 }
-
-if(Test-Path $reportDirectory)
-{
-   # delete any code coverage data 
-   rm -r $reportDirectory -force | Out-Null
-}
-
 
 Write-Verbose "Leaving script Gradle.ps1"

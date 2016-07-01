@@ -109,9 +109,8 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 
 $buildRootPath = Split-Path $mavenPOMFile -Parent
-$reportDirectoryName = [guid]::NewGuid()
+$reportDirectoryName = "ReportDirectory"
 $reportDirectoryNameCobertura = "target\site\cobertura"
-$reportPOMFileName = [guid]::NewGuid().tostring() + ".xml"
 $reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
@@ -125,6 +124,24 @@ $summaryFileCobertura = Join-Path $summaryFileCobertura $summaryFileNameCobertur
 $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
+
+if(Test-Path $reportDirectory)
+{
+    # delete any previous code coverage data 
+    rm -r $reportDirectory -force | Out-Null
+}
+
+if(Test-Path $reportDirectoryCobertura)
+{
+    # delete any previous code coverage data from Cobertura
+    rm -r $reportDirectoryCobertura -force | Out-Null
+}
+
+if(Test-Path $reportPOMFile)
+{
+    # delete any previous code coverage data 
+    rm $reportPOMFile -force | Out-Null
+}
 
 if($isCoverageEnabled)
 {
@@ -183,24 +200,6 @@ ElseIf ($codeCoverageTool -eq "Cobertura")
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
-
-if(Test-Path $reportDirectory)
-{
-    # delete any previous code coverage data 
-    rm -r $reportDirectory -force | Out-Null
-}
-
-if(Test-Path $reportDirectoryCobertura)
-{
-    # delete any previous code coverage data from Cobertura
-    rm -r $reportDirectoryCobertura -force | Out-Null
-}
-
-if(Test-Path $reportPOMFile)
-{
-    # delete any previous code coverage data 
-    rm $reportPOMFile -force | Out-Null
-}
 
 Write-Verbose "Leaving script Maven.ps1"
 
