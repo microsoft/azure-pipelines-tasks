@@ -211,6 +211,9 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
                 </p>
             </td>
             <td>
+                <p align="left">
+                    1.101
+                </p>
             </td>
         </tr>
     </tbody>
@@ -308,9 +311,6 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
                 </p>
             </td>
             <td>
-                <p align="left">
-                    1.101
-                </p>
             </td>
         </tr>
         <tr>
