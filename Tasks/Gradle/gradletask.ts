@@ -6,9 +6,10 @@ import path = require('path');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import sqCommon = require('sonarqube-common/sonarqube-common');
-import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
-
 import sqGradle = require('./CodeAnalysis/gradlesonar');
+
+import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrchestrator.ts';
+import {BuildOutput} from './CodeAnalysis/Common/BuildOutput.ts';
 
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -38,6 +39,7 @@ var summaryFile: string = null;
 var reportDirectory: string = null;
 var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
 var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
+var isPMDAnalysisEnabled: boolean = CodeAnalysisOrchestrator.IsPMDEnabled();
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
@@ -88,17 +90,34 @@ if (isSonarQubeEnabled) {
     gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile);
 }
 
+if (isPMDAnalysisEnabled) {
+    console.log(tl.loc('codeAnalysis_ToolIsEnabled'), 'PMD');
+
+    var pmdInitScriptPath: string = path.join(__dirname, 'CodeAnalysis', 'pmd.gradle');
+    gb.arg(['-I', pmdInitScriptPath]);
+}
+
 gb.exec()
-    .then(function(code) {
+    .then(function (code) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted);
+
+        let buildOutput : BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), 'build');
+        let caOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+            buildOutput, 
+            path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis"), 
+            tl.getVariable('build.buildNumber'));
+
+        caOrchestrator.orchestrateCodeAnalysisProcessing();
+
 
         if (isSonarQubeEnabled) {
             sqGradle.uploadSonarQubeBuildSummary();
         }
+
         tl.exit(code);
     })
-    .fail(function(err) {
+    .fail(function (err) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         console.error(err.message);
         tl.debug('taskRunner fail');

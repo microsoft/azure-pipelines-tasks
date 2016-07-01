@@ -268,6 +268,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "pmdAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.pmdAnalysisEnabled"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -293,6 +302,11 @@
     "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
     "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "ms-resource:loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild",
     "sqAnalysis_TaskReportInvalid": "ms-resource:loc.messages.sqAnalysis_TaskReportInvalid",
-    "sqAnalysis_BuildSummary_LinkText": "ms-resource:loc.messages.sqAnalysis_BuildSummary_LinkText"
+    "sqAnalysis_BuildSummary_LinkText": "ms-resource:loc.messages.sqAnalysis_BuildSummary_LinkText",
+    "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
+    "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
+    "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
+    "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
+    "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle"
   }
 }
