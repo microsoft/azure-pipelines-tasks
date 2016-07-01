@@ -15,26 +15,20 @@
     return $certificate
 }
 
-function Set-UserAgent
-{
-    $serverString = "TFS"
-    if ($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI.ToLower().Contains("visualstudio.com".ToLower()))
-    {
-        $serverString = "VSTS"
-    }
-    
-    $userAgent = [string]::Empty
-    if ($env:SYSTEM_HOSTTYPE -ieq "build")
-    {
-        $userAgent = $serverString + "_" + $env:SYSTEM_COLLECTIONID + "_" + "build" + "_" + $env:SYSTEM_DEFINITIONID + "_" + $env:BUILD_BUILDID
+function Format-Splat {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)][hashtable]$Hashtable)
+
+    # Collect the parameters (names and values) in an array.
+    $parameters = foreach ($key in $Hashtable.Keys) {
+        $value = $Hashtable[$key]
+        # If the value is a bool, format the parameter as a switch (ending with ':').
+        if ($value -is [bool]) { "-$($key):" } else { "-$key" }
+        $value
     }
 
-    if ($env:SYSTEM_HOSTTYPE -ieq "release")
-    {
-        $userAgent = $serverString + "_" + $env:SYSTEM_COLLECTIONID + "_" + "release" + "_" + $env:RELEASE_DEFINITIONID + "_" + $env:RELEASE_RELEASEID + "_" + $env:RELEASE_ENVIRONMENTID + "_" + $env:RELEASE_ATTEMPTNUMBER
-    }
-
-    [Microsoft.Azure.Common.Authentication.AzureSession]::ClientFactory.AddUserAgent($UserAgent)
+    $OFS = " "
+    "$parameters" # String join the array.
 }
 
 function Initialize-AzureSubscription {
@@ -45,6 +39,9 @@ function Initialize-AzureSubscription {
         [Parameter(Mandatory=$false)]
         [string]$StorageAccount)
 
+    #Set UserAgent for Azure Calls
+    Set-UserAgent
+	
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
         if (!$script:azureModule) {
@@ -172,18 +169,49 @@ function Set-CurrentAzureRMSubscription {
     $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
 }
 
-function Format-Splat {
+function Set-UserAgent {
     [CmdletBinding()]
-    param([Parameter(Mandatory = $true)][hashtable]$Hashtable)
-
-    # Collect the parameters (names and values) in an array.
-    $parameters = foreach ($key in $Hashtable.Keys) {
-        $value = $Hashtable[$key]
-        # If the value is a bool, format the parameter as a switch (ending with ':').
-        if ($value -is [bool]) { "-$($key):" } else { "-$key" }
-        $value
+    param()
+	
+	$collectionUri = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
+    $collectionId = Get-VstsTaskVariable -Name System.CollectionId -Require
+	$hostType = Get-VstsTaskVariable -Name System.HostType -Require
+    $serverString = "TFS"
+    if ($collectionUri.ToLower().Contains("visualstudio.com".ToLower())) {
+        $serverString = "VSTS"
     }
+    
+    $userAgent = [string]::Empty
+    if ($hostType -ieq "build") {
+		$definitionId = Get-VstsTaskVariable -Name System.DefinitionId -Require
+		$buildId = Get-VstsTaskVariable -Name Build.BuildId -Require
+		$userAgent = $serverString + "_" + $collectionId + "_" + "build" + "_" + $definitionId + "_" + $buildId
+    } elseif ($hostType -ieq "release") {
+        $definitionId = Get-VstsTaskVariable -Name Release.DefinitionId -Require
+		$releaseId = Get-VstsTaskVariable -Name Release.ReleaseId -Require
+		$environmentId = Get-VstsTaskVariable -Name Release.EnvironmentId -Require
+		$attemptNumber = Get-VstsTaskVariable -Name Release.AttemptNumber -Require
+		$userAgent = $serverString + "_" + $collectionId + "_" + "release" + "_" + $definitionId + "_" + $releaseId + "_" + $environmentId + "_" + $attemptNumber
+    } else {
+	    return
+	}
+	
+    Set-UserAgent_Core -UserAgent $userAgent
+}
 
-    $OFS = " "
-    "$parameters" # String join the array.
+function Set-UserAgent_Core {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$UserAgent)
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        [Microsoft.Azure.Common.Authentication.AzureSession]::ClientFactory.AddUserAgent($UserAgent)
+    } catch {
+	    Write-Host "##vso[task.logissue type=warning;TaskName=SetUserAgent]"
+		Write-Verbose "Set-UserAgent not supported"
+	} finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
 }
