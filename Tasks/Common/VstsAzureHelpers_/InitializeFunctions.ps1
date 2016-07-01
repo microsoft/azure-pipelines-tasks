@@ -172,10 +172,10 @@ function Set-CurrentAzureRMSubscription {
 function Set-UserAgent {
     [CmdletBinding()]
     param()
-	
-	$collectionUri = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
+
+    $collectionUri = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
     $collectionId = Get-VstsTaskVariable -Name System.CollectionId -Require
-	$hostType = Get-VstsTaskVariable -Name System.HostType -Require
+    $hostType = Get-VstsTaskVariable -Name System.HostType -Require
     $serverString = "TFS"
     if ($collectionUri.ToLower().Contains("visualstudio.com".ToLower())) {
         $serverString = "VSTS"
