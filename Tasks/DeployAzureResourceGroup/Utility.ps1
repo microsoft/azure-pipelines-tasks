@@ -365,7 +365,7 @@ function Invoke-OperationOnResourceGroup
             Write-Host "'$operationName' operation on the machine '$machineName' succeeded"
         }
         
-        Write-Verbose "Call to provider to perform operation '$operationName' on the machine '$machineName' completed" -Verbose
+        Write-Verbose "Call to provider to perform operation '$operationName' on the machine '$machineName' completed"
     }
 }
 
@@ -502,7 +502,7 @@ function Get-MachinesFqdnsForLB
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $publicIPAddressResources -and $networkInterfaceResources -and $frontEndIPConfigs)
     {
-        Write-Verbose "Trying to get FQDN for the RM azureVM resources under load balancer from resource group: $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the RM azureVM resources under load balancer from resource group: $resourceGroupName"
 
         #Map the public ip id to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -576,7 +576,7 @@ function Get-MachinesFqdnsForLB
         }
     }
 
-    Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName"
 
     return $fqdnMap
 }
@@ -708,7 +708,7 @@ function Get-MachinesFqdnsForPublicIP
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName)-and $publicIPAddressResources -and $networkInterfaceResources)
     {
-        Write-Verbose "Trying to get FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName"
 
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)

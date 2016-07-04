@@ -327,7 +327,7 @@ function Get-TagBasedFilteredAzureVMs
         {
             if(Does-AzureVMMatchTagFilterCriteria -azureVMResource $azureVMResource -filter $filter)
             {
-                Write-Verbose -Verbose "azureVM with name: $($azureVMResource.Name) matches filter criteria"
+                Write-Verbose "azureVM with name: $($azureVMResource.Name) matches filter criteria"
                 $filteredAzureVMResources += $azureVMResource
             }
         }
@@ -491,7 +491,7 @@ function Get-MachinesFqdnsForPublicIP
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName)-and $publicIPAddressResources -and $networkInterfaceResources)
     {
-        Write-Verbose "Trying to get FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" -Verbose
+        Write-Verbose "Trying to get FQDN for the azureRM VM resources under public IP from resource Group $resourceGroupName" 
 
         #Map the ipc to the fqdn
         foreach($publicIp in $publicIPAddressResources)
@@ -629,7 +629,7 @@ function Get-MachinesFqdnsForLB
         }
     }
 
-    Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName" -Verbose
+    Write-Verbose "Got FQDN for the RM azureVM resources under load balancer from resource Group $resourceGroupName"
 
     return $fqdnMap
 }
@@ -687,7 +687,7 @@ function Get-FrontEndPorts
         }
     }
     
-    Write-Verbose "Got front end ports for $backEndPort" -Verbose
+    Write-Verbose "Got front end ports for $backEndPort"
     return $portList
 }
 
@@ -741,7 +741,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             $resourceWinRMHttpsPort = $winRMHttpsPortMap[$resourceName]
             if([string]::IsNullOrWhiteSpace($resourceWinRMHttpsPort))
             {
-                Write-Verbose -Verbose "Defaulting WinRmHttpsPort of $resourceName to 5986"
+                Write-Verbose "Defaulting WinRmHttpsPort of $resourceName to 5986"
                 $resourceWinRMHttpsPort = "5986"
             }
 
@@ -811,7 +811,7 @@ function Get-AzureVMResourcesProperties
             # since authentication is userNamePassword, we will check whether resource group has RM resources
             if($connectionType -eq 'UserNamePassword' -and $azureVMsDetails.Count -eq 0)
             {
-                Write-Verbose "Trying to find RM resources since there are no classic resources in resource group: $resourceGroupName" -Verbose
+                Write-Verbose "Trying to find RM resources since there are no classic resources in resource group: $resourceGroupName"
 
                 $azureRMVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName  $resourceGroupName
                 $filteredAzureRMVMResources = Get-FilteredAzureRMVMsInResourceGroup -azureRMVMResources $azureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
@@ -868,11 +868,11 @@ function Get-SkipCACheckOption
     {
         if ($skipCACheck -eq "false")
         {
-            Write-Verbose "Not skipping CA Check" -Verbose
+            Write-Verbose "Not skipping CA Check"
             return $doNotSkipCACheckOption
         }
 
-        Write-Verbose "Skipping CA Check" -Verbose
+        Write-Verbose "Skipping CA Check"
         return $doSkipCACheckOption
     }
 }

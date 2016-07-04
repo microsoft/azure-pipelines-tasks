@@ -47,7 +47,7 @@ function Get-AzureSqlDatabaseServerRGName
     {
         if ([string]::IsNullOrEmpty($azureResourceGroupName))
         {
-            Write-Verbose "[Azure RM Call] Sql Database Server: $serverName not found" -Verbose
+            Write-Verbose "[Azure RM Call] Sql Database Server: $serverName not found"
 
             Throw (Get-LocalizedString -Key "Sql Database Server: '{0}' not found." -ArgumentList $serverName)
         }

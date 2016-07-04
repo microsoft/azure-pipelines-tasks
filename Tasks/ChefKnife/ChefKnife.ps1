@@ -11,7 +11,7 @@ param
     $ScriptArguments
 )
 
-Write-Verbose "Entering script ChefKnife.ps1" -Verbose
+Write-Verbose "Entering script ChefKnife.ps1"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -37,10 +37,10 @@ finally
     #delete temporary chef repo
     if ([string]::IsNullOrEmpty($global:chefRepo) -eq $false)
     {
-        Write-Verbose "Deleting Chef Repo" -verbose
+        Write-Verbose "Deleting Chef Repo" 
         Remove-Item -Recurse -Force $global:chefRepo
-        Write-Verbose "Chef Repo Deleted" -verbose
+        Write-Verbose "Chef Repo Deleted" 
     }
 }
 
-Write-Verbose "Leaving script ChefKnife.ps1" -Verbose
+Write-Verbose "Leaving script ChefKnife.ps1" 
