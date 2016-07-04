@@ -187,6 +187,28 @@ function generateResponseFile(): Q.Promise<string> {
     return defer.promise;
 }
 
+function publishCodeChanges(): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    var selectortool = tl.createToolRunner(tiaSelectorTool);
+    selectortool.arg("PublishCodeChanges");
+    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
+    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
+    selectortool.arg("/newdropPath:" + tl.getVariable("Build.SourcesDirectory"));
+    selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
+    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+    selectortool.arg("/token:" + tl.getVariable("System.AccessToken"));
+
+    selectortool.exec()
+        .then(function(code) {
+            defer.resolve(String(code));
+        })        
+        .fail(function (err) {            
+            defer.reject(err);
+        });
+
+    return defer.promise;
+}
+
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     var defer = Q.defer<number>();
     var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
@@ -219,12 +241,43 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
     var defer = Q.defer<number>();
     if (isTiaAllowed()) {
-        generateResponseFile()
-            .then(function (responseFile) {
-                if (isNonEmptyResponseFile(responseFile)) {
-                    updateResponseFile(getVstestArguments(settingsFile), responseFile)
-                        .then(function (updatedFile) {
-                            executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+        publishCodeChanges()
+            .then(function(status) {
+                generateResponseFile()
+                    .then(function (responseFile) {
+                        if (isNonEmptyResponseFile(responseFile)) {
+                            updateResponseFile(getVstestArguments(settingsFile), responseFile)
+                                .then(function (updatedFile) {
+                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+                                        .then(function (code) {
+                                            defer.resolve(code);
+                                        })
+                                        .fail(function (code) {
+                                            defer.resolve(code);
+                                        })
+                                        .finally(function () {
+                                            tl.debug("Deleting the response file " + responseFile)
+                                            tl.rmRF(responseFile, true);
+                                        });
+                                })
+                                .fail(function (err) {
+                                    tl.error(err);
+                                    tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                                        .then(function (code) {
+                                            defer.resolve(code);
+                                        })
+                                        .fail(function (code) {
+                                            defer.resolve(code);
+                                        }).finally(function () {
+                                            tl.debug("Deleting the response file " + responseFile)
+                                            tl.rmRF(responseFile, true);
+                                        });
+                                });
+                        }
+                        else {
+                            tl.debug("Empty response file detected. All tests will be executed.");
+                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
                                 .then(function (code) {
                                     defer.resolve(code);
                                 })
@@ -235,40 +288,23 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     tl.debug("Deleting the response file " + responseFile)
                                     tl.rmRF(responseFile, true);
                                 });
-                        })
-                        .fail(function (err) {
-                            tl.error(err);
-                            tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
-                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
-                                .then(function (code) {
-                                    defer.resolve(code);
-                                })
-                                .fail(function (code) {
-                                    defer.resolve(code);
-                                }).finally(function () {
-                                    tl.debug("Deleting the response file " + responseFile)
-                                    tl.rmRF(responseFile, true);
-                                });
-                        });
-                }
-                else {
-                    tl.debug("Empty response file detected. All tests will be executed.");
-                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
-                        .then(function (code) {
-                            defer.resolve(code);
-                        })
-                        .fail(function (code) {
-                            defer.resolve(code);
-                        })
-                        .finally(function () {
-                            tl.debug("Deleting the response file " + responseFile)
-                            tl.rmRF(responseFile, true);
-                        });
-                }
+                        }
+                    })
+                    .fail(function (err) {
+                        tl.error(err);
+                        tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
+                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                            .then(function (code) {
+                                defer.resolve(code);
+                            })
+                            .fail(function (code) {
+                                defer.resolve(code);
+                            });
+                    });
             })
-            .fail(function (err) {
+            .fail(function (err){
                 tl.error(err);
-                tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
+                tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
                     .then(function (code) {
                         defer.resolve(code);
