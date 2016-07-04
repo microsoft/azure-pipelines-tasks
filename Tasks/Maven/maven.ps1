@@ -109,9 +109,9 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 
 $buildRootPath = Split-Path $mavenPOMFile -Parent
-$reportDirectoryName = "ReportDirectory"
+$reportDirectoryName = "ReportDirectory_C91CDE2D-CC66-4541-9C27-E3EF6CB3DB16"
 $reportDirectoryNameCobertura = "target\site\cobertura"
-$reportPOMFileName = "ReportPOMFile.xml"
+$reportPOMFileName = "ReportPOMFile_4E52C1C4-8C32-4580-A54D-41D5E9ED1F74.xml"
 $reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura

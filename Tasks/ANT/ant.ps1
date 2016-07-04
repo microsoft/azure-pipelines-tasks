@@ -108,7 +108,7 @@ if ($jdkPath)
 }
 
 $buildRootPath = Split-Path $antBuildFile -Parent
-$reportDirectoryName = "ReportDirectory"
+$reportDirectoryName = "ReportDirectory_75C12DBC-FB59-450A-8E4F-772EA8BFCFA6"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
 if(Test-Path $reportDirectory)
@@ -134,7 +134,7 @@ $summaryFile = Join-Path $summaryFile $summaryFileName
 # ensuring unique code coverage report task name by using guid
 $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 
-$reportBuildFileName = "ReportBuildFile.xml"
+$reportBuildFileName = "ReportBuildFile_9B5907FC-EC56-4662-B8EA-EC23FCB97C43.xml"
 $reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
 $instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
 

@@ -105,7 +105,7 @@ if ($jdkPath)
 
 $buildRootPath = $cwd
 $wrapperDirectory = Split-Path $wrapperScript -Parent
-$reportDirectoryName = "ReportDirectory"
+$reportDirectoryName = "ReportDirectory_84B7D86C-F08D-4B65-8D37-742D8B02D27B"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
 if(Test-Path $reportDirectory)
