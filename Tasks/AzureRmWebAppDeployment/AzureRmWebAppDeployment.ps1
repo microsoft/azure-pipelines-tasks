@@ -18,6 +18,7 @@ try{
 	$AdditionalArguments = Get-VstsInput -Name AdditionalArguments 
 	$WebAppUri = Get-VstsInput -Name WebAppUri
 	$SetParametersFile = Get-VstsInput -Name SetParametersFile
+    $VariableSubstitution = Get-VstsInput -Name VariableSubstitution
 
 	# Initialize Azure.
 
@@ -41,6 +42,8 @@ try{
 	. $PSScriptRoot/AzureUtility.ps1
 	. $PSScriptRoot/Utility.ps1
 	. $PSScriptRoot/FindInstalledMSDeploy.ps1
+    . $PSScriptRoot/CompressionUtility.ps1
+    . $PSScriptRoot/VariableSubstituter.ps1
 
 	# Importing required version of azure cmdlets according to azureps installed on machine
 	$azureUtility = Get-AzureUtility
@@ -55,6 +58,18 @@ try{
 
 	# Ensure that at most a package (.zip) file is found
 	$packageFilePath = Get-SingleFilePath -file $Package
+
+    if( $VariableSubstitution -eq "true")
+    {
+        # Unzip the source package
+        $unzippedPath = UnzipWebDeployPkg -PackagePath $packageFilePath
+        
+        Substitute-Variables -WebAppFolderPath $unzippedPath -ConfigFileRegex "*.config"
+        $packageFilePath = $unzippedPath+".zip"
+
+        # Zip folder again
+        CreateWebDeployPkg -UnzippedPkgPath $unzippedPath -FinalPackagePath $packageFilePath
+    }
 
     # Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
     if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\" ) -or [string]::IsNullOrEmpty($SetParametersFile) ){
@@ -100,6 +115,13 @@ try{
 	Write-Verbose "Completed AzureRM WebApp Deployment Task"
 
 } finally {
+    if( $VariableSubstitution -eq "true")
+    {
+        if( Test-Path $packageFilePath )
+        {
+            Remove-Item -Force $packageFilePath
+        }
+    }
     Trace-VstsLeavingInvocation $MyInvocation
 }
 

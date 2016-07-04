@@ -12,11 +12,16 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 11
+        "Minor": 1,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
+	    {
+            "name": "configtransforms",
+            "displayName": "XML Configuration Transformations",
+            "isExpanded": true
+        },
         {
             "name": "output",
             "displayName": "Output",
@@ -130,6 +135,15 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+        {
+            "name": "VariableSubstitution",
+            "type": "boolean",
+            "label": "Variable Substitution",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "configtransforms",
+            "helpMarkDown": "Variables defined in the Definition will be automatically substituted in the appSettings, applicationSettings and connectionStrings section of the config files. As of now variable substitution is not supported for variables of type 'secret'. <br/>In case of Release, if the same variable is defined both in the Release Definition and in the Environment, then the Environment variable value will supersede the Release Definition variable value."
         },
         {
             "name": "WebAppUri",
