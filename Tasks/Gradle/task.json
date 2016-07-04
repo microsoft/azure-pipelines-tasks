@@ -307,6 +307,7 @@
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
         "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
-        "codeAnalysisBuildSummaryTitle":"Code Analysis Report"
+        "codeAnalysisBuildSummaryTitle":"Code Analysis Report",
+        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results"
     }
 }

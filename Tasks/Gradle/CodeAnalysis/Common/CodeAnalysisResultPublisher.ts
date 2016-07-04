@@ -19,33 +19,34 @@ export class CodeAnalysisResultPublisher {
     }
 
     /**
-     * Uploads the artifacts. It groups them into logical artifact directories 
+     * Uploads the artifacts. It groups them by module
      * 
      * @param {string} prefix
      */
     public uploadArtifacts(prefix: string) {
         tl.debug('[CA] Preparing to upload artifacts');
+
+        let artifactBaseDir = path.join(this.stagingDir, 'CA');
+        tl.mkdirP(artifactBaseDir);
+
         for (var analysisResult of this.analysisResults) {
-            let destinationDir = path.join(this.stagingDir, `${analysisResult.toolName}`);
+
+            // Group artifacts in folders representing the module name
+            let destinationDir = path.join(artifactBaseDir, analysisResult.moduleName);
+            tl.mkdirP(destinationDir);
 
             for (var resultFile of analysisResult.resultFiles) {
                 let extension = path.extname(resultFile);
                 let artifactName = `${prefix}_${analysisResult.moduleName}_${analysisResult.toolName}${extension}`;
-
-                tl.mkdirP(destinationDir);
                 tl.cp('-f', resultFile, path.join(destinationDir, artifactName));
             }
-
-            tl.debug(`[CA] Uploading artifacts for ${analysisResult.moduleName} module - ${destinationDir}`);
-
-            // Artifact upload is a fire and forget operation 
-            tl.command("artifact.upload", {
-                'containerfolder': analysisResult.moduleName,
-                // Artifact names need to be unique on an upload-by-upload basis
-                'artifactname': `${prefix}_${analysisResult.moduleName}_${analysisResult.toolName}`
-            }, destinationDir);
         }
+
+        tl.command("artifact.upload", {
+            'artifactname': tl.loc('codeAnalysisArtifactSummaryTitle')
+        }, artifactBaseDir);
     }
+
 
     /**
      * Creates and uploads a build summary that looks like:

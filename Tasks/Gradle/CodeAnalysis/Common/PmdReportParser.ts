@@ -1,6 +1,6 @@
 import {AnalysisResult} from './AnalysisResult'
 import {IAnalysisToolReportParser} from './IAnalysisToolReportParser'
-import {BuildOutput} from './BuildOutput'
+import {BuildOutput, BuildEngine} from './BuildOutput'
 import {ModuleOutput} from './ModuleOutput'
 
 import path = require('path');
@@ -42,7 +42,7 @@ export class PmdReportParser implements IAnalysisToolReportParser {
 
     private parseModuleOutput(output: ModuleOutput): AnalysisResult {
 
-        let reportDir = path.join(output.moduleRoot, 'reports', 'pmd');
+        let reportDir = this.getBuildReportDir(output);
         let xmlReports = glob.sync(path.join(reportDir, '*.xml'));
 
         if (xmlReports.length === 0) {
@@ -52,6 +52,17 @@ export class PmdReportParser implements IAnalysisToolReportParser {
 
         tl.debug(`[CA] Found ${xmlReports.length} xml reports for module ${output.moduleName}`)
         return this.buildAnalysisResultFromModule(xmlReports, output.moduleName);
+    }
+
+    private getBuildReportDir(output: ModuleOutput) {
+        switch (this.buildOutput.buildEngine) {
+            case BuildEngine.Maven:
+                return path.join(output.moduleRoot);
+            case BuildEngine.Gradle:
+                return path.join(output.moduleRoot, 'reports', 'pmd');
+            default:
+                throw new Error('not supported');
+        }
     }
 
     private buildAnalysisResultFromModule(xmlReports: string[], moduleName: string): AnalysisResult {
@@ -87,7 +98,7 @@ export class PmdReportParser implements IAnalysisToolReportParser {
         var reportName = path.basename(xmlReport, '.xml');
         var dirName = path.dirname(xmlReport);
 
-        var htmlReports = glob.sync(path.join(dirName, reportName + '.html'));
+        var htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
 
         if (htmlReports.length > 0) {
             return htmlReports[0];
