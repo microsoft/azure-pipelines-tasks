@@ -19,7 +19,7 @@
   "loc.input.label.SqlUsername": "Server Admin Login",
   "loc.input.help.SqlUsername": "Specify the Azure SQL Server administrator login.",
   "loc.input.label.SqlPassword": "Password",
-  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.",
+  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark variable type as 'secret' to secure it.",
   "loc.input.label.PublishProfile": "Publish Profile",
   "loc.input.help.PublishProfile": "Publish profile provides fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share. Predefined system variables like, $(agent.buildDirectory) or $(agent.releaseDirectory) can be also used here.",
   "loc.input.label.AdditionalArguments": "Additional SqlPackage.exe Arguments",
