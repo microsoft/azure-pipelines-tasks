@@ -1,1 +1,0 @@
-This entire directory should be kept in sync with the one from Maven (Maven\CodeAnalysis\Common) 
