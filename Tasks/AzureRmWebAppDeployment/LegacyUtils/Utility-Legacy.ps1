@@ -136,9 +136,9 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += ( " " + $AdditionalArguments)
     }
 	
-    $collectionUri = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
-    $collectionId = Get-VstsTaskVariable -Name System.CollectionId -Require
-    $hostType = Get-VstsTaskVariable -Name System.HostType -Require
+    $collectionUri = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
+    $collectionId = "$env:SYSTEM_COLLECTIONID"
+    $hostType = "$env:SYSTEM_HOSTTYPE"
     $serverString = "TFS"
     if ($collectionUri.ToLower().Contains("visualstudio.com".ToLower())) {
         $serverString = "VSTS"
@@ -146,14 +146,14 @@ function Get-MsDeployCmdArgs
 
     $userAgent = [string]::Empty
     if ($hostType -ieq "build") {
-        $definitionId = Get-VstsTaskVariable -Name System.DefinitionId -Require
-        $buildId = Get-VstsTaskVariable -Name Build.BuildId -Require
+        $definitionId = "$env:SYSTEM_DEFINITIONID"
+        $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
         $userAgent = $serverString + "_" + $collectionId + "_" + "build" + "_" + $definitionId + "_" + $buildId
     } elseif ($hostType -ieq "release") {
-        $definitionId = Get-VstsTaskVariable -Name Release.DefinitionId -Require
-        $releaseId = Get-VstsTaskVariable -Name Release.ReleaseId -Require
-        $environmentId = Get-VstsTaskVariable -Name Release.EnvironmentId -Require
-        $attemptNumber = Get-VstsTaskVariable -Name Release.AttemptNumber -Require
+        $definitionId = Get-TaskVariable $distributedTaskContext "release.definitionId"
+        $releaseId = Get-TaskVariable $distributedTaskContext "release.releaseId"
+        $environmentId = Get-TaskVariable $distributedTaskContext "release.environmentId"
+        $attemptNumber = Get-TaskVariable $distributedTaskContext "release.attemptNumber"
         $userAgent = $serverString + "_" + $collectionId + "_" + "release" + "_" + $definitionId + "_" + $releaseId + "_" + $environmentId + "_" + $attemptNumber
 	}
 	
