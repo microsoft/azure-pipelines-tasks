@@ -8,8 +8,8 @@ import path = require('path');
 import sqCommon = require('sonarqube-common/sonarqube-common');
 import sqGradle = require('./CodeAnalysis/gradlesonar');
 
-import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrchestrator.ts';
-import {BuildOutput} from './CodeAnalysis/Common/BuildOutput.ts';
+import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrchestrator';
+import {BuildOutput} from './CodeAnalysis/Common/BuildOutput';
 
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -81,7 +81,6 @@ if (isCodeCoverageOpted) {
     enableCodeCoverage();
 }
 
-
 if (isSonarQubeEnabled) {
     // Looks like: 'SonarQube analysis is enabled.'
     console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
@@ -101,19 +100,7 @@ gb.exec()
     .then(function (code) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted);
-
-        let buildOutput : BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), 'build');
-        let caOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
-            buildOutput, 
-            path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis"), 
-            tl.getVariable('build.buildNumber'));
-
-        caOrchestrator.orchestrateCodeAnalysisProcessing();
-
-
-        if (isSonarQubeEnabled) {
-            sqGradle.uploadSonarQubeBuildSummary();
-        }
+        processCodeAnalysisResults();
 
         tl.exit(code);
     })
@@ -124,6 +111,24 @@ gb.exec()
         tl.exit(1);
     })
 
+function processCodeAnalysisResults() {
+
+    if (isPMDAnalysisEnabled) {
+        tl.debug('Processing code analysis results');
+        let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), 'build');
+        let caOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+            buildOutput,
+            path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis"),
+            tl.getVariable('build.buildNumber'));
+
+        caOrchestrator.orchestrateCodeAnalysisProcessing();
+    }
+
+    if (isSonarQubeEnabled) {
+        sqGradle.uploadSonarQubeBuildSummary();
+    }
+
+}
 /* Functions for Publish Test Results, Code Coverage */
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
     if (publishJUnitResults) {

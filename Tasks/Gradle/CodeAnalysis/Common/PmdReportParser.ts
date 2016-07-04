@@ -44,27 +44,63 @@ export class PmdReportParser implements IAnalysisToolReportParser {
 
         let reportDir = path.join(output.moduleRoot, 'reports', 'pmd');
         let xmlReports = glob.sync(path.join(reportDir, '*.xml'));
-        let htmlReports = glob.sync(path.join(reportDir, '*.html'));
 
-        if (xmlReports.length === 0 || htmlReports.length === 0) {
+        if (xmlReports.length === 0) {
             tl.debug(`[CA] No PMD reports found for the ${output.moduleName} module. Searched in ${output.moduleRoot}`);
             return null;
         }
 
-        if (xmlReports.length > 1 || htmlReports.length > 1) {
-            tl.debug(`[CA] Found multiple PMD reports in ${reportDir} - skipping them`);
-            return null;
-        }
-
-        return this.buildAnalysisResult(xmlReports[0], htmlReports[0], output.moduleName);
-
+        tl.debug(`[CA] Found ${xmlReports.length} xml reports for module ${output.moduleName}`)
+        return this.buildAnalysisResultFromModule(xmlReports, output.moduleName);
     }
 
-    private buildAnalysisResult(xmlReport: string, htmlReport: string, moduleName: string): AnalysisResult {
+    private buildAnalysisResultFromModule(xmlReports: string[], moduleName: string): AnalysisResult {
 
         let analysisResult: AnalysisResult = null;
+        let fileCount: number = 0;
+        let violationCount: number = 0;
+        let artifacts: string[] = [];
 
-        var pmdXmlFileContents = fs.readFileSync(xmlReport, 'utf-8');
+        for (var xmlReport of xmlReports) {
+
+            var pmdXmlFileContents = fs.readFileSync(xmlReport, 'utf-8');
+            var result = this.parseXmlReport(pmdXmlFileContents, xmlReport, moduleName);
+
+            if (result) {
+                violationCount += result[0];
+                fileCount += result[1];
+                artifacts.push(xmlReport);
+                var htmlReport = this.findHtmlReport(xmlReport);
+
+                if (htmlReport) {
+                    artifacts.push(htmlReport);
+                }
+            }
+        }
+
+        return new AnalysisResult('PMD', moduleName, artifacts, violationCount, fileCount);
+    }
+
+    private findHtmlReport(xmlReport: string): string {
+
+        // expecting to find an html report with the same name
+        var reportName = path.basename(xmlReport, '.xml');
+        var dirName = path.dirname(xmlReport);
+
+        var htmlReports = glob.sync(path.join(dirName, reportName + '.html'));
+
+        if (htmlReports.length > 0) {
+            return htmlReports[0];
+        }
+
+        return null;
+    }
+
+    private parseXmlReport(pmdXmlFileContents: string, xmlReport: string, moduleName: string) {
+
+        let fileCount = 0;
+        let violationCount = 0;
+
         xml2js.parseString(pmdXmlFileContents, (err, data) => {
             if (!data || !data.pmd) { // If the file is not in XML, or is from PMD, return immediately
                 tl.debug(`[CA] Empty or unrecognized PMD xml report ${xmlReport}`);
@@ -76,18 +112,17 @@ export class PmdReportParser implements IAnalysisToolReportParser {
                 return null;
             }
 
-            let fileCount: number = data.pmd.file.length;
-            let violationCount: number = 0;
-
+            fileCount = data.pmd.file.length;
             data.pmd.file.forEach((file: any) => {
                 if (file.violation) {
                     violationCount += file.violation.length;
                 }
             });
 
-            tl.debug(`[CA] A pmd report was found for for module '${moduleName}' containing ${violationCount} issues`);
-            analysisResult = new AnalysisResult('PMD', moduleName, [xmlReport, htmlReport], violationCount, fileCount);
+            tl.debug(`[CA] A PMD report was found for for module '${moduleName}' containing ${violationCount} issues - ${xmlReport}`);
         });
-        return analysisResult;
+
+        return [violationCount, fileCount];
     }
+
 }
