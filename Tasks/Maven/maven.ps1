@@ -203,7 +203,3 @@ ElseIf ($codeCoverageTool -eq "Cobertura")
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
 
 Write-Verbose "Leaving script Maven.ps1"
-
-
-
-

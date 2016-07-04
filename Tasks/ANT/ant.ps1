@@ -149,7 +149,7 @@ if(Test-Path $instrumentedClassesDirectory)
    # delete any previous instrumented classes directory
    rm -r $instrumentedClassesDirectory -force | Out-Null
 }
-
+ 
 if($isCoverageEnabled)
 {
    try
@@ -261,7 +261,3 @@ if($isCoverageEnabled)
 }
 
 Write-Verbose "Leaving script Ant.ps1"
-
-
-
-
