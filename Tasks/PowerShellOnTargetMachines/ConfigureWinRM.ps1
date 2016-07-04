@@ -73,7 +73,7 @@ function Configure-WinRMListener
     param([string] $hostname,
           [string] $protocol)
 
-    Write-Verbose -Verbose "Configuring the WinRM listener for $hostname over $protocol protocol"
+    Write-Verbose "Configuring the WinRM listener for $hostname over $protocol protocol"
 
     if($protocol -ne "http")
     {
@@ -84,7 +84,7 @@ function Configure-WinRMListener
             Configure-WinRMHttpListener
     }
     
-    Write-Verbose -Verbose "Successfully Configured the WinRM listener for $hostname over $protocol protocol" 
+    Write-Verbose "Successfully Configured the WinRM listener for $hostname over $protocol protocol" 
 }
 
 function Configure-WinRMHttpListener
