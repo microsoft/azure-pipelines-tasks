@@ -108,8 +108,14 @@ if ($jdkPath)
 }
 
 $buildRootPath = Split-Path $antBuildFile -Parent
-$reportDirectoryName = [guid]::NewGuid()
+$reportDirectoryName = "ReportDirectory_75C12DBC-FB59-450A-8E4F-772EA8BFCFA6"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+
+if(Test-Path $reportDirectory)
+ {
+    # delete any previous code coverage data 
+    rm -r $reportDirectory -force | Out-Null
+ }
 
 if($isCoverageEnabled)
 {
@@ -128,9 +134,21 @@ $summaryFile = Join-Path $summaryFile $summaryFileName
 # ensuring unique code coverage report task name by using guid
 $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 
-$reportBuildFileName = [guid]::NewGuid().tostring() + ".xml"
+$reportBuildFileName = "ReportBuildFile_9B5907FC-EC56-4662-B8EA-EC23FCB97C43.xml"
 $reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
 $instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
+
+if(Test-Path $reportBuildFile)
+{
+    # delete any previous code coverage report build file
+    rm -r $reportBuildFile -force | Out-Null
+}
+ 
+if(Test-Path $instrumentedClassesDirectory)
+{
+    # delete any previous instrumented classes directory
+    rm -r $instrumentedClassesDirectory -force | Out-Null
+}
 
 if($isCoverageEnabled)
 {
@@ -242,23 +260,6 @@ if($isCoverageEnabled)
    	}
 }
 
-if(Test-Path $reportDirectory)
-{
-   # delete any previous code coverage data 
-   rm -r $reportDirectory -force | Out-Null
-}
-
-if(Test-Path $reportBuildFile)
-{
-   # delete any previous code coverage report build file
-   rm -r $reportBuildFile -force | Out-Null
-}
-
-if(Test-Path $instrumentedClassesDirectory)
-{
-   # delete any previous instrumented classes directory
-   rm -r $instrumentedClassesDirectory -force | Out-Null
-}
 Write-Verbose "Leaving script Ant.ps1"
 
 

@@ -109,9 +109,9 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 
 $buildRootPath = Split-Path $mavenPOMFile -Parent
-$reportDirectoryName = [guid]::NewGuid()
+$reportDirectoryName = "ReportDirectory_C91CDE2D-CC66-4541-9C27-E3EF6CB3DB16"
 $reportDirectoryNameCobertura = "target\site\cobertura"
-$reportPOMFileName = [guid]::NewGuid().tostring() + ".xml"
+$reportPOMFileName = "ReportPOMFile_4E52C1C4-8C32-4580-A54D-41D5E9ED1F74.xml"
 $reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
@@ -125,6 +125,24 @@ $summaryFileCobertura = Join-Path $summaryFileCobertura $summaryFileNameCobertur
 $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
+
+if(Test-Path $reportDirectory)
+{
+    # delete any previous code coverage data 
+    rm -r $reportDirectory -force | Out-Null
+}
+
+if(Test-Path $reportDirectoryCobertura)
+{
+    # delete any previous code coverage data from Cobertura
+    rm -r $reportDirectoryCobertura -force | Out-Null
+}
+
+if(Test-Path $reportPOMFile)
+{
+    # delete any previous code coverage data 
+    rm $reportPOMFile -force | Out-Null
+}
 
 if($isCoverageEnabled)
 {
@@ -184,26 +202,4 @@ ElseIf ($codeCoverageTool -eq "Cobertura")
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
 
-if(Test-Path $reportDirectory)
-{
-    # delete any previous code coverage data 
-    rm -r $reportDirectory -force | Out-Null
-}
-
-if(Test-Path $reportDirectoryCobertura)
-{
-    # delete any previous code coverage data from Cobertura
-    rm -r $reportDirectoryCobertura -force | Out-Null
-}
-
-if(Test-Path $reportPOMFile)
-{
-    # delete any previous code coverage data 
-    rm $reportPOMFile -force | Out-Null
-}
-
 Write-Verbose "Leaving script Maven.ps1"
-
-
-
-
