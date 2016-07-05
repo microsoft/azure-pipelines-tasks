@@ -108,14 +108,21 @@ if ($jdkPath)
 }
 
 $buildRootPath = Split-Path $antBuildFile -Parent
-$reportDirectoryName = "ReportDirectory_75C12DBC-FB59-450A-8E4F-772EA8BFCFA6"
+$reportDirectoryName = "ReportDirectory75C12DBC"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
-if(Test-Path $reportDirectory)
- {
-    # delete any previous code coverage data 
-    rm -r $reportDirectory -force | Out-Null
- }
+try 
+{
+    if(Test-Path $reportDirectory)
+    {
+        # delete any previous code coverage data 
+        rm -r $reportDirectory -force | Out-Null
+    }
+}
+catch
+{
+    Write-Verbose "Failed to delete report directory"
+}
 
 if($isCoverageEnabled)
 {
@@ -134,20 +141,34 @@ $summaryFile = Join-Path $summaryFile $summaryFileName
 # ensuring unique code coverage report task name by using guid
 $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 
-$reportBuildFileName = "ReportBuildFile_9B5907FC-EC56-4662-B8EA-EC23FCB97C43.xml"
+$reportBuildFileName = "ReportBuildFile9B5907FC.xml"
 $reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
 $instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
 
-if(Test-Path $reportBuildFile)
+try
 {
-    # delete any previous code coverage report build file
-    rm -r $reportBuildFile -force | Out-Null
+    if(Test-Path $reportBuildFile)
+    {
+        # delete any previous code coverage report build file
+        rm -r $reportBuildFile -force | Out-Null
+    }
+}
+catch
+{
+    Write-Verbose "Failed to delete report build file"
 }
  
-if(Test-Path $instrumentedClassesDirectory)
+try
 {
-    # delete any previous instrumented classes directory
-    rm -r $instrumentedClassesDirectory -force | Out-Null
+    if(Test-Path $instrumentedClassesDirectory)
+    {
+        # delete any previous instrumented classes directory
+        rm -r $instrumentedClassesDirectory -force | Out-Null
+    }
+}
+catch
+{
+    Write-Verbose "Failed to delete instrumented classes directory"
 }
 
 if($isCoverageEnabled)
