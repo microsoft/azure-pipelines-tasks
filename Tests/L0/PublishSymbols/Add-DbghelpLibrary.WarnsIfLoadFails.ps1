@@ -11,20 +11,19 @@ Register-Mock Get-CurrentProcess {
             Id = $PID
             Modules = @(
                 New-Object psobject -Property @{
-                    ModuleName = 'SomeModule2.dll'
-                    FileName = 'SomeDrive:\SomeDir\SomeModule2.dll'
-                }
-                New-Object psobject -Property @{
-                    ModuleName = 'dbghelp.dll'
-                    FileName = "SomeDrive:\AgentHome\Externals\Symstore\dbghelp.dll"
+                    ModuleName = 'SomeModule.dll'
+                    FileName = 'SomeDrive:\SomeDir\SomeModule.dll'
                 }
             )
         }
 }
-Register-Mock Invoke-LoadLibrary
+Register-Mock Invoke-LoadLibrary { [System.IntPtr]::Zero } # Zero indicates error.
+Register-Mock Get-LastWin32Error { 123 }
+Register-Mock Write-Warning
 
 # Act.
-Add-DbghelpLibrary 
+Add-DbghelpLibrary
 
 # Assert.
-Assert-WasCalled Invoke-LoadLibrary -Times 0
+Assert-WasCalled Invoke-LoadLibrary -- -LiteralPath "SomeDrive:\AgentHome\Externals\Symstore\dbghelp.dll"
+Assert-WasCalled Write-Warning -- "FailedToLoadDbghelpDllFrom0ErrorCode1 SomeDrive:\AgentHome\Externals\Symstore\dbghelp.dll 123"
