@@ -46,8 +46,10 @@ export class BuildOutput {
     }
 
     private getModuleName(modulePath: string): string {
-        // we cannot use the parent directory as module name for top-level modules  
-        if (modulePath === this.rootDirectory) {
+        let rootBuildDir = path.join(this.rootDirectory, this.getBuildDirectoryName());
+        tl.debug(`[CA] modulePath: ${modulePath} rootBuildDir: ${rootBuildDir}`);
+
+        if (path.normalize(modulePath) === path.normalize(rootBuildDir)) {
             return 'root';
         }
         return path.basename(path.join(modulePath, '..'));
