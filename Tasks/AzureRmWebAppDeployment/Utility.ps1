@@ -260,12 +260,12 @@ function Update-DeploymentStatus
             $releaseIdTaskVar = Get-VstsTaskVariable -Name "release.releaseId"
             if(-not [string]::IsNullOrEmpty($releaseUrlTaskVar)) {
                 $deploymentId = $releaseIdTaskVar
-                $message = Get-VstsLocString -Key "Updating deployment history for deployment {0}" -ArgumentList $releaseUrlTaskVar
+                $message = Get-VstsLocString -Key "Updatingdeploymenthistoryfordeployment0" -ArgumentList $releaseUrlTaskVar
             }
             else
             {
                $deploymentId = $buildIdTaskVar
-               $message = Get-VstsLocString -Key "Updating deployment history for deployment {0}" -ArgumentList $buildUrlTaskVar
+               $message = Get-VstsLocString -Key "Updatingdeploymenthistoryfordeployment0" -ArgumentList $buildUrlTaskVar
             }
 
             Write-Verbose "Using deploymentId as: '$deploymentId' to update deployment Status"
@@ -294,7 +294,7 @@ function Update-DeploymentStatus
             $url = [string]::Format("https://{0}/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($webAppHostUrl),[System.Web.HttpUtility]::UrlEncode($deploymentId))
 
             Write-Verbose "Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
-            Write-Host (Get-VstsLocString -Key "Updating deployment status")
+            Write-Host (Get-VstsLocString -Key "Updatingdeploymentstatus")
             try {
                 Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType "application/json" -UserAgent "myuseragent"
             } 
@@ -307,11 +307,11 @@ function Update-DeploymentStatus
                 $streamReader.DiscardBufferedData()
                 $responseBody = $streamReader.ReadToEnd()
                 $streamReader.Close()
-                Write-Warning (Get-VstsLocString -Key "Cannot update deployment status for {0} - {1}" -ArgumentList $WebSiteName, $responseBody)        
+                Write-Warning (Get-VstsLocString -Key "Cannotupdatedeploymentstatusfor01" -ArgumentList $WebSiteName, $responseBody)        
             }
         }
         else {
-            Write-Warning (Get-VstsLocString -Key "Cannot update deployment status, SCM endpoint is not enabled for this website")      
+            Write-Warning (Get-VstsLocString -Key "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite")      
         }
     
 }
