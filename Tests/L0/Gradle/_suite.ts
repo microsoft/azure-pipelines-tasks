@@ -37,6 +37,23 @@ function setDefaultInputs(tr: TaskRunner, enableSonarQubeAnalysis: boolean): Tas
     return tr;
 }
 
+function createTempDirsForCodeAnalysisTests(): void {
+    var testTempDir: string = path.join(__dirname, '_temp');
+    var caTempDir: string = path.join(testTempDir, '.codeAnalysis');
+
+    if (!fs.existsSync(testTempDir)) {
+        fs.mkdirSync(testTempDir);
+    }
+
+    if (!fs.existsSync(caTempDir)) {
+        fs.mkdirSync(caTempDir);
+    }
+}
+
+function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
+    assertBuildSummaryContains(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), expectedString);
+}
+
 function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString: string): void {
     assertBuildSummaryContains(path.join(stagingDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), expectedString);
 }
@@ -46,6 +63,19 @@ function assertBuildSummaryContains(buildSummaryFilePath: string, expectedLine: 
     var buildSummaryString: string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
 
     assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
+}
+
+function setResponseAndBuildVars(initialResponseFile: string, finalResponseFile: string, envVars: Array<[string, string]>) {
+
+    var responseJsonFilePath: string = path.join(__dirname, initialResponseFile);
+    var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+    for (var envVar of envVars) {
+        responseJsonContent.getVariable[envVar[0]] = envVar[1];
+    }
+
+    var newResponseFilePath: string = path.join(__dirname, finalResponseFile);
+    fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+    setResponseFile(path.basename(newResponseFilePath));
 }
 
 // Recursively lists all files within the target folder, giving their full paths.
@@ -61,6 +91,33 @@ function listFolderContents(folder): string[] {
     });
 
     return result;
+}
+
+// Adds mock exist, checkPath, rmRF and mkdirP responses for given file paths.
+// Takes an object to add to and an array of file paths for which responses should be added.
+// Modifies and returns the argument object.
+function setupMockResponsesForPaths(responseObject: any, paths: string[]) { // Can't use rest arguments here (gulp-mocha complains)
+
+    // Create empty objects for responses only if they did not already exist (avoid overwriting existing responses)
+    responseObject.exist = responseObject.exist || {};
+    responseObject.checkPath = responseObject.checkPath || {};
+    responseObject.rmRF = responseObject.rmRF || {};
+    responseObject.mkdirP = responseObject.mkdirP || {};
+
+    var rmRFSuccessObj = {
+        success: true,
+        message: "foo bar"
+    };
+
+
+    paths.forEach((path) => {
+        responseObject.exist[path] = true;
+        responseObject.checkPath[path] = true;
+        responseObject.rmRF[path] = rmRFSuccessObj;
+        responseObject.mkdirP[path] = true;
+    });
+
+    return responseObject;
 }
 
 // Create temp dirs for mavencodeanalysis tests to save into
@@ -1169,4 +1226,97 @@ describe('gradle Suite', function () {
                 done(err);
             });
     });
+
+
+
+    it('Single Module Gradle with PMD', function (done) {
+
+        createTempDirsForCodeAnalysisTests();
+
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
+
+        setResponseAndBuildVars(
+            'gradleCA.json',
+            this.test.title + '_response.json',
+            [
+                ["build.buildNumber", "14"],
+                ['build.sourcesDirectory', testSrcDir],
+                ['build.artifactStagingDirectory', testStgDir]
+            ]);
+
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr, false);
+        tr.setInput('pmdAnalysisEnabled', 'true');
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran('gradlew build -I /gradle/CodeAnalysis/pmd.gradle'), 'ran gradle with pmd');
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+                assert(tr.stdout.indexOf('artifact.upload artifactname=Code Analysis Results;') > -1,
+                    'should have uploaded PMD build artifacts');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 4 violations in 2 files.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
+    it('Multi Module Gradle with PMD', function (done) {
+
+        createTempDirsForCodeAnalysisTests();
+
+        var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
+
+        setResponseAndBuildVars(
+            'gradleCA.json',
+            this.test.title + '_response.json',
+            [
+                ["build.buildNumber", "211"],
+                ['build.sourcesDirectory', testSrcDir],
+                ['build.artifactStagingDirectory', testStgDir]
+            ]);
+
+        var tr = new TaskRunner('gradle', true, true);
+        tr = setDefaultInputs(tr, false);
+        tr.setInput('pmdAnalysisEnabled', 'true');
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran('gradlew build -I /gradle/CodeAnalysis/pmd.gradle'), 'ran gradle with pmd');
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+                assert(tr.stdout.indexOf('artifact.upload artifactname=Code Analysis Results;') > -1,
+                    'should have uploaded PMD build artifacts');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 4 violations in 2 files.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
 });
