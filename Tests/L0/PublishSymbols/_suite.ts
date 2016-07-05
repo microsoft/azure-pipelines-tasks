@@ -40,6 +40,9 @@ describe('PublishSymbols Suite', function () {
         it('(Add-DbghelpLibrary) warns if different location already loaded', (done) => {
             psr.run(path.join(__dirname, 'Add-DbghelpLibrary.WarnsIfDifferentLocationAlreadyLoaded.ps1'), done);
         })
+        it('(Add-DbghelpLibrary) warns if load fails', (done) => {
+            psr.run(path.join(__dirname, 'Add-DbghelpLibrary.WarnsIfLoadFails.ps1'), done);
+        })
         it('(Add-SourceServerStream) instruments pdb', (done) => {
             psr.run(path.join(__dirname, 'Add-SourceServerStream.InstrumentsPdb.ps1'), done);
         })
