@@ -1,7 +1,8 @@
 import {AnalysisResult} from './AnalysisResult'
-import {IAnalysisToolReportParser} from './IAnalysisToolReportParser'
+import {IAnalysisTool} from './IAnalysisTool'
 import {BuildOutput, BuildEngine} from './BuildOutput'
 import {ModuleOutput} from './ModuleOutput'
+import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
 import path = require('path');
 import fs = require('fs');
@@ -12,21 +13,51 @@ import tl = require('vsts-task-lib/task');
 
 
 /**
- * An object that is able to identify and parse PMD reports
+ * An object that is able to configure the build to run PMD and identify and parse PMD reports
  * 
  * @export
  * @class PmdReportParser
  * @implements {IAnalysisToolReportParser}
  */
-export class PmdReportParser implements IAnalysisToolReportParser {
+export class PmdTool implements IAnalysisTool {
+
+    private static Name: string = 'PMD';
 
     constructor(private buildOutput: BuildOutput) {
 
     }
 
-    public parse(): AnalysisResult[] {
-        var results: AnalysisResult[] = [];
+    private isEnabled(): boolean {
+        return tl.getBoolInput('pmdAnalysisEnabled', false);
+    }
 
+    public configureBuild(toolRunner: ToolRunner): ToolRunner {
+        switch (this.buildOutput.buildEngine) {
+            case BuildEngine.Maven: {
+                throw new Error('Not implemented');
+            }
+            case BuildEngine.Gradle: {
+
+                if (this.isEnabled()) {
+                    console.log(tl.loc('codeAnalysis_ToolIsEnabled'), PmdTool.Name);
+
+                    var pmdInitScriptPath: string = path.join(__dirname, '../', 'pmd.gradle');
+                    toolRunner.arg(['-I', pmdInitScriptPath]);
+                    break;
+                }
+            }
+        }
+        return toolRunner;
+    }
+
+
+    public processResults(): AnalysisResult[] {
+
+        if (!this.isEnabled()) {
+            return [];
+        }
+
+        var results: AnalysisResult[] = [];
         var outputs: ModuleOutput[] = this.buildOutput.getModuleOutputs();
 
         for (var output of outputs) {
@@ -46,7 +77,7 @@ export class PmdReportParser implements IAnalysisToolReportParser {
         let xmlReports = glob.sync(path.join(reportDir, '*.xml'));
 
         if (xmlReports.length === 0) {
-            tl.debug(`[CA] No PMD reports found for the ${output.moduleName} module. Searched in ${output.moduleRoot}`);
+            tl.debug(`[CA] No PMD reports found for the ${output.moduleName} module. Searched in ${reportDir}`);
             return null;
         }
 
@@ -89,7 +120,7 @@ export class PmdReportParser implements IAnalysisToolReportParser {
             }
         }
 
-        return new AnalysisResult('PMD', moduleName, artifacts, violationCount, fileCount);
+        return new AnalysisResult(PmdTool.Name, moduleName, artifacts, violationCount, fileCount);
     }
 
     private findHtmlReport(xmlReport: string): string {
@@ -113,7 +144,8 @@ export class PmdReportParser implements IAnalysisToolReportParser {
         let violationCount = 0;
 
         xml2js.parseString(pmdXmlFileContents, (err, data) => {
-            if (!data || !data.pmd) { // If the file is not in XML, or is from PMD, return immediately
+            // If the file is not XML, or is not from PMD, return immediately
+            if (!data || !data.pmd) { 
                 tl.debug(`[CA] Empty or unrecognized PMD xml report ${xmlReport}`);
                 return null;
             }

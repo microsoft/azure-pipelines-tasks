@@ -15,10 +15,7 @@ rootProject {
             allprojects.forEach{p->
                 p.apply plugin: 'pmd'
             }
-        }
-
-        allprojects { p->
-            if (!hasPmd) {
+            allprojects { p->
                 pmd {
                     ignoreFailures = true;
                     reportsDir = file("$p.buildDir/reports/pmd")
@@ -26,6 +23,4 @@ rootProject {
             }
         }
     }
-
 }
-

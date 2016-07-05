@@ -10,6 +10,7 @@ import sqGradle = require('./CodeAnalysis/gradlesonar');
 
 import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrchestrator';
 import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
+import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -39,7 +40,9 @@ var summaryFile: string = null;
 var reportDirectory: string = null;
 var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
 var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
-var isPMDAnalysisEnabled: boolean = CodeAnalysisOrchestrator.IsPMDEnabled();
+
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Gradle);
+var codeAnalysisOrchestrator = new CodeAnalysisOrchestrator([new PmdTool(buildOutput)])
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
@@ -89,12 +92,7 @@ if (isSonarQubeEnabled) {
     gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile);
 }
 
-if (isPMDAnalysisEnabled) {
-    console.log(tl.loc('codeAnalysis_ToolIsEnabled'), 'PMD');
-
-    var pmdInitScriptPath: string = path.join(__dirname, 'CodeAnalysis', 'pmd.gradle');
-    gb.arg(['-I', pmdInitScriptPath]);
-}
+gb = codeAnalysisOrchestrator.configureBuild(gb);
 
 gb.exec()
     .then(function (code) {
@@ -113,22 +111,14 @@ gb.exec()
 
 function processCodeAnalysisResults() {
 
-    if (isPMDAnalysisEnabled) {
-        tl.debug('Processing code analysis results');
-        let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Gradle);
-        let caOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
-            buildOutput,
-            path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis"),
-            tl.getVariable('build.buildNumber'));
-
-        caOrchestrator.orchestrateCodeAnalysisProcessing();
-    }
+    tl.debug('Processing code analysis results');
+    codeAnalysisOrchestrator.publishCodeAnalysisResults()
 
     if (isSonarQubeEnabled) {
         sqGradle.uploadSonarQubeBuildSummary();
     }
-
 }
+
 /* Functions for Publish Test Results, Code Coverage */
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
     if (publishJUnitResults) {

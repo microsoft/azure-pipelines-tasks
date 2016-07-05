@@ -13,7 +13,8 @@ param(
     [string]$jdkVersion,      # JDK version
     [string]$jdkArchitecture,  # JDK arch
     [string]$jdkUserInputPath,
-    [string]$sqAnalysisEnabled
+    [string]$sqAnalysisEnabled,
+    [string]$pmdAnalysisEnabled
 )
 
 Function CmdletHasMember($memberName) {
@@ -39,6 +40,13 @@ if($isCoverageEnabled)
 if($sqAnalysisEnabled)
 {
     Write-Warning "SonarQube analysis is not yet supported on Windows and hosted agents."
+    Write-Warning "Please use a dedicated Unix agent to enable this feature: https://github.com/Microsoft/vsts-agent"
+}
+
+# PMD analysis is not supported on Powershell, output a warning message
+if($pmdAnalysisEnabled)
+{
+    Write-Warning "PMD code analysis is not yet supported on Windows and hosted agents."
     Write-Warning "Please use a dedicated Unix agent to enable this feature: https://github.com/Microsoft/vsts-agent"
 }
 

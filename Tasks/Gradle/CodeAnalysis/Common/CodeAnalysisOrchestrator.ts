@@ -1,8 +1,10 @@
 import {AnalysisResult} from './AnalysisResult'
 import {BuildOutput} from './BuildOutput'
-import {IAnalysisToolReportParser} from './IAnalysisToolReportParser'
-import {PmdReportParser} from './PmdReportParser'
+import {IAnalysisTool} from './IAnalysisTool'
+import {PmdTool} from './PmdTool'
 import {CodeAnalysisResultPublisher} from './CodeAnalysisResultPublisher'
+
+import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
 import path = require('path');
 import fs = require('fs');
@@ -21,53 +23,48 @@ import tl = require('vsts-task-lib/task');
  */
 export class CodeAnalysisOrchestrator {
 
-    private parsed: boolean = false;
-    private analysisResults: AnalysisResult[] = [];
-
-    constructor(private buildOutput: BuildOutput, private stagingDir: string, private buildNumber: string) {
-        if (!buildOutput) {
-            throw new ReferenceError('buildOutput');
-        }
+    constructor(private tools: IAnalysisTool[]) {
     }
 
-    public static IsPMDEnabled() {
-        return tl.getBoolInput('pmdAnalysisEnabled', false);
+    public configureBuild(toolRunner: ToolRunner): ToolRunner {
+        for (var tool of this.tools) {
+            toolRunner = tool.configureBuild(toolRunner);
+        }
+
+        return toolRunner;
     }
 
     /**
      * Parses the code analysis tool results (PMD, CheckStyle .. but not SonarQube). Uploads reports and artifacts.
      */
-    public orchestrateCodeAnalysisProcessing() {
-        let parsers: IAnalysisToolReportParser[] = [];
+    public publishCodeAnalysisResults() {
 
-        if (CodeAnalysisOrchestrator.IsPMDEnabled()) {
-            let pmdParser = new PmdReportParser(this.buildOutput);
-            parsers.push(pmdParser);
-        }
+        let stagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
+        let buildNumber: string = tl.getVariable('build.buildNumber');
 
-        tl.debug(`[CA] Detected ${parsers.length} parsers`);
+        tl.debug(`[CA] Detected ${this.tools.length} tool(s)`);
 
-        if (parsers.length > 0) {
-            this.processResults(parsers);
+        if (this.tools.length > 0) {
+            let analysisResults = this.processResults(this.tools);
 
-            let resultPublisher = new CodeAnalysisResultPublisher(this.analysisResults, this.stagingDir);
+            let resultPublisher = new CodeAnalysisResultPublisher(analysisResults, stagingDir);
 
             resultPublisher.uploadBuildSummary();
-            resultPublisher.uploadArtifacts(this.buildNumber);
+            resultPublisher.uploadArtifacts(buildNumber);
         }
     }
 
-    private processResults(parsers: IAnalysisToolReportParser[]): AnalysisResult[] {
-        if (!this.parsed) {
+    private processResults(tools: IAnalysisTool[]) {
 
-            for (var parser of parsers) {
-                var results = parser.parse();
-                this.analysisResults = this.analysisResults.concat(results);
+        let analysisResults: AnalysisResult[] = [];
+
+        for (var tool of tools) {
+            var results = tool.processResults();
+            if (results) {
+                analysisResults = analysisResults.concat(results);
             }
-
-            this.parsed = true;
         }
 
-        return this.analysisResults;
+        return analysisResults;
     }
 }

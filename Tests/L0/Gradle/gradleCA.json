@@ -10,9 +10,9 @@
             "stderr": ""
         },
         "gradlew build -I /gradle/CodeAnalysis/pmd.gradle": {
-             "code": 0,
+            "code": 0,
             "stdout": "Sample gradle + PMD"
-        }      
+        }
     },
     "checkPath": {
         "gradlew": true,
@@ -22,8 +22,11 @@
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
         "System.DefaultWorkingDirectory": "/user/build",
         "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
-        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}"
-    },      
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
+        "build.buildNumber": "14",
+        "build.sourcesDirectory": "/user/build/s",
+        "build.artifactStagingDirectory": "/user/build/a"
+    },
     "find": {
         "/user/build": [
             "/user/build/fun/test-123.xml"

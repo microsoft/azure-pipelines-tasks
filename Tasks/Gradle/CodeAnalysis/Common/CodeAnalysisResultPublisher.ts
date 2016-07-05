@@ -21,9 +21,13 @@ export class CodeAnalysisResultPublisher {
     /**
      * Uploads the artifacts. It groups them by module
      * 
-     * @param {string} prefix
+     * @param {string} prefix - used to discriminate between artifacts comming from different builds of the same projects (e.g. the build number)
      */
     public uploadArtifacts(prefix: string) {
+        if (this.analysisResults.length === 0) {
+            return;
+        }
+
         tl.debug('[CA] Preparing to upload artifacts');
 
         let artifactBaseDir = path.join(this.stagingDir, 'CA');
@@ -56,6 +60,11 @@ export class CodeAnalysisResultPublisher {
      * Code analysis results can be found in the 'Artifacts' tab. 
      */
     public uploadBuildSummary() {
+
+        if (this.analysisResults.length === 0) {
+            return;
+        }
+        
         tl.debug('[CA] Preparing a build summary');
         let content: string = this.createSummaryContent();
         this.uploadMdSummary(content);
