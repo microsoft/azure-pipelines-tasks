@@ -95,7 +95,7 @@ function run() {
                 if (tl.filePathSupplied('p12')) {
                     p12 = path.resolve(workingDir, p12);
                     var keychain = path.join(workingDir, '_xcodetasktmp.keychain');
-                    var keychainPwd = Math.random().toString();
+                    var keychainPwd = '_xcodetask_TmpKeychain_Pwd#1';
                     //create a temporary keychain and install the p12 into that keychain
                     yield sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd);
                     xcb.arg('OTHER_CODE_SIGN_FLAGS=--keychain=' + keychain);

@@ -102,7 +102,7 @@ async function run() {
             if(tl.filePathSupplied('p12')) {
                 p12 = path.resolve(workingDir, p12);
                 var keychain : string = path.join(workingDir, '_xcodetasktmp.keychain');
-                var keychainPwd : string = Math.random().toString();
+                var keychainPwd : string = '_xcodetask_TmpKeychain_Pwd#1';
 
                 //create a temporary keychain and install the p12 into that keychain
                 await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd);
