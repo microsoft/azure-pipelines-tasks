@@ -166,6 +166,8 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
 
 
 function generateResponseFile(): Q.Promise<string> {
+    var startTime = perfMeasure();
+    var endTime;
     var defer = Q.defer<string>();
     var tempFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     tl.debug("Response file will be generated at " + tempFile);
@@ -178,6 +180,8 @@ function generateResponseFile(): Q.Promise<string> {
     selectortool.arg("/responsefile:" + tempFile);
     selectortool.exec()
         .then(function (code) {
+            endTime = perfMeasure();
+            tl.debug(tl.loc("GenerateResponseFilePerfTime", endTime-startTime));
             defer.resolve(tempFile);
         })
         .fail(function (err) {
@@ -188,6 +192,8 @@ function generateResponseFile(): Q.Promise<string> {
 }
 
 function publishCodeChanges(): Q.Promise<string> {
+    var startTime = perfMeasure();
+    var endTime;
     var defer = Q.defer<string>();
     var selectortool = tl.createToolRunner(tiaSelectorTool);
     selectortool.arg("PublishCodeChanges");
@@ -200,13 +206,19 @@ function publishCodeChanges(): Q.Promise<string> {
 
     selectortool.exec()
         .then(function(code) {
+            endTime = perfMeasure();
+            tl.debug(tl.loc("PublishCodeChangesPerfTime", endTime-startTime));
             defer.resolve(String(code));
         })        
         .fail(function (err) {            
             defer.reject(err);
         });
-
+    
     return defer.promise;
+}
+
+function perfMeasure() : number {
+    return performance.now();
 }
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
