@@ -1,93 +1,93 @@
 {
-  "id": "c6650aa0-185b-11e6-a47d-df93e7a34c64",
-  "name": "ServiceFabricDeploy",
-  "friendlyName": "Service Fabric Application Deployment",
-  "description": "Deploy a Service Fabric application to a cluster.",
-  "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "version": {
-    "Major": "1",
-    "Minor": "0",
-    "Patch": "0"
-  },
-  "minimumAgentVersion": "1.95.0",
-  "instanceNameFormat": "Deploy Service Fabric Application",
-  "inputs": [
-    {
-      "name": "publishProfilePath",
-      "type": "filePath",
-      "label": "Publish Profile",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Path to the publish profile that defines the settings to use. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+    "id": "c6650aa0-185b-11e6-a47d-df93e7a34c64",
+    "name": "ServiceFabricDeploy",
+    "friendlyName": "Service Fabric Application Deployment",
+    "description": "Deploy a Service Fabric application to a cluster.",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1
     },
-    {
-      "name": "applicationPackagePath",
-      "type": "filePath",
-      "label": "Application Package",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Path to the application package that is to be deployed. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "Deploy Service Fabric Application",
+    "inputs": [
+        {
+            "name": "publishProfilePath",
+            "type": "filePath",
+            "label": "Publish Profile",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to the publish profile that defines the settings to use. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+        },
+        {
+            "name": "applicationPackagePath",
+            "type": "filePath",
+            "label": "Application Package",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to the application package that is to be deployed. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+        },
+        {
+            "name": "aadServiceConnectionName",
+            "type": "connectedService:servicefabric",
+            "label": "Credentials",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select a previously registered service connection to be used to authenticate to the Service Fabric cluster. Choose 'Manage' to register a new connection."
+        }
+    ],
+    "execution": {
+        "PowerShell3": {
+            "target": "deploy.ps1"
+        }
     },
-    {
-      "name": "aadServiceConnectionName",
-      "type": "connectedService:servicefabric",
-      "label": "Credentials",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Select a previously registered service connection to be used to authenticate to the Service Fabric cluster. Choose 'Manage' to register a new connection."
+    "messages": {
+        "AzureActiveDirectoryNotSet": "The publish profile is not configured to enable Azure Active Directory.  This task only supports Service Fabric clusters secured by Azure Active Directory.",
+        "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
+        "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
+        "SearchingForPublishProfile": "Searching for publish profile: {0}",
+        "FoundPublishProfile": "Found publish profile: {0}",
+        "SearchingForApplicationPackage": "Searching for application package: {0}",
+        "FoundApplicationPackage": "Found application package: {0}",
+        "ConnectedToCluster": "Successfully connected to cluster.",
+        "AadAuthority": "AAD Authority: {0}",
+        "ClusterAppId": "Cluster Application ID: {0}",
+        "ClientAppId": "Client Application ID: {0}",
+        "PathDoesNotExist": "Path '{0}' does not exist.",
+        "ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it.",
+        "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
+        "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
+        "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",
+        "SFSDK_UnableToReadAppTypeAndVersion": "Unable to read application type and version from application manifest file.",
+        "SFSDK_AppAlreadyExistsError": "An application with name '{0}' already exists, its type is '{1}' and version is '{2}'. You must first remove the existing application before a new application can be deployed or provide a new name for the application.",
+        "SFSDK_AppAlreadyExistsInfo": "An application with name '{0}' already exists in the cluster with application type '{1}' and version '{2}'. Removing it.",
+        "SFSDK_UnregisteringExistingAppType": "Application type '{0}' and version '{1}' was already registered with the cluster, unregistering it...",
+        "SFSDK_UnableToUnregisterAppType": "Unregistering the existing application type was unsuccessful.",
+        "SFSDK_CopyingAppToImageStore": "Copying application to image store...",
+        "SFSDK_CopyingAppToImageStoreFailed": "Copying of application package to image store failed. Cannot continue with registering the application.",
+        "SFSDK_RegisterAppType": "Registering application type...",
+        "SFSDK_RegisterAppTypeFailed": "Registration of application type failed.",
+        "SFSDK_RemoveAppPackage": "Removing application package from image store...",
+        "SFSDK_CreateApplication": "Creating application...",
+        "SFSDK_CreateApplicationFailed": "Creation of application failed.",
+        "SFSDK_CreateApplicationSuccess": "Create application succeeded.",
+        "SFSDK_AppDoesNotExist": "Application '{0}' doesn't exist in cluster.",
+        "SFSDK_AppTypeMismatch": "Application type of application '{0}' doesn't match the application type in the application manifest of the new application package. Please ensure that the application being upgraded has the same application type.",
+        "SFSDK_UpgradeInProgressError": "An upgrade for the application '{0}' is already in progress.",
+        "SFSDK_StartAppUpgrade": "Start upgrading application...",
+        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}'...",
+        "SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
+        "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
+        "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
+        "SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",
+        "SFSDK_UnzipPackage": "Attempting to unzip '{0}' to location '{1}'.",
+        "SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message"
     }
-  ],
-  "execution": {
-    "PowerShell3": {
-      "target": "deploy.ps1"
-    }
-  },
-  "messages": {
-    "AzureActiveDirectoryNotSet": "The publish profile is not configured to enable Azure Active Directory.  This task only supports Service Fabric clusters secured by Azure Active Directory.",
-    "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
-    "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
-    "SearchingForPublishProfile": "Searching for publish profile: {0}",
-    "FoundPublishProfile": "Found publish profile: {0}",
-    "SearchingForApplicationPackage": "Searching for application package: {0}",
-    "FoundApplicationPackage": "Found application package: {0}",
-    "ConnectedToCluster": "Successfully connected to cluster.",
-    "AadAuthority": "AAD Authority: {0}",
-    "ClusterAppId": "Cluster Application ID: {0}",
-    "ClientAppId": "Client Application ID: {0}",
-    "PathDoesNotExist": "Path '{0}' does not exist.",
-    "ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it.",
-    "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
-    "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
-    "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",
-    "SFSDK_UnableToReadAppTypeAndVersion": "Unable to read application type and version from application manifest file.",
-    "SFSDK_AppAlreadyExistsError": "An application with name '{0}' already exists, its type is '{1}' and version is '{2}'. You must first remove the existing application before a new application can be deployed or provide a new name for the application.",
-    "SFSDK_AppAlreadyExistsInfo": "An application with name '{0}' already exists in the cluster with application type '{1}' and version '{2}'. Removing it.",
-    "SFSDK_UnregisteringExistingAppType": "Application type '{0}' and version '{1}' was already registered with the cluster, unregistering it...",
-    "SFSDK_UnableToUnregisterAppType": "Unregistering the existing application type was unsuccessful.",
-    "SFSDK_CopyingAppToImageStore": "Copying application to image store...",
-    "SFSDK_CopyingAppToImageStoreFailed": "Copying of application package to image store failed. Cannot continue with registering the application.",
-    "SFSDK_RegisterAppType": "Registering application type...",
-    "SFSDK_RegisterAppTypeFailed": "Registration of application type failed.",
-    "SFSDK_RemoveAppPackage": "Removing application package from image store...",
-    "SFSDK_CreateApplication": "Creating application...",
-    "SFSDK_CreateApplicationFailed": "Creation of application failed.",
-    "SFSDK_CreateApplicationSuccess": "Create application succeeded.",
-    "SFSDK_AppDoesNotExist": "Application '{0}' doesn't exist in cluster.",
-    "SFSDK_AppTypeMismatch": "Application type of application '{0}' doesn't match the application type in the application manifest of the new application package. Please ensure that the application being upgraded has the same application type.",
-    "SFSDK_UpgradeInProgressError": "An upgrade for the application '{0}' is already in progress.",
-    "SFSDK_StartAppUpgrade": "Start upgrading application...",
-    "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}'...",
-    "SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
-    "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
-    "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
-    "SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",
-    "SFSDK_UnzipPackage": "Attempting to unzip '{0}' to location '{1}'.",
-    "SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message"
-  }
 }
