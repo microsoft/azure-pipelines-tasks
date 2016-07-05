@@ -109,9 +109,9 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 
 $buildRootPath = Split-Path $mavenPOMFile -Parent
-$reportDirectoryName = [guid]::NewGuid()
+$reportDirectoryName = "ReportDirectoryC91CDE2D"
 $reportDirectoryNameCobertura = "target\site\cobertura"
-$reportPOMFileName = [guid]::NewGuid().tostring() + ".xml"
+$reportPOMFileName = "ReportPOMFile4E52C1C4.xml"
 $reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
@@ -125,6 +125,38 @@ $summaryFileCobertura = Join-Path $summaryFileCobertura $summaryFileNameCobertur
 $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
+
+try 
+{
+	if(Test-Path $reportDirectory)
+	{
+		# delete any previous code coverage data 
+		rm -r $reportDirectory -force | Out-Null
+	}
+
+	if(Test-Path $reportDirectoryCobertura)
+	{
+		# delete any previous code coverage data from Cobertura
+		rm -r $reportDirectoryCobertura -force | Out-Null
+	}
+}
+catch
+{
+	Write-Verbose "Failed to delete report directory"
+}
+
+try 
+{
+	if(Test-Path $reportPOMFile)
+	{
+		# delete any previous code coverage data 
+		rm $reportPOMFile -force | Out-Null
+	}
+}
+catch
+{
+	Write-Verbose "Failed to delete report POM file"
+}
 
 if($isCoverageEnabled)
 {
@@ -184,26 +216,4 @@ ElseIf ($codeCoverageTool -eq "Cobertura")
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
 
-if(Test-Path $reportDirectory)
-{
-    # delete any previous code coverage data 
-    rm -r $reportDirectory -force | Out-Null
-}
-
-if(Test-Path $reportDirectoryCobertura)
-{
-    # delete any previous code coverage data from Cobertura
-    rm -r $reportDirectoryCobertura -force | Out-Null
-}
-
-if(Test-Path $reportPOMFile)
-{
-    # delete any previous code coverage data 
-    rm $reportPOMFile -force | Out-Null
-}
-
 Write-Verbose "Leaving script Maven.ps1"
-
-
-
-

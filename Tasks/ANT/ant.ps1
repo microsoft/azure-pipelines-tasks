@@ -108,8 +108,21 @@ if ($jdkPath)
 }
 
 $buildRootPath = Split-Path $antBuildFile -Parent
-$reportDirectoryName = [guid]::NewGuid()
+$reportDirectoryName = "ReportDirectory75C12DBC"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
+
+try 
+{
+    if(Test-Path $reportDirectory)
+    {
+        # delete any previous code coverage data 
+        rm -r $reportDirectory -force | Out-Null
+    }
+}
+catch
+{
+    Write-Verbose "Failed to delete report directory"
+}
 
 if($isCoverageEnabled)
 {
@@ -128,9 +141,35 @@ $summaryFile = Join-Path $summaryFile $summaryFileName
 # ensuring unique code coverage report task name by using guid
 $CCReportTask = "CodeCoverage_" +[guid]::NewGuid()
 
-$reportBuildFileName = [guid]::NewGuid().tostring() + ".xml"
+$reportBuildFileName = "ReportBuildFile9B5907FC.xml"
 $reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
 $instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
+
+try
+{
+    if(Test-Path $reportBuildFile)
+    {
+        # delete any previous code coverage report build file
+        rm -r $reportBuildFile -force | Out-Null
+    }
+}
+catch
+{
+    Write-Verbose "Failed to delete report build file"
+}
+ 
+try
+{
+    if(Test-Path $instrumentedClassesDirectory)
+    {
+        # delete any previous instrumented classes directory
+        rm -r $instrumentedClassesDirectory -force | Out-Null
+    }
+}
+catch
+{
+    Write-Verbose "Failed to delete instrumented classes directory"
+}
 
 if($isCoverageEnabled)
 {
@@ -242,23 +281,6 @@ if($isCoverageEnabled)
    	}
 }
 
-if(Test-Path $reportDirectory)
-{
-   # delete any previous code coverage data 
-   rm -r $reportDirectory -force | Out-Null
-}
-
-if(Test-Path $reportBuildFile)
-{
-   # delete any previous code coverage report build file
-   rm -r $reportBuildFile -force | Out-Null
-}
-
-if(Test-Path $instrumentedClassesDirectory)
-{
-   # delete any previous instrumented classes directory
-   rm -r $instrumentedClassesDirectory -force | Out-Null
-}
 Write-Verbose "Leaving script Ant.ps1"
 
 
