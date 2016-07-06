@@ -112,6 +112,7 @@
     "CleanedUpSemaphoreFile0": "ms-resource:loc.messages.CleanedUpSemaphoreFile0",
     "CleanUpSemaphoreFile0Error1": "ms-resource:loc.messages.CleanUpSemaphoreFile0Error1",
     "Error0AccessingSemaphoreFile1Retrying2Seconds": "ms-resource:loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds",
+    "FailedToLoadDbghelpDllFrom0ErrorCode1": "ms-resource:loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1",
     "Found0Files": "ms-resource:loc.messages.Found0Files",
     "FreeLibraryDbghelpDllError0": "ms-resource:loc.messages.FreeLibraryDbghelpDllError0",
     "NoFilesForIndexing": "ms-resource:loc.messages.NoFilesForIndexing",
