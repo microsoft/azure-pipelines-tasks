@@ -167,7 +167,8 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
 
 function generateResponseFile(): Q.Promise<string> {
     var startTime = perfMeasure();
-    var endTime;
+    var endTime : number;
+    var elapsedTime : number;
     var defer = Q.defer<string>();
     var tempFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     tl.debug("Response file will be generated at " + tempFile);
@@ -176,12 +177,14 @@ function generateResponseFile(): Q.Promise<string> {
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-    selectortool.arg("/token:" + tl.getVariable("System.AccessToken"));
+    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/responsefile:" + tempFile);
     selectortool.exec()
         .then(function (code) {
             endTime = perfMeasure();
-            tl.debug(tl.loc("GenerateResponseFilePerfTime", endTime-startTime));
+            elapsedTime = endTime - startTime;
+            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=GenerateResponseFile;SubTaskDuration=" + elapsedTime + "]");    
+            tl.debug(tl.loc("GenerateResponseFilePerfTime", elapsedTime));
             defer.resolve(tempFile);
         })
         .fail(function (err) {
@@ -193,7 +196,8 @@ function generateResponseFile(): Q.Promise<string> {
 
 function publishCodeChanges(): Q.Promise<string> {
     var startTime = perfMeasure();
-    var endTime;
+    var endTime : number;
+    var elapsedTime: number;
     var defer = Q.defer<string>();
     var selectortool = tl.createToolRunner(tiaSelectorTool);
     selectortool.arg("PublishCodeChanges");
@@ -202,12 +206,14 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/newdropPath:" + tl.getVariable("Build.SourcesDirectory"));
     selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-    selectortool.arg("/token:" + tl.getVariable("System.AccessToken"));
+    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
 
     selectortool.exec()
         .then(function(code) {
             endTime = perfMeasure();
-            tl.debug(tl.loc("PublishCodeChangesPerfTime", endTime-startTime));
+            elapsedTime = endTime - startTime;
+            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=PublishCodeChanges;SubTaskDuration=" + elapsedTime + "]");            
+            tl.debug(tl.loc("PublishCodeChangesPerfTime", elapsedTime));
             defer.resolve(String(code));
         })        
         .fail(function (err) {            
