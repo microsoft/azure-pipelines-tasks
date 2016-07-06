@@ -20,7 +20,7 @@ $actual = & $module Invoke-MSBuild -ProjectFile 'Some project file' -NoTimelineL
 # Assert.
 Assert-WasCalled Assert-VstsPath -- -LiteralPath $expectedMSBuildPath -PathType Leaf
 Assert-WasCalled Assert-VstsPath -- -LiteralPath $expectedLoggerPath -PathType Leaf
-Assert-WasCalled Invoke-VstsTool -- -FileName $expectedMSBuildPath -Arguments "`"Some project file`" /nologo /m /nr:false /dl:CentralLogger,`"$expectedLoggerPath`"*ForwardingLogger,`"$expectedLoggerPath`"" -RequireExitCodeZero
+Assert-WasCalled Invoke-VstsTool -- -FileName $expectedMSBuildPath -Arguments "`"Some project file`" /nologo /nr:false /dl:CentralLogger,`"$expectedLoggerPath`"*ForwardingLogger,`"$expectedLoggerPath`"" -RequireExitCodeZero
 Assert-WasCalled Write-VstsSetResult -Times 0
 Assert-AreEqual -Expected @(
     'Some output 1'
