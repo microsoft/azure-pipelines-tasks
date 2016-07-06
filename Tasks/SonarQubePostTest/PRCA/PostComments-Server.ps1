@@ -7,7 +7,7 @@
 #
 function InitPostCommentsModule
 {
-    param ([Microsoft.VisualStudio.Services.Client.VssConnection][ValidateNotNull()]$vssConnection)
+    param ([ValidateNotNull()]$vssConnection)
     
     Write-Verbose "Initializing the PostComments-Module"
     
