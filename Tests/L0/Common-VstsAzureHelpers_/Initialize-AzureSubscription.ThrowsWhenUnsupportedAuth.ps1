@@ -19,6 +19,7 @@ $endpoint = @{
     }
 }
 
+Register-Mock Set-UserAgent
 # Act/Assert.
 Assert-Throws {
     & $module Initialize-AzureSubscription -Endpoint $endpoint
