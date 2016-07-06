@@ -30,7 +30,7 @@ function run() {
             //--------------------------------------------------------
             var workingDir = tl.getPathInput('cwd');
             tl.cd(workingDir);
-            var outPath = path.resolve(workingDir, tl.getInput('outputPattern', true));
+            var outPath = path.posix.resolve(workingDir, tl.getInput('outputPattern', true)); //use posix implementation to resolve paths to prevent unit test failures on Windows
             tl.mkdirP(outPath);
             //--------------------------------------------------------
             // Xcode args
@@ -93,7 +93,7 @@ function run() {
                 var provProfilePath = tl.getPathInput('provProfile', false);
                 var removeProfile = tl.getBoolInput('removeProfile', false);
                 if (tl.filePathSupplied('p12')) {
-                    p12 = path.resolve(workingDir, p12);
+                    p12 = path.posix.resolve(workingDir, p12);
                     var keychain = path.join(workingDir, '_xcodetasktmp.keychain');
                     var keychainPwd = '_xcodetask_TmpKeychain_Pwd#1';
                     //create a temporary keychain and install the p12 into that keychain
@@ -136,7 +136,7 @@ function run() {
             if (publishResults && useXctool && xctoolReporter && 0 !== xctoolReporter.length) {
                 var xctoolReporterString = xctoolReporter.split(":");
                 if (xctoolReporterString && xctoolReporterString.length === 2) {
-                    testResultsFiles = path.resolve(workingDir, xctoolReporterString[1].trim());
+                    testResultsFiles = path.posix.resolve(workingDir, xctoolReporterString[1].trim());
                 }
                 if (testResultsFiles && 0 !== testResultsFiles.length) {
                     //check for pattern in testResultsFiles

@@ -28,7 +28,7 @@ async function run() {
         var workingDir : string = tl.getPathInput('cwd');
         tl.cd(workingDir);
 
-        var outPath : string = path.resolve(workingDir, tl.getInput('outputPattern', true));
+        var outPath : string = path.posix.resolve(workingDir, tl.getInput('outputPattern', true)); //use posix implementation to resolve paths to prevent unit test failures on Windows
         tl.mkdirP(outPath);
 
         //--------------------------------------------------------
@@ -100,7 +100,7 @@ async function run() {
             var removeProfile : boolean = tl.getBoolInput('removeProfile', false);
 
             if(tl.filePathSupplied('p12')) {
-                p12 = path.resolve(workingDir, p12);
+                p12 = path.posix.resolve(workingDir, p12);
                 var keychain : string = path.join(workingDir, '_xcodetasktmp.keychain');
                 var keychainPwd : string = '_xcodetask_TmpKeychain_Pwd#1';
 
@@ -154,7 +154,7 @@ async function run() {
             var xctoolReporterString = xctoolReporter.split(":");
             if (xctoolReporterString && xctoolReporterString.length === 2)
             {
-                testResultsFiles = path.resolve(workingDir, xctoolReporterString[1].trim());
+                testResultsFiles = path.posix.resolve(workingDir, xctoolReporterString[1].trim());
             }
 
             if(testResultsFiles && 0 !== testResultsFiles.length) {
