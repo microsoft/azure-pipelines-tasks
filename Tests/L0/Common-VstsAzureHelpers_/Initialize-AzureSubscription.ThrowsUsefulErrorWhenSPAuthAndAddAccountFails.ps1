@@ -28,9 +28,11 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Add-AzureAccount
     Unregister-Mock Add-AzureRMAccount
     Unregister-Mock Write-VstsTaskError
+    Unregister-Mock Set-UserAgent
     Register-Mock Add-AzureAccount { throw 'Some add account error' }
     Register-Mock Add-AzureRMAccount { throw 'Some add account error' }
     Register-Mock Write-VstsTaskError
+    Register-Mock Set-UserAgent
     if ($variableSet.Classic) {
         & $module {
             $script:azureModule = @{ Version = [version]'0.9.8' }

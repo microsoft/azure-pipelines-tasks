@@ -27,6 +27,8 @@ foreach ($variableSet in $variableSets) {
     Write-Verbose ('-' * 80)
     & $module { $script:azureModule = @{ Version = $args[0] } } $variableSet.Version
 
+    Unregister-Mock Set-UserAgent
+    Register-Mock Set-UserAgent
     # Act/Assert.
     Assert-Throws {
         & $module Initialize-AzureSubscription -Endpoint $endpoint

@@ -24,9 +24,11 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Add-Certificate
     Unregister-Mock Set-AzureSubscription
     Unregister-Mock Set-CurrentAzureSubscription
+    Unregister-Mock Set-UserAgent
     Register-Mock Add-Certificate { $certificate }
     Register-Mock Set-AzureSubscription
     Register-Mock Set-CurrentAzureSubscription
+    Register-Mock Set-UserAgent
 
     # Act.
     & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
