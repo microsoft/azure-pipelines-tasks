@@ -135,6 +135,11 @@ function Get-MsDeployCmdArgs
     if( -not [String]::IsNullOrEmpty($AdditionalArguments)){
         $msDeployCmdArgs += ( " " + $AdditionalArguments)
     }
+	
+	$userAgent = Get-UserAgentString
+	if (!([string]::IsNullOrEmpty($userAgent))) {
+	    $msDeployCmdArgs += [String]::Format(' -userAgent:"{0}"', $userAgent)
+	}
 
     Write-Verbose "Constructed msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
     return $msDeployCmdArgs
@@ -185,4 +190,30 @@ function Run-MsDeployCommand
     Write-Host (Get-LocalizedString -Key "Running msdeploy command: `n`t{0}" -ArgumentList $msDeployCmdForLogs)
     Run-Command -command $msDeployCmd
     Write-Host (Get-LocalizedString -Key "msdeploy command ran successfully.")
+}
+
+function Get-UserAgentString
+{
+    $collectionUri = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
+    $collectionId = "$env:SYSTEM_COLLECTIONID"
+    $hostType = "$env:SYSTEM_HOSTTYPE"
+    $serverString = "TFS"
+    if ($collectionUri.ToLower().Contains("visualstudio.com".ToLower())) {
+        $serverString = "VSTS"
+    }
+
+    $userAgent = [string]::Empty
+    if ($hostType -ieq "build") {
+        $definitionId = "$env:SYSTEM_DEFINITIONID"
+        $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
+        $userAgent = $serverString + "_" + $collectionId + "_" + "build" + "_" + $definitionId + "_" + $buildId
+    } elseif ($hostType -ieq "release") {
+        $definitionId = Get-TaskVariable $distributedTaskContext "release.definitionId"
+        $releaseId = Get-TaskVariable $distributedTaskContext "release.releaseId"
+        $environmentId = Get-TaskVariable $distributedTaskContext "release.environmentId"
+        $attemptNumber = Get-TaskVariable $distributedTaskContext "release.attemptNumber"
+        $userAgent = $serverString + "_" + $collectionId + "_" + "release" + "_" + $definitionId + "_" + $releaseId + "_" + $environmentId + "_" + $attemptNumber
+	}
+	
+    return $userAgent
 }

@@ -13,13 +13,13 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 19
+        "Patch": 23
     },
     "demands": [
         "azureps",
         "sqlpackage"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "1.103.0",
     "groups": [
         {
             "name": "target",
@@ -105,7 +105,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Password for the Azure SQL Server administrator."
+            "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark variable type as 'secret' to secure it."
         },
         {
             "name": "PublishProfile",

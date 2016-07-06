@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PublishProfile xmlns="http://schemas.microsoft.com/2015/05/fabrictools">
+  <ClusterConnectionParameters AzureActiveDirectory="true" />
+  <ApplicationParameterFile Path="ApplicationParameters.xml" />
+</PublishProfile>

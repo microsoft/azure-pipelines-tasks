@@ -168,28 +168,28 @@ function Get-AzureRMResourceGroupResourcesDetails
     [hashtable]$LoadBalancerDetails = @{}
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
-        Write-Verbose -Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
         $networkInterfaceResources = Get-AzureRMNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose -Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
+        Write-Verbose  "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         $ResourcesDetails.Add("networkInterfaceResources", $networkInterfaceResources)
 
-        Write-Verbose -Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
         $publicIPAddressResources = Get-AzureRMPublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose -Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
+        Write-Verbose  "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
         $ResourcesDetails.Add("publicIPAddressResources", $publicIPAddressResources)
 
-        Write-Verbose -Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
         $lbGroup = Get-AzureRMLoadBalancer -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose -Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
+        Write-Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
         if($lbGroup)
         {
             foreach($lb in $lbGroup)
             {
                 $lbDetails = @{}
-                Write-Verbose -Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
+                Write-Verbose  "[Azure Call]Getting load balancer in resource group $resourceGroupName"
                 $loadBalancer = Get-AzureRMLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-                Write-Verbose -Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
+                Write-Verbose  "[Azure Call]Got load balancer in resource group $resourceGroupName"
 
                 Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config"
                 $frontEndIPConfigs = Get-AzureRMLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
@@ -232,18 +232,18 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
     [hashtable]$classicVMsDetails = @{}
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureClassicVMResources)
     {
-        Write-Verbose -Verbose "Trying to get FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
+        Write-Verbose "Trying to get FQDN and WinRM HTTPS Port for the classic azureVM resources from resource Group $resourceGroupName"
         foreach($azureClassicVm in $azureClassicVMResources)
         {
             $resourceName = $azureClassicVm.Name
 
-            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            Write-Verbose  "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
             $azureClassicVM = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -ErrorAction Stop -Verbose
-            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            Write-Verbose  "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
 
-            Write-Verbose -Verbose "[Azure Call]Getting classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
+            Write-Verbose  "[Azure Call]Getting classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
             $azureClassicVMEndpoint = $azureClassicVM | Get-AzureEndpoint | Where-Object {$_.LocalPort -eq '5986'}
-            Write-Verbose -Verbose "[Azure Call]Got classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
+            Write-Verbose  "[Azure Call]Got classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
 
             $fqdnUri = [System.Uri]$azureClassicVM.DNSName
             $resourceFQDN = $fqdnUri.Host
@@ -382,7 +382,7 @@ function Get-NetworkSecurityGroups
     }
     else
     {
-        throw (Get-LocalizedString -Key "[Azure Call]Resource group name and virtual machine id should not be null or empty")
+        throw (Get-LocalizedString -Key "[Azure Call]Resource group name and virtual machine ID should not be null or empty")
     }
     
     return $securityGroups

@@ -409,7 +409,7 @@ function Get-NetworkSecurityGroups
     }
     else
     {
-        throw (Get-LocalizedString -Key "[Azure Call]Resource group name and virtual machine id should not be null or empty")
+        throw (Get-LocalizedString -Key "[Azure Call]Resource group name and virtual machine ID should not be null or empty")
     }
     
     return $securityGroups

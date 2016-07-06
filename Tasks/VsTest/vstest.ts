@@ -202,7 +202,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.rmRF(testResultsDirectory, true);
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
-    vstest.exec()
+    vstest.exec({failOnStdErr: true})
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
             defer.resolve(code);
@@ -472,7 +472,16 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
             parser.parseString(xmlContents, function (err, result) {
                 if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
                     result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
-                    defer.resolve(result.RunSettings.RunConfiguration[0].ResultsDirectory[0]);
+                    var resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
+                    resultDirectory = resultDirectory.trim();
+
+                    if (resultDirectory) {
+                        // path.resolve will take care if the result directory given in settings files is not absolute.
+                        defer.resolve(path.resolve(path.dirname(runSettingsFile), resultDirectory));
+                    }
+                    else {
+                        defer.resolve(defaultResultsDirectory);
+                    }
                 }
                 else {
                     defer.resolve(defaultResultsDirectory);

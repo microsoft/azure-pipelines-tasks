@@ -5,10 +5,10 @@
 	[string]$chefWaitTime
     )
 
-Write-Verbose "ConnectedServiceName = $connectedServiceName" -Verbose
-Write-Verbose "Environment = $environment" -Verbose
-Write-Verbose "Attributes = $attributes" -Verbose
-Write-Verbose "Wait Time = $chefWaitTime" -Verbose
+Write-Verbose "ConnectedServiceName = $connectedServiceName"
+Write-Verbose "Environment = $environment"
+Write-Verbose "Attributes = $attributes"
+Write-Verbose "Wait Time = $chefWaitTime"
 
 function Validate-EnvironmentInput()
 {
@@ -41,7 +41,7 @@ function Validate-AttributesInput()
         [string[]]$attributesString
     )
 
-	Write-Verbose "Parsing environment attributes passed as key-value pairs" -verbose
+	Write-Verbose "Parsing environment attributes passed as key-value pairs"
 	try
 	{
 		$attributesTable = Invoke-GenericMethod ([Newtonsoft.Json.JsonConvert]) DeserializeObject HashTable $attributesString
@@ -51,7 +51,7 @@ function Validate-AttributesInput()
         throw (Get-LocalizedString -Key "Give the environment attribute key value pairs to be updated as proper json. ex: '{0}'" -ArgumentList "{`"default_attributes.websiteName`":`"MyWebsite`",`"override_attributes.db`":`"MyDb`"}")
 	}
 
-	Write-Verbose "Parsed environment attributes" -verbose
+	Write-Verbose "Parsed environment attributes"
 	return $attributesTable
 }
 
@@ -88,10 +88,10 @@ function Add-NewtonsoftAsType()
 	pushd $PSScriptRoot
 	try
 	{
-		Write-Verbose "Adding Newtonsoft.Json.dll as a type" -verbose
+		Write-Verbose "Adding Newtonsoft.Json.dll as a type"
 		$newtonPath = (resolve-path $path).path
 		Add-Type -LiteralPath $newtonPath | Out-Null
-		Write-Verbose "Added Newtonsoft.Json.dll as a type" -verbose
+		Write-Verbose "Added Newtonsoft.Json.dll as a type"
 	}
 	finally
 	{
@@ -125,7 +125,7 @@ function Update-LocalEnvironmentAttributes()
 	$jsonString = [string](Invoke-Knife @("environment show '$environmentName' -z -F json"))
     $jsonObject = [Newtonsoft.Json.Linq.JObject]::Parse($jsonString)
 
-	Write-Verbose "Environment attributes before modification:`n$jsonString" -verbose
+	Write-Verbose "Environment attributes before modification:`n$jsonString"
 
 	foreach ($attribute in $attributesTable.GetEnumerator())
 	{
@@ -192,7 +192,7 @@ finally
     #delete temporary chef repo
     if ([string]::IsNullOrEmpty($global:chefRepo) -eq $false)
     {
-        Write-Verbose "Deleting Chef Repo" -verbose
+        Write-Verbose "Deleting Chef Repo"
         #adding this as knife sometimes takes hold of the repo for a little time before deleting
         $deleteChefRepoScript = 
         { 
@@ -200,7 +200,7 @@ finally
         }
 
         Invoke-WithRetry -Command $deleteChefRepoScript -RetryDelay 10 -MaxRetries 10 -OperationDetail "deleting chef repo"
-        Write-Verbose "Chef Repo Deleted" -verbose
+        Write-Verbose "Chef Repo Deleted"
     }
 }
 ########################  END EXECUTION  #################################
