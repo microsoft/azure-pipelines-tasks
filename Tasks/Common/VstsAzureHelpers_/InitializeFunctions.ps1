@@ -41,7 +41,7 @@ function Initialize-AzureSubscription {
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
-	
+    
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
         if (!$script:azureModule) {
@@ -183,19 +183,19 @@ function Set-UserAgent {
     
     $userAgent = [string]::Empty
     if ($hostType -ieq "build") {
-		$definitionId = Get-VstsTaskVariable -Name System.DefinitionId -Require
-		$buildId = Get-VstsTaskVariable -Name Build.BuildId -Require
-		$userAgent = $serverString + "_" + $collectionId + "_" + "build" + "_" + $definitionId + "_" + $buildId
+        $definitionId = Get-VstsTaskVariable -Name System.DefinitionId -Require
+        $buildId = Get-VstsTaskVariable -Name Build.BuildId -Require
+        $userAgent = $serverString + "_" + $collectionId + "_" + "build" + "_" + $definitionId + "_" + $buildId
     } elseif ($hostType -ieq "release") {
         $definitionId = Get-VstsTaskVariable -Name Release.DefinitionId -Require
-		$releaseId = Get-VstsTaskVariable -Name Release.ReleaseId -Require
-		$environmentId = Get-VstsTaskVariable -Name Release.EnvironmentId -Require
-		$attemptNumber = Get-VstsTaskVariable -Name Release.AttemptNumber -Require
-		$userAgent = $serverString + "_" + $collectionId + "_" + "release" + "_" + $definitionId + "_" + $releaseId + "_" + $environmentId + "_" + $attemptNumber
+        $releaseId = Get-VstsTaskVariable -Name Release.ReleaseId -Require
+        $environmentId = Get-VstsTaskVariable -Name Release.EnvironmentId -Require
+        $attemptNumber = Get-VstsTaskVariable -Name Release.AttemptNumber -Require
+        $userAgent = $serverString + "_" + $collectionId + "_" + "release" + "_" + $definitionId + "_" + $releaseId + "_" + $environmentId + "_" + $attemptNumber
     } else {
-	    return
-	}
-	
+        return
+    }
+    
     Set-UserAgent_Core -UserAgent $userAgent
 }
 
@@ -209,9 +209,8 @@ function Set-UserAgent_Core {
     try {
         [Microsoft.Azure.Common.Authentication.AzureSession]::ClientFactory.AddUserAgent($UserAgent)
     } catch {
-	    Write-Host "##vso[task.logissue type=warning;TaskName=SetUserAgent]"
-		Write-Verbose "Set-UserAgent not supported"
-	} finally {
+        Write-Verbose "Set-UserAgent failed with exception message: $_.Exception.Message"
+    } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
