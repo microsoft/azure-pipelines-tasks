@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "SSH",
+  "loc.helpMarkDown": "",
+  "loc.description": "Run shell commands on a remote machine using SSH",
+  "loc.instanceNameFormat": "Run remote shell commands",
+  "loc.input.label.sshEndpoint": "SSH endpoint",
+  "loc.input.help.sshEndpoint": "SSH endpoint with connection details for the remote machine.",
+  "loc.input.label.commands": "Commands",
+  "loc.input.help.commands": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line."
+}

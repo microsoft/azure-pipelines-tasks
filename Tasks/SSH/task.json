@@ -1,0 +1,45 @@
+{
+    "id": "91443475-df55-4874-944b-39253b558790",
+    "name": "SSH",
+    "friendlyName": "SSH",
+    "description": "Run shell commands on a remote machine using SSH",
+    "helpMarkDown": "",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "demands": [
+     ],
+    "instanceNameFormat": "Run remote shell commands",
+    "inputs": [
+        {
+            "name": "sshEndpoint",
+            "type": "connectedService:ssh",
+            "label": "SSH endpoint",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "SSH endpoint with connection details for the remote machine."
+        },
+        {
+            "name": "commands",
+            "type": "multiLine",
+            "label": "Commands",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "ssh.js",
+            "argumentFormat": ""
+        }
+    }
+}

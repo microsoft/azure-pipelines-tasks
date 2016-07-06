@@ -295,6 +295,42 @@ export function getEndpointUrl(id: string, optional: boolean): string {
     return urlval;
 }
 
+export function getEndpointDataParameter(id: string, key: string, optional: boolean) : string {
+    var dataParam = getVariable('ENDPOINT_DATA_' + id + '_' + key.toUpperCase());
+    debug(id + '=' + dataParam);
+
+    if (!optional && !dataParam) {
+        _writeError('Endpoint data not present: ' + id);
+        exit(1);
+    }
+
+    return dataParam;
+}
+
+export function getEndpointAuthorizationScheme(id: string, optional: boolean) : string {
+    var authScheme = getVariable('ENDPOINT_AUTH_SCHEME_' + id);
+    debug(id + '=' + authScheme);
+
+    if (!optional && !authScheme) {
+        _writeError('Endpoint auth not present: ' + id);
+        exit(1);
+    }
+
+    return authScheme;
+}
+
+export function getEndpointAuthorizationParameter(id: string, key: string, optional: boolean) : string {
+    var authParam = getVariable('ENDPOINT_AUTH_PARAMETER_' + id + '_' + key.toUpperCase());
+    debug(id + '=' + authParam);
+
+    if (!optional && !authParam) {
+        _writeError('Endpoint auth not present: ' + id);
+        exit(1);
+    }
+
+    return authParam;
+}
+
 // TODO: should go away when task lib 
 export interface EndpointAuthorization {
     parameters: {
