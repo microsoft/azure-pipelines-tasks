@@ -1057,7 +1057,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     }
 
     # if no error thrown, copy successfully succeeded
-    Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $resourceGroupName)
+    Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure VMs in resource group: '{1}' successfully" -ArgumentList $sourcePath, $resourceGroupName)
 }
 
 function Validate-CustomScriptExecutionStatus
