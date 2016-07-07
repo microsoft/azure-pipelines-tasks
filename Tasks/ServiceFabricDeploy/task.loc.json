@@ -35,12 +35,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.applicationPackagePath"
     },
     {
-      "name": "aadServiceConnectionName",
+      "name": "serviceConnectionName",
       "type": "connectedService:servicefabric",
-      "label": "ms-resource:loc.input.label.aadServiceConnectionName",
+      "label": "ms-resource:loc.input.label.serviceConnectionName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.aadServiceConnectionName"
+      "helpMarkDown": "ms-resource:loc.input.help.serviceConnectionName"
     }
   ],
   "execution": {
@@ -49,7 +49,9 @@
     }
   },
   "messages": {
-    "AzureActiveDirectoryNotSet": "ms-resource:loc.messages.AzureActiveDirectoryNotSet",
+    "ClusterSecurityMismatch_AAD": "ms-resource:loc.messages.ClusterSecurityMismatch_AAD",
+    "ClusterSecurityMismatch_Certificate": "ms-resource:loc.messages.ClusterSecurityMismatch_Certificate",
+    "ClusterSecurityMismatch_None": "ms-resource:loc.messages.ClusterSecurityMismatch_None",
     "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForPublishProfile": "ms-resource:loc.messages.SearchingForPublishProfile",
@@ -62,6 +64,9 @@
     "ClientAppId": "ms-resource:loc.messages.ClientAppId",
     "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
     "ServiceFabricSDKNotInstalled": "ms-resource:loc.messages.ServiceFabricSDKNotInstalled",
+    "ErrorOnCertificateImport": "ms-resource:loc.messages.ErrorOnCertificateImport",
+    "ErrorOnAcquireToken": "ms-resource:loc.messages.ErrorOnAcquireToken",
+    "ImportedCertificate": "ms-resource:loc.messages.ImportedCertificate",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",

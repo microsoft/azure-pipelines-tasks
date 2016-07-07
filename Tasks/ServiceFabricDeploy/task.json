@@ -35,12 +35,12 @@
             "helpMarkDown": "Path to the application package that is to be deployed. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
         },
         {
-            "name": "aadServiceConnectionName",
+            "name": "serviceConnectionName",
             "type": "connectedService:servicefabric",
-            "label": "Credentials",
+            "label": "Cluster Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select a previously registered service connection to be used to authenticate to the Service Fabric cluster. Choose 'Manage' to register a new connection."
+            "helpMarkDown": "Select an Azure Service Fabric service endpoint to be used to connect to the cluster. Choose 'Manage' to register a new endpoint."
         }
     ],
     "execution": {
@@ -49,7 +49,9 @@
         }
     },
     "messages": {
-        "AzureActiveDirectoryNotSet": "The publish profile is not configured to enable Azure Active Directory.  This task only supports Service Fabric clusters secured by Azure Active Directory.",
+        "ClusterSecurityMismatch_AAD": "There is a mismatch between the security configuration of the Service Fabric Application Deployment task and the selected publish profile. The task references a service endpoint configured to use Azure Active Directory authentication but the publish profile is not configured to enable Azure Active Directory authentication. Change the configuration of the task or publish profile so that their authentication types match.",
+        "ClusterSecurityMismatch_Certificate": "There is a mismatch between the security configuration of the Service Fabric Application Deployment task and the selected publish profile. The task references a service endpoint configured to use certificate authentication but the publish profile is not configured to enable certificate authentication. Change the configuration of the task or publish profile so that their authentication types match.",
+        "ClusterSecurityMismatch_None": "There is a mismatch between the security configuration of the Service Fabric Application Deployment task and the selected publish profile. The task references a service endpoint configured to use no authentication but the publish profile is configured to use authentication. Change the configuration of the task or publish profile so that their authentication types match.",
         "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
         "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
         "SearchingForPublishProfile": "Searching for publish profile: {0}",
@@ -62,6 +64,9 @@
         "ClientAppId": "Client Application ID: {0}",
         "PathDoesNotExist": "Path '{0}' does not exist.",
         "ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it.",
+        "ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
+        "ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
+        "ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",

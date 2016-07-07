@@ -60,8 +60,15 @@ function Get-AadSecurityToken
     $authParams = $ConnectedServiceEndpoint.Auth.Parameters
 	$userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
     
-    # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
-    $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential).AccessToken
+    try
+    {
+        # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
+        $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential).AccessToken
+    }
+    catch
+    {
+        throw (Get-VstsLocString -Key ErrorOnAcquireToken -ArgumentList $_)
+    }
 
     return $accessToken
 }
@@ -119,4 +126,61 @@ function Read-PublishProfile
     $publishProfile.ApplicationParameterFile = [System.IO.Path]::Combine($publishProfileFolder, $publishProfileElement.ApplicationParameterFile.Path)
 
     return $publishProfile
+}
+
+function Add-Certificate
+{
+    Param (
+        [Hashtable]
+        $ClusterConnectionParameters,
+
+        $ConnectedServiceEndpoint
+    )
+
+    $storeName = [System.Security.Cryptography.X509Certificates.StoreName]::My;
+    $storeLocation = [System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser
+   
+    # Generate a certificate from the service endpoint values
+    $certificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+
+    try
+    {
+        $bytes = [System.Convert]::FromBase64String($ConnectedServiceEndpoint.Auth.Parameters.Certificate)
+
+        if ($ConnectedServiceEndpoint.Auth.Parameters.CertificatePassword)
+        {
+            $certificate.Import($bytes, $ConnectedServiceEndpoint.Auth.Parameters.CertificatePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::DefaultKeySet)
+        }
+        else
+        {
+            $certificate.Import($bytes)
+        }
+    }
+    catch
+    {
+        throw (Get-VstsLocString -Key ErrorOnCertificateImport -ArgumentList $_)
+    }
+    
+    # Add the certificate to the cert store.
+    $store = New-Object System.Security.Cryptography.X509Certificates.X509Store($storeName, $storeLocation)
+    $store.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
+    try
+    {
+        $store.Add($certificate)    
+    }
+    finally
+    {
+        $store.Close()
+        $store.Dispose()
+    }
+
+    Write-Host (Get-VstsLocString -Key ImportedCertificate -ArgumentList $certificate.Thumbprint)
+
+    # Override the certificate-related cluster connection parameters to known and supported values
+    $clusterConnectionParameters["FindType"] = "FindByThumbprint"
+    $clusterConnectionParameters["FindValue"] = $certificate.Thumbprint
+    $clusterConnectionParameters["StoreName"] = $storeName.ToString()
+    $clusterConnectionParameters["StoreLocation"] = $storeLocation.ToString()
+
+    return $certificate
 }
