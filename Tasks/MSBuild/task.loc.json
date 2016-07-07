@@ -65,6 +65,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.clean"
     },
     {
+      "name": "maximumCpuCount",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.maximumCpuCount",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.maximumCpuCount"
+    },
+    {
       "name": "restoreNugetPackages",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.restoreNugetPackages",
