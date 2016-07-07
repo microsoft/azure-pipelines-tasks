@@ -8,6 +8,7 @@ var regedit = require('regedit');
 var uuid = require('node-uuid');
 var fs = require('fs');
 var xml2js = require('xml2js');
+var perf = require("performance-now")
 
 const runSettingsExt = ".runsettings";
 const testSettingsExt = ".testsettings";
@@ -166,7 +167,7 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
 
 
 function generateResponseFile(): Q.Promise<string> {
-    var startTime = perfMeasure();
+    var startTime = perf();
     var endTime : number;
     var elapsedTime : number;
     var defer = Q.defer<string>();
@@ -181,7 +182,7 @@ function generateResponseFile(): Q.Promise<string> {
     selectortool.arg("/responsefile:" + tempFile);
     selectortool.exec()
         .then(function (code) {
-            endTime = perfMeasure();
+            endTime = perf();
             elapsedTime = endTime - startTime;
             tl._writeLine("##vso[task.logissue type=warning;SubTaskName=GenerateResponseFile;SubTaskDuration=" + elapsedTime + "]");    
             tl.debug(tl.loc("GenerateResponseFilePerfTime", elapsedTime));
@@ -195,7 +196,7 @@ function generateResponseFile(): Q.Promise<string> {
 }
 
 function publishCodeChanges(): Q.Promise<string> {
-    var startTime = perfMeasure();
+    var startTime = perf();
     var endTime : number;
     var elapsedTime: number;
     var defer = Q.defer<string>();
@@ -210,7 +211,7 @@ function publishCodeChanges(): Q.Promise<string> {
 
     selectortool.exec()
         .then(function(code) {
-            endTime = perfMeasure();
+            endTime = perf();
             elapsedTime = endTime - startTime;
             tl._writeLine("##vso[task.logissue type=warning;SubTaskName=PublishCodeChanges;SubTaskDuration=" + elapsedTime + "]");            
             tl.debug(tl.loc("PublishCodeChangesPerfTime", elapsedTime));
@@ -221,10 +222,6 @@ function publishCodeChanges(): Q.Promise<string> {
         });
     
     return defer.promise;
-}
-
-function perfMeasure() : number {
-    return performance.now();
 }
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
