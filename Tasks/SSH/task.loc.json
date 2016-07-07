@@ -45,7 +45,11 @@
       "defaultValue": "",
       "required": true,
       "visibleRule": "runOptions = commands",
-      "helpMarkDown": "ms-resource:loc.input.help.commands"
+      "helpMarkDown": "ms-resource:loc.input.help.commands",
+      "properties": {
+        "resizable": "true",
+        "rows": "5"
+      }
     },
     {
       "name": "scriptPath",

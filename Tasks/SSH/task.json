@@ -46,7 +46,11 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "runOptions = commands",
-            "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line."
+            "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line.",
+            "properties": {
+                "resizable": "true",
+                "rows": "5"
+            }
         },
         {
             "name": "scriptPath",
