@@ -21,7 +21,6 @@ const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTe
 
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-
     var vsTestVersion: string = tl.getInput('vsTestVersion');
     var testAssembly: string = tl.getInput('testAssembly', true);
     var testFiltercriteria: string = tl.getInput('testFiltercriteria');
@@ -36,7 +35,6 @@ try {
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     var tiaEnabled = tl.getVariable('tia.enabled');
-    var tiaSelectorTool = tl.getVariable('tia.selectortool');
 
     tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
 
@@ -165,6 +163,9 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
     return defer.promise;
 }
 
+function getTestSelectorLocation() : string {
+    return path.join(__dirname, "TestSelector/TestSelector.exe");
+}
 
 function generateResponseFile(): Q.Promise<string> {
     var startTime = perf();
@@ -173,7 +174,7 @@ function generateResponseFile(): Q.Promise<string> {
     var defer = Q.defer<string>();
     var tempFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     tl.debug("Response file will be generated at " + tempFile);
-    var selectortool = tl.createToolRunner(tiaSelectorTool);
+    var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("GetImpactedtests");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
@@ -200,7 +201,7 @@ function publishCodeChanges(): Q.Promise<string> {
     var endTime : number;
     var elapsedTime: number;
     var defer = Q.defer<string>();
-    var selectortool = tl.createToolRunner(tiaSelectorTool);
+    var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("PublishCodeChanges");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
@@ -1004,7 +1005,7 @@ function isNonEmptyResponseFile(responseFile: string): boolean {
 }
 
 function isTiaAllowed(): boolean {
-    if (tiaEnabled && tiaEnabled.toUpperCase() == "TRUE" && tiaSelectorTool) {
+    if (tiaEnabled && tiaEnabled.toUpperCase() == "TRUE" && getTestSelectorLocation()) {
         return true;
     }
     return false;
