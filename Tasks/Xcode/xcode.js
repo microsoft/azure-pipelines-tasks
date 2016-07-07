@@ -42,11 +42,11 @@ function run() {
                 if (workspaceMatches.length > 0) {
                     ws = workspaceMatches[0];
                     if (workspaceMatches.length > 1) {
-                        tl.warning('Multiple xcode workspace matches were found. Using the first match: ' + ws);
+                        tl.warning(tl.loc('MultipleWorkspacesFound', ws));
                     }
                 }
                 else {
-                    throw 'Xcode workspace was specified but it does not exist or is not a directory';
+                    throw tl.loc('WorkspaceDoesNotExist');
                 }
             }
             var sdk = tl.getInput('sdk', false);
@@ -131,7 +131,7 @@ function run() {
             var testResultsFiles;
             var publishResults = tl.getBoolInput('publishJUnitResults', false);
             if (publishResults && !useXctool) {
-                tl.warning("Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.");
+                tl.warning(tl.loc('UseXcToolForTestPublishing'));
             }
             if (publishResults && useXctool && xctoolReporter && 0 !== xctoolReporter.length) {
                 var xctoolReporterString = xctoolReporter.split(":");
@@ -150,7 +150,7 @@ function run() {
                         var matchingTestResultsFiles = [testResultsFiles];
                     }
                     if (!matchingTestResultsFiles) {
-                        tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
+                        tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
                     }
                     var tp = new tl.TestPublisher("JUnit");
                     tp.publish(matchingTestResultsFiles, false, "", "", "", true);
@@ -177,20 +177,19 @@ function run() {
                     }
                 }
             }
-            tl.setResult(tl.TaskResult.Succeeded, 'Xcode task execution completed with no errors.');
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc('XcodeSuccess'));
         }
         catch (err) {
             tl.setResult(tl.TaskResult.Failed, err);
         }
         finally {
-            //delete provisioning profile if specified
-            if (profileToDelete) {
-                tl.warning('Deleting provisioning profile: ' + profileToDelete);
-                yield sign.deleteProvisioningProfile(profileToDelete);
-            }
             //clean up the temporary keychain, so it is not used to search for code signing identity in future builds
             if (keychainToDelete) {
                 yield sign.deleteKeychain(keychainToDelete);
+            }
+            //delete provisioning profile if specified
+            if (profileToDelete) {
+                yield sign.deleteProvisioningProfile(profileToDelete);
             }
         }
     });

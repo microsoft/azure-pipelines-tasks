@@ -229,5 +229,12 @@
             "target": "xcode.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
+        "WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
+        "UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
+        "NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+        "XcodeSuccess": "Xcode task execution completed with no errors."
     }
 }

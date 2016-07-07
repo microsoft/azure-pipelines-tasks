@@ -229,5 +229,12 @@
       "target": "xcode.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "MultipleWorkspacesFound": "ms-resource:loc.messages.MultipleWorkspacesFound",
+    "WorkspaceDoesNotExist": "ms-resource:loc.messages.WorkspaceDoesNotExist",
+    "UseXcToolForTestPublishing": "ms-resource:loc.messages.UseXcToolForTestPublishing",
+    "NoTestResultsFound": "ms-resource:loc.messages.NoTestResultsFound",
+    "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess"
   }
 }

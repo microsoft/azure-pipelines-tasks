@@ -14,23 +14,18 @@ var userProvisioningProfilesPath = path.join(tl.getVariable('HOME'), 'Library', 
  * @param p12Pwd, the password for the P12 cert
  */
 export async function installCertInTemporaryKeychain(keychainPath : string, keychainPwd: string, p12CertPath : string, p12Pwd: string) {
-
     //delete keychain if exists
     await deleteKeychain(keychainPath);
 
     //create keychain
     var createKeychainCommand : ToolRunner =  tl.createToolRunner(tl.which('security', true));
-    createKeychainCommand.arg('create-keychain');
-    createKeychainCommand.arg('-p');
-    createKeychainCommand.arg(keychainPwd);
+    createKeychainCommand.arg(['create-keychain', '-p', keychainPwd]);
     createKeychainCommand.pathArg(keychainPath);
     await createKeychainCommand.exec();
 
     //update keychain settings
     var keychainSettingsCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
-    keychainSettingsCommand.arg('set-keychain-settings');
-    keychainSettingsCommand.arg('-lut');
-    keychainSettingsCommand.arg('7200');
+    keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '7200']);
     keychainSettingsCommand.pathArg(keychainPath);
     await keychainSettingsCommand.exec();
 
@@ -41,10 +36,8 @@ export async function installCertInTemporaryKeychain(keychainPath : string, keyc
     var importP12Command : ToolRunner = tl.createToolRunner(tl.which('security', true));
     importP12Command.arg('import');
     importP12Command.pathArg(p12CertPath);
-    importP12Command.arg('-P');
-    importP12Command.arg(p12Pwd);
-    importP12Command.arg(['-A', '-t', 'cert', '-f', 'pkcs12', '-k']);
-    importP12Command.arg(keychainPath);
+    importP12Command.arg(['-P', p12Pwd, '-A', '-t', 'cert', '-f', 'pkcs12', '-k']);
+    importP12Command.pathArg(keychainPath);
     await importP12Command.exec();
 }
 
@@ -164,9 +157,7 @@ export async function deleteKeychain(keychainPath: string) {
 export async function unlockKeychain(keychainPath: string, keychainPwd: string) {
     //unlock the keychain
     var unlockCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
-    unlockCommand.arg('unlock-keychain');
-    unlockCommand.arg('-p');
-    unlockCommand.arg(keychainPwd.toString());
+    unlockCommand.arg(['unlock-keychain', '-p', keychainPwd]);
     unlockCommand.pathArg(keychainPath);
     await unlockCommand.exec();
 }
