@@ -20,22 +20,6 @@ describe('SSH Suite', function() {
     after(function () {
 
     });
-    it('SSH with default inputs', (done) => {
-        setResponseFile('responseEndpoint.json');
-
-        var tr = new trm.TaskRunner('SSH', true, true);
-        tr.setInput('sshEndpoint', 'IDValidKey');
-
-        tr.run()
-            .then(() => {
-                assert(tr.invokedToolCount == 0, 'should not have run any tools');
-                assert(tr.succeeded, 'task should have succeeded, connection should not attempted as no commands are set to run.');
-                done();
-            })
-        .fail((err) => {
-                done(err);
-            });
-    })
     it('Fails for missing endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
 
@@ -58,6 +42,7 @@ describe('SSH Suite', function() {
         setResponseFile('responseEndpoint.json');
         var tr = new trm.TaskRunner('SSH', true, true);
         tr.setInput('sshEndpoint', 'IDInvalidKey');
+        tr.setInput('runOptions', 'commands');
         tr.setInput('commands', 'ls -l');
 
         tr.run()
@@ -66,7 +51,7 @@ describe('SSH Suite', function() {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stderr.indexOf('Failed to connect to remote machine. Verify the SSH endpoint details.') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                assert(tr.stderr.indexOf('ConnectionFailed') >= 0, 'wrong error message: "' + tr.stderr + '"');
                 assert(tr.stderr.indexOf('Cannot parse privateKey: Unsupported key format') >= 0, 'wrong error message: "' + tr.stderr + '"');
                 done();
             })
@@ -101,7 +86,7 @@ describe('SSH Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run any tools');
-                assert(tr.succeeded, 'task should not have errors');
+                assert(tr.stderr.indexOf('Input required: password') < 0, 'task should not require password');
                 done();
             })
             .fail((err) => {
@@ -112,7 +97,6 @@ describe('SSH Suite', function() {
         setResponseFile('responseEndpoint.json');
         var tr = new trm.TaskRunner('SSH', true, true);
         tr.setInput('sshEndpoint', 'IDHostNotSet');
-        tr.setInput('commands', 'ls -l');
 
         tr.run()
             .then(() => {
@@ -146,6 +130,7 @@ describe('SSH Suite', function() {
         setResponseFile('responseEndpoint.json');
         var tr = new trm.TaskRunner('SSH', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
+        tr.setInput('runOptions', 'commands');
         tr.setInput('commands', 'ls -l');
 
         tr.run()
@@ -154,7 +139,60 @@ describe('SSH Suite', function() {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stderr.indexOf('Failed to connect to remote machine. Verify the SSH endpoint details.') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                assert(tr.stderr.indexOf('ConnectionFailed') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    it('Fails for missing run options', (done) => {
+        setResponseFile('responseEndpoint.json');
+
+        var tr = new trm.TaskRunner('SSH', true, true);
+        tr.setInput('sshEndpoint', 'IDValidKey');
+
+        tr.run()
+            .then(() => {
+                assert(tr.invokedToolCount == 0, 'should not have run any tools');
+                assert(tr.failed, 'build should have failed');
+                assert(tr.stderr.indexOf('Input required: runOptions') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    it('Fails for missing commands', (done) => {
+        setResponseFile('responseEndpoint.json');
+
+        var tr = new trm.TaskRunner('SSH', true, true);
+        tr.setInput('sshEndpoint', 'IDValidKey');
+        tr.setInput('runOptions', 'commands');
+
+        tr.run()
+            .then(() => {
+                assert(tr.invokedToolCount == 0, 'should not have run any tools');
+                assert(tr.failed, 'task should have failed');
+                assert(tr.stderr.indexOf('Input required: commands') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    it('Fails for missing script path', (done) => {
+        setResponseFile('responseEndpoint.json');
+
+        var tr = new trm.TaskRunner('SSH', true, true);
+        tr.setInput('sshEndpoint', 'IDValidKey');
+        tr.setInput('runOptions', 'script');
+
+        tr.run()
+            .then(() => {
+                assert(tr.invokedToolCount == 0, 'should not have run any tools');
+                assert(tr.failed, 'task should have failed');
+                assert(tr.stderr.indexOf('Input required: scriptPath') >= 0, 'wrong error message: "' + tr.stderr + '"');
                 done();
             })
             .fail((err) => {

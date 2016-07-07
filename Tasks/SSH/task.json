@@ -28,12 +28,43 @@
             "helpMarkDown": "SSH endpoint with connection details for the remote machine."
         },
         {
+            "name": "runOptions",
+            "type": "radio",
+            "label": "Run",
+            "required": true,
+            "defaultValue": "commands",
+            "options": {
+                "commands": "Commands",
+                "script": "Script"
+            },
+            "helpMarkDown": "Choose to either run shell commands or a shell script on the remote machine."
+        },
+        {
             "name": "commands",
             "type": "multiLine",
             "label": "Commands",
             "defaultValue": "",
-            "required": false,
+            "required": true,
+            "visibleRule": "runOptions = commands",
             "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line."
+        },
+        {
+            "name": "scriptPath",
+            "type": "filePath",
+            "label": "Script Path",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "runOptions = script",
+            "helpMarkDown": "Relative path from repo root of the shell script file to run on the remote machine."
+        },
+        {
+            "name": "args",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "runOptions = script",
+            "helpMarkDown": "Arguments to pass to the shell script."
         }
     ],
     "execution": {
@@ -41,5 +72,9 @@
             "target": "ssh.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. Error: %s",
+        "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s"
     }
 }

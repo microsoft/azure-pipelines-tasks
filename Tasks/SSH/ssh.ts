@@ -3,13 +3,14 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
-var Client = require('ssh2').Client;
+var sshClient = require('ssh2').Client;
+var scpClient = require('scp2');
 
 function runCommandsUsingSSH(sshConfig, commands) {
     try {
         var stdout:string = '';
 
-        var client = new Client();
+        var client = new sshClient();
         client.on('ready', function () {
             tl.debug('SSH connection succeeded, client is ready.');
             client.shell(function (err, stream) {
@@ -31,10 +32,10 @@ function runCommandsUsingSSH(sshConfig, commands) {
                 stream.end(commands);
             });
         }).on('error', function (err) {
-            tl.setResult(tl.TaskResult.Failed, 'Failed to connect to remote machine. Verify the SSH endpoint details. Error: '  + err);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ConnectionFailed', err));
         }).connect(sshConfig);
     } catch(err) {
-        tl.setResult(tl.TaskResult.Failed, 'Failed to connect to remote machine. Verify the SSH endpoint details. Error: ' + err);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('ConnectionFailed', err));
     }
 }
 
@@ -71,8 +72,44 @@ if (privateKey && privateKey !== '') {
     }
 }
 
-var commands = tl.getInput('commands');
-if (commands) {
+var runOptions = tl.getInput('runOptions', true);
+if(runOptions === 'commands') {
+    var commands = tl.getInput('commands', true);
     commands = commands.concat('\nexit\n');
     runCommandsUsingSSH(sshConfig, commands);
+} else if (runOptions === 'script') {
+    var scriptFile = tl.getPathInput('scriptPath', true, true);
+    var args = tl.getInput('args');
+    var scpConfig = sshConfig;
+    var remoteScript = '/home/' + sshConfig.username + '/' + path.basename(scriptFile);
+    scpConfig.path = remoteScript;
+
+    //copy script file to remote machine
+    scpClient.scp(scriptFile, scpConfig, function (err) {
+        if(err) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('RemoteCopyFailed', err));
+        } else {
+            tl.debug('Copied script file to remote machine at: ' + remoteScript);
+
+            //run remote script file with args on the remote machine
+            var remoteCmd = 'bash ';
+            if(remoteScript.indexOf(' ') > 0) {
+                remoteCmd = remoteCmd.concat('"'+ remoteScript + '"');
+            } else {
+                remoteCmd = remoteCmd.concat(remoteScript);
+            }
+            if(args) {
+                remoteCmd = remoteCmd.concat(' ' + args);
+            }
+            remoteCmd = remoteCmd.concat('\n');
+
+            //setup command to clean up script file
+            remoteCmd = remoteCmd.concat('rm -f ' + remoteScript);
+            remoteCmd = remoteCmd.concat('\nexit\n');
+
+            tl.debug('remoteCmd = ' + remoteCmd);
+            runCommandsUsingSSH(sshConfig, remoteCmd);
+        }
+    })
+
 }

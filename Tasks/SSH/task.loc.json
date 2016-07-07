@@ -27,12 +27,43 @@
       "helpMarkDown": "ms-resource:loc.input.help.sshEndpoint"
     },
     {
+      "name": "runOptions",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.runOptions",
+      "required": true,
+      "defaultValue": "commands",
+      "options": {
+        "commands": "Commands",
+        "script": "Script"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.runOptions"
+    },
+    {
       "name": "commands",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.commands",
       "defaultValue": "",
-      "required": false,
+      "required": true,
+      "visibleRule": "runOptions = commands",
       "helpMarkDown": "ms-resource:loc.input.help.commands"
+    },
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.scriptPath",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = script",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "runOptions = script",
+      "helpMarkDown": "ms-resource:loc.input.help.args"
     }
   ],
   "execution": {
@@ -40,5 +71,9 @@
       "target": "ssh.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
+    "RemoteCopyFailed": "ms-resource:loc.messages.RemoteCopyFailed"
   }
 }
