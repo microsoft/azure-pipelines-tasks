@@ -66,7 +66,7 @@ export async function findSigningIdentity(keychainPath: string) {
         tl.debug('findSigningIdentity = ' + signIdentity);
         return signIdentity;
     } else {
-        throw 'Failed to find iOS signing identity. Verify the signing and provisioning information provided.';
+        throw tl.loc('SignIdNotFound');
     }
 }
 
@@ -98,7 +98,7 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
         var tmpPlist = '_xcodetasktmp.plist';
         fs.writeFileSync(tmpPlist, provProfileDetails);
     } else {
-        throw 'Failed to find the details for provisioning profile: ' + provProfilePath;
+        throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
     }
 
     //use PlistBuddy to figure out the UUID
@@ -132,7 +132,7 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
 
         return provProfileUUID;
     } else {
-        throw 'Failed to find provisioning profile UUID for provisioning profile: ' + provProfilePath;
+        throw tl.loc('ProvProfileUUIDNotFound', provProfilePath);
     }
 }
 
