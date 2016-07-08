@@ -30,10 +30,10 @@
     {
       "name": "ConnectedServiceName",
       "type": "connectedService:Azure:Certificate,UsernamePassword",
-      "label": "Azure Subscription",
+      "label": "Azure Subscription (Classic)",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Azure subscription to target for deployment."
+      "helpMarkDown": "Azure Classic subscription to target for deployment."
     },
     {
       "name": "StorageAccount",

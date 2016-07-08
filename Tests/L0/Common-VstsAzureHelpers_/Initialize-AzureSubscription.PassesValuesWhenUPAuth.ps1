@@ -54,10 +54,12 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Add-AzureRMAccount
     Unregister-Mock Set-CurrentAzureSubscription
     Unregister-Mock Set-CurrentAzureRMSubscription
+    Unregister-Mock Set-UserAgent
     Register-Mock Add-AzureAccount { 'some output' }
     Register-Mock Add-AzureRMAccount { 'some output' }
     Register-Mock Set-CurrentAzureSubscription
     Register-Mock Set-CurrentAzureRMSubscription
+    Register-Mock Set-UserAgent
     & $module {
         $script:azureModule = $null
         $script:azureRMProfileModule = $null
