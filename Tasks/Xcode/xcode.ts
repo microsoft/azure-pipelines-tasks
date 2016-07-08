@@ -28,7 +28,7 @@ async function run() {
         var workingDir : string = tl.getPathInput('cwd');
         tl.cd(workingDir);
 
-        var outPath : string = path.posix.resolve(workingDir, tl.getInput('outputPattern', true)); //use posix implementation to resolve paths to prevent unit test failures on Windows
+        var outPath : string = tl.resolve(workingDir, tl.getInput('outputPattern', true)); //use posix implementation to resolve paths to prevent unit test failures on Windows
         tl.mkdirP(outPath);
 
         //--------------------------------------------------------
