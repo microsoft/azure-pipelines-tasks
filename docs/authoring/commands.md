@@ -196,7 +196,7 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.uploadlog]local file path
+                    ##vso[task.uploadfile]local file path
                 </p>
             </td>
             <td>
@@ -207,7 +207,7 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
                 <p align="left">
                     Upload user interested file as additional log information to the current timeline record. The file shall be available for download along with task logs.<br>
                     Example: <br>
-                    ##vso[task.uploadlog]c:\additionalfile.log
+                    ##vso[task.uploadfile]c:\additionalfile.log
                 </p>
             </td>
             <td>
