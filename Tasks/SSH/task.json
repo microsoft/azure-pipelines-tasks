@@ -49,7 +49,7 @@
             "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line.",
             "properties": {
                 "resizable": "true",
-                "rows": "5"
+                "rows": "10"
             }
         },
         {

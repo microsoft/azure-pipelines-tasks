@@ -48,7 +48,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.commands",
       "properties": {
         "resizable": "true",
-        "rows": "5"
+        "rows": "10"
       }
     },
     {
