@@ -212,14 +212,18 @@ function Upload-FilesToAzureContainer
     try
     {
         Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
-
+        
+		$storageAccount = Get-AzureStorageAccount -StorageAccountName $storageAccountName
+		$stoargeAccountEnpoints = $storageAccount.Endpoints
+		$blobStorageURI = $stoargeAccountEnpoints[0]+$containerName+"/"+$blobPrefix
+		
         if([string]::IsNullOrWhiteSpace($additionalArguments))
         {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation
+            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey  $storageKey -AzCopyLocation $azCopyLocation -BlobStorageURI $blobStorageURI
         }
         else
         {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments
+            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
         }
     }
     catch

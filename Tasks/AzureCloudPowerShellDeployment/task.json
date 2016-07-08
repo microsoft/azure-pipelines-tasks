@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 26
+    "Patch": 27
   },
   "demands": [
     "azureps"
@@ -60,7 +60,7 @@
       "name": "ServiceLocation",
       "type": "pickList",
       "label": "Service Location",
-      "defaultValue": "South Central US",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
       "properties": {
