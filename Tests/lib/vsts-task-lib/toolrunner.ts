@@ -273,14 +273,14 @@ export class ToolRunner extends events.EventEmitter {
         }
 
         var r = mock.getResponse('exec', cmdString);
-        if (r.stdout.length > 0) {
+        if (r.stdout && r.stdout.length > 0) {
             ops.outStream.write(r.stdout);
         }
 
-        if (r.stderr.length > 0) {
+        if (r.stderr && r.stderr.length > 0) {
             ops.errStream.write(r.stderr);
         }
 
-        return <IExecResult>{ code: r.code, stdout: r.stdout, stderr: r.stderr };
+        return <IExecResult>{ code: r.code, stdout: (r.stdout) ? r.stdout.toString() : null, stderr: (r.stderr) ? r.stderr.toString() : null };
     }
 }

@@ -1,4 +1,17 @@
 {
+    "which": {
+        "unzip": "/usr/bin/unzip",
+        "7z": "/usr/bin/7z",
+        "tar": "/bin/tar"
+    },
+    "checkPath": {
+        "/usr/bin/unzip": true,
+        "/usr/bin/7z": true,
+        "/bin/tar": true
+    },
+    "osType" : {
+        "osType" : "Linux"
+    },
     "getVariable": {
         "build.sourcesDirectory": "mockedBuildSources"
     },
@@ -28,46 +41,38 @@
     "exists": {
         "output": true
     },
-    "rmRF" :{
-        "output": true
-    },
     "mkdirP" :{
         "output": true
     },
     "exec": {
-        "7zip/7z.exe x -ooutput mockedBuildSources/foo.zip": {
+        "/usr/bin/unzip mockedBuildSources/foo.zip -d output": {
             "code": 0,
-            "stdout": "7zip extracted mockedBuildSources/foo.zip",
+            "stdout": "extracted mockedBuildSources/foo.zip",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput mockedBuildSources/foo.tar": {
+        "/bin/tar -xvf mockedBuildSources/foo.tar -C output": {
             "code": 0,
-            "stdout": "7zip extracted mockedBuildSources/foo.tar",
+            "stdout": "extracted mockedBuildSources/foo.tar",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput/_foo.tar.gz_ mockedBuildSources/foo.tar.gz": {
+        "/bin/tar -xvf mockedBuildSources/foo.tar.gz -C output": {
             "code": 0,
-            "stdout": "7zip extracted mockedBuildSources/foo.tar.gz",
+            "stdout": "extracted mockedBuildSources/foo.tar.gz",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput/ output/_foo.tar.gz_/foo.tar": {
+        "/usr/bin/unzip mockedBuildSources/subdir/foo.jar -d output": {
             "code": 0,
-            "stdout": "7zip extractedoutput/_foo.tar.gz_/foo.tar",
+            "stdout": "extracted mockedBuildSources/subdir/foo.jar",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput mockedBuildSources/subdir/foo.jar": {
+        "/usr/bin/7z x -ooutput mockedBuildSources/subdir/subdir/foo.7z": {
             "code": 0,
-            "stdout": "7zip extracted mockedBuildSources/subdir/foo.jar",
+            "stdout": "extracted mockedBuildSources/subdir/subdir/foo.7z",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput mockedBuildSources/subdir/subdir/foo.7z": {
+        "/usr/bin/unzip mockedBuildSources/subdir/foo.zip -d output": {
             "code": 0,
-            "stdout": "7zip extracted mockedBuildSources/subdir/subdir/foo.7z",
-            "stderr": ""
-        },
-        "7zip/7z.exe x -ooutput mockedBuildSources/subdir/foo.zip": {
-            "code": 0,
-            "stdout": "7zip extracted mockedBuildSources/subdir/foo.zip",
+            "stdout": "extracted mockedBuildSources/subdir/foo.zip",
             "stderr": ""
         }   
     },

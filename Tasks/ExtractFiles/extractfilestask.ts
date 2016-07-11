@@ -1,7 +1,5 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import fs = require('fs');
-import os = require('os');
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 
@@ -13,7 +11,7 @@ var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', 
 var repoRoot : string = tl.getVariable('build.sourcesDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
-var win = os.type().match(/^Win/);
+var win = tl.osType().match(/^Win/);
 tl.debug('win: ' + win);
 
 // extractors
@@ -27,7 +25,7 @@ function getSevenZipLocation() : string {
     if(win){
         return winSevenZipLocation;
     } else {
-        if (typeof xpTarLocation == "undefined") {
+        if (typeof xpSevenZipLocation == "undefined") {
             xpSevenZipLocation = tl.which('7z', true);
         }
         return xpSevenZipLocation; 
@@ -283,7 +281,8 @@ for (var i = 0; i < files.length; i++) {
                     tl.mkdirP(tempFolder);
                     // 1 extract compressed tar
                     sevenZipExtract(file, tempFolder);
-                    var tempTar = tempFolder + path.sep + fs.readdirSync(tempFolder)[0]; // should be only one
+                    console.log('tempFolder = '+tempFolder);
+                    var tempTar = tempFolder + path.sep + tl.ls(null, [tempFolder])[0]; // should be only one
                     console.log('Decompressed temporary tar from: ' + file + ' to: ' + tempTar);
                     // 2 expand extracted tar
                     sevenZipExtract(tempTar, destinationFolder);
