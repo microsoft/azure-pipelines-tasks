@@ -198,6 +198,11 @@
     "msdeploycommandransuccessfully": "ms-resource:loc.messages.msdeploycommandransuccessfully",
     "filePathFindFilesSearchPattern0": "ms-resource:loc.messages.filePathFindFilesSearchPattern0",
     "filePath0": "ms-resource:loc.messages.filePath0",
-    "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0"
+    "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0",
+    "Updatingdeploymenthistoryfordeployment0": "ms-resource:loc.messages.Updatingdeploymenthistoryfordeployment0",
+    "Updatingdeploymentstatus": "ms-resource:loc.messages.Updatingdeploymentstatus",
+    "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "Cannotupdatedeploymentstatusfor01": "ms-resource:loc.messages.Cannotupdatedeploymentstatusfor01",
+    "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved"
   }
 }

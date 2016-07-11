@@ -113,14 +113,22 @@ if ($jdkPath)
 
 $buildRootPath = $cwd
 $wrapperDirectory = Split-Path $wrapperScript -Parent
-$reportDirectoryName = "ReportDirectory_84B7D86C-F08D-4B65-8D37-742D8B02D27B"
+$reportDirectoryName = "ReportDirectory84B7D86C"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
-if(Test-Path $reportDirectory)
-{
-   # delete any code coverage data 
-   rm -r $reportDirectory -force | Out-Null
+try 
+{    
+    if(Test-Path $reportDirectory)
+    {
+    # delete any code coverage data 
+    rm -r $reportDirectory -force | Out-Null
+    }
 }
+catch
+{
+    Write-Verbose "Failed to delete report directory"
+}
+
 
 # check if project is multi module gradle build or not
 $subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}

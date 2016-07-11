@@ -30,10 +30,12 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Add-AzureRMAccount
     Unregister-Mock Set-CurrentAzureSubscription
     Unregister-Mock Set-CurrentAzureRMSubscription
+    Unregister-Mock Set-UserAgent
     Register-Mock Add-AzureAccount { 'some output' }
     Register-Mock Add-AzureRMAccount { 'some output' }
     Register-Mock Set-CurrentAzureSubscription
     Register-Mock Set-CurrentAzureRMSubscription
+    Register-Mock Set-UserAgent
     if ($variableSet.Classic) {
         & $module {
             $script:azureModule = @{ Version = [version]'0.9.8' }

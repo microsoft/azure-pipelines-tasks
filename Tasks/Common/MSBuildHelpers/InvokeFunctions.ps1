@@ -204,7 +204,7 @@ function Invoke-MSBuild {
 
         # Don't show the logo and do not allow node reuse so all child nodes are shut down once the master
         # node has completed build orchestration.
-        $arguments = "`"$ProjectFile`" /nologo /m /nr:false"
+        $arguments = "`"$ProjectFile`" /nologo /nr:false"
 
         # Add the targets if specified.
         if ($Targets) {

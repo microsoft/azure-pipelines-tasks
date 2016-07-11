@@ -4,7 +4,8 @@ function Format-MSBuildArguments {
         [string]$MSBuildArguments,
         [string]$Platform,
         [string]$Configuration,
-        [string]$VSVersion)
+        [string]$VSVersion,
+        [switch]$MaximumCpuCount)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -18,6 +19,10 @@ function Format-MSBuildArguments {
 
         if ($VSVersion) {
             $MSBuildArguments = "$MSBuildArguments /p:VisualStudioVersion=`"$VSVersion`""
+        }
+
+        if ($MaximumCpuCount) {
+            $MSBuildArguments = "$MSBuildArguments /m"
         }
 
         $MSBuildArguments
