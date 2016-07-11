@@ -7,7 +7,7 @@
 #
 function InitPostCommentsModule
 {
-    param ([Microsoft.VisualStudio.Services.Client.VssConnection][ValidateNotNull()]$vssConnection)
+    param ([ValidateNotNull()]$vssConnection)
     
     Write-Verbose "Initializing the PostComments-Module"
     
@@ -95,6 +95,7 @@ function LoadTfsClientAssemblies
     $source = @"
 
 using Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi;
+using Microsoft.VisualStudio.Services.CodeReview.WebApi;
 using Microsoft.TeamFoundation.SourceControl.WebApi;
 using System;
 using System.Collections.Generic;
@@ -118,6 +119,16 @@ namespace PsWorkarounds
         public static DiscussionCommentCollection GetComments(DiscussionHttpClient discussionClient, int discussionId)
         {
             return discussionClient.GetCommentsAsync(discussionId).Result;
+        }
+
+        public static IterationChanges GetChanges(CodeReviewHttpClient codeReviewClient, Guid teamProjectId, int codeReviewId, int iterationId) 
+        {
+            return codeReviewClient.GetChangesAsync(teamProjectId, codeReviewId, iterationId).Result;
+        }
+
+        public static Review GetReview(CodeReviewHttpClient codeReviewClient, Guid teamProjectId, int codeReviewId)
+        {
+            return codeReviewClient.GetReviewAsync(teamProjectId, codeReviewId).Result;
         }
     }
 }
@@ -276,15 +287,11 @@ function ThreadMatchesCommentSource
 
 function GetCodeFlowLatestIterationId
 {
-    $review = $script:codeReviewClient.GetReviewAsync(
-        $script:pullRequest.Repository.ProjectReference.Id,  # Guid project
-        $script:pullRequest.CodeReviewId, # int reviewId
-        $null, # bool? includeAllProperties
-        $null, # int? maxChangesCount
-        $null, # DateTimeOffset? ifModifiedSince
-        $null, # object userState
-        [System.Threading.CancellationToken]::None).Result
-    
+    $review = [PsWorkarounds.Helper]::GetReview(
+        $script:codeReviewClient,
+        $script:pullRequest.Repository.ProjectReference.Id, 
+        $script:pullRequest.CodeReviewId);
+
     Assert ($review -ne $null) "Could not retrieve the review"
     Assert (HasElements $review.Iterations) "No iterations found on the review"
     
@@ -297,11 +304,11 @@ function GetCodeFlowChanges
 {
      param ([int]$iterationId)
      
-     $changes = $script:codeReviewClient.GetChangesAsync(
-        $script:pullRequest.Repository.ProjectReference.Id, 
-        $script:pullRequest.CodeReviewId, 
-        $iterationId,
-        $null, $null, $null, [System.Threading.CancellationToken]::None).Result
+     $changes = [PsWorkarounds.Helper]::GetChanges(
+         $script:codeReviewClient, 
+         $script:pullRequest.Repository.ProjectReference.Id, 
+         $script:pullRequest.CodeReviewId, 
+         $iterationId);
      
      Write-Verbose "Change count: $($changes.Count)"
      
@@ -321,7 +328,3 @@ function GetCodeFlowChangeTrackingId
 } 
 
 #endregion 
-
-
-     
-
