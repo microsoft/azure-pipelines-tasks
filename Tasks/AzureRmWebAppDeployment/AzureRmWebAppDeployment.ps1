@@ -76,26 +76,41 @@ try{
 										   -setParametersFile $setParametersFilePath
 
 	# Deploy azureRM webApp using msdeploy Command
-	Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs
+	Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs -ErrorAction silentlycontinue -ErrorVariable errorVariable
 
-	# Get azure webapp hosted url
-	$azureWebsitePublishURL = Get-AzureRMWebAppPublishUrl -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
-																		   -resourceGroupName $ResourceGroupName -slotName $SlotName
+    Write-Verbose "Error occured while deploying webapp : $errorVariable "
 
-	# Publish azure webApp url
-	Write-Host (Get-VstsLocString -Key "WebappsuccessfullypublishedatUrl0" -ArgumentList $azureWebsitePublishURL)
+    if ( !$errorVariable )
+    {
 
-	# Set ouput vairable with azureWebsitePublishUrl
-	if(-not [string]::IsNullOrEmpty($WebAppUri))
-	{
+	    # Get azure webapp hosted url
+	    $azureWebsitePublishURL = Get-AzureRMWebAppPublishUrl -webAppName $WebAppName -deployToSlotFlag $DeployToSlotFlag `
+																		       -resourceGroupName $ResourceGroupName -slotName $SlotName
+
+	    # Publish azure webApp url
+	    Write-Host (Get-VstsLocString -Key "WebappsuccessfullypublishedatUrl0" -ArgumentList $azureWebsitePublishURL)
+
+	    # Set ouput vairable with azureWebsitePublishUrl
+	    if(-not [string]::IsNullOrEmpty($WebAppUri))
+	    {
 	
-		if( [string]::IsNullOrEmpty($azureWebsitePublishURL))
-		{
-			Throw (Get-VstsLocString -Key "Unabletoretrievewebapppublishurlforwebapp0" -ArgumentList $webAppName)
-		}
+		    if( [string]::IsNullOrEmpty($azureWebsitePublishURL))
+		    {
+			    Throw (Get-VstsLocString -Key "Unabletoretrievewebapppublishurlforwebapp0" -ArgumentList $webAppName)
+		    }
 	
-		Set-VstsTaskVariable -Name $WebAppUri -Value $azureWebsitePublishURL
-	}
+		    Set-VstsTaskVariable -Name $WebAppUri -Value $azureWebsitePublishURL
+	    }
+    
+    }
+
+    Update-DeploymentStatus -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -deployAzureWebsiteError $errorVariable
+
+    # If error occurred while deploying azure webapp, task should fail
+    if( $errorVariable )
+    {
+        throw $errorVariable
+    }
 
 	Write-Verbose "Completed AzureRM WebApp Deployment Task"
 
