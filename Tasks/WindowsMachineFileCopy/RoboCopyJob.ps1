@@ -76,7 +76,7 @@ param (
         }   
     }
 
-    function Get-FullUserName(
+    function Get-DownLevelLogonName(
         [string]$fqdn,
         [string]$userName
         )
@@ -165,7 +165,7 @@ param (
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
     
     Validate-Credential $credential
-    $userName = Get-FullUserName -fqdn $fqdn -userName $($credential.UserName)
+    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
     $password = $($credential.Password) 
 
     if($machineShare)
