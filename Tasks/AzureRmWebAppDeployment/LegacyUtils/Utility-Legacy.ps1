@@ -258,28 +258,34 @@ function Update-DeploymentStatus
             $releaseUrlTaskVar = Get-TaskVariable $distributedTaskContext "release.releaseUri"
             $buildIdTaskVar = Get-TaskVariable $distributedTaskContext "build.buildId"
             $releaseIdTaskVar = Get-TaskVariable $distributedTaskContext "release.releaseId"
+            
+			$collectionUrl = Get-TaskVariable $distributedTaskContext System.TeamFoundationCollectionUri
+            $teamproject = Get-TaskVariable $distributedTaskContext System.TeamProject
+            $buildOrReleaseUrl = "";
+            $uniqueId = Get-Date -Format ddMMyyhhmmss
+
             if(-not [string]::IsNullOrEmpty($releaseUrlTaskVar)) {
-                $deploymentId = $releaseIdTaskVar
-                $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $releaseUrlTaskVar
+                $deploymentId = $releaseIdTaskVar + $uniqueId
+                $buildOrReleaseUrl = [string]::Format("{0}{1}/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId={2}&_a=release-summary", $collectionUrl, $teamproject, $releaseIdTaskVar)
+                $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $buildOrReleaseUrl
             }
             else
             {
-               $deploymentId = $buildIdTaskVar
-               $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $buildUrlTaskVar
+               $deploymentId = $buildIdTaskVar + $uniqueId
+               $buildOrReleaseUrl = [string]::Format("{0}{1}/_build#buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildIdTaskVar)
+               $message = Get-LocalizedString -Key "Updating deployment history for deployment {0}" -ArgumentList $buildOrReleaseUrl
             }
 
-            Write-Verbose "Using deploymentId as: '$deploymentId' to update deployment Status"
-            Write-Verbose "Using message as: '$message' to update deployment Status"
 
             if([string]::IsNullOrEmpty($deploymentId)) {
                 #No point in proceeding further
                 Write-Warning (Get-LocalizedString -Key "Cannot update deployment status, unique deploymentId cannot be retrieved")  
                 Return
             }
+			
+			Write-Verbose "Using deploymentId as: '$deploymentId' to update deployment Status"
+            Write-Verbose "Using message as: '$message' to update deployment Status"
 
-            $collectionUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
-            $teamproject = "$env:SYSTEM_TEAMPROJECTID"
-            $buildUrl = [string]::Format("{0}/{1}/_build#buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildIdTaskVar)
 
             $body = ConvertTo-Json (New-Object -TypeName psobject -Property @{
                 status = $status
@@ -287,7 +293,7 @@ function Update-DeploymentStatus
                 message = $message
                 author = $author
                 deployer = 'VSTS'
-                details = $buildUrl
+                details = $buildOrReleaseUrl
             })
 
             $webAppHostUrl = $webAppPublishKuduUrl.split(':')[0]

@@ -281,8 +281,7 @@ function Update-DeploymentStatus
                $message = Get-VstsLocString -Key "Updatingdeploymenthistoryfordeployment0" -ArgumentList $buildOrReleaseUrl
             }
 
-            Write-Verbose "Using deploymentId as: '$deploymentId' to update deployment Status"
-            Write-Verbose "Using message as: '$message' to update deployment Status"
+            
 
             if([string]::IsNullOrEmpty($deploymentId)) {
                 #No point in proceeding further
@@ -290,6 +289,8 @@ function Update-DeploymentStatus
                 Return
             }
 
+            Write-Verbose "Using deploymentId as: '$deploymentId' to update deployment Status"
+            Write-Verbose "Using message as: '$message' to update deployment Status"
 
             $body = ConvertTo-Json (New-Object -TypeName psobject -Property @{
                 status = $status
