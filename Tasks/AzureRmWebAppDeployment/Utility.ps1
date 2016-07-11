@@ -285,7 +285,7 @@ function Update-DeploymentStatus
 
             if([string]::IsNullOrEmpty($deploymentId)) {
                 #No point in proceeding further
-                Write-Warning (Get-VstsLocString -Key "Cannot update deployment status, unique deploymentId cannot be retrieved")  
+                Write-Warning (Get-VstsLocString -Key "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved")  
                 Return
             }
 
