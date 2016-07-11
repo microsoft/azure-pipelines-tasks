@@ -54,11 +54,13 @@ export class PmdTool implements IAnalysisTool {
     public processResults(): AnalysisResult[] {
 
         if (!this.isEnabled()) {
+            tl.debug('[CA]PMD analysis is not enabled');
             return [];
         }
 
         var results: AnalysisResult[] = [];
         var outputs: ModuleOutput[] = this.buildOutput.getModuleOutputs();
+        tl.debug(`[CA] PMD parser found ${outputs.length} possible modules` );
 
         for (var output of outputs) {
             var result = this.parseModuleOutput(output);
