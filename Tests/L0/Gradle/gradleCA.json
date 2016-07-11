@@ -9,27 +9,9 @@
             "stdout": "subprojects: []",
             "stderr": ""
         },
-        "gradlew clean build jacocoTestReport": {
+        "gradlew build -I /gradle/CodeAnalysis/pmd.gradle": {
             "code": 0,
-            "stdout": "Sample output",
-            "stderr": ""
-        },
-        "gradlew clean build cobertura": {
-            "code": 0,
-            "stdout": "Sample output",
-            "stderr": ""
-        },
-        "gradlew build FAIL": {
-            "code": 2,
-            "stderr": "FAILED"
-        },
-        "gradlew /o /p t i /o /n /s build": {
-            "code": 0,
-            "stdout": "More sample gradle output"
-        },
-        "gradlew /o /p t i /o /n /s build test deploy": {
-            "code": 0,
-            "stdout": "More sample gradle output"
+            "stdout": "Sample gradle + PMD"
         }
     },
     "checkPath": {
@@ -44,17 +26,6 @@
         "build.buildNumber": "14",
         "build.sourcesDirectory": "/user/build/s",
         "build.artifactStagingDirectory": "/user/build/a"
-    },
-    "stats": {
-        "CCReport43F6D5EF\\coverage.xml": {
-            "isFile": true
-        }
-    },
-    "rmRF": {
-        "CCReport43F6D5EF": {
-            "success": true,
-            "message": "success"
-        }
     },
     "find": {
         "/user/build": [

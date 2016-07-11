@@ -6,9 +6,11 @@ import path = require('path');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import sqCommon = require('sonarqube-common/sonarqube-common');
-import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
-
 import sqGradle = require('./CodeAnalysis/gradlesonar');
+
+import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrchestrator';
+import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
+import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -38,6 +40,9 @@ var summaryFile: string = null;
 var reportDirectory: string = null;
 var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
 var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
+
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Gradle);
+var codeAnalysisOrchestrator = new CodeAnalysisOrchestrator([new PmdTool(buildOutput)])
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
@@ -79,7 +84,6 @@ if (isCodeCoverageOpted) {
     enableCodeCoverage();
 }
 
-
 if (isSonarQubeEnabled) {
     // Looks like: 'SonarQube analysis is enabled.'
     console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
@@ -88,22 +92,32 @@ if (isSonarQubeEnabled) {
     gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile);
 }
 
+gb = codeAnalysisOrchestrator.configureBuild(gb);
+
 gb.exec()
-    .then(function(code) {
+    .then(function (code) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted);
+        processCodeAnalysisResults();
 
-        if (isSonarQubeEnabled) {
-            sqGradle.uploadSonarQubeBuildSummary();
-        }
         tl.exit(code);
     })
-    .fail(function(err) {
+    .fail(function (err) {
         publishTestResults(publishJUnitResults, testResultsFiles);
         console.error(err.message);
         tl.debug('taskRunner fail');
         tl.exit(1);
     })
+
+function processCodeAnalysisResults() {
+
+    tl.debug('Processing code analysis results');
+    codeAnalysisOrchestrator.publishCodeAnalysisResults()
+
+    if (isSonarQubeEnabled) {
+        sqGradle.uploadSonarQubeBuildSummary();
+    }
+}
 
 /* Functions for Publish Test Results, Code Coverage */
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {

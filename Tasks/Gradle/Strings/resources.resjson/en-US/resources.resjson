@@ -51,6 +51,8 @@
   "loc.input.help.sqDbUsername": "SonarQube server 5.1 and lower only. Enter the username for the database user (i.e. sonar.jdbc.username).",
   "loc.input.label.sqDbPassword": "Db User Password",
   "loc.input.help.sqDbPassword": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
+  "loc.input.label.pmdAnalysisEnabled": "Run PMD Analysis",
+  "loc.input.help.pmdAnalysisEnabled": "Use the PMD Java static analysis tool to look for bugs in the code.",
   "loc.messages.sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: {0}",
   "loc.messages.codeAnalysis_ToolIsEnabled": "%s analysis is enabled.",
   "loc.messages.codeAnalysis_ToolFailed": "%s analysis failed.",
@@ -58,5 +60,11 @@
   "loc.messages.sqAnalysis_BuildSummaryTitle": "SonarQube Analysis Report",
   "loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild": "Detailed SonarQube reports are not available for pull request builds.",
   "loc.messages.sqAnalysis_TaskReportInvalid": "Invalid or missing task report. Check SonarQube finished successfully.",
-  "loc.messages.sqAnalysis_BuildSummary_LinkText": "Detailed SonarQube report"
+  "loc.messages.sqAnalysis_BuildSummary_LinkText": "Detailed SonarQube report",
+  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
+  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
+  "loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
+  "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
+  "loc.messages.codeAnalysisBuildSummaryTitle": "Code Analysis Report",
+  "loc.messages.codeAnalysisArtifactSummaryTitle": "Code Analysis Results"
 }

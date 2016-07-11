@@ -1,0 +1,13 @@
+{
+  "name": "Agent.Tasks.Gradle",
+  "version": "1.0.37",
+  "author": "Microsoft Corporation",
+  "description": "Build with Gradle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+  },
+  "dependencies": {
+    "xml2js": "^0.4.16"
+  }
+}
