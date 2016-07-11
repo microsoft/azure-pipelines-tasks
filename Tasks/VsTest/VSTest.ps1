@@ -81,6 +81,7 @@ try
 
     $codeCoverage = Convert-String $codeCoverageEnabled Boolean
 
+    $diagFileName = [system.IO.path]::GetTempFileName()
     if($testAssemblyFiles)
     {
         Write-Verbose -Verbose "Calling Invoke-VSTest for all test assemblies"
@@ -118,8 +119,17 @@ try
             $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
         } 
         Write-Verbose "Test results directory: $testResultsDirectory"
-    
-        Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
+
+        
+        $shouldAddDiagFlag = ShouldAddDiagFlag $vsTestVersion
+        if($shouldAddDiagFlag)
+        {
+            Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory -DiagFileName $diagFileName
+        }
+        else 
+        {
+            Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
+        }
     
     }
     else
@@ -127,6 +137,7 @@ try
         Write-Host "##vso[task.logissue type=warning;code=002004;]"
         Write-Warning (Get-LocalizedString -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
     }
+    ##vso[task.uploadlog]$diagFileName
 }
 catch
 {
