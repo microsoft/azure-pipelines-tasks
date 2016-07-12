@@ -28,8 +28,14 @@ describe('ServiceFabricDeploy Suite', function () {
     });
 
     if (ps) {
-        it('simple deploy', (done) => {
-            psr.run(path.join(__dirname, 'SimpleDeploy.ps1'), done);
+        it('AAD deploy', (done) => {
+            psr.run(path.join(__dirname, 'AadDeploy.ps1'), done);
+        })
+        it('Certificate deploy', (done) => {
+            psr.run(path.join(__dirname, 'CertDeploy.ps1'), done);
+        })
+        it('No auth deploy', (done) => {
+            psr.run(path.join(__dirname, 'NoAuthDeploy.ps1'), done);
         })
     }
 });

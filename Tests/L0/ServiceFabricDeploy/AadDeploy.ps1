@@ -3,9 +3,9 @@ param()
 
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 
-$publishProfilePath = "$PSScriptRoot\data\PublishProfile.xml"
+$publishProfilePath = "$PSScriptRoot\data\AadPublishProfile.xml"
 $applicationPackagePath = "random package path"
-$aadServiceConnectionName = "random connection name"
+$serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $userName = "random user"
 $password = "random password"
@@ -16,7 +16,7 @@ $appName = "AppName"
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath -Require
 Register-Mock Get-VstsInput { $applicationPackagePath } -- -Name applicationPackagePath -Require
-Register-Mock Get-VstsInput { $aadServiceConnectionName } -- -Name aadServiceConnectionName -Require
+Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectionName -Require
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -28,13 +28,14 @@ Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SD
 # Setup mock VSTS service endpoint
 $vstsEndpoint = @{
     "Auth" = @{
+        "Scheme" = "UserNamePassword" 
         "Parameters" = @{
             "Username" = $userName
             "Password" = $password
         }
     }
 }
-Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $aadServiceConnectionName -Require
+Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName -Require
 
 # Setup mock results of cluster metadata
 $clusterMetadata = @{
