@@ -3,79 +3,13 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
-import Q = require('q');
-var Ssh2Client = require('ssh2').Client;
-var Scp2Client = require('scp2');
-
-function copyScriptToRemoteMachine(scriptFile : string, scpConfig : any) : Q.Promise<string> {
-    var defer = Q.defer<string>();
-
-    Scp2Client.scp(scriptFile, scpConfig, function (err) {
-        if (err) {
-            defer.reject(tl.loc('RemoteCopyFailed', err));
-        } else {
-            tl.debug('Copied script file to remote machine at: ' + scpConfig.path);
-            defer.resolve(scpConfig.path);
-        }
-    });
-
-    return defer.promise;
-}
-
-function setupSshClientConnection(sshConfig: any) : Q.Promise<any> {
-    var defer = Q.defer<any>();
-    var client = new Ssh2Client();
-    client.on('ready', function () {
-        defer.resolve(client);
-    }).on('error', function (err) {
-        defer.reject(err);
-    }).connect(sshConfig);
-    return defer.promise;
-}
-
-function runCommandOnRemoteMachine(sshClient: any, command: string) : Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var stdErrWritten:boolean = false;
-    var stdout: string = '';
-
-    var cmdToRun = command;
-    if(cmdToRun.indexOf(';') > 0) {
-        //multiple commands were passed separated by ;
-        cmdToRun = cmdToRun.replace(/;/g, '\n');
-    }
-    tl.debug('cmdToRun = ' + cmdToRun);
-
-    sshClient.exec(cmdToRun, function(err, stream) {
-        if(err) {
-            defer.reject(tl.loc('RemoteCmdExecutionErr', err))
-        }
-        stream.on('data', function(data) {
-            stdout = stdout.concat(data);
-            if(stdout.endsWith('\n')) {
-                tl._writeLine(stdout);
-                stdout = '';
-            }
-        }).stderr.on('data', function(data) {
-            stdErrWritten = true;
-            tl._writeError(data);
-        })
-        .on('close', function(code, signal) {
-            tl._writeLine(stdout);
-            if(stdErrWritten === true) {
-                defer.reject(tl.loc('RemoteCmdExecutionErr'));
-            } else if(code && code != 0) {
-                defer.reject(tl.loc('RemoteCmdExecutionErr'));
-            } else {
-                defer.resolve('0');
-            }
-        })
-    })
-    return defer.promise;
-}
+import sshHelper = require('./ssh2helpers');
+import {RemoteCommandOptions} from './ssh2helpers'
 
 async function run() {
     var sshClientConnection: any;
     var cleanUpScriptCmd: string;
+    var remoteCmdOptions : RemoteCommandOptions = new RemoteCommandOptions();
 
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -127,10 +61,13 @@ async function run() {
             args = tl.getInput('args')
         }
 
+        var failOnStdErr : boolean = tl.getBoolInput('failOnStdErr');
+        remoteCmdOptions.failOnStdErr = failOnStdErr;
+
         //setup the SSH connection
         tl._writeLine(tl.loc('SettingUpSshConnection', sshConfig.username, sshConfig.host, sshConfig.port));
         try {
-            sshClientConnection = await setupSshClientConnection(sshConfig);
+            sshClientConnection = await sshHelper.setupSshClientConnection(sshConfig);
         } catch (err) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('ConnectionFailed', err));
         }
@@ -142,7 +79,8 @@ async function run() {
                 for (var i:number = 0; i < commands.length; i++) {
                     tl.debug('Running command ' + commands[i] + ' on remote machine.');
                     tl._writeLine(commands[i]);
-                    var returnCode:string = await runCommandOnRemoteMachine(sshClientConnection, commands[i]);
+                    var returnCode:string = await sshHelper.runCommandOnRemoteMachine(
+                        commands[i], sshClientConnection, remoteCmdOptions);
                     tl.debug('Command ' + commands[i] + ' completed with return code = ' + returnCode);
                 }
             } else if (runOptions === 'script') {
@@ -153,7 +91,7 @@ async function run() {
 
                 //copy script file to remote machine
                 tl.debug('Copying script to remote machine.');
-                await copyScriptToRemoteMachine(scriptFile, scpConfig);
+                await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
 
                 var remoteScriptPath = '"' + remoteScript + '"';
                 tl.debug('remoteScriptPath = ' + remoteScriptPath);
@@ -161,7 +99,8 @@ async function run() {
                 //set execute permissions on the script
                 tl.debug('Setting execute permisison on script copied to remote machine');
                 tl._writeLine('chmod +x ' + remoteScriptPath);
-                await runCommandOnRemoteMachine(sshClientConnection, 'chmod +x ' + remoteScriptPath);
+                await sshHelper.runCommandOnRemoteMachine(
+                    'chmod +x ' + remoteScriptPath, sshClientConnection, remoteCmdOptions);
 
                 //run remote script file with args on the remote machine
                 var runScriptCmd = remoteScriptPath;
@@ -173,7 +112,8 @@ async function run() {
                 cleanUpScriptCmd = 'rm -f ' + remoteScriptPath;
 
                 tl._writeLine(runScriptCmd);
-                await runCommandOnRemoteMachine(sshClientConnection, runScriptCmd);
+                await sshHelper.runCommandOnRemoteMachine(
+                    runScriptCmd, sshClientConnection, remoteCmdOptions);
             }
         }
 
@@ -184,7 +124,8 @@ async function run() {
         if(cleanUpScriptCmd) {
             try {
                 tl.debug('Deleting the script file copied to the remote machine.');
-                await runCommandOnRemoteMachine(sshClientConnection, cleanUpScriptCmd);
+                await sshHelper.runCommandOnRemoteMachine(
+                    cleanUpScriptCmd, sshClientConnection, remoteCmdOptions);
             } catch(err) {
                 tl.warning(tl.loc('RemoteScriptFileCleanUpFailed', err));
             }

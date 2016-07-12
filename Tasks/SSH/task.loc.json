@@ -17,6 +17,13 @@
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "sshEndpoint",
@@ -68,6 +75,15 @@
       "required": false,
       "visibleRule": "runOptions = script",
       "helpMarkDown": "ms-resource:loc.input.help.args"
+    },
+    {
+      "name": "failOnStdErr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStdErr",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStdErr",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -82,7 +98,7 @@
     "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
     "RemoteCopyFailed": "ms-resource:loc.messages.RemoteCopyFailed",
     "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
-    "RemoteCmdExecutionErrWithDetails": "ms-resource:loc.messages.RemoteCmdExecutionErrWithDetails",
+    "RemoteCmdNonZeroExitCode": "ms-resource:loc.messages.RemoteCmdNonZeroExitCode",
     "RemoteScriptFileCleanUpFailed": "ms-resource:loc.messages.RemoteScriptFileCleanUpFailed"
   }
 }

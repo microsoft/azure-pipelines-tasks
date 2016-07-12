@@ -18,6 +18,13 @@
     "demands": [
      ],
     "instanceNameFormat": "Run shell $(runOptions) on remote machine",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "sshEndpoint",
@@ -69,6 +76,15 @@
             "required": false,
             "visibleRule": "runOptions = script",
             "helpMarkDown": "Arguments to pass to the shell script."
+        },
+        {
+            "name": "failOnStdErr",
+            "type": "boolean",
+            "label": "Fail on STDERR",
+            "required": false,
+            "defaultValue": true,
+            "helpMarkDown": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
+            "groupName": "advanced"
         }
     ],
     "execution": {
@@ -83,7 +99,7 @@
         "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. Error: %s.",
         "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
         "RemoteCmdExecutionErr": "Command failed with errors on remote machine.",
-        "RemoteCmdExecutionErrWithDetails": "Command failed on remote machine. Error = %s.",
+        "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
         "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s."
     }
 }
