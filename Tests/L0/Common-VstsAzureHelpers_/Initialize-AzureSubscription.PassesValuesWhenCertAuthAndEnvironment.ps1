@@ -45,6 +45,9 @@ foreach ($variableSet in $variableSets) {
         $environmentName =  'AzureCloud'
     }
 	
+	# setting environment to endpoint
+	$endpoint.Data.Environment = $variableSet.Environment
+	
     # Assert.
     Assert-WasCalled Add-Certificate -- -Endpoint $endpoint
     if ($variableSet.StorageAccount) {
