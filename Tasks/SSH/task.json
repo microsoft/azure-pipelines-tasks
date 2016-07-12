@@ -2,7 +2,7 @@
     "id": "91443475-df55-4874-944b-39253b558790",
     "name": "SSH",
     "friendlyName": "SSH",
-    "description": "Run shell commands on a remote machine using SSH",
+    "description": "Run shell commands or a script on a remote machine using SSH",
     "helpMarkDown": "",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +17,7 @@
     },
     "demands": [
      ],
-    "instanceNameFormat": "Run remote shell commands",
+    "instanceNameFormat": "Run shell $(runOptions) on remote machine",
     "inputs": [
         {
             "name": "sshEndpoint",
@@ -46,7 +46,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "runOptions = commands",
-            "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line.",
+            "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line. To run multiple commands together, enter them on the same line separated by semi-colons (e.g. cd /home/user/myFolder;build).",
             "properties": {
                 "resizable": "true",
                 "rows": "10"

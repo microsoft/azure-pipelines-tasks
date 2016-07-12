@@ -28,7 +28,7 @@ function setupSshClientConnection(sshConfig: any) : Q.Promise<any> {
     client.on('ready', function () {
         defer.resolve(client);
     }).on('error', function (err) {
-        defer.reject(tl.loc('ConnectionFailed', err));
+        defer.reject(err);
     }).connect(sshConfig);
     return defer.promise;
 }
@@ -38,7 +38,14 @@ function runCommandOnRemoteMachine(sshClient: any, command: string) : Q.Promise<
     var stdErrWritten:boolean = false;
     var stdout: string = '';
 
-    sshClient.exec(command, function(err, stream) {
+    var cmdToRun = command;
+    if(cmdToRun.indexOf(';') > 0) {
+        //multiple commands were passed separated by ;
+        cmdToRun = cmdToRun.replace(/;/g, '\n');
+    }
+    tl.debug('cmdToRun = ' + cmdToRun);
+
+    sshClient.exec(cmdToRun, function(err, stream) {
         if(err) {
             defer.reject(tl.loc('RemoteCmdExecutionErr', err))
         }
