@@ -1,0 +1,7 @@
+{
+    "messages": {
+        "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
+        "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
+        "NGCommon_UnableToFindTool": "Unable to find tool %s"
+    }
+}

@@ -8,10 +8,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 34
+        "Minor": 2,
+        "Patch": 0
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.101.0",
     "groups": [
         {
             "name": "advanced",
@@ -34,7 +34,7 @@
             "type": "filePath",
             "label": "Path to NuGet.config",
             "defaultValue": "",
-            "helpMarkDown": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you have added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( https://go.microsoft.com/fwlink/?LinkID=733327).",
+            "helpMarkDown": "Equivalent to the -ConfigFile NuGet.exe command line argument",
             "required": "false"
         },
         {
@@ -66,6 +66,21 @@
             "helpMarkDown": "Additional arguments passed to NuGet.exe restore or install. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)."
         },
         {
+            "name": "verbosity",
+            "type": "pickList",
+            "label": "Verbosity",
+            "defaultValue": "",
+            "helpMarkDown": "NuGet's verbosity level",
+            "required": "false",
+            "groupName": "advanced",
+            "options": {
+                "": "-",
+                "Quiet": "Quiet",
+                "Normal": "Normal",
+                "Detailed": "Detailed"
+            }
+        },
+        {
             "name": "nuGetPath",
             "type": "string",
             "label": "Path to NuGet.exe",
@@ -73,20 +88,32 @@
             "required": false,
             "helpMarkDown": "Optionally supply the path to NuGet.exe",
             "groupName": "advanced"
+        },
+        {
+            "name": "preCredProviderNuGet",
+            "type": "boolean",
+            "label": "Path to NuGet.exe is below version 3.2",
+            "groupName": "advanced",
+            "defaultValue": "false",
+            "helpMarkDown": "If you are supplying a path to nuget.exe and it is older than NuGet 3.2, check this box and fill in a 'Path to NuGet.config' above. Has no effect if 'Path to NuGet.exe' is not specified.",
+            "required": "false"
         }
     ],
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\NuGetInstaller.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "",
-            "platforms": [
-                "windows"
-            ]
-        },
         "Node": {
             "target": "nugetinstaller.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "PackagesInstalledSuccessfully": "Packages were installed successfully",
+        "PackagesFailedToInstall": "Packages failed to install",
+        "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
+        "LegacyNuGetHint": "If %s is older than NuGet 3.2, you may need to edit the build definition and check the 'Path to NuGet.exe is below version 3.2' checkbox",
+        "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
+        "NoCredProviderOnAgent": "CredentialProvider.TeamBuild.exe not found on the agent. Falling back to config-based credential flow.",
+        "NotARegularFile": "%s is not a solution file. Check the 'path to solution or packages.config' property of the NuGetInstaller task."
     }
 }
