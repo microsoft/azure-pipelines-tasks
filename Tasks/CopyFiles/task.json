@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -46,7 +46,7 @@
             "label": "Target Folder",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Target folder files will copy to. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
+            "helpMarkDown": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
         },
         {
             "name": "CleanTargetFolder",
