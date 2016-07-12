@@ -235,6 +235,8 @@
     "WorkspaceDoesNotExist": "ms-resource:loc.messages.WorkspaceDoesNotExist",
     "UseXcToolForTestPublishing": "ms-resource:loc.messages.UseXcToolForTestPublishing",
     "NoTestResultsFound": "ms-resource:loc.messages.NoTestResultsFound",
-    "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess"
+    "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess",
+    "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
+    "ProvProfileDeleteFailed": "ms-resource:loc.messages.ProvProfileDeleteFailed"
   }
 }

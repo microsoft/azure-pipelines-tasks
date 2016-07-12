@@ -206,12 +206,22 @@ async function run() {
     } finally {
         //clean up the temporary keychain, so it is not used to search for code signing identity in future builds
         if(keychainToDelete) {
-            await sign.deleteKeychain(keychainToDelete);
+            try {
+                await sign.deleteKeychain(keychainToDelete);
+            } catch(err) {
+                tl.debug('Failed to delete temporary keychain. Error = ' + err);
+                tl.warning(tl.loc('TempKeychainDeleteFailed', keychainToDelete));
+            }
         }
 
         //delete provisioning profile if specified
         if(profileToDelete) {
-            await sign.deleteProvisioningProfile(profileToDelete);
+            try {
+                await sign.deleteProvisioningProfile(profileToDelete);
+            } catch(err) {
+                tl.debug('Failed to delete provisioning profile. Error = ' + err);
+                tl.warning(tl.loc('ProvProfileDeleteFailed', profileToDelete));
+            }
         }
     }
 }

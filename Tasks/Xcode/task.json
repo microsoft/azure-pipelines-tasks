@@ -235,6 +235,8 @@
         "WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
         "UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
         "NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-        "XcodeSuccess": "Xcode task execution completed with no errors."
+        "XcodeSuccess": "Xcode task execution completed with no errors.",
+        "TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
+        "ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
     }
 }

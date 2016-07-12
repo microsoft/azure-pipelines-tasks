@@ -185,11 +185,23 @@ function run() {
         finally {
             //clean up the temporary keychain, so it is not used to search for code signing identity in future builds
             if (keychainToDelete) {
-                yield sign.deleteKeychain(keychainToDelete);
+                try {
+                    yield sign.deleteKeychain(keychainToDelete);
+                }
+                catch (err) {
+                    tl.debug('Failed to delete temporary keychain. Error = ' + err);
+                    tl.warning(tl.loc('TempKeychainDeleteFailed', keychainToDelete));
+                }
             }
             //delete provisioning profile if specified
             if (profileToDelete) {
-                yield sign.deleteProvisioningProfile(profileToDelete);
+                try {
+                    yield sign.deleteProvisioningProfile(profileToDelete);
+                }
+                catch (err) {
+                    tl.debug('Failed to delete provisioning profile. Error = ' + err);
+                    tl.warning(tl.loc('ProvProfileDeleteFailed', profileToDelete));
+                }
             }
         }
     });
