@@ -213,9 +213,9 @@ function Upload-FilesToAzureContainer
     {
         Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
         
-		$storageAccount = Get-AzureStorageAccount -StorageAccountName $storageAccountName
-		$stoargeAccountEnpoints = $storageAccount.Endpoints
-		$blobStorageURI = $stoargeAccountEnpoints[0]+$containerName+"/"+$blobPrefix
+        $storageAccount = Get-AzureStorageAccount -StorageAccountName $storageAccountName
+        $stoargeAccountEnpoints = $storageAccount.Endpoints
+        $blobStorageURI = $stoargeAccountEnpoints[0]+$containerName+"/"+$blobPrefix
 		
         if([string]::IsNullOrWhiteSpace($additionalArguments))
         {

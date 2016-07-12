@@ -57,15 +57,14 @@ function Initialize-AzureSubscription {
             $additional['CurrentStorageAccountName'] = $StorageAccount
         }
 
-        $EnvironmentName = "AzureCloud"
-        if( $Endpoint.Data.Environment )
-        {
-            $EnvironmentName = $Endpoint.Data.Environment
+        $environmentName = "AzureCloud"
+        if( $Endpoint.Data.Environment ) {
+            $environmentName = $Endpoint.Data.Environment
         }
 
         # Set the subscription.
-        Write-Host "##[command]Set-AzureSubscription -SubscriptionName $($Endpoint.Data.SubscriptionName) -SubscriptionId $($Endpoint.Data.SubscriptionId) -Certificate ******** -Environment AzureCloud $(Format-Splat $additional)"
-        Set-AzureSubscription -SubscriptionName $Endpoint.Data.SubscriptionName -SubscriptionId $Endpoint.Data.SubscriptionId -Certificate $certificate -Environment $EnvironmentName @additional
+        Write-Host "##[command]Set-AzureSubscription -SubscriptionName $($Endpoint.Data.SubscriptionName) -SubscriptionId $($Endpoint.Data.SubscriptionId) -Certificate ******** -Environment $environmentName $(Format-Splat $additional)"
+        Set-AzureSubscription -SubscriptionName $Endpoint.Data.SubscriptionName -SubscriptionId $Endpoint.Data.SubscriptionId -Certificate $certificate -Environment $environmentName @additional
         Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
     } elseif ($Endpoint.Auth.Scheme -eq 'UserNamePassword') {
         $psCredential = New-Object System.Management.Automation.PSCredential(
