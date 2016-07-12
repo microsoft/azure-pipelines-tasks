@@ -248,6 +248,26 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   string
 	 */
 	export function getEndpointUrl(id: string, optional: boolean): string;
+	export function getEndpointDataParameter(id: string, key: string, optional: boolean): string;
+	/**
+	 * Gets the endpoint authorization scheme for a service endpoint
+	 * If the endpoint authorization scheme is not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param optional whether the endpoint authorization scheme is optional
+	 * @returns {string} value of the endpoint authorization scheme
+	 */
+	export function getEndpointAuthorizationScheme(id: string, optional: boolean): string;
+	/**
+	 * Gets the endpoint authorization parameter value for a service endpoint with specified key
+	 * If the endpoint authorization parameter is not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param key key to find the endpoint authorization parameter
+	 * @param optional optional whether the endpoint authorization scheme is optional
+	 * @returns {string} value of the endpoint authorization parameter value
+	 */
+	export function getEndpointAuthorizationParameter(id: string, key: string, optional: boolean): string;
 	/**
 	 * Interface for EndpointAuthorization
 	 * Contains a schema and a string/string dictionary of auth data
@@ -292,6 +312,20 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   boolean
 	 */
 	export function exist(path: string): boolean;
+	/**
+	 * Useful for determining the host operating system.
+	 * see [os.type](https://nodejs.org/api/os.html#os_os_type)
+	 *
+	 * @return      the name of the operating system
+	 */
+	export function osType(): string;
+	/**
+	 * Returns the process's current working directory.
+	 * see [process.cwd](https://nodejs.org/api/process.html#process_process_cwd)
+	 *
+	 * @return      the path to the current working directory of the process
+	 */
+	export function cwd(): string;
 	/**
 	 * Checks whether a path exists.
 	 * If the path does not exist, the task will fail with an error message. Execution will halt.
@@ -338,6 +372,13 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   string
 	 */
 	export function which(tool: string, check?: boolean): string;
+	/**
+	 * Returns array of files in the given path, or in current directory if no path provided.  See shelljs.ls
+	 * @param  {string}   options  Available options: -R (recursive), -A (all files, include files beginning with ., except for . and ..)
+	 * @param  {string[]} paths    Paths to search.
+	 * @return {string[]}          An array of files in the given path(s).
+	 */
+	export function ls(options: string, paths: string[]): string[];
 	/**
 	 * Returns path of a tool had the tool actually been invoked.  Resolves via paths.
 	 * If you check and the tool does not exist, the task will fail with an error message and halt execution.

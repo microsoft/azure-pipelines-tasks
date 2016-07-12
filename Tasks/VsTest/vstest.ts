@@ -8,6 +8,7 @@ var regedit = require('regedit');
 var uuid = require('node-uuid');
 var fs = require('fs');
 var xml2js = require('xml2js');
+var perf = require("performance-now")
 
 const runSettingsExt = ".runsettings";
 const testSettingsExt = ".testsettings";
@@ -20,7 +21,6 @@ const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTe
 
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-
     var vsTestVersion: string = tl.getInput('vsTestVersion');
     var testAssembly: string = tl.getInput('testAssembly', true);
     var testFiltercriteria: string = tl.getInput('testFiltercriteria');
@@ -35,7 +35,6 @@ try {
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     var tiaEnabled = tl.getVariable('tia.enabled');
-    var tiaSelectorTool = tl.getVariable('tia.selectortool');
 
     tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
 
@@ -164,26 +163,65 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
     return defer.promise;
 }
 
+function getTestSelectorLocation() : string {
+    return path.join(__dirname, "TestSelector/TestSelector.exe");
+}
 
 function generateResponseFile(): Q.Promise<string> {
+    var startTime = perf();
+    var endTime : number;
+    var elapsedTime : number;
     var defer = Q.defer<string>();
     var tempFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     tl.debug("Response file will be generated at " + tempFile);
-    var selectortool = tl.createToolRunner(tiaSelectorTool);
+    var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("GetImpactedtests");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-    selectortool.arg("/token:" + tl.getVariable("System.AccessToken"));
+    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/responsefile:" + tempFile);
     selectortool.exec()
         .then(function (code) {
+            endTime = perf();
+            elapsedTime = endTime - startTime;
+            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=GenerateResponseFile;SubTaskDuration=" + elapsedTime + "]");    
+            tl.debug(tl.loc("GenerateResponseFilePerfTime", elapsedTime));
             defer.resolve(tempFile);
         })
         .fail(function (err) {
             defer.reject(err);
         });
 
+    return defer.promise;
+}
+
+function publishCodeChanges(): Q.Promise<string> {
+    var startTime = perf();
+    var endTime : number;
+    var elapsedTime: number;
+    var defer = Q.defer<string>();
+    var selectortool = tl.createToolRunner(getTestSelectorLocation());
+    selectortool.arg("PublishCodeChanges");
+    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
+    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
+    selectortool.arg("/newdropPath:" + tl.getVariable("Build.SourcesDirectory"));
+    selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
+    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
+
+    selectortool.exec()
+        .then(function(code) {
+            endTime = perf();
+            elapsedTime = endTime - startTime;
+            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=PublishCodeChanges;SubTaskDuration=" + elapsedTime + "]");            
+            tl.debug(tl.loc("PublishCodeChangesPerfTime", elapsedTime));
+            defer.resolve(String(code));
+        })        
+        .fail(function (err) {            
+            defer.reject(err);
+        });
+    
     return defer.promise;
 }
 
@@ -219,12 +257,43 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
     var defer = Q.defer<number>();
     if (isTiaAllowed()) {
-        generateResponseFile()
-            .then(function (responseFile) {
-                if (isNonEmptyResponseFile(responseFile)) {
-                    updateResponseFile(getVstestArguments(settingsFile), responseFile)
-                        .then(function (updatedFile) {
-                            executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+        publishCodeChanges()
+            .then(function(status) {
+                generateResponseFile()
+                    .then(function (responseFile) {
+                        if (isNonEmptyResponseFile(responseFile)) {
+                            updateResponseFile(getVstestArguments(settingsFile), responseFile)
+                                .then(function (updatedFile) {
+                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+                                        .then(function (code) {
+                                            defer.resolve(code);
+                                        })
+                                        .fail(function (code) {
+                                            defer.resolve(code);
+                                        })
+                                        .finally(function () {
+                                            tl.debug("Deleting the response file " + responseFile)
+                                            tl.rmRF(responseFile, true);
+                                        });
+                                })
+                                .fail(function (err) {
+                                    tl.error(err);
+                                    tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                                        .then(function (code) {
+                                            defer.resolve(code);
+                                        })
+                                        .fail(function (code) {
+                                            defer.resolve(code);
+                                        }).finally(function () {
+                                            tl.debug("Deleting the response file " + responseFile)
+                                            tl.rmRF(responseFile, true);
+                                        });
+                                });
+                        }
+                        else {
+                            tl.debug("Empty response file detected. All tests will be executed.");
+                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
                                 .then(function (code) {
                                     defer.resolve(code);
                                 })
@@ -235,40 +304,23 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     tl.debug("Deleting the response file " + responseFile)
                                     tl.rmRF(responseFile, true);
                                 });
-                        })
-                        .fail(function (err) {
-                            tl.error(err);
-                            tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
-                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
-                                .then(function (code) {
-                                    defer.resolve(code);
-                                })
-                                .fail(function (code) {
-                                    defer.resolve(code);
-                                }).finally(function () {
-                                    tl.debug("Deleting the response file " + responseFile)
-                                    tl.rmRF(responseFile, true);
-                                });
-                        });
-                }
-                else {
-                    tl.debug("Empty response file detected. All tests will be executed.");
-                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
-                        .then(function (code) {
-                            defer.resolve(code);
-                        })
-                        .fail(function (code) {
-                            defer.resolve(code);
-                        })
-                        .finally(function () {
-                            tl.debug("Deleting the response file " + responseFile)
-                            tl.rmRF(responseFile, true);
-                        });
-                }
+                        }
+                    })
+                    .fail(function (err) {
+                        tl.error(err);
+                        tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
+                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                            .then(function (code) {
+                                defer.resolve(code);
+                            })
+                            .fail(function (code) {
+                                defer.resolve(code);
+                            });
+                    });
             })
-            .fail(function (err) {
+            .fail(function (err){
                 tl.error(err);
-                tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
+                tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
                     .then(function (code) {
                         defer.resolve(code);
@@ -953,7 +1005,7 @@ function isNonEmptyResponseFile(responseFile: string): boolean {
 }
 
 function isTiaAllowed(): boolean {
-    if (tiaEnabled && tiaEnabled.toUpperCase() == "TRUE" && tiaSelectorTool) {
+    if (tiaEnabled && tiaEnabled.toUpperCase() == "TRUE" && getTestSelectorLocation()) {
         return true;
     }
     return false;

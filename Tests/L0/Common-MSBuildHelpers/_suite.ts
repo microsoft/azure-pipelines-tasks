@@ -37,6 +37,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Format-MSBuildArguments) adds configuration property', (done) => {
             psr.run(path.join(__dirname, 'Format-MSBuildArguments.AddsConfigurationProperty.ps1'), done);
         })
+        it('(Format-MSBuildArguments) adds maximum CPU count', (done) => {
+            psr.run(path.join(__dirname, 'Format-MSBuildArguments.AddsMaximumCpuCount.ps1'), done);
+        })
         it('(Format-MSBuildArguments) adds platform property', (done) => {
             psr.run(path.join(__dirname, 'Format-MSBuildArguments.AddsPlatformProperty.ps1'), done);
         })

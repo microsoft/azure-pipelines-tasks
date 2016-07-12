@@ -11,6 +11,7 @@ try {
     [string]$platform = Get-VstsInput -Name Platform
     [string]$configuration = Get-VstsInput -Name Configuration
     [bool]$clean = Get-VstsInput -Name Clean -AsBool
+    [bool]$maximumCpuCount = Get-VstsInput -Name MaximumCpuCount -AsBool
     [bool]$restoreNugetPackages = Get-VstsInput -Name RestoreNugetPackages -AsBool
     [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
     [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
@@ -36,7 +37,7 @@ try {
     $solutionFiles = Get-SolutionFiles -Solution $Solution
     $VSVersion = Select-VSVersion -PreferredVersion $VSVersion
     $MSBuildLocation = Select-MSBuildLocation -VSVersion $VSVersion -Architecture $MSBuildArchitecture
-    $MSBuildArgs = Format-MSBuildArguments -MSBuildArguments $MSBuildArgs -Platform $Platform -Configuration $Configuration -VSVersion $VSVersion
+    $MSBuildArgs = Format-MSBuildArguments -MSBuildArguments $MSBuildArgs -Platform $Platform -Configuration $Configuration -VSVersion $VSVersion -MaximumCpuCount:$maximumCpuCount
     $global:ErrorActionPreference = 'Continue'
     Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile
 } finally {

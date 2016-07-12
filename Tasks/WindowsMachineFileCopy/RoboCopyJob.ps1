@@ -75,7 +75,19 @@ param (
             ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList "credential")
         }   
     }
-    
+
+    function Get-DownLevelLogonName(
+        [string]$fqdn,
+        [string]$userName
+        )
+    {
+        if($userName  -like '.\*') {
+            $userName = $userName.replace(".\","\")
+            $userName = $fqdn+$userName
+        }
+        return $userName
+    }
+
     function Replace-First(
         [string]$text,
         [string]$search, 
@@ -153,7 +165,7 @@ param (
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
     
     Validate-Credential $credential
-    $userName = $($credential.UserName)
+    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
     $password = $($credential.Password) 
 
     if($machineShare)

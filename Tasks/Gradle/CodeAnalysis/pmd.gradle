@@ -1,0 +1,26 @@
+rootProject {
+    afterEvaluate {project ->
+        def hasPmd = false;
+
+        allprojects.forEach{ p ->
+
+            if (p.plugins.hasPlugin('pmd')) {
+                hasPmd = true;
+                println('$p is already configured to run PMD. Skipping auto configuration ');
+            }
+        }
+
+        if (!hasPmd) {
+            println('Applying the PMD plugin to all projects');
+            allprojects.forEach{p->
+                p.apply plugin: 'pmd'
+            }
+            allprojects { p->
+                pmd {
+                    ignoreFailures = true;
+                    reportsDir = file("$p.buildDir/reports/pmd")
+                }
+            }
+        }
+    }
+}

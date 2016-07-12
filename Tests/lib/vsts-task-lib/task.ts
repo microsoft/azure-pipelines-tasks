@@ -412,6 +412,14 @@ export function exist(path: string): boolean {
     return mock.getResponse('exist', path) || false;
 }
 
+export function osType(): string {
+    return mock.getResponse('osType', 'osType');
+}
+
+export function cwd(): string {
+    return mock.getResponse('cwd', 'cwd');
+}
+
 //-----------------------------------------------------
 // Cmd Helpers
 //-----------------------------------------------------
@@ -479,6 +487,14 @@ export function which(tool: string, check?: boolean): string {
     var response = mock.getResponse('which', tool);
     if (check) {
         checkPath(response, tool);
+    }
+    return response;
+}
+
+export function ls(options: string, paths: string[]): string[] {
+    var response = mock.getResponse('ls', paths[0]);
+    if(!response){
+        return [];
     }
     return response;
 }

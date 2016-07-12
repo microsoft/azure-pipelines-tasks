@@ -4,7 +4,8 @@ function Format-MSBuildArguments {
         [string]$MSBuildArguments,
         [string]$Platform,
         [string]$Configuration,
-        [string]$VSVersion)
+        [string]$VSVersion,
+        [switch]$MaximumCpuCount)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -20,11 +21,15 @@ function Format-MSBuildArguments {
             $MSBuildArguments = "$MSBuildArguments /p:VisualStudioVersion=`"$VSVersion`""
         }
 
-        $userAgent = Get-UserAgentString
-        if (!([string]::IsNullOrEmpty($userAgent))) {
-            $MSBuildArguments = "$MSBuildArguments /p:_MSDeployUserAgent=`"$userAgent`""
+        if ($MaximumCpuCount) {
+            $MSBuildArguments = "$MSBuildArguments /m"
         }
         
+        $userAgent = Get-UserAgentString
+        if ($userAgent) {
+            $MSBuildArguments = "$MSBuildArguments /p:_MSDeployUserAgent=`"$userAgent`""
+        }
+
         $MSBuildArguments
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

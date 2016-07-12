@@ -773,7 +773,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     {
         $session = CreateNewSession -MachineCredential $MachineCredential
         # Make sure DTA Agent Execution Service starts first before invoking DTA Execution Host
-        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out { Start-Service -Name "DTAAgentExecutionService" }
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out { Restart-Service -Name "DTAAgentExecutionService" }
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
         
