@@ -81,3 +81,11 @@ Recommended:
 
 Other supported versions:
 [Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015) 
+
+|  VSTS/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |
+|:------------------:|:---------------------------:|:-------------------------:|
+|  VSTS              |  [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 3  | [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 2  | [v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 1  | [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
+|  TFS 2015 RTM       | [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
