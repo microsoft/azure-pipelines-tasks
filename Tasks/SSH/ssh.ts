@@ -84,17 +84,16 @@ async function run() {
                     tl.debug('Command ' + commands[i] + ' completed with return code = ' + returnCode);
                 }
             } else if (runOptions === 'script') {
-                //run the script specified by the user
-                var scpConfig = sshConfig;
-                var remoteScript = '/home/' + sshConfig.username + '/' + path.basename(scriptFile);
-                scpConfig.path = remoteScript;
-
-                //copy script file to remote machine
-                tl.debug('Copying script to remote machine.');
-                await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
-
+                //setup script path on remote machine relative to user's $HOME directory
+                var remoteScript = './' + path.basename(scriptFile);
                 var remoteScriptPath = '"' + remoteScript + '"';
                 tl.debug('remoteScriptPath = ' + remoteScriptPath);
+
+                //copy script file to remote machine
+                var scpConfig = sshConfig;
+                scpConfig.path = remoteScript;
+                tl.debug('Copying script to remote machine.');
+                await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
 
                 //set execute permissions on the script
                 tl.debug('Setting execute permisison on script copied to remote machine');
