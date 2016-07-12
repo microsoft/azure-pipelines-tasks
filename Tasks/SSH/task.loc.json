@@ -34,7 +34,7 @@
       "defaultValue": "commands",
       "options": {
         "commands": "Commands",
-        "script": "Script"
+        "script": "Shell script"
       },
       "helpMarkDown": "ms-resource:loc.input.help.runOptions"
     },
@@ -77,7 +77,12 @@
     }
   },
   "messages": {
+    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
+    "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
     "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
-    "RemoteCopyFailed": "ms-resource:loc.messages.RemoteCopyFailed"
+    "RemoteCopyFailed": "ms-resource:loc.messages.RemoteCopyFailed",
+    "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
+    "RemoteCmdExecutionErrWithDetails": "ms-resource:loc.messages.RemoteCmdExecutionErrWithDetails",
+    "RemoteScriptFileCleanUpFailed": "ms-resource:loc.messages.RemoteScriptFileCleanUpFailed"
   }
 }

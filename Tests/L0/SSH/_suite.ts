@@ -51,8 +51,8 @@ describe('SSH Suite', function() {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stderr.indexOf('ConnectionFailed') >= 0, 'wrong error message: "' + tr.stderr + '"');
-                assert(tr.stderr.indexOf('Cannot parse privateKey: Unsupported key format') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                assert(tr.stderr.indexOf('Failed to connect to remote machine. Verify the SSH endpoint details. Error:') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                assert(tr.stderr.indexOf('Error: Cannot parse privateKey: Unsupported key format') >= 0, 'wrong error message: "' + tr.stderr + '"');
                 done();
             })
             .fail((err) => {
@@ -139,7 +139,7 @@ describe('SSH Suite', function() {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stderr.indexOf('ConnectionFailed') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                assert(tr.stderr.indexOf('Failed to connect to remote machine. Verify the SSH endpoint details.') >= 0, 'wrong error message: "' + tr.stderr + '"');
                 done();
             })
             .fail((err) => {
