@@ -7,6 +7,7 @@ Import-VstsLocStrings "$PSScriptRoot\module.json"
 Export-ModuleMember -Function @(
     # Argument functions.
     'Format-MSBuildArguments'
+    'Get-UserAgentString'
     # Invoke functions.
     'Invoke-BuildTools'
     # Path functions.
