@@ -99,7 +99,7 @@ async function run() {
             var provProfilePath : string = tl.getPathInput('provProfile', false);
             var removeProfile : boolean = tl.getBoolInput('removeProfile', false);
 
-            if(tl.filePathSupplied('p12')) {
+            if(tl.filePathSupplied('p12') && tl.exist(p12)) {
                 p12 = path.posix.resolve(workingDir, p12);
                 var keychain : string = path.join(workingDir, '_xcodetasktmp.keychain');
                 var keychainPwd : string = '_xcodetask_TmpKeychain_Pwd#1';
@@ -114,11 +114,12 @@ async function run() {
                 xcb.arg('CODE_SIGN_IDENTITY=' + signIdentity);
 
                 //determine the provisioning profile UUID
-                var provProfileUUID = await sign.getProvisioningProfileUUID(provProfilePath);
-                xcb.arg('PROVISIONING_PROFILE=' + provProfileUUID);
-
-                if(removeProfile) {
-                    profileToDelete = provProfileUUID;
+                if(tl.filePathSupplied(provProfilePath) && tl.exist(provProfilePath)) {
+                    var provProfileUUID = await sign.getProvisioningProfileUUID(provProfilePath);
+                    xcb.arg('PROVISIONING_PROFILE=' + provProfileUUID);
+                    if(removeProfile) {
+                        profileToDelete = provProfileUUID;
+                    }
                 }
             }
 
