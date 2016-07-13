@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "Exécuter un script PowerShell",
   "loc.instanceNameFormat": "PowerShell Script",
   "loc.group.displayName.advanced": "Avancé",
@@ -13,6 +13,6 @@
   "loc.input.label.workingFolder": "Dossier de travail",
   "loc.input.help.workingFolder": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script.",
   "loc.input.label.inlineScript": "Inline Script",
-  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
   "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure. This feature requires an agent version 1.102 or higher, to enable not failing on STDERR."
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "使用 MSBuild 生成",
   "loc.instanceNameFormat": "生成解决方案 $(solution)",
   "loc.group.displayName.advanced": "高级",
@@ -12,6 +12,8 @@
   "loc.input.help.msbuildArguments": "Additional arguments passed to MSBuild (on Windows) and xbuild (on Mac).",
   "loc.input.label.clean": "清理",
   "loc.input.help.clean": "在生成前运行清理生成(/t:clean)。",
+  "loc.input.label.maximumCpuCount": "Maximum CPU Count",
+  "loc.input.help.maximumCpuCount": "If you're MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If you're target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "还原 NuGet 包",
   "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.logProjectEvents": "记录项目详情",

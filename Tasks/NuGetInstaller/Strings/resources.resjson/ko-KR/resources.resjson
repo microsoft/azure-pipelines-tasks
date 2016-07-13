@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 설치 관리자",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613747)",
   "loc.description": "Installs or restores missing NuGet packages",
   "loc.instanceNameFormat": "NuGet $(restoreMode) $(solution)",
   "loc.group.displayName.advanced": "고급",

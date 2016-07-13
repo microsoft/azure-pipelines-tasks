@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "cURL 上载文件",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "Use cURL to upload files with FTP, FTPS, SFTP, HTTP, and more.",
   "loc.instanceNameFormat": "使用 cURL 上载 $(files)",
   "loc.group.displayName.advanced": "高级",

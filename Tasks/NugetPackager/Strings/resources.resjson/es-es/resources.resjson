@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet Packager",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=627416)",
   "loc.description": "Crea salidas nupkg a partir de archivos csproj o nuspec",
   "loc.instanceNameFormat": "NuGet Packager $(solution)",
   "loc.group.displayName.versioning": "Versioning",

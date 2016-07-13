@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet-Herausgeber",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627417)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=627417)",
   "loc.description": "Lädt NUPKG-Dateien auf einen NuGet-Server hoch.",
   "loc.instanceNameFormat": "NuGet-Herausgeber $(solution)",
   "loc.group.displayName.advanced": "Erweitert",

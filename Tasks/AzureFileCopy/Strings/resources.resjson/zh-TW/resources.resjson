@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Azure 檔案複製",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "將檔案複製到 Azure Blob 或 VM",
   "loc.instanceNameFormat": "$(Destination) 檔案複製",
-  "loc.group.displayName.output": "Output",
+  "loc.group.displayName.output": "輸出",
   "loc.input.label.SourcePath": "來源",
   "loc.input.help.SourcePath": "來源資料夾的絕對路徑、本機電腦上的檔案，或通用命名慣例 (UNC) 共用。運算式應傳回單一資料夾或檔案。",
   "loc.input.label.ConnectedServiceNameSelector": "Azure 連接類型",

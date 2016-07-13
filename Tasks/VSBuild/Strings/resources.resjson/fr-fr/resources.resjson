@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Build Visual Studio",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Générer avec MSBuild et définir la propriété de version Visual Studio",
   "loc.instanceNameFormat": "Générer la solution $(solution)",
   "loc.group.displayName.advanced": "Avancé",
@@ -11,6 +11,8 @@
   "loc.input.label.platform": "Plateforme",
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.clean": "Nettoyer",
+  "loc.input.label.maximumCpuCount": "Maximum CPU Count",
+  "loc.input.help.maximumCpuCount": "If you're MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If you're target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "Restaurer des packages NuGet",
   "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.vsVersion": "Version de Visual Studio",

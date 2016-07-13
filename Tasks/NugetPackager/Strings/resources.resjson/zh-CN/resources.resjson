@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 包装程序",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=627416)",
   "loc.description": "从 csproj 或 nuspec 文件创建 nupkg 输出",
   "loc.instanceNameFormat": "NuGet 包装程序 $(solution)",
   "loc.group.displayName.versioning": "Versioning",

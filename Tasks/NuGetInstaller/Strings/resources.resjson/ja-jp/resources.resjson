@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet インストーラー",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613747)",
   "loc.description": "Installs or restores missing NuGet packages",
   "loc.instanceNameFormat": "NuGet $(restoreMode) $(solution)",
   "loc.group.displayName.advanced": "詳細設定",

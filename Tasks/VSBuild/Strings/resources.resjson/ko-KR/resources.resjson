@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 빌드",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "MSBuild로 빌드하고 Visual Studio 버전 속성 설정",
   "loc.instanceNameFormat": "솔루션 $(solution) 빌드",
   "loc.group.displayName.advanced": "고급",
@@ -11,6 +11,8 @@
   "loc.input.label.platform": "플랫폼",
   "loc.input.label.configuration": "구성",
   "loc.input.label.clean": "클린",
+  "loc.input.label.maximumCpuCount": "Maximum CPU Count",
+  "loc.input.help.maximumCpuCount": "If you're MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If you're target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "NuGet 패키지 복원",
   "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.vsVersion": "Visual Studio 버전",

@@ -20,7 +20,7 @@
   "loc.input.label.location": "位置",
   "loc.input.help.location": "資源群組的部署位置。若訂用帳戶中已有該資源，將會忽略此值。",
   "loc.input.label.csmFile": "範本",
-  "loc.input.help.csmFile": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
+  "loc.input.help.csmFile": "請指定 Azure Resource Manager 範本的路徑。如需範本的詳細資訊，請參閱 https://aka.ms/azuretemplates。若要立即啟動，請使用範本 https://aka.ms/sampletemplate。",
   "loc.input.label.csmParametersFile": "範本參數",
   "loc.input.help.csmParametersFile": "指定 Azure Resource Manager 範本之參數檔案的路徑。",
   "loc.input.label.overrideParameters": "覆寫範本參數",
@@ -28,7 +28,7 @@
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "啟用部署必要條件",
   "loc.input.help.enableDeploymentPrerequisitesForCreate": "啟用此選項即可使用自我簽署憑證，透過連接埠 5986 上的 HTTPS 通訊協定來設定 Windows 遠端管理 (WinRM) 接聽程式。必須要有此設定，才能在 Azure 機器上執行部署作業。若目標虛擬機器受 Load Balancer 支援，請確認已設定目標連接埠 (5986) 的輸入 NAT 規則。",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "啟用部署必要條件",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "啟用此選項即可使用自我簽署憑證，透過連接埠 5986 上的 HTTPS 通訊協定來設定 Windows 遠端管理 (WinRM) 接聽程式。必須要有此設定，才能在 Azure 機器上執行部署作業。若目標虛擬機器受 Load Balancer 支援，請確認已設定目標連接埠 (5986) 的輸入 NAT 規則。",
   "loc.input.label.outputVariable": "資源群組",
   "loc.input.help.outputVariable": "提供資源群組之變數的名稱。您可以 $(variableName) 形式使用變數，以參考後續工作中的資源群組，例如在 PowerShell 中部署應用程式時，參考目標電腦工作。<br>僅當選取「建立」、「更新」或「選取」動作時，此選項才有效，而此選項在選取現有的資源群組時為必要選項。"
 }

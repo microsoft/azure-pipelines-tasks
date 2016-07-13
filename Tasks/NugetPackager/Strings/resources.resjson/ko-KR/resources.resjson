@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 패키지 작성 도구",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=627416)",
   "loc.description": "csproj 또는 nuspec 파일에서 nupkg 출력을 만듭니다.",
   "loc.instanceNameFormat": "NuGet 패키지 작성 도구 $(solution)",
   "loc.group.displayName.versioning": "Versioning",

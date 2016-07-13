@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "소스 인덱싱 및 기호 게시 ",
-  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "소스 코드를 인덱싱하고 파일 공유에 기호 게시<br/>[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "소스 코드를 인덱싱하고 파일 공유에 기호 게시",
   "loc.instanceNameFormat": "기호 경로 게시: $(SymbolsPath)",
   "loc.group.displayName.advanced": "고급",
@@ -25,6 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "세마포 파일 '{0}'을(를) 정리했습니다.",
   "loc.messages.CleanUpSemaphoreFile0Error1": "기존 세마포 파일 '{0}'을(를) 정리할 수 없습니다. {1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "세마포 파일 '{1}'에 액세스하는 동안 오류 '{0}'이(가) 발생했습니다. {2:N0}초 후에 다시 시도합니다.",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
   "loc.messages.Found0Files": "{0:N0}개 파일을 찾았습니다.",
   "loc.messages.FreeLibraryDbghelpDllError0": "무료 라이브러리 dbghelp.dll이 실패했습니다. 오류 코드: '{0}'.",
   "loc.messages.NoFilesForIndexing": "인덱싱할 파일을 선택하지 않았습니다.",

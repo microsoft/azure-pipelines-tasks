@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent の配置",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
+  "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "一連のコンピューターでテストを実行するためにテスト エージェントを展開および構成する",
   "loc.instanceNameFormat": "TestAgent を $(testMachineGroup) に展開",
   "loc.group.displayName.testMachineGroups": "テスト コンピューター グループ",
@@ -26,7 +26,7 @@
   "loc.input.label.runAsProcess": "対話型プロセス",
   "loc.input.help.runAsProcess": "テスト エージェントが対話型プロセスとして実行する必要があるかどうかを表します。コード化された UI テストに必要です。",
   "loc.input.label.agentLocation": "テスト エージェントの場所",
-  "loc.input.help.agentLocation": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`",
+  "loc.input.help.agentLocation": "オプションで、ネットワークまたはローカルの場所から vstf_testagent.exe へのパスを指定します。パスを指定しないと、'https://go.microsoft.com/fwlink/?LinkId=536423' からダウンロードされます",
   "loc.input.label.updateTestAgent": "テスト エージェントの更新",
   "loc.input.help.updateTestAgent": "(省略可能) テスト エージェントを更新する必要があるかどうかを指定します。",
   "loc.input.label.isDataCollectionOnly": "データの収集のみを有効にする",

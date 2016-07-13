@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xcode パッケージ iOS",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613731)",
   "loc.description": "Xcode ビルド出力から .ipa ファイルを生成します",
   "loc.instanceNameFormat": "Xcode パッケージ $(appName)",
   "loc.group.displayName.advanced": "詳細設定",

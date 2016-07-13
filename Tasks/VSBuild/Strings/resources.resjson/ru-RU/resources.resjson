@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Сборка Visual Studio",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Сборка с помощью MSBuild и задание свойства версии Visual Studio",
   "loc.instanceNameFormat": "Сборка решения $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -11,6 +11,8 @@
   "loc.input.label.platform": "Платформа",
   "loc.input.label.configuration": "Конфигурация",
   "loc.input.label.clean": "Очистить",
+  "loc.input.label.maximumCpuCount": "Maximum CPU Count",
+  "loc.input.help.maximumCpuCount": "If you're MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If you're target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "Восстановить пакеты NuGet",
   "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.vsVersion": "Версия Visual Studio",

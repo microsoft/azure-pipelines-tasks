@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione database SQL di Azure",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Consente di distribuire il database SQL di Azure con DACPAC",
   "loc.instanceNameFormat": "Distribuisci DACPAC SQL di Azure: $(DacpacFile)",
   "loc.group.displayName.target": "Destinazione",
@@ -19,7 +19,7 @@
   "loc.input.label.SqlUsername": "Account di accesso amministratore server",
   "loc.input.help.SqlUsername": "Consente di specificare l'account di accesso dell'amministratore del server SQL Azure.",
   "loc.input.label.SqlPassword": "Password",
-  "loc.input.help.SqlPassword": "Password dell'amministratore del server SQL Azure.",
+  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark variable type as 'secret' to secure it.",
   "loc.input.label.PublishProfile": "Profilo di pubblicazione",
   "loc.input.help.PublishProfile": "Il profilo di pubblicazione consente di disporre di un controllo più specifico sulla creazione o sugli aggiornamenti del database SQL di Azure. Specificare il percorso del file XML del profilo di pubblicazione nell'agente di automazione o in una condivisione UNC. È anche possibile usare qui le variabili di sistema predefinite, ad esempio $(agent.buildDirectory) o $(agent.releaseDirectory).",
   "loc.input.label.AdditionalArguments": "Argomenti aggiuntivi di SqlPackage.exe",

@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Azure Web 应用部署",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "使用 Web 部署将 Visual Studio Web 项目发布到 Microsoft Azure Web 应用",
   "loc.instanceNameFormat": "Azure 部署: $(WebSiteName)",
-  "loc.input.label.ConnectedServiceName": "Azure 订阅",
-  "loc.input.help.ConnectedServiceName": "要作为部署目标的 Azure 订阅。",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
+  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
   "loc.input.label.WebSiteLocation": "Web 应用位置",
   "loc.input.help.WebSiteLocation": "Select a location for website.",
   "loc.input.label.WebSiteName": "Web 应用名称",

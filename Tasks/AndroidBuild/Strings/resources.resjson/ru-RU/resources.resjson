@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android Build (deprecated; use Gradle)",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Сборка приложения Android с помощью Gradle и при необходимости запуск эмулятора для модульных тестов",
   "loc.instanceNameFormat": "Сборка Android $(gradleProj)",
   "loc.group.displayName.avdOptions": "Параметры виртуального устройства Android (AVD)",
@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "Целевой пакет SDK AVD",
   "loc.input.help.emulatorTarget": "Целевой идентификатор нового виртуального устройства Android (AVD).",
   "loc.input.label.emulatorDevice": "Устройство AVD",
-  "loc.input.help.emulatorDevice": "Дополнительное определение устройства. Это может быть индекс или идентификатор устройства.",
+  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "ABI, используемый для виртуального устройства Android (AVD).",
   "loc.input.label.avdForce": "Перезаписать существующее устройство AVD",

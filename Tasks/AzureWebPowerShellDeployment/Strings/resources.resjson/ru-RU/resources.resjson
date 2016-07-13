@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Развертывание веб-приложения Azure",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Публикация веб-проекта Visual Studio в веб-приложении Microsoft Azure с помощью веб-развертывания",
   "loc.instanceNameFormat": "Развертывание Azure: $(WebSiteName)",
-  "loc.input.label.ConnectedServiceName": "Подписка Azure",
-  "loc.input.help.ConnectedServiceName": "Целевая подписка Azure для развертывания.",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
+  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
   "loc.input.label.WebSiteLocation": "Расположение веб-приложения",
   "loc.input.help.WebSiteLocation": "Select a location for website.",
   "loc.input.label.WebSiteName": "Имя веб-приложения",

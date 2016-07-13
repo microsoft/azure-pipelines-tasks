@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Indexer les sources et publier les symboles",
-  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Indexer votre code source et publier des symboles dans un partage de fichiers<br/>[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Indexer votre code source, et publier les symboles sur un partage de fichiers",
   "loc.instanceNameFormat": "Publier le chemin d'accès des symboles : $(SymbolsPath)",
   "loc.group.displayName.advanced": "Avancé",
@@ -25,6 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "Nettoyage réussi du fichier sémaphore '{0}'.",
   "loc.messages.CleanUpSemaphoreFile0Error1": "Impossible de nettoyer le fichier sémaphore existant '{0}'. {1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "Erreur '{0}' durant l'accès au fichier sémaphore '{1}'. Nouvelle tentative dans {2:N0} secondes.",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
   "loc.messages.Found0Files": "{0:N0} fichiers trouvés.",
   "loc.messages.FreeLibraryDbghelpDllError0": "Échec de la libération de la bibliothèque dbghelp.dll. Code d'erreur '{0}'.",
   "loc.messages.NoFilesForIndexing": "Aucun fichier sélectionné pour l'indexation.",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement de base de données SQL Azure",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Déployer la base de données SQL Azure avec DACPAC",
   "loc.instanceNameFormat": "Déployer Azure SQL DACPAC : $(DacpacFile)",
   "loc.group.displayName.target": "Cible",
@@ -19,7 +19,7 @@
   "loc.input.label.SqlUsername": "Connexion administrateur au serveur",
   "loc.input.help.SqlUsername": "Spécifiez les informations de connexion de l'administrateur du serveur Azure SQL Server.",
   "loc.input.label.SqlPassword": "Mot de passe",
-  "loc.input.help.SqlPassword": "Mot de passe de l'administrateur du serveur Azure SQL Server.",
+  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark variable type as 'secret' to secure it.",
   "loc.input.label.PublishProfile": "Profil de publication",
   "loc.input.help.PublishProfile": "Le profil de publication permet de contrôler précisément les opérations de création ou de mise à niveau de la base de données SQL Azure. Spécifiez le chemin d'accès au fichier XML du profil de publication sur l'agent Automation ou sur un partage UNC. Vous pouvez également utiliser des variables système prédéfinies, telles que $(agent.buildDirectory) ou $(agent.releaseDirectory) .",
   "loc.input.label.AdditionalArguments": "Arguments SqlPackage.exe supplémentaires",
