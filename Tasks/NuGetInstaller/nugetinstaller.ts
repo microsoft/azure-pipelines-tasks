@@ -25,10 +25,23 @@ if(!nuGetPathToUse) {
 }
 tl.checkPath(nuGetPathToUse, 'nuget');
 
+//check if mono is available,
+var monoPath = tl.which('mono');
+if(!monoPath) {
+    tl.error('Failed to find mono. Mono is required to run NuGet.exe on OSX and Linux.');
+    tl.exit(1);
+}
+
 var sourcesFolder = tl.getVariable('system.defaultworkingdirectory');
 var runnuget = function(fn) {
     return Q.fcall(() => {
-        var nugetTool = tl.createToolRunner(nuGetPathToUse);
+        var nugetTool;
+        if(nuGetPathToUse.trim().toLowerCase().endsWith('.exe')) {
+            nugetTool = tl.createToolRunner(monoPath);
+            nugetTool.pathArg(nuGetPathToUse);
+        } else {
+            nugetTool = tl.createToolRunner(nuGetPathToUse);
+        }
 
         nugetTool.arg('restore');
         nugetTool.pathArg(fn);
