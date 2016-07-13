@@ -40,7 +40,7 @@ if (isCodeCoverageEnabled) {
 	istanbul.arg('./node_modules/istanbul/lib/cli.js');
 	istanbul.argString('cover --report cobertura --report html');
 	if (srcFiles) {
-		istanbul.argString('-i .\\' + path.join(srcFiles));
+		istanbul.argString('-i .' + path.sep + path.join(srcFiles));
 	}
 	if (testFramework.toLowerCase() == 'jasmine') {
 		istanbul.argString('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
@@ -95,7 +95,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
             tl.debug('No pattern found in testResultsFiles parameter');
             var matchingTestResultsFiles = [testResultsFiles];
         }
-        if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
+        if (!matchingTestResultsFiles  ||  matchingTestResultsFiles.length  ==  0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
             return 0;
         }
@@ -109,10 +109,10 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
 }
 
 function publishCodeCoverage(summaryFile) {
-	try{
+	try {
 		var ccPublisher = new tl.CodeCoveragePublisher();
 		ccPublisher.publish('cobertura', summaryFile, reportDirectory, "");
-	} catch (error){
+	} catch (error) {
 		tl.debug(error);
 		throw error;
 	}

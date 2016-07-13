@@ -153,7 +153,7 @@ describe('gradle Suite', function () {
     it('run gradle with all default inputs', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -179,7 +179,7 @@ describe('gradle Suite', function () {
     it('run gradle with missing wrapperScript', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
         tr.setInput('javaHomeSelection', 'JDKVersion');
@@ -205,7 +205,7 @@ describe('gradle Suite', function () {
     it('run gradle with INVALID wrapperScript', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', '/home/gradlew');
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -232,7 +232,7 @@ describe('gradle Suite', function () {
     it('run gradle with cwd set to valid path', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -259,7 +259,7 @@ describe('gradle Suite', function () {
     it('run gradle with cwd set to INVALID path', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -286,7 +286,7 @@ describe('gradle Suite', function () {
     it('run gradle with options set', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
         tr.setInput('tasks', 'build');
@@ -312,7 +312,7 @@ describe('gradle Suite', function () {
     it('run gradle with tasks not set', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
         tr.setInput('javaHomeSelection', 'JDKVersion');
@@ -337,7 +337,7 @@ describe('gradle Suite', function () {
     it('run gradle with tasks set to multiple', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
         tr.setInput('tasks', 'build test deploy');
@@ -363,7 +363,7 @@ describe('gradle Suite', function () {
     it('run gradle with missing publishJUnitResults input', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -388,7 +388,7 @@ describe('gradle Suite', function () {
     it('run gradle with publishJUnitResults set to "garbage"', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -414,7 +414,7 @@ describe('gradle Suite', function () {
     it('fails if missing testResultsFiles input', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
         tr.setInput('tasks', 'build test deploy');
@@ -439,7 +439,7 @@ describe('gradle Suite', function () {
     it('fails if missing javaHomeSelection input', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o "/p t i" /o /n /s');
         tr.setInput('tasks', 'build test deploy');
@@ -464,7 +464,7 @@ describe('gradle Suite', function () {
     it('run gradle with jdkVersion set to 1.8', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -492,7 +492,7 @@ describe('gradle Suite', function () {
     it('run gradle with jdkVersion set to 1.5', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -519,7 +519,7 @@ describe('gradle Suite', function () {
     it('run gradle with Valid inputs but it fails', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build FAIL');
@@ -546,7 +546,7 @@ describe('gradle Suite', function () {
     it('Gradle with jacoco selected should call enable and publish code coverage for a single module project.', (done) => {
         setResponseFile('gradleCCSingleModule.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -577,7 +577,7 @@ describe('gradle Suite', function () {
     it('Gradle with jacoco selected should call enable and publish code coverage for a multi module project.', (done) => {
         setResponseFile('gradleCCMultiModule.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -608,7 +608,7 @@ describe('gradle Suite', function () {
     it('Gradle with cobertura selected should call enable and publish code coverage.', (done) => {
         setResponseFile('gradleCCSingleModule.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -639,7 +639,7 @@ describe('gradle Suite', function () {
     it('Gradle with jacoco selected and report generation failed should call enable but not publish code coverage.', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -669,7 +669,7 @@ describe('gradle Suite', function () {
     it('Gradle with cobertura selected and report generation failed should call enable but not publish code coverage.', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -699,7 +699,7 @@ describe('gradle Suite', function () {
     it('Gradle build with publish test results.', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -725,7 +725,7 @@ describe('gradle Suite', function () {
     it('Gradle build with publish test results with no matching test result files.', (done) => {
         setResponseFile('gradleGood.json');
 
-        var tr = new TaskRunner('gradle');
+        var tr = new TaskRunner('Gradle');
         tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
         tr.setInput('tasks', 'build');
@@ -775,7 +775,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
 
         // Act
@@ -823,7 +823,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
 
         // Act
@@ -871,7 +871,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
 
         // Act
@@ -898,7 +898,7 @@ describe('gradle Suite', function () {
         createTempDirsForSonarQubeTests();
         setResponseFile('gradleSonarQube.json');
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, false);
         tr.setInput('sqAnalysisEnabled', 'false');
 
@@ -945,7 +945,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
         tr.setInput('codeCoverageTool', 'Cobertura');
 
@@ -989,7 +989,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
 
         // Act
@@ -1042,7 +1042,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
 
         // Act
@@ -1092,7 +1092,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
 
         // Act
@@ -1143,7 +1143,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
 
         // Act
@@ -1196,7 +1196,7 @@ describe('gradle Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, true);
 
         tr.setInput('sqDbDetailsRequired', 'true');
@@ -1246,7 +1246,7 @@ describe('gradle Suite', function () {
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, false);
         tr.setInput('pmdAnalysisEnabled', 'true');
 
@@ -1291,7 +1291,7 @@ describe('gradle Suite', function () {
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
-        var tr = new TaskRunner('gradle', true, true);
+        var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, false);
         tr.setInput('pmdAnalysisEnabled', 'true');
 
