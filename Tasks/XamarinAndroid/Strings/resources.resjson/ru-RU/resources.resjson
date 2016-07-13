@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613728)",
   "loc.description": "Сборка приложения Android с помощью Xamarin",
   "loc.instanceNameFormat": "Сборка проекта Xamarin.Android $(project)",
   "loc.group.displayName.msbuildOptions": "Параметры MSBuild",
@@ -12,7 +12,7 @@
   "loc.input.label.outputDir": "Выходной каталог",
   "loc.input.help.outputDir": "Optionally provide the output directory for the build. Example: $(build.binariesDirectory)/bin/Release.",
   "loc.input.label.configuration": "Конфигурация",
-  "loc.input.label.clean": "Clean",
+  "loc.input.label.clean": "Очистить",
   "loc.input.help.clean": "Passes the clean target (/t:clean) during build.",
   "loc.input.label.msbuildLocation": "Расположение MSBuild",
   "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).  It defaults to searching for latest version.",
@@ -22,7 +22,7 @@
   "loc.input.help.jdkSelection": "Pick the JDK to be used during the build by selecting a JDK version that will be discovered during builds or by manually entering a JDK path.",
   "loc.input.label.jdkVersion": "Версия JDK",
   "loc.input.help.jdkVersion": "Используйте при сборке выбранную версию JDK.",
-  "loc.input.label.jdkUserInputPath": "JDK Path",
+  "loc.input.label.jdkUserInputPath": "Путь к JDK",
   "loc.input.help.jdkUserInputPath": "Use the JDK version at specified path during build.",
   "loc.input.label.jdkArchitecture": "Архитектура JDK",
   "loc.input.help.jdkArchitecture": "Дополнительно укажите архитектуру JDK (x86, x64)."

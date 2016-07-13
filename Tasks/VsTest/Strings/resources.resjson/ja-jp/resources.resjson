@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio テスト",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Visual Studio テスト ランナーを使用してテストを実行します",
   "loc.instanceNameFormat": "テスト アセンブリ $(testAssembly)",
   "loc.group.displayName.executionOptions": "実行オプション",
@@ -13,7 +13,7 @@
   "loc.input.label.runSettingsFile": "実行設定ファイル",
   "loc.input.help.runSettingsFile": "テストで使用される runsettings ファイルへのパス。`$(Build.SourcesDirectory)` を使用してプロジェクト フォルダーにアクセスします。",
   "loc.input.label.overrideTestrunParameters": "TestRun パラメーターのオーバーライド",
-  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
+  "loc.input.help.overrideTestrunParameters": "runsettings ファイルの TestRunParameters セクションで定義されたパラメーターを無視します。例: 'AppURL=$(DeployURL);Port=8080'",
   "loc.input.label.codeCoverageEnabled": "コード カバレッジ有効",
   "loc.input.help.codeCoverageEnabled": "実行テストでコード カバレッジ情報を収集します。",
   "loc.input.label.runInParallel": "並列実行する",
@@ -46,5 +46,8 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
   "loc.messages.ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
-  "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run."
+  "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
+  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
+  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
 }

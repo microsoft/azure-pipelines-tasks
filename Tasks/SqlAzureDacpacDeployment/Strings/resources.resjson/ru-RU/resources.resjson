@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание базы данных SQL Azure",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Подробнее...](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Развертывание базы данных SQL Azure с помощью DACPAC",
   "loc.instanceNameFormat": "Развертывание DACPAC-файла SQL Azure: $(DacpacFile)",
   "loc.group.displayName.target": "Целевой объект",
@@ -19,7 +19,7 @@
   "loc.input.label.SqlUsername": "Имя для входа администратора сервера",
   "loc.input.help.SqlUsername": "Укажите имя для входа администратора Azure SQL Server.",
   "loc.input.label.SqlPassword": "Пароль",
-  "loc.input.help.SqlPassword": "Пароль администратора Azure SQL Server.",
+  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark variable type as 'secret' to secure it.",
   "loc.input.label.PublishProfile": "Профиль публикации",
   "loc.input.help.PublishProfile": "Профиль публикации обеспечивает тонкое управление над созданием и обновлениями Базы данных SQL Azure. Укажите путь к XML-файлу профиля публикации в агенте автоматизации или в общем ресурсе UNC. Также можно использовать предварительно заданные системные переменные, например $(agent.buildDirectory) или $(agent.releaseDirectory).",
   "loc.input.label.AdditionalArguments": "Дополнительные аргументы SqlPackage.exe",

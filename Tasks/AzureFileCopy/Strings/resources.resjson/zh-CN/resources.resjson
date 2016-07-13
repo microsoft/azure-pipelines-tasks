@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Azure 文件复制",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[详细信息](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "将文件复制到 Azure blob 或 VM",
   "loc.instanceNameFormat": "$(Destination) 文件复制",
-  "loc.group.displayName.output": "Output",
+  "loc.group.displayName.output": "输出",
   "loc.input.label.SourcePath": "源",
   "loc.input.help.SourcePath": "本地计算机上源文件夹或文件的绝对路径，或是 UNC 共享。表达式应返回一个文件夹或文件。",
   "loc.input.label.ConnectedServiceNameSelector": "Azure 连接类型",

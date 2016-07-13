@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Deprecated] IIS Web App Deployment",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
+  "loc.helpMarkDown": "[자세한 정보](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "MSDeploy에 의한 배포, 웹 사이트 및 앱 풀 만들기/업데이트",
   "loc.instanceNameFormat": "[Deprecated] Deploy IIS App: $(WebDeployPackage)",
   "loc.group.displayName.deployment": "배포",

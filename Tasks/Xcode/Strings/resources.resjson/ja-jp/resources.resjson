@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xcode のビルド",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Mac OS で Xcode ワークスペースをビルドします",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "署名およびプロビジョニング",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xcode 組建",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "在 Mac OS 上建置 Xcode 工作區",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "簽署與佈建",

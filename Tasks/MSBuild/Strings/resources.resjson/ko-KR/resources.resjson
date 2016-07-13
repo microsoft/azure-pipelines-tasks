@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "MSBuild로 빌드",
   "loc.instanceNameFormat": "솔루션 $(solution) 빌드",
   "loc.group.displayName.advanced": "고급",
@@ -12,6 +12,8 @@
   "loc.input.help.msbuildArguments": "Additional arguments passed to MSBuild (on Windows) and xbuild (on Mac).",
   "loc.input.label.clean": "클린",
   "loc.input.help.clean": "빌드에 앞서 클린 빌드(/t:clean)를 실행합니다.",
+  "loc.input.label.maximumCpuCount": "Maximum CPU Count",
+  "loc.input.help.maximumCpuCount": "If you're MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If you're target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "NuGet 패키지 복원",
   "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.logProjectEvents": "프로젝트 정보 기록",

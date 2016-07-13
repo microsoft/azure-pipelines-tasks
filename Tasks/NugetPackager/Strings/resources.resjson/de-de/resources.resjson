@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet-Manager",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=627416)",
   "loc.description": "Erstellt NUPKG-Ausgaben aus CSPROJ- oder NUSPEC-Dateien.",
   "loc.instanceNameFormat": "NuGet-Manager $(solution)",
   "loc.group.displayName.versioning": "Versioning",

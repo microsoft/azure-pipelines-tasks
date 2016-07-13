@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "npm 명령을 실행합니다.",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "고급",

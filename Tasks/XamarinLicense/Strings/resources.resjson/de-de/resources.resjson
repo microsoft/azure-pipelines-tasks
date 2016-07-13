@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin-Lizenz",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613739)",
   "loc.description": "Xamarin-Lizenzen aktivieren oder deaktivieren",
   "loc.instanceNameFormat": "Xamarin-Lizenz $(action)",
   "loc.group.displayName.advanced": "Erweitert",

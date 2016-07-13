@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Azure-Dateikopiervorgang",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Dateien in Azure-Blobs oder VMs kopieren",
   "loc.instanceNameFormat": "$(Destination)-Dateikopiervorgang",
-  "loc.group.displayName.output": "Output",
+  "loc.group.displayName.output": "Ausgabe",
   "loc.input.label.SourcePath": "Quelle",
   "loc.input.help.SourcePath": "Absoluter Pfad des Quellordners bzw. der Datei auf dem lokalen Computer oder eine UNC-Freigabe. Der Ausdruck muss einen einzigen Ordner bzw. eine einzige Datei zurückgeben.",
   "loc.input.label.ConnectedServiceNameSelector": "Azure-Verbindungstyp",

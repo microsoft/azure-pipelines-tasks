@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows コンピューターのファイル コピー",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "ファイルをリモート コンピューター (複数可) にコピーします",
   "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "詳細設定のオプション",

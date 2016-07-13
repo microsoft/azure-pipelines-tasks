@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Quellen indizieren und Symbole veröffentlichen",
-  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Quellcode indizieren und Symbole in Dateifreigabe veröffentlichen<br/>[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Quellcode indizieren und Symbole auf einer Dateifreigabe veröffentlichen",
   "loc.instanceNameFormat": "Pfad für Symbolveröffentlichung: $(SymbolsPath)",
   "loc.group.displayName.advanced": "Erweitert",
@@ -25,6 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "Die Semaphordatei \"{0}\" wurde erfolgreich bereinigt.",
   "loc.messages.CleanUpSemaphoreFile0Error1": "Die vorhandene Semaphordatei \"{0}\" konnte nicht bereinigt werden. {1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "Fehler \"{0}\" beim Zugriff auf die Semaphordatei \"{1}\". Wiederholungsversuch in {2:N0} Sekunden.",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
   "loc.messages.Found0Files": "Es wurden {0:N0} Dateien gefunden.",
   "loc.messages.FreeLibraryDbghelpDllError0": "Fehler beim Freigeben der Bibliothek \"dbghelp.dll\". Fehlercode \"{0}\".",
   "loc.messages.NoFilesForIndexing": "Es sind keine Dateien für die Indizierung ausgewählt.",

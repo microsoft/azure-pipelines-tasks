@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL Database の配置",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[詳細] (https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "DACPAC を使用して Azure SQL DB を展開します",
   "loc.instanceNameFormat": "Azure SQL DACPAC: $(DacpacFile) を展開します",
   "loc.group.displayName.target": "ターゲット ",
@@ -19,7 +19,7 @@
   "loc.input.label.SqlUsername": "サーバー管理者ログイン",
   "loc.input.help.SqlUsername": "Azure SQL Server 管理者ログインを指定します。",
   "loc.input.label.SqlPassword": "パスワード",
-  "loc.input.help.SqlPassword": "Azure SQL Server の管理者用パスワード。",
+  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark variable type as 'secret' to secure it.",
   "loc.input.label.PublishProfile": "発行プロファイル",
   "loc.input.help.PublishProfile": "発行プロファイルを使用すると、Azure SQL Database の作成またはアップグレードを詳細に制御できるようになります。自動化エージェントまたは UNC 共有上で、発行プロファイル XML ファイルへのパスを指定します。$(agent.buildDirectory) または $(agent.releaseDirectory) などの定義済みシステム変数はここでも使用できます。",
   "loc.input.label.AdditionalArguments": "SqlPackage.exe 追加引数",
