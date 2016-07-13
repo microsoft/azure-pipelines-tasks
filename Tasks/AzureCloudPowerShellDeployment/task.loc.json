@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 26
+    "Patch": 27
   },
   "demands": [
     "azureps"
@@ -60,7 +60,7 @@
       "name": "ServiceLocation",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ServiceLocation",
-      "defaultValue": "South Central US",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ServiceLocation",
       "properties": {

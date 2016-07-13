@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 35
   },
   "demands": [
     "azureps"
@@ -32,7 +32,7 @@
         "name": "WebSiteLocation",
         "type": "pickList",
         "label": "Web App Location",
-        "defaultValue": "South Central US",
+        "defaultValue": "",
         "required": true,
         "helpMarkDown": "Select a location for website.",
         "properties": {
