@@ -63,8 +63,11 @@ param (
     Write-Verbose "Initiating copy on $fqdn "
 
     $storageAccountInfo = Get-AzureStorageAccount -StorageAccountName $storageAccount
-    $stoargeAccountEnpoints = $storageAccountInfo.Endpoints
-    $blobStorageURI = $stoargeAccountEnpoints[0]+$containerName+"/"+$blobPrefix
+    if( $storageAccountInfo )
+    {
+        $stoargeAccountEnpoints = $storageAccountInfo.Endpoints
+        $blobStorageURI = $stoargeAccountEnpoints[0]+$containerName+"/"+$blobPrefix
+    }
 	
     [String]$copyToAzureMachinesBlockString = [string]::Empty
     if([string]::IsNullOrWhiteSpace($additionalArguments))
