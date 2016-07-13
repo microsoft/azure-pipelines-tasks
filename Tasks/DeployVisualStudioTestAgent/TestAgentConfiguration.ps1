@@ -961,11 +961,11 @@ $enableAutoLogon = [Boolean] $enableAutoLogon
 #To maintain compat with old build agents.
 if(-not $keepConnectionAlive)
 {
-    $keepConnectionAlive = $false
+    $keepConnectionAlive = [Boolean] $false
 }
 else
 {
-    $keepConnectionAlive = [Boolean] $keepConnectionAlive
+    $keepConnectionAlive = [System.Convert]::ToBoolean($keepConnectionAlive)
 }
 
 $machineCredential = New-Object System.Management.Automation.PSCredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
