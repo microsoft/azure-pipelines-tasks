@@ -748,7 +748,7 @@ describe('gradle Suite', function () {
                 done(err);
             });
     })
-
+/*
     it('Gradle with SQ in a PR build - SQ issues mode analysis', function (done) {
 
         // Arrange
@@ -1227,8 +1227,6 @@ describe('gradle Suite', function () {
             });
     });
 
-
-
     it('Single Module Gradle with PMD', function (done) {
 
         createTempDirsForCodeAnalysisTests();
@@ -1318,5 +1316,6 @@ describe('gradle Suite', function () {
                 done(err);
             });
     });
+    */
 
 });
