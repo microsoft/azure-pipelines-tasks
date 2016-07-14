@@ -25,10 +25,7 @@ describe('SonarQubePostTest Suite', function () {
         psr.kill();
     });
 
-    if (ps) {
-         it('DisableAnalysisOnPrBuild tests', (done) => {
-             psr.run(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
-         })
+    if (ps) {        
          it('TopLevelOrchestration tests', (done) => {
              psr.run(path.join(__dirname, 'TopLevelOrchestration.ps1'), done);
          })

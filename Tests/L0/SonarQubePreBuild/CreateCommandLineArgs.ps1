@@ -25,8 +25,7 @@ Assert-AreEqual 'begin /k:"pkey" /n:"Test Project" /v:"1.0" /d:sonar.host.url="h
 # Arrange
 $dummyConfigFile = [System.IO.Path]::Combine($PSScriptRoot, "test-analysis-config.xml");
 New-Item $dummyConfigFile -ItemType File -Force 
-$oldSourcesValue = $env:BUILD_SOURCESDIRECTORY 
-$env:BUILD_SOURCESDIRECTORY = "d:\agent\_work\1\s"
+Register-Mock GetTaskContextVariable  {"d:\agent\_work\1\s"} -- "Build.SourcesDirectory"
 
 try
 {
@@ -47,7 +46,7 @@ try
 finally
 {
     Remove-Item $dummyConfigFile
-    $env:BUILD_SOURCESDIRECTORY = $oldSourcesValue
+    Unregister-Mock GetTaskContextVariable
 }                
 
 # Assert.

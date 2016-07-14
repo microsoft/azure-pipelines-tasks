@@ -31,22 +31,24 @@ function VerifyMessage
     Assert-AreEqual $expectedComparator $actualMessage.comparator "Invalid message comparator"    
 }
 
+Register-Mock Write-VstsTaskVerbose
+
 #### Test 1 - Legacy report - uploading fails with a warning if the file is not found
     
 # Arrange
 Register-Mock GetSonarQubeOutDirectory {([IO.Path]::GetRandomFileName())}
-Register-Mock Write-Warning 
+Register-Mock Write-VstsTaskWarning
 Register-Mock IsPrBuild {$true}  
 
 # Act
 CreateAndUploadReport
 
 # Assert
-Assert-WasCalled Write-Warning 
+Assert-WasCalled Write-VstsTaskWarning
 
 # Cleanup
 Unregister-Mock GetSonarQubeOutDirectory
-Unregister-Mock Write-Warning
+Unregister-Mock Write-VstsTaskWarning
 Unregister-Mock IsPrBuild   
 
 
@@ -59,7 +61,7 @@ $dummyReport = [IO.Path]::Combine($tempDir, "summary.md")
 $file = [IO.File]::Create($dummyReport)   
 
 Register-Mock GetSonarQubeOutDirectory {$tempDir}
-Register-Mock Write-Host
+Register-Mock Write-VstsAddAttachment 
 Register-Mock IsPrBuild {$false}  
 # the legacy report is printed if the user deselects the full report option
 Register-Mock GetTaskContextVariable {$false} -- "MSBuild.SonarQube.IncludeReport" 
@@ -68,14 +70,15 @@ Register-Mock GetTaskContextVariable {$false} -- "MSBuild.SonarQube.IncludeRepor
 CreateAndUploadReport
 
 # Assert
-Assert-WasCalled Write-Host -ArgumentsEvaluator { $args[0].StartsWith("##vso[task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report;") }
+Assert-WasCalled Write-VstsAddAttachment -- -Type "Distributedtask.Core.Summary" -Name "SonarQube Analysis Report" -Path $dummyReport
 
 # Cleanup
 $file.Dispose()
 [IO.Directory]::Delete($tempDir, $true)    
 Unregister-Mock GetSonarQubeOutDirectory
-Unregister-Mock Write-Host 
+Unregister-Mock Write-VstsAddAttachment
 Unregister-Mock IsPrBuild   
+Unregister-Mock GetTaskContextVariable
 
 
 ### Test 3 - Fetching the quality gate warnings and errors
