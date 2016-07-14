@@ -12,7 +12,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [
     "xcode"
@@ -44,14 +44,14 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "$(Configuration)",
-      "required": true
+      "required": false
     },
     {
       "name": "sdk",
       "type": "string",
       "label": "ms-resource:loc.input.label.sdk",
       "defaultValue": "$(SDK)",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sdk"
     },
     {
@@ -226,8 +226,17 @@
   ],
   "execution": {
     "Node": {
-      "target": "xcodebuild2.js",
+      "target": "xcode.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "MultipleWorkspacesFound": "ms-resource:loc.messages.MultipleWorkspacesFound",
+    "WorkspaceDoesNotExist": "ms-resource:loc.messages.WorkspaceDoesNotExist",
+    "UseXcToolForTestPublishing": "ms-resource:loc.messages.UseXcToolForTestPublishing",
+    "NoTestResultsFound": "ms-resource:loc.messages.NoTestResultsFound",
+    "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess",
+    "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
+    "ProvProfileDeleteFailed": "ms-resource:loc.messages.ProvProfileDeleteFailed"
   }
 }

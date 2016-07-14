@@ -1,0 +1,57 @@
+{
+  "which": {
+    "xctool": "/home/bin/xctool",
+    "xcrun": "/home/bin/xcrun"
+  },
+  "checkPath" : {
+    "/home/bin/xctool": true,
+    "/home/bin/xcrun": true
+  },
+  "getVariable": {
+    "build.sourcesDirectory": "/user/build",
+    "HOME": "/users/test"
+  },
+  "glob": {
+    "**/*.xcodeproj/*.xcworkspace": [
+      "/user/build/fun.xcodeproj/project.xcworkspace"
+    ],
+    "/user/build/output/$(SDK)/$(Configuration)/build.sym/**/*.app": [
+      "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app"
+    ]
+  },
+  "find": {
+    "/user/build": [
+      "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app",
+      "/user/build/test1/test-results.xml",
+      "/user/build/test2/testresults.xml"
+    ]
+  },
+  "match": {
+    "/user/build/**/*test*.xml": [
+      "/user/build/test1/test-results.xml",
+      "/user/build/test2/testresults.xml"
+    ]
+  },
+  "exec": {
+    "/home/bin/xctool -version": {
+      "code": 0,
+      "stdout": "Xcode 7.3.1"
+    },
+    "/home/bin/xctool -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch": {
+      "code": 0,
+      "stdout": "xcodebuild output here"
+    },
+    "/home/bin/xctool -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -reporter plain -reporter junit:test-results.xml test DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch": {
+      "code": 0,
+      "stdout": "xcodebuild output with tests here"
+    },
+    "/home/bin/xctool -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -reporter plain -reporter junit:**/*test*.xml test DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch": {
+      "code": 0,
+      "stdout": "xcodebuild output with tests here"
+    },
+    "/home/bin/xcrun -sdk $(SDK) PackageApplication -v /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app -o /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.ipa": {
+      "code": 0,
+      "stdout": "xcrun output here"
+    }
+  }
+}
