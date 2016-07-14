@@ -11,11 +11,9 @@ import * as util from 'util';
 
 var xmlreader = require('xmlreader');
 
-interface IPackageSource {
-    id: number;
+export interface IPackageSource {
     feedName: string;
     feedUri: string;
-    addCredential: boolean
 }
 
 export class NuGetConfigHelper {
@@ -37,7 +35,49 @@ export class NuGetConfigHelper {
     }
 
     public setCredentialsNuGetConfigAndSaveTemp(): Q.Promise<string> {
+        return this.getSourcesFromConfig()
+            .then(packageSources => {
+                if (packageSources.length === 0) {
+                    // nothing to do; calling code should use the user's config unmodified.
+                    return this._nugetConfigPath;
+                }
+                else {
+                    this.setSources(packageSources);
 
+                    return this.tempNugetConfigPath;
+                }
+            });
+    }
+
+    public ensureTempConfigCreated() {
+        // save nuget config file to agent build directory
+        tl._writeLine('save nuget.config to temp config file');
+        if (!(fs.existsSync(this.tempNugetConfigDir))) {
+            fs.mkdirSync(this.tempNugetConfigDir);
+        };
+
+        if (this._nugetConfigPath) {
+            tl.cp('', this._nugetConfigPath, this.tempNugetConfigPath);
+        }
+        else {
+            // small file, use writeFileSync
+            fs.writeFileSync(this.tempNugetConfigPath, "<configuration/>");
+        }
+    }
+
+    public setSources(packageSources: IPackageSource[]): void {
+        this.ensureTempConfigCreated();
+
+        // remove sources
+        tl._writeLine('remove sources in the config file');
+        this.removeSourcesInNugetConfig(packageSources);
+
+        // add sources
+        tl._writeLine('add sources in the config file');
+        this.addSourcesInNugetConfig(packageSources);
+    }
+
+    public getSourcesFromConfig(): Q.Promise<IPackageSource[]> {
         // load content of the user's nuget.config
         var xmlString = fs.readFileSync(this._nugetConfigPath).toString();
 
@@ -57,7 +97,7 @@ export class NuGetConfigHelper {
                 for (var i = 0; i < configXml.configuration.packageSources.add.count(); i++) {
                     sourceKey = configXml.configuration.packageSources.add.at(i).attributes().key;
                     sourceValue = configXml.configuration.packageSources.add.at(i).attributes().value;
-                    packageSource = { id: i, feedName: sourceKey, feedUri: sourceValue, addCredential: false };
+                    packageSource = {feedName: sourceKey, feedUri: sourceValue};
 
                     // check if need to add credential to feed
                     tl._writeLine('check credential: ' + sourceValue)
@@ -65,29 +105,7 @@ export class NuGetConfigHelper {
                         packageSources.push(packageSource);
                     }
                 }
-
-                if (packageSources.length === 0) {
-                    // nothing to do; calling code should use the user's config unmodified.
-                    this._nugetConfigPath;
-                }
-
-                // save nuget config file to agent build directory
-                tl._writeLine('save nuget.config to temp config file');
-                if (!(fs.existsSync(this.tempNugetConfigDir))) {
-                    fs.mkdirSync(this.tempNugetConfigDir);
-                };
-                // small file, use writeFileSync
-                fs.writeFileSync(this.tempNugetConfigPath, xmlString);
-
-                // remove sources
-                tl._writeLine('remove sources in the config file');
-                this.removeSourcesInNugetConfig(packageSources);
-
-                // add sources
-                tl._writeLine('add sources in the config file');
-                this.addSourcesInNugetConfig(packageSources);
-
-                return this.tempNugetConfigPath;
+                return packageSources;
             });
     }
 
