@@ -386,6 +386,14 @@ declare module 'vsts-task-lib/task' {
 	 */
 	export function popd(): void;
 	/**
+	 * Resolves a sequence of paths or path segments into an absolute path.
+	 * Calls node.js path.resolve()
+	 * Allows L0 testing with consistent path formats on Mac/Linux and Windows in the mock implementation
+	 * @param pathSegments
+	 * @returns {string}
+	 */
+	export function resolve(...pathSegments: any[]): string;
+	/**
 	 * Make a directory.  Creates the full path with folders in between
 	 * Returns whether it was successful or not
 	 *
