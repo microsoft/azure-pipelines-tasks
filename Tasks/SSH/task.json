@@ -3,7 +3,7 @@
     "name": "SSH",
     "friendlyName": "SSH",
     "description": "Run shell commands or a script on a remote machine using SSH",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=821892)",
     "category": "Deploy",
     "visibility": [
         "Build",
