@@ -114,6 +114,10 @@
     "LegacyNuGetHint": "ms-resource:loc.messages.LegacyNuGetHint",
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
     "NoCredProviderOnAgent": "ms-resource:loc.messages.NoCredProviderOnAgent",
-    "NotARegularFile": "ms-resource:loc.messages.NotARegularFile"
+    "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
+    "UnknownRestoreMode": "ms-resource:loc.messages.UnknownRestoreMode",
+    "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
+    "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
+    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool"
   }
 }

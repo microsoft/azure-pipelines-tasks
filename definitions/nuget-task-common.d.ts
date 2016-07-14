@@ -80,6 +80,8 @@ declare module 'nuget-task-common/LocationHelpers' {
 
 }
 declare module 'nuget-task-common/NuGetToolRunner' {
+	/// <reference path="../../../definitions/node.d.ts" />
+	/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
 	import { ToolRunner, IExecOptions, IExecResult } from 'vsts-task-lib/toolrunner';
 	import * as auth from 'nuget-task-common/Authentication';
 	export interface NuGetEnvironmentSettings {
@@ -94,13 +96,17 @@ declare module 'nuget-task-common/NuGetToolRunner' {
 	    exec(options?: IExecOptions): Q.Promise<number>;
 	}
 	export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings): NuGetToolRunner;
-	export function locateTool(tool: string, userPath?: string, optional?: boolean): any;
+	export function locateTool(tool: string, userPath?: string, optional?: boolean): string;
 
 }
 declare module 'nuget-task-common/NuGetConfigHelper' {
 	import Q = require('q');
 	import * as auth from 'nuget-task-common/Authentication';
 	import * as ngToolRunner from 'nuget-task-common/NuGetToolRunner';
+	export interface IPackageSource {
+	    feedName: string;
+	    feedUri: string;
+	}
 	export class NuGetConfigHelper {
 	    private _nugetPath;
 	    private _nugetConfigPath;
@@ -108,9 +114,12 @@ declare module 'nuget-task-common/NuGetConfigHelper' {
 	    private _environmentSettings;
 	    private tempNugetConfigDir;
 	    private tempNugetConfigFileName;
-	    tempNugetConfigPath: any;
+	    tempNugetConfigPath: string;
 	    constructor(nugetPath: string, nugetConfigPath: string, authInfo: auth.NuGetAuthInfo, environmentSettings: ngToolRunner.NuGetEnvironmentSettings);
 	    setCredentialsNuGetConfigAndSaveTemp(): Q.Promise<string>;
+	    ensureTempConfigCreated(): void;
+	    setSources(packageSources: IPackageSource[]): void;
+	    getSourcesFromConfig(): Q.Promise<IPackageSource[]>;
 	    private removeSourcesInNugetConfig(packageSources);
 	    private addSourcesInNugetConfig(packageSources);
 	    private shouldGetCredentialsForFeed(source);

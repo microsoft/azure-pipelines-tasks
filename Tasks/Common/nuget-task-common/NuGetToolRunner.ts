@@ -7,8 +7,6 @@ import * as auth from "./Authentication"
 import * as os from 'os';
 import * as path from 'path';
 
-tl.setResourcePath(path.join(__dirname, "module.json"));
-
 interface EnvironmentDictionary { [key: string]: string }
 
 export interface NuGetEnvironmentSettings {

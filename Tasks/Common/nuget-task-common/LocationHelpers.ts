@@ -107,7 +107,10 @@ export function getConnectionDataForArea(serviceUri: string, areaName: string, a
                         tl.debug("successfully loaded SPS location data");
                         var areaService = findServiceByIdentifier(spsConnectionData, areaId);
                         if (!areaService) {
-                            throw new Error("Could not locate nuget service in the root location service");
+                            var error = new Error("Could not locate nuget service in the root location service");
+                            (<any>error).code = "AreaNotFoundInSps";
+                            (<any>error).spsConnectionData = spsConnectionData;
+                            throw error;
                         }
 
                         var areaServiceUri = getUriForServiceDefinition(areaService)
