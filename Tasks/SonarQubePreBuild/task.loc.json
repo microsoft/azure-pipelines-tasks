@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 45
+    "Patch": 46
   },
   "minimumAgentVersion": "1.99.0",
   "demands": [
@@ -137,10 +137,8 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "SonarQubePreBuild.ps1"
     }
   }
 }

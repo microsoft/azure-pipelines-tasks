@@ -12,22 +12,30 @@ function EscapeArg
 
 
 # Set a variable in a property bag that is accessible by all steps
-# To retrieve the variable use $val = Get-Variable $distributedTaskContext "varName"
+# To retrieve the variable use GetTaskContextVariable
+# The variable will be available in both the current and the subsequent tasks
 function SetTaskContextVariable
 {
     param([string][ValidateNotNullOrEmpty()]$varName, 
           [string]$varValue)
         
-    #[Environment]::SetEnvironmentVariable($varName, $varValue)
-    Write-Host "##vso[task.setvariable variable=$varName;]$varValue"
+    [Environment]::SetEnvironmentVariable($varName, $varValue)
+    Set-VstsTaskVariable $varName $varValue
 }
 
 function GetTaskContextVariable()
 {
 	param([string][ValidateNotNullOrEmpty()]$varName)
         
-    #return ([Environment]::GetEnvironmentVariable($varName))
-	return Get-TaskVariable -Context $distributedTaskContext -Name $varName    
+    $value = [Environment]::GetEnvironmentVariable($varName);
+
+    if ([String]::IsNullOrWhiteSpace($value))
+    {
+        $value = Get-VstsTaskVariable -Name $varName 
+    } 
+
+    Write-Verbose "Variable read: $varName = $value"
+	return $value
 }
 
 #
@@ -145,7 +153,7 @@ function InvokeGetRestMethod
 {
     param ([Parameter(Mandatory=$true)][string]$query)
                 
-    $sonarQubeHostUrl = GetTaskContextVariable "MSBuild.SonarQube.HostUrl"     
+    $sonarQubeHostUrl = GetTaskContextVariable "MSBuild.SonarQube.HostUrl"         
     $sonarQubeHostUrl  = $sonarQubeHostUrl.TrimEnd("/");
 
     Assert (![System.String]::IsNullOrWhiteSpace($sonarQubeHostUrl)) "Could not retrieve the SonarQube host url"
@@ -155,7 +163,7 @@ function InvokeGetRestMethod
 
     if (![String]::IsNullOrWhiteSpace($authHeader))
     {
-        $allheaders = @{Authorization = $authHeader}        
+        $allheaders = @{Authorization = $authHeader}
     }
 
     # Fix for HTTPS websites that support only TLS 1.2, as described by https://jira.sonarsource.com/browse/SONARMSBRU-169
@@ -203,10 +211,8 @@ function Assert
 function HasElements
 {
     param ([Array]$arr)
-    
     return ($arr -ne $null) -and ($arr.Count -gt 0)
 }
-
 
 #
 # Returns true if this build was triggered in response to a PR
@@ -216,8 +222,8 @@ function HasElements
 #
 function IsPrBuild
 {    
-    $sourceBranch = $env:Build_SourceBranch
-    $scProvider = $env:Build_Repository_Provider
+    $sourceBranch = GetTaskContextVariable "Build.SourceBranch"
+    $scProvider = GetTaskContextVariable "Build.Repository.Provider" 
 
     return   $scProvider -and `
              ($scProvider -eq "TfsGit") -and `
@@ -280,6 +286,8 @@ function IsFeatureEnabled
 #
 function ExitOnPRBuild
 {    
+    Write-VstsTaskDebug "Checking if the build was triggered by a PR"
+
     if ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $true))
     {
         Write-Host "SonarQube analysis is disabled because either this is a pull request build or because the flag SQPullRequestBot is set to false"

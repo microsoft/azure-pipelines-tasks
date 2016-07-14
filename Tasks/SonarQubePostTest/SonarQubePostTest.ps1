@@ -1,7 +1,5 @@
 Write-Verbose "Starting SonarQube PostBuild Step"
 
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-
 . $PSScriptRoot/Common/SonarQubeHelpers/SonarQubeHelper.ps1
 
 # During PR builds only an "issues mode" analysis is allowed. The resulting issues are posted as code review comments. 

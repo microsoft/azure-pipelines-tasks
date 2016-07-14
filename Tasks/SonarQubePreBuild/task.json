@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 45
+    "Patch": 46
   },
   "minimumAgentVersion": "1.99.0",
   "demands": [
@@ -116,7 +116,7 @@
       "helpMarkDown": "You can also specify settings via a configuration file. A template is available [here](https://go.microsoft.com/fwlink/?LinkID=620062)",
       "groupName": "advanced"
     },
-      {
+    {
       "name": "includeFullReport",
       "type": "boolean",
       "defaultValue": "true",
@@ -134,14 +134,11 @@
       "helpMarkDown": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)",
       "groupName": "advanced"
     }
-  
   ],
   "instanceNameFormat": "Fetch the Quality Profile from SonarQube",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "SonarQubePreBuild.ps1"
     }
   }
 }

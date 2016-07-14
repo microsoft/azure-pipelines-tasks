@@ -12,19 +12,17 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 51
+    "Patch": 52
   },
   "minimumAgentVersion": "1.99.0",
   "demands": [
     "msbuild",
     "java"
-  ], 
+  ],
   "instanceNameFormat": "Finish the analysis and upload the results to SonarQube",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\SonarQubePostTest.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "SonarQubePostTest.ps1"
     }
   }
 }

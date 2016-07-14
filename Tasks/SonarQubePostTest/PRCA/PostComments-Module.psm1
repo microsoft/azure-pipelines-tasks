@@ -94,7 +94,7 @@ function InternalPostAndResolveComments
 {
     param ([Array]$messages, [string][ValidateNotNullOrEmpty()]$messageSource)
     
-    Write-Verbose "Fetching existing threads and comments..."
+    Write-VstsTaskVerbose "Fetching existing threads and comments..."
     
     $existingThreads = FetchActiveDiscussionThreads 
     $existingComments = FetchDiscussionComments $existingThreads    
@@ -116,14 +116,14 @@ function InternalPostAndResolveComments
     if (HasElements $remainingMessages )
     {
          # Debug: print remaining messages 
-        $remainingMessages | ForEach {Write-Verbose $_} 
+        $remainingMessages | ForEach {Write-VstsTaskVerbose $_} 
         
         $newDiscussionThreads = CreateDiscussionThreads $remainingMessages
         PostDiscussionThreads $newDiscussionThreads 
     }
     else
     {
-        Write-Verbose "All messages were filtered. Nothing new to post."
+        Write-VstsTaskVerbose "All messages were filtered. Nothing new to post."
     }
    
 }
@@ -138,13 +138,13 @@ function ResolveExistingComments
     
     if ( !(HasElements $existingComments) )
     {
-        Write-Verbose "No messages to resolve"
+        Write-VstsTaskVerbose "No messages to resolve"
         return    
     }
     
     # Comments that do not match HasElements input messages are said to be resolved
     $resolvedComments = GetResolvedComments $existingComments
-    Write-Verbose "Found $($resolvedComments.Count) existing comments that do not match any new message and can be resolved"
+    Write-VstsTaskVerbose "Found $($resolvedComments.Count) existing comments that do not match any new message and can be resolved"
     
     foreach ($resolvedComment in $resolvedComments)
     {
@@ -212,7 +212,7 @@ function FilterMessages
 {
     param ([Array]$messages) 
     
-    Write-Verbose "Filtering messages before posting"
+    Write-VstsTaskVerbose "Filtering messages before posting"
     
     $messages = FilterMessagesByPath $messages
     $messages = FilterPreExistingComments $messages
@@ -231,7 +231,7 @@ function FilterMessagesByPath
     }
     
     $modifiedFilesInPr = GetModifiedFilesInPR
-    Write-Verbose "Files changed in this PR: $modifiedFilesInPr"
+    Write-VstsTaskVerbose "Files changed in this PR: $modifiedFilesInPr"
     
     $countBefore = $messages.Count
     $messages = $messages | Where-Object {$modifiedFilesInPr.Contains($_.RelativePath)}
@@ -267,7 +267,7 @@ function FilterPreExistingComments
      $commentsFiltered = $countBefore - $messages.Count 
      
      Write-Host "$commentsFiltered message(s) were filtered because they were already present"
-     Write-Verbose "Filtering out $($existingComments.Count) existing comments took $($sw.ElapsedMilliseconds) ms"
+     Write-VstsTaskVerbose "Filtering out $($existingComments.Count) existing comments took $($sw.ElapsedMilliseconds) ms"
      
      return $messages
 }
@@ -332,7 +332,7 @@ function BuildMessageToCommentDictonary
          }
      }
      
-     Write-Verbose "Built a message to comment dictionary in $($sw.ElapsedMilliseconds) ms"
+     Write-VstsTaskVerbose "Built a message to comment dictionary in $($sw.ElapsedMilliseconds) ms"
 }
 
 #TODO: can be optimized by using a map of <Thread,List<Comments>> instead of 2 flat lists
@@ -353,7 +353,7 @@ function GetMatchingComments
 
      if ($matchingThreads.Count -gt 0)
      {
-        Write-Verbose "Found $($matchingThreads.Count) matching thread(s) for the message at $($message.RelativePath) line $($message.Line)"
+        Write-VstsTaskVerbose "Found $($matchingThreads.Count) matching thread(s) for the message at $($message.RelativePath) line $($message.Line)"
      }  
      
      foreach ($matchingThread in $matchingThreads)
@@ -367,7 +367,7 @@ function GetMatchingComments
                 
         if ($matchingComments -ne $null)
         {
-            Write-Verbose "Found $($matchingComments.Count) matching comment(s) for the message at $($message.RelativePath) line $($message.Line)"
+            Write-VstsTaskVerbose "Found $($matchingComments.Count) matching comment(s) for the message at $($message.RelativePath) line $($message.Line)"
             
             foreach ($matchingComment in $matchingComments)
             {
@@ -385,7 +385,7 @@ function CreateDiscussionThreads
 {
     param ([Array]$messages)
     
-    Write-Verbose "Creating new discussion threads"
+    Write-VstsTaskVerbose "Creating new discussion threads"
     $discussionThreadCollection = New-Object "$script:discussionWebApiNS.DiscussionThreadCollection"
     $discussionId = -1
     

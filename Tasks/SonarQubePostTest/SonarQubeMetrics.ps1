@@ -92,7 +92,7 @@ function WaitForAnalysisToFinishInternal
     $analysisId = QueryAnalysisId $taskId
 
     Write-Host "The SonarQube analysis has finished processing."
-    Write-Verbose "The analysis id is $analysisId"
+    Write-VstsTaskVerbose "The analysis id is $analysisId"
 
     return $analysisId
 }
@@ -123,7 +123,7 @@ function FetchTaskIdFromReportFile
     }
 
     $taskId = $matchResult.Groups[1].Value.Trim()
-    Write-Verbose "The analysis is associated with the task id $taskId"
+    Write-VstsTaskVerbose "The analysis is associated with the task id $taskId"
 
     return $taskId
 }
@@ -139,7 +139,7 @@ function IsAnalysisFinished
     $response = InvokeGetRestMethod "/api/ce/task?id=$taskId" 
     $status = $response.task.status
     
-    Write-Verbose "The task status is $status"
+    Write-VstsTaskVerbose "The task status is $status"
 
     if (!$status)
     {
@@ -170,7 +170,7 @@ function GetTaskStatusFile
     
     if (![System.IO.File]::Exists($reportTaskFile))
     {
-        Write-Verbose "Could not find the task details file at $reportTaskFile"
+        Write-VstsTaskVerbose "Could not find the task details file at $reportTaskFile"
         throw "Cannot determine if the analysis has finished. Possible cause: your SonarQube server version is lower than 5.3 - for more details see https://go.microsoft.com/fwlink/?LinkId=722407"
     }
 

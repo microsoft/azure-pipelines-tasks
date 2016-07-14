@@ -9,7 +9,7 @@ function InitPostCommentsModule
 {
     param ([ValidateNotNull()]$vssConnection)
     
-    Write-Verbose "Initializing the PostComments-Module"
+    Write-VstsTaskVerbose "Initializing the PostComments-Module"
     
     $tfsClientAssemblyDir = GetTaskContextVariable "agent.serveromdirectory"
     LoadTfsClientAssemblies $tfsClientAssemblyDir
@@ -36,7 +36,7 @@ function Test-InitPostCommentsModule
 
 function InternalInit
 {
-    Write-Verbose "Fetching VSS clients"
+    Write-VstsTaskVerbose "Fetching VSS clients"
     $script:gitClient = $vssConnection.GetClient("Microsoft.TeamFoundation.SourceControl.WebApi.GitHttpClient")            
     $script:discussionClient = $vssConnection.GetClient("Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionHttpClient")    
     $script:codeReviewClient = $vssConnection.GetClient("Microsoft.VisualStudio.Services.CodeReview.WebApi.CodeReviewHttpClient") 
@@ -45,7 +45,7 @@ function InternalInit
     Assert ( $script:discussionClient -ne $null ) "Internal error: could not retrieve the DiscussionHttpClient object"
     Assert ( $script:codeReviewClient -ne $null ) "Internal error: could not retrieve the CodeReviewHttpClient object"
                  
-    Write-Verbose "Fetching data from build variables"
+    Write-VstsTaskVerbose "Fetching data from build variables"
     $repositoryId = GetTaskContextVariable "build.repository.id"    
     $script:project = GetTaskContextVariable "system.teamProject"
 
@@ -54,7 +54,7 @@ function InternalInit
 
     $pullRequestId = GetPullRequestId
     $repositoryIdGuid = [Guid]::Parse($repositoryId);
-    Write-Verbose "Fetching the pull request object with id $pullRequestId"
+    Write-VstsTaskVerbose "Fetching the pull request object with id $pullRequestId"
 
     $script:pullRequest = [PsWorkarounds.Helper]::GetPullRequestObject($script:gitClient, $script:project, $repositoryIdGuid, $pullRequestId);
      
@@ -71,7 +71,7 @@ function LoadTfsClientAssemblies
 {
     param ([ValidateNotNullOrEmpty()][string]$tfsClientAssemblyDir)   
                      
-    Write-Verbose "Loading TFS client object model assemblies packaged with the build agent"      
+    Write-VstsTaskVerbose "Loading TFS client object model assemblies packaged with the build agent"      
     
     $externalAssemblyNames = (             
         "Microsoft.TeamFoundation.Common.dll",
@@ -86,7 +86,7 @@ function LoadTfsClientAssemblies
     $externalAssemblyPaths = $externalAssemblyNames | foreach { [System.IO.Path]::Combine($tfsClientAssemblyDir, $_)}                        
     $externalAssemblyPaths | foreach {Add-Type -Path $_} 
     
-    Write-Verbose "Loaded $externalAssemblyPaths"
+    Write-VstsTaskVerbose "Loaded $externalAssemblyPaths"
     
     # Workaround: PowerShell 4 seems to have a problem finding the right method from a list of overloaded .net methods. This is because
     # PS converts variables to its own PSObject type and it then gets confused when trying to coerce the values to determine the right method candidate.
@@ -144,7 +144,7 @@ namespace PsWorkarounds
 # Remark: public for test purposes
 function GetModifiedFilesInPR 
 {
-    Write-Verbose "Computing the list of files changed in this PR"
+    Write-VstsTaskVerbose "Computing the list of files changed in this PR"
     $sourceFiles = @()
 
     $targetVersionDescriptor = New-Object -TypeName "Microsoft.TeamFoundation.SourceControl.WebApi.GitTargetVersionDescriptor"
@@ -169,7 +169,7 @@ function GetModifiedFilesInPR
     
     if ($commitDiffs.ChangeCounts.Count -gt 0)
     {
-        Write-Verbose "Found $($commitDiffs.ChangeCounts.Count) changed file(s) in the PR"
+        Write-VstsTaskVerbose "Found $($commitDiffs.ChangeCounts.Count) changed file(s) in the PR"
         
         $sourceFiles = $commitDiffs.Changes | 
             Where-Object { ($_ -ne $null) -and ($_.Item.IsFolder -eq $false) }  | 
@@ -211,7 +211,7 @@ function FetchActiveDiscussionThreads
         }
     }
     
-    Write-Verbose "Found $($threadList.Count) discussion thread(s)"
+    Write-VstsTaskVerbose "Found $($threadList.Count) discussion thread(s)"
     return $threadList;
 }
 
@@ -234,7 +234,7 @@ function FetchDiscussionComments
         }
     }
     
-    Write-Verbose "Found $($comments.Count) existing comment(s)" 
+    Write-VstsTaskVerbose "Found $($comments.Count) existing comment(s)" 
     return $comments
 }  
 
@@ -245,12 +245,12 @@ function GetArtifactUri
     if ($codeReviewId -eq 0)
     {        
         $artifactUri = [String]::Format("vstfs:///CodeReview/CodeReviewId/{0}%2f{1}", $teamProjectId, $pullRequestId);        
-        Write-Verbose "Legacy code review. The artifact uri is $artifactUri"
+        Write-VstsTaskVerbose "Legacy code review. The artifact uri is $artifactUri"
         return $artifactUri
     }
 
     $artifactUri = [Microsoft.VisualStudio.Services.CodeReview.WebApi.CodeReviewSdkArtifactId]::GetArtifactUri($teamProjectId, $codeReviewId)
-    Write-Verbose "New style code review. The artifact uri is $artifactUri"
+    Write-VstsTaskVerbose "New style code review. The artifact uri is $artifactUri"
     
     return $artifactUri
 }
@@ -310,7 +310,7 @@ function GetCodeFlowChanges
          $script:pullRequest.CodeReviewId, 
          $iterationId);
      
-     Write-Verbose "Change count: $($changes.Count)"
+     Write-VstsTaskVerbose "Change count: $($changes.Count)"
      
      return $changes
 }

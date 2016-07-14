@@ -21,7 +21,7 @@ function HandleCodeAnalysisReporting
     }	
     else
     {
-        Write-Verbose "The build was not triggered by a Pull Request, not processing code analysis comments"   
+        Write-VstsTaskVerbose "The build was not triggered by a Pull Request, not processing code analysis comments"   
     }
 }
 
@@ -45,7 +45,7 @@ function GetMessagesFromIssues
     $sw = new-object "Diagnostics.Stopwatch"
     $sw.Start();
      
-    Write-Verbose "Transforming SonarQube analysis issues to PR comments"
+    Write-VstsTaskVerbose "Transforming SonarQube analysis issues to PR comments"
     
     $comments = New-Object System.Collections.ArrayList
     
@@ -55,7 +55,7 @@ function GetMessagesFromIssues
 
         if ([String]::IsNullOrWhiteSpace($issue.line) -or $issue.line -lt 0)
         {
-            Write-Verbose "A SonarQube issue - $($issue.message) from $($issue.relativePath) - has no line associated with it. Placing it at the beginning of the file."
+            Write-VstsTaskVerbose "A SonarQube issue - $($issue.message) from $($issue.relativePath) - has no line associated with it. Placing it at the beginning of the file."
             $issue.line = 0
         }
         
@@ -77,7 +77,7 @@ function GetMessagesFromIssues
         [void]$comments.Add($comment)
     }
     
-    Write-Verbose "Creating $($issues.Count) messages from issues took $($sw.ElapsedMilliseconds) ms"
+    Write-VstsTaskVerbose "Creating $($issues.Count) messages from issues took $($sw.ElapsedMilliseconds) ms"
          
     return $comments
 }

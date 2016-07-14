@@ -30,7 +30,7 @@ function UploadLegacySummaryMdReport
 
 	# Upload the summary markdown file
 	$legacySummaryReportPath = [System.IO.Path]::Combine($sonarQubeOutDir, "summary.md")
-	Write-Verbose "Looking for a summary report at $legacySummaryReportPath"
+	Write-VstsTaskVerbose "Looking for a summary report at $legacySummaryReportPath"
 
 	if ([System.IO.File]::Exists($legacySummaryReportPath))
 	{
@@ -85,7 +85,7 @@ function CreateReportFile
     $reportPath = [IO.Path]::Combine($sonarQubeOutDir, "newSummaryReport.md");
     
     [IO.File]::WriteAllText($reportPath, $reportContents)
-    Write-Verbose "Produced a summary report at $reportPath"
+    Write-VstsTaskVerbose "Produced a summary report at $reportPath"
     
     return $reportPath
 }
@@ -94,7 +94,8 @@ function FireUploadReportCommand
 {
     param($reportPath)
     
-    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report;]$reportPath"
+    Write-VstsAddAttachment -Type "Distributedtask.Core.Summary" -Name "SonarQube Analysis Report" -Path $reportPath
+    #Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report;]$reportPath"
 }
 
 

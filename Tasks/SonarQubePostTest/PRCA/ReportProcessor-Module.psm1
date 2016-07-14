@@ -19,7 +19,7 @@ function FetchAnnotatedNewIssues
         throw  [System.IO.FileNotFoundException] "Could not find the SonarQube issue report at $sonarReportFilePath. Unable to post issues to the PR."
     }
 
-    Write-Verbose "Report file found at $sonarReportFilePath"    
+    Write-VstsTaskVerbose "Report file found at $sonarReportFilePath"    
         
     CreateProjectGuidToProjectPathMap    
     
@@ -88,7 +88,7 @@ function CreateComponentKeyToPathMap($json)
         }
         else 
         {
-            Write-Verbose "Found a duplicate component key: $($component.key)"    
+            Write-VstsTaskVerbose "Found a duplicate component key: $($component.key)"    
         }
     }
 }
@@ -108,7 +108,7 @@ function CreateProjectGuidToProjectPathMap
         
         if ([System.IO.File]::Exists($projectInfoFilePath))
         {
-            Write-Verbose "CreateProjectGuidToProjectPathMap: Processing project info file: $projectInfoFilePath"
+            Write-VstsTaskVerbose "CreateProjectGuidToProjectPathMap: Processing project info file: $projectInfoFilePath"
             [xml]$xmlContent = Get-Content $projectInfoFilePath
             
             Assert ($xmlContent -ne $null) "Internal error: could not read $projectInfoFilePath"
@@ -120,7 +120,7 @@ function CreateProjectGuidToProjectPathMap
             }
             else
             {
-                Write-Verbose "Duplicate ProjectGuid found in $projectInfoFilePath"
+                Write-VstsTaskVerbose "Duplicate ProjectGuid found in $projectInfoFilePath"
             }
         }
     }
@@ -164,12 +164,12 @@ function GetPathRelativeToRepoRoot
     
     if (!$script:ProjectGuidAndFilePathMap.ContainsKey($guidToken))
     {
-        Write-Verbose "GetPathRelativeToRepoRoot: An entry for project guid $guidToken could not be found, check ProjectInfo.xml file"
+        Write-VstsTaskVerbose "GetPathRelativeToRepoRoot: An entry for project guid $guidToken could not be found, check ProjectInfo.xml file"
         return $null
     }
     if (!$script:ComponentKeyAndPathMap.ContainsKey($component))
     {
-        Write-Verbose "GetPathRelativeToRepoRoot: An entry for component key $component could not be found, check sonar-report.json file"
+        Write-VstsTaskVerbose "GetPathRelativeToRepoRoot: An entry for component key $component could not be found, check sonar-report.json file"
         return $null
     }
 

@@ -4,7 +4,7 @@
 function BreakBuildOnQualityGateFailure
 {    
     $breakBuild = GetTaskContextVariable "MSBuild.SonarQube.Internal.BreakBuild"
-    $breakBuildEnabled = Convert-String $breakBuild Boolean
+    $breakBuildEnabled = [System.Convert]::ToBoolean($breakBuild)
 
     if ($breakBuildEnabled)
     {
@@ -35,8 +35,8 @@ function FailBuildOnQualityGateStatus
     {        
         $dashboardUrl = GetTaskContextVariable "MSBuild.SonarQube.ProjectUri"
         
-        Write-Host "##vso[task.logissue type=error]The SonarQube quality gate associated with this build has failed. For more details see $dashboardUrl"
-        Write-Host "##vso[task.complete result=Failed;]"
+        Write-VstsTaskError "The SonarQube quality gate associated with this build has failed. For more details see $dashboardUrl"
+        Write-VstsSetResult -Result Failed
         
     }
     else
