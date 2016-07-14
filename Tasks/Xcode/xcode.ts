@@ -111,13 +111,13 @@ async function run() {
 
                 //find signing identity
                 var signIdentity = await sign.findSigningIdentity(keychain);
-                xcb.arg('CODE_SIGN_IDENTITY=' + signIdentity);
+                xcb.argIf(signIdentity, 'CODE_SIGN_IDENTITY=' + signIdentity);
 
                 //determine the provisioning profile UUID
-                if(tl.filePathSupplied(provProfilePath) && tl.exist(provProfilePath)) {
+                if(tl.filePathSupplied('provProfile') && tl.exist(provProfilePath)) {
                     var provProfileUUID = await sign.getProvisioningProfileUUID(provProfilePath);
-                    xcb.arg('PROVISIONING_PROFILE=' + provProfileUUID);
-                    if(removeProfile) {
+                    xcb.argIf(provProfileUUID, 'PROVISIONING_PROFILE=' + provProfileUUID);
+                    if (removeProfile && provProfileUUID) {
                         profileToDelete = provProfileUUID;
                     }
                 }
@@ -132,10 +132,10 @@ async function run() {
             }
 
             var signIdentity : string = tl.getInput('iosSigningIdentity');
-            xcb.arg('CODE_SIGN_IDENTITY=' + signIdentity);
+            xcb.argIf(signIdentity, 'CODE_SIGN_IDENTITY=' + signIdentity);
 
             var provProfileUUID : string = tl.getInput('provProfileUuid');
-            xcb.arg('PROVISIONING_PROFILE=' + provProfileUUID);
+            xcb.argIf(provProfileUUID, 'PROVISIONING_PROFILE=' + provProfileUUID);
         }
 
         //--- Xcode Build ---

@@ -53,10 +53,11 @@ export async function findSigningIdentity(keychainPath: string) {
     findIdentityCmd.pathArg(keychainPath);
     findIdentityCmd.on('stdout', function (data) {
         if (data) {
-            var matches = data.toString().trim().match(/\((.+)\)/g);
+            var matches = data.toString().trim().match(/"(.+)"/g);
             tl.debug('signing identity data = ' + matches);
-            if(matches) {
-                signIdentity = matches[0];
+            if(matches && matches[0]) {
+                signIdentity = matches[0].replace(/"/gm, '');
+                tl.debug('signing identity data trimmed = ' + signIdentity);
             }
         }
     })
