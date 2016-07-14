@@ -247,8 +247,8 @@ export function getDelimitedInput(name: string, delim: string, required?: boolea
 
 export function filePathSupplied(name: string): boolean {
     // normalize paths
-    var pathValue = path.resolve(this.getPathInput(name) || '');
-    var repoRoot = path.resolve(this.getVariable('build.sourcesDirectory') || '');
+    var pathValue = this.resolve(this.getPathInput(name) || '');
+    var repoRoot = this.resolve(this.getVariable('build.sourcesDirectory') || '');
 
     var supplied = pathValue !== repoRoot;
     debug(name + 'path supplied :' + supplied);
@@ -517,6 +517,14 @@ export function checkPath(p: string, name: string): void {
 //-----------------------------------------------------
 export function mkdirP(p): void {
     debug('creating path: ' + p);
+}
+
+export function resolve(): string {
+    // we can't do ...param if we target ES6 and node 5.  This is what <=ES5 compiles down to.
+    //return the posix implementation in the mock, so paths will be consistent when L0 tests are run on Windows or Mac/Linux
+    var absolutePath = path.posix.resolve.apply(this, arguments);
+    debug('Absolute path for pathSegments: ' + arguments + ' = ' + absolutePath);
+    return absolutePath;
 }
 
 export function which(tool: string, check?: boolean): string {
