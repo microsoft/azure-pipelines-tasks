@@ -12,9 +12,9 @@
   ],
   "demands": [],
   "version": {
-    "Major": "1",
-    "Minor": "0",
-    "Patch": "2"
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 3
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
