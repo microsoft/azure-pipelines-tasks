@@ -196,28 +196,11 @@ function Run-MsDeployCommand
 
 function Get-UserAgentString
 {
-    $collectionUri = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
-    $collectionId = "$env:SYSTEM_COLLECTIONID"
-    $hostType = "$env:SYSTEM_HOSTTYPE"
-    $serverString = "TFS"
-    if ($collectionUri.ToLower().Contains("visualstudio.com".ToLower())) {
-        $serverString = "VSTS"
-    }
-
-    $userAgent = [string]::Empty
-    if ($hostType -ieq "build") {
-        $definitionId = "$env:SYSTEM_DEFINITIONID"
-        $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
-        $userAgent = $serverString + "_" + $collectionId + "_" + "build" + "_" + $definitionId + "_" + $buildId
-    } elseif ($hostType -ieq "release") {
-        $definitionId = Get-TaskVariable $distributedTaskContext "release.definitionId"
-        $releaseId = Get-TaskVariable $distributedTaskContext "release.releaseId"
-        $environmentId = Get-TaskVariable $distributedTaskContext "release.environmentId"
-        $attemptNumber = Get-TaskVariable $distributedTaskContext "release.attemptNumber"
-        $userAgent = $serverString + "_" + $collectionId + "_" + "release" + "_" + $definitionId + "_" + $releaseId + "_" + $environmentId + "_" + $attemptNumber
+    if ($env:AZURE_HTTP_USER_AGENT) {
+        return $env:AZURE_HTTP_USER_AGENT
 	}
 	
-    return $userAgent
+	return [string]::Empty
 }
 
 function Update-DeploymentStatus
